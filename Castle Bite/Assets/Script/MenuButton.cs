@@ -169,6 +169,9 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             case "OptionsGameSubmenuL3Panel":
                 OptionsGameSubmenuL3PanelClick();
                 break;
+            case "OptionsVideoSubmenuL3Panel":
+                OptionsGameSubmenuL3PanelClick();
+                break;
             default:
                 Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
                 break;

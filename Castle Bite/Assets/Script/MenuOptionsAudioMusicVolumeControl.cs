@@ -4,7 +4,8 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuOptionsVideoFontSizeControl : MonoBehaviour, IDragHandler {
+public class MenuOptionsAudioMusicVolumeControl : MonoBehaviour, IDragHandler
+{
     Text txt;
     Slider sld;
 
@@ -17,8 +18,5 @@ public class MenuOptionsVideoFontSizeControl : MonoBehaviour, IDragHandler {
     public void OnDrag(PointerEventData eventData)
     {
         txt.text = sld.value.ToString();
-        txt.fontSize = (int)sld.value;
     }
-
-
 }

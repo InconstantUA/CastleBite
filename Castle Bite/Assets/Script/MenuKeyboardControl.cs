@@ -78,7 +78,86 @@ public class MenuKeyboardControl : MonoBehaviour {
             HighlightSelectedMenu();
             ActOnClick();
         }
+        if (Input.GetKeyUp(KeyCode.LeftArrow) == true)
+        {
+            // if selected menu control is one of the below then act on this
+            currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
+            btn = menuBtnsList[currSelctdBtnID];
+            string currActiveMenuName = btn.transform.parent.name;
+            // move slider for the font size
+            if ((currActiveMenuName == "OptionsVideoSubmenuL3Panel") & (btn.name == "FontSize"))
+            {
+                MoveSlider(btn, -1); // decrease font
+                ChangeFontSize();
+            }
+            if ((currActiveMenuName == "OptionsAudioSubmenuL3Panel") & (btn.name == "MusicVolume"))
+            {
+                MoveSlider(btn, -5); // decrease volume
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.RightArrow) == true)
+        {
+            // if selected menu control is one of the below then act on this
+            currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
+            btn = menuBtnsList[currSelctdBtnID];
+            string currActiveMenuName = btn.transform.parent.name;
+            // move slider for the font size
+            if ((currActiveMenuName == "OptionsVideoSubmenuL3Panel") & (btn.name == "FontSize"))
+            {
+                MoveSlider(btn, 1); // increase font
+                ChangeFontSize();
+            }
+            if ((currActiveMenuName == "OptionsAudioSubmenuL3Panel") & (btn.name == "MusicVolume"))
+            {
+                MoveSlider(btn, 5); // inrease volume
+            }
+        }
     }
+
+    #region from MenuOptionsVideoFontSizeControl.cs
+    void MoveSlider(Button btn, int direction)
+    {
+        //  direction<0 <- move left
+        //  direction>0 <- move right
+        Slider sld = btn.GetComponentInChildren<Slider>();
+        if (direction < 0)
+        {
+            // make sure that slider is not going to less than min value
+            if ((sld.value + direction) > sld.minValue)
+            {
+                sld.value += direction; // direction is negative so we should not use - here otherwise it will become +
+            }
+            else
+            {
+                // reset to minimum value
+                sld.value = sld.minValue;
+            }
+        }
+        else
+        {
+            // make sure that slider is not going more than max value
+            if ((sld.value + direction) < sld.maxValue)
+            {
+                sld.value += direction;
+            } else
+            {
+                // reset to max value
+                sld.value = sld.maxValue;
+            }
+        }
+        // update text show in UI
+        Text txt = sld.transform.parent.gameObject.GetComponentInChildren<Text>();
+        txt.text = sld.value.ToString();
+
+    }
+
+    void ChangeFontSize()
+    {
+        Slider fontSizeSlider = transform.root.Find("OptionsVideoSubmenuL3Panel").Find("FontSize").gameObject.GetComponentInChildren<Slider>();
+        Text txt = fontSizeSlider.transform.parent.gameObject.GetComponentInChildren<Text>();
+        txt.fontSize = (int)fontSizeSlider.value;
+    }
+    #endregion
 
     #region OnClick
 
@@ -98,6 +177,12 @@ public class MenuKeyboardControl : MonoBehaviour {
                 break;
             case "OptionsGameSubmenuL3Panel":
                 OptionsGameSubmenuL3PanelClick();
+                break;
+            case "OptionsVideoSubmenuL3Panel":
+                OptionsVideoSubmenuL3PanelClick();
+                break;
+            case "OptionsAudioSubmenuL3Panel":
+                OptionsAudioSubmenuL3PanelClick();
                 break;
             default:
                 Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
@@ -186,10 +271,10 @@ public class MenuKeyboardControl : MonoBehaviour {
                 SetActiveMenuTo("OptionsGameSubmenuL3Panel", 1);
                 break;
             case "Video":
-                // activate Video sub-options
+                SetActiveMenuTo("OptionsVideoSubmenuL3Panel", 1);
                 break;
             case "Audio":
-                // activate Audio sub-options
+                SetActiveMenuTo("OptionsAudioSubmenuL3Panel", 1);
                 break;
             case "KeyBindings":
                 // activate KeyBindings sub-options
@@ -208,9 +293,6 @@ public class MenuKeyboardControl : MonoBehaviour {
         {
             case "ReturnToTheOptionsMenu":
                 SetActiveMenuTo("OptionsSubmenuL2Panel");
-                //// disable Options sub-menu and activate Main menu
-                //transform.parent.gameObject.SetActive(false);
-                //transform.root.Find("MainMenuPanel").gameObject.SetActive(true);
                 break;
             case "Autosave":
                 // Revert autosave setting on click
@@ -218,7 +300,8 @@ public class MenuKeyboardControl : MonoBehaviour {
                 if (btnTxt.text == "Off")
                 {
                     btnTxt.text = "On";
-                } else
+                }
+                else
                 {
                     btnTxt.text = "Off";
                 }
@@ -228,6 +311,43 @@ public class MenuKeyboardControl : MonoBehaviour {
                 break;
         }
         Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
+    }
+
+    void OptionsVideoSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "FontSize":
+                // it does not react on enter or return keyboard presses
+                // instead it react on keyboard -> <- keys
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsVideoSubmenuL3PanelClick on " + selectedMBtnName + " button");
+    }
+    void OptionsAudioSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "MusicVolume":
+                // it does not react on enter or return keyboard presses
+                // instead it react on keyboard -> <- keys
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick
