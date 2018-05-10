@@ -149,6 +149,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         ActOnClick();
     }
 
+
     #region OnClick
 
     Button[] menuBtnsList; // required for MenuKeyboardControl.cs
@@ -157,7 +158,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // act depending on the parent menu
         string currActiveMenuName = btn.transform.parent.name;
-        Debug.Log("ActOnClick curr menu is " + currActiveMenuName);
         switch (currActiveMenuName)
         {
             case "MainMenuPanel":
@@ -170,7 +170,13 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 OptionsGameSubmenuL3PanelClick();
                 break;
             case "OptionsVideoSubmenuL3Panel":
-                OptionsGameSubmenuL3PanelClick();
+                OptionsVideoSubmenuL3PanelClick();
+                break;
+            case "OptionsAudioSubmenuL3Panel":
+                OptionsAudioSubmenuL3PanelClick();
+                break;
+            case "OptionsKeyboardAndMouseSubmenuL3Panel":
+                OptionsKeyboardAndMouseSubmenuL3PanelClick();
                 break;
             default:
                 Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
@@ -194,7 +200,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             tmpBtn.GetComponentInChildren<Text>().color = tmpColor;
             // Debug.Log("dimm " + tmpBtn.name + "button");
         }
-        Debug.Log("ResetAllMenuButtonsToNormal");
+
     }
 
     void SetActiveMenuTo(string mName, int btnID = -1)
@@ -204,6 +210,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         GameObject newMenu = btn.transform.root.Find(mName).gameObject;
         newMenu.SetActive(true);
         // Update list of all buttons in the menu - required for keyboard control script
+        // This is also required here because of the active menu change
         menuBtnsList = newMenu.GetComponentsInChildren<Button>();
     }
 
@@ -243,13 +250,13 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 SetActiveMenuTo("OptionsGameSubmenuL3Panel", 1);
                 break;
             case "Video":
-                // activate Video sub-options
+                SetActiveMenuTo("OptionsVideoSubmenuL3Panel", 1);
                 break;
             case "Audio":
-                // activate Audio sub-options
+                SetActiveMenuTo("OptionsAudioSubmenuL3Panel", 1);
                 break;
-            case "KeyBindings":
-                // activate KeyBindings sub-options
+            case "KeyboardAndMouse":
+                SetActiveMenuTo("OptionsKeyboardAndMouseSubmenuL3Panel", 1);
                 break;
             default:
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
@@ -265,9 +272,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             case "ReturnToTheOptionsMenu":
                 SetActiveMenuTo("OptionsSubmenuL2Panel");
-                //// disable Options sub-menu and activate Main menu
-                //transform.parent.gameObject.SetActive(false);
-                //transform.root.Find("MainMenuPanel").gameObject.SetActive(true);
                 break;
             case "Autosave":
                 // Revert autosave setting on click
@@ -286,6 +290,67 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 break;
         }
         Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
+    }
+
+    void OptionsVideoSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "FontSize":
+                // it does not react on enter or return keyboard presses
+                // instead it react on keyboard -> <- keys
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsVideoSubmenuL3PanelClick on " + selectedMBtnName + " button");
+    }
+    void OptionsAudioSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "MusicVolume":
+                // it does not react on enter or return keyboard presses
+                // instead it react on keyboard -> <- keys
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
+    }
+
+    void OptionsKeyboardAndMouseSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "DoCustomAction":
+                // Change key binding
+                break;
+            case "SaveAndReturn":
+                // Save
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "ResetToDefault":
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsKeyboardAndMouseSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick

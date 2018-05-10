@@ -25,8 +25,9 @@ public class MenuKeyboardControl : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.DownArrow) == true)
         {
+            // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
+            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             // switch to the other menu
-            // audio.PlayOneShot(blip);
             // Disable cursor, to not conflict with keyboard input
             // If cursor was enabled, then we should verify if highlighted menu has not changed
             // and we cannot rely on previoiusly set previouslySelectedMenuID, 
@@ -47,8 +48,8 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.UpArrow) == true)
         {
-            // switch to the other menu
-            // audio.PlayOneShot(blip);
+            // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
+            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             Cursor.visible = false;
             currSelctdBtnID = GetCurrentlySelectedBtnID();
             previouslySelectedMenuID = currSelctdBtnID;
@@ -65,12 +66,18 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.Return) == true)
         {
+            // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
+            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            Cursor.visible = false;
             currSelctdBtnID = GetCurrentlySelectedBtnID();
             btn = menuBtnsList[currSelctdBtnID];
             SetPressedStatus();
         }
         if (Input.GetKeyUp(KeyCode.Return) == true)
         {
+            // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
+            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            Cursor.visible = false;
             // update btn object, which later will be used in act on click
             currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
             btn = menuBtnsList[currSelctdBtnID];
@@ -80,6 +87,9 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         if (Input.GetKeyUp(KeyCode.LeftArrow) == true)
         {
+            // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
+            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            Cursor.visible = false;
             // if selected menu control is one of the below then act on this
             currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
             btn = menuBtnsList[currSelctdBtnID];
@@ -88,7 +98,7 @@ public class MenuKeyboardControl : MonoBehaviour {
             if ((currActiveMenuName == "OptionsVideoSubmenuL3Panel") & (btn.name == "FontSize"))
             {
                 MoveSlider(btn, -1); // decrease font
-                ChangeFontSize();
+                // ChangeFontSize();
             }
             if ((currActiveMenuName == "OptionsAudioSubmenuL3Panel") & (btn.name == "MusicVolume"))
             {
@@ -97,6 +107,9 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         if (Input.GetKeyUp(KeyCode.RightArrow) == true)
         {
+            // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
+            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            Cursor.visible = false;
             // if selected menu control is one of the below then act on this
             currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
             btn = menuBtnsList[currSelctdBtnID];
@@ -105,13 +118,32 @@ public class MenuKeyboardControl : MonoBehaviour {
             if ((currActiveMenuName == "OptionsVideoSubmenuL3Panel") & (btn.name == "FontSize"))
             {
                 MoveSlider(btn, 1); // increase font
-                ChangeFontSize();
+                // ChangeFontSize();
             }
             if ((currActiveMenuName == "OptionsAudioSubmenuL3Panel") & (btn.name == "MusicVolume"))
             {
                 MoveSlider(btn, 5); // inrease volume
             }
         }
+    }
+
+    string GetActiveMenuName()
+    {
+        string[] allMenuNames = {   "MainMenuPanel",
+                                    "OptionsSubmenuL2Panel",
+                                    "OptionsGameSubmenuL3Panel",
+                                    "OptionsVideoSubmenuL3Panel",
+                                    "OptionsAudioSubmenuL3Panel",
+                                    "OptionsKeyboardAndMouseSubmenuL3Panel"};
+        string activeMenuName = "unknown";
+        foreach (string menuName in allMenuNames)
+        {
+            if (transform.root.Find(menuName).gameObject.activeSelf)
+            {
+                activeMenuName = menuName;
+            }
+        }
+        return activeMenuName;
     }
 
     #region from MenuOptionsVideoFontSizeControl.cs
@@ -146,17 +178,17 @@ public class MenuKeyboardControl : MonoBehaviour {
             }
         }
         // update text show in UI
-        Text txt = sld.transform.parent.gameObject.GetComponentInChildren<Text>();
-        txt.text = sld.value.ToString();
+        // Text txt = sld.transform.parent.gameObject.GetComponentInChildren<Text>();
+        // txt.text = sld.value.ToString();
 
     }
 
-    void ChangeFontSize()
-    {
-        Slider fontSizeSlider = transform.root.Find("OptionsVideoSubmenuL3Panel").Find("FontSize").gameObject.GetComponentInChildren<Slider>();
-        Text txt = fontSizeSlider.transform.parent.gameObject.GetComponentInChildren<Text>();
-        txt.fontSize = (int)fontSizeSlider.value;
-    }
+    //void ChangeFontSize()
+    //{
+    //    Slider fontSizeSlider = transform.root.Find("OptionsVideoSubmenuL3Panel").Find("FontSize").gameObject.GetComponentInChildren<Slider>();
+    //    Text txt = fontSizeSlider.transform.parent.gameObject.GetComponentInChildren<Text>();
+    //    txt.fontSize = (int)fontSizeSlider.value;
+    //}
     #endregion
 
     #region OnClick
@@ -183,6 +215,9 @@ public class MenuKeyboardControl : MonoBehaviour {
                 break;
             case "OptionsAudioSubmenuL3Panel":
                 OptionsAudioSubmenuL3PanelClick();
+                break;
+            case "OptionsKeyboardAndMouseSubmenuL3Panel":
+                OptionsKeyboardAndMouseSubmenuL3PanelClick();
                 break;
             default:
                 Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
@@ -216,6 +251,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         GameObject newMenu = btn.transform.root.Find(mName).gameObject;
         newMenu.SetActive(true);
         // Update list of all buttons in the menu - required for keyboard control script
+        // This is also required here because of the active menu change
         menuBtnsList = newMenu.GetComponentsInChildren<Button>();
         #region Keyboard-specific
         // Set currently selected button id and highligh it
@@ -276,8 +312,8 @@ public class MenuKeyboardControl : MonoBehaviour {
             case "Audio":
                 SetActiveMenuTo("OptionsAudioSubmenuL3Panel", 1);
                 break;
-            case "KeyBindings":
-                // activate KeyBindings sub-options
+            case "KeyboardAndMouse":
+                SetActiveMenuTo("OptionsKeyboardAndMouseSubmenuL3Panel", 1);
                 break;
             default:
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
@@ -348,6 +384,30 @@ public class MenuKeyboardControl : MonoBehaviour {
                 break;
         }
         Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
+    }
+
+    void OptionsKeyboardAndMouseSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "DoCustomAction":
+                // Change key binding
+                break;
+            case "SaveAndReturn":
+                // Save
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                break;
+            case "ResetToDefault":
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsKeyboardAndMouseSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick
