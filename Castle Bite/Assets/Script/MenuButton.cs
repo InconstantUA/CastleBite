@@ -60,7 +60,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         //}
         //interactableDelay = btn.interactable;
         // enable mouse on its move, if it was disabled before
-        if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0) & (! Cursor.visible))
+        if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
         {
             Cursor.visible = true;
             // highlight button if it was highlighted before
@@ -84,7 +84,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         tmpColor.a = 1;
         txt.color = tmpColor;
-        Debug.Log("highlight " + btn.name + "button");
+        Debug.Log("SetHighlightedStatus " + btn.name + " button");
     }
 
     void SetPressedStatus()
@@ -99,6 +99,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         tmpColor.a = 1;
         txt.color = tmpColor;
+        Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
     void DimmAllOtherMenus()
@@ -116,12 +117,14 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
             tmpColor.a = 1;
             otherButton.GetComponentInChildren<Text>().color = tmpColor;
-            // Debug.Log("dimm " + otherButton.name + "button");
+            // Debug.Log("dimm " + otherButton.name + " button");
         }
+        Debug.Log("DimmAllOtherMenus");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log("OnPointerEnter");
         // set state
         currentState = States.Highlighted;
         // dimm all other menus
@@ -132,6 +135,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        Debug.Log("OnPointerDown");
         // set state
         currentState = States.Pressed;
         SetPressedStatus();
@@ -139,6 +143,9 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        Debug.Log("OnPointerUp");
+        currentState = States.Highlighted;
+        SetHighlightedStatus();
         ActOnClick();
     }
 
@@ -150,6 +157,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // act depending on the parent menu
         string currActiveMenuName = btn.transform.parent.name;
+        Debug.Log("ActOnClick curr menu is " + currActiveMenuName);
         switch (currActiveMenuName)
         {
             case "MainMenuPanel":
@@ -158,13 +166,35 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             case "OptionsSubmenuL2Panel":
                 OnOptionsSubmenuL2Click();
                 break;
+            case "OptionsGameSubmenuL3Panel":
+                OptionsGameSubmenuL3PanelClick();
+                break;
             default:
                 Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
                 break;
         }
     }
 
-    void SetActiveMenuTo(string mName)
+    void ResetAllMenuButtonsToNormal()
+    {
+        foreach (Button tmpBtn in menuBtnsList)
+        {
+            if (tmpBtn.interactable)
+            {
+                tmpColor = tmpBtn.colors.normalColor;
+            }
+            else
+            {
+                tmpColor = tmpBtn.colors.disabledColor;
+            }
+            tmpColor.a = 1;
+            tmpBtn.GetComponentInChildren<Text>().color = tmpColor;
+            // Debug.Log("dimm " + tmpBtn.name + "button");
+        }
+        Debug.Log("ResetAllMenuButtonsToNormal");
+    }
+
+    void SetActiveMenuTo(string mName, int btnID = -1)
     {
         // Disable old menu and activate new menu
         btn.transform.parent.gameObject.SetActive(false);
@@ -183,7 +213,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 SceneManager.LoadScene(1);
                 break;
             case "Options":
-                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                SetActiveMenuTo("OptionsSubmenuL2Panel", 1);
                 break;
             case "Quit":
                 Application.Quit();
@@ -192,6 +222,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
+        Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
     void OnOptionsSubmenuL2Click()
@@ -206,7 +237,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 //transform.root.Find("MainMenuPanel").gameObject.SetActive(true);
                 break;
             case "Game":
-                // activate Game sub-options
+                SetActiveMenuTo("OptionsGameSubmenuL3Panel", 1);
                 break;
             case "Video":
                 // activate Video sub-options
@@ -221,6 +252,37 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
+        Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
+    }
+
+    void OptionsGameSubmenuL3PanelClick()
+    {
+        string selectedMBtnName = btn.name;
+        switch (selectedMBtnName)
+        {
+            case "ReturnToTheOptionsMenu":
+                SetActiveMenuTo("OptionsSubmenuL2Panel");
+                //// disable Options sub-menu and activate Main menu
+                //transform.parent.gameObject.SetActive(false);
+                //transform.root.Find("MainMenuPanel").gameObject.SetActive(true);
+                break;
+            case "Autosave":
+                // Revert autosave setting on click
+                Text btnTxt = btn.GetComponentsInChildren<Text>()[1];
+                if (btnTxt.text == "Off")
+                {
+                    btnTxt.text = "On";
+                }
+                else
+                {
+                    btnTxt.text = "Off";
+                }
+                break;
+            default:
+                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                break;
+        }
+        Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick

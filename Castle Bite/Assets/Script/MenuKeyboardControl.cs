@@ -13,7 +13,8 @@ public class MenuKeyboardControl : MonoBehaviour {
     // Use this for initialization
     void Start() {
         // Init list of all buttons in the menu
-        menuBtnsList = GetComponentsInChildren<Button>();
+        GameObject mainMenu = transform.root.Find("MainMenuPanel").gameObject;
+        menuBtnsList = mainMenu.GetComponentsInChildren<Button>();
         // pre-select first element in the menu
         currSelctdBtnID = 0;
         previouslySelectedMenuID = 0;
@@ -64,12 +65,17 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.Return) == true)
         {
+            currSelctdBtnID = GetCurrentlySelectedBtnID();
+            btn = menuBtnsList[currSelctdBtnID];
             SetPressedStatus();
         }
         if (Input.GetKeyUp(KeyCode.Return) == true)
         {
             // update btn object, which later will be used in act on click
+            currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
             btn = menuBtnsList[currSelctdBtnID];
+            // release color back to highlighted
+            HighlightSelectedMenu();
             ActOnClick();
         }
     }
@@ -137,9 +143,10 @@ public class MenuKeyboardControl : MonoBehaviour {
         else
         {
             // If btnID is not provided, or it is invalid then keep previously pressed button
-            currSelctdBtnID = GetCurrentlyPressedBtnID();
+            currSelctdBtnID = GetCurrentlySelectedBtnID();
         }
         HighlightSelectedMenu();
+        Debug.Log("SetActiveMenuTo " + mName + " and button id to " + currSelctdBtnID);
         #endregion Keyboard-specific
     }
 
@@ -161,6 +168,7 @@ public class MenuKeyboardControl : MonoBehaviour {
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
+        Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
     void OnOptionsSubmenuL2Click()
@@ -190,6 +198,7 @@ public class MenuKeyboardControl : MonoBehaviour {
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
+        Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
     }
 
     void OptionsGameSubmenuL3PanelClick()
@@ -218,6 +227,7 @@ public class MenuKeyboardControl : MonoBehaviour {
                 Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
+        Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick
@@ -234,6 +244,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         tmpColor.a = 1;
         menuBtnsList[currSelctdBtnID].GetComponentInChildren<Text>().color = tmpColor;
+        Debug.Log("SetPressedStatus for id " + currSelctdBtnID + " name " + menuBtnsList[currSelctdBtnID].name);
     }
 
     //// take action according to the menu
@@ -280,10 +291,11 @@ public class MenuKeyboardControl : MonoBehaviour {
             // reset to 0
             selectedBtnID = 0;
         }
+        Debug.Log("GetCurrentlySelectedBtnID is " + selectedBtnID);
         return selectedBtnID;
     }
 
-    int GetCurrentlyPressedBtnID()
+    int GetCurrentlyPressedOrHighlightedBtnID()
     {
         // it is possible that id has changed, because there was mouse activity
         // that is why I need to get active menu id set by mouse and verify if it is the same as for keyboard
@@ -293,9 +305,11 @@ public class MenuKeyboardControl : MonoBehaviour {
         {
             // do not compare alpha (transparancy) because it is different, because we set it to 1(255)
             Debug.Log("Comparing " + menuBtnsList[id] + " menu");
-            Color btnHClr = menuBtnsList[id].colors.pressedColor;
+            Color btnHClr = menuBtnsList[id].colors.highlightedColor;
+            Color btnPClr = menuBtnsList[id].colors.pressedColor;
             Color txtClr = menuBtnsList[id].GetComponentInChildren<Text>().color;
-            if (((int)(txtClr.r * 1000) == (int)(btnHClr.r * 1000)) || ((int)(txtClr.g * 1000) == (int)(btnHClr.g * 1000)) || ((int)(txtClr.b * 1000) == (int)(btnHClr.b * 1000)))
+            if ((((int)(txtClr.r * 1000) == (int)(btnPClr.r * 1000)) && ((int)(txtClr.g * 1000) == (int)(btnPClr.g * 1000)) && ((int)(txtClr.b * 1000) == (int)(btnPClr.b * 1000)))
+             || (((int)(txtClr.r * 1000) == (int)(btnHClr.r * 1000)) && ((int)(txtClr.g * 1000) == (int)(btnHClr.g * 1000)) && ((int)(txtClr.b * 1000) == (int)(btnHClr.b * 1000))) )
             {
                 // found id
                 Debug.Log("Currently highlighted button is " + menuBtnsList[id].name);
@@ -310,6 +324,7 @@ public class MenuKeyboardControl : MonoBehaviour {
             // reset to 0
             pressedBtnID = 0;
         }
+        Debug.Log("GetCurrentlyPressedOrHighlightedBtnID is " + pressedBtnID);
         return pressedBtnID;
     }
 
