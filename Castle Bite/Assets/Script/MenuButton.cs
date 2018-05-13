@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 // Use the same colors as defined for the button but for the text
 // Button in our case is not visible, only text is visible
@@ -31,7 +30,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         txt = GetComponentInChildren<Text>();
         // baseColor = txt.color;
         btn = gameObject.GetComponent<Button>();
-        // interactableDelay = btn.interactable;
         // use the same color as set for button normal color
         // otherwise we will have to remember to change both values
         // because at the game start text will not have the same color as button
@@ -45,21 +43,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void Update()
     {
-        //if (btn.interactable != interactableDelay)
-        //{
-        //    if (btn.interactable)
-        //    {
-        //        tmpColor = btn.colors.normalColor;
-        //    }
-        //    else
-        //    {
-        //        tmpColor = btn.colors.disabledColor;
-        //    }
-        //    tmpColor.a = 1;
-        //    txt.color = tmpColor;
-        //}
-        //interactableDelay = btn.interactable;
-        // enable mouse on its move, if it was disabled before
+        // enable mouse on its move, if it was disabled before by keyboard activity
         if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
         {
             Cursor.visible = true;

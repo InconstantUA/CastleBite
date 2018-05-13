@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DropHandler : MonoBehaviour, IDropHandler {
+public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     public GameObject item
     {
         get
@@ -20,12 +20,12 @@ public class DropHandler : MonoBehaviour, IDropHandler {
     {
         if (!item)
         {
-            DragHandler.itemBeingDragged.transform.SetParent(transform);
+            InventoryItemDragHandler.itemBeingDragged.transform.SetParent(transform);
             // reset position to 0/0/0/0
             // [ left - bottom ]
-            DragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
+            InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
             // [ right - top ]
-            DragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
+            InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
             // trigger event
             ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
         }
