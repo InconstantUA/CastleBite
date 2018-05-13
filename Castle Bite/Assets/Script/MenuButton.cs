@@ -207,7 +207,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // Disable old menu and activate new menu
         btn.transform.parent.gameObject.SetActive(false);
-        GameObject newMenu = btn.transform.root.Find(mName).gameObject;
+        GameObject newMenu = btn.transform.root.Find("MainMenu").Find(mName).gameObject;
         newMenu.SetActive(true);
         // Update list of all buttons in the menu - required for keyboard control script
         // This is also required here because of the active menu change
@@ -220,7 +220,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         switch (selectedMBtnName)
         {
             case "Start":
-                SceneManager.LoadScene(1);
+                StartGame();
                 break;
             case "Options":
                 SetActiveMenuTo("OptionsSubmenuL2Panel", 1);
@@ -235,6 +235,13 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
+    void StartGame()
+    {
+        // Activate Game canvas and deactivate menu canvas
+        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        transform.root.Find("Game").gameObject.SetActive(true);
+    }
+
     void OnOptionsSubmenuL2Click()
     {
         string selectedMBtnName = btn.name;
@@ -242,9 +249,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             case "ReturnToTheMainMenu":
                 SetActiveMenuTo("MainMenuPanel");
-                //// disable Options sub-menu and activate Main menu
-                //transform.parent.gameObject.SetActive(false);
-                //transform.root.Find("MainMenuPanel").gameObject.SetActive(true);
                 break;
             case "Game":
                 SetActiveMenuTo("OptionsGameSubmenuL3Panel", 1);

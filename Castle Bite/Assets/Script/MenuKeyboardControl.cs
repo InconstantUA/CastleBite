@@ -13,7 +13,7 @@ public class MenuKeyboardControl : MonoBehaviour {
     // Use this for initialization
     void Start() {
         // Init list of all buttons in the menu
-        GameObject mainMenu = transform.root.Find("MainMenuPanel").gameObject;
+        GameObject mainMenu = transform.root.Find("MainMenu").Find("MainMenuPanel").gameObject;
         menuBtnsList = mainMenu.GetComponentsInChildren<Button>();
         // pre-select first element in the menu
         currSelctdBtnID = 0;
@@ -26,7 +26,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.DownArrow) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
-            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             // switch to the other menu
             // Disable cursor, to not conflict with keyboard input
             // If cursor was enabled, then we should verify if highlighted menu has not changed
@@ -49,7 +49,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.UpArrow) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
-            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             Cursor.visible = false;
             currSelctdBtnID = GetCurrentlySelectedBtnID();
             previouslySelectedMenuID = currSelctdBtnID;
@@ -67,7 +67,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Return) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
-            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             Cursor.visible = false;
             currSelctdBtnID = GetCurrentlySelectedBtnID();
             btn = menuBtnsList[currSelctdBtnID];
@@ -76,7 +76,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.Return) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
-            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             Cursor.visible = false;
             // update btn object, which later will be used in act on click
             currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
@@ -88,7 +88,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.LeftArrow) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
-            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             Cursor.visible = false;
             // if selected menu control is one of the below then act on this
             currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
@@ -108,7 +108,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         if (Input.GetKeyUp(KeyCode.RightArrow) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
-            menuBtnsList = transform.root.Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
+            menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
             Cursor.visible = false;
             // if selected menu control is one of the below then act on this
             currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
@@ -138,7 +138,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         string activeMenuName = "unknown";
         foreach (string menuName in allMenuNames)
         {
-            if (transform.root.Find(menuName).gameObject.activeSelf)
+            if (transform.root.Find("MainMenu").Find(menuName).gameObject.activeSelf)
             {
                 activeMenuName = menuName;
             }
@@ -183,12 +183,6 @@ public class MenuKeyboardControl : MonoBehaviour {
 
     }
 
-    //void ChangeFontSize()
-    //{
-    //    Slider fontSizeSlider = transform.root.Find("OptionsVideoSubmenuL3Panel").Find("FontSize").gameObject.GetComponentInChildren<Slider>();
-    //    Text txt = fontSizeSlider.transform.parent.gameObject.GetComponentInChildren<Text>();
-    //    txt.fontSize = (int)fontSizeSlider.value;
-    //}
     #endregion
 
     #region OnClick
@@ -248,7 +242,7 @@ public class MenuKeyboardControl : MonoBehaviour {
     {
         // Disable old menu and activate new menu
         btn.transform.parent.gameObject.SetActive(false);
-        GameObject newMenu = btn.transform.root.Find(mName).gameObject;
+        GameObject newMenu = btn.transform.root.Find("MainMenu").Find(mName).gameObject;
         newMenu.SetActive(true);
         // Update list of all buttons in the menu - required for keyboard control script
         // This is also required here because of the active menu change
@@ -277,7 +271,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         switch (selectedMBtnName)
         {
             case "Start":
-                SceneManager.LoadScene(1);
+                StartGame();
                 break;
             case "Options":
                 SetActiveMenuTo("OptionsSubmenuL2Panel", 1);
@@ -292,6 +286,13 @@ public class MenuKeyboardControl : MonoBehaviour {
         Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
+    void StartGame()
+    {
+        // Activate Game canvas and deactivate menu canvas
+        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        transform.root.Find("Game").gameObject.SetActive(true);
+    }
+
     void OnOptionsSubmenuL2Click()
     {
         string selectedMBtnName = btn.name;
@@ -299,9 +300,6 @@ public class MenuKeyboardControl : MonoBehaviour {
         {
             case "ReturnToTheMainMenu":
                 SetActiveMenuTo("MainMenuPanel");
-                //// disable Options sub-menu and activate Main menu
-                //transform.parent.gameObject.SetActive(false);
-                //transform.root.Find("MainMenuPanel").gameObject.SetActive(true);
                 break;
             case "Game":
                 SetActiveMenuTo("OptionsGameSubmenuL3Panel", 1);

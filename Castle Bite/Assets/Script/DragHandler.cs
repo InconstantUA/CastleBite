@@ -6,11 +6,14 @@ using UnityEngine.EventSystems;
 public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
     public static GameObject itemBeingDragged;
     Vector3 startPosition;
+    Transform startParent;
     #region IBeginDragHandler implementation
     public void OnBeginDrag(PointerEventData eventData)
     {
         itemBeingDragged = gameObject;
         startPosition = transform.position;
+        startParent = transform.parent;
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
     #endregion
     #region IDragHandler implementation
@@ -23,7 +26,11 @@ public class DragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
     public void OnEndDrag(PointerEventData eventData)
     {
         itemBeingDragged = null;
-        transform.position = startPosition;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        if (transform.parent == startParent)
+        {
+            transform.position = startPosition;
+        }
     }
     #endregion
 }
