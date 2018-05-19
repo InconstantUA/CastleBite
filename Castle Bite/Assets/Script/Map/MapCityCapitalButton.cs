@@ -10,16 +10,16 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    Text txt;
+    Text tip;
     Button btn;
     Color tmpColor;
 
     void Start()
     {
         // init text object
-        txt = GetComponentInChildren<Text>();
+        tip = GetComponentInChildren<Text>();
         // hide it
-        txt.color = new Color(0, 0, 0, 0);
+        tip.color = new Color(0, 0, 0, 0);
         // baseColor = txt.color;
         btn = gameObject.GetComponent<Button>();
     }
@@ -82,7 +82,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
     void SetHighlightedStatus()
     {
         // avoid double job
-        if (!CompareColors(btn.colors.highlightedColor, txt.color))
+        if (!CompareColors(btn.colors.highlightedColor, tip.color))
         {
             // change to highlighted color
             if (btn.interactable)
@@ -94,7 +94,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
                 tmpColor = btn.colors.disabledColor;
             }
             tmpColor.a = 1;
-            txt.color = tmpColor;
+            tip.color = tmpColor;
             Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
     }
@@ -110,7 +110,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
             tmpColor = btn.colors.disabledColor;
         }
         tmpColor.a = 1;
-        txt.color = tmpColor;
+        tip.color = tmpColor;
         Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
@@ -125,7 +125,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
             tmpColor = btn.colors.disabledColor;
         }
         tmpColor.a = 0;
-        txt.color = tmpColor;
+        tip.color = tmpColor;
         Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
