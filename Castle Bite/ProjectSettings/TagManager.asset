@@ -6,6 +6,7 @@ TagManager:
   tags:
   - OptionsVideoFontSize
   - HighlightableCityView
+  - HighlightableMapView
   layers:
   - Default
   - TransparentFX

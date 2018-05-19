@@ -158,7 +158,9 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
         GameObject[] highlightableText = GameObject.FindGameObjectsWithTag("HighlightableCityView");
         foreach (GameObject text in highlightableText)
         {
-            text.GetComponentInChildren<Text>().color = btn.colors.normalColor;
+            Text tmpTxt = text.GetComponentInChildren<Text>();
+            // Button tmpBtn = text.GetComponentInChildren<Button>();
+            tmpTxt.color = btn.colors.normalColor;
             // Debug.Log("dimm " + otherButton.name + " button");
         }
         Debug.Log("DimmAllOtherMenus");

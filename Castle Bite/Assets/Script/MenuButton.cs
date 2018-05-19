@@ -223,7 +223,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // Activate Game canvas and deactivate menu canvas
         transform.root.Find("MainMenu").gameObject.SetActive(false);
-        transform.root.Find("Game").gameObject.SetActive(true);
+        transform.root.Find("MapScreen").gameObject.SetActive(true);
     }
 
     void OnOptionsSubmenuL2Click()

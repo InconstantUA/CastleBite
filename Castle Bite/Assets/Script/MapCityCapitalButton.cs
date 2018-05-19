@@ -8,7 +8,7 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     Text txt;
     Button btn;
@@ -18,6 +18,8 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // init text object
         txt = GetComponentInChildren<Text>();
+        // hide it
+        txt.color = new Color(0, 0, 0, 0);
         // baseColor = txt.color;
         btn = gameObject.GetComponent<Button>();
     }
@@ -122,7 +124,7 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             tmpColor = btn.colors.disabledColor;
         }
-        tmpColor.a = 1;
+        tmpColor.a = 0;
         txt.color = tmpColor;
         Debug.Log("SetNormalStatus " + btn.name + " button");
     }
@@ -130,12 +132,12 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     void DimmAllOtherMenus()
     {
         // to make it easier dimm just all menus
-        GameObject[] highlightableText = GameObject.FindGameObjectsWithTag("HighlightableCityView");
+        GameObject[] highlightableText = GameObject.FindGameObjectsWithTag("HighlightableMapView");
         foreach (GameObject text in highlightableText)
         {
             Text tmpTxt = text.GetComponentInChildren<Text>();
-            // Button tmpBtn = text.GetComponentInChildren<Button>();
-            tmpTxt.color = btn.colors.normalColor;
+            Button tmpBtn = text.GetComponentInChildren<Button>();
+            tmpTxt.color = tmpBtn.colors.normalColor;
             // Debug.Log("dimm " + otherButton.name + " button");
         }
         Debug.Log("DimmAllOtherMenus");
@@ -147,10 +149,10 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // go back to main menu
         // change this to map in future
-        GameObject MainMenu = btn.transform.root.Find("MapScreen").gameObject;
-        GameObject game = btn.transform.root.Find("Game").gameObject;
-        game.SetActive(false);
-        MainMenu.SetActive(true);
+        GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
+        GameObject cityMenu = btn.transform.root.Find("Game").gameObject;
+        mapScreen.SetActive(false);
+        cityMenu.SetActive(true);
     }
 
     #endregion OnClick
