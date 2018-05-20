@@ -10,12 +10,11 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Toggle))]
 public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public enum HeroType { Knight, Ranger, Archmage, Archangel, Thief };
-    public HeroType heroType;
+    public PartyLeader.HeroType heroType;
+    public bool isPLeaderSelected = false;
     Text heroTypeTxt;
     Toggle tgl;
     Color tmpColor;
-    public bool isPLeaderSelected = false;
 
     void Start()
     {
@@ -24,7 +23,7 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
         // baseColor = txt.color;
         tgl = gameObject.GetComponent<Toggle>();
         // pre-select knight leader
-        if (heroType == HeroType.Knight)
+        if (heroType == PartyLeader.HeroType.Knight)
         {
             isPLeaderSelected = true;
             SetOnStatus();
