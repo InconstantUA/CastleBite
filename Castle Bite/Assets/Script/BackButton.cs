@@ -147,10 +147,10 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // go back to main menu
         // change this to map in future
-        GameObject MainMenu = btn.transform.root.Find("MapScreen").gameObject;
+        GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
         GameObject game = btn.transform.root.Find("Game").gameObject;
         game.SetActive(false);
-        MainMenu.SetActive(true);
+        mapScreen.SetActive(true);
     }
 
     #endregion OnClick

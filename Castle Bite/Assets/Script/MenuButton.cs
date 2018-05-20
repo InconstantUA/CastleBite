@@ -198,6 +198,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         menuBtnsList = newMenu.GetComponentsInChildren<Button>();
     }
 
+
     void OnMainMenuClick()
     {
         string selectedMBtnName = btn.name;
@@ -205,6 +206,15 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             case "Start":
                 StartGame();
+                break;
+            case "Continue":
+                ContinueGame();
+                break;
+            case "Save":
+                SaveGame();
+                break;
+            case "Load":
+                LoadGame();
                 break;
             case "Options":
                 SetActiveMenuTo("OptionsSubmenuL2Panel", 1);
@@ -222,8 +232,37 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     void StartGame()
     {
         // Activate Game canvas and deactivate menu canvas
-        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
+        mainMenu.SetActive(false);
+        transform.root.Find("Game").gameObject.SetActive(true);
+        // As long as we are in game mode now, then Start button is not needed any more
+        // instead activate Continue button
+        GameObject mainMenuPanel = mainMenu.transform.Find("MainMenuPanel").gameObject;
+        GameObject startButton = mainMenuPanel.transform.Find("Start").gameObject;
+        GameObject continueButton = mainMenuPanel.transform.Find("Continue").gameObject;
+        startButton.SetActive(false);
+        continueButton.SetActive(true);
+        // Also activate Save and Load buttons for future use
+        GameObject saveButton = mainMenuPanel.transform.Find("Save").gameObject;
+        GameObject loadButton = mainMenuPanel.transform.Find("Load").gameObject;
+        saveButton.SetActive(true);
+        loadButton.SetActive(true);
+    }
+
+    void ContinueGame()
+    {
+        // Activate map screen and deactivate menu
+        GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
+        mainMenu.SetActive(false);
         transform.root.Find("MapScreen").gameObject.SetActive(true);
+    }
+
+    void SaveGame()
+    {
+    }
+
+    void LoadGame()
+    {
     }
 
     void OnOptionsSubmenuL2Click()
