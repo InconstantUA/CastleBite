@@ -146,7 +146,7 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
     {
         // Act based on the leader type
         //  Get selected leader type
-        PartyLeader.HeroType selectedHeroType = PartyLeader.HeroType.Unknown;
+        PartyUnit.HeroType selectedHeroType = PartyUnit.HeroType.Unknown;
         GameObject[] partyLeaders = GameObject.FindGameObjectsWithTag("HirePartyLeader");
         foreach (GameObject leader in partyLeaders)
         {
@@ -159,29 +159,30 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
         }
         //  Get conditions based on the hero type
         int requiredGold = 0;
-        //  I instantiate hero types in Game->PartyLeaderTmplts
-        Transform partyLeaderTmplts = transform.root.Find("PartyLeaderTmplts");
+        //  I instantiate hero types templates in Game->Templates->PartyLeaderTmplts
+        Transform partyLeaderTmplts = transform.root.Find("Templates").Find("PartyLeaders");
+        PartyUnit unit = null;
         switch (selectedHeroType)
         {
-            case PartyLeader.HeroType.Knight:
-                PartyLeader knight = partyLeaderTmplts.Find("Knight").gameObject.GetComponent<PartyLeader>();
-                requiredGold = knight.GetCost();
+            case PartyUnit.HeroType.Knight:
+                unit = partyLeaderTmplts.Find("Knight").gameObject.GetComponent<PartyUnit>();
+                requiredGold = unit.GetCost();
                 break;
-            case PartyLeader.HeroType.Ranger:
-                PartyLeader ranger = partyLeaderTmplts.Find("Ranger").gameObject.GetComponent<PartyLeader>();
-                requiredGold = ranger.GetCost();
+            case PartyUnit.HeroType.Ranger:
+                unit = partyLeaderTmplts.Find("Ranger").gameObject.GetComponent<PartyUnit>();
+                requiredGold = unit.GetCost();
                 break;
-            case PartyLeader.HeroType.Archmage:
-                PartyLeader archmage = partyLeaderTmplts.Find("Archmage").gameObject.GetComponent<PartyLeader>();
-                requiredGold = archmage.GetCost();
+            case PartyUnit.HeroType.Archmage:
+                unit = partyLeaderTmplts.Find("Archmage").gameObject.GetComponent<PartyUnit>();
+                requiredGold = unit.GetCost();
                 break;
-            case PartyLeader.HeroType.Archangel:
-                PartyLeader archangel = partyLeaderTmplts.Find("Archangel").gameObject.GetComponent<PartyLeader>();
-                requiredGold = archangel.GetCost();
+            case PartyUnit.HeroType.Archangel:
+                unit = partyLeaderTmplts.Find("Archangel").gameObject.GetComponent<PartyUnit>();
+                requiredGold = unit.GetCost();
                 break;
-            case PartyLeader.HeroType.Thief:
-                PartyLeader thief = partyLeaderTmplts.Find("Thief").gameObject.GetComponent<PartyLeader>();
-                requiredGold = thief.GetCost();
+            case PartyUnit.HeroType.Thief:
+                unit = partyLeaderTmplts.Find("Thief").gameObject.GetComponent<PartyUnit>();
+                requiredGold = unit.GetCost();
                 break;
             default:
                 Debug.LogError("Error: unknown hero type.");
@@ -194,9 +195,31 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
         {
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - requiredGold);
-            // deactivate HireHero menu
+            // create instance of the party leader and place it in to the party object
+            Party partyTemplate = transform.root.Find("Templates").Find("Party").GetComponent<Party>();
+            Transform playerParties = transform.root.Find("PlayerParties");
+            Party newParty = Instantiate(partyTemplate, playerParties);
+            PartyUnit newPartyUnit = Instantiate(unit, newParty.transform);
+            newParty.party[0] = newPartyUnit;
+            // create and update Hero Party panel in UI, parent it to Game UI
+            Transform gameTr = transform.root.Find("Game");
+            GameObject heroPartyPanelTemplate = transform.root.Find("Game").Find("HeroParty").gameObject;
+            GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, gameTr);
+            // disable hire hero button as it is not needed
+            newPartyUIPanel.transform.Find("HireHeroBtn").gameObject.SetActive(false);
+            // activate units panels
+            newPartyUIPanel.transform.Find("Top").gameObject.SetActive(true);
+            newPartyUIPanel.transform.Find("Middle").gameObject.SetActive(true);
+            newPartyUIPanel.transform.Find("Bottom").gameObject.SetActive(true);
+            // populate middle right panel with information from the highered leader
+            newPartyUIPanel.transform.Find("Middle").Find("Right").Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
+            newPartyUIPanel.transform.Find("Middle").Find("Right").Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
+            newPartyUIPanel.transform.Find("Middle").Find("Right").Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetName().ToString();
+            // deactivate HireHero menu and default HeroParty UI Panel
             btn.transform.root.Find("Game").Find("HirePartyLeader").gameObject.SetActive(false);
-        } else
+            btn.transform.root.Find("Game").Find("HeroParty").gameObject.SetActive(false);
+        }
+        else
         {
             // display message that is not enough gold
             Debug.Log("need more gold");
