@@ -8,6 +8,8 @@ TagManager:
   - HighlightableCityView
   - HighlightableMapView
   - MapCity
+  - HirePartyLeader
+  - HighlightableControlsHirePartyLeader
   layers:
   - Default
   - TransparentFX

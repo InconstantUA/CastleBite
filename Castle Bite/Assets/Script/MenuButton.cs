@@ -234,7 +234,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Activate Game canvas and deactivate menu canvas
         GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
         mainMenu.SetActive(false);
-        transform.root.Find("Game").gameObject.SetActive(true);
+        GameObject game = transform.root.Find("Game").gameObject;
+        game.SetActive(true);
         // As long as we are in game mode now, then Start button is not needed any more
         // instead activate Continue button
         GameObject mainMenuPanel = mainMenu.transform.Find("MainMenuPanel").gameObject;
@@ -247,6 +248,9 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         GameObject loadButton = mainMenuPanel.transform.Find("Load").gameObject;
         saveButton.SetActive(true);
         loadButton.SetActive(true);
+        // Activate prolog
+        GameObject prolog = game.transform.Find("Prolog").gameObject;
+        prolog.SetActive(true);
     }
 
     void ContinueGame()
