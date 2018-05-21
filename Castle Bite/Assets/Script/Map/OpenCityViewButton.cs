@@ -8,19 +8,21 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class OpenCityViewButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    Text tip;
+    public string cityName;
+    public string cityDescription;
+    Text cityDescrTxt;
     Button btn;
     Color tmpColor;
 
     void Start()
     {
         // init text object
-        tip = GetComponentInChildren<Text>();
+        cityDescrTxt = GetComponentInChildren<Text>();
+        cityDescrTxt.text = "[" + cityName + "]\n\r <size=12>" + cityDescription + "</size>";
         // hide it
-        tip.color = new Color(0, 0, 0, 0);
-        // baseColor = txt.color;
+        cityDescrTxt.color = new Color(0, 0, 0, 0);
         btn = gameObject.GetComponent<Button>();
     }
 
@@ -30,12 +32,6 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
         if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
         {
             Cursor.visible = true;
-            // highlight button if it was highlighted before
-            //if (CompareColors(btn.colors.highlightedColor, txt.color))
-            //{
-            //    DimmAllOtherMenus();
-            //    SetHighlightedStatus();
-            //}
             // Highlight button, if needed by triggering on point enter
             OnPointerEnter(null);
         }
@@ -82,7 +78,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
     void SetHighlightedStatus()
     {
         // avoid double job
-        if (!CompareColors(btn.colors.highlightedColor, tip.color))
+        if (!CompareColors(btn.colors.highlightedColor, cityDescrTxt.color))
         {
             // change to highlighted color
             if (btn.interactable)
@@ -94,7 +90,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
                 tmpColor = btn.colors.disabledColor;
             }
             tmpColor.a = 1;
-            tip.color = tmpColor;
+            cityDescrTxt.color = tmpColor;
             Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
     }
@@ -110,7 +106,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
             tmpColor = btn.colors.disabledColor;
         }
         tmpColor.a = 1;
-        tip.color = tmpColor;
+        cityDescrTxt.color = tmpColor;
         Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
@@ -125,7 +121,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
             tmpColor = btn.colors.disabledColor;
         }
         tmpColor.a = 0;
-        tip.color = tmpColor;
+        cityDescrTxt.color = tmpColor;
         Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
@@ -150,7 +146,7 @@ public class MapCityCapitalButton : MonoBehaviour, IPointerEnterHandler, IPointe
         // go back to main menu
         // change this to map in future
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
-        GameObject cityMenu = btn.transform.root.Find("Game").gameObject;
+        GameObject cityMenu = btn.transform.root.Find("Cities").Find(cityName).gameObject;
         mapScreen.SetActive(false);
         cityMenu.SetActive(true);
     }

@@ -131,7 +131,6 @@ public class NotificationPopUpOkButton : MonoBehaviour, IPointerEnterHandler, IP
     {
         // deactivate Notification pop up
         btn.transform.parent.parent.gameObject.SetActive(false);
-        // btn.transform.root.Find("Game").Find("HirePartyLeader").gameObject.SetActive(false);
     }
 
     #endregion OnClick

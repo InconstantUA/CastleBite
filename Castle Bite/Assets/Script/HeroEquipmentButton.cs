@@ -172,9 +172,9 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
     {
         // Disable Hero equipment menu if it was enabled and enable it otherwise
         // Also disable / enable hero party and city garnizon
-        GameObject heroEquipmentMenu = btn.transform.root.Find("Game").Find("Inventory").Find("HeroEquipment").gameObject;
-        GameObject heroParty = btn.transform.root.Find("Game").Find("HeroParty").gameObject;
-        GameObject cityGarnizon = btn.transform.root.Find("Game").Find("CityGarnizon").gameObject;
+        GameObject heroEquipmentMenu = btn.transform.root.Find("Cities").Find("Inventory").Find("HeroEquipment").gameObject;
+        GameObject heroParty = btn.transform.root.Find("Cities").Find("HeroParty").gameObject;
+        GameObject cityGarnizon = btn.transform.root.Find("Cities").Find("CityGarnizon").gameObject;
         if (heroEquipmentMenu.activeSelf)
         {
             heroEquipmentMenu.SetActive(false);

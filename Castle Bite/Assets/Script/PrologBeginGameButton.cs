@@ -146,11 +146,9 @@ public class PrologBeginGameButton : MonoBehaviour, IPointerEnterHandler, IPoint
     void ActOnClick()
     {
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
-        GameObject game = btn.transform.root.Find("Game").gameObject;
-        GameObject prolog = game.transform.Find("Prolog").gameObject;
+        GameObject prolog = btn.transform.parent.gameObject;
         // deactivate prolog and game screen
         prolog.SetActive(false);
-        game.SetActive(false);
         // activate map
         mapScreen.SetActive(true);
     }

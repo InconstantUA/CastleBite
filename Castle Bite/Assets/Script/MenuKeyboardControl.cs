@@ -299,7 +299,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         // Activate Game canvas and deactivate menu canvas
         GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
         mainMenu.SetActive(false);
-        transform.root.Find("Game").gameObject.SetActive(true);
+        transform.root.Find("Cities").gameObject.SetActive(true);
         // As long as we are in game mode now, then Start button is not needed any more
         // instead activate Continue button
         GameObject mainMenuPanel = mainMenu.transform.Find("MainMenuPanel").gameObject;

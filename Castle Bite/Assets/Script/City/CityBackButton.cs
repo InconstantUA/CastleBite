@@ -8,7 +8,7 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class CityBackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     Text txt;
     Button btn;
@@ -28,12 +28,6 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
         {
             Cursor.visible = true;
-            // highlight button if it was highlighted before
-            //if (CompareColors(btn.colors.highlightedColor, txt.color))
-            //{
-            //    DimmAllOtherMenus();
-            //    SetHighlightedStatus();
-            //}
             // Highlight button, if needed by triggering on point enter
             OnPointerEnter(null);
         }
@@ -148,8 +142,8 @@ public class BackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // go back to main menu
         // change this to map in future
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
-        GameObject game = btn.transform.root.Find("Game").gameObject;
-        game.SetActive(false);
+        GameObject city = transform.parent.gameObject;
+        city.SetActive(false);
         mapScreen.SetActive(true);
     }
 

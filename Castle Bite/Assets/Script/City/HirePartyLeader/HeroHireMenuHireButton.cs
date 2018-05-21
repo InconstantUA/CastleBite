@@ -160,7 +160,7 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
         //  Get conditions based on the hero type
         int requiredGold = 0;
         //  I instantiate hero types templates in Game->Templates->PartyLeaderTmplts
-        Transform partyLeaderTmplts = transform.root.Find("Templates").Find("PartyLeaders");
+        Transform partyLeaderTmplts = transform.root.Find("Templates").Find("Obj").Find("PartyLeaders");
         PartyUnit unit = null;
         switch (selectedHeroType)
         {
@@ -196,34 +196,33 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - requiredGold);
             // create instance of the party leader and place it in to the party object
-            Party partyTemplate = transform.root.Find("Templates").Find("Party").GetComponent<Party>();
+            Party partyTemplate = transform.root.Find("Templates").Find("Obj").Find("Party").GetComponent<Party>();
             Transform playerParties = transform.root.Find("PlayerParties");
             Party newParty = Instantiate(partyTemplate, playerParties);
             PartyUnit newPartyUnit = Instantiate(unit, newParty.transform);
             newParty.party[0] = newPartyUnit;
             // create and update Hero Party panel in UI, parent it to Game UI
-            Transform gameTr = transform.root.Find("Game");
-            GameObject heroPartyPanelTemplate = transform.root.Find("Game").Find("HeroParty").gameObject;
-            GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, gameTr);
-            // disable hire hero button as it is not needed
-            newPartyUIPanel.transform.Find("HireHeroBtn").gameObject.SetActive(false);
-            // activate units panels
-            newPartyUIPanel.transform.Find("Top").gameObject.SetActive(true);
-            newPartyUIPanel.transform.Find("Middle").gameObject.SetActive(true);
-            newPartyUIPanel.transform.Find("Bottom").gameObject.SetActive(true);
-            // populate middle right panel with information from the highered leader
-            newPartyUIPanel.transform.Find("Middle").Find("Right").Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
-            newPartyUIPanel.transform.Find("Middle").Find("Right").Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
-            newPartyUIPanel.transform.Find("Middle").Find("Right").Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetName().ToString();
-            // deactivate HireHero menu and default HeroParty UI Panel
-            btn.transform.root.Find("Game").Find("HirePartyLeader").gameObject.SetActive(false);
-            btn.transform.root.Find("Game").Find("HeroParty").gameObject.SetActive(false);
+            Transform cityTr = transform.parent.parent.parent.parent;
+            GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
+            GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
+            //  activate new party UI panel
+            newPartyUIPanel.SetActive(true);
+            //  populate middle right panel with information from the highered leader
+            Transform middeRightUnitPanel = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right");
+            middeRightUnitPanel.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
+            middeRightUnitPanel.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
+            middeRightUnitPanel.Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetName().ToString();
+            // deactivate HireHero menu 
+            // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
+            btn.transform.parent.parent.parent.gameObject.SetActive(false);
+            // deactivate Hire Hero pannel-button
+            cityTr.Find("HireHeroPanelBtn").gameObject.SetActive(false);
         }
         else
         {
             // display message that is not enough gold
             Debug.Log("need more gold");
-            GameObject notificationPopup = btn.transform.root.Find("Game").Find("NotificationPopUp").gameObject;
+            GameObject notificationPopup = btn.transform.root.Find("MiscUI").Find("NotificationPopUp").gameObject;
             notificationPopup.SetActive(true);
             notificationPopup.GetComponentInChildren<Transform>().GetComponentInChildren<Text>().text = "More gold is needed to hire this party leader.";
         }

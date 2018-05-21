@@ -146,7 +146,8 @@ public class CityHirePartyLeaderButton : MonoBehaviour, IPointerEnterHandler, IP
     void ActOnClick()
     {
         // activate HireHero menu
-        btn.transform.root.Find("Game").Find("HirePartyLeader").gameObject.SetActive(true);
+        // GameRoot-Cities-[City]-(this)HireHeroPanelBtn
+        btn.transform.parent.Find("HirePartyLeader").gameObject.SetActive(true);
     }
 
     #endregion OnClick

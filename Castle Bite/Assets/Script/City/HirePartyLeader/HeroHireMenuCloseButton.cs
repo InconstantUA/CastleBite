@@ -145,7 +145,8 @@ public class HeroHireMenuCloseButton : MonoBehaviour, IPointerEnterHandler, IPoi
     void ActOnClick()
     {
         // deactivate HireHero menu
-        btn.transform.root.Find("Game").Find("HirePartyLeader").gameObject.SetActive(false);
+        // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
+        btn.transform.parent.parent.parent.gameObject.SetActive(false);
     }
 
     #endregion OnClick
