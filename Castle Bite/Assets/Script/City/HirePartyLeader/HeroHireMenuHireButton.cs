@@ -212,6 +212,8 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
             middeRightUnitPanel.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
             middeRightUnitPanel.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
             middeRightUnitPanel.Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetName().ToString();
+            //  activate hero HeroEquipmentBtn
+            cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
             // deactivate HireHero menu 
             // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
             btn.transform.parent.parent.parent.gameObject.SetActive(false);

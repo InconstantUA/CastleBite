@@ -10,6 +10,7 @@ TagManager:
   - MapCity
   - HirePartyLeader
   - HighlightableControlsHirePartyLeader
+  - HeroParty
   layers:
   - Default
   - TransparentFX

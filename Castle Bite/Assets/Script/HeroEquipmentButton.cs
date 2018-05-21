@@ -166,25 +166,40 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
         Debug.Log("DimmAllOtherMenus");
     }
 
+    GameObject GetChildGameObjByTag(string tag)
+    {
+        GameObject result = null;
+        foreach (Transform child in transform.parent)
+        {
+            if (child.gameObject.tag == tag)
+            {
+                result = child.gameObject;
+            }
+        }
+        return result;
+    }
+
     #region OnClick
 
     void ActOnClick()
     {
         // Disable Hero equipment menu if it was enabled and enable it otherwise
         // Also disable / enable hero party and city garnizon
-        GameObject heroEquipmentMenu = btn.transform.root.Find("Cities").Find("Inventory").Find("HeroEquipment").gameObject;
-        GameObject heroParty = btn.transform.root.Find("Cities").Find("HeroParty").gameObject;
-        GameObject cityGarnizon = btn.transform.root.Find("Cities").Find("CityGarnizon").gameObject;
+        // Structure:   [city]->(this)Button
+        GameObject heroParty = GetChildGameObjByTag("HeroParty");
+        GameObject heroEquipmentMenu = heroParty.transform.Find("HeroEquipment").gameObject;
+        GameObject heroUnitsPanel = heroParty.transform.Find("PartyPanel").gameObject;
+        GameObject cityGarnizon = transform.parent.Find("CityGarnizon").gameObject;
         if (heroEquipmentMenu.activeSelf)
         {
             heroEquipmentMenu.SetActive(false);
-            heroParty.SetActive(true);
+            heroUnitsPanel.SetActive(true);
             cityGarnizon.SetActive(true);
         }
         else
         {
             heroEquipmentMenu.SetActive(true);
-            heroParty.SetActive(false);
+            heroUnitsPanel.SetActive(false);
             cityGarnizon.SetActive(false);
         }
     }
