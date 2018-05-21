@@ -11,9 +11,10 @@ public class PartyUnit : MonoBehaviour {
     public string givenName;
     public int unitLevel;
     public int unitLeadership;
+    public string unitRole;
 
-    public enum HeroType { Knight, Ranger, Archmage, Archangel, Thief, Unknown};
-    public HeroType heroType;
+    public enum UnitType { Knight, Ranger, Archmage, Archangel, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
+    public UnitType unitType;
 
     public void SetCost(int requiredCost)
     {
@@ -45,12 +46,12 @@ public class PartyUnit : MonoBehaviour {
         return healthMax;
     }
 
-    public void SetName(string requiredName)
+    public void SetUnitName(string requiredName)
     {
         unitName = requiredName;
     }
 
-    public string GetName()
+    public string GetUnitName()
     {
         return unitName;
     }
@@ -85,6 +86,25 @@ public class PartyUnit : MonoBehaviour {
         return unitLeadership;
     }
 
+    public void SetRole(string requiredRole)
+    {
+        unitRole = requiredRole;
+    }
+
+    public string GetRole()
+    {
+        return unitRole;
+    }
+
+    public void SetUnitType(UnitType requiredUnitType)
+    {
+        unitType = requiredUnitType;
+    }
+
+    public UnitType GetUnitType()
+    {
+        return unitType;
+    }
 
     //// Use this for initialization
     //void Start () {

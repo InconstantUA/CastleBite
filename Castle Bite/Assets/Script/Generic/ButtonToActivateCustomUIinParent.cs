@@ -8,8 +8,9 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class CityHirePartyLeaderButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class ButtonToActivateCustomUIinParent : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
+    public GameObject gameObjectToBeActivated;
     Text txt;
     Button btn;
     Color tmpColor;
@@ -147,7 +148,7 @@ public class CityHirePartyLeaderButton : MonoBehaviour, IPointerEnterHandler, IP
     {
         // activate HireHero menu
         // GameRoot-Cities-[City]-(this)HireHeroPanelBtn
-        btn.transform.parent.Find("HirePartyLeader").gameObject.SetActive(true);
+        gameObjectToBeActivated.SetActive(true);
     }
 
     #endregion OnClick

@@ -3,31 +3,29 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Use the same colors as defined for the button but for the text
-// Toggle in our case is not visible, only text is visible
-// We set alpha in button properties to 0
-// Later, before assigning toggle colors to the text we reset transprancy to 1(255)
+// Toggles should be organized under same toggle group as parent object
+// Toggles should have child Name Text UI object
 [RequireComponent(typeof(Toggle))]
-public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public PartyUnit.HeroType heroType;
-    public bool isPLeaderSelected = false;
-    Text heroTypeTxt;
+    Text unitName;
     Toggle tgl;
+    Toggle[] allTogglesInGroup;
     Color tmpColor;
-
+    
     void Start()
     {
         // init lable object
-        heroTypeTxt = GetComponentsInChildren<Text>()[0];
+        unitName = GetComponentInChildren<Text>();
         // baseColor = txt.color;
         tgl = gameObject.GetComponent<Toggle>();
-        // pre-select knight leader
-        if (heroType == PartyUnit.HeroType.Knight)
+        // pre-select leader if it is selected in Unity UI
+        if (tgl.isOn)
         {
-            isPLeaderSelected = true;
             SetOnStatus();
         }
+        // get all toggles in Toggle group
+        allTogglesInGroup = transform.parent.GetComponentsInChildren<Toggle>();
     }
 
     void Update()
@@ -44,7 +42,7 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
     {
         Debug.Log("OnPointerEnter");
         // dimm all other menus
-        DimmAllOtherMenus();
+        DimmAllOtherMenusExceptToggled();
         // highlight this menu
         SetHighlightedStatus();
     }
@@ -55,14 +53,8 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
         // Simulate on/off togle
         // Do not off, if it was on, because it means that no object is selected
         // We should have at least one object selected
-        if (isPLeaderSelected)
+        if (!tgl.isOn)
         {
-            // was on -> transition to off
-            // SetOffStatus();
-        }
-        else
-        {
-            // was off -> transition to on
             SetOnStatus();
             DeselectAllOtherTogglesInGroup();
         }
@@ -71,8 +63,13 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
     public void OnPointerUp(PointerEventData eventData)
     {
         Debug.Log("OnPointerUp");
-        // keep state On
-        // ActOnClick();
+        // turn it on if it is not ON already
+        //if (!tgl.isOn)
+        //{
+        //    // was off -> transition to on
+        //    SetOnStatus();
+        //    DeselectAllOtherTogglesInGroup();
+        //}
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -94,7 +91,7 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
     void SetHighlightedStatus()
     {
         // avoid double job
-        if (!CompareColors(tgl.colors.highlightedColor, heroTypeTxt.color))
+        if (!CompareColors(tgl.colors.highlightedColor, unitName.color))
         {
             // change to highlighted color
             if (tgl.interactable)
@@ -107,7 +104,7 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
             }
             tmpColor.a = 1;
             // Highlight label ([N] button)
-            heroTypeTxt.color = tmpColor;
+            unitName.color = tmpColor;
             Debug.Log("SetHighlightedStatus " + tgl.name + " button");
         }
     }
@@ -123,8 +120,7 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
             tmpColor = tgl.colors.disabledColor;
         }
         tmpColor.a = 1;
-        heroTypeTxt.color = tmpColor;
-        isPLeaderSelected = true;
+        unitName.color = tmpColor;
         Debug.Log("SetOnStatus " + tgl.name + " button");
     }
 
@@ -139,15 +135,14 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
             tmpColor = tgl.colors.disabledColor;
         }
         tmpColor.a = 1;
-        heroTypeTxt.color = tmpColor;
-        isPLeaderSelected = false;
+        unitName.color = tmpColor;
         Debug.Log("SetOnStatus " + tgl.name + " button");
     }
 
     void SetPreHighlightStatus()
     {
         // return to previous color if was not On
-        if (isPLeaderSelected)
+        if (tgl.isOn)
         {
             tmpColor = tgl.colors.pressedColor;
         }
@@ -156,40 +151,37 @@ public class HeroHireMenuLeaderToggle : MonoBehaviour, IPointerEnterHandler, IPo
             tmpColor = tgl.colors.normalColor;
         }
         tmpColor.a = 1;
-        heroTypeTxt.color = tmpColor;
+        unitName.color = tmpColor;
         Debug.Log("SetPreHighlightStatus");
     }
 
-    void DimmAllOtherMenus()
+    void DimmAllOtherMenusExceptToggled()
     {
-        GameObject[] partyLeaders = GameObject.FindGameObjectsWithTag("HirePartyLeader");
-        foreach (GameObject leader in partyLeaders)
+        foreach (Toggle tmpTgl in allTogglesInGroup)
         {
             // do not dimm currently selected objects
-            Text tmpTxt = leader.GetComponentInChildren<Text>();
-            Toggle tmpTgl = leader.GetComponentInChildren<Toggle>();
-            HeroHireMenuLeaderToggle tmpHero = tmpTgl.GetComponent<HeroHireMenuLeaderToggle>();
-            if ( (!tmpTgl.isOn) && (tmpHero.heroType != heroType) )
+            // first child in toggle is Name Text UI obj
+            Text tmpUnitName = tmpTgl.GetComponentInChildren<Text>();
+            // make sure that we do not deem ourselves and toggled (selected) unit
+            if ( (!tmpTgl.isOn) && (unitName != tmpUnitName) )
             {
-                tmpTxt.color = tmpTgl.colors.normalColor;
+                tmpUnitName.color = tmpTgl.colors.normalColor;
             }
         }
-        Debug.Log("DimmAllOtherMenus");
+        Debug.Log("DimmAllOtherMenusExceptToggled");
     }
     
     void DeselectAllOtherTogglesInGroup()
     {
-        GameObject[] partyLeaders = GameObject.FindGameObjectsWithTag("HirePartyLeader");
-        foreach (GameObject leader in partyLeaders)
+        foreach (Toggle tmpTgl in allTogglesInGroup)
         {
             // do not dimm currently selected objects
-            Text tmpTxt = leader.GetComponentInChildren<Text>();
-            Toggle tmpTgl = leader.GetComponentInChildren<Toggle>();
-            HeroHireMenuLeaderToggle tmpHero = tmpTgl.GetComponent<HeroHireMenuLeaderToggle>();
-            if ((tmpTgl.isOn) && (tmpHero.heroType != heroType))
+            // first child in toggle is Name Text UI obj
+            Text tmpUnitName = tmpTgl.GetComponentInChildren<Text>();
+            // make sure that we do not deem ourselves
+            if ((tmpTgl.isOn) && (unitName != tmpUnitName))
             {
-                tmpTxt.color = tmpTgl.colors.normalColor;
-                tmpHero.isPLeaderSelected = false;
+                tmpUnitName.color = tmpTgl.colors.normalColor;
             }
         }
         Debug.Log("DeselectAllOtherTogglesInGroup");

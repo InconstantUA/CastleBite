@@ -8,7 +8,7 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class UnitHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     Text txt;
     Button btn;
@@ -196,7 +196,7 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
             cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
             cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
             cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
-            // deactivate HireHero menu 
+            // deactivate HirePartyLeader menu 
             // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
             btn.transform.parent.parent.parent.gameObject.SetActive(false);
             // deactivate Hire Hero pannel-button

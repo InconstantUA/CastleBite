@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HireHeroMenuCurrentGoldValue : MonoBehaviour {
+public class TextBoxDisplayCurrentGoldValue : MonoBehaviour {
     PlayerObj player;
     Text txt;
 

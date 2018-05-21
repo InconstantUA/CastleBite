@@ -8,8 +8,13 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class HeroHireMenuCloseButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class CityHireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
+    public GameObject gameObjectToBeActivated;
+    public bool isHigheredUnitPartyLeader;
+    public Transform newUnitParent;
+    public GameObject callerObjectToDisableOnHire;
+    public GameObject unitsGroupToHire;
     Text txt;
     Button btn;
     Color tmpColor;
@@ -130,12 +135,13 @@ public class HeroHireMenuCloseButton : MonoBehaviour, IPointerEnterHandler, IPoi
     void DimmAllOtherMenus()
     {
         // to make it easier dimm just all menus
-        GameObject[] allControls = GameObject.FindGameObjectsWithTag("HighlightableControlsHirePartyLeader");
-        foreach (GameObject control in allControls)
+        GameObject[] highlightableText = GameObject.FindGameObjectsWithTag("HighlightableCityView");
+        foreach (GameObject text in highlightableText)
         {
-            Text tmpTxt = control.GetComponentInChildren<Text>();
-            Button tmpBtn = control.GetComponentInChildren<Button>();
-            tmpTxt.color = tmpBtn.colors.normalColor;
+            Text tmpTxt = text.GetComponentInChildren<Text>();
+            // Button tmpBtn = text.GetComponentInChildren<Button>();
+            tmpTxt.color = btn.colors.normalColor;
+            // Debug.Log("dimm " + otherButton.name + " button");
         }
         Debug.Log("DimmAllOtherMenus");
     }
@@ -144,9 +150,7 @@ public class HeroHireMenuCloseButton : MonoBehaviour, IPointerEnterHandler, IPoi
 
     void ActOnClick()
     {
-        // deactivate HireHero menu
-        // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
-        btn.transform.parent.parent.parent.gameObject.SetActive(false);
+        gameObjectToBeActivated.GetComponent<HireUnitGeneric>().ActivateAdv(isHigheredUnitPartyLeader, newUnitParent, callerObjectToDisableOnHire, unitsGroupToHire);
     }
 
     #endregion OnClick
