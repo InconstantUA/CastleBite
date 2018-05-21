@@ -13,7 +13,7 @@ public class PartyUnit : MonoBehaviour {
     public int unitLeadership;
     public string unitRole;
 
-    public enum UnitType { Knight, Ranger, Archmage, Archangel, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
+    public enum UnitType { Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
     public UnitType unitType;
 
     public void SetCost(int requiredCost)
