@@ -5,10 +5,23 @@ using UnityEngine;
 // When this class is called it requires special objects to be set
 // This is later will be used by other sub-scripts
 public class HireUnitGeneric : MonoBehaviour {
-    public bool isHigheredUnitPartyLeader;
-    public Transform newUnitParent;
-    public GameObject callerObjectToDisableOnHire;
+    bool isHigheredUnitPartyLeader;
+    Transform newUnitParent;
+    GameObject callerObjectToDisableOnHire;
     GameObject unitsPanel;
+
+    public bool GetisHigheredUnitPartyLeader()
+    {
+        return isHigheredUnitPartyLeader;
+    }
+    public Transform GetnewUnitParent()
+    {
+        return newUnitParent;
+    }
+    public GameObject GetcallerObjectToDisableOnHire()
+    {
+        return callerObjectToDisableOnHire;
+    }
 
     public void DeactivateAdv()
     {
@@ -23,6 +36,8 @@ public class HireUnitGeneric : MonoBehaviour {
         newUnitParent = nUP;
         callerObjectToDisableOnHire = cOTDOH;
         gameObject.SetActive(true);
+        // and bring it to the front
+        transform.SetAsLastSibling();
         // create new units panel
         unitsPanel = Instantiate(uP, transform.Find("Panel"));
     }

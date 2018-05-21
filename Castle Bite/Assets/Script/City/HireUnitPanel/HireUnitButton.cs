@@ -8,7 +8,7 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class UnitHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     Text txt;
     Button btn;
@@ -144,11 +144,15 @@ public class UnitHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
 
     void ActOnClick()
     {
+        // First get input from parent:
+        HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
+        bool isHigheredUnitPartyLeader = hireUnitPanel.GetisHigheredUnitPartyLeader();
+        Transform newUnitParent = hireUnitPanel.GetnewUnitParent();
+        GameObject callerObjectToDisableOnHire = hireUnitPanel.GetcallerObjectToDisableOnHire();
         // Act based on the leader type
         //  Find selected toggle and get attached to it unit template
         //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
-        Transform hirePartyLeaderPanel = transform.parent.parent;
-        Toggle[] toggles = hirePartyLeaderPanel.Find("UnitsGroup").GetComponentsInChildren<Toggle>();
+        Toggle[] toggles = transform.parent.parent.GetComponentInChildren<ToggleGroup>().GetComponentsInChildren<Toggle>();
         PartyUnit selectedUnit = null;
         foreach (Toggle toggle in toggles)
         {
@@ -168,39 +172,59 @@ public class UnitHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
         {
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - requiredGold);
-            // create instance of the party leader and place it in to the party object
-            Party partyTemplate = transform.root.Find("Templates").Find("Obj").Find("Party").GetComponent<Party>();
-            Transform playerParties = transform.root.Find("PlayerParties");
-            Party newParty = Instantiate(partyTemplate, playerParties);
-            PartyUnit newPartyUnit = Instantiate(selectedUnit, newParty.transform);
-            newParty.party[0] = newPartyUnit;
-            // create and update Hero Party panel in UI, parent it to Game UI
-            Transform cityTr = transform.parent.parent.parent.parent;
-            GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
-            GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
-            //  activate new party UI panel
-            newPartyUIPanel.SetActive(true);
-            //  populate middle right panel with information from the highered leader
-            Transform middeRightUnitPanel = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right");
-            middeRightUnitPanel.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
-            middeRightUnitPanel.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
-            middeRightUnitPanel.Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetGivenName().ToString() + "\r\n" + newPartyUnit.GetUnitName().ToString();
-            //  activate hero HeroEquipmentBtn
-            cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
-            // fill in city's left focus with information from the hero
-            //  first deactivate NoPartyInfo and activate FocusedName and BriefInfo
-            cityTr.Find("LeftFocus").Find("NoPartyInfo").gameObject.SetActive(false);
-            cityTr.Find("LeftFocus").Find("FocusedName").gameObject.SetActive(true);
-            cityTr.Find("LeftFocus").Find("BriefInfo").gameObject.SetActive(true);
-            //  populate with info from hero
-            cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
-            cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
-            cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
-            // deactivate HirePartyLeader menu 
-            // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
-            btn.transform.parent.parent.parent.gameObject.SetActive(false);
-            // deactivate Hire Hero pannel-button
-            cityTr.Find("HireHeroPanelBtn").gameObject.SetActive(false);
+            // Create if required parent transform for new Unit (this is needed in new party is created, when leader is highered)
+            Transform newUnitParentTr = null;
+            if (isHigheredUnitPartyLeader)
+            {
+                // create and update Hero Party panel in UI, parent it to Game UI
+                Transform cityTr = transform.parent.parent.parent.parent;
+                GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
+                GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
+                //  activate new party UI panel
+                newPartyUIPanel.SetActive(true);
+                //  set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
+                newUnitParentTr = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right").GetComponentInChildren<CanvasGroup>().transform;
+            }
+            else
+            {
+                newUnitParentTr = newUnitParent;
+            }
+            // Create new unit and place it in parent transform
+            PartyUnit newPartyUnit = Instantiate(selectedUnit, newUnitParentTr);
+            // Update UI with information from new unit;
+            // If this is for new leader highering, then we also should activate required UIs
+            // and also fill in city's left focus panels
+            if (isHigheredUnitPartyLeader)
+            {
+                Transform cityTr = transform.parent.parent.parent.parent;
+                //  activate hero HeroEquipmentBtn
+                cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
+                // fill in city's left focus with information from the hero
+                //  first deactivate NoPartyInfo and activate FocusedName and BriefInfo
+                cityTr.Find("LeftFocus").Find("NoPartyInfo").gameObject.SetActive(false);
+                cityTr.Find("LeftFocus").Find("FocusedName").gameObject.SetActive(true);
+                cityTr.Find("LeftFocus").Find("BriefInfo").gameObject.SetActive(true);
+                //  populate with info from hero
+                cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
+                cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
+                cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
+            }
+            // fill in highered object UI panel
+            if (isHigheredUnitPartyLeader)
+            {
+                // add additional Hero's given name information
+                newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetGivenName().ToString() + "\r\n" + newPartyUnit.GetUnitName().ToString();
+            }
+            else
+            {
+                newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetUnitName().ToString();
+            }
+            newUnitParentTr.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
+            newUnitParentTr.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
+            // deactivate new unit hire selection pannel, which is parent of this button
+            transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
+            // deactivate required menu (we set it in Unity UI)
+            callerObjectToDisableOnHire.SetActive(false);
         }
         else
         {
