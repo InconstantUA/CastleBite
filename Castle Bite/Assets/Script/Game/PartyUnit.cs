@@ -8,6 +8,9 @@ public class PartyUnit : MonoBehaviour {
     public int healthMax;
     public bool isLeader;
     public string unitName;
+    public string givenName;
+    public int unitLevel;
+    public int unitLeadership;
 
     public enum HeroType { Knight, Ranger, Archmage, Archangel, Thief, Unknown};
     public HeroType heroType;
@@ -50,6 +53,36 @@ public class PartyUnit : MonoBehaviour {
     public string GetName()
     {
         return unitName;
+    }
+
+    public void SetGivenName(string requiredGivenName)
+    {
+        givenName = requiredGivenName;
+    }
+
+    public string GetGivenName()
+    {
+        return givenName;
+    }
+
+    public void SetLevel(int requiredLevel)
+    {
+        unitLevel = requiredLevel;
+    }
+
+    public int GetLevel()
+    {
+        return unitLevel;
+    }
+
+    public void SetLeadership(int requiredLeadership)
+    {
+        unitLeadership = requiredLeadership;
+    }
+
+    public int GetLeadership()
+    {
+        return unitLeadership;
     }
 
 

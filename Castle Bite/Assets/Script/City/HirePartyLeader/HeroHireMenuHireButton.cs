@@ -211,9 +211,18 @@ public class HeroHireMenuHireButton : MonoBehaviour, IPointerEnterHandler, IPoin
             Transform middeRightUnitPanel = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right");
             middeRightUnitPanel.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
             middeRightUnitPanel.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
-            middeRightUnitPanel.Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetName().ToString();
+            middeRightUnitPanel.Find("UnitCanvas").Find("Name").GetComponent<Text>().text = newPartyUnit.GetGivenName().ToString() + "\r\n" + newPartyUnit.GetName().ToString();
             //  activate hero HeroEquipmentBtn
             cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
+            // fill in city's left focus with information from the hero
+            //  first deactivate NoPartyInfo and activate FocusedName and BriefInfo
+            cityTr.Find("LeftFocus").Find("NoPartyInfo").gameObject.SetActive(false);
+            cityTr.Find("LeftFocus").Find("FocusedName").gameObject.SetActive(true);
+            cityTr.Find("LeftFocus").Find("BriefInfo").gameObject.SetActive(true);
+            //  populate with info from hero
+            cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
+            cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
+            cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
             // deactivate HireHero menu 
             // Structure Cities-[city]-HirePartyLeader-Panel-Controls-thisButton
             btn.transform.parent.parent.parent.gameObject.SetActive(false);
