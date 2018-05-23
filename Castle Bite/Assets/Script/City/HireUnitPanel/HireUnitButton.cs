@@ -172,8 +172,8 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         {
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - requiredGold);
-            // Create if required parent transform for new Unit (this is needed in new party is created, when leader is highered)
-            Transform newUnitParentTr = null;
+            // Create if required parent transform for new Unit (this is needed iF new party is created, when leader is highered)
+            Transform newUnitParentSlot = null;
             if (isHigheredUnitPartyLeader)
             {
                 // create and update Hero Party panel in UI, parent it to Game UI
@@ -183,12 +183,17 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 //  activate new party UI panel
                 newPartyUIPanel.SetActive(true);
                 //  set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
-                newUnitParentTr = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right").GetComponentInChildren<CanvasGroup>().transform;
+                newUnitParentSlot = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right").GetComponentInChildren<CanvasGroup>().transform;
             }
             else
             {
-                newUnitParentTr = newUnitParent;
+                newUnitParentSlot = newUnitParent;
             }
+            //  create new instance of unity draggable canvas and set it as unit's parent
+            GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;
+            Transform newUnitParentTr = Instantiate(unitCanvasTemplate, newUnitParentSlot).transform;
+            // enable it
+            newUnitParentTr.gameObject.SetActive(true);
             // Create new unit and place it in parent transform
             PartyUnit newPartyUnit = Instantiate(selectedUnit, newUnitParentTr);
             // Update UI with information from new unit;
@@ -219,8 +224,8 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             {
                 newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetUnitName().ToString();
             }
-            newUnitParentTr.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
-            newUnitParentTr.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
+            newUnitParentSlot.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
+            newUnitParentSlot.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
             // deactivate new unit hire selection pannel, which is parent of this button
             transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
             // deactivate required menu (we set it in Unity UI)

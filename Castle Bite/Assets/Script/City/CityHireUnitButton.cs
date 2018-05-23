@@ -46,6 +46,7 @@ public class CityHireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        // skip all actions if unit is being dragged
         Debug.Log("OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenus();
