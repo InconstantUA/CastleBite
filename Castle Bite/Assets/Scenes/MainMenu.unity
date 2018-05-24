@@ -1736,6 +1736,7 @@ MonoBehaviour:
   unitLeadership: 3
   unitRole: Mage Leader
   unitType: 2
+  unitSize: 0
 --- !u!1 &140492880
 GameObject:
   m_ObjectHideFlags: 0
@@ -2793,6 +2794,7 @@ MonoBehaviour:
   unitLeadership: 3
   unitRole: Scouting Leader
   unitType: 1
+  unitSize: 0
 --- !u!1 &194414580
 GameObject:
   m_ObjectHideFlags: 0
@@ -5912,6 +5914,7 @@ MonoBehaviour:
   unitLeadership: 0
   unitRole: Attacks from distance
   unitType: 9
+  unitSize: 0
 --- !u!1 &386848368
 GameObject:
   m_ObjectHideFlags: 0
@@ -6101,7 +6104,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -9420,7 +9423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -10324,6 +10327,7 @@ MonoBehaviour:
   unitLeadership: 3
   unitRole: Fighter Leader
   unitType: 0
+  unitSize: 0
 --- !u!1 &563363458
 GameObject:
   m_ObjectHideFlags: 0
@@ -10915,6 +10919,7 @@ MonoBehaviour:
   unitLeadership: 1
   unitRole: Earth control
   unitType: 3
+  unitSize: 0
 --- !u!1 &588234285
 GameObject:
   m_ObjectHideFlags: 0
@@ -13287,7 +13292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -14334,7 +14339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -18307,6 +18312,7 @@ MonoBehaviour:
   unitLeadership: 0
   unitRole: Attacks with magic
   unitType: 6
+  unitSize: 0
 --- !u!1 &1029595793
 GameObject:
   m_ObjectHideFlags: 0
@@ -24339,6 +24345,7 @@ MonoBehaviour:
   unitLeadership: 0
   unitRole: Stealing, spying and special operations
   unitType: 4
+  unitSize: 0
 --- !u!1 &1422099718
 GameObject:
   m_ObjectHideFlags: 0
@@ -24472,6 +24479,7 @@ MonoBehaviour:
   unitLeadership: 0
   unitRole: Mele fighter
   unitType: 5
+  unitSize: 0
 --- !u!1 &1429338790
 GameObject:
   m_ObjectHideFlags: 0
@@ -26543,6 +26551,7 @@ MonoBehaviour:
   unitLeadership: 0
   unitRole: Heals other members
   unitType: 7
+  unitSize: 0
 --- !u!1 &1531772083
 GameObject:
   m_ObjectHideFlags: 0
@@ -29139,6 +29148,7 @@ MonoBehaviour:
   unitLeadership: 0
   unitRole: Unique strong mele fighter
   unitType: 8
+  unitSize: 1
 --- !u!1 &1693554442
 GameObject:
   m_ObjectHideFlags: 0
@@ -32254,7 +32264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -35207,7 +35217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
