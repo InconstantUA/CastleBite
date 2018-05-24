@@ -16,6 +16,9 @@ public class PartyUnit : MonoBehaviour {
     public enum UnitType { Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
     public UnitType unitType;
 
+    public enum UnitSize { Single, Double };
+    public UnitSize unitSize;
+
     public void SetCost(int requiredCost)
     {
         cost = requiredCost;
@@ -104,6 +107,16 @@ public class PartyUnit : MonoBehaviour {
     public UnitType GetUnitType()
     {
         return unitType;
+    }
+
+    public void SetUnitSize(UnitSize requiredUnitSize)
+    {
+        unitSize = requiredUnitSize;
+    }
+
+    public UnitSize GetUnitSize()
+    {
+        return unitSize;
     }
 
     //// Use this for initialization

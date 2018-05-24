@@ -187,7 +187,21 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             }
             else
             {
-                newUnitParentSlot = newUnitParent;
+                // if hired unit is double unit, then we actually need to change its parent to the wide
+                if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Double)
+                {
+                    // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-newUnitParent
+                    newUnitParentSlot = newUnitParent.parent.parent.Find("Wide").Find("UnitSlot");
+                    // Also we need to enable Wide panel, because by defaut it is disabled
+                    newUnitParent.parent.parent.Find("Wide").gameObject.SetActive(true);
+                    // And disable left and right panels
+                    newUnitParent.parent.parent.Find("Left").gameObject.SetActive(false);
+                    newUnitParent.parent.parent.Find("Right").gameObject.SetActive(false);
+                }
+                else if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Single)
+                {
+                    newUnitParentSlot = newUnitParent;
+                }
             }
             //  create new instance of unity draggable canvas and set it as unit's parent
             GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;
