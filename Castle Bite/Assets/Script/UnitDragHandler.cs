@@ -32,7 +32,8 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         transform.position = Input.mousePosition;
         // disable all add unit buttons to avoid unnecessary interraction
-        SetHireUnitPnlButtonActive(false);
+        PartyPanel partyPanel = transform.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        partyPanel.SetHireUnitPnlButtonActive(false);
     }
     #endregion
     #region IEndDragHandler implementation
@@ -48,39 +49,9 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             transform.position = startPosition;
         }
         // activate hire unit buttons again, after it was disabled
-        SetHireUnitPnlButtonActive(true);
+        PartyPanel partyPanel = transform.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        partyPanel.SetHireUnitPnlButtonActive(true);
     }
 
-    void SetHireUnitPnlButtonActive(bool isActive)
-    {
-        Transform partyPanel = transform.parent.parent.parent.parent;
-        string[] horisontalPanels = { "Top", "Middle", "Bottom" };
-        string[] cells = { "Left", "Right" };
-        foreach (string horisontalPanel in horisontalPanels)
-        {
-            foreach (string cell in cells)
-            {
-                if (isActive)
-                {
-                    // activate - set in front of drop slot
-                    // do not activate it if drop slot has an unit in it
-                    if (partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
-                    {
-                        // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsLastSibling();
-                        partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(true);
-                    }
-                }
-                else
-                {
-                    //// deactivate - set behind drop slot
-                    //if (partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
-                    //{
-                    // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsFirstSibling();
-                    partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(false);
-                    //}
-                }
-            }
-        }
-    }
     #endregion
 }

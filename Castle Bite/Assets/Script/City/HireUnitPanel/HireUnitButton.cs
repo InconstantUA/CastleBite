@@ -142,14 +142,8 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     #region OnClick
 
-    void ActOnClick()
+    PartyUnit GetSelectedUnit()
     {
-        // First get input from parent:
-        HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
-        bool isHigheredUnitPartyLeader = hireUnitPanel.GetisHigheredUnitPartyLeader();
-        Transform callerCell = hireUnitPanel.GetcallerCell();
-        GameObject callerObjectToDisableOnHire = hireUnitPanel.GetcallerObjectToDisableOnHire();
-        // Act based on the leader type
         //  Find selected toggle and get attached to it unit template
         //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
         Toggle[] toggles = transform.parent.parent.GetComponentInChildren<ToggleGroup>().GetComponentsInChildren<Toggle>();
@@ -161,84 +155,132 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 selectedUnit = toggle.GetComponent<UnitHirePanel>().GetUnitToHire();
             }
         }
+        return selectedUnit;
+    }
+
+    bool VerifySingleUnitHire(PartyUnit selectedUnit)
+    {
+        bool result = true;
+        // this is actually not required, because
+        // if number of units in city reaches maximum, 
+        // then hire unit button is disabled
+        return result;
+    }
+
+    bool VerifyDoubleUnitHire(PartyUnit selectedUnit)
+    {
+        bool result = true;
+        return result;
+    }
+
+    bool VerifyUnitHire(PartyUnit selectedUnit)
+    {
+        bool result = true;
+        if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Single)
+        {
+            result = VerifySingleUnitHire(selectedUnit);
+        }
+        else
+        {
+            result = VerifyDoubleUnitHire(selectedUnit);
+        }
+        return result;
+    }
+
+    void ActOnClick()
+    {
+        // First get input from parent:
+        HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
+        bool isHigheredUnitPartyLeader = hireUnitPanel.GetisHigheredUnitPartyLeader();
+        Transform callerCell = hireUnitPanel.GetcallerCell();
+        GameObject callerObjectToDisableOnHire = hireUnitPanel.GetcallerObjectToDisableOnHire();
+        // Act based on the leader type
+        PartyUnit selectedUnit = GetSelectedUnit();
         //  Get attached leader type
         //  Get conditions based on the hero type
         //  I instantiate hero types templates in Game->Templates->PartyLeaderTmplts
         int requiredGold = selectedUnit.GetCost();
-        // Verify if conditions are met
         //  Verify if player has enough gold
         PlayerObj player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
         if (player.GetTotalGold() >= requiredGold)
         {
-            // take gold from player
-            player.SetTotalGold(player.GetTotalGold() - requiredGold);
-            // Create if required parent transform for new Unit (this is needed iF new party is created, when leader is highered)
-            Transform newUnitParentSlot = null;
-            if (isHigheredUnitPartyLeader)
-            {
-                // create and update Hero Party panel in UI, parent it to Game UI
-                Transform cityTr = transform.parent.parent.parent.parent;
-                GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
-                GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
-                //  activate new party UI panel
-                newPartyUIPanel.SetActive(true);
-                //  set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
-                newUnitParentSlot = newPartyUIPanel.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Right");
+            // Verify if other conditions are met
+            if (VerifyUnitHire(selectedUnit)) {
+                // take gold from player
+                player.SetTotalGold(player.GetTotalGold() - requiredGold);
+                // Create if required parent transform for new Unit (this is needed iF new party is created, when leader is highered)
+                Transform newUnitParentSlot = null;
+                if (isHigheredUnitPartyLeader)
+                {
+                    // create and update Hero Party panel in UI, parent it to Game UI
+                    Transform cityTr = transform.parent.parent.parent.parent;
+                    GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
+                    GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
+                    //  activate new party UI panel
+                    newPartyUIPanel.SetActive(true);
+                    //  set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
+                    newUnitParentSlot = newPartyUIPanel.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Right");
+                }
+                else
+                {
+                    PartyPanel partyPanel = callerCell.parent.parent.GetComponent<PartyPanel>();
+                    newUnitParentSlot = partyPanel.GetUnitSlotTr(callerCell, selectedUnit);
+                }
+                //  create new instance of unity draggable canvas and set it as unit's parent
+                GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;
+                Transform newUnitParentTr = Instantiate(unitCanvasTemplate, newUnitParentSlot).transform;
+                // enable it
+                newUnitParentTr.gameObject.SetActive(true);
+                // Create new unit and place it in parent transform
+                PartyUnit newPartyUnit = Instantiate(selectedUnit, newUnitParentTr);
+                // Update UI with information from new unit;
+                // If this is for new leader highering, then we also should activate required UIs
+                // and also fill in city's left focus panels
+                if (isHigheredUnitPartyLeader)
+                {
+                    Transform cityTr = transform.parent.parent.parent.parent;
+                    //  activate hero HeroEquipmentBtn
+                    cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
+                    // fill in city's left focus with information from the hero
+                    //  first deactivate NoPartyInfo and activate FocusedName and BriefInfo
+                    cityTr.Find("LeftFocus").Find("NoPartyInfo").gameObject.SetActive(false);
+                    cityTr.Find("LeftFocus").Find("FocusedName").gameObject.SetActive(true);
+                    cityTr.Find("LeftFocus").Find("BriefInfo").gameObject.SetActive(true);
+                    //  populate with info from hero
+                    cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
+                    cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
+                    cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
+                }
+                // fill in highered object UI panel
+                if (isHigheredUnitPartyLeader)
+                {
+                    // add additional Hero's given name information
+                    newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetGivenName().ToString() + "\r\n" + newPartyUnit.GetUnitName().ToString();
+                }
+                else
+                {
+                    newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetUnitName().ToString();
+                }
+                newUnitParentSlot.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
+                newUnitParentSlot.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
+                // deactivate new unit hire selection pannel, which is parent of this button
+                transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
+                // deactivate required menu (we set it in Unity UI)
+                callerObjectToDisableOnHire.SetActive(false);
             }
-            else
-            {
-                PartyPanel partyPanel = callerCell.parent.parent.GetComponent<PartyPanel>();
-                newUnitParentSlot = partyPanel.GetUnitSlotTr(callerCell, selectedUnit);
-            }
-            //  create new instance of unity draggable canvas and set it as unit's parent
-            GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;
-            Transform newUnitParentTr = Instantiate(unitCanvasTemplate, newUnitParentSlot).transform;
-            // enable it
-            newUnitParentTr.gameObject.SetActive(true);
-            // Create new unit and place it in parent transform
-            PartyUnit newPartyUnit = Instantiate(selectedUnit, newUnitParentTr);
-            // Update UI with information from new unit;
-            // If this is for new leader highering, then we also should activate required UIs
-            // and also fill in city's left focus panels
-            if (isHigheredUnitPartyLeader)
-            {
-                Transform cityTr = transform.parent.parent.parent.parent;
-                //  activate hero HeroEquipmentBtn
-                cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
-                // fill in city's left focus with information from the hero
-                //  first deactivate NoPartyInfo and activate FocusedName and BriefInfo
-                cityTr.Find("LeftFocus").Find("NoPartyInfo").gameObject.SetActive(false);
-                cityTr.Find("LeftFocus").Find("FocusedName").gameObject.SetActive(true);
-                cityTr.Find("LeftFocus").Find("BriefInfo").gameObject.SetActive(true);
-                //  populate with info from hero
-                cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
-                cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
-                cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
-            }
-            // fill in highered object UI panel
-            if (isHigheredUnitPartyLeader)
-            {
-                // add additional Hero's given name information
-                newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetGivenName().ToString() + "\r\n" + newPartyUnit.GetUnitName().ToString();
-            }
-            else
-            {
-                newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetUnitName().ToString();
-            }
-            newUnitParentSlot.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
-            newUnitParentSlot.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
-            // deactivate new unit hire selection pannel, which is parent of this button
-            transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
-            // deactivate required menu (we set it in Unity UI)
-            callerObjectToDisableOnHire.SetActive(false);
         }
         else
         {
             // display message that is not enough gold
-            Debug.Log("need more gold");
-            GameObject notificationPopup = btn.transform.root.Find("MiscUI").Find("NotificationPopUp").gameObject;
-            notificationPopup.SetActive(true);
-            notificationPopup.GetComponentInChildren<Transform>().GetComponentInChildren<Text>().text = "More gold is needed to hire this party leader.";
+            NotificationPopUp notificationPopup = btn.transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
+            if (isHigheredUnitPartyLeader)
+            {
+                notificationPopup.DisplayMessage("More gold is needed to hire this party leader.");
+            }
+            else
+            {
+                notificationPopup.DisplayMessage("More gold is needed to hire this party member.");
+            }
         }
     }
 
