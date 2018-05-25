@@ -3249,10 +3249,10 @@ MonoBehaviour:
   unitName: Capital guard
   givenName: Lahabiel
   unitLevel: 1
-  unitLeadership: 3
-  unitRole: Fighter Leader
+  unitLeadership: 0
+  unitRole: Protects Dominion Capital
   isInterpartyMovable: 0
-  isDismissable: 1
+  isDismissable: 0
   unitType: 0
   unitSize: 0
 --- !u!1 &227619492
@@ -6148,7 +6148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 0
-  newUnitParent: {fileID: 408503104}
+  callerCell: {fileID: 502771461}
   callerObjectToDisableOnHire: {fileID: 388582001}
   unitsGroupToHire: {fileID: 822737847}
 --- !u!114 &388582004
@@ -9467,7 +9467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 0
-  newUnitParent: {fileID: 2037475457}
+  callerCell: {fileID: 416436444}
   callerObjectToDisableOnHire: {fileID: 494916179}
   unitsGroupToHire: {fileID: 822737847}
 --- !u!114 &494916182
@@ -9968,6 +9968,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 524936390}
+  - component: {fileID: 524936391}
   m_Layer: 5
   m_Name: PartyPanel
   m_TagString: Untagged
@@ -9996,6 +9997,17 @@ RectTransform:
   m_AnchoredPosition: {x: 213, y: 15}
   m_SizeDelta: {x: 230, y: 324}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &524936391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 524936389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c92d0cc90605ac49b61756cc736e137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &525685345
 GameObject:
   m_ObjectHideFlags: 0
@@ -13340,7 +13352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 0
-  newUnitParent: {fileID: 901665267}
+  callerCell: {fileID: 1866670159}
   callerObjectToDisableOnHire: {fileID: 735503942}
   unitsGroupToHire: {fileID: 822737847}
 --- !u!114 &735503945
@@ -14387,7 +14399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 0
-  newUnitParent: {fileID: 229474503}
+  callerCell: {fileID: 512533642}
   callerObjectToDisableOnHire: {fileID: 793123146}
   unitsGroupToHire: {fileID: 822737847}
 --- !u!114 &793123149
@@ -30594,7 +30606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 1
-  newUnitParent: {fileID: 0}
+  callerCell: {fileID: 0}
   callerObjectToDisableOnHire: {fileID: 1744433198}
   unitsGroupToHire: {fileID: 1247712767}
 --- !u!114 &1744433201
@@ -32322,7 +32334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 0
-  newUnitParent: {fileID: 1288917654}
+  callerCell: {fileID: 438534150}
   callerObjectToDisableOnHire: {fileID: 1798238836}
   unitsGroupToHire: {fileID: 822737847}
 --- !u!114 &1798238839
@@ -35286,7 +35298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameObjectToBeActivated: {fileID: 1538723444}
   isHigheredUnitPartyLeader: 0
-  newUnitParent: {fileID: 1464631796}
+  callerCell: {fileID: 684787773}
   callerObjectToDisableOnHire: {fileID: 1954613725}
   unitsGroupToHire: {fileID: 822737847}
 --- !u!114 &1954613728
