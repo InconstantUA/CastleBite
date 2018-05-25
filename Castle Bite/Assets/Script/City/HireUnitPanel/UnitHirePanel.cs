@@ -10,7 +10,15 @@ public class UnitHirePanel : MonoBehaviour {
     void Start() {
         // populate panel with information from attached unitToHire
         transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.GetUnitName() + "]";
-        transform.Find("CharacteristicsValues").GetComponent<Text>().text = unitToHire.GetCost().ToString() + "\r\n" + unitToHire.GetLeadership().ToString() + "\r\n" + unitToHire.GetRole();
+        // for double size units also indicate their size
+        if(unitToHire.GetUnitSize() == PartyUnit.UnitSize.Double)
+        {
+            transform.Find("CharacteristicsValues").GetComponent<Text>().text = unitToHire.GetCost().ToString() + "\r\n" + unitToHire.GetLeadership().ToString() + "\r\n" + unitToHire.GetRole() + "\r\n" + "Large";
+        }
+        else
+        {
+            transform.Find("CharacteristicsValues").GetComponent<Text>().text = unitToHire.GetCost().ToString() + "\r\n" + unitToHire.GetLeadership().ToString() + "\r\n" + unitToHire.GetRole();
+        }
     }
 
     public PartyUnit GetUnitToHire()

@@ -12,8 +12,10 @@ public class PartyUnit : MonoBehaviour {
     public int unitLevel;
     public int unitLeadership;
     public string unitRole;
+    public bool isInterpartyMovable;
+    public bool isDismissable;
 
-    public enum UnitType { Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
+    public enum UnitType { CapitalGuard, Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
     public UnitType unitType;
 
     public enum UnitSize { Single, Double };

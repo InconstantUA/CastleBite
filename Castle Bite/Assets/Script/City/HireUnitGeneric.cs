@@ -6,7 +6,7 @@ using UnityEngine;
 // This is later will be used by other sub-scripts
 public class HireUnitGeneric : MonoBehaviour {
     bool isHigheredUnitPartyLeader;
-    Transform newUnitParent;
+    Transform callerCell;
     GameObject callerObjectToDisableOnHire;
     GameObject unitsPanel;
 
@@ -14,9 +14,9 @@ public class HireUnitGeneric : MonoBehaviour {
     {
         return isHigheredUnitPartyLeader;
     }
-    public Transform GetnewUnitParent()
+    public Transform GetcallerCell()
     {
-        return newUnitParent;
+        return callerCell;
     }
     public GameObject GetcallerObjectToDisableOnHire()
     {
@@ -30,16 +30,18 @@ public class HireUnitGeneric : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void ActivateAdv(bool isHUPL, Transform nUP, GameObject cOTDOH, GameObject uP)
+    public void ActivateAdv(bool isHUPL, Transform cCell, GameObject cOTDOH, GameObject uP)
     {
         isHigheredUnitPartyLeader = isHUPL;
-        newUnitParent = nUP;
+        callerCell = cCell;
         callerObjectToDisableOnHire = cOTDOH;
         gameObject.SetActive(true);
         // and bring it to the front
         transform.SetAsLastSibling();
         // create new units panel
         unitsPanel = Instantiate(uP, transform.Find("Panel"));
+        // turn it on
+        unitsPanel.SetActive(true);
     }
 
     //// Use this for initialization

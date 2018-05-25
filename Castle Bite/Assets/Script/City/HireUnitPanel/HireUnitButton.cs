@@ -147,7 +147,7 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         // First get input from parent:
         HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
         bool isHigheredUnitPartyLeader = hireUnitPanel.GetisHigheredUnitPartyLeader();
-        Transform newUnitParent = hireUnitPanel.GetnewUnitParent();
+        Transform callerCell = hireUnitPanel.GetcallerCell();
         GameObject callerObjectToDisableOnHire = hireUnitPanel.GetcallerObjectToDisableOnHire();
         // Act based on the leader type
         //  Find selected toggle and get attached to it unit template
@@ -183,25 +183,12 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 //  activate new party UI panel
                 newPartyUIPanel.SetActive(true);
                 //  set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
-                newUnitParentSlot = newPartyUIPanel.transform.Find("PartyPanel").Find("Middle").Find("Right").GetComponentInChildren<CanvasGroup>().transform;
+                newUnitParentSlot = newPartyUIPanel.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Right");
             }
             else
             {
-                // if hired unit is double unit, then we actually need to change its parent to the wide
-                if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Double)
-                {
-                    // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-newUnitParent
-                    newUnitParentSlot = newUnitParent.parent.parent.Find("Wide").Find("UnitSlot");
-                    // Also we need to enable Wide panel, because by defaut it is disabled
-                    newUnitParent.parent.parent.Find("Wide").gameObject.SetActive(true);
-                    // And disable left and right panels
-                    newUnitParent.parent.parent.Find("Left").gameObject.SetActive(false);
-                    newUnitParent.parent.parent.Find("Right").gameObject.SetActive(false);
-                }
-                else if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Single)
-                {
-                    newUnitParentSlot = newUnitParent;
-                }
+                PartyPanel partyPanel = callerCell.parent.parent.GetComponent<PartyPanel>();
+                newUnitParentSlot = partyPanel.GetUnitSlotTr(callerCell, selectedUnit);
             }
             //  create new instance of unity draggable canvas and set it as unit's parent
             GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;

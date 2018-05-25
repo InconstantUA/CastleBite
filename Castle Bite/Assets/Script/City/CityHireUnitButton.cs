@@ -12,7 +12,7 @@ public class CityHireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 {
     public GameObject gameObjectToBeActivated;
     public bool isHigheredUnitPartyLeader;
-    public Transform newUnitParent;
+    public Transform callerCell;
     public GameObject callerObjectToDisableOnHire;
     public GameObject unitsGroupToHire;
     Text txt;
@@ -151,7 +151,7 @@ public class CityHireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     void ActOnClick()
     {
-        gameObjectToBeActivated.GetComponent<HireUnitGeneric>().ActivateAdv(isHigheredUnitPartyLeader, newUnitParent, callerObjectToDisableOnHire, unitsGroupToHire);
+        gameObjectToBeActivated.GetComponent<HireUnitGeneric>().ActivateAdv(isHigheredUnitPartyLeader, callerCell, callerObjectToDisableOnHire, unitsGroupToHire);
     }
 
     #endregion OnClick
