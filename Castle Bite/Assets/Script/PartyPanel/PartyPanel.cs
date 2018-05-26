@@ -186,7 +186,11 @@ public class PartyPanel : MonoBehaviour {
             // this depends if city has reached max level
             City city = transform.parent.parent.GetComponent<City>();
             string errMsg;
-            if (city.HasCityReachedMaximumLevel())
+            if (city.cityLevel == 1)
+            {
+                errMsg = "Not enough city capacity, 2 free slots are required. Increase city level.";
+            }
+            else if (city.HasCityReachedMaximumLevel())
             {
                 errMsg = "Not enough city capacity, 2 free slots are required. Dismiss or move other units to Hero's party.";
             }

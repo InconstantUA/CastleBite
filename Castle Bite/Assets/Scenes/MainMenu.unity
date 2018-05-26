@@ -2712,7 +2712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cityName: Stormberg
   cityDescription: Dominion capital
-  cityLevel: 5
+  cityLevel: 1
   cityType: 1
 --- !u!1 &191661099
 GameObject:

@@ -286,6 +286,9 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 // which is parent of this button
                 transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
                 // deactivate required menu (we set it in Unity UI)
+                // we do it here and not on DeactivateAdv because DeactivateAdv is also used
+                // just on close button and on close we do not need to deactivate caller
+                // because nothing has changed
                 callerObjectToDisableOnHire.SetActive(false);
             }
         }

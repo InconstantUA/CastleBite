@@ -26,6 +26,7 @@ public class HireUnitGeneric : MonoBehaviour {
     public void DeactivateAdv()
     {
         // delete units panel, because later it may change to other
+        // for example: from hire party leader to hire unit
         Destroy(unitsPanel);
         gameObject.SetActive(false);
     }
