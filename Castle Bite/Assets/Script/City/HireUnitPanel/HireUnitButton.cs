@@ -169,7 +169,22 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     bool VerifyDoubleUnitHire(PartyUnit selectedUnit)
     {
-        bool result = true;
+        bool result = false;
+        Transform cityTr = transform.parent.parent.parent.parent;
+        PartyPanel partyPanel = cityTr.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>();
+        // if all checks passed, then verify result is success
+        if(partyPanel.VerifyCityCapacityOverflowOnDoubleUnitHire())
+        {
+            // verify if player is highring double unit near occupied single unit cell
+            // this is not possible and will cause double unit to be displayed on top of single unit
+            // we should avoid this
+            HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
+            Transform callerCell = hireUnitPanel.GetcallerCell();
+            if (partyPanel.VerifyDoubleHireNearOccupiedSingleCell(callerCell))
+            {
+                result = true;
+            }
+        }
         return result;
     }
 
@@ -210,10 +225,10 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 player.SetTotalGold(player.GetTotalGold() - requiredGold);
                 // Create if required parent transform for new Unit (this is needed iF new party is created, when leader is highered)
                 Transform newUnitParentSlot = null;
+                Transform cityTr = transform.parent.parent.parent.parent;
                 if (isHigheredUnitPartyLeader)
                 {
                     // create and update Hero Party panel in UI, parent it to Game UI
-                    Transform cityTr = transform.parent.parent.parent.parent;
                     GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
                     GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
                     //  activate new party UI panel
@@ -238,19 +253,23 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 // and also fill in city's left focus panels
                 if (isHigheredUnitPartyLeader)
                 {
-                    Transform cityTr = transform.parent.parent.parent.parent;
                     //  activate hero HeroEquipmentBtn
                     cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
+                    // link party leader to the Left Focus panel
+                    // os it can useit to fill in information
+                    cityTr.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnit.gameObject;
                     // fill in city's left focus with information from the hero
-                    //  first deactivate NoPartyInfo and activate FocusedName and BriefInfo
-                    cityTr.Find("LeftFocus").Find("NoPartyInfo").gameObject.SetActive(false);
-                    cityTr.Find("LeftFocus").Find("FocusedName").gameObject.SetActive(true);
-                    cityTr.Find("LeftFocus").Find("BriefInfo").gameObject.SetActive(true);
-                    //  populate with info from hero
-                    cityTr.Find("LeftFocus").Find("FocusedName").GetComponent<Text>().text = newPartyUnit.GetGivenName();
-                    cityTr.Find("LeftFocus").Find("BriefInfo").Find("LevelValue").GetComponent<Text>().text = newPartyUnit.GetLevel().ToString();
-                    cityTr.Find("LeftFocus").Find("BriefInfo").Find("LeadershipValue").GetComponent<Text>().text = newPartyUnit.GetLeadership().ToString();
+                    // Focus panel wil automatically detect changes and update info
+                    cityTr.Find("LeftFocus").GetComponent<FocusPanel>().OnChange();
+                } else
+                {
+                    // fill in city's right focus with information from the hero
+                    // Focus panel wil automatically detect changes and update info
+                    cityTr.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
+                    // update party panel
+                    cityTr.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange();
                 }
+
                 // fill in highered object UI panel
                 if (isHigheredUnitPartyLeader)
                 {
@@ -263,7 +282,8 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 }
                 newUnitParentSlot.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
                 newUnitParentSlot.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
-                // deactivate new unit hire selection pannel, which is parent of this button
+                // deactivate new unit hire selection pannel with the list of units to hire
+                // which is parent of this button
                 transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
                 // deactivate required menu (we set it in Unity UI)
                 callerObjectToDisableOnHire.SetActive(false);

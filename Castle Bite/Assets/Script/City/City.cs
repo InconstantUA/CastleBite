@@ -8,6 +8,7 @@ public class City : MonoBehaviour {
     public int cityLevel;
     public enum CityType { Normal, Capital };
     public CityType cityType;
+    int maxCityLevel = 5;
 
     //// Use this for initialization
     //void Start () {
@@ -42,5 +43,16 @@ public class City : MonoBehaviour {
     public int GetUnitsCapacity()
     {
         return cityLevel;
+    }
+
+    public bool HasCityReachedMaximumLevel()
+    {
+        bool result = false;
+        if  (cityLevel == maxCityLevel)
+        {
+            // city has reached its maximum level
+            result = true;
+        }
+        return result;
     }
 }

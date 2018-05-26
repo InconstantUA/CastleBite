@@ -65,7 +65,7 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    PartyUnit GetPartyLeader()
+    public PartyUnit GetPartyLeader()
     {
         PartyUnit leader = null;
         // find the unit with 
@@ -116,7 +116,16 @@ public class PartyPanel : MonoBehaviour {
                 // verify if slot has an unit in it
                 if (transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount > 0)
                 {
-                    unitsNumber += 1;
+                    // if this is double unit, then count is as +2
+                    if (cell == "Wide")
+                    {
+                        // double unit
+                        unitsNumber += 2;
+                    } else
+                    {
+                        // single unit
+                        unitsNumber += 1;
+                    }
                 }
             }
         }
@@ -164,6 +173,57 @@ public class PartyPanel : MonoBehaviour {
             // enable hire buttons
             SetHireUnitPnlButtonActive(true);
         }
+    }
+
+    public bool VerifyCityCapacityOverflowOnDoubleUnitHire()
+    {
+        bool result = true;
+        if (GetCapacity() < (GetNumberOfPresentUnits()+2))
+        {
+            // overflow on double unit hire
+            result = false;
+            // show error message
+            // this depends if city has reached max level
+            City city = transform.parent.parent.GetComponent<City>();
+            string errMsg;
+            if (city.HasCityReachedMaximumLevel())
+            {
+                errMsg = "Not enough city capacity, 2 free slots are required. Dismiss or move other units to Hero's party.";
+            }
+            else
+            {
+                errMsg = "Not enough city capacity, 2 free slots are required. Dismiss or move other units to Hero's party or increase city level.";
+            }
+            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+        }
+        return result;
+    }
+
+    public bool VerifyDoubleHireNearOccupiedSingleCell(Transform callerCell)
+    {
+        bool result = true;
+        // structure PartyPanel-[Top/Middle/Bottom]-(this)callerCell
+        // verify cell, which is located nearby
+        // if it is occuped, then show an error message
+        Transform oppositeCell;
+        if (callerCell.name == "Left")
+        {
+            // check Right cell
+            oppositeCell = callerCell.parent.Find("Right");
+        } else
+        {
+            // check Left cell
+            oppositeCell = callerCell.parent.Find("Left");
+        }
+        // check if cell is occupied
+        // structure [Left/Right cell]-UnitSlot-unit
+        if (oppositeCell.Find("UnitSlot").childCount > 0)
+        {
+            result = false;
+            string errMsg = "Not enough free space to hire this large unit, 2 free nearby horisontal slots are required. " + oppositeCell.name + " unit slot is occupied. Move unit from " + oppositeCell.name + " slot to other free slot or to Hero's party or dismiss it to free up a slot or click on hire button where 2 free nearby horisontal slots are available.";
+            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+        }
+        return result;
     }
 
     //// Update is called once per frame
