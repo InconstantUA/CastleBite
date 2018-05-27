@@ -269,19 +269,6 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     // update party panel
                     cityTr.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange();
                 }
-
-                // fill in highered object UI panel
-                if (isHigheredUnitPartyLeader)
-                {
-                    // add additional Hero's given name information
-                    newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetGivenName().ToString() + "\r\n" + newPartyUnit.GetUnitName().ToString();
-                }
-                else
-                {
-                    newUnitParentTr.Find("Name").GetComponent<Text>().text = newPartyUnit.GetUnitName().ToString();
-                }
-                newUnitParentSlot.parent.Find("HPPanel").Find("HPcurr").GetComponent<Text>().text = newPartyUnit.GetHealthCurr().ToString();
-                newUnitParentSlot.parent.Find("HPPanel").Find("HPmax").GetComponent<Text>().text = newPartyUnit.GetHealthMax().ToString();
                 // deactivate new unit hire selection pannel with the list of units to hire
                 // which is parent of this button
                 transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();

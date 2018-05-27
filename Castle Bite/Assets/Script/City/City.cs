@@ -48,7 +48,8 @@ public class City : MonoBehaviour {
     public bool HasCityReachedMaximumLevel()
     {
         bool result = false;
-        if  (cityLevel == maxCityLevel)
+        // note city level for capital is 6, which is higher than for normal city
+        if  (cityLevel >= maxCityLevel)
         {
             // city has reached its maximum level
             result = true;

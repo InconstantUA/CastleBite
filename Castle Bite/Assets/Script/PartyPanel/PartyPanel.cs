@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Controls all operations with child panels
 public class PartyPanel : MonoBehaviour {
@@ -43,17 +44,6 @@ public class PartyPanel : MonoBehaviour {
 
     public void OnChange()
     {
-        if (panelMode == PanelMode.Garnizon)
-        {
-            // this is needed to disable hire units button
-            // hero party does not have this functionality
-            VerifyCityCapacity();
-        }
-    }
-
-    // Use this for initialization
-    void Start()
-    {
         // verify if city or hero capacity has not been reached
         // if number of units in city or hero party reaches maximum, 
         // then hire unit button is disabled
@@ -62,6 +52,49 @@ public class PartyPanel : MonoBehaviour {
             // this is needed to disable hire units button
             // hero party does not have this functionality
             VerifyCityCapacity();
+        }
+        UpdatePannelsInfo();
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        OnChange();
+    }
+
+    void UpdatePannelsInfo()
+    {
+        Transform unitPanel;
+        Transform unitSlot;
+        PartyUnit unit;
+        string unitName;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                unitPanel = transform.Find(horisontalPanel+"/"+cell);
+                unitSlot = unitPanel.Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // verify if unit has isLeader atrribute ON
+                    unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // fill in highered object UI panel
+                    if (unit.isLeader)
+                    {
+                        // start with Hero's given name information
+                        unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
+                    }
+                    else
+                    {
+                        unitName = unit.GetUnitName().ToString();
+                    }
+                    unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unitName;
+                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
+                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+
+                }
+            }
         }
     }
 
