@@ -213,7 +213,7 @@ public class MenuKeyboardControl : MonoBehaviour {
                 OptionsKeyboardAndMouseSubmenuL3PanelClick();
                 break;
             default:
-                Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
+                Debug.LogError("Error: unknown selected menu name [" + currActiveMenuName + "]");
                 break;
         }
     }
@@ -260,7 +260,7 @@ public class MenuKeyboardControl : MonoBehaviour {
             currSelctdBtnID = GetCurrentlySelectedBtnID();
         }
         HighlightSelectedMenu();
-        Debug.Log("SetActiveMenuTo " + mName + " and button id to " + currSelctdBtnID);
+        // Debug.Log("SetActiveMenuTo " + mName + " and button id to " + currSelctdBtnID);
         #endregion Keyboard-specific
     }
 
@@ -288,10 +288,10 @@ public class MenuKeyboardControl : MonoBehaviour {
                 Application.Quit();
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
+        // Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
     void StartGame()
@@ -351,10 +351,10 @@ public class MenuKeyboardControl : MonoBehaviour {
                 SetActiveMenuTo("OptionsKeyboardAndMouseSubmenuL3Panel", 1);
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
+        // Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
     }
 
     void OptionsGameSubmenuL3PanelClick()
@@ -378,10 +378,10 @@ public class MenuKeyboardControl : MonoBehaviour {
                 }
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     void OptionsVideoSubmenuL3PanelClick()
@@ -397,10 +397,10 @@ public class MenuKeyboardControl : MonoBehaviour {
                 // instead it react on keyboard -> <- keys
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsVideoSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsVideoSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
     void OptionsAudioSubmenuL3PanelClick()
     {
@@ -415,10 +415,10 @@ public class MenuKeyboardControl : MonoBehaviour {
                 // instead it react on keyboard -> <- keys
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     void OptionsKeyboardAndMouseSubmenuL3PanelClick()
@@ -439,10 +439,10 @@ public class MenuKeyboardControl : MonoBehaviour {
             case "ResetToDefault":
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsKeyboardAndMouseSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsKeyboardAndMouseSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick
@@ -459,7 +459,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         tmpColor.a = 1;
         menuBtnsList[currSelctdBtnID].GetComponentInChildren<Text>().color = tmpColor;
-        Debug.Log("SetPressedStatus for id " + currSelctdBtnID + " name " + menuBtnsList[currSelctdBtnID].name);
+        // Debug.Log("SetPressedStatus for id " + currSelctdBtnID + " name " + menuBtnsList[currSelctdBtnID].name);
     }
 
     int GetCurrentlySelectedBtnID()
@@ -471,13 +471,13 @@ public class MenuKeyboardControl : MonoBehaviour {
         for (int id=0; id < menuBtnsList.Length; id++)
         {
             // do not compare alpha (transparancy) because it is different, because we set it to 1(255)
-            Debug.Log("Comparing " + menuBtnsList[id] + " menu");
+            // Debug.Log("Comparing " + menuBtnsList[id] + " menu");
             Color btnHClr = menuBtnsList[id].colors.highlightedColor;
             Color txtClr = menuBtnsList[id].GetComponentInChildren<Text>().color;
             if (((int)(txtClr.r * 1000) == (int)(btnHClr.r * 1000)) || ((int)(txtClr.g * 1000) == (int)(btnHClr.g * 1000)) || ((int)(txtClr.b * 1000) == (int)(btnHClr.b * 1000)))
             {
                 // found id
-                Debug.Log("Currently highlighted button is " + menuBtnsList[id].name);
+                // Debug.Log("Currently highlighted button is " + menuBtnsList[id].name);
                 selectedBtnID = id;
                 break;
             }
@@ -489,7 +489,7 @@ public class MenuKeyboardControl : MonoBehaviour {
             // reset to 0
             selectedBtnID = 0;
         }
-        Debug.Log("GetCurrentlySelectedBtnID is " + selectedBtnID);
+        // Debug.Log("GetCurrentlySelectedBtnID is " + selectedBtnID);
         return selectedBtnID;
     }
 
@@ -502,7 +502,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         for (int id = 0; id < menuBtnsList.Length; id++)
         {
             // do not compare alpha (transparancy) because it is different, because we set it to 1(255)
-            Debug.Log("Comparing " + menuBtnsList[id] + " menu");
+            // Debug.Log("Comparing " + menuBtnsList[id] + " menu");
             Color btnHClr = menuBtnsList[id].colors.highlightedColor;
             Color btnPClr = menuBtnsList[id].colors.pressedColor;
             Color txtClr = menuBtnsList[id].GetComponentInChildren<Text>().color;
@@ -510,7 +510,7 @@ public class MenuKeyboardControl : MonoBehaviour {
              || (((int)(txtClr.r * 1000) == (int)(btnHClr.r * 1000)) && ((int)(txtClr.g * 1000) == (int)(btnHClr.g * 1000)) && ((int)(txtClr.b * 1000) == (int)(btnHClr.b * 1000))) )
             {
                 // found id
-                Debug.Log("Currently highlighted button is " + menuBtnsList[id].name);
+                // Debug.Log("Currently highlighted button is " + menuBtnsList[id].name);
                 pressedBtnID = id;
                 break;
             }
@@ -522,7 +522,7 @@ public class MenuKeyboardControl : MonoBehaviour {
             // reset to 0
             pressedBtnID = 0;
         }
-        Debug.Log("GetCurrentlyPressedOrHighlightedBtnID is " + pressedBtnID);
+        // Debug.Log("GetCurrentlyPressedOrHighlightedBtnID is " + pressedBtnID);
         return pressedBtnID;
     }
 
@@ -539,16 +539,16 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         tmpColor.a = 1;
         menuBtnsList[previouslySelectedMenuID].GetComponentInChildren<Text>().color = tmpColor;
-        Debug.Log("Dimm button " + menuBtnsList[previouslySelectedMenuID].name);
+        // Debug.Log("Dimm button " + menuBtnsList[previouslySelectedMenuID].name);
     }
 
     void HighlightSelectedMenu()
     {
         // Highlight newly selected menu
-        Debug.Log("id " + currSelctdBtnID);
+        // Debug.Log("id " + currSelctdBtnID);
         foreach(Button dbg_btn in menuBtnsList)
         {
-            Debug.Log("btn name " + dbg_btn.name);
+            // Debug.Log("btn name " + dbg_btn.name);
         }
         if (menuBtnsList[currSelctdBtnID].interactable)
         {
@@ -560,6 +560,6 @@ public class MenuKeyboardControl : MonoBehaviour {
         }
         tmpColor.a = 1;
         menuBtnsList[currSelctdBtnID].GetComponentInChildren<Text>().color = tmpColor;
-        Debug.Log("Highlight button " + menuBtnsList[currSelctdBtnID].name);
+        // Debug.Log("Highlight button " + menuBtnsList[currSelctdBtnID].name);
     }
 }

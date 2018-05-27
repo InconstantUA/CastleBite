@@ -42,7 +42,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenus();
         // highlight this menu
@@ -51,7 +51,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         // Simulate on/off togle
         if (CompareColors(btn.colors.pressedColor, preHighlightColor))
         {
@@ -67,7 +67,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
         // keep state On
         ActOnClick();
     }
@@ -104,7 +104,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
             }
             tmpColor.a = 1;
             txt.color = tmpColor;
-            Debug.Log("SetHighlightedStatus " + btn.name + " button");
+            // Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
     }
 
@@ -121,7 +121,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
         tmpColor.a = 1;
         txt.color = tmpColor;
         preHighlightColor = tmpColor;
-    Debug.Log("SetOnStatus " + btn.name + " button");
+    // Debug.Log("SetOnStatus " + btn.name + " button");
     }
 
     void SetOffStatus()
@@ -137,7 +137,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
         tmpColor.a = 1;
         txt.color = tmpColor;
         preHighlightColor = tmpColor;
-        Debug.Log("SetOnStatus " + btn.name + " button");
+        // Debug.Log("SetOnStatus " + btn.name + " button");
     }
 
     void SetPreHighlightStatus()
@@ -163,7 +163,7 @@ public class HeroEquipmentButton : MonoBehaviour, IPointerEnterHandler, IPointer
             tmpTxt.color = btn.colors.normalColor;
             // Debug.Log("dimm " + otherButton.name + " button");
         }
-        Debug.Log("DimmAllOtherMenus");
+        // Debug.Log("DimmAllOtherMenus");
     }
 
     GameObject GetChildGameObjByTag(string tag)

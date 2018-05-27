@@ -40,7 +40,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenusExceptToggled();
         // highlight this menu
@@ -49,7 +49,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         // Simulate on/off togle
         // Do not off, if it was on, because it means that no object is selected
         // We should have at least one object selected
@@ -62,7 +62,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
         // turn it on if it is not ON already
         //if (!tgl.isOn)
         //{
@@ -105,7 +105,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             tmpColor.a = 1;
             // Highlight label ([N] button)
             unitName.color = tmpColor;
-            Debug.Log("SetHighlightedStatus " + tgl.name + " button");
+            // Debug.Log("SetHighlightedStatus " + tgl.name + " button");
         }
     }
 
@@ -121,7 +121,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         tmpColor.a = 1;
         unitName.color = tmpColor;
-        Debug.Log("SetOnStatus " + tgl.name + " button");
+        // Debug.Log("SetOnStatus " + tgl.name + " button");
     }
 
     void SetOffStatus()
@@ -136,7 +136,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         tmpColor.a = 1;
         unitName.color = tmpColor;
-        Debug.Log("SetOnStatus " + tgl.name + " button");
+        // Debug.Log("SetOnStatus " + tgl.name + " button");
     }
 
     void SetPreHighlightStatus()
@@ -152,7 +152,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         tmpColor.a = 1;
         unitName.color = tmpColor;
-        Debug.Log("SetPreHighlightStatus");
+        // Debug.Log("SetPreHighlightStatus");
     }
 
     void DimmAllOtherMenusExceptToggled()
@@ -168,7 +168,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 tmpUnitName.color = tmpTgl.colors.normalColor;
             }
         }
-        Debug.Log("DimmAllOtherMenusExceptToggled");
+        // Debug.Log("DimmAllOtherMenusExceptToggled");
     }
     
     void DeselectAllOtherTogglesInGroup()
@@ -184,6 +184,6 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 tmpUnitName.color = tmpTgl.colors.normalColor;
             }
         }
-        Debug.Log("DeselectAllOtherTogglesInGroup");
+        // Debug.Log("DeselectAllOtherTogglesInGroup");
     }
 }

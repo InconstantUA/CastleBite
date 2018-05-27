@@ -68,7 +68,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         tmpColor.a = 1;
         txt.color = tmpColor;
-        Debug.Log("SetHighlightedStatus " + btn.name + " button");
+        // Debug.Log("SetHighlightedStatus " + btn.name + " button");
     }
 
     void SetPressedStatus()
@@ -83,7 +83,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         tmpColor.a = 1;
         txt.color = tmpColor;
-        Debug.Log("SetPressedStatus " + btn.name + " button");
+        // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
     void DimmAllOtherMenus()
@@ -103,12 +103,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             otherButton.GetComponentInChildren<Text>().color = tmpColor;
             // Debug.Log("dimm " + otherButton.name + " button");
         }
-        Debug.Log("DimmAllOtherMenus");
+        // Debug.Log("DimmAllOtherMenus");
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // set state
         currentState = States.Highlighted;
         // dimm all other menus
@@ -119,7 +119,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         // set state
         currentState = States.Pressed;
         SetPressedStatus();
@@ -127,7 +127,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
         currentState = States.Highlighted;
         SetHighlightedStatus();
         ActOnClick();
@@ -163,7 +163,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 OptionsKeyboardAndMouseSubmenuL3PanelClick();
                 break;
             default:
-                Debug.Log("Error: unknown selected menu name [" + currActiveMenuName + "]");
+                Debug.LogError("Error: unknown selected menu name [" + currActiveMenuName + "]");
                 break;
         }
     }
@@ -223,10 +223,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 Application.Quit();
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
+        // Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
     void StartGame()
@@ -290,10 +290,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 SetActiveMenuTo("OptionsKeyboardAndMouseSubmenuL3Panel", 1);
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
+        // Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
     }
 
     void OptionsGameSubmenuL3PanelClick()
@@ -317,10 +317,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 }
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsGameSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     void OptionsVideoSubmenuL3PanelClick()
@@ -336,10 +336,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 // instead it react on keyboard -> <- keys
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsVideoSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsVideoSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
     void OptionsAudioSubmenuL3PanelClick()
     {
@@ -354,10 +354,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 // instead it react on keyboard -> <- keys
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsAudioSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     void OptionsKeyboardAndMouseSubmenuL3PanelClick()
@@ -378,10 +378,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             case "ResetToDefault":
                 break;
             default:
-                Debug.Log("Error: unknown selected button name [" + selectedMBtnName + "]");
+                Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
         }
-        Debug.Log("OptionsKeyboardAndMouseSubmenuL3PanelClick on " + selectedMBtnName + " button");
+        // Debug.Log("OptionsKeyboardAndMouseSubmenuL3PanelClick on " + selectedMBtnName + " button");
     }
 
     #endregion OnClick

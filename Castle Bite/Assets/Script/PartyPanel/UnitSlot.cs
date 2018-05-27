@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -13,6 +14,20 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     Text unitName;
     Button unitSlot;
     Color tmpColor;
+
+    // reference to the Confirmation pop-up window
+    private ConfirmationPopUp confirmationPopUp;
+    // actions for Confrimation pop-up
+    private UnityAction disableYesAction;
+    private UnityAction disableNoAction;
+
+    private void Awake()
+    {
+        confirmationPopUp = ConfirmationPopUp.Instance();
+        // define actions
+        disableYesAction = new UnityAction(OnDismissYesConfirmation);
+        disableNoAction = new UnityAction(OnDismissNoConfirmation);
+    }
 
     void Start()
     {
@@ -38,7 +53,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (unitSlot.transform.childCount > 0)
         {
             // verify if unit has isLeader atrribute ON
-            PartyUnit unit = unitSlot.transform.GetComponentInChildren<PartyUnit>();
+            // PartyUnit unit = unitSlot.transform.GetComponentInChildren<PartyUnit>();
             // fill in highered object UI panel
             resultNameTxtComp = unitSlot.transform.GetChild(0).Find("Name").GetComponent<Text>();
         }
@@ -47,20 +62,20 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // highlight this menu
         SetHighlightedStatus();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
         SetHighlightedStatus();
         ActOnClick();
     }
@@ -101,7 +116,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 }
                 tmpColor.a = 1;
                 unitName.color = tmpColor;
-                Debug.Log("SetHighlightedStatus " + unitSlot.name + " button");
+                // Debug.Log("SetHighlightedStatus " + unitSlot.name + " button");
             }
         }
     }
@@ -122,7 +137,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             tmpColor.a = 1;
             unitName.color = tmpColor;
         }
-        Debug.Log("SetPressedStatus " + unitSlot.name + " button");
+        // Debug.Log("SetPressedStatus " + unitSlot.name + " button");
     }
 
     void SetNormalStatus()
@@ -141,7 +156,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             tmpColor.a = 1;
             unitName.color = tmpColor;
         }
-        Debug.Log("SetNormalStatus " + unitSlot.name + " button");
+        // Debug.Log("SetNormalStatus " + unitSlot.name + " button");
     }
 
     #region OnClick
@@ -161,7 +176,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 break;
             case City.CityViewActiveState.ActiveDismiss:
                 // try to dismiss unit, if it is possible
-                DismissUnit();
+                TryToDismissUnit();
                 break;
             case City.CityViewActiveState.ActiveHeal:
                 // try to heal unit, if it is possible
@@ -175,7 +190,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    void DismissUnit()
+    void TryToDismissUnit()
     {
         // this depends on the fact if unit is dismissable
         // for example Capital guard is not dimissable
@@ -188,18 +203,30 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // verify if this is party leader
             if (unit.GetIsLeader())
             {
-                confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Are you sure you want to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + "?";
+                confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + " and whole party?";
             }
             else
             {
-                confirmationMessage = "Are you sure you want to dismiss " + unit.GetUnitName() + "?";
+                confirmationMessage = "Do you want to dismiss " + unit.GetUnitName() + "?";
             }
+            // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+            confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
         } else
         {
             // display error message
             NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
             notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + ".");
         }
+    }
+
+    void OnDismissYesConfirmation()
+    {
+        Debug.Log("Yes");
+    }
+
+    void OnDismissNoConfirmation()
+    {
+        Debug.Log("No");
     }
 
     #endregion OnClick

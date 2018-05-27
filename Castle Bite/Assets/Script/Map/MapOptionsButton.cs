@@ -41,7 +41,7 @@ public class MapOptionsButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenus();
         // highlight this menu
@@ -50,13 +50,13 @@ public class MapOptionsButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
         // keep state On
         ActOnClick();
     }
@@ -93,7 +93,7 @@ public class MapOptionsButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
             }
             tmpColor.a = 1;
             txt.color = tmpColor;
-            Debug.Log("SetHighlightedStatus " + btn.name + " button");
+            // Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
     }
 
@@ -109,7 +109,7 @@ public class MapOptionsButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
         tmpColor.a = 1;
         txt.color = tmpColor;
-        Debug.Log("SetPressedStatus " + btn.name + " button");
+        // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
     void SetNormalStatus()
@@ -124,7 +124,7 @@ public class MapOptionsButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
         tmpColor.a = 1;
         txt.color = tmpColor;
-        Debug.Log("SetNormalStatus " + btn.name + " button");
+        // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
     void DimmAllOtherMenus()
@@ -138,7 +138,7 @@ public class MapOptionsButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
             tmpTxt.color = tmpBtn.colors.normalColor;
             // Debug.Log("dimm " + otherButton.name + " button");
         }
-        Debug.Log("DimmAllOtherMenus");
+        // Debug.Log("DimmAllOtherMenus");
     }
 
     #region OnClick

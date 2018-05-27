@@ -13,7 +13,7 @@ public class PartyPanel : MonoBehaviour {
 
     public Transform GetUnitSlotTr(string row, string cell)
     {
-        Debug.Log(row + " " + cell);
+        // Debug.Log(row + " " + cell);
         return transform.Find(row).Find(cell).Find("UnitSlot");
     }
 
@@ -339,21 +339,22 @@ public class PartyPanel : MonoBehaviour {
                 unitSlot = untCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // verify if unit is damaged
+                    // verify if we need to activate or deactivate highlight
+                    // get unit for future reference
                     unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     if (activate)
                     {
                         // activate highlight
-                        // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
-                        if ((unit.GetHealthCurr() > 0) && (unit.GetHealthCurr() < unit.GetHealthMax()))
+                        // make sure that unit is dismissable
+                        if (unit.GetIsDismissable())
                         {
-                            // unit can be healed
+                            // unit can be dismissed
                             // highlight it with green
                             hightlightColor = greenHighlight;
                         }
                         else
                         {
-                            // unit cannot be healed
+                            // unit cannot be dismissed
                             // highlight with red
                             hightlightColor = redHighlight;
                         }
@@ -393,21 +394,21 @@ public class PartyPanel : MonoBehaviour {
                 unitSlot = untCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // verify if unit is damaged
+                    // verify if we need to activate or deactivate highlight
                     unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     if (activate)
                     {
                         // activate highlight
                         // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
-                        if ((unit.GetHealthCurr() > 0) && (unit.GetHealthCurr() < unit.GetHealthMax()))
+                        if (0 == unit.GetHealthCurr())
                         {
-                            // unit can be healed
+                            // unit is dead and can be resurected
                             // highlight it with green
                             hightlightColor = greenHighlight;
                         }
                         else
                         {
-                            // unit cannot be healed
+                            // unit is alive and cannot be resurected
                             // highlight with red
                             hightlightColor = redHighlight;
                         }

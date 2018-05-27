@@ -43,7 +43,7 @@ public class CityControlPanel : MonoBehaviour {
         {
             VerifyAndDimmToggle(callingToggle, heroEquipmentToggle);
         }
-        Debug.Log("DimmAllOtherMenusExceptToggled");
+        // Debug.Log("DimmAllOtherMenusExceptToggled");
     }
 
     void VerifyAndDeselectToggle(Toggle callingToggle, Toggle tmpTgl)
@@ -66,6 +66,6 @@ public class CityControlPanel : MonoBehaviour {
         {
             VerifyAndDeselectToggle(callingToggle, heroEquipmentToggle);
         }
-        Debug.Log("DeselectAllOtherTogglesInGroup");
+        // Debug.Log("DeselectAllOtherTogglesInGroup");
     }
 }

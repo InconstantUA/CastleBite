@@ -47,7 +47,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenus();
         // highlight this menu
@@ -56,7 +56,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         // Simulate on/off togle
         // if (CompareColors(btn.colors.pressedColor, preHighlightColor))
         if (isOn)
@@ -74,7 +74,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
         // keep state On
         ActOnClick();
     }
@@ -115,7 +115,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
             lbl.color = tmpColor;
             // Show tip
             tip.color = tmpColor;
-            Debug.Log("SetHighlightedStatus " + btn.name + " button");
+            // Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
     }
 
@@ -132,7 +132,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
         tmpColor.a = 1;
         lbl.color = tmpColor;
         isOn = true;
-        Debug.Log("SetOnStatus " + btn.name + " button");
+        // Debug.Log("SetOnStatus " + btn.name + " button");
     }
 
     void SetOffStatus()
@@ -148,7 +148,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
         tmpColor.a = 1;
         lbl.color = tmpColor;
         isOn = false;
-        Debug.Log("SetOnStatus " + btn.name + " button");
+        // Debug.Log("SetOnStatus " + btn.name + " button");
     }
 
     void SetPreHighlightStatus()
@@ -165,7 +165,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
         }
         tmpColor.a = 1;
         lbl.color = tmpColor;
-        Debug.Log("SetPreHighlightStatus");
+        // Debug.Log("SetPreHighlightStatus");
     }
 
     void DimmAllOtherMenus()
@@ -179,7 +179,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
             tmpTxt.color = tmpBtn.colors.normalColor;
             // Debug.Log("dimm " + otherButton.name + " button");
         }
-        Debug.Log("DimmAllOtherMenus");
+        // Debug.Log("DimmAllOtherMenus");
     }
 
     void SetTipNormalStatus()
@@ -194,7 +194,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
         }
         tmpColor.a = 0;
         tip.color = tmpColor;
-        Debug.Log("SetTipNormalStatus " + btn.name + " button");
+        // Debug.Log("SetTipNormalStatus " + btn.name + " button");
     }
 
     #region OnClick
@@ -211,13 +211,13 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
             {
                 tmpColor = tmpBtn.colors.highlightedColor;
                 tmpColor.a = 1; // show it
-                Debug.Log("Show all cities names");
+                // Debug.Log("Show all cities names");
             }
             else
             {
                 tmpColor = tmpBtn.colors.normalColor;
                 tmpColor.a = 0; // hide it
-                Debug.Log("Hide all cities names");
+                // Debug.Log("Hide all cities names");
             }
             tmpTxt.color = tmpColor;
             // Debug.Log("dimm " + otherButton.name + " button");

@@ -57,8 +57,8 @@ public class MapDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         //Vector3 bordersMin = new Vector3(xMin, yMin, 100);
         // xMax = Camera.main.WorldToScreenPoint(bordersMax).x;
         // yMax = Camera.main.WorldToScreenPoint(bordersMax).y;
-        Debug.Log("min x:" + xMinDef + " y:" + yMinDef);
-        Debug.Log("max x:" + xMaxDef + " y:" + yMaxDef);
+        // Debug.Log("min x:" + xMinDef + " y:" + yMinDef);
+        // Debug.Log("max x:" + xMaxDef + " y:" + yMaxDef);
         //xMax = Camera.main.ScreenToWorldPoint(bordersMax).x;
         //yMax = Camera.main.ScreenToWorldPoint(bordersMax).y;
         //xMin = Camera.main.ScreenToWorldPoint(bordersMin).x;

@@ -62,7 +62,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("OnPointerEnter");
+        // Debug.Log("OnPointerEnter");
         // dimm all other menus
         // CityControlPanel ctrlPnl = transform.parent.GetComponent<CityControlPanel>();
         CityControlPanel ctrlPnl = tgl.group.GetComponent<CityControlPanel>();
@@ -73,7 +73,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown");
+        // Debug.Log("OnPointerDown");
         // Simulate on/off togle
         if (tgl.isOn)
         {
@@ -91,7 +91,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("OnPointerUp");
+        // Debug.Log("OnPointerUp");
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -127,7 +127,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             tmpColor.a = 1;
             // Highlight label ([N] button)
             tglName.color = tmpColor;
-            Debug.Log("SetHighlightedStatus " + tgl.name + " button");
+            // Debug.Log("SetHighlightedStatus " + tgl.name + " button");
         }
     }
 
@@ -144,7 +144,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         tmpColor.a = 1;
         tglName.color = tmpColor;
-        Debug.Log("SetPreHighlightStatus");
+        // Debug.Log("SetPreHighlightStatus");
     }
 
     void SetOnStatus()
@@ -159,7 +159,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         tmpColor.a = 1;
         tglName.color = tmpColor;
-        Debug.Log("SetOnStatus " + tgl.name + " button");
+        // Debug.Log("SetOnStatus " + tgl.name + " button");
     }
 
     void SetOffStatus()
@@ -174,7 +174,7 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         tmpColor.a = 1;
         tglName.color = tmpColor;
-        Debug.Log("SetOnStatus " + tgl.name + " button");
+        // Debug.Log("SetOnStatus " + tgl.name + " button");
     }
 
     void ChangeCityActiveState(bool doActivate)
