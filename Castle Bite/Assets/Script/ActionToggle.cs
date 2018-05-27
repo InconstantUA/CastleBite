@@ -4,8 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
+    public enum ActToggleType { Heal, Resurect, Dismiss };
+    [SerializeField]
+    ActToggleType toggleType;
+
 
     // button works as toggle
     // - on click
@@ -21,7 +25,7 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     //  verify if user really wants to dismiss hero with other party members
     //  remvove whole party
     // if clicked on something else
-    // change cursor back to normal
+    //  change cursor back to normal
 
     //// Use this for initialization
     //void Start () {
@@ -34,21 +38,16 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     //}
 
 
-    Text unitName;
+    Text tglName;
     Toggle tgl;
     Color tmpColor;
 
     void Start()
     {
         // init lable object
-        unitName = GetComponentInChildren<Text>();
+        tglName = GetComponentInChildren<Text>();
         // baseColor = txt.color;
         tgl = gameObject.GetComponent<Toggle>();
-        // pre-select leader if it is selected in Unity UI
-        if (tgl.isOn)
-        {
-            SetOnStatus();
-        }
     }
 
     void Update()
@@ -65,7 +64,8 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         Debug.Log("OnPointerEnter");
         // dimm all other menus
-        // DimmAllOtherMenusExceptToggled();
+        CityControlPanel ctrlPnl = transform.parent.GetComponent<CityControlPanel>();
+        ctrlPnl.DimmAllOtherMenusExceptToggled(tgl);
         // highlight this menu
         SetHighlightedStatus();
     }
@@ -81,20 +81,14 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         else
         {
             SetOnStatus();
-            // DeselectAllOtherTogglesInGroup();
+            ActivateActionMouseCursor();
+            transform.parent.GetComponent<CityControlPanel>().DeselectAllOtherTogglesInGroup(tgl);
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         Debug.Log("OnPointerUp");
-        // turn it on if it is not ON already
-        //if (!tgl.isOn)
-        //{
-        //    // was off -> transition to on
-        //    SetOnStatus();
-        //    DeselectAllOtherTogglesInGroup();
-        //}
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -116,7 +110,7 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     void SetHighlightedStatus()
     {
         // avoid double job
-        if (!CompareColors(tgl.colors.highlightedColor, unitName.color))
+        if (!CompareColors(tgl.colors.highlightedColor, tglName.color))
         {
             // change to highlighted color
             if (tgl.interactable)
@@ -129,7 +123,7 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             }
             tmpColor.a = 1;
             // Highlight label ([N] button)
-            unitName.color = tmpColor;
+            tglName.color = tmpColor;
             Debug.Log("SetHighlightedStatus " + tgl.name + " button");
         }
     }
@@ -145,10 +139,25 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             tmpColor = tgl.colors.disabledColor;
         }
         tmpColor.a = 1;
-        unitName.color = tmpColor;
-        // change cursor to Dismiss
-        CursorController.Instance.SetDismissUnitCursor();
+        tglName.color = tmpColor;
         Debug.Log("SetOnStatus " + tgl.name + " button");
+    }
+
+    void ActivateActionMouseCursor()
+    {
+        // change cursor to required state based on toggle type
+        if (toggleType == ActToggleType.Dismiss)
+        {
+            CursorController.Instance.SetDismissUnitCursor();
+        }
+        else if (toggleType == ActToggleType.Heal)
+        {
+            CursorController.Instance.SetHealUnitCursor();
+        }
+        else if (toggleType == ActToggleType.Resurect)
+        {
+            CursorController.Instance.SetResurectUnitCursor();
+        }
     }
 
     void SetOffStatus()
@@ -162,7 +171,7 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             tmpColor = tgl.colors.disabledColor;
         }
         tmpColor.a = 1;
-        unitName.color = tmpColor;
+        tglName.color = tmpColor;
         // change cursor to Normal
         CursorController.Instance.SetNormalCursor();
         Debug.Log("SetOnStatus " + tgl.name + " button");
@@ -180,39 +189,8 @@ public class DismissUnit : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             tmpColor = tgl.colors.normalColor;
         }
         tmpColor.a = 1;
-        unitName.color = tmpColor;
+        tglName.color = tmpColor;
         Debug.Log("SetPreHighlightStatus");
     }
 
-    //void DimmAllOtherMenusExceptToggled()
-    //{
-    //    foreach (Toggle tmpTgl in allTogglesInGroup)
-    //    {
-    //        // do not dimm currently selected objects
-    //        // first child in toggle is Name Text UI obj
-    //        Text tmpUnitName = tmpTgl.GetComponentInChildren<Text>();
-    //        // make sure that we do not deem ourselves and toggled (selected) unit
-    //        if ((!tmpTgl.isOn) && (unitName != tmpUnitName))
-    //        {
-    //            tmpUnitName.color = tmpTgl.colors.normalColor;
-    //        }
-    //    }
-    //    Debug.Log("DimmAllOtherMenusExceptToggled");
-    //}
-
-    //void DeselectAllOtherTogglesInGroup()
-    //{
-    //    foreach (Toggle tmpTgl in allTogglesInGroup)
-    //    {
-    //        // do not dimm currently selected objects
-    //        // first child in toggle is Name Text UI obj
-    //        Text tmpUnitName = tmpTgl.GetComponentInChildren<Text>();
-    //        // make sure that we do not deem ourselves
-    //        if ((tmpTgl.isOn) && (unitName != tmpUnitName))
-    //        {
-    //            tmpUnitName.color = tmpTgl.colors.normalColor;
-    //        }
-    //    }
-    //    Debug.Log("DeselectAllOtherTogglesInGroup");
-    //}
 }
