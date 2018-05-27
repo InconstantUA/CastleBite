@@ -47,7 +47,7 @@ public class CursorController : MonoBehaviour {
                     Cursor.SetCursor(resurectUnitCursor, new Vector2(16, 16), CursorMode.Auto);
                     break;
                 case City.CityViewActiveState.ActiveHeroEquipment:
-                    Cursor.SetCursor(invenotryUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+                    Cursor.SetCursor(invenotryUnitCursor, Vector2.zero, CursorMode.Auto);
                     break;
             }
         }

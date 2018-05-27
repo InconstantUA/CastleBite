@@ -144,6 +144,16 @@ public class PartyUnit : MonoBehaviour {
         isLeader = isLdr;
     }
 
+    public bool GetIsDismissable()
+    {
+        return isDismissable;
+    }
+
+    public void SetIsDismissable(bool isLdr)
+    {
+        isDismissable = isLdr;
+    }
+
     //// Use this for initialization
     //void Start () {
 

@@ -16,9 +16,6 @@ public class City : MonoBehaviour {
     public enum CityOccupationState { NoHeroIn, HeroIn };
     [SerializeField]
     CityOccupationState cityOccupationState;
-    public enum CityInventoryState { HeroInvOff, HeroInvOn };
-    [SerializeField]
-    CityInventoryState cityInventoryState;
 
     // City view state is required to effectively change between different states
     // and do not forget to enable or disable something
@@ -79,6 +76,11 @@ public class City : MonoBehaviour {
             result = true;
         }
         return result;
+    }
+
+    public CityViewActiveState GetActiveState()
+    {
+        return cityViewActiveState;
     }
 
     public void SetActiveState(CityViewActiveState requiredState, bool doActivate)

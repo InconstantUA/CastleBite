@@ -228,7 +228,7 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 Transform cityTr = transform.parent.parent.parent.parent;
                 if (isHigheredUnitPartyLeader)
                 {
-                    // create and update Hero Party panel in UI, parent it to Game UI
+                    // create and update Hero Party panel in UI, parent it to city UI
                     GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
                     GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
                     //  activate new party UI panel
