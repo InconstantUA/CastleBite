@@ -135,24 +135,16 @@ public class CityBackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         Debug.Log("DimmAllOtherMenus");
     }
 
-    void ResetCityView()
-    {
-        // Reset previously toggled active states: heal, resurect, dismiss, hire
-        // return cursor to normal state
-        CursorController.Instance.SetNormalCursor();
-    }
-
     #region OnClick
 
     void ActOnClick()
     {
-        ResetCityView();
-        // go back to main menu
-        // change this to map in future
+        // activate map view
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
-        GameObject city = transform.parent.gameObject;
-        city.SetActive(false);
         mapScreen.SetActive(true);
+        // deactivate city view
+        // activate exit city function to correctly exit city
+        transform.parent.GetComponent<City>().ExitCity();
     }
 
     #endregion OnClick

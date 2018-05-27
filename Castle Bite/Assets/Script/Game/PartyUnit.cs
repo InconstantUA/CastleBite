@@ -3,17 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PartyUnit : MonoBehaviour {
-    public int cost;
-    public int healthCurr;
-    public int healthMax;
-    public bool isLeader;
-    public string unitName;
-    public string givenName;
-    public int unitLevel;
-    public int unitLeadership;
-    public string unitRole;
-    public bool isInterpartyMovable;
-    public bool isDismissable;
+    [SerializeField]
+    int cost;
+    [SerializeField]
+    int healthCurr;
+    [SerializeField]
+    int healthMax;
+    [SerializeField]
+    bool isLeader;
+    [SerializeField]
+    string unitName;
+    [SerializeField]
+    string givenName;
+    [SerializeField]
+    int unitLevel;
+    [SerializeField]
+    int unitLeadership;
+    [SerializeField]
+    string unitRole;
+    [SerializeField]
+    bool isInterpartyMovable;
+    [SerializeField]
+    bool isDismissable;
+    [SerializeField]
+
 
     public enum UnitType { CapitalGuard, Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
     public UnitType unitType;
@@ -119,6 +132,16 @@ public class PartyUnit : MonoBehaviour {
     public UnitSize GetUnitSize()
     {
         return unitSize;
+    }
+
+    public bool GetIsLeader()
+    {
+        return isLeader;
+    }
+
+    public void SetIsLeader(bool isLdr)
+    {
+        isLeader = isLdr;
     }
 
     //// Use this for initialization

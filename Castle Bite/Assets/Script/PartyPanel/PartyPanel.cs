@@ -80,7 +80,7 @@ public class PartyPanel : MonoBehaviour {
                     // verify if unit has isLeader atrribute ON
                     unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // fill in highered object UI panel
-                    if (unit.isLeader)
+                    if (unit.GetIsLeader())
                     {
                         // start with Hero's given name information
                         unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
@@ -112,7 +112,7 @@ public class PartyPanel : MonoBehaviour {
                 {
                     // verify if unit has isLeader atrribute ON
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    if (unit.isLeader)
+                    if (unit.GetIsLeader())
                     {
                         leader = unit;
                     }
@@ -167,33 +167,36 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetHireUnitPnlButtonActive(bool activate)
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        // this is only needed in garnizon mode, only in this mode hire buttons are present
+        if (panelMode == PanelMode.Garnizon)
         {
-            foreach (string cell in singleUnitCells)
+            foreach (string horisontalPanel in horisontalPanels)
             {
-                if (activate)
+                foreach (string cell in singleUnitCells)
                 {
-                    // activate - set in front of drop slot
-                    // do not activate it if drop slot has an unit in it
-                    if (transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
+                    if (activate)
                     {
-                        // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsLastSibling();
-                        transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                        // activate - set in front of drop slot
+                        // do not activate it if drop slot has an unit in it
+                        if (transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
+                        {
+                            // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsLastSibling();
+                            transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                        }
                     }
-                }
-                else
-                {
-                    //// deactivate - set behind drop slot
-                    //if (partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
-                    //{
-                    // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsFirstSibling();
-                    transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(false);
-                    //}
+                    else
+                    {
+                        //// deactivate - set behind drop slot
+                        //if (partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
+                        //{
+                        // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsFirstSibling();
+                        transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(false);
+                        //}
+                    }
                 }
             }
         }
     }
-
 
     void VerifyCityCapacity()
     {
@@ -261,6 +264,167 @@ public class PartyPanel : MonoBehaviour {
             transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
         }
         return result;
+    }
+
+    public void SetActiveHeal(bool activate)
+    {
+        Transform untCell;
+        Transform unitSlot;
+        PartyUnit unit;
+        Color greenHighlight = Color.green;
+        Color redHighlight = Color.red;
+        Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+        Color hightlightColor;
+        // highlight differently cells with and without units
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                untCell = transform.Find(horisontalPanel).Find(cell);
+                unitSlot = untCell.Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // verify if unit is damaged
+                    unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    if (activate)
+                    {
+                        // activate highlight
+                        // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
+                        if ( (unit.GetHealthCurr()>0) && (unit.GetHealthCurr() < unit.GetHealthMax()) )
+                        {
+                            // unit can be healed
+                            // highlight it with green
+                            hightlightColor = greenHighlight;
+                        }
+                        else
+                        {
+                            // unit cannot be healed
+                            // highlight with red
+                            hightlightColor = redHighlight;
+                        }
+                    }
+                    else
+                    {
+                        // deactivate highlight
+                        // get color from 
+                        hightlightColor = normalColor;
+                    }
+                    // Change text box color
+                    untCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                }
+            }
+        }
+        // and disable hire buttons
+        SetHireUnitPnlButtonActive(!activate);
+    }
+
+
+    public void SetActiveDismiss(bool activate)
+    {
+        Transform untCell;
+        Transform unitSlot;
+        PartyUnit unit;
+        Color greenHighlight = Color.green;
+        Color redHighlight = Color.red;
+        Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+        Color hightlightColor;
+        // highlight differently cells with and without units
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                untCell = transform.Find(horisontalPanel).Find(cell);
+                unitSlot = untCell.Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // verify if unit is damaged
+                    unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    if (activate)
+                    {
+                        // activate highlight
+                        // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
+                        if ((unit.GetHealthCurr() > 0) && (unit.GetHealthCurr() < unit.GetHealthMax()))
+                        {
+                            // unit can be healed
+                            // highlight it with green
+                            hightlightColor = greenHighlight;
+                        }
+                        else
+                        {
+                            // unit cannot be healed
+                            // highlight with red
+                            hightlightColor = redHighlight;
+                        }
+                    }
+                    else
+                    {
+                        // deactivate highlight
+                        // get color from 
+                        hightlightColor = normalColor;
+                    }
+                    // Change text box color
+                    untCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                }
+            }
+        }
+        // and disable hire buttons
+        SetHireUnitPnlButtonActive(!activate);
+    }
+
+
+    public void SetActiveResurect(bool activate)
+    {
+        Transform untCell;
+        Transform unitSlot;
+        PartyUnit unit;
+        Color greenHighlight = Color.green;
+        Color redHighlight = Color.red;
+        Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+        Color hightlightColor;
+        // highlight differently cells with and without units
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                untCell = transform.Find(horisontalPanel).Find(cell);
+                unitSlot = untCell.Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // verify if unit is damaged
+                    unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    if (activate)
+                    {
+                        // activate highlight
+                        // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
+                        if ((unit.GetHealthCurr() > 0) && (unit.GetHealthCurr() < unit.GetHealthMax()))
+                        {
+                            // unit can be healed
+                            // highlight it with green
+                            hightlightColor = greenHighlight;
+                        }
+                        else
+                        {
+                            // unit cannot be healed
+                            // highlight with red
+                            hightlightColor = redHighlight;
+                        }
+                    }
+                    else
+                    {
+                        // deactivate highlight
+                        // get color from 
+                        hightlightColor = normalColor;
+                    }
+                    // Change text box color
+                    untCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                }
+            }
+        }
+        // and disable hire buttons
+        SetHireUnitPnlButtonActive(!activate);
     }
 
     //// Update is called once per frame

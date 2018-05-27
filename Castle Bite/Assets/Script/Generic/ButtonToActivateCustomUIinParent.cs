@@ -146,8 +146,7 @@ public class ButtonToActivateCustomUIinParent : MonoBehaviour, IPointerEnterHand
 
     void ActOnClick()
     {
-        // activate HireHero menu
-        // GameRoot-Cities-[City]-(this)HireHeroPanelBtn
+        // activate required object
         gameObjectToBeActivated.SetActive(true);
     }
 

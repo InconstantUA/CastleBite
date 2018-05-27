@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public enum ActToggleType { Heal, Resurect, Dismiss };
+    public enum ActToggleType { Heal, Resurect, Dismiss, HeroEquipment };
     [SerializeField]
     ActToggleType toggleType;
 
@@ -64,7 +64,8 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         Debug.Log("OnPointerEnter");
         // dimm all other menus
-        CityControlPanel ctrlPnl = transform.parent.GetComponent<CityControlPanel>();
+        // CityControlPanel ctrlPnl = transform.parent.GetComponent<CityControlPanel>();
+        CityControlPanel ctrlPnl = tgl.group.GetComponent<CityControlPanel>();
         ctrlPnl.DimmAllOtherMenusExceptToggled(tgl);
         // highlight this menu
         SetHighlightedStatus();
@@ -77,12 +78,14 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (tgl.isOn)
         {
             SetOffStatus();
+            ChangeCityActiveState(false);
         }
         else
         {
             SetOnStatus();
-            ActivateActionMouseCursor();
-            transform.parent.GetComponent<CityControlPanel>().DeselectAllOtherTogglesInGroup(tgl);
+            ChangeCityActiveState(true);
+            CityControlPanel ctrlPnl = tgl.group.GetComponent<CityControlPanel>();
+            ctrlPnl.DeselectAllOtherTogglesInGroup(tgl);
         }
     }
 
@@ -128,55 +131,6 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
     }
 
-    void SetOnStatus()
-    {
-        if (tgl.interactable)
-        {
-            tmpColor = tgl.colors.pressedColor;
-        }
-        else
-        {
-            tmpColor = tgl.colors.disabledColor;
-        }
-        tmpColor.a = 1;
-        tglName.color = tmpColor;
-        Debug.Log("SetOnStatus " + tgl.name + " button");
-    }
-
-    void ActivateActionMouseCursor()
-    {
-        // change cursor to required state based on toggle type
-        if (toggleType == ActToggleType.Dismiss)
-        {
-            CursorController.Instance.SetDismissUnitCursor();
-        }
-        else if (toggleType == ActToggleType.Heal)
-        {
-            CursorController.Instance.SetHealUnitCursor();
-        }
-        else if (toggleType == ActToggleType.Resurect)
-        {
-            CursorController.Instance.SetResurectUnitCursor();
-        }
-    }
-
-    void SetOffStatus()
-    {
-        if (tgl.interactable)
-        {
-            tmpColor = tgl.colors.normalColor;
-        }
-        else
-        {
-            tmpColor = tgl.colors.disabledColor;
-        }
-        tmpColor.a = 1;
-        tglName.color = tmpColor;
-        // change cursor to Normal
-        CursorController.Instance.SetNormalCursor();
-        Debug.Log("SetOnStatus " + tgl.name + " button");
-    }
-
     void SetPreHighlightStatus()
     {
         // return to previous color if was not On
@@ -193,4 +147,58 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Debug.Log("SetPreHighlightStatus");
     }
 
+    void SetOnStatus()
+    {
+        if (tgl.interactable)
+        {
+            tmpColor = tgl.colors.pressedColor;
+        }
+        else
+        {
+            tmpColor = tgl.colors.disabledColor;
+        }
+        tmpColor.a = 1;
+        tglName.color = tmpColor;
+        Debug.Log("SetOnStatus " + tgl.name + " button");
+    }
+
+    void SetOffStatus()
+    {
+        if (tgl.interactable)
+        {
+            tmpColor = tgl.colors.normalColor;
+        }
+        else
+        {
+            tmpColor = tgl.colors.disabledColor;
+        }
+        tmpColor.a = 1;
+        tglName.color = tmpColor;
+        Debug.Log("SetOnStatus " + tgl.name + " button");
+    }
+
+    void ChangeCityActiveState(bool doActivate)
+    {
+        // change cursor to required state based on toggle type
+        City.CityViewActiveState cityViewActiveState = City.CityViewActiveState.Normal;
+        if (toggleType == ActToggleType.Dismiss)
+        {
+            cityViewActiveState = City.CityViewActiveState.ActiveDismiss;
+        }
+        else if (toggleType == ActToggleType.Heal)
+        {
+            cityViewActiveState = City.CityViewActiveState.ActiveHeal;
+
+        }
+        else if (toggleType == ActToggleType.Resurect)
+        {
+            cityViewActiveState = City.CityViewActiveState.ActiveResurect;
+        }
+        else if (toggleType == ActToggleType.HeroEquipment)
+        {
+            cityViewActiveState = City.CityViewActiveState.ActiveHeroEquipment;
+        }
+        //  get city, structure: [City]-CtrlPnlCity-(this)Toggle, and activate state
+        transform.parent.parent.GetComponent<City>().SetActiveState(cityViewActiveState, doActivate);
+    }
 }

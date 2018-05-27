@@ -233,6 +233,14 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, cityTr);
                     //  activate new party UI panel
                     newPartyUIPanel.SetActive(true);
+                    //  set hero's equipment button to be part of city control panel ToggleGroup
+                    //  this should be unset on hero leaving city
+                    ToggleGroup toggleGroup = cityTr.Find("CtrlPnlCity").GetComponent<ToggleGroup>();
+                    Toggle heroEquipmentToggle = newPartyUIPanel.transform.Find("HeroEquipmentBtn").GetComponent<Toggle>();
+                    heroEquipmentToggle.group = toggleGroup;
+                    //  set HeroEquipmentBtn Toggle within CityControlPanel, so it can dimm or deselect it when other Toggles in group are activated
+                    //  this should be set to null on hero leaving or accessed outside of the city.
+                    toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
                     //  set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
                     newUnitParentSlot = newPartyUIPanel.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Right");
                 }
@@ -254,7 +262,7 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 if (isHigheredUnitPartyLeader)
                 {
                     //  activate hero HeroEquipmentBtn
-                    cityTr.Find("HeroEquipmentBtn").gameObject.SetActive(true);
+                    //   cityTr.Find("CtrlPnlCity/HeroEquipmentBtn").gameObject.SetActive(true);
                     // link party leader to the Left Focus panel
                     // os it can useit to fill in information
                     cityTr.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnit.gameObject;

@@ -11,6 +11,8 @@ public class CursorController : MonoBehaviour {
     private Texture2D healUnitCursor;
     [SerializeField]
     private Texture2D resurectUnitCursor;
+    [SerializeField]
+    private Texture2D invenotryUnitCursor;
     public static CursorController Instance { get; private set; }
 
     private void Awake()
@@ -29,21 +31,31 @@ public class CursorController : MonoBehaviour {
         Cursor.SetCursor(normalCursor, Vector2.zero, CursorMode.Auto);
     }
 
-    public void SetDismissUnitCursor()
+    public void SetCityActiveViewStateCursor(City.CityViewActiveState requiredState, bool doActivate)
     {
-        Cursor.SetCursor(dismissUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+        if(doActivate)
+        {
+            switch (requiredState)
+            {
+                case City.CityViewActiveState.ActiveDismiss:
+                    Cursor.SetCursor(dismissUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+                    break;
+                case City.CityViewActiveState.ActiveHeal:
+                    Cursor.SetCursor(healUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+                    break;
+                case City.CityViewActiveState.ActiveResurect:
+                    Cursor.SetCursor(resurectUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+                    break;
+                case City.CityViewActiveState.ActiveHeroEquipment:
+                    Cursor.SetCursor(invenotryUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+                    break;
+            }
+        }
+        else
+        {
+            SetNormalCursor();
+        }
     }
-
-    public void SetHealUnitCursor()
-    {
-        Cursor.SetCursor(healUnitCursor, new Vector2(16, 16), CursorMode.Auto);
-    }
-
-    public void SetResurectUnitCursor()
-    {
-        Cursor.SetCursor(resurectUnitCursor, new Vector2(16, 16), CursorMode.Auto);
-    }
-
 
     //// Update is called once per frame
     //void Update () {
