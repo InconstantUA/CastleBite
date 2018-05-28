@@ -56,7 +56,7 @@ public class PartyPanel : MonoBehaviour {
         // then hire unit button is disabled
         if (panelMode == PanelMode.Garnizon)
         {
-            // this is needed to disable hire units button
+            // this is needed to disable or enable hire units button
             // hero party does not have this functionality
             VerifyCityCapacity();
         }
@@ -82,7 +82,8 @@ public class PartyPanel : MonoBehaviour {
                 // verify if slot has an unit in it
                 unitPanel = transform.Find(horisontalPanel+"/"+cell);
                 unitSlot = unitPanel.Find("UnitSlot");
-                if (unitSlot.childCount > 0)
+                // if (unitSlot.childCount > 0)
+                if (unitSlot.GetComponentInChildren<UnitDragHandler>())
                 {
                     // verify if unit has isLeader atrribute ON
                     unit = unitSlot.GetComponentInChildren<PartyUnit>();
@@ -100,18 +101,20 @@ public class PartyPanel : MonoBehaviour {
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
                 }
-                //else
-                //{
-                //    // it is possile that unit was dismissed
-                //    // clean health information
-                //    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-                //    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
-                //    // activate hier unit button if panel is in garnizon state and this left or right single panel
-                //    if ((PanelMode.Garnizon == panelMode) && ( ("Left" == cell) || ("Right" == cell) ) )
-                //    {
-                //        unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
-                //    }
-                //}
+                else
+                {
+                    // it is possile that unit was dismissed
+                    // clean health information
+                    Debug.Log("Clean health info");
+                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+                    // activate hire unit button if panel is in garnizon state and this left or right single panel
+                    if ((PanelMode.Garnizon == panelMode) && (("Left" == cell) || ("Right" == cell)))
+                    {
+                        Debug.Log("Activate hire unit button");
+                        unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                    }
+                }
             }
         }
     }

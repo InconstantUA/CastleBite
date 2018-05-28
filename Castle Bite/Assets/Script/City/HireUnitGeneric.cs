@@ -5,22 +5,12 @@ using UnityEngine;
 // When this class is called it requires special objects to be set
 // This is later will be used by other sub-scripts
 public class HireUnitGeneric : MonoBehaviour {
-    bool isHigheredUnitPartyLeader;
     Transform callerCell;
-    GameObject callerObjectToDisableOnHire;
     GameObject unitsPanel;
 
-    public bool GetisHigheredUnitPartyLeader()
-    {
-        return isHigheredUnitPartyLeader;
-    }
     public Transform GetcallerCell()
     {
         return callerCell;
-    }
-    public GameObject GetcallerObjectToDisableOnHire()
-    {
-        return callerObjectToDisableOnHire;
     }
 
     public void DeactivateAdv()
@@ -31,16 +21,14 @@ public class HireUnitGeneric : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void ActivateAdv(bool isHUPL, Transform cCell, GameObject cOTDOH, GameObject uP)
+    public void ActivateAdv(Transform cCell, GameObject unitsPanelTemplate)
     {
-        isHigheredUnitPartyLeader = isHUPL;
         callerCell = cCell;
-        callerObjectToDisableOnHire = cOTDOH;
         gameObject.SetActive(true);
         // and bring it to the front
         transform.SetAsLastSibling();
         // create new units panel
-        unitsPanel = Instantiate(uP, transform.Find("Panel"));
+        unitsPanel = Instantiate(unitsPanelTemplate, transform.Find("Panel"));
         // turn it on
         unitsPanel.SetActive(true);
     }

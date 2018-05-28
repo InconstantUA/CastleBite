@@ -167,11 +167,6 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return transform.parent.parent.parent.parent.parent.GetComponent<City>();
     }
 
-    PartyPanel GetParentParty()
-    {
-        return transform.parent.parent.parent.GetComponent<PartyPanel>();
-    }
-
     void ActOnClick()
     {
         // act based on the city (and cursor) state
@@ -231,44 +226,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void OnDismissYesConfirmation()
     {
         Debug.Log("Yes");
-        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-        bool wasLeader = unit.GetIsLeader();
-        if (wasLeader)
-        {
-            // dismiss all units in party
-            // dismiss party
-        }
-        else
-        {
-            // dismiss unit with its parent canvas
-            Debug.Log("Dismiss uit");
-            Destroy(unit.transform.parent.gameObject);
-        }
-        // update city state, party and focus panels
-        Transform cityTr = GetParentCity().transform;
-        if (wasLeader)
-        {
-            // remove link to party leader to the Left Focus panel
-            cityTr.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = null;
-            // fill in city's left focus with information from the hero
-            // Focus panel wil automatically detect changes and update info
-            cityTr.Find("LeftFocus").GetComponent<FocusPanel>().OnChange();
-        }
-        else
-        {
-            // Update party panel
-            PartyPanel partyPanel = GetParentParty();
-            partyPanel.OnChange();
-            // if parent Party panel is in Garnizon state, then update right focus
-            if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
-            {
-                // fill in city's right focus with information from the hero
-                // Focus panel wil automatically detect changes and update info
-                cityTr.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
-            }
-        }
-        // disable dismiss mode and return to normal mode
-        GetParentCity().ReturnToNomalState();
+        // Ask city to dismiss unit
+        GetParentCity().DimissUnit(unitSlot.GetComponentInChildren<PartyUnit>());
     }
 
     void OnDismissNoConfirmation()

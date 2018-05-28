@@ -151,7 +151,7 @@ public class CityHireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     void ActOnClick()
     {
-        gameObjectToBeActivated.GetComponent<HireUnitGeneric>().ActivateAdv(isHigheredUnitPartyLeader, callerCell, callerObjectToDisableOnHire, unitsGroupToHire);
+        gameObjectToBeActivated.GetComponent<HireUnitGeneric>().ActivateAdv(callerCell, unitsGroupToHire);
     }
 
     #endregion OnClick
