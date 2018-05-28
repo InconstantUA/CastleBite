@@ -2988,7 +2988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cityName: Stormberg
   cityDescription: Dominion capital
-  cityLevel: 6
+  cityLevel: 4
   cityType: 1
   cityViewActiveState: 0
   cityOccupationState: 0
@@ -10970,6 +10970,7 @@ GameObject:
   - component: {fileID: 562574030}
   - component: {fileID: 562574029}
   - component: {fileID: 562574028}
+  - component: {fileID: 562574027}
   m_Layer: 5
   m_Name: YesBtn
   m_TagString: HighlightableControlsHirePartyLeader
@@ -10996,6 +10997,17 @@ RectTransform:
   m_AnchoredPosition: {x: -60, y: 30}
   m_SizeDelta: {x: 120, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &562574027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 562574025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6f16e6348cfda4a999b4a634a7664f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &562574028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20369,6 +20381,7 @@ GameObject:
   - component: {fileID: 1052235385}
   - component: {fileID: 1052235384}
   - component: {fileID: 1052235383}
+  - component: {fileID: 1052235382}
   m_Layer: 5
   m_Name: NoBtn
   m_TagString: HighlightableControlsHirePartyLeader
@@ -20395,6 +20408,17 @@ RectTransform:
   m_AnchoredPosition: {x: 60, y: 30}
   m_SizeDelta: {x: 120, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1052235382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1052235380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6f16e6348cfda4a999b4a634a7664f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1052235383
 MonoBehaviour:
   m_ObjectHideFlags: 0
