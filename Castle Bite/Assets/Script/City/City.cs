@@ -171,7 +171,7 @@ public class City : MonoBehaviour {
         cityGarnizon.SetActive(!doActivate);
     }
 
-    public void ExitCity()
+    public void ReturnToNomalState()
     {
         // return states to normal
         if (CityViewActiveState.Normal != cityViewActiveState)
@@ -206,9 +206,33 @@ public class City : MonoBehaviour {
             }
             // deactive currently active state
             // SetActiveState(cityViewActiveState, false);
-
         }
+    }
+
+    public void ExitCity()
+    {
+        ReturnToNomalState();
         // deactivate this component
         transform.gameObject.SetActive(false);
+    }
+
+    public void HirePartyLeader()
+    {
+
+    }
+
+    public void DismissPartyLeader()
+    {
+
+    }
+
+    public void HireSingleUnit()
+    {
+
+    }
+
+    public void DimissSingleUnit()
+    {
+
     }
 }

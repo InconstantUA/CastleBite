@@ -6,7 +6,8 @@ using UnityEngine.UI;
 // Controls all operations with child panels
 public class PartyPanel : MonoBehaviour {
     public enum PanelMode { Party, Garnizon };
-    public PanelMode panelMode;
+    [SerializeField]
+    PanelMode panelMode;
     string[] horisontalPanels = { "Top", "Middle", "Bottom" };
     string[] singleUnitCells = { "Left", "Right" };
     string[] cells = { "Left", "Right", "Wide" };
@@ -15,6 +16,11 @@ public class PartyPanel : MonoBehaviour {
     {
         // Debug.Log(row + " " + cell);
         return transform.Find(row).Find(cell).Find("UnitSlot");
+    }
+
+    public PanelMode GetPanelMode()
+    {
+        return panelMode;
     }
 
     public Transform GetUnitSlotTr(Transform callerCell, PartyUnit selectedUnit = null)
@@ -44,6 +50,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void OnChange()
     {
+        Debug.Log("PartyPanel OnChange");
         // verify if city or hero capacity has not been reached
         // if number of units in city or hero party reaches maximum, 
         // then hire unit button is disabled
@@ -92,8 +99,19 @@ public class PartyPanel : MonoBehaviour {
                     unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unitName;
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
-
                 }
+                //else
+                //{
+                //    // it is possile that unit was dismissed
+                //    // clean health information
+                //    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+                //    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+                //    // activate hier unit button if panel is in garnizon state and this left or right single panel
+                //    if ((PanelMode.Garnizon == panelMode) && ( ("Left" == cell) || ("Right" == cell) ) )
+                //    {
+                //        unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                //    }
+                //}
             }
         }
     }

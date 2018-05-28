@@ -161,12 +161,21 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     #region OnClick
 
+    City GetParentCity()
+    {
+        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        return transform.parent.parent.parent.parent.parent.GetComponent<City>();
+    }
+
+    PartyPanel GetParentParty()
+    {
+        return transform.parent.parent.parent.GetComponent<PartyPanel>();
+    }
+
     void ActOnClick()
     {
         // act based on the city (and cursor) state
-        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
-        City city = transform.parent.parent.parent.parent.parent.GetComponent<City>();
-        switch (city.GetActiveState())
+         switch (GetParentCity().GetActiveState())
         {
             case City.CityViewActiveState.Normal:
                 // do nothing for now
@@ -222,11 +231,51 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void OnDismissYesConfirmation()
     {
         Debug.Log("Yes");
+        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+        bool wasLeader = unit.GetIsLeader();
+        if (wasLeader)
+        {
+            // dismiss all units in party
+            // dismiss party
+        }
+        else
+        {
+            // dismiss unit with its parent canvas
+            Debug.Log("Dismiss uit");
+            Destroy(unit.transform.parent.gameObject);
+        }
+        // update city state, party and focus panels
+        Transform cityTr = GetParentCity().transform;
+        if (wasLeader)
+        {
+            // remove link to party leader to the Left Focus panel
+            cityTr.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = null;
+            // fill in city's left focus with information from the hero
+            // Focus panel wil automatically detect changes and update info
+            cityTr.Find("LeftFocus").GetComponent<FocusPanel>().OnChange();
+        }
+        else
+        {
+            // Update party panel
+            PartyPanel partyPanel = GetParentParty();
+            partyPanel.OnChange();
+            // if parent Party panel is in Garnizon state, then update right focus
+            if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
+            {
+                // fill in city's right focus with information from the hero
+                // Focus panel wil automatically detect changes and update info
+                cityTr.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
+            }
+        }
+        // disable dismiss mode and return to normal mode
+        GetParentCity().ReturnToNomalState();
     }
 
     void OnDismissNoConfirmation()
     {
         Debug.Log("No");
+        // disable dismiss mode and return to normal mode
+        GetParentCity().ReturnToNomalState();
     }
 
     #endregion OnClick

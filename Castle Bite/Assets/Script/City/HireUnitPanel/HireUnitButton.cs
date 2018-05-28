@@ -223,7 +223,8 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             if (VerifyUnitHire(selectedUnit)) {
                 // take gold from player
                 player.SetTotalGold(player.GetTotalGold() - requiredGold);
-                // Create if required parent transform for new Unit (this is needed iF new party is created, when leader is highered)
+                // Create, if required, parent transform for new Unit 
+                // (this is needed iF new party is created, when leader is highered)
                 Transform newUnitParentSlot = null;
                 Transform cityTr = transform.parent.parent.parent.parent;
                 if (isHigheredUnitPartyLeader)
@@ -264,7 +265,7 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     //  activate hero HeroEquipmentBtn
                     //   cityTr.Find("CtrlPnlCity/HeroEquipmentBtn").gameObject.SetActive(true);
                     // link party leader to the Left Focus panel
-                    // os it can useit to fill in information
+                    // so it can useit to fill in information
                     cityTr.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnit.gameObject;
                     // fill in city's left focus with information from the hero
                     // Focus panel wil automatically detect changes and update info
