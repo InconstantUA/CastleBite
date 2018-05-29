@@ -24,29 +24,39 @@ public class PartyPanel : MonoBehaviour {
         return panelMode;
     }
 
-    public Transform GetUnitSlotTr(Transform callerCell, PartyUnit selectedUnit = null)
+    #region On Change: hire or dismiss unit
+
+    void OnHireSingleUnit(Transform changedCell)
     {
-        // return most suitable cell for the unit, if it was specified
-        // otherwise just return row and cell
-        // if it is double size, then place it in the wide cell
-        // if (PartyUnit.UnitSize.Single == unit.GetUnitSize())
-        // if hired unit is double unit, then we actually need to change its parent to the wide
-        Transform newUnitParentSlot = null;
-        if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Double)
-        {
-            // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-callerCell
-            newUnitParentSlot = callerCell.parent.Find("Wide").Find("UnitSlot");
-            // Also we need to enable Wide panel, because by defaut it is disabled
-            callerCell.parent.Find("Wide").gameObject.SetActive(true);
-            // And disable left and right panels
-            callerCell.parent.Find("Left").gameObject.SetActive(false);
-            callerCell.parent.Find("Right").gameObject.SetActive(false);
-        }
-        else if (selectedUnit.GetUnitSize() == PartyUnit.UnitSize.Single)
-        {
-            newUnitParentSlot = callerCell.Find("UnitSlot");
-        }
-        return newUnitParentSlot;
+        // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
+        // it is more reliable to use GetChild(0), because it is only one child there
+        Transform unitCanvas = changedCell.Find("UnitSlot").GetChild(0);
+        PartyUnit unit = unitCanvas.GetComponentInChildren<PartyUnit>();
+        // fill in highered object UI panel
+        unitCanvas.Find("Name").GetComponent<Text>().text = GetUnitDisplayName(unit);
+        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
+        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+        // disable hire unit button
+        changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+    }
+
+    void OnHireDoubleUnit(Transform changedCell)
+    {
+        // Also we need to enable Wide panel, because by defaut it is disabled
+        changedCell.parent.Find("Wide").gameObject.SetActive(true);
+        // And disable left and right panels
+        changedCell.parent.Find("Left").gameObject.SetActive(false);
+        changedCell.parent.Find("Right").gameObject.SetActive(false);
+        // Update name and health information
+        // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
+        // it is more reliable to use GetChild(0), because it is only one child there
+        Transform parentCell = changedCell.parent.Find("Wide");
+        Transform unitCanvas = parentCell.Find("UnitSlot").GetChild(0);
+        PartyUnit unit = unitCanvas.GetComponentInChildren<PartyUnit>();
+        // fill in highered object UI panel
+        unitCanvas.Find("Name").GetComponent<Text>().text = GetUnitDisplayName(unit);
+        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
+        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
     }
 
     void OnDismissSingleUnit(Transform changedCell)
@@ -55,7 +65,7 @@ public class PartyPanel : MonoBehaviour {
         // clean health information
         changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
         changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
-        // activate hire unit button if panel is in garnizon state and this left or right single panel
+        // activate hire unit button if panel is in garnizon state
         if (PartyPanel.PanelMode.Garnizon == panelMode)
         {
             Debug.Log("Activate hire unit button");
@@ -63,35 +73,29 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    void OnSingleUnitHire(Transform changedCell)
+    void OnDimissDoubleUnit(Transform changedCell)
     {
-        // verify if unit has isLeader atrribute ON
-        PartyUnit unit = changedCell.Find("UnitCanvas").GetComponentInChildren<PartyUnit>();
-        string unitName;
+        // Disable Wide panel
+        changedCell.parent.Find("Wide").gameObject.SetActive(false);
+        // And enable left and right panels
+        changedCell.parent.Find("Left").gameObject.SetActive(true);
+        changedCell.parent.Find("Right").gameObject.SetActive(true);
+        // Update name and health information
+        // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
+        // it is more reliable to use GetChild(0), because it is only one child there
+        Transform parentCell = changedCell.parent.Find("Wide");
         // fill in highered object UI panel
-        if (unit.GetIsLeader())
+        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+        // activate hire unit buttons on left and right cells if panel is in garnizon state
+        if (PartyPanel.PanelMode.Garnizon == panelMode)
         {
-            // start with Hero's given name information
-            unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
-        }
-        else
-        {
-            unitName = unit.GetUnitName().ToString();
-        }
-        changedCell.GetChild(0).Find("Name").GetComponent<Text>().text = unitName;
-        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
-        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
-    }
+            Debug.Log("Activate hire unit button");
+            changedCell.parent.Find("Left/HireUnitPnlBtn").gameObject.SetActive(true);
+            changedCell.parent.Find("Right/HireUnitPnlBtn").gameObject.SetActive(true);
 
-    void OnDoubleUnitHire(Transform changedCell)
-    {
-        // Also we need to enable Wide panel, because by defaut it is disabled
-        changedCell.parent.Find("Wide").gameObject.SetActive(true);
-        // And disable left and right panels
-        changedCell.parent.Find("Left").gameObject.SetActive(false);
-        changedCell.parent.Find("Right").gameObject.SetActive(false);
+        }
     }
-
 
     public void OnChange(ChangeType changeType, Transform changedCell)
     {
@@ -111,12 +115,15 @@ public class PartyPanel : MonoBehaviour {
                 IntitPartyPanel();
                 break;
             case ChangeType.HirePartyLeader:
+                // we do not need to do anything here
+                // because all actions are done by IntitPartyPanel() 
+                // which is initiated by Start() function on party panel creation
                 break;
             case ChangeType.HireSingleUnit:
-                OnSingleUnitHire(changedCell);
+                OnHireSingleUnit(changedCell);
                 break;
             case ChangeType.HireDoubleUnit:
-                OnDoubleUnitHire(changedCell);
+                OnHireDoubleUnit(changedCell);
                 break;
             case ChangeType.DismissPartyLeader:
                 break;
@@ -124,6 +131,7 @@ public class PartyPanel : MonoBehaviour {
                 OnDismissSingleUnit(changedCell);
                 break;
             case ChangeType.DismissDoubleUnit:
+                OnDimissDoubleUnit(changedCell);
                 break;
             default:
                 Debug.LogError("Unknown condition");
@@ -131,10 +139,27 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    #endregion
+
     // Use this for initialization
     void Start()
     {
         OnChange(ChangeType.Init, null);
+    }
+
+    string GetUnitDisplayName(PartyUnit unit)
+    {
+        string unitName;
+        if (unit.GetIsLeader())
+        {
+            // start with Hero's given name information
+            unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
+        }
+        else
+        {
+            unitName = unit.GetUnitName().ToString();
+        }
+        return unitName;
     }
 
     void IntitPartyPanel()
@@ -142,7 +167,6 @@ public class PartyPanel : MonoBehaviour {
         Transform unitPanel;
         Transform unitSlot;
         PartyUnit unit;
-        string unitName;
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
@@ -156,30 +180,24 @@ public class PartyPanel : MonoBehaviour {
                     // verify if unit has isLeader atrribute ON
                     unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // fill in highered object UI panel
-                    if (unit.GetIsLeader())
-                    {
-                        // start with Hero's given name information
-                        unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
-                    }
-                    else
-                    {
-                        unitName = unit.GetUnitName().ToString();
-                    }
-                    unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unitName;
+                    unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = GetUnitDisplayName(unit);
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+                    // deactivate hire unit button if panel is in garnizon state and this left or right single panel
+                    if ((PanelMode.Garnizon == panelMode) && (("Left" == cell) || ("Right" == cell)))
+                    {
+                        unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+                    }
                 }
                 else
                 {
                     // it is possile that unit was dismissed
                     // clean health information
-                    Debug.Log("Clean health info");
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
                     // activate hire unit button if panel is in garnizon state and this left or right single panel
                     if ((PanelMode.Garnizon == panelMode) && (("Left" == cell) || ("Right" == cell)))
                     {
-                        Debug.Log("Activate hire unit button");
                         unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
                     }
                     // it is possible that double unit was dismissed

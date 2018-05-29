@@ -250,6 +250,21 @@ public class City : MonoBehaviour {
         return result;
     }
 
+
+    PartyUnit CreateUnit(Transform newUnitParentSlot, PartyUnit hiredUnitTemplate)
+    {
+        //  create new instance of unity draggable canvas and set it as unit's parent
+        GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;
+        Transform newUnitParentTr = Instantiate(unitCanvasTemplate, newUnitParentSlot).transform;
+        // enable it
+        newUnitParentTr.gameObject.SetActive(true);
+        // Create new unit and place it in parent transform
+        PartyUnit newPartyUnit = Instantiate(hiredUnitTemplate, newUnitParentTr);
+        return newPartyUnit;
+    }
+
+    #region Hire Hero
+
     GameObject CreateNewPartyInCity()
     {
         // create and update Hero Party panel in UI, parent it to city UI
@@ -267,18 +282,6 @@ public class City : MonoBehaviour {
         toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
         // return new party as result
         return newPartyUIPanel;
-    }
-
-    PartyUnit CreateUnit(Transform newUnitParentSlot, PartyUnit hiredUnitTemplate)
-    {
-        //  create new instance of unity draggable canvas and set it as unit's parent
-        GameObject unitCanvasTemplate = transform.root.Find("Templates").Find("UI").Find("UnitCanvas").gameObject;
-        Transform newUnitParentTr = Instantiate(unitCanvasTemplate, newUnitParentSlot).transform;
-        // enable it
-        newUnitParentTr.gameObject.SetActive(true);
-        // Create new unit and place it in parent transform
-        PartyUnit newPartyUnit = Instantiate(hiredUnitTemplate, newUnitParentTr);
-        return newPartyUnit;
     }
 
     void UpdateLeftFocus(GameObject newPartyUnitObj)
@@ -308,6 +311,17 @@ public class City : MonoBehaviour {
         player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
     }
 
+    #endregion
+
+    void UpdateRightFocus()
+    {
+        // Focus panel wil automatically detect changes and update info
+        transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
+    }
+
+
+    #region Hire Single Unit
+
     bool VerifySingleUnitHire(PartyUnit selectedUnit)
     {
         bool result = true;
@@ -318,12 +332,6 @@ public class City : MonoBehaviour {
         return result;
     }
 
-    void UpdateRightFocus()
-    {
-        // Focus panel wil automatically detect changes and update info
-        transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
-    }
-
     void HireSingleUnit(Transform callerCell, PartyUnit hiredUnitTemplate)
     {
         if (VerifySingleUnitHire(hiredUnitTemplate))
@@ -332,16 +340,17 @@ public class City : MonoBehaviour {
             Transform parentTransform = callerCell.Find("UnitSlot");
             // create unit
             PartyUnit newPartyUnit = CreateUnit(parentTransform, hiredUnitTemplate);
+            // Update city garnizon panel to fill in required information and do required adjustments;
+            transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
             // fill in city's right focus with information from the hero
             UpdateRightFocus();
-            // Update city garnizon panel to fill in required information;
-            transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
-            // disable hire unit button
-            callerCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
         }
     }
+    #endregion
+
+    #region Hire Double unit
 
     bool VerifyDoubleUnitHire(Transform callerCell, PartyUnit selectedUnit)
     {
@@ -371,16 +380,18 @@ public class City : MonoBehaviour {
             // if hired unit is double unit, then we actually need to change its parent to the wide
             // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-callerCell
             Transform newUnitParentSlot = callerCell.parent.Find("Wide").Find("UnitSlot");
-            // update panel
-            transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
             // create unit
             PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
+            // update panel
+            transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
             // fill in city's right focus with information from the hero
             UpdateRightFocus();
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
         }
     }
+
+    #endregion
 
     public void HireUnit(Transform callerCell, PartyUnit hiredUnitTemplate)
     {
@@ -407,15 +418,9 @@ public class City : MonoBehaviour {
         }
     }
 
+    #endregion
 
-    public void DismissPartyLeader(UnitSlot unitSlot)
-    {
-        // dismiss all units in party
-        // dismiss party
-        //
-        // update UI
-        UpdateLeftFocus(null);
-    }
+    #region Dismiss unit
 
     PartyPanel GetUnitsParentPartyPanel(Transform unitCell)
     {
@@ -423,7 +428,21 @@ public class City : MonoBehaviour {
         return unitCell.transform.parent.parent.GetComponent<PartyPanel>();
     }
 
-    public void DimissSingleUnit(UnitSlot unitSlot)
+    public void DismissPartyLeader()
+    {
+        // Unset hero's equipment button to be part of city control panel ToggleGroup
+        // this should be set to null on hero dismiss, leaving or accessed outside of the city.
+        ToggleGroup toggleGroup = transform.Find("CtrlPnlCity").GetComponent<ToggleGroup>();
+        toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(null);
+        // Update UI;
+        UpdateLeftFocus(null);
+        // Dismiss party with all units in it
+        Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
+        // Enable Hire leader panel
+        transform.Find("HireHeroPanel").gameObject.SetActive(true);
+    }
+
+    public void DismissGenericUnit(UnitSlot unitSlot)
     {
         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
         // todo just manually update all fields
@@ -435,7 +454,15 @@ public class City : MonoBehaviour {
         // 2 dismiss unit with its parent canvas
         Destroy(unitCanvas);
         // Update party panel
-        partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
+        // act based on the unit size
+        if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
+        {
+            partyPanel.OnChange(PartyPanel.ChangeType.DismissDoubleUnit, unitCell);
+        }
+        else
+        {
+            partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
+        }
         // if parent Party panel is in Garnizon state, then update right focus
         // no need to update left focus, because it is only updated on leader dismiss
         if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
@@ -444,13 +471,6 @@ public class City : MonoBehaviour {
             // Focus panel wil automatically detect changes and update info
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
         }
-
-    }
-
-
-    public void DimissDoubleUnit(UnitSlot unitSlot)
-    {
-
     }
 
     public void DimissUnit(UnitSlot unitSlot)
@@ -460,23 +480,14 @@ public class City : MonoBehaviour {
         bool wasLeader = unit.GetIsLeader();
         if (wasLeader)
         {
-            DismissPartyLeader(unitSlot);
+            DismissPartyLeader();
         }
         else
         {
-            // act based on the unit size
-            if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
-            {
-                DimissSingleUnit(unitSlot);
-            }
-            else
-            {
-                DimissDoubleUnit(unitSlot);
-            }
+            DismissGenericUnit(unitSlot);
         }
         // disable dismiss mode and return to normal mode
         ReturnToNomalState();
     }
-
     #endregion
 }
