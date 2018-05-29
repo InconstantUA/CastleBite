@@ -169,8 +169,13 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void ActOnClick()
     {
+        // presave state, because we are going to reset it here
+        City.CityViewActiveState cityState = GetParentCity().GetActiveState();
+        // disable dismiss mode and return to normal mode
+        // this looks naturally
+        GetParentCity().ReturnToNomalState();
         // act based on the city (and cursor) state
-         switch (GetParentCity().GetActiveState())
+        switch (cityState)
         {
             case City.CityViewActiveState.Normal:
                 // do nothing for now
@@ -200,26 +205,31 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // for example Capital guard is not dimissable
         // all other units normally are dismissable
         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-        if (unit.GetIsDismissable())
+        // if unit does not exist, then nothing to do
+        if (unit)
         {
-            // as for confirmation
-            string confirmationMessage;
-            // verify if this is party leader
-            if (unit.GetIsLeader())
+            if (unit.GetIsDismissable())
             {
-                confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + " and whole party?";
+                // as for confirmation
+                string confirmationMessage;
+                // verify if this is party leader
+                if (unit.GetIsLeader())
+                {
+                    confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + " and whole party?";
+                }
+                else
+                {
+                    confirmationMessage = "Do you want to dismiss " + unit.GetUnitName() + "?";
+                }
+                // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+                confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
             }
             else
             {
-                confirmationMessage = "Do you want to dismiss " + unit.GetUnitName() + "?";
+                // display error message
+                NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
+                notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + ".");
             }
-            // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
-            confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
-        } else
-        {
-            // display error message
-            NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
-            notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + ".");
         }
     }
 
@@ -233,8 +243,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void OnDismissNoConfirmation()
     {
         Debug.Log("No");
-        // disable dismiss mode and return to normal mode
-        GetParentCity().ReturnToNomalState();
+        // nothing to do here
     }
 
     #endregion OnClick
