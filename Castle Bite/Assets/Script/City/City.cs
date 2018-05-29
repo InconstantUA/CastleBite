@@ -324,12 +324,6 @@ public class City : MonoBehaviour {
         transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
     }
 
-    void UpdateCityGarnizonPartyPanel()
-    {
-        // update party panel
-        transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange();
-    }
-
     void HireSingleUnit(Transform callerCell, PartyUnit hiredUnitTemplate)
     {
         if (VerifySingleUnitHire(hiredUnitTemplate))
@@ -341,7 +335,7 @@ public class City : MonoBehaviour {
             // fill in city's right focus with information from the hero
             UpdateRightFocus();
             // Update city garnizon panel to fill in required information;
-            UpdateCityGarnizonPartyPanel();
+            transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
             // disable hire unit button
             callerCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
             // take gold from player
@@ -377,11 +371,8 @@ public class City : MonoBehaviour {
             // if hired unit is double unit, then we actually need to change its parent to the wide
             // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-callerCell
             Transform newUnitParentSlot = callerCell.parent.Find("Wide").Find("UnitSlot");
-            // Also we need to enable Wide panel, because by defaut it is disabled
-            callerCell.parent.Find("Wide").gameObject.SetActive(true);
-            // And disable left and right panels
-            callerCell.parent.Find("Left").gameObject.SetActive(false);
-            callerCell.parent.Find("Right").gameObject.SetActive(false);
+            // update panel
+            transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
             // create unit
             PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
             // fill in city's right focus with information from the hero
@@ -417,7 +408,7 @@ public class City : MonoBehaviour {
     }
 
 
-    public void DismissPartyLeader(PartyUnit unit)
+    public void DismissPartyLeader(UnitSlot unitSlot)
     {
         // dismiss all units in party
         // dismiss party
@@ -426,32 +417,25 @@ public class City : MonoBehaviour {
         UpdateLeftFocus(null);
     }
 
-    PartyPanel GetUnitsParentPartyPanel(PartyUnit unit)
+    PartyPanel GetUnitsParentPartyPanel(Transform unitCell)
     {
-        // structure: 5PartyPanel-4[Top/Middle/Bottom]-3[Left/Wide/Right]-2UnitSlot-1UnitCanvas-unit
-        return unit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        // structure: 2PartyPanel-1[Top/Middle/Bottom]-[Left/Wide/Right]-UnitSlot-1UnitCanvas-unit
+        return unitCell.transform.parent.parent.GetComponent<PartyPanel>();
     }
 
-    public void DimissSingleUnit(PartyUnit unit)
+    public void DimissSingleUnit(UnitSlot unitSlot)
     {
+        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
         // todo just manually update all fields
         // or create special onDismiss functions
         // 1 get all required variables, before removing unit
-        Transform unitPanel = unit.transform.parent.parent;
-        PartyPanel partyPanel = GetUnitsParentPartyPanel(unit);
+        Transform unitCell = unitSlot.transform.parent;
+        PartyPanel partyPanel = GetUnitsParentPartyPanel(unitCell);
+        GameObject unitCanvas = unit.transform.parent.gameObject;
         // 2 dismiss unit with its parent canvas
-        Destroy(unit.transform.parent.gameObject);
+        Destroy(unitCanvas);
         // Update party panel
-        // it is possile that unit was dismissed
-        // clean health information
-        unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-        unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
-        // activate hire unit button if panel is in garnizon state and this left or right single panel
-        if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
-        {
-            Debug.Log("Activate hire unit button");
-            unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
-        }
+        partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
         // if parent Party panel is in Garnizon state, then update right focus
         // no need to update left focus, because it is only updated on leader dismiss
         if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
@@ -464,29 +448,30 @@ public class City : MonoBehaviour {
     }
 
 
-    public void DimissDoubleUnit(PartyUnit unit)
+    public void DimissDoubleUnit(UnitSlot unitSlot)
     {
 
     }
 
-    public void DimissUnit(PartyUnit unit)
+    public void DimissUnit(UnitSlot unitSlot)
     {
         Debug.Log("Dismiss unit");
+        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
         bool wasLeader = unit.GetIsLeader();
         if (wasLeader)
         {
-            DismissPartyLeader(unit);
+            DismissPartyLeader(unitSlot);
         }
         else
         {
             // act based on the unit size
             if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
             {
-                DimissSingleUnit(unit);
+                DimissSingleUnit(unitSlot);
             }
             else
             {
-                DimissDoubleUnit(unit);
+                DimissDoubleUnit(unitSlot);
             }
         }
         // disable dismiss mode and return to normal mode

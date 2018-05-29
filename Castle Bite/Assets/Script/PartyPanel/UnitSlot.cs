@@ -227,7 +227,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Debug.Log("Yes");
         // Ask city to dismiss unit
-        GetParentCity().DimissUnit(unitSlot.GetComponentInChildren<PartyUnit>());
+        GetParentCity().DimissUnit(unitSlot.GetComponent<UnitSlot>());
     }
 
     void OnDismissNoConfirmation()

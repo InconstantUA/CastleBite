@@ -11,6 +11,7 @@ public class PartyPanel : MonoBehaviour {
     string[] horisontalPanels = { "Top", "Middle", "Bottom" };
     string[] singleUnitCells = { "Left", "Right" };
     string[] cells = { "Left", "Right", "Wide" };
+    public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader}
 
     public Transform GetUnitSlotTr(string row, string cell)
     {
@@ -48,7 +49,51 @@ public class PartyPanel : MonoBehaviour {
         return newUnitParentSlot;
     }
 
-    public void OnChange()
+    void OnDismissSingleUnit(Transform changedCell)
+    {
+        // it is possile that unit was dismissed
+        // clean health information
+        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+        // activate hire unit button if panel is in garnizon state and this left or right single panel
+        if (PartyPanel.PanelMode.Garnizon == panelMode)
+        {
+            Debug.Log("Activate hire unit button");
+            changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+        }
+    }
+
+    void OnSingleUnitHire(Transform changedCell)
+    {
+        // verify if unit has isLeader atrribute ON
+        PartyUnit unit = changedCell.Find("UnitCanvas").GetComponentInChildren<PartyUnit>();
+        string unitName;
+        // fill in highered object UI panel
+        if (unit.GetIsLeader())
+        {
+            // start with Hero's given name information
+            unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
+        }
+        else
+        {
+            unitName = unit.GetUnitName().ToString();
+        }
+        changedCell.GetChild(0).Find("Name").GetComponent<Text>().text = unitName;
+        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
+        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+    }
+
+    void OnDoubleUnitHire(Transform changedCell)
+    {
+        // Also we need to enable Wide panel, because by defaut it is disabled
+        changedCell.parent.Find("Wide").gameObject.SetActive(true);
+        // And disable left and right panels
+        changedCell.parent.Find("Left").gameObject.SetActive(false);
+        changedCell.parent.Find("Right").gameObject.SetActive(false);
+    }
+
+
+    public void OnChange(ChangeType changeType, Transform changedCell)
     {
         Debug.Log("PartyPanel OnChange");
         // verify if city or hero capacity has not been reached
@@ -60,16 +105,39 @@ public class PartyPanel : MonoBehaviour {
             // hero party does not have this functionality
             VerifyCityCapacity();
         }
-        UpdatePannelsInfo();
+        switch (changeType)
+        {
+            case ChangeType.Init:
+                IntitPartyPanel();
+                break;
+            case ChangeType.HirePartyLeader:
+                break;
+            case ChangeType.HireSingleUnit:
+                OnSingleUnitHire(changedCell);
+                break;
+            case ChangeType.HireDoubleUnit:
+                OnDoubleUnitHire(changedCell);
+                break;
+            case ChangeType.DismissPartyLeader:
+                break;
+            case ChangeType.DismissSingleUnit:
+                OnDismissSingleUnit(changedCell);
+                break;
+            case ChangeType.DismissDoubleUnit:
+                break;
+            default:
+                Debug.LogError("Unknown condition");
+                break;
+        }
     }
 
     // Use this for initialization
     void Start()
     {
-        OnChange();
+        OnChange(ChangeType.Init, null);
     }
 
-    void UpdatePannelsInfo()
+    void IntitPartyPanel()
     {
         Transform unitPanel;
         Transform unitSlot;
@@ -113,6 +181,15 @@ public class PartyPanel : MonoBehaviour {
                     {
                         Debug.Log("Activate hire unit button");
                         unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                    }
+                    // it is possible that double unit was dismissed
+                    if ("Wide" == cell)
+                    {
+                        // we need to disable Wide panel, because it is still enabled and placed on top of single panels
+                        unitPanel.parent.Find("Wide").gameObject.SetActive(false);
+                        // and enable left and right panels
+                        unitPanel.parent.Find("Left").gameObject.SetActive(true);
+                        unitPanel.parent.Find("Right").gameObject.SetActive(true);
                     }
                 }
             }
