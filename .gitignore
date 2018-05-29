@@ -13,7 +13,8 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
-*.sln
+# try to keep *.sln otherwise it is hard to restore it on other computer
+# *.sln
 *.suo
 *.tmp
 *.user
