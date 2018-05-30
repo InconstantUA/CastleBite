@@ -214,6 +214,8 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    #region Verify capacity
+
     public PartyUnit GetPartyLeader()
     {
         PartyUnit leader = null;
@@ -326,6 +328,8 @@ public class PartyPanel : MonoBehaviour {
             SetHireUnitPnlButtonActive(true);
         }
     }
+
+    #endregion Verify capacity
 
     public bool VerifyCityCapacityOverflowOnDoubleUnitHire()
     {
