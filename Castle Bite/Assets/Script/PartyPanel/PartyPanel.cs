@@ -100,15 +100,6 @@ public class PartyPanel : MonoBehaviour {
     public void OnChange(ChangeType changeType, Transform changedCell)
     {
         // Debug.Log("PartyPanel OnChange");
-        // verify if city or hero capacity has not been reached
-        // if number of units in city or hero party reaches maximum, 
-        // then hire unit button is disabled
-        if (panelMode == PanelMode.Garnizon)
-        {
-            // this is needed to disable or enable hire units button
-            // hero party does not have this functionality
-            VerifyCityCapacity();
-        }
         switch (changeType)
         {
             case ChangeType.Init:
@@ -136,6 +127,15 @@ public class PartyPanel : MonoBehaviour {
             default:
                 Debug.LogError("Unknown condition");
                 break;
+        }
+        // verify if city or hero capacity has not been reached
+        // if number of units in city or hero party reaches maximum, 
+        // then hire unit button is disabled
+        if (panelMode == PanelMode.Garnizon)
+        {
+            // this is needed to disable or enable hire units button
+            // hero party does not have this functionality
+            VerifyCityCapacity();
         }
     }
 

@@ -446,6 +446,7 @@ public class City : MonoBehaviour {
         GameObject unitCanvas = unit.transform.parent.gameObject;
         // 2 dismiss unit with its parent canvas
         Destroy(unitCanvas);
+        unitSlot.transform.DetachChildren(); // this is needed otherwise child count will remain the same, because object is destroyed after Update()
         // Update party panel
         // act based on the unit size
         if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)

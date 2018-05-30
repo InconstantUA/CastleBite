@@ -109,16 +109,14 @@ public class FocusPanel : MonoBehaviour {
 
     void OnDismissSingleUnit()
     {
-        // looks like unit is not destroyed immediately and still present in the cell
-        // decrease number of units by one here manually
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (partyPanel.GetNumberOfPresentUnits()-1).ToString() + "/" + city.GetUnitsCapacity().ToString();
+        // update number of units
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
     void OnDimissDoubleUnit()
     {
-        // looks like unit is not destroyed immediately and still present in the cell
-        // decrease number of units by one here manually
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (partyPanel.GetNumberOfPresentUnits() - 2).ToString() + "/" + city.GetUnitsCapacity().ToString();
+        // update number of units
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
     public void OnChange(ChangeType changeType)
