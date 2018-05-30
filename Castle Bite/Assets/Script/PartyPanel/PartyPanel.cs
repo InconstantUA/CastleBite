@@ -388,7 +388,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetActiveHeal(bool activate)
     {
-        Transform untCell;
+        Transform unitCell;
         Transform unitSlot;
         PartyUnit unit;
         Color greenHighlight = Color.green;
@@ -401,8 +401,8 @@ public class PartyPanel : MonoBehaviour {
             foreach (string cell in cells)
             {
                 // verify if slot has an unit in it
-                untCell = transform.Find(horisontalPanel).Find(cell);
-                unitSlot = untCell.Find("UnitSlot");
+                unitCell = transform.Find(horisontalPanel).Find(cell);
+                unitSlot = unitCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // verify if unit is damaged
@@ -431,7 +431,7 @@ public class PartyPanel : MonoBehaviour {
                         hightlightColor = normalColor;
                     }
                     // Change text box color
-                    untCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
                 }
             }
         }
@@ -442,7 +442,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetActiveDismiss(bool activate)
     {
-        Transform untCell;
+        Transform unitCell;
         Transform unitSlot;
         PartyUnit unit;
         Color greenHighlight = Color.green;
@@ -455,8 +455,8 @@ public class PartyPanel : MonoBehaviour {
             foreach (string cell in cells)
             {
                 // verify if slot has an unit in it
-                untCell = transform.Find(horisontalPanel).Find(cell);
-                unitSlot = untCell.Find("UnitSlot");
+                unitCell = transform.Find(horisontalPanel).Find(cell);
+                unitSlot = unitCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // verify if we need to activate or deactivate highlight
@@ -486,7 +486,7 @@ public class PartyPanel : MonoBehaviour {
                         hightlightColor = normalColor;
                     }
                     // Change text box color
-                    untCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
                 }
             }
         }
@@ -497,7 +497,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetActiveResurect(bool activate)
     {
-        Transform untCell;
+        Transform unitCell;
         Transform unitSlot;
         PartyUnit unit;
         Color greenHighlight = Color.green;
@@ -510,8 +510,8 @@ public class PartyPanel : MonoBehaviour {
             foreach (string cell in cells)
             {
                 // verify if slot has an unit in it
-                untCell = transform.Find(horisontalPanel).Find(cell);
-                unitSlot = untCell.Find("UnitSlot");
+                unitCell = transform.Find(horisontalPanel).Find(cell);
+                unitSlot = unitCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // verify if we need to activate or deactivate highlight
@@ -540,7 +540,7 @@ public class PartyPanel : MonoBehaviour {
                         hightlightColor = normalColor;
                     }
                     // Change text box color
-                    untCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
                 }
             }
         }
@@ -548,6 +548,122 @@ public class PartyPanel : MonoBehaviour {
         SetHireUnitPnlButtonActive(!activate);
     }
 
+    PartyPanel GetOtherPartyPanel(PartyPanel currentPartyPanel)
+    {
+        // if other party is not present, then return null
+        // calling script should do null verification
+        PartyPanel otherPartyPanel = null;
+        // get city transform, this actually can be inter-hero exchange root transform
+        Transform cityTr = currentPartyPanel.transform.parent.parent;
+        if (PartyPanel.PanelMode.Garnizon == currentPartyPanel.GetComponent<PartyPanel>().GetPanelMode())
+        {
+            // verify if there is a HeroParty in City
+            if (cityTr.GetComponentInChildren<HeroParty>())
+            {
+                otherPartyPanel = cityTr.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>();
+            }
+        } else
+        {
+            // verify if there is a city garnizon
+            if (cityTr.Find("CityGarnizon"))
+            {
+                otherPartyPanel = cityTr.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
+            } else
+            {
+                // verify if we are exchanging with other hero party
+                foreach (HeroParty heroParty in cityTr.GetComponentsInChildren<HeroParty>())
+                {
+                    // find party panel of other party in city, if it is present there
+                    // this will be the case if there are more then 1 hero party in the city
+                    if (heroParty.GetComponentInChildren<PartyPanel>() != currentPartyPanel)
+                    {
+                        otherPartyPanel = heroParty.GetComponentInChildren<PartyPanel>();
+                    }
+                }
+            }
+        }
+        return otherPartyPanel;
+    }
+
+    public void SetActiveUnitDrag(bool activate)
+    {
+        // Todo:
+        // I'm actually doing the same job in each party panel
+        // fix it somehow
+        // this needs to be done only once
+        //
+        // unit being dragged is static, so we do not need to assign it here
+        // or send as and argument
+        // structure: 5[City]-4[HeroParty/CityGarnizon]Party-3PartyPanel-2[Top/Middle/Bottom]HorizontalPanelGroup-1[Left/Right/Wide]Cell-UnitSlot-(this)UnitCanvas
+        PartyUnit unitBeingDragged = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
+        Transform unitCell = UnitDragHandler.unitBeingDragged.transform.parent.parent;
+        Transform horizontalPanelGroup = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent;
+        Transform partyPanel = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent;
+        Transform party = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.parent;
+        Color greenHighlight = Color.green;
+        Color redHighlight = Color.red;
+        Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+        if (activate)
+        {
+            // highlight differently cells where units can be and cannot be dropped
+            // gradually go from the lowest possible scope
+            // to the highest possible
+            // Scopes: InterParty[CityGarnizon/HeroParty]-PartyPanel-HorizontalPanelGroup[Top/Middle/Bottom]
+            // HorizontalPanelGroup[Top/Middle/Bottom] PartyPanel scopes
+            //  there cannot be any possible failures
+            //  so this can be safely highlighted as OK
+            //  highlight all active cells
+            foreach (string horisontalPanel in horisontalPanels)
+            {
+                foreach (string cell in cells)
+                {
+                    // verify if slot is active
+                    // here we highlight only party panel of the draggable unit
+                    // not this party panel, where we are now
+                    if (partyPanel.Find(horisontalPanel + "/" + cell).gameObject.activeSelf)
+                    {
+                        // Change text box color
+                        partyPanel.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = greenHighlight;
+                    }
+                }
+            }
+            // InterParty scope
+            //  The 1st easiest check is if draggable unit is inter-party movable or not
+            //  The 2nd problem may happen with moving unit to the other party
+            //  Verify if other party panel is present, if no panel - no problems
+            PartyPanel otherPartyPanel = GetOtherPartyPanel(partyPanel.GetComponent<PartyPanel>());
+            if (otherPartyPanel && unitBeingDragged.GetIsInterpartyMovable())
+            {
+                // here we highlight other party if it is present,
+                // there are multiple blocking conditions present
+                // skip highlighting for the non-interparty-movable objects
+                // on double unit hire, skip also highlighting of nearby cell near non-interparty-movable
+                // the only good conditions are:
+                // -
+                // -
+            }
+            //if (PartyUnit.UnitSize.Single == unitBeingDragged.GetUnitSize())
+            //{
+            //    // highlight all single cells in the horizontal panel group as OK
+            //    horizontalPanelGroup.Find("Left/Br").GetComponent<Text>().color = greenHighlight;
+            //    horizontalPanelGroup.Find("Right/Br").GetComponent<Text>().color = greenHighlight;
+            //}
+        }
+        else
+        {
+            // reset all colors to normal
+            foreach (string horisontalPanel in horisontalPanels)
+            {
+                foreach (string cell in cells)
+                {
+                    // Change text box color
+                    transform.Find(horisontalPanel+"/"+cell+"/Br").GetComponent<Text>().color = normalColor;
+                }
+            }
+        }
+        // and disable hire buttons
+        SetHireUnitPnlButtonActive(!activate);
+    }
     //// Update is called once per frame
     //void Update () {
 

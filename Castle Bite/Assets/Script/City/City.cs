@@ -10,7 +10,7 @@ public class City : MonoBehaviour {
     public enum CityType { Normal, Capital };
     public CityType cityType;
     int maxCityLevel = 5;
-    public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment };
+    public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
     [SerializeField]
     CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
     public enum CityOccupationState { NoHeroIn, HeroIn };
@@ -82,7 +82,7 @@ public class City : MonoBehaviour {
         return result;
     }
 
-    #region Active city states: dismiss, heal, resurect unit and hero equipment
+    #region Active city states: dismiss, heal, resurect, hero equipment, unit drag
 
     public CityViewActiveState GetActiveState()
     {
@@ -125,6 +125,12 @@ public class City : MonoBehaviour {
                 // this is not applicable to garnizon, garnizon does not have hero or eqipment
                 // it is only appicable to hero party
                 break;
+            case CityViewActiveState.ActiveUnitDrag:
+                transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                break;
+            default:
+                Debug.LogError("Unknown condition");
+                break;
         }
         // if hero party is present,
         // then activate active state highligh
@@ -144,6 +150,12 @@ public class City : MonoBehaviour {
                     break;
                 case CityViewActiveState.ActiveHeroEquipment:
                     SetActiveHeroEquipment(doActivate);
+                    break;
+                case CityViewActiveState.ActiveUnitDrag:
+                    transform.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                    break;
+                default:
+                    Debug.LogError("Unknown condition");
                     break;
             }
         }

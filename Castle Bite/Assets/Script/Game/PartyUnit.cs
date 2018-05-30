@@ -154,6 +154,16 @@ public class PartyUnit : MonoBehaviour {
         isDismissable = isLdr;
     }
 
+    public bool GetIsInterpartyMovable()
+    {
+        return isInterpartyMovable;
+    }
+
+    public void SetIsInterpartyMovable(bool isLdr)
+    {
+        isInterpartyMovable = isLdr;
+    }
+
     //// Use this for initialization
     //void Start () {
 

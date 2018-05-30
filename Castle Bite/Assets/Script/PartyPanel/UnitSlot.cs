@@ -193,6 +193,9 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             case City.CityViewActiveState.ActiveResurect:
                 // try to resurect unit, if it is possible
                 break;
+            case City.CityViewActiveState.ActiveUnitDrag:
+                // ??
+                break;
             default:
                 Debug.LogError("Unknown state");
                 break;

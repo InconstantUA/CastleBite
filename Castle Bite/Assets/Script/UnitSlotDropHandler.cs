@@ -17,8 +17,19 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         }
     }
 
+    City GetParentCity()
+    {
+        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        return transform.parent.parent.parent.parent.parent.GetComponent<City>();
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
+        // observations
+        // 
+        // 
+        // disable drag state
+        GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, false);
         // drop unit if there is no other unit already present
         if (!unit)
         {

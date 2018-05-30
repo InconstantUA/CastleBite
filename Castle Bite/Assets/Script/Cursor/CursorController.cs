@@ -13,6 +13,8 @@ public class CursorController : MonoBehaviour {
     private Texture2D resurectUnitCursor;
     [SerializeField]
     private Texture2D invenotryUnitCursor;
+    [SerializeField]
+    private Texture2D dragUnitCursor;
     public static CursorController Instance { get; private set; }
 
     private void Awake()
@@ -48,6 +50,12 @@ public class CursorController : MonoBehaviour {
                     break;
                 case City.CityViewActiveState.ActiveHeroEquipment:
                     Cursor.SetCursor(invenotryUnitCursor, Vector2.zero, CursorMode.Auto);
+                    break;
+                case City.CityViewActiveState.ActiveUnitDrag:
+                    Cursor.SetCursor(dragUnitCursor, Vector2.zero, CursorMode.Auto);
+                    break;
+                default:
+                    Debug.LogError("Unknown condition");
                     break;
             }
         }
