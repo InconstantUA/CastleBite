@@ -284,17 +284,6 @@ public class City : MonoBehaviour {
         return newPartyUIPanel;
     }
 
-    void UpdateLeftFocus(GameObject newPartyUnitObj)
-    {
-        // activate required UIs and also fill in city's left focus panels
-        // link party leader to the Left Focus panel
-        // so it can use it to fill in information
-        transform.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnitObj;
-        // fill in city's left focus with information from the hero
-        // Focus panel wil automatically detect changes and update info
-        transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange();
-    }
-
     void HirePartyLeader(PartyUnit hiredUnitTemplate)
     {
         // create new party
@@ -303,8 +292,14 @@ public class City : MonoBehaviour {
         Transform newUnitParentSlot = newLeaderParty.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Right");
         // create new unit
         PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
-        // Update UI with information from new unit;
-        UpdateLeftFocus(newPartyUnit.gameObject);
+        // Update Left focus with information from new unit;
+        // activate required UIs and also fill in city's left focus panels
+        // link party leader to the Left Focus panel
+        // so it can use it to fill in information
+        transform.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnit.gameObject;
+        // fill in city's left focus with information from the hero
+        // Instruct Focus panel to update info
+        transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HirePartyLeader);
         // Disable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(false);
         // take gold from player
@@ -312,13 +307,6 @@ public class City : MonoBehaviour {
     }
 
     #endregion
-
-    void UpdateRightFocus()
-    {
-        // Focus panel wil automatically detect changes and update info
-        transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
-    }
-
 
     #region Hire Single Unit
 
@@ -342,8 +330,8 @@ public class City : MonoBehaviour {
             PartyUnit newPartyUnit = CreateUnit(parentTransform, hiredUnitTemplate);
             // Update city garnizon panel to fill in required information and do required adjustments;
             transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
-            // fill in city's right focus with information from the hero
-            UpdateRightFocus();
+            // Instruct Right focus panel to update information
+            transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
         }
@@ -384,8 +372,8 @@ public class City : MonoBehaviour {
             PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
             // update panel
             transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
-            // fill in city's right focus with information from the hero
-            UpdateRightFocus();
+            // Instruct Right focus panel to update information
+            transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
             // take gold from player
             player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
         }
@@ -434,8 +422,13 @@ public class City : MonoBehaviour {
         // this should be set to null on hero dismiss, leaving or accessed outside of the city.
         ToggleGroup toggleGroup = transform.Find("CtrlPnlCity").GetComponent<ToggleGroup>();
         toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(null);
-        // Update UI;
-        UpdateLeftFocus(null);
+        // Update Left focus panel;
+        // activate required UIs and also fill in city's left focus panels
+        // unlink party leader from the Left Focus panel
+        transform.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = null;
+        // fill in city's left focus with information from the hero
+        // Focus panel wil automatically detect changes and update info
+        transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissPartyLeader);
         // Dismiss party with all units in it
         Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
         // Enable Hire leader panel
@@ -457,19 +450,26 @@ public class City : MonoBehaviour {
         // act based on the unit size
         if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
         {
-            partyPanel.OnChange(PartyPanel.ChangeType.DismissDoubleUnit, unitCell);
+            partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
         }
         else
         {
-            partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
+            partyPanel.OnChange(PartyPanel.ChangeType.DismissDoubleUnit, unitCell);
         }
         // if parent Party panel is in Garnizon state, then update right focus
         // no need to update left focus, because it is only updated on leader dismiss
         if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
         {
-            // fill in city's right focus with information from the hero
-            // Focus panel wil automatically detect changes and update info
-            transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange();
+            // Instruct Right focus panel to update information
+            // act based on the unit size
+            if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
+            {
+                transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissSingleUnit);
+            }
+            else
+            {
+                transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissDoubleUnit);
+            }
         }
     }
 

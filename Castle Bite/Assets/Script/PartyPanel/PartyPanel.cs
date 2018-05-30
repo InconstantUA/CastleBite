@@ -99,7 +99,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void OnChange(ChangeType changeType, Transform changedCell)
     {
-        Debug.Log("PartyPanel OnChange");
+        // Debug.Log("PartyPanel OnChange");
         // verify if city or hero capacity has not been reached
         // if number of units in city or hero party reaches maximum, 
         // then hire unit button is disabled

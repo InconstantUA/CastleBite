@@ -9,16 +9,20 @@ public class FocusPanel : MonoBehaviour {
     City city;
     PartyUnit partyLeader;
     PartyPanel partyPanel;
-    public enum FocusState { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
-    FocusState focusState;
+    public enum FocusMode { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
+    FocusMode focusMode;
+    public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader }
+
 
     // Use this for initialization
     void Start()
     {
-        OnChange();
+        InitFocusPanel();
     }
 
-    public void OnChange()
+    #region Initialize
+
+    void InitFocusPanel()
     {
         // update information depending on focused object
         // if focused object is city, then populate focus panel with information from this city
@@ -33,7 +37,7 @@ public class FocusPanel : MonoBehaviour {
             }
             else if (focusedObject.GetComponent<PartyUnit>())
             {
-                SetUnitInformation();
+                SetLeaderInformation();
             }
         }
         else
@@ -63,7 +67,7 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
-    void SetUnitInformation()
+    void SetLeaderInformation()
     {
         //  first deactivate NoPartyInfo and activate FocusedName, FocusedDescription and PartyFocus
         transform.Find("NoPartyInfo").gameObject.SetActive(false);
@@ -87,6 +91,68 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("PartyFocus").gameObject.SetActive(false);
     }
 
+    #endregion
+
+    #region On change
+
+    void OnHireSingleUnit()
+    {
+        // update number of units
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+    }
+
+    void OnHireDoubleUnit()
+    {
+        // update number of units
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+    }
+
+    void OnDismissSingleUnit()
+    {
+        // looks like unit is not destroyed immediately and still present in the cell
+        // decrease number of units by one here manually
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (partyPanel.GetNumberOfPresentUnits()-1).ToString() + "/" + city.GetUnitsCapacity().ToString();
+    }
+
+    void OnDimissDoubleUnit()
+    {
+        // looks like unit is not destroyed immediately and still present in the cell
+        // decrease number of units by one here manually
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (partyPanel.GetNumberOfPresentUnits() - 2).ToString() + "/" + city.GetUnitsCapacity().ToString();
+    }
+
+    public void OnChange(ChangeType changeType)
+    {
+        switch (changeType)
+        {
+            case ChangeType.Init:
+                InitFocusPanel();
+                break;
+            case ChangeType.HirePartyLeader:
+                SetLeaderInformation();
+                break;
+            case ChangeType.HireSingleUnit:
+                OnHireSingleUnit();
+                break;
+            case ChangeType.HireDoubleUnit:
+                OnHireDoubleUnit();
+                break;
+            case ChangeType.DismissPartyLeader:
+                SetNoPartyInfo();
+                break;
+            case ChangeType.DismissSingleUnit:
+                OnDismissSingleUnit();
+                break;
+            case ChangeType.DismissDoubleUnit:
+                OnDimissDoubleUnit();
+                break;
+            default:
+                Debug.LogError("Unknown condition");
+                break;
+        }
+    }
+
+    #endregion
 
     //// Update is called once per frame
     //void Update () {
