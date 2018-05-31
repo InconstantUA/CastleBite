@@ -252,7 +252,7 @@ public class PartyPanel : MonoBehaviour {
             capacity = city.GetUnitsCapacity();
         } else
         {
-            capacity = GetPartyLeader().GetLeadership();
+            capacity = GetPartyLeader().GetLeadership() + 1; // +1 because we do not count leader
         }
         return capacity;
     }
@@ -598,7 +598,7 @@ public class PartyPanel : MonoBehaviour {
         PartyUnit unitBeingDragged = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
         Transform unitCell = UnitDragHandler.unitBeingDragged.transform.parent.parent;
         Transform horizontalPanelGroup = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent;
-        Transform partyPanel = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent;
+        Transform sourcePartyPanel = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent;
         Transform party = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.parent;
         Color greenHighlight = Color.green;
         Color redHighlight = Color.red;
@@ -613,41 +613,319 @@ public class PartyPanel : MonoBehaviour {
             //  there cannot be any possible failures
             //  so this can be safely highlighted as OK
             //  highlight all active cells
-            foreach (string horisontalPanel in horisontalPanels)
+            // panel should understand who it is
+            //  - source of the draggable object
+            //  - or destination or other panel
+            // find out if current panel is the source panel
+            if (sourcePartyPanel == gameObject.GetComponent<PartyPanel>().transform)
             {
-                foreach (string cell in cells)
+                foreach (string horisontalPanel in horisontalPanels)
                 {
-                    // verify if slot is active
-                    // here we highlight only party panel of the draggable unit
-                    // not this party panel, where we are now
-                    if (partyPanel.Find(horisontalPanel + "/" + cell).gameObject.activeSelf)
+                    foreach (string cell in cells)
                     {
-                        // Change text box color
-                        partyPanel.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = greenHighlight;
+                        // verify if slot is active
+                        // here we highlight only party panel of the draggable unit
+                        // not this party panel, where we are now
+                        if (sourcePartyPanel.Find(horisontalPanel + "/" + cell).gameObject.activeSelf)
+                        {
+                            // Change text box color
+                            sourcePartyPanel.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = greenHighlight;
+                        }
                     }
                 }
             }
-            // InterParty scope
-            //  The 1st easiest check is if draggable unit is inter-party movable or not
-            //  The 2nd problem may happen with moving unit to the other party
-            //  Verify if other party panel is present, if no panel - no problems
-            PartyPanel otherPartyPanel = GetOtherPartyPanel(partyPanel.GetComponent<PartyPanel>());
-            if (otherPartyPanel && unitBeingDragged.GetIsInterpartyMovable())
+            else
             {
-                // here we highlight other party if it is present,
-                // there are multiple blocking conditions present
-                // skip highlighting for the non-interparty-movable objects
-                // on double unit hire, skip also highlighting of nearby cell near non-interparty-movable
-                // the only good conditions are:
-                // -
-                // -
+                // there can be only 2 panels
+                // if i'm not the source panel, then I'm other panel or destination panel
+                // InterParty scope
+                //  The 1st easiest check is if draggable unit is inter-party movable or not
+                //  The 2nd problem may happen with moving unit to the other party
+                //  Verify if other party panel is present, if no panel - no problems
+                PartyPanel otherPartyPanel = GetOtherPartyPanel(sourcePartyPanel.GetComponent<PartyPanel>());
+                if (otherPartyPanel)
+                {
+                    if (unitBeingDragged.GetIsInterpartyMovable())
+                    {
+                        // unit is movable
+                        // find in other panel where it can or cannot be placed and highlight accordingly
+                        // here we highlight other party if it is present,
+                        // there are multiple blocking conditions present
+                        // skip highlighting for the non-interparty-movable objects
+                        // on double unit hire, skip also highlighting of nearby cell near non-interparty-movable
+                        // act based on the unit size
+                        if (PartyUnit.UnitSize.Single == unitBeingDragged.GetUnitSize())
+                        {
+                            // Single unit size
+                            // act based on the destination cell type
+                            // Single[Occupied[movable/non-interparty-movable]/Free]/Double
+                            // loop through all cells in other party panel and highlight based on condition
+                            bool isCellActive;
+                            PartyUnit cellUnit;
+                            Color highlightColor;
+                            UnitDragHandler unitCanvas;
+                            bool isUnitInterPartyDraggable;
+                            foreach (string horisontalPanel in horisontalPanels)
+                            {
+                                foreach (string cell in cells)
+                                {
+                                    // verify if slot is active
+                                    // wo do not need to do anything with inacive cells
+                                    isCellActive = otherPartyPanel.transform.Find(horisontalPanel + "/" + cell).gameObject.activeSelf;
+                                    if (isCellActive)
+                                    {
+                                        // verify if cell is occupied
+                                        // UnitCanvas, which has UnitDragHandler component attached is present
+                                        unitCanvas = otherPartyPanel.transform.Find(horisontalPanel + "/" + cell + "/UnitSlot").GetComponentInChildren<UnitDragHandler>();
+                                        if (unitCanvas)
+                                        {
+                                            // occupied
+                                            cellUnit = unitCanvas.GetComponentInChildren<PartyUnit>();
+                                            isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
+                                            if (isUnitInterPartyDraggable)
+                                            {
+                                                // unit can be dragged to other party
+                                                // do additional checks
+                                                // if occupied cell is single-unit, 
+                                                // then we can easily drag here unit and exchange units between the cells
+                                                // but if the occupied cell is double unit cells, then we need to do additional verification
+                                                if ("Wide" == cell)
+                                                {
+                                                    // do additional verification
+                                                    // possible states and tranistions
+                                                    // src state    dst state   result
+                                                    // 01/10        2           check for source overflow
+                                                    // 11           2           ok
+                                                    // 1x/x1        2           not ok
+                                                    // get nearby cell
+                                                    Transform nearbySrcCellTr;
+                                                    if ("Left" == unitCell.name)
+                                                    {
+                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Right");
+                                                    }
+                                                    else
+                                                    {
+                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Left");
+                                                    }
+                                                    // verify if nearby source cell is occupied
+                                                    UnitDragHandler nearbySrcCellUnitCanvas = nearbySrcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
+                                                    if (nearbySrcCellUnitCanvas)
+                                                    {
+                                                        // nearby cell is occupied
+                                                        // check if it is occupied by non-inter-party-movable unit, 
+                                                        // because we cannot swap those units
+                                                        PartyUnit nearbySrcUnit = nearbySrcCellUnitCanvas.GetComponentInChildren<PartyUnit>();
+                                                        if (nearbySrcUnit.GetIsInterpartyMovable())
+                                                        {
+                                                            // it is inter-party movable unit
+                                                            // we can safely swap between src horizontal panel and destination panel with double unit
+                                                            highlightColor = greenHighlight;
+                                                        }
+                                                        else
+                                                        {
+                                                            // it is not inter-party movable unit
+                                                            // we cannot swap it
+                                                            highlightColor = redHighlight;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        // nearby cell is free
+                                                        // check for overflow in source cell
+                                                        // +1 is we are simulating final capacity with swapped single and double units
+                                                        if (sourcePartyPanel.GetComponent<PartyPanel>().GetCapacity() < (sourcePartyPanel.GetComponent<PartyPanel>().GetNumberOfPresentUnits() + 1))
+                                                        {
+                                                            // not enough capacity
+                                                            highlightColor = redHighlight;
+                                                        }
+                                                        else
+                                                        {
+                                                            // enough capacity
+                                                            highlightColor = greenHighlight;
+                                                        }
+                                                    }
+                                                } else
+                                                {
+                                                    // we can swap units
+                                                    highlightColor = greenHighlight;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                highlightColor = redHighlight;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            // free
+                                            // verify if there is no overflow of city or hero capacity if unit move to free cell
+                                            // +1 is we are simulating final capacity with moved single unit
+                                            if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 1))
+                                            {
+                                                // not enough capacity
+                                                highlightColor = redHighlight;
+                                            }
+                                            else
+                                            {
+                                                // enough capacity
+                                                highlightColor = greenHighlight;
+                                            }
+                                            // Change text box color
+                                        }
+                                        // per-cell hightlight
+                                        otherPartyPanel.transform.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = highlightColor;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // Double unit size
+                            // do the same as for single
+                            // act based on destination horizontal panel state
+                            // possible states:
+                            // src cell     dst cell    result
+                            // 2            00          check destination panel overflow +2
+                            // 2            01/10       check destination panel overflow +1
+                            // 2            x*/*x       not possible, x - non interparty movable unit
+                            // 2            2/11        ok
+                            bool isCellActive;
+                            PartyUnit cellUnit;
+                            Color highlightColor;
+                            UnitDragHandler unitCanvas;
+                            bool isUnitInterPartyDraggable;
+                            GameObject wideCell;
+                            Transform leftCell;
+                            Transform rightCell;
+                            UnitDragHandler isLeftCellOccupied; // if null - false, if other - true, we use it as bool
+                            UnitDragHandler isRightCellOccupied; // if null - false, if other - true, we use it as bool
+                            bool isLeftCellUnitInterPartyMovable = false;
+                            bool isRightCellUnitInterPartyMovable = false;
+                            foreach (string horisontalPanel in horisontalPanels)
+                            {
+                                // verify if wide slot is active
+                                // if wide is active, then we have unit there
+                                // there is no need to additionally check this
+                                // we can swap with other wide units
+                                // we assume that all wide units are inter-party movable
+                                wideCell = otherPartyPanel.transform.Find(horisontalPanel + "/Wide").gameObject;
+                                if (wideCell.activeSelf)
+                                {
+                                    // wide slot is active
+                                    highlightColor = greenHighlight;
+                                    // per-horizontal panel hightlight
+                                    otherPartyPanel.transform.Find(horisontalPanel + "/Wide/Br").GetComponent<Text>().color = highlightColor;
+                                }
+                                else
+                                {
+                                    // wide slot is not active
+                                    // single unit slot should be active
+                                    // verify their state
+                                    leftCell = otherPartyPanel.transform.Find(horisontalPanel + "/Left");
+                                    rightCell = otherPartyPanel.transform.Find(horisontalPanel + "/Right");
+                                    // gather input for possible states
+                                    // UnitCanvas, which has UnitDragHandler component attached is present
+                                    isLeftCellOccupied = leftCell.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
+                                    isRightCellOccupied = rightCell.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
+                                    if (isLeftCellOccupied)
+                                    {
+                                        // occupied
+                                        cellUnit = isLeftCellOccupied.GetComponentInChildren<PartyUnit>();
+                                        isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
+                                        if (isUnitInterPartyDraggable)
+                                        {
+                                            isLeftCellUnitInterPartyMovable = true;
+                                        }
+                                        else
+                                        {
+                                            isLeftCellUnitInterPartyMovable = false;
+                                        }
+                                    }
+                                    if (isRightCellOccupied)
+                                    {
+                                        // occupied
+                                        cellUnit = isRightCellOccupied.GetComponentInChildren<PartyUnit>();
+                                        isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
+                                        if (isUnitInterPartyDraggable)
+                                        {
+                                            isRightCellUnitInterPartyMovable = true;
+                                        }
+                                        else
+                                        {
+                                            isRightCellUnitInterPartyMovable = false;
+                                        }
+                                    }
+                                    // verify conditions
+                                    // 00
+                                    if (!isLeftCellOccupied && !isRightCellOccupied)
+                                    {
+                                        // check destination overflow +2
+                                        if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 2))
+                                        {
+                                            // not enough capacity
+                                            highlightColor = redHighlight;
+                                        }
+                                        else
+                                        {
+                                            // enough capacity
+                                            highlightColor = greenHighlight;
+                                        }
+                                    }
+                                    // 01/10
+                                    else if ( (!isLeftCellOccupied && (isRightCellOccupied && isRightCellUnitInterPartyMovable))
+                                      || ( (isLeftCellOccupied && isLeftCellUnitInterPartyMovable) && !isRightCellOccupied) )
+                                    {
+                                        // check destination overflow +1
+                                        if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 1))
+                                        {
+                                            // not enough capacity
+                                            highlightColor = redHighlight;
+                                        }
+                                        else
+                                        {
+                                            // enough capacity
+                                            highlightColor = greenHighlight;
+                                        }
+                                    }
+                                    // 11
+                                    else if ((isLeftCellOccupied && isLeftCellUnitInterPartyMovable) && (isRightCellOccupied && isRightCellUnitInterPartyMovable))
+                                    {
+                                        // just swap
+                                        highlightColor = greenHighlight;
+                                    }
+                                    // x0
+                                    // 0x
+                                    // x1
+                                    // x1
+                                    else
+                                    {
+                                        // all other conditions lead to error
+                                        highlightColor = redHighlight;
+                                    }
+                                    // per-horizontal panel hightlight
+                                    otherPartyPanel.transform.Find(horisontalPanel + "/Left/Br").GetComponent<Text>().color = highlightColor;
+                                    otherPartyPanel.transform.Find(horisontalPanel + "/Right/Br").GetComponent<Text>().color = highlightColor;
+
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // unit is not inter-party movable
+                        // highlight other panel with (red) - unit cannot be dropped there
+                        foreach (string horisontalPanel in horisontalPanels)
+                        {
+                            // get state of active cells
+                            foreach (string cell in cells)
+                            {
+                                // Change text box color
+                                transform.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = redHighlight;
+                            }
+                        }
+                    }
+                }
             }
-            //if (PartyUnit.UnitSize.Single == unitBeingDragged.GetUnitSize())
-            //{
-            //    // highlight all single cells in the horizontal panel group as OK
-            //    horizontalPanelGroup.Find("Left/Br").GetComponent<Text>().color = greenHighlight;
-            //    horizontalPanelGroup.Find("Right/Br").GetComponent<Text>().color = greenHighlight;
-            //}
         }
         else
         {
