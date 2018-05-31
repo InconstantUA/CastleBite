@@ -2988,7 +2988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cityName: Stormberg
   cityDescription: Dominion capital
-  cityLevel: 4
+  cityLevel: 6
   cityType: 1
   cityViewActiveState: 0
   cityOccupationState: 0
@@ -41795,6 +41795,7 @@ MonoBehaviour:
   healUnitCursor: {fileID: 2800000, guid: 10e19d6a2364cc84c998e43f443dca04, type: 3}
   resurectUnitCursor: {fileID: 2800000, guid: 59fb61cc8896fe242b82d09fe365f4cd, type: 3}
   invenotryUnitCursor: {fileID: 2800000, guid: b33edc60e2197444fbd5cfb8db01625b, type: 3}
+  dragUnitCursor: {fileID: 0}
 --- !u!1 &2117242370
 GameObject:
   m_ObjectHideFlags: 0
