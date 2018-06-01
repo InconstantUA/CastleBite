@@ -37,7 +37,9 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         unitBeingDraggedParentTr = transform.parent;
         startPosition = transform.position;
         startParent = transform.parent;
-        // todo: findout how it works
+        // Make sure that draggable unit do not block rays
+        // which are goiong from the mouse to the underlying objects (unit drop slots)
+        // so we can detect where we drop unit and what is below the mouse pointer
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         // make unit the top most, so when you drag it, it appears on top of other units
         BringUnitToFront();
@@ -65,8 +67,9 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             transform.position = startPosition;
         }
         // activate hire unit buttons again, after it was disabled
-        PartyPanel partyPanel = transform.parent.parent.parent.parent.GetComponent<PartyPanel>();
-        partyPanel.SetHireUnitPnlButtonActive(true);
+        // this is should be done in City Garnizon panel
+        PartyPanel garnizonPanel = GetParentCity().transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
+        garnizonPanel.SetHireUnitPnlButtonActive(true);
     }
 
     #endregion

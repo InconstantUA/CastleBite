@@ -285,6 +285,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetHireUnitPnlButtonActive(bool activate)
     {
+        GameObject hireUnitPnlBtn;
         // this is only needed in garnizon mode, only in this mode hire buttons are present
         if (panelMode == PanelMode.Garnizon)
         {
@@ -296,10 +297,19 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // activate - set in front of drop slot
                         // do not activate it if drop slot has an unit in it
-                        if (transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
+                        if (!transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
                         {
                             // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsLastSibling();
-                            transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                            hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
+                            hireUnitPnlBtn.SetActive(true);
+                            // and bring it to the front
+                            hireUnitPnlBtn.transform.SetAsLastSibling();
+                        }
+                        else
+                        {
+                            Debug.Log("slot " + horisontalPanel + " " + cell + " has a unit");
+                            hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
+                            hireUnitPnlBtn.SetActive(false);
                         }
                     }
                     else
@@ -308,8 +318,11 @@ public class PartyPanel : MonoBehaviour {
                         //if (partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
                         //{
                         // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsFirstSibling();
-                        transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject.SetActive(false);
+                        hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
+                        hireUnitPnlBtn.SetActive(false);
                         //}
+                        // and bring it to the front
+                        // hireUnitPnlBtn.transform.SetAsLastSibling();
                     }
                 }
             }
