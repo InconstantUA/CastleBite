@@ -585,6 +585,45 @@ public class PartyPanel : MonoBehaviour {
         return otherPartyPanel;
     }
 
+    void SetCellIsDroppableStatus(bool isDroppable, Transform cellTr, string errorMessage = "")
+    {
+        // isDroppable means if we can drop units to this cell
+        if (isDroppable)
+        {
+            // Change text box color
+            cellTr.Find("Br").GetComponent<Text>().color = Color.green;
+        }
+        else
+        {
+            // Change text box color
+            cellTr.Find("Br").GetComponent<Text>().color = Color.red;
+        }
+        // set UnitSlot in cell as droppable or not
+        cellTr.Find("UnitSlot").GetComponent<UnitSlotDropHandler>().SetOnDropAction(isDroppable, errorMessage);
+    }
+
+    string GetNotEnoughCapacityErrorMessage(PartyPanel partyPanel, bool direction)
+    {
+        string errorMessage = "";
+        // return error message based on the party panel mode and direction
+        // direction = true -> source
+        // direction = false -> target
+        string directionStr = "source";
+        if (!direction)
+        {
+            directionStr = "target";
+        }
+        if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
+        {
+            errorMessage = "Not enough " + directionStr + " city capacity.";
+        }
+        else
+        {
+            errorMessage = "Not enough " + directionStr + " hero leadership.";
+        }
+        return errorMessage;
+    }
+
     public void SetActiveUnitDrag(bool activate)
     {
         // Todo:
@@ -600,9 +639,10 @@ public class PartyPanel : MonoBehaviour {
         Transform horizontalPanelGroup = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent;
         Transform sourcePartyPanel = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent;
         Transform party = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.parent;
-        Color greenHighlight = Color.green;
-        Color redHighlight = Color.red;
+        Transform cellTr;
         Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+        string errorMessage = "";
+        bool isDroppable = false;
         if (activate)
         {
             // highlight differently cells where units can be and cannot be dropped
@@ -626,10 +666,10 @@ public class PartyPanel : MonoBehaviour {
                         // verify if slot is active
                         // here we highlight only party panel of the draggable unit
                         // not this party panel, where we are now
-                        if (sourcePartyPanel.Find(horisontalPanel + "/" + cell).gameObject.activeSelf)
+                        cellTr = sourcePartyPanel.Find(horisontalPanel + "/" + cell);
+                        if (cellTr.gameObject.activeSelf)
                         {
-                            // Change text box color
-                            sourcePartyPanel.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = greenHighlight;
+                            SetCellIsDroppableStatus(true, cellTr);
                         }
                     }
                 }
@@ -662,7 +702,6 @@ public class PartyPanel : MonoBehaviour {
                             // loop through all cells in other party panel and highlight based on condition
                             bool isCellActive;
                             PartyUnit cellUnit;
-                            Color highlightColor;
                             UnitDragHandler unitCanvas;
                             bool isUnitInterPartyDraggable;
                             foreach (string horisontalPanel in horisontalPanels)
@@ -719,13 +758,14 @@ public class PartyPanel : MonoBehaviour {
                                                         {
                                                             // it is inter-party movable unit
                                                             // we can safely swap between src horizontal panel and destination panel with double unit
-                                                            highlightColor = greenHighlight;
+                                                            isDroppable = true;
                                                         }
                                                         else
                                                         {
                                                             // it is not inter-party movable unit
                                                             // we cannot swap it
-                                                            highlightColor = redHighlight;
+                                                            isDroppable = false;
+                                                            errorMessage = "Unit in nearby slot cannot be moved to other party.";
                                                         }
                                                     }
                                                     else
@@ -736,23 +776,25 @@ public class PartyPanel : MonoBehaviour {
                                                         if (sourcePartyPanel.GetComponent<PartyPanel>().GetCapacity() < (sourcePartyPanel.GetComponent<PartyPanel>().GetNumberOfPresentUnits() + 1))
                                                         {
                                                             // not enough capacity
-                                                            highlightColor = redHighlight;
+                                                            isDroppable = false;
+                                                            errorMessage = GetNotEnoughCapacityErrorMessage(sourcePartyPanel.GetComponent<PartyPanel>(), true);
                                                         }
                                                         else
                                                         {
                                                             // enough capacity
-                                                            highlightColor = greenHighlight;
+                                                            isDroppable = true;
                                                         }
                                                     }
                                                 } else
                                                 {
                                                     // we can swap units
-                                                    highlightColor = greenHighlight;
+                                                    isDroppable = true;
                                                 }
                                             }
                                             else
                                             {
-                                                highlightColor = redHighlight;
+                                                isDroppable = false;
+                                                errorMessage = "Unit in target slot cannot be moved to other party.";
                                             }
                                         }
                                         else
@@ -763,17 +805,18 @@ public class PartyPanel : MonoBehaviour {
                                             if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 1))
                                             {
                                                 // not enough capacity
-                                                highlightColor = redHighlight;
+                                                isDroppable = false;
+                                                errorMessage = GetNotEnoughCapacityErrorMessage(otherPartyPanel, false);
                                             }
                                             else
                                             {
                                                 // enough capacity
-                                                highlightColor = greenHighlight;
+                                                isDroppable = true;
                                             }
                                             // Change text box color
                                         }
                                         // per-cell hightlight
-                                        otherPartyPanel.transform.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = highlightColor;
+                                        SetCellIsDroppableStatus(isDroppable, otherPartyPanel.transform.Find(horisontalPanel + "/" + cell), errorMessage);
                                     }
                                 }
                             }
@@ -789,10 +832,7 @@ public class PartyPanel : MonoBehaviour {
                             // 2            01/10       check destination panel overflow +1
                             // 2            x*/*x       not possible, x - non interparty movable unit
                             // 2            2/11        ok
-                            bool isCellActive;
                             PartyUnit cellUnit;
-                            Color highlightColor;
-                            UnitDragHandler unitCanvas;
                             bool isUnitInterPartyDraggable;
                             GameObject wideCell;
                             Transform leftCell;
@@ -812,9 +852,8 @@ public class PartyPanel : MonoBehaviour {
                                 if (wideCell.activeSelf)
                                 {
                                     // wide slot is active
-                                    highlightColor = greenHighlight;
                                     // per-horizontal panel hightlight
-                                    otherPartyPanel.transform.Find(horisontalPanel + "/Wide/Br").GetComponent<Text>().color = highlightColor;
+                                    SetCellIsDroppableStatus(true, otherPartyPanel.transform.Find(horisontalPanel + "/Wide"));
                                 }
                                 else
                                 {
@@ -863,12 +902,13 @@ public class PartyPanel : MonoBehaviour {
                                         if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 2))
                                         {
                                             // not enough capacity
-                                            highlightColor = redHighlight;
+                                            isDroppable = false;
+                                            errorMessage = GetNotEnoughCapacityErrorMessage(otherPartyPanel, false);
                                         }
                                         else
                                         {
                                             // enough capacity
-                                            highlightColor = greenHighlight;
+                                            isDroppable = true;
                                         }
                                     }
                                     // 01/10
@@ -879,33 +919,35 @@ public class PartyPanel : MonoBehaviour {
                                         if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 1))
                                         {
                                             // not enough capacity
-                                            highlightColor = redHighlight;
+                                            isDroppable = false;
+                                            errorMessage = GetNotEnoughCapacityErrorMessage(otherPartyPanel, false);
                                         }
                                         else
                                         {
                                             // enough capacity
-                                            highlightColor = greenHighlight;
+                                            isDroppable = true;
                                         }
                                     }
                                     // 11
                                     else if ((isLeftCellOccupied && isLeftCellUnitInterPartyMovable) && (isRightCellOccupied && isRightCellUnitInterPartyMovable))
                                     {
                                         // just swap
-                                        highlightColor = greenHighlight;
+                                        isDroppable = true;
                                     }
                                     // x0
                                     // 0x
                                     // x1
                                     // x1
+                                    // xx
                                     else
                                     {
                                         // all other conditions lead to error
-                                        highlightColor = redHighlight;
+                                        isDroppable = false;
+                                        errorMessage = "Unit(s) in target slot(s) cannot be moved to other party.";
                                     }
                                     // per-horizontal panel hightlight
-                                    otherPartyPanel.transform.Find(horisontalPanel + "/Left/Br").GetComponent<Text>().color = highlightColor;
-                                    otherPartyPanel.transform.Find(horisontalPanel + "/Right/Br").GetComponent<Text>().color = highlightColor;
-
+                                    SetCellIsDroppableStatus(isDroppable, leftCell, errorMessage);
+                                    SetCellIsDroppableStatus(isDroppable, rightCell, errorMessage);
                                 }
                             }
                         }
@@ -920,7 +962,8 @@ public class PartyPanel : MonoBehaviour {
                             foreach (string cell in cells)
                             {
                                 // Change text box color
-                                transform.Find(horisontalPanel + "/" + cell + "/Br").GetComponent<Text>().color = redHighlight;
+                                errorMessage = "This unit cannot be moved to other party.";
+                                SetCellIsDroppableStatus(false, transform.Find(horisontalPanel + "/" + cell), errorMessage);
                             }
                         }
                     }
