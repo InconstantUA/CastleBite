@@ -42,8 +42,9 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         objTransform.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
     }
 
-    void SwapSingleCells(Transform srcCellTr, Transform dstCellTr)
+    void SwapTwoCellsContent(Transform srcCellTr, Transform dstCellTr)
     {
+        Debug.Log("Swap 2 cells: " + srcCellTr.name + " > " + dstCellTr.name);
         // swap all relevan cells content and states
         // swap HPPanel values
         string srcHPcurr = srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
@@ -57,8 +58,12 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         // swap UnitCanvas
         UnitDragHandler srcUnitCanvas = srcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
         UnitDragHandler dstUnitCanvas = dstCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
-        srcUnitCanvas.transform.SetParent(transform);
-        ResetPositionToZero(srcUnitCanvas.transform);
+        // verify is src unit canvas exist, it may not exist on double unit swap
+        if (srcUnitCanvas)
+        {
+            srcUnitCanvas.transform.SetParent(dstCellTr.Find("UnitSlot"));
+            ResetPositionToZero(srcUnitCanvas.transform);
+        }
         //  verfy that unit canvas is present, dst cell may be free
         if (dstUnitCanvas)
         {
@@ -68,6 +73,34 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         //// swap HireUnitPnlBtn state
         //bool srcHireUnitPnlBtn = srcCellTr.Find("HireUnitPnlBtn").gameObject.activeSelf;
         //bool dstHireUnitPnlBtn = dstCellTr.Find("HireUnitPnlBtn").gameObject.activeSelf;
+    }
+
+    void SwapSingleWithDouble(Transform srcCellTr, Transform dstCellTr, bool direction)
+    {
+        Debug.Log("Swap horizontal panels");
+        // L/l-left cell active/inactive, R/r-right, W-wide
+        // activate/deactivate as below
+        // LRw->lrW - direction true
+        // lrW->LRw - direction false
+        // swap all cells content
+        // get horizontal panels for later use
+        Transform srcPanelTr = srcCellTr.parent;
+        Transform dstPanelTr = dstCellTr.parent;
+        Transform srcL = srcPanelTr.Find("Left");
+        Transform srcR = srcPanelTr.Find("Right");
+        Transform srcW = srcPanelTr.Find("Wide");
+        Transform dstL = dstPanelTr.Find("Left");
+        Transform dstR = dstPanelTr.Find("Right");
+        Transform dstW = dstPanelTr.Find("Wide");
+        SwapTwoCellsContent(srcL, dstL);
+        SwapTwoCellsContent(srcR, dstR);
+        SwapTwoCellsContent(srcW, dstW);
+        srcL.gameObject.SetActive(!direction);
+        srcR.gameObject.SetActive(!direction);
+        srcW.gameObject.SetActive(direction);
+        dstL.gameObject.SetActive(direction);
+        dstR.gameObject.SetActive(direction);
+        dstW.gameObject.SetActive(!direction);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -81,6 +114,9 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             // act based on then draggable unit size
             // get actual unit, structure Cell-UnitCanvas(dragged)->Unit
             PartyUnit draggedUnit = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
+            Transform srcCellTr = UnitDragHandler.unitBeingDragged.transform.parent.parent;
+            Transform dstCellTr = transform.parent;
+            PartyUnit.UnitSize dstCellSize = transform.parent.GetComponent<UnitCell>().GetCellSize();
             if (draggedUnit.GetUnitSize() == PartyUnit.UnitSize.Single)
             {
                 // single unit
@@ -89,22 +125,30 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 // 1    free or occupied by single unit     swap single cells
                 // 1    occupied by double                  swap cells in horizontal panels
                 // act based on destination cell size
-                PartyUnit.UnitSize dstCellSize = transform.parent.GetComponent<UnitCell>().GetCellSize();
                 if (PartyUnit.UnitSize.Single == dstCellSize)
                 {
                     // swap single cells
-                    Transform srcCellTr = UnitDragHandler.unitBeingDragged.transform.parent.parent;
-                    Transform dstCellTr = transform.parent;
-                    SwapSingleCells(srcCellTr, dstCellTr);
+                    SwapTwoCellsContent(srcCellTr, dstCellTr);
                 }
                 else
                 {
-                    // swap cells in horizontal panels
+                    // swap 2 single cells in src panel with double cell in dest panel
+                    SwapSingleWithDouble(srcCellTr, dstCellTr, true);
                 }
             }
             else
             {
                 // double unit
+                if (PartyUnit.UnitSize.Single == dstCellSize)
+                {
+                    // swap single with double cells
+                    SwapSingleWithDouble(srcCellTr, dstCellTr, false);
+                }
+                else
+                {
+                    // swap 2 double cells
+                    SwapTwoCellsContent(srcCellTr, dstCellTr);
+                }
             }
             //// drop unit if there is no other unit already present
             //if (!unit)
