@@ -13,7 +13,6 @@ public class TileHighlighter : MonoBehaviour {
     void Start() {
         isOn = true;
         txt = GetComponentInChildren<Text>();
-        // InvokeRepeating("Blink", 0, animationDuration);
         //Debug.Log("Start repeating");
     }
 
@@ -48,6 +47,7 @@ public class TileHighlighter : MonoBehaviour {
                 EnterDragMode();
                 break;
             case MapManager.Mode.Selection:
+                EnterSelectionMode();
                 break;
             case MapManager.Mode.Move:
                 break;
@@ -78,6 +78,15 @@ public class TileHighlighter : MonoBehaviour {
         txt.gameObject.SetActive(false);
         // stop blinking (selection) animation
         CancelInvoke();
+    }
+
+    void EnterSelectionMode()
+    {
+        // make TileHighligter visible
+        // enable txt
+        txt.gameObject.SetActive(false);
+        // start blinking (selection) animation
+        InvokeRepeating("Blink", 0, animationDuration);
     }
 
     // Update is called once per frame

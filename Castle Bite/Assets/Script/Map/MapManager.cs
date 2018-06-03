@@ -72,7 +72,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         int x = Mathf.FloorToInt(Input.mousePosition.x / tileSize);
         int y = Mathf.FloorToInt(Input.mousePosition.y / tileSize);
         tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
-        Debug.Log(x + ";" + y);
+        Debug.Log("Tile: " + x + ";" + y);
     }
 
     void Update()
