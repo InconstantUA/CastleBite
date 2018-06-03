@@ -326,16 +326,16 @@ public class City : MonoBehaviour {
         Transform map = transform.root.Find("MapScreen/Map");
         //  create and update Hero Party panel in UI, parent it to city UI
         GameObject heroPartyOnMapUITemplate = transform.root.Find("Templates/UI/HeroOnMap").gameObject;
-        GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map);
+        GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map.Find(transform.name));
         //  activate new party UI panel
         newPartyOnMapUI.SetActive(true);
         // Set it to the same position as a city on the map
-        string thisCityName = transform.name;
-        newPartyOnMapUI.transform.position = map.Find(thisCityName).position;
+        // string thisCityName = transform.name;
+        // newPartyOnMapUI.transform.position = map.Find(thisCityName).position;
         // Link hero to the hero on the map
         newPartyOnMapUI.GetComponent<MapHero>().linkedHeroTr = newLeaderParty.transform;
         // Update information about hero on the map Lable.
-        newPartyOnMapUI.transform.Find("Label").GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "] \r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
+        newPartyOnMapUI.transform.Find("Label").GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
     }
 
     void HirePartyLeader(PartyUnit hiredUnitTemplate)
