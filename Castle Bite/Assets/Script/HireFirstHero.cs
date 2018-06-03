@@ -8,12 +8,14 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     public Transform city;
     Text txt;
     Button btn;
     Color tmpColor;
+    public GameObject gameObjectToBeActivated;
+    public GameObject gameObjectToBeDeactivated;
 
     void Start()
     {
@@ -137,11 +139,27 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     #region OnClick
 
+    UniqueAbility.Ability GetSelectedUniqueAbility()
+    {
+        //  Find selected toggle and get attached to it unit template
+        //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
+        Toggle[] toggles = transform.parent.parent.GetComponentsInChildren<ToggleGroup>()[0].GetComponentsInChildren<Toggle>();
+        UniqueAbility.Ability selectedAbility = UniqueAbility.Ability.Hardcore;
+        foreach (Toggle toggle in toggles)
+        {
+            if (toggle.isOn)
+            {
+                selectedAbility = toggle.GetComponent<UniqueAbility>().ability;
+            }
+        }
+        return selectedAbility;
+    }
+
     PartyUnit GetSelectedUnit()
     {
         //  Find selected toggle and get attached to it unit template
         //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
-        Toggle[] toggles = transform.parent.parent.GetComponentInChildren<ToggleGroup>().GetComponentsInChildren<Toggle>();
+        Toggle[] toggles = transform.parent.parent.GetComponentsInChildren<ToggleGroup>()[1].GetComponentsInChildren<Toggle>();
         PartyUnit selectedUnit = null;
         foreach (Toggle toggle in toggles)
         {
@@ -155,27 +173,19 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     Transform GetCityTransform()
     {
-        // act depend on whether city transform is already linked to the button
-        // if not linked, then button is located in city
-        // otherwise it is button outside of the city, for example during "choose your first hero" menu
-        if (city)
-        {
-            return city;
-        }
-        else
-        {
-            return transform.parent.parent.parent.parent;
-        }
+        return city;
     }
 
     void ActOnClick()
     {
-        // First get input from parent:
-        HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
+        // Apply selected special ability to the player
+        transform.root.Find("PlayerObj").GetComponent<UniqueAbility>().ability = GetSelectedUniqueAbility();
         // Ask City to Hire unit
-        GetCityTransform().GetComponent<City>().HireUnit(hireUnitPanel.GetcallerCell(), GetSelectedUnit());
-        // Deactivate hire unit panel
-        transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
+        GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnit());
+        // Activate required object
+        gameObjectToBeActivated.SetActive(true);
+        // Deactivate required object
+        gameObjectToBeDeactivated.SetActive(false);
     }
 
     #endregion OnClick

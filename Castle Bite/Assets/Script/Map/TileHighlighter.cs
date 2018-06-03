@@ -10,10 +10,10 @@ public class TileHighlighter : MonoBehaviour {
     Text txt;
 
     // Use this for initialization
-    void Start() {
+    void Awake() {
         isOn = true;
-        txt = GetComponentInChildren<Text>();
-        //Debug.Log("Start repeating");
+        txt = gameObject.GetComponentInChildren<Text>(true) as Text;
+        // txt = transform.Find("Text").GetComponent<Text>();
     }
 
     void Blink()

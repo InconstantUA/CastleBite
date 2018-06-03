@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class City : MonoBehaviour {
-    public string cityName;
-    public string cityDescription;
-    public int cityLevel;
+    [SerializeField]
+    string cityName;
+    [SerializeField]
+    string cityDescription;
+    [SerializeField]
+    int cityLevel;
     public enum CityType { Normal, Capital };
-    public CityType cityType;
+    [SerializeField]
+    CityType cityType;
     int maxCityLevel = 5;
     public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
     [SerializeField]
@@ -33,9 +37,28 @@ public class City : MonoBehaviour {
     // If hero leaves city, the we should return city state o NoHeroIn
     // and activate hire hero button
 
+    public string GetCityName()
+    {
+        return cityName;
+    }
+
+    public string GetCityDescription()
+    {
+        return cityDescription;
+    }
+
+    public int GetCityLevel()
+    {
+        return cityLevel;
+    }
+
+    public CityType GetCityType()
+    {
+        return cityType;
+    }
 
     // Use this for initialization
-    void Start()
+    void Awake()
     {
         player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
     }
@@ -243,6 +266,7 @@ public class City : MonoBehaviour {
         bool result = false;
         int requiredGold = hiredUnitTemplate.GetCost();
         //  Verify if player has enough gold
+        player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
         if (player.GetTotalGold() >= requiredGold)
         {
             result = true;
@@ -280,7 +304,7 @@ public class City : MonoBehaviour {
     GameObject CreateNewPartyInCity()
     {
         // create and update Hero Party panel in UI, parent it to city UI
-        GameObject heroPartyPanelTemplate = transform.root.Find("Templates").Find("UI").Find("HeroParty").gameObject;
+        GameObject heroPartyPanelTemplate = transform.root.Find("Templates/UI/HeroParty").gameObject;
         GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, transform);
         //  activate new party UI panel
         newPartyUIPanel.SetActive(true);
@@ -294,6 +318,24 @@ public class City : MonoBehaviour {
         toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
         // return new party as result
         return newPartyUIPanel;
+    }
+
+    void SetHeroPartyRepresentationOnTheMap(GameObject newLeaderParty, PartyUnit leaderUnit)
+    {
+        // Create Hero's object on the map
+        Transform map = transform.root.Find("MapScreen/Map");
+        //  create and update Hero Party panel in UI, parent it to city UI
+        GameObject heroPartyOnMapUITemplate = transform.root.Find("Templates/UI/HeroOnMap").gameObject;
+        GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map);
+        //  activate new party UI panel
+        newPartyOnMapUI.SetActive(true);
+        // Set it to the same position as a city on the map
+        string thisCityName = transform.name;
+        newPartyOnMapUI.transform.position = map.Find(thisCityName).position;
+        // Link hero to the hero on the map
+        newPartyOnMapUI.GetComponent<MapHero>().linkedHeroTr = newLeaderParty.transform;
+        // Update information about hero on the map Lable.
+        newPartyOnMapUI.transform.Find("Label").GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "] \r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
     }
 
     void HirePartyLeader(PartyUnit hiredUnitTemplate)
@@ -316,6 +358,8 @@ public class City : MonoBehaviour {
         transform.Find("HireHeroPanel").gameObject.SetActive(false);
         // take gold from player
         player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
+        // Create hero's representation on the map
+        SetHeroPartyRepresentationOnTheMap(newLeaderParty, newPartyUnit);
     }
 
     #endregion

@@ -5,7 +5,17 @@ using UnityEngine.EventSystems;
 
 public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
 {
-    public enum Mode { Browse, Selection, Drag, Move };
+    public enum Mode {
+        Browse,
+        Drag,
+        Selection,
+        HighlightMovePath,
+        Move,
+        EnterHeroEdit,
+        EnterCity,
+        EnterBattle,
+        EnterCastSpell
+    };
     Mode mode;
     Vector3 startPosition;
     Transform startParent;
@@ -40,6 +50,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Vector3 mouseOnDownStartPosition;
     float xCorrectionOnDragStart;
     float yCorrectionOnDragStart;
+
+    public Mode GetMode()
+    {
+        return mode;
+    }
 
     void Start()
     {
@@ -186,6 +201,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 mode = Mode.Selection;
                 tileHighlighter.OnChange();
                 break;
+            case Mode.Selection:
+                // verify if we should
+                //  - highlight move path for selected unit 
+                //  - select other unit
+                //  - ...
+                // if we can, then update tile highlighter
+                mode = Mode.Selection;
+                // tileHighlighter.OnChange();
+                break;
             default:
                 Debug.LogError("Unknown mode");
                 break;
@@ -194,8 +218,4 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     }
 
-    public Mode GetMode()
-    {
-        return mode;
-    }
 }

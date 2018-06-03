@@ -355,7 +355,7 @@ public class PartyPanel : MonoBehaviour {
             // this depends if city has reached max level
             City city = transform.parent.parent.GetComponent<City>();
             string errMsg;
-            if (city.cityLevel == 1)
+            if (city.GetCityLevel() == 1)
             {
                 errMsg = "Not enough city capacity, 2 free slots are required. Increase city level.";
             }

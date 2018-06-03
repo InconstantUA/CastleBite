@@ -248,9 +248,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         GameObject loadButton = mainMenuPanel.transform.Find("Load").gameObject;
         saveButton.SetActive(true);
         loadButton.SetActive(true);
-        // Activate prolog
-        GameObject prolog = miscUI.transform.Find("Prolog").gameObject;
-        prolog.SetActive(true);
+        // Activate ChooseYourFirstHero
+        transform.root.Find("ChooseYourFirstHero").gameObject.SetActive(true);
     }
 
     void ContinueGame()

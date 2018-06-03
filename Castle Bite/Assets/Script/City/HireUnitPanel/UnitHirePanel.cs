@@ -5,19 +5,39 @@ using UnityEngine.UI;
 
 public class UnitHirePanel : MonoBehaviour {
     public PartyUnit unitToHire;
+    public enum Mode {Normal, FirstUnit};
+    public Mode mode;
 
     // Use this for initialization
     void Start() {
         // populate panel with information from attached unitToHire
         transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.GetUnitName() + "]";
-        // for double size units also indicate their size
-        if(unitToHire.GetUnitSize() == PartyUnit.UnitSize.Double)
+        // pupulate additional unit information
+        if (Mode.FirstUnit == mode)
         {
-            transform.Find("CharacteristicsValues").GetComponent<Text>().text = unitToHire.GetCost().ToString() + "\r\n" + unitToHire.GetLeadership().ToString() + "\r\n" + unitToHire.GetRole() + "\r\n" + "Large";
+            // fill in first hero hire menu with hero's most important characteristics
+            transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                unitToHire.GetRole() + "\r\n" +
+                unitToHire.GetBriefDescription();
         }
         else
         {
-            transform.Find("CharacteristicsValues").GetComponent<Text>().text = unitToHire.GetCost().ToString() + "\r\n" + unitToHire.GetLeadership().ToString() + "\r\n" + unitToHire.GetRole();
+            // Normal mode
+            if (unitToHire.GetUnitSize() == PartyUnit.UnitSize.Double)
+            {
+                // for double size units also indicate their size
+                transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                    unitToHire.GetCost().ToString() + "\r\n" +
+                    unitToHire.GetLeadership().ToString() + "\r\n" +
+                    unitToHire.GetRole() + "\r\n" + "Large";
+            }
+            else
+            {
+                transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                    unitToHire.GetCost().ToString() + "\r\n" +
+                    unitToHire.GetLeadership().ToString() + "\r\n" +
+                    unitToHire.GetRole();
+            }
         }
     }
 
@@ -25,8 +45,5 @@ public class UnitHirePanel : MonoBehaviour {
     {
         return unitToHire;
     }
-    //// Update is called once per frame
-    //void Update () {
 
-    //}
 }

@@ -8,9 +8,10 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class ButtonToActivateAndDeactivateCustomUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public Transform city;
+    public GameObject gameObjectToBeActivated;
+    public GameObject gameObjectToBeDeactivated;
     Text txt;
     Button btn;
     Color tmpColor;
@@ -29,6 +30,12 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
         {
             Cursor.visible = true;
+            // highlight button if it was highlighted before
+            //if (CompareColors(btn.colors.highlightedColor, txt.color))
+            //{
+            //    DimmAllOtherMenus();
+            //    SetHighlightedStatus();
+            //}
             // Highlight button, if needed by triggering on point enter
             OnPointerEnter(null);
         }
@@ -125,57 +132,25 @@ public class HireUnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     void DimmAllOtherMenus()
     {
         // to make it easier dimm just all menus
-        GameObject[] allControls = GameObject.FindGameObjectsWithTag("HighlightableControlsHirePartyLeader");
-        foreach (GameObject control in allControls)
+        GameObject[] highlightableText = GameObject.FindGameObjectsWithTag("HighlightableCityView");
+        foreach (GameObject text in highlightableText)
         {
-            Text tmpTxt = control.GetComponentInChildren<Text>();
-            Button tmpBtn = control.GetComponentInChildren<Button>();
-            tmpTxt.color = tmpBtn.colors.normalColor;
+            Text tmpTxt = text.GetComponentInChildren<Text>();
+            // Button tmpBtn = text.GetComponentInChildren<Button>();
+            tmpTxt.color = btn.colors.normalColor;
+            // Debug.Log("dimm " + otherButton.name + " button");
         }
         // Debug.Log("DimmAllOtherMenus");
     }
 
     #region OnClick
 
-    PartyUnit GetSelectedUnit()
-    {
-        //  Find selected toggle and get attached to it unit template
-        //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
-        Toggle[] toggles = transform.parent.parent.GetComponentInChildren<ToggleGroup>().GetComponentsInChildren<Toggle>();
-        PartyUnit selectedUnit = null;
-        foreach (Toggle toggle in toggles)
-        {
-            if (toggle.isOn)
-            {
-                selectedUnit = toggle.GetComponent<UnitHirePanel>().GetUnitToHire();
-            }
-        }
-        return selectedUnit;
-    }
-
-    Transform GetCityTransform()
-    {
-        // act depend on whether city transform is already linked to the button
-        // if not linked, then button is located in city
-        // otherwise it is button outside of the city, for example during "choose your first hero" menu
-        if (city)
-        {
-            return city;
-        }
-        else
-        {
-            return transform.parent.parent.parent.parent;
-        }
-    }
-
     void ActOnClick()
     {
-        // First get input from parent:
-        HireUnitGeneric hireUnitPanel = transform.parent.parent.parent.GetComponent<HireUnitGeneric>();
-        // Ask City to Hire unit
-        GetCityTransform().GetComponent<City>().HireUnit(hireUnitPanel.GetcallerCell(), GetSelectedUnit());
-        // Deactivate hire unit panel
-        transform.parent.parent.parent.GetComponent<HireUnitGeneric>().DeactivateAdv();
+        // activate required object
+        gameObjectToBeActivated.SetActive(true);
+        // deactivate required object
+        gameObjectToBeDeactivated.SetActive(false);
     }
 
     #endregion OnClick

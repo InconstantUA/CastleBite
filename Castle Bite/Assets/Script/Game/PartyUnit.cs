@@ -22,6 +22,10 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     string unitRole;
     [SerializeField]
+    string unitBriefDescription;
+    [SerializeField]
+    string unitFullDescription;
+    [SerializeField]
     bool isInterpartyMovable;
     [SerializeField]
     bool isDismissable;
@@ -112,6 +116,26 @@ public class PartyUnit : MonoBehaviour {
     public string GetRole()
     {
         return unitRole;
+    }
+
+    public void SetBriefDescription(string requiredBriefDescription)
+    {
+        unitBriefDescription = requiredBriefDescription;
+    }
+
+    public string GetBriefDescription()
+    {
+        return unitBriefDescription;
+    }
+
+    public string GetFullDescription()
+    {
+        return unitFullDescription;
+    }
+
+    public void SetFullDescription(string requiredFullDescription)
+    {
+        unitFullDescription = requiredFullDescription;
     }
 
     public void SetUnitType(UnitType requiredUnitType)

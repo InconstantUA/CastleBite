@@ -8,19 +8,21 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class OpenCityViewButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public string cityName;
-    public string cityDescription;
+    public Transform linkedCityTr;
+    City linkedCity;
     Text cityDescrTxt;
     Button btn;
     Color tmpColor;
 
     void Start()
     {
+        // init linkedCity object
+        linkedCity = linkedCityTr.GetComponent<City>();
         // init text object
         cityDescrTxt = GetComponentInChildren<Text>();
-        cityDescrTxt.text = "[" + cityName + "]\n\r <size=12>" + cityDescription + "</size>";
+        cityDescrTxt.text = "[" + linkedCity.GetCityName() + "]\n\r <size=12>" + linkedCity.GetCityDescription() + "</size>";
         // hide it
         cityDescrTxt.color = new Color(0, 0, 0, 0);
         btn = gameObject.GetComponent<Button>();
@@ -146,7 +148,7 @@ public class OpenCityViewButton : MonoBehaviour, IPointerEnterHandler, IPointerE
         // go back to main menu
         // change this to map in future
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
-        GameObject cityMenu = btn.transform.root.Find("Cities").Find(cityName).gameObject;
+        GameObject cityMenu = linkedCity.gameObject;
         mapScreen.SetActive(false);
         cityMenu.SetActive(true);
     }
