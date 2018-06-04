@@ -4,42 +4,26 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
-    public Transform linkedHeroTr;
     enum State { NotSelected, Selected };
     State state = State.NotSelected;
-    // for animation
-    bool isOn;
-    [SerializeField]
-    float animationDuration = 1f;
-    Text markerTxt;
     // for highlight
     Button btn;
     Color tmpColor;
     Text heroLabel;
+    MapHero mapHero;
 
     void Awake()
     {
-        isOn = true;
-        markerTxt = gameObject.GetComponent<Text>();
         btn = gameObject.GetComponent<Button>();
-        heroLabel = transform.Find("HeroLabel").GetComponent<Text>();
+        heroLabel = gameObject.GetComponent<Text>();
+        mapHero = transform.parent.GetComponent<MapHero>();
     }
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerEnter");
+        Debug.Log("MapHeroLabel OnPointerEnter");
         // dimm all other menus
         // DimmAllOtherMenus();
         // highlight this menu
@@ -48,38 +32,27 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerDown");
+        Debug.Log("MapHeroLabel OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerUp");
+        Debug.Log("MapHeroLabel OnPointerUp");
         // keep state On
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerExit");
+        Debug.Log("MapHeroLabel OnPointerExit");
         // return to previous toggle state
         SetNormalStatus();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerClick");
-        // verify if we are inside the city
-        MapCity city = transform.parent.GetComponent<MapCity>();
-        if (city)
-        {
-            // we clicked on a hero's lable, but because hero is inside the city
-            // we transfer control to the city's script
-            city.OnPointerClick(eventData);
-        }
-        else
-        {
-            ActOnClick();
-        }
+        Debug.Log("MapHeroLabel OnPointerClick");
+        ActOnClick();
     }
 
     void SetSelectedState(bool doActivate)
@@ -88,24 +61,19 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         {
             // higlight it with red blinking
             state = State.Selected;
-            // start blinking (selection) animation
-            InvokeRepeating("Blink", 0, animationDuration);
         }
         else
         {
             // exit highlight mode
             state = State.NotSelected;
-            CancelInvoke();
         }
     }
 
-    void EnterEditMode()
+    void ActOnClick()
     {
-
-    }
-
-    public void ActOnClick()
-    {
+        // do actions for map hero object
+        mapHero.ActOnClick();
+        // do actions for yourself
         switch (state)
         {
             case State.NotSelected:
@@ -115,36 +83,12 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             case State.Selected:
                 // enter edit hero mode
                 SetSelectedState(false);
-                EnterEditMode();
                 break;
             default:
                 Debug.LogError("Unknown state");
                 break;
         }
     }
-
-    #region Animation
-    void Blink()
-    {
-        if (isOn)
-        {
-            // fade away until is off, reduce alpha to 0
-            Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 0);
-            markerTxt.color = tmpClr;
-            //Debug.Log("disable");
-            isOn = false;
-        }
-        else
-        {
-            // appear auntil is on, increase alpha to 1 
-            Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 1);
-            markerTxt.color = tmpClr;
-            //Debug.Log("enable");
-            isOn = true;
-        }
-        // yield return new WaitForSeconds(0.2f);
-    }
-    #endregion Animation
 
 
     bool CompareColors(Color a, Color b)
@@ -157,10 +101,10 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         return result;
     }
 
-    public void SetHighlightedStatus()
+    void SetHighlightedStatus()
     {
         // avoid double job
-        if (!CompareColors(btn.colors.highlightedColor, markerTxt.color))
+        if (!CompareColors(btn.colors.highlightedColor, heroLabel.color))
         {
             // change to highlighted color
             if (btn.interactable)
@@ -172,8 +116,6 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
                 tmpColor = btn.colors.disabledColor;
             }
             tmpColor.a = 1;
-            markerTxt.color = tmpColor;
-            // make also highlight hero label
             heroLabel.color = tmpColor;
             // Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
@@ -190,22 +132,47 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             tmpColor = btn.colors.disabledColor;
         }
         tmpColor.a = 1;
-        markerTxt.color = tmpColor;
+        heroLabel.color = tmpColor;
         // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
     public void SetNormalStatus()
     {
-        if (btn.interactable)
+        if (State.NotSelected == state)
         {
-            tmpColor = btn.colors.normalColor;
+            if (btn.interactable)
+            {
+                tmpColor = btn.colors.normalColor;
+            }
+            else
+            {
+                tmpColor = btn.colors.disabledColor;
+            }
+            tmpColor.a = 0;
+            heroLabel.color = tmpColor;
         }
-        else
+        // disable labels clickability, so it does not pop up when you mouse over map on top of it
+        // heroLabel.raycastTarget = false;
+        // Debug.Log("SetNormalStatus " + btn.name + " button");
+    }
+
+
+    public void SetVisibleAndClickableStatus()
+    {
+        if (State.NotSelected == state)
         {
-            tmpColor = btn.colors.disabledColor;
+            if (btn.interactable)
+            {
+                tmpColor = btn.colors.normalColor;
+            }
+            else
+            {
+                tmpColor = btn.colors.disabledColor;
+            }
+            tmpColor.a = 1;
+            heroLabel.color = tmpColor;
         }
-        tmpColor.a = 1;
-        markerTxt.color = tmpColor;
+        heroLabel.raycastTarget = true;
         // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 

@@ -324,9 +324,12 @@ public class City : MonoBehaviour {
     {
         // Create Hero's object on the map
         Transform map = transform.root.Find("MapScreen/Map");
-        //  create and update Hero Party panel in UI, parent it to city UI
+        //  create and update Hero Party panel in UI, (no - parent it to city UI)
         GameObject heroPartyOnMapUITemplate = transform.root.Find("Templates/UI/HeroOnMap").gameObject;
-        GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map.Find(transform.name));
+        Transform parentCityOnMap = map.Find(transform.name);
+        GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map);
+        // set it to the same position as the parent city
+        newPartyOnMapUI.transform.position = parentCityOnMap.position;
         //  activate new party UI panel
         newPartyOnMapUI.SetActive(true);
         // Set it to the same position as a city on the map
@@ -335,7 +338,12 @@ public class City : MonoBehaviour {
         // Link hero to the hero on the map
         newPartyOnMapUI.GetComponent<MapHero>().linkedHeroTr = newLeaderParty.transform;
         // Update information about hero on the map Lable.
-        newPartyOnMapUI.transform.Find("Label").GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
+        GameObject newPartyHeroLable = newPartyOnMapUI.transform.Find("HeroLabel").gameObject;
+        newPartyHeroLable.GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
+        // Link hero on the map to the city on the map
+        parentCityOnMap.GetComponent<MapCity>().linkedPartyTr = newPartyOnMapUI.transform;
+        // bring city to the front
+        parentCityOnMap.SetAsLastSibling();
     }
 
     void HirePartyLeader(PartyUnit hiredUnitTemplate)

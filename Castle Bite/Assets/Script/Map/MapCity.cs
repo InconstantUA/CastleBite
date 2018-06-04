@@ -8,9 +8,10 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     public Transform linkedCityTr;
+    public Transform linkedPartyTr;
     City linkedCity;
     Text cityDescrTxt;
     Button btn;
@@ -41,7 +42,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Debug.Log("OnPointerEnter");
+        Debug.Log("MapCity OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenus();
         // highlight this menu
@@ -50,21 +51,27 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Debug.Log("OnPointerDown");
+        Debug.Log("MapCity OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // Debug.Log("OnPointerUp");
+        Debug.Log("MapCity OnPointerUp");
         // keep state On
-        ActOnClick();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        Debug.Log("MapCity OnPointerExit");
         // return to previous toggle state
         SetNormalStatus();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("MapCity OnPointerClick");
+        ActOnClick();
     }
 
     bool CompareColors(Color a, Color b)
@@ -93,6 +100,15 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             }
             tmpColor.a = 1;
             cityDescrTxt.color = tmpColor;
+            // also highlight party in the city if it is present
+            // but do it a little dimmed to show that it will not be activated on press
+            // but to indicate that you can move mouse left to activate it
+            if (linkedPartyTr)
+            {
+                linkedPartyTr.GetComponent<MapHero>().SetNormalStatus();
+                // also show hero label
+                linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>().SetVisibleAndClickableStatus();
+            }
             // Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
     }
@@ -124,6 +140,14 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
         tmpColor.a = 0;
         cityDescrTxt.color = tmpColor;
+        // also hide map hero lable
+        if (linkedPartyTr)
+        {
+            // linkedPartyTr.GetComponent<MapHero>().SetNormalStatus();
+            // also show hero label
+            MapHeroLabel mapHeroLabel = linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>();
+            mapHeroLabel.SetNormalStatus();
+        }
         // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
