@@ -138,7 +138,8 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void SetNormalStatus()
     {
-        if (State.NotSelected == state)
+        // if (State.NotSelected == state)
+        if (true)
         {
             if (btn.interactable)
             {
@@ -152,7 +153,11 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             heroLabel.color = tmpColor;
         }
         // disable labels clickability, so it does not pop up when you mouse over map on top of it
-        // heroLabel.raycastTarget = false;
+        // do this only if mouse is not over this lable
+        if (!((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)))
+        {
+            heroLabel.raycastTarget = false;
+        }
         // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
