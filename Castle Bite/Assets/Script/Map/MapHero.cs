@@ -196,6 +196,7 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void SetNormalStatus()
     {
+        // btn = gameObject.GetComponent<Button>();
         if (btn.interactable)
         {
             tmpColor = btn.colors.normalColor;

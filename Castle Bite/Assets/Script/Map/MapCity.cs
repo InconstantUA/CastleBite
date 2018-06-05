@@ -12,10 +12,12 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 {
     public Transform linkedCityTr;
     public Transform linkedPartyTr;
+    public float heroLableSubmenuDimTimeout;
     City linkedCity;
     Text cityDescrTxt;
     Button btn;
     Color tmpColor;
+    bool isMouseOver;
 
     void Start()
     {
@@ -47,6 +49,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         DimmAllOtherMenus();
         // highlight this menu
         SetHighlightedStatus();
+        isMouseOver = true;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -64,6 +67,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void OnPointerExit(PointerEventData eventData)
     {
         Debug.Log("MapCity OnPointerExit");
+        isMouseOver = false;
         // return to previous toggle state
         SetNormalStatus();
     }
@@ -108,6 +112,9 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
                 linkedPartyTr.GetComponent<MapHero>().SetNormalStatus();
                 // also show hero label
                 linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>().SetVisibleAndClickableStatus();
+                // stop courutine, if it was running to prevent it to dimm out hero lable
+                // this does not work
+                // StopCoroutine(DimmHeroLabelWithDelay());
             }
             // Debug.Log("SetHighlightedStatus " + btn.name + " button");
         }
@@ -145,10 +152,22 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         {
             // linkedPartyTr.GetComponent<MapHero>().SetNormalStatus();
             // also show hero label
-            MapHeroLabel mapHeroLabel = linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>();
-            mapHeroLabel.SetNormalStatus();
+            StartCoroutine(DimmHeroLabelWithDelay());
         }
         // Debug.Log("SetNormalStatus " + btn.name + " button");
+    }
+
+    IEnumerator DimmHeroLabelWithDelay()
+    {
+        Debug.LogWarning("Before dimm");
+        yield return new WaitForSeconds(heroLableSubmenuDimTimeout);
+        // verify if mouse is not entered again after we started to wait
+        if (!isMouseOver)
+        {
+            MapHeroLabel mapHeroLabel = linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>();
+            mapHeroLabel.SetNormalStatus();
+            Debug.LogWarning("After dimm");
+        }
     }
 
     void DimmAllOtherMenus()

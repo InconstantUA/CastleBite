@@ -13,6 +13,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     Color tmpColor;
     Text heroLabel;
     MapHero mapHero;
+    bool isMouseOver = false;
 
     void Awake()
     {
@@ -27,6 +28,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // dimm all other menus
         // DimmAllOtherMenus();
         // highlight this menu
+        isMouseOver = true;
         SetHighlightedStatus();
     }
 
@@ -45,6 +47,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnPointerExit(PointerEventData eventData)
     {
         Debug.Log("MapHeroLabel OnPointerExit");
+        isMouseOver = false;
         // return to previous toggle state
         SetNormalStatus();
     }
@@ -139,7 +142,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void SetNormalStatus()
     {
         // if (State.NotSelected == state)
-        if (true)
+        if (!isMouseOver)
         {
             if (btn.interactable)
             {
@@ -154,17 +157,21 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         // disable labels clickability, so it does not pop up when you mouse over map on top of it
         // do this only if mouse is not over this lable
-        if (!((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)))
+        //if (!((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)))
+        //{
+        if (!isMouseOver)
         {
             heroLabel.raycastTarget = false;
         }
+        //}
         // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
 
     public void SetVisibleAndClickableStatus()
     {
-        if (State.NotSelected == state)
+        // if (State.NotSelected == state)
+        if (true)
         {
             if (btn.interactable)
             {
