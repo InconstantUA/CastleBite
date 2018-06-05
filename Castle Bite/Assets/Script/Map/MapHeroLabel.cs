@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
-    enum State { NotSelected, Selected };
-    State state = State.NotSelected;
     // for highlight
     Button btn;
     Color tmpColor;
@@ -24,7 +22,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("MapHeroLabel OnPointerEnter");
+        // Debug.Log("MapHeroLabel OnPointerEnter");
         // dimm all other menus
         // DimmAllOtherMenus();
         // highlight this menu
@@ -34,19 +32,19 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("MapHeroLabel OnPointerDown");
+        // Debug.Log("MapHeroLabel OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("MapHeroLabel OnPointerUp");
+        // Debug.Log("MapHeroLabel OnPointerUp");
         // keep state On
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("MapHeroLabel OnPointerExit");
+        // Debug.Log("MapHeroLabel OnPointerExit");
         isMouseOver = false;
         // return to previous toggle state
         SetNormalStatus();
@@ -54,43 +52,14 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("MapHeroLabel OnPointerClick");
+        // Debug.Log("MapHeroLabel OnPointerClick");
         ActOnClick();
-    }
-
-    void SetSelectedState(bool doActivate)
-    {
-        if (doActivate)
-        {
-            // higlight it with red blinking
-            state = State.Selected;
-        }
-        else
-        {
-            // exit highlight mode
-            state = State.NotSelected;
-        }
     }
 
     void ActOnClick()
     {
         // do actions for map hero object
         mapHero.ActOnClick();
-        // do actions for yourself
-        switch (state)
-        {
-            case State.NotSelected:
-                // select it
-                SetSelectedState(true);
-                break;
-            case State.Selected:
-                // enter edit hero mode
-                SetSelectedState(false);
-                break;
-            default:
-                Debug.LogError("Unknown state");
-                break;
-        }
     }
 
 
@@ -141,7 +110,6 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void SetNormalStatus()
     {
-        // if (State.NotSelected == state)
         if (!isMouseOver)
         {
             if (btn.interactable)
@@ -157,20 +125,16 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         }
         // disable labels clickability, so it does not pop up when you mouse over map on top of it
         // do this only if mouse is not over this lable
-        //if (!((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)))
-        //{
         if (!isMouseOver)
         {
             heroLabel.raycastTarget = false;
         }
-        //}
         // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
 
     public void SetVisibleAndClickableStatus()
     {
-        // if (State.NotSelected == state)
         if (true)
         {
             if (btn.interactable)
@@ -185,7 +149,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             heroLabel.color = tmpColor;
         }
         heroLabel.raycastTarget = true;
-        // Debug.Log("SetNormalStatus " + btn.name + " button");
+        // Debug.Log("SetVisibleAndClickableStatus " + btn.name + " button");
     }
 
 }

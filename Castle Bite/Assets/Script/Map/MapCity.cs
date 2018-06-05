@@ -44,7 +44,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("MapCity OnPointerEnter");
+        // Debug.Log("MapCity OnPointerEnter");
         // dimm all other menus
         DimmAllOtherMenus();
         // highlight this menu
@@ -54,19 +54,19 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("MapCity OnPointerDown");
+        // Debug.Log("MapCity OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("MapCity OnPointerUp");
+        // Debug.Log("MapCity OnPointerUp");
         // keep state On
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("MapCity OnPointerExit");
+        // Debug.Log("MapCity OnPointerExit");
         isMouseOver = false;
         // return to previous toggle state
         SetNormalStatus();
@@ -74,7 +74,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("MapCity OnPointerClick");
+        // Debug.Log("MapCity OnPointerClick");
         ActOnClick();
     }
 
@@ -159,14 +159,14 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     IEnumerator DimmHeroLabelWithDelay()
     {
-        Debug.LogWarning("Before dimm");
+        // Debug.LogWarning("Before dimm");
         yield return new WaitForSeconds(heroLableSubmenuDimTimeout);
         // verify if mouse is not entered again after we started to wait
         if (!isMouseOver)
         {
             MapHeroLabel mapHeroLabel = linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>();
             mapHeroLabel.SetNormalStatus();
-            Debug.LogWarning("After dimm");
+            // Debug.LogWarning("After dimm");
         }
     }
 
@@ -188,8 +188,9 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     void ActOnClick()
     {
-        // go back to main menu
-        // change this to map in future
+        // change city pressed status to city highlighted color
+        SetHighlightedStatus();
+        // go to city edit mode
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
         GameObject cityMenu = linkedCity.gameObject;
         mapScreen.SetActive(false);

@@ -18,6 +18,8 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     Button btn;
     Color tmpColor;
     Text heroLabel;
+    // for path finding
+    Vector2 heroTilePosition;
 
     void Awake()
     {
@@ -39,7 +41,7 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerEnter");
+        // Debug.Log("MapHero OnPointerEnter");
         // dimm all other menus
         // DimmAllOtherMenus();
         // highlight this menu
@@ -48,26 +50,26 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerDown");
+        // Debug.Log("MapHero OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerUp");
+        // Debug.Log("MapHero OnPointerUp");
         // keep state On
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerExit");
+        // Debug.Log("MapHero OnPointerExit");
         // return to previous toggle state
         SetNormalStatus();
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("MapHero OnPointerClick");
+        // Debug.Log("MapHero OnPointerClick");
         // verify if we are inside the city
         MapCity city = transform.parent.GetComponent<MapCity>();
         if (city)
@@ -90,6 +92,8 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             state = State.Selected;
             // start blinking (selection) animation
             InvokeRepeating("Blink", 0, animationDuration);
+            // inform MapManager about selected hero
+            transform.parent.GetComponent<MapManager>().SetSelectedHero(GetComponent<MapHero>());
         }
         else
         {
