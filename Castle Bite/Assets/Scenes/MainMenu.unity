@@ -32857,6 +32857,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileSize: 16
+  heroMoveSpeed: 50
+  heroMoveSpeedDelay: 0.05
 --- !u!225 &1575848958
 CanvasGroup:
   m_ObjectHideFlags: 0

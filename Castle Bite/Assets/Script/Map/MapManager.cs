@@ -31,6 +31,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
     GameObject[,] tileHighlighters;
+    // for hero moving
+    public float heroMoveSpeed = 10.1f;
+    public float heroMoveSpeedDelay = 0.1f;
+
 
     // Map Sprite size
     float mapWidth;
@@ -143,6 +147,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     UpdateTileHighlighterToMousePoistion();
                     FindAndHighlightPath();
                     break;
+                case Mode.Move:
+                    // Move();
+                    // do nothing, wait for move to finish
+                    break;
                 default:
                     Debug.LogError("Unknown mode");
                     break;
@@ -198,7 +206,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             foreach (var pathPoint in movePath)
             {
                 // output path to debug
-                Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
+                // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                 tileHighlighters[pathPoint.x, pathPoint.y].SetActive(doHighlight);
                 //if (doHighlight)
                 //{
@@ -228,7 +236,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // List<NesScripts.Controls.PathFind.Point> path = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to, NesScripts.Controls.Pathfinding.DistanceType.Manhattan);
         // highlight new path
         HighlightMovePath(true);
-        Debug.Log("FindAndHighlightPath");
+        // Debug.Log("FindAndHighlightPath");
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -317,6 +325,51 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
     #endregion
 
+    float GetRemainingDistance(NesScripts.Controls.PathFind.Point pathPoint)
+    {
+        float result = 0;
+        Vector2 dst = GetDestination(pathPoint);
+        Vector2 src = selectedHero.transform.position;
+        result = Vector2.Distance(src, dst);
+        Debug.Log("Remaining distance is [" + result.ToString() + "]");
+        return result;
+    }
+
+    Vector2 GetDestination(NesScripts.Controls.PathFind.Point pathPoint)
+    {
+        // + tileSize/ is to place it in the center of the tile
+        return new Vector2
+        {
+            x = (float)pathPoint.x * (float)tileSize + (float)tileSize / 2f,
+            y = (float)pathPoint.y * (float)tileSize + (float)tileSize / 2f
+        };
+    }
+
+    IEnumerator Move()
+    {
+        Debug.Log("Move");
+        float deltaTime;
+        float previousTime = Time.time;
+        if (movePath != null)
+        {
+            foreach (var pathPoint in movePath)
+            {
+                Vector2 dst = GetDestination(pathPoint);
+                while (GetRemainingDistance(pathPoint) > 0.5f)
+                {
+                    // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
+                    // move hero
+                    deltaTime = Time.time - previousTime;
+                    selectedHero.transform.position = Vector2.MoveTowards(selectedHero.transform.position, dst, deltaTime * heroMoveSpeed);
+                    // wait until next move
+                    previousTime = Time.time;
+                    yield return new WaitForSeconds(heroMoveSpeedDelay);
+                }
+            }
+        }
+        // exit move state and enter HighlightMovePath
+        mode = Mode.HighlightMovePath;
+    }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
@@ -337,6 +390,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // if we can, then update tile highlighter
                 mode = Mode.Selection;
                 // tileHighlighter.OnChange();
+                break;
+            case Mode.HighlightMovePath:
+                // enter move mode
+                mode = Mode.Move;
+                StartCoroutine(Move());
                 break;
             default:
                 Debug.LogError("Unknown mode");
