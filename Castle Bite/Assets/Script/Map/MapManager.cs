@@ -31,6 +31,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
     GameObject[,] tileHighlighters;
+    // for path highlighting
+    public enum TileOccupiedBy {
+        None,
+        ImpassableTerrain,
+        SelectedParty,
+        PlayerParty,
+        EnemyParty,
+        AlliedParty,
+        Treasure,
+        PlayerCity,
+        EnemyCity
+    }
     // for hero moving
     public float heroMoveSpeed = 10.1f;
     public float heroMoveSpeedDelay = 0.1f;
@@ -158,14 +170,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    Vector2Int GetTilePosition(Transform tr)
+    {
+        return new Vector2Int
+        {
+            x = Mathf.FloorToInt(tr.position.x / tileSize),
+            y = Mathf.FloorToInt(tr.position.y / tileSize)
+        };
+    }
+
     Vector2Int GetHeroTilePosition()
     {
-        Vector2Int result = new Vector2Int
-        {
-            x = Mathf.FloorToInt(selectedHero.transform.position.x / tileSize),
-            y = Mathf.FloorToInt(selectedHero.transform.position.y / tileSize)
-        };
-        return result;
+        //Vector2Int result = new Vector2Int
+        //{
+        //    x = Mathf.FloorToInt(selectedHero.transform.position.x / tileSize),
+        //    y = Mathf.FloorToInt(selectedHero.transform.position.y / tileSize)
+        //};
+        return GetTilePosition(selectedHero.transform);
     }
 
     Vector2Int GetTileHighlighterPosition()
@@ -198,25 +219,94 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    TileOccupiedBy GetTileOccupationState(NesScripts.Controls.PathFind.Point pathPoint)
+    {
+        TileOccupiedBy result = TileOccupiedBy.None;
+        Vector2Int tilePosition = new Vector2Int
+        {
+            x = pathPoint.x,
+            y = pathPoint.y
+        };
+        // go over all objects and verify if they are on the tile
+        foreach (EnemyPartyOnMap enemyParty in transform.GetComponentsInChildren<EnemyPartyOnMap>())
+        {
+            // verify if not null
+            if (enemyParty)
+            {
+                if (GetTilePosition(enemyParty.transform) == tilePosition)
+                {
+                    return TileOccupiedBy.EnemyParty;
+                }
+            }
+        }
+        foreach (PlayerPartyOnMap playerParty in transform.GetComponentsInChildren<PlayerPartyOnMap>())
+        {
+            // verify if not null
+            if (playerParty)
+            {
+                if (GetTilePosition(playerParty.transform) == tilePosition)
+                {
+                    return TileOccupiedBy.PlayerParty;
+                }
+            }
+        }
+        foreach (PlayerCityOnMap enemyParty in transform.GetComponentsInChildren<PlayerCityOnMap>())
+        {
+            // verify if not null
+            if (enemyParty)
+            {
+                if (GetTilePosition(enemyParty.transform) == tilePosition)
+                {
+                    return TileOccupiedBy.PlayerCity;
+                }
+            }
+        }
+        return result;
+    }
+
+    void HighlightLastPathTile()
+    {
+        // highligh the last tile depending on what is under cursor
+        // the might be another hero or enemy party or treasure chest or ally party
+        NesScripts.Controls.PathFind.Point lastPathTile = movePath[movePath.Count - 1];
+        switch (GetTileOccupationState(lastPathTile))
+        {
+            case TileOccupiedBy.None:
+                // nothing to do
+                break;
+            case TileOccupiedBy.SelectedParty:
+                // this should not be possible, because move path in this case is 0
+                Debug.LogError("Not possible condition");
+                break;
+            case TileOccupiedBy.PlayerParty:
+                // select other party
+                // highlight blue
+                tileHighlighters[lastPathTile.x, lastPathTile.y].GetComponentInChildren<Text>().color = Color.blue;
+                break;
+            case TileOccupiedBy.PlayerCity:
+                // select city
+                // highlight yellow
+                tileHighlighters[lastPathTile.x, lastPathTile.y].GetComponentInChildren<Text>().color = Color.yellow;
+                break;
+            case TileOccupiedBy.EnemyParty:
+                // highlight red
+                tileHighlighters[lastPathTile.x, lastPathTile.y].GetComponentInChildren<Text>().color = Color.red;
+                break;
+        }
+    }
+
     void HighlightMovePath(bool doHighlight)
     {
         // todo: it is better to make them transparant, then instantiate new and destroy each time
-        if (movePath != null)
+        if (movePath != null && movePath.Count > 0)
         {
             foreach (var pathPoint in movePath)
             {
                 // output path to debug
                 // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                 tileHighlighters[pathPoint.x, pathPoint.y].SetActive(doHighlight);
-                //if (doHighlight)
-                //{
-                //    // highlight
-                //}
-                //else
-                //{
-                //    // remove highlight
-                //}
             }
+            HighlightLastPathTile();
         }
     }
 
@@ -226,9 +316,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         HighlightMovePath(false);
         // create source and target points
         NesScripts.Controls.PathFind.Point _from = new NesScripts.Controls.PathFind.Point(GetHeroTilePosition().x, GetHeroTilePosition().y);
-        Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
+        // Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
         NesScripts.Controls.PathFind.Point _to = new NesScripts.Controls.PathFind.Point(GetTileHighlighterPosition().x, GetTileHighlighterPosition().y);
-        Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
+        // Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
         // get path
         // path will either be a list of Points (x, y), or an empty list if no path is found.
         movePath = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to);

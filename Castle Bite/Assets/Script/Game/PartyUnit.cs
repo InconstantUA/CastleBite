@@ -32,7 +32,11 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
 
 
-    public enum UnitType { CapitalGuard, Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer, Unknown };
+    public enum UnitType {
+        CapitalGuard,
+        Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer,
+        Orc, Goblin, Ogre, Cyclop, Troll,
+        Unknown };
     public UnitType unitType;
 
     public enum UnitSize { Single, Double };
