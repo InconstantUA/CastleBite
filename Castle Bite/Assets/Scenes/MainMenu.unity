@@ -4706,6 +4706,7 @@ MonoBehaviour:
   cityType: 1
   cityViewActiveState: 0
   cityOccupationState: 0
+  faction: 0
 --- !u!1 &191661099
 GameObject:
   m_ObjectHideFlags: 0
@@ -29705,6 +29706,51 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1062170750}
+--- !u!1 &1069906423
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1069906424}
+  - component: {fileID: 1069906425}
+  m_Layer: 5
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1069906424
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069906423}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1713389793}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1069906425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1069906423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20fbba7a659f9e4459e1ce147f69c473, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1072504887
 GameObject:
   m_ObjectHideFlags: 0
@@ -33592,6 +33638,11 @@ Prefab:
       propertyPath: m_Colors.m_PressedColor.r
       value: 0.990566
       objectReference: {fileID: 0}
+    - target: {fileID: 114881583066773808, guid: 7b27db02a00e8a54da671f3fa21d0c18,
+        type: 2}
+      propertyPath: linkedPartyTr
+      value: 
+      objectReference: {fileID: 1576762044}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7b27db02a00e8a54da671f3fa21d0c18, type: 2}
   m_IsPrefabParent: 0
@@ -42151,6 +42202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 0
 --- !u!1 &1536253971
 GameObject:
   m_ObjectHideFlags: 0
@@ -43311,6 +43363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  faction: 1
 --- !u!1 &1578765596
 GameObject:
   m_ObjectHideFlags: 0
@@ -46708,6 +46761,7 @@ RectTransform:
   - {fileID: 164374030}
   - {fileID: 637408235}
   - {fileID: 1288346178}
+  - {fileID: 1069906424}
   - {fileID: 2111856612}
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -59705,7 +59759,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1713389793}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}

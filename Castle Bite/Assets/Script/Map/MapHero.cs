@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
-    public Transform linkedHeroTr;
+    public Transform linkedPartyTr;
+    public Transform linkedCityOnMapTr;
     enum State { NotSelected, Selected };
     State state = State.NotSelected;
     // for animation
@@ -27,6 +28,19 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         markerTxt = gameObject.GetComponent<Text>();
         btn = gameObject.GetComponent<Button>();
         heroLabel = transform.Find("HeroLabel").GetComponent<Text>();
+        // set party leader lable if hero is already linked
+        if (linkedPartyTr)
+        {
+            PartyPanel partyPanel = linkedPartyTr.GetComponentInChildren<PartyPanel>();
+            UpdateHeroLable(partyPanel.GetPartyLeader());
+        }
+    }
+
+    public void UpdateHeroLable(PartyUnit leaderUnit)
+    {
+        // GameObject newPartyHeroLable = newPartyOnMapUI.transform.Find("HeroLabel").gameObject;
+        heroLabel = transform.Find("HeroLabel").GetComponent<Text>();
+        heroLabel.GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
     }
 
     // Use this for initialization
@@ -65,6 +79,12 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         // Debug.Log("MapHero OnPointerExit");
         // return to previous toggle state
         SetNormalStatus();
+        HideLable();
+    }
+
+    void HideLable()
+    {
+        heroLabel.GetComponent<MapHeroLabel>().SetHiddenStatus();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -84,10 +104,17 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
     }
 
-    void SetSelectedState(bool doActivate)
+    public void SetSelectedState(bool doActivate)
     {
+        // select this hero
         if (doActivate)
         {
+            // deselect previously selected hero if it was present
+            MapHero previouslySelectedHero = transform.parent.GetComponent<MapManager>().GetSelectedHero();
+            if (previouslySelectedHero)
+            {
+                previouslySelectedHero.SetSelectedState(false);
+            }
             // higlight it with red blinking
             state = State.Selected;
             // start blinking (selection) animation
@@ -97,18 +124,22 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
         else
         {
-            // exit highlight mode
+            // exit selected mode
             state = State.NotSelected;
+            // stop blinking
             CancelInvoke();
+            // show marker, it is needed because sometimes it may cancel invoke, when we are blinked off and invisible
+            Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 1);
+            markerTxt.color = tmpClr;
         }
     }
 
     void EnterEditMode()
     {
-
+        Debug.Log("Enter party edit mode");
     }
 
-    public void ActOnClick()
+    void ToggleSelectedState()
     {
         switch (state)
         {
@@ -127,6 +158,68 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
     }
 
+    public void ActOnClick()
+    {
+        // act based on map manager state
+        switch (transform.parent.GetComponent<MapManager>().GetMode())
+        {
+            case MapManager.Mode.Browse:
+                ToggleSelectedState();
+                break;
+            case MapManager.Mode.HighlightMovePath:
+                // act based on the fact of it is the same hero or not
+                // check if we click on ourselves in highlight move path mode
+                if (State.Selected == state)
+                {
+                    // clicked on myself
+                    // do nothing
+                } else
+                {
+                    // this hero is clicked, while other hero is selected
+                    // find out if both heros are from the same faction or not
+                    HeroParty selectedParty = transform.parent.GetComponent<MapManager>().GetSelectedHero().linkedPartyTr.GetComponent<HeroParty>();
+                    HeroParty thisParty = linkedPartyTr.GetComponent<HeroParty>();
+                    if (selectedParty.GetFaction() == thisParty.GetFaction())
+                    {
+                        // highlight this new hero instead
+                        SetSelectedState(true);
+                    } else
+                    {
+                        // other faction hero is clicked
+                        // verify faction relationships
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedParty.GetFaction(), thisParty.GetFaction());
+                        switch (relationships)
+                        {
+                            case Relationships.State.Allies:
+                                // nothing to do here
+                                // we cannot select allies
+                                // we can only right click to see their party
+                                break;
+                            case Relationships.State.AtWar:
+                                // move, attack will be triggered automatically at the end of the move
+                                transform.parent.GetComponent<MapManager>().EnterMoveMode();
+                                break;
+                            case Relationships.State.Neutral:
+                                // move, attack will be triggered automatically at the end of the move
+                                transform.parent.GetComponent<MapManager>().EnterMoveMode();
+                                break;
+                            case Relationships.State.SameFaction:
+                                // this should not happen here, because we check this previously
+                                Debug.LogError("This should not happen here");
+                                break;
+                            default:
+                                Debug.LogError("Unknown relationships");
+                                break;
+                        }
+                    }
+                }
+                break;
+            default:
+                Debug.LogError("unknown MapManager mode");
+                break;
+        }
+    }
+
     #region Animation
     void Blink()
     {
@@ -140,7 +233,7 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
         else
         {
-            // appear auntil is on, increase alpha to 1 
+            // appear until is on, increase alpha to 1 
             Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 1);
             markerTxt.color = tmpClr;
             //Debug.Log("enable");

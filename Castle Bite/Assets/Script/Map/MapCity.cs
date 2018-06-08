@@ -165,7 +165,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         if (!isMouseOver)
         {
             MapHeroLabel mapHeroLabel = linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>();
-            mapHeroLabel.SetNormalStatus();
+            mapHeroLabel.SetHiddenStatus();
             // Debug.LogWarning("After dimm");
         }
     }
@@ -186,15 +186,34 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     #region OnClick
 
-    void ActOnClick()
+    public void EnterCityEditMode()
     {
-        // change city pressed status to city highlighted color
-        SetHighlightedStatus();
         // go to city edit mode
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
         GameObject cityMenu = linkedCity.gameObject;
         mapScreen.SetActive(false);
         cityMenu.SetActive(true);
+    }
+
+    void ActOnClick()
+    {
+        // change city pressed status to city highlighted color
+        // so it is not in pressed status any more
+        SetHighlightedStatus();
+        // act based on the MapManager state
+        switch (transform.parent.GetComponent<MapManager>().GetMode())
+        {
+            case MapManager.Mode.Browse:
+                EnterCityEditMode();
+                break;
+            case MapManager.Mode.HighlightMovePath:
+                // Move hero to the city
+                transform.parent.GetComponent<MapManager>().EnterMoveMode();
+                break;
+            default:
+                Debug.LogError("unknown MapManager mode");
+                break;
+        }
     }
 
     #endregion OnClick

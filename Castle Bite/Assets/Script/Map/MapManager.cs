@@ -46,6 +46,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // for hero moving
     public float heroMoveSpeed = 10.1f;
     public float heroMoveSpeedDelay = 0.1f;
+    TileOccupiedBy lastTileOccupiedBy = TileOccupiedBy.None;
+    NesScripts.Controls.PathFind.Point lastPathTile;
 
 
     // Map Sprite size
@@ -85,6 +87,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         selectedHero = sltdHero;
         // enter HighlightMovePath mode
         mode = Mode.HighlightMovePath;
+    }
+
+    public MapHero GetSelectedHero()
+    {
+        return selectedHero;
     }
 
     void Start()
@@ -268,8 +275,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // highligh the last tile depending on what is under cursor
         // the might be another hero or enemy party or treasure chest or ally party
-        NesScripts.Controls.PathFind.Point lastPathTile = movePath[movePath.Count - 1];
-        switch (GetTileOccupationState(lastPathTile))
+        lastPathTile = movePath[movePath.Count - 1];
+        // set lastTileOccupiedBy value it will be used here and in other functions too
+        lastTileOccupiedBy = GetTileOccupationState(lastPathTile);
+        // highlight based on the occupation type
+        switch (lastTileOccupiedBy)
         {
             case TileOccupiedBy.None:
                 // nothing to do
@@ -297,6 +307,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void HighlightMovePath(bool doHighlight)
     {
+        Color highlightColor = Color.green;
         // todo: it is better to make them transparant, then instantiate new and destroy each time
         if (movePath != null && movePath.Count > 0)
         {
@@ -305,6 +316,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // output path to debug
                 // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                 tileHighlighters[pathPoint.x, pathPoint.y].SetActive(doHighlight);
+                // reset collor to correct highlight color
+                // because it might be changed by previous highlight operations to something else
+                // if for example in the past there was enemy standing and we were highliting is with red color
+                tileHighlighters[pathPoint.x, pathPoint.y].GetComponentInChildren<Text>().color = highlightColor;
             }
             HighlightLastPathTile();
         }
@@ -317,15 +332,27 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // create source and target points
         NesScripts.Controls.PathFind.Point _from = new NesScripts.Controls.PathFind.Point(GetHeroTilePosition().x, GetHeroTilePosition().y);
         // Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
-        NesScripts.Controls.PathFind.Point _to = new NesScripts.Controls.PathFind.Point(GetTileHighlighterPosition().x, GetTileHighlighterPosition().y);
+        Vector2Int highlighterPosition = GetTileHighlighterPosition();
+        NesScripts.Controls.PathFind.Point _to = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
         // Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
+        // Debug.Log("Length [" + (grid.nodes.GetLength(0) - 1).ToString() + "]:[" + (grid.nodes.GetLength(1) - 1).ToString() + "]");
         // get path
         // path will either be a list of Points (x, y), or an empty list if no path is found.
-        movePath = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to);
-        // for Manhattan distance
-        // List<NesScripts.Controls.PathFind.Point> path = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to, NesScripts.Controls.Pathfinding.DistanceType.Manhattan);
-        // highlight new path
-        HighlightMovePath(true);
+        // verify if mouse is not over screen
+        if (   (_to.x > grid.nodes.GetLength(0) - 1) 
+            || (_to.y > grid.nodes.GetLength(1) - 1)
+            || (_to.x < 0)
+            || (_to.y < 0) )
+        {
+            // nothing to highlight, mouse is over the screen
+        } else
+        {
+            movePath = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to);
+            // for Manhattan distance
+            // List<NesScripts.Controls.PathFind.Point> path = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to, NesScripts.Controls.Pathfinding.DistanceType.Manhattan);
+            // highlight new path
+            HighlightMovePath(true);
+        }
         // Debug.Log("FindAndHighlightPath");
     }
 
@@ -421,7 +448,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Vector2 dst = GetDestination(pathPoint);
         Vector2 src = selectedHero.transform.position;
         result = Vector2.Distance(src, dst);
-        Debug.Log("Remaining distance is [" + result.ToString() + "]");
+        // Debug.Log("Remaining distance is [" + result.ToString() + "]");
         return result;
     }
 
@@ -435,9 +462,83 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         };
     }
 
+    MapCity GetCityByTile(Vector2Int tilePosition)
+    {
+        MapCity mapCity = null;
+        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
+        {
+            // verify if not null
+            if (city)
+            {
+                if (GetTilePosition(city.transform) == tilePosition)
+                {
+                    return city;
+                }
+            }
+        }
+        return mapCity;
+    }
+
+    void EnterCityAfterMove()
+    {
+        Debug.Log("Enter city");
+        // Get City
+        MapCity mapCity = GetCityByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
+        // Link hero on the map to city on the map
+        mapCity.linkedPartyTr = selectedHero.transform;
+        // And do the opposite 
+        // Link city on the map to hero on the map
+        selectedHero.linkedCityOnMapTr = mapCity.transform;
+        // Enter city edit mode
+        mapCity.EnterCityEditMode();
+    }
+
+    void EnterBattleAfterMove()
+    {
+        Debug.Log("Enter battle");
+    }
+
+    void EndMoveTransition()
+    {
+        // transition to required state based on the type of the last occupied cell
+        switch (lastTileOccupiedBy)
+        {
+            case TileOccupiedBy.None:
+                // exit move state and enter previous HighlightMovePath state
+                mode = Mode.HighlightMovePath;
+                break;
+            case TileOccupiedBy.SelectedParty:
+                // this should not be possible, because move path in this case is 0
+                Debug.LogError("Not possible condition");
+                break;
+            case TileOccupiedBy.PlayerParty:
+                // not possible that we move the same tile where previously our own party was
+                Debug.LogError("Not possible condition");
+                break;
+            case TileOccupiedBy.PlayerCity:
+                // exit move state and enter previous HighlightMovePath state
+                mode = Mode.HighlightMovePath;
+                // enter city
+                EnterCityAfterMove();
+                break;
+            case TileOccupiedBy.EnemyParty:
+                // enter battle
+                EnterBattleAfterMove();
+                break;
+        }
+
+    }
+
     IEnumerator Move()
     {
         Debug.Log("Move");
+        // unlink city from hero and hero from city if they were linked before
+        if (selectedHero.linkedCityOnMapTr)
+        {
+            selectedHero.linkedCityOnMapTr.GetComponent<MapCity>().linkedPartyTr = null;
+            selectedHero.linkedCityOnMapTr = null;
+        }
+        // move
         float deltaTime;
         float previousTime = Time.time;
         if (movePath != null)
@@ -457,8 +558,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
-        // exit move state and enter HighlightMovePath
-        mode = Mode.HighlightMovePath;
+        EndMoveTransition();
+    }
+
+    public void EnterMoveMode()
+    {
+        mode = Mode.Move;
+        StartCoroutine(Move());
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -483,8 +589,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 break;
             case Mode.HighlightMovePath:
                 // enter move mode
-                mode = Mode.Move;
-                StartCoroutine(Move());
+                EnterMoveMode();
                 break;
             default:
                 Debug.LogError("Unknown mode");

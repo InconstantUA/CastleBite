@@ -47,7 +47,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // Debug.Log("MapHeroLabel OnPointerExit");
         isMouseOver = false;
         // return to previous toggle state
-        SetNormalStatus();
+        SetHiddenStatus();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -108,7 +108,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
-    public void SetNormalStatus()
+    public void SetHiddenStatus()
     {
         if (!isMouseOver)
         {
@@ -129,7 +129,7 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         {
             heroLabel.raycastTarget = false;
         }
-        // Debug.Log("SetNormalStatus " + btn.name + " button");
+        // Debug.Log("SetHiddenStatus " + btn.name + " button");
     }
 
 

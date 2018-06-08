@@ -20,6 +20,8 @@ public class City : MonoBehaviour {
     public enum CityOccupationState { NoHeroIn, HeroIn };
     [SerializeField]
     CityOccupationState cityOccupationState;
+    [SerializeField]
+    Faction faction;
 
     // add player here, because it accessed by many functions
     PlayerObj player;
@@ -91,6 +93,16 @@ public class City : MonoBehaviour {
     public int GetUnitsCapacity()
     {
         return cityLevel;
+    }
+
+    public Faction GetFaction()
+    {
+        return faction;
+    }
+
+    public void SetFaction(Faction value)
+    {
+        faction = value;
     }
 
     public bool HasCityReachedMaximumLevel()
@@ -332,16 +344,16 @@ public class City : MonoBehaviour {
         newPartyOnMapUI.transform.position = parentCityOnMap.position;
         //  activate new party UI panel
         newPartyOnMapUI.SetActive(true);
-        // Set it to the same position as a city on the map
-        // string thisCityName = transform.name;
-        // newPartyOnMapUI.transform.position = map.Find(thisCityName).position;
         // Link hero to the hero on the map
-        newPartyOnMapUI.GetComponent<MapHero>().linkedHeroTr = newLeaderParty.transform;
+        MapHero heroOnMap = newPartyOnMapUI.GetComponent<MapHero>();
+        heroOnMap.linkedPartyTr = newLeaderParty.transform;
         // Update information about hero on the map Lable.
-        GameObject newPartyHeroLable = newPartyOnMapUI.transform.Find("HeroLabel").gameObject;
-        newPartyHeroLable.GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
-        // Link hero on the map to the city on the map
+        heroOnMap.UpdateHeroLable(leaderUnit);
+        // Link hero on the map to city on the map
         parentCityOnMap.GetComponent<MapCity>().linkedPartyTr = newPartyOnMapUI.transform;
+        // And do the opposite 
+        // Link city on the map to hero on the map
+        newPartyOnMapUI.GetComponent<MapHero>().linkedCityOnMapTr = parentCityOnMap;
         // bring city to the front
         parentCityOnMap.SetAsLastSibling();
     }
