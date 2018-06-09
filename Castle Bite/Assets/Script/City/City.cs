@@ -403,7 +403,8 @@ public class City : MonoBehaviour {
             // get parent for new cell
             Transform parentTransform = callerCell.Find("UnitSlot");
             // create unit
-            PartyUnit newPartyUnit = CreateUnit(parentTransform, hiredUnitTemplate);
+            // PartyUnit newPartyUnit = CreateUnit(parentTransform, hiredUnitTemplate);
+            CreateUnit(parentTransform, hiredUnitTemplate);
             // Update city garnizon panel to fill in required information and do required adjustments;
             transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
             // Instruct Right focus panel to update information
@@ -445,7 +446,8 @@ public class City : MonoBehaviour {
             // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-callerCell
             Transform newUnitParentSlot = callerCell.parent.Find("Wide").Find("UnitSlot");
             // create unit
-            PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
+            // PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
+            CreateUnit(newUnitParentSlot, hiredUnitTemplate);
             // update panel
             transform.Find("CityGarnizon/PartyPanel").GetComponent<PartyPanel>().OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
             // Instruct Right focus panel to update information

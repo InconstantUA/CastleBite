@@ -13,7 +13,6 @@ public class FocusPanel : MonoBehaviour {
     FocusMode focusMode;
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader }
 
-
     // Use this for initialization
     void Start()
     {
@@ -48,7 +47,11 @@ public class FocusPanel : MonoBehaviour {
             // this can only happen with party leader focus
             // when leader is not hired yet or not present in the city
             // set empty oject information
-            SetNoPartyInfo();
+            // this is only relevan if focus panel is in city, not relevant for battle screen
+            if (transform.parent.GetComponent<City>())
+            {
+                SetNoPartyInfo();
+            }
         }
     }
 
@@ -70,10 +73,14 @@ public class FocusPanel : MonoBehaviour {
     void SetLeaderInformation()
     {
         //  first deactivate NoPartyInfo and activate FocusedName, FocusedDescription and PartyFocus
-        transform.Find("NoPartyInfo").gameObject.SetActive(false);
-        transform.Find("FocusedName").gameObject.SetActive(true);
-        transform.Find("FocusedDescription").gameObject.SetActive(true);
-        transform.Find("PartyFocus").gameObject.SetActive(true);
+        // this is relevant only for focus panel in city
+        if (transform.parent.GetComponent<City>())
+        {
+            transform.Find("NoPartyInfo").gameObject.SetActive(false);
+            transform.Find("FocusedName").gameObject.SetActive(true);
+            transform.Find("FocusedDescription").gameObject.SetActive(true);
+            transform.Find("PartyFocus").gameObject.SetActive(true);
+        }
         // get party leader
         partyLeader = focusedObject.GetComponent<PartyUnit>();
         // populate with info from hero

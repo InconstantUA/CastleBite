@@ -493,9 +493,31 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         mapCity.EnterCityEditMode();
     }
 
+
+    MapHero GetEnemyByTile(Vector2Int tilePosition)
+    {
+        MapHero mapHero = null;
+        foreach (EnemyPartyOnMap enemyOnMap in transform.GetComponentsInChildren<EnemyPartyOnMap>())
+        {
+            // verify if not null
+            if (enemyOnMap)
+            {
+                if (GetTilePosition(enemyOnMap.transform) == tilePosition)
+                {
+                    return enemyOnMap.GetComponent<MapHero>();
+                }
+            }
+        }
+        return mapHero;
+    }
+
     void EnterBattleAfterMove()
     {
         Debug.Log("Enter battle");
+        // Get Enemy party
+        MapHero enemyOnMap = GetEnemyByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
+        // initialize battle
+        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, enemyOnMap);
     }
 
     void EndMoveTransition()
