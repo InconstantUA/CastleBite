@@ -9,6 +9,8 @@ public class BattleScreen : MonoBehaviour {
     PartyPanel playerPartyPanel;
     PartyPanel enemyPartyPanel;
 
+    PartyUnit activeUnit;
+
     // Use this for initialization
     void Awake () {
         // initialize internal "static" (non-changeable) resources
@@ -174,6 +176,8 @@ public class BattleScreen : MonoBehaviour {
         bool canActivate = false;
         // find next unit, which can act in the battle
         PartyUnit nextUnit = FindNextUnit();
+        // save it for later needs
+        activeUnit = nextUnit;
         if (nextUnit)
         {
             // found next unit
@@ -188,6 +192,11 @@ public class BattleScreen : MonoBehaviour {
             canActivate = StartTurn();
         }
         return canActivate;
+    }
+
+    public PartyUnit GetActiveUnit()
+    {
+        return activeUnit;
     }
 
     // Update is called once per frame

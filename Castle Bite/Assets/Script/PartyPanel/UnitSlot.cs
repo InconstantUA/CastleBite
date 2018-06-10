@@ -21,6 +21,10 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private UnityAction disableYesAction;
     private UnityAction disableNoAction;
 
+    // For battle screen
+    bool isAllowedToApplyPowerToThisUnit = false;
+    string errorMessage = "Error message";
+
     private void Awake()
     {
         confirmationPopUp = ConfirmationPopUp.Instance();
@@ -173,6 +177,12 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return transform.parent.parent.parent.parent.parent.GetComponent<BattleScreen>();
     }
 
+    PartyPanel GetParentPartyPanel()
+    {
+        // structure: 3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        return transform.parent.parent.parent.GetComponent<PartyPanel>();
+    }
+
     void ActOnClick()
     {
         // act based on where we are:
@@ -216,7 +226,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         if (battleScreen)
         {
-            Debug.Log("UnitSlot ActOnClick");
+            Debug.Log("UnitSlot ActOnClick Battle screen");
+            ActOnBattleScreenClick();
         }
     }
 
@@ -265,6 +276,28 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Debug.Log("No");
         // nothing to do here
+    }
+
+    public void SetOnClickAction(bool isAllowedToApplyPwrToThisUnit, string errMsg = "")
+    {
+        isAllowedToApplyPowerToThisUnit = isAllowedToApplyPwrToThisUnit;
+        errorMessage = errMsg;
+    }
+
+    void ActOnBattleScreenClick()
+    {
+        // act based on the previously set by SetOnClickAction by PartyPanel conditions
+        if (isAllowedToApplyPowerToThisUnit)
+        {
+            // it is allowed to apply powers to the unit in this cell
+            GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnit>());
+        }
+        else
+        {
+            // it is not allowed to use powers on this cell
+            // display error message
+            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
+        }
     }
 
     #endregion OnClick

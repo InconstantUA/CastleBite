@@ -13,6 +13,9 @@ public class PartyPanel : MonoBehaviour {
     string[] cells = { "Left", "Right", "Wide" };
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader}
 
+    // for battle
+    PartyUnit activeBattleUnit;
+
     public Transform GetUnitSlotTr(string row, string cell)
     {
         // Debug.Log(row + " " + cell);
@@ -1167,34 +1170,120 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    void ApplyHealPower()
+    void SetIfCellCanBeTargetedStatus(bool isTargetable, Transform cellTr, string errorMessage = "")
     {
-        Debug.Log("ApplyHealPower");
+        // isDroppable means if we can drop units to this cell
+        if (isTargetable)
+        {
+            // Change text box color
+            cellTr.Find("Br").GetComponent<Text>().color = Color.red;
+        }
+        else
+        {
+            // Change text box color
+            cellTr.Find("Br").GetComponent<Text>().color = Color.gray;
+        }
+        // set UnitSlot in cell as droppable or not
+        cellTr.Find("UnitSlot").GetComponent<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
     }
 
-    void ApplyResurectPower()
+    void PrepareBattleFieldForHealPower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("ApplyResurectPower");
+        Debug.Log("PrepareBattleFieldForHealPower");
+        bool isAllowedToApplyPwrToThisUnit = false;
+        string errorMessage = "";
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas (and unit) is present
+                    if (activeUnitIsFromThisParty)
+                    {
+                        // highlight units which can be healed
+                        // verify if unit is damaged
+                        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        if (unit.GetHealthCurr() < unit.GetHealthMax())
+                        {
+                            // unit can be healed
+                            isAllowedToApplyPwrToThisUnit = true;
+                            errorMessage = "";
+                        }
+                        else
+                        {
+                            // unit cannot be healed
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot heal this unit. Unit health is already full.";
+                        }
+                    }
+                    else
+                    {
+                        // this is actions for enemy party
+                        // set is as not unit to which we can apply powers
+                        isAllowedToApplyPwrToThisUnit = false;
+                        errorMessage = "Cannot heal enemy units.";
+                    }
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage);
+                }
+            }
+        }
     }
 
-    void ApplyMelePower()
+    void PrepareBattleFieldForResurectPower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("ApplyMelePower");
+        Debug.Log("PrepareBattleFieldForResurectPower");
     }
 
-    void ApplyRangedPower()
+    void PrepareBattleFieldForMelePower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("ApplyRangedPower");
+        Debug.Log("PrepareBattleFieldForMelePower");
     }
 
-    void ApplyMagicPower()
+    void PrepareBattleFieldForRangedPower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("ApplyMagicPower");
+        Debug.Log("PrepareBattleFieldForRangedPower");
+        bool isAllowedToApplyPwrToThisUnit = false;
+        string errorMessage = "";
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas (and unit) is present
+                    if (activeUnitIsFromThisParty)
+                    {
+                        // cannot attack friendly units
+                        isAllowedToApplyPwrToThisUnit = false;
+                        errorMessage = "Cannot attack friendly units.";
+                    }
+                    else
+                    {
+                        // this is actions for enemy party
+                        // ranged units can reach any unit
+                        // so all enemy units can be targeted
+                        isAllowedToApplyPwrToThisUnit = true;
+                        errorMessage = "";
+                    }
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage);
+                }
+            }
+        }
     }
 
-    void ApplyPurePower()
+    void PrepareBattleFieldForMagicPower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("ApplyPurePower");
+        Debug.Log("PrepareBattleFieldForMagicPower");
+    }
+
+    void PrepareBattleFieldForPurePower(bool activeUnitIsFromThisParty)
+    {
+        Debug.Log("PrepareBattleFieldForPurePower");
     }
 
     void HighlightActiveUnitInBattle(PartyUnit unitToActivate)
@@ -1211,59 +1300,66 @@ public class PartyPanel : MonoBehaviour {
     public void SetActiveUnitInBattle(PartyUnit unitToActivate)
     {
         Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
+        // save it locally for later use
+        activeBattleUnit = unitToActivate;
         // new unit became active in battle
         // highlight differently cells which this unit can or cannot interract and in which way
         // act based on activated unit relationships with this panel
         // verify if this is enemy unit or unit from this party
-        if (GetIsUnitFriendly(unitToActivate))
+        bool activeUnitIsFromThisParty = GetIsUnitFriendly(unitToActivate);
+        // defined below how actions applied to the friendly and enemy units
+        // based on the active unit powers
+        switch (unitToActivate.GetPower())
         {
-            // this is friendly unit
+            // Helping or buf powers
+            case PartyUnit.UnitPower.Heal:
+                PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
+                break;
+            case PartyUnit.UnitPower.Resurect:
+                PrepareBattleFieldForResurectPower(activeUnitIsFromThisParty);
+                break;
+            // Mele attack powers
+            case PartyUnit.UnitPower.BlowWithGreatSword:
+            case PartyUnit.UnitPower.BlowWithMaul:
+            case PartyUnit.UnitPower.CutWithAxe:
+            case PartyUnit.UnitPower.CutWithDagger:
+            case PartyUnit.UnitPower.SlashWithSword:
+            case PartyUnit.UnitPower.StabWithDagger:
+            case PartyUnit.UnitPower.StompWithFoot:
+                PrepareBattleFieldForMelePower(activeUnitIsFromThisParty);
+                break;
+            // Ranged attack powers
+            case PartyUnit.UnitPower.ShootWithBow:
+            case PartyUnit.UnitPower.ShootWithCompoudBow:
+            case PartyUnit.UnitPower.ThrowSpear:
+            case PartyUnit.UnitPower.ThrowRock:
+                PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
+                break;
+            // Magic attack powers
+            case PartyUnit.UnitPower.CastChainLightning:
+            case PartyUnit.UnitPower.CastLightningStorm:
+                PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
+                break;
+            // Pure attack powers
+            case PartyUnit.UnitPower.HolyWord:
+                PrepareBattleFieldForPurePower(activeUnitIsFromThisParty);
+                break;
+            default:
+                Debug.LogError("Unknown unit power");
+                break;
+        }
+        // Highlight active unit itself, this should be done after previous highlights
+        // to override their logic
+        if (activeUnitIsFromThisParty)
+        {
             // This unit belongs to this party highlight it here
             HighlightActiveUnitInBattle(unitToActivate);
-            // act based on the unit powers
-            switch (unitToActivate.GetPower()) {
-                // Helping or buf powers
-                case PartyUnit.UnitPower.Heal:
-                    ApplyHealPower();
-                    break;
-                case PartyUnit.UnitPower.Resurect:
-                    ApplyResurectPower();
-                    break;
-                // Mele attack powers
-                case PartyUnit.UnitPower.BlowWithGreatSword:
-                case PartyUnit.UnitPower.BlowWithMaul:
-                case PartyUnit.UnitPower.CutWithAxe:
-                case PartyUnit.UnitPower.CutWithDagger:
-                case PartyUnit.UnitPower.SlashWithSword:
-                case PartyUnit.UnitPower.StabWithDagger:
-                case PartyUnit.UnitPower.StompWithFoot:
-                    ApplyMelePower();
-                    break;
-                // Ranged attack powers
-                case PartyUnit.UnitPower.ShootWithBow:
-                case PartyUnit.UnitPower.ShootWithCompoudBow:
-                case PartyUnit.UnitPower.ThrowSpear:
-                case PartyUnit.UnitPower.ThrowRock:
-                    ApplyRangedPower();
-                    break;
-                // Magic attack powers
-                case PartyUnit.UnitPower.CastChainLightning:
-                case PartyUnit.UnitPower.CastLightningStorm:
-                    ApplyMagicPower();
-                    break;
-                // Pure attack powers
-                case PartyUnit.UnitPower.HolyWord:
-                    ApplyPurePower();
-                    break;
-                default:
-                    Debug.LogError("Unknown unit power");
-                    break;
-            }
         }
-        else
-        {
-            // this enemy unit
-        }
+    }
+
+    public void ApplyPowersToUnit(PartyUnit dstUnit)
+    {
+        Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName());
     }
 
     #endregion For Battle Screen
