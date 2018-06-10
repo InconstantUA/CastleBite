@@ -30,6 +30,14 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     bool isDismissable;
     [SerializeField]
+    bool isAlive = true;
+    [SerializeField]
+    bool hasEscaped = false;
+    [SerializeField]
+    bool hasMoved = false;
+    [SerializeField]
+    int initiative = 10;
+
 
 
     public enum UnitType {
@@ -41,6 +49,64 @@ public class PartyUnit : MonoBehaviour {
 
     public enum UnitSize { Single, Double };
     public UnitSize unitSize;
+
+    public enum UnitPower {
+        ThrowRock,          // Greenskin Cyclop
+        StompWithFoot,      // Greenskin Ogre
+        CutWithAxe,         // Greenskin Orc
+        CutWithDagger,      // Greenskin Goblin
+        ThrowSpear,         // Greenskin Troll
+        HolyWord,           // Dominion Lahabiel capital guard
+        BlowWithGreatSword, // Dominion Knight leader
+        ShootWithCompoudBow,// Dominion Ranger leader
+        StabWithDagger,     // Dominion Thief leader
+        Resurect,           // Dominion Seraphim leader
+        CastLightningStorm, // Dominion Archmage leader
+        SlashWithSword,     // Dominion Swordsman
+        ShootWithBow,       // Dominion Archer
+        Heal,               // Dominion Priest
+        BlowWithMaul,       // Dominion Colossus
+        CastChainLightning,    // Dominion Mage
+        None
+    };
+    [SerializeField]
+    UnitPower unitPower;
+
+    public enum UnitPowerSource
+    {
+        Physical,   // Attack with metal weapons
+        Water,
+        Fire,
+        Earth,
+        Wind,
+        Life,       // Heal
+        Pure,       // Cannot be resisted
+        None
+    }
+    [SerializeField]
+    UnitPowerSource unitPowerSource;
+
+
+
+    public UnitPower GetPower()
+    {
+        return unitPower;
+    }
+
+    public void SetPower(UnitPower value)
+    {
+        unitPower = value;
+    }
+
+    public UnitPowerSource GetPowerSource()
+    {
+        return unitPowerSource;
+    }
+
+    public void SetPowerSource(UnitPowerSource value)
+    {
+        unitPowerSource = value;
+    }
 
     public void SetCost(int requiredCost)
     {
@@ -190,6 +256,46 @@ public class PartyUnit : MonoBehaviour {
     public void SetIsInterpartyMovable(bool isLdr)
     {
         isInterpartyMovable = isLdr;
+    }
+
+    public bool GetIsAlive()
+    {
+        return isAlive;
+    }
+
+    public void SetIsAlive(bool value)
+    {
+        isAlive = value;
+    }
+
+    public bool GetHasEscaped()
+    {
+        return hasEscaped;
+    }
+
+    public void SetHasEscaped(bool value)
+    {
+        hasEscaped = value;
+    }
+
+    public bool GetHasMoved()
+    {
+        return hasMoved;
+    }
+
+    public void SetHasMoved(bool value)
+    {
+        hasMoved = value;
+    }
+
+    public int GetInitiative()
+    {
+        return initiative;
+    }
+
+    public void SetInitiative(int value)
+    {
+        initiative = value;
     }
 
     //// Use this for initialization

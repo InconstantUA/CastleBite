@@ -52,8 +52,14 @@ MonoBehaviour:
     species.
   isInterpartyMovable: 1
   isDismissable: 1
+  isAlive: 1
+  hasEscaped: 0
+  hasMoved: 0
+  initiative: 35
   unitType: 11
   unitSize: 0
+  unitPower: 0
+  unitPowerSource: 0
 --- !u!224 &224037969209454766
 RectTransform:
   m_ObjectHideFlags: 1

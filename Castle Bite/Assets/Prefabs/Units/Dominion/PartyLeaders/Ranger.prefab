@@ -9,64 +9,63 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1199747042690498}
+  m_RootGameObject: {fileID: 1323575025782672}
   m_IsPrefabParent: 1
---- !u!1 &1199747042690498
+--- !u!1 &1323575025782672
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 224086146622810032}
-  - component: {fileID: 114967515040118940}
+  - component: {fileID: 224390023808979864}
+  - component: {fileID: 114249753246361688}
   m_Layer: 5
-  m_Name: Troll
+  m_Name: Ranger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &114967515040118940
+--- !u!114 &114249753246361688
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1199747042690498}
+  m_GameObject: {fileID: 1323575025782672}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 500
-  healthCurr: 55
-  healthMax: 55
-  isLeader: 0
-  unitName: Troll
-  givenName: Troll
+  cost: 550
+  healthCurr: 95
+  healthMax: 95
+  isLeader: 1
+  unitName: Ranger
+  givenName: Eison
   unitLevel: 1
-  unitLeadership: 0
-  unitRole: Weak ranged fighter
-  unitBriefDescription: 
-  unitFullDescription: Trolls are tall skinny humanoids with long noses, rubbery skin.
-    Use spear to hit his enemies from the distance.
-  isInterpartyMovable: 1
+  unitLeadership: 3
+  unitRole: Scouting Leader
+  unitBriefDescription: Strong ranged fighter. Can cross long distances.
+  unitFullDescription: 
+  isInterpartyMovable: 0
   isDismissable: 1
   isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 45
-  unitType: 15
+  initiative: 65
+  unitType: 1
   unitSize: 0
-  unitPower: 0
+  unitPower: 7
   unitPowerSource: 0
---- !u!224 &224086146622810032
+--- !u!224 &224390023808979864
 RectTransform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1199747042690498}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 1323575025782672}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -75,6 +74,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -50, y: 50}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

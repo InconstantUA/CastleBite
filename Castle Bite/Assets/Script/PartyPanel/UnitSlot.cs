@@ -167,38 +167,56 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return transform.parent.parent.parent.parent.parent.GetComponent<City>();
     }
 
+    BattleScreen GetParentBattleScreen()
+    {
+        // structure: 5[BattleScreen]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        return transform.parent.parent.parent.parent.parent.GetComponent<BattleScreen>();
+    }
+
     void ActOnClick()
     {
-        // presave state, because we are going to reset it here
-        City.CityViewActiveState cityState = GetParentCity().GetActiveState();
-        // disable dismiss mode and return to normal mode
-        // this looks naturally
-        GetParentCity().ReturnToNomalState();
-        // act based on the city (and cursor) state
-        switch (cityState)
+        // act based on where we are:
+        //  - in city
+        //  - in battle
+        City city = GetParentCity();
+        BattleScreen battleScreen = GetParentBattleScreen();
+        if (city)
         {
-            case City.CityViewActiveState.Normal:
-                // do nothing for now
-                break;
-            case City.CityViewActiveState.ActiveHeroEquipment:
-                // do nothing for now
-                break;
-            case City.CityViewActiveState.ActiveDismiss:
-                // try to dismiss unit, if it is possible
-                TryToDismissUnit();
-                break;
-            case City.CityViewActiveState.ActiveHeal:
-                // try to heal unit, if it is possible
-                break;
-            case City.CityViewActiveState.ActiveResurect:
-                // try to resurect unit, if it is possible
-                break;
-            case City.CityViewActiveState.ActiveUnitDrag:
-                // ??
-                break;
-            default:
-                Debug.LogError("Unknown state");
-                break;
+            // presave state, because we are going to reset it here
+            City.CityViewActiveState cityState = GetParentCity().GetActiveState();
+            // disable dismiss mode and return to normal mode
+            // this looks naturally
+            GetParentCity().ReturnToNomalState();
+            // act based on the city (and cursor) state
+            switch (cityState)
+            {
+                case City.CityViewActiveState.Normal:
+                    // do nothing for now
+                    break;
+                case City.CityViewActiveState.ActiveHeroEquipment:
+                    // do nothing for now
+                    break;
+                case City.CityViewActiveState.ActiveDismiss:
+                    // try to dismiss unit, if it is possible
+                    TryToDismissUnit();
+                    break;
+                case City.CityViewActiveState.ActiveHeal:
+                    // try to heal unit, if it is possible
+                    break;
+                case City.CityViewActiveState.ActiveResurect:
+                    // try to resurect unit, if it is possible
+                    break;
+                case City.CityViewActiveState.ActiveUnitDrag:
+                    // ??
+                    break;
+                default:
+                    Debug.LogError("Unknown state");
+                    break;
+            }
+        }
+        if (battleScreen)
+        {
+            Debug.Log("UnitSlot ActOnClick");
         }
     }
 

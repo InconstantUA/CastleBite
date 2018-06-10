@@ -52,8 +52,14 @@ MonoBehaviour:
     and greedy, especially for gold and jewelry.
   isInterpartyMovable: 1
   isDismissable: 1
+  isAlive: 1
+  hasEscaped: 0
+  hasMoved: 0
+  initiative: 40
   unitType: 11
   unitSize: 0
+  unitPower: 0
+  unitPowerSource: 0
 --- !u!224 &224051042000359588
 RectTransform:
   m_ObjectHideFlags: 1

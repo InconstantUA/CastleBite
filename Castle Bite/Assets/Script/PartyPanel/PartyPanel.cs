@@ -24,7 +24,36 @@ public class PartyPanel : MonoBehaviour {
         return panelMode;
     }
 
-    #region On Change: hire or dismiss unit
+    #region On Change: hire or dismiss unit, for unit edit mode
+
+    public void SetOnEditClickHandler(bool doActivate)
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas is present
+                    if (doActivate)
+                    {
+                        // add UnitOnBattleMouseHandler Component
+                        GameObject unitCanvas = unitSlot.GetChild(0).gameObject;
+                        // UnitDragHandler sc = unitCanvas.AddComponent<UnitDragHandler>() as UnitDragHandler;
+                        unitCanvas.AddComponent<UnitDragHandler>();
+                    }
+                    else
+                    {
+                        // remove UnitOnBattleMouseHandler Component
+                        UnitDragHandler unitDragHandlerComponent = unitSlot.GetComponentInChildren<UnitDragHandler>();
+                        Destroy(unitDragHandlerComponent);
+                    }
+                }
+            }
+        }
+    }
 
     void OnHireSingleUnit(Transform changedCell)
     {
@@ -998,6 +1027,247 @@ public class PartyPanel : MonoBehaviour {
         // and disable hire buttons
         SetHireUnitPnlButtonActive(!activate);
     }
+
+    #region For Battle Screen
+
+    public bool CanFight()
+    {
+        // loop through all units in each party and verify if there is at least one unit, which can fight
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // verify if unit is alive and it has not escaped yet
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        // if not unit can fight, return false;
+        return false;
+    }
+
+    public PartyUnit GetActiveUnitWithHighestInitiative()
+    {
+        PartyUnit unitWithHighestInitiative = null;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // verify if unit has moved or not
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    if (!unit.GetHasMoved())
+                    {
+                        // compare initiative with other unit, if it was found
+                        if (unitWithHighestInitiative)
+                        {
+                            if (unit.GetInitiative() > unitWithHighestInitiative.GetInitiative())
+                            {
+                                // found unit with highest initiative, update unitWithHighestInitiative variable
+                                unitWithHighestInitiative = unit;
+                            }
+                        }
+                        else
+                        {
+                            // no other unit found yet, assume that this unit has the highest initiative
+                            unitWithHighestInitiative = unit;
+                        }
+                    }
+                }
+            }
+        }
+        return unitWithHighestInitiative;
+    }
+
+    public void ResetHasMovedFlag()
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // set unit has moved to false, so it can move again
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    unit.SetHasMoved(false);
+                }
+            }
+        }
+    }
+
+    public void SetOnBattleClickHandler(bool doActivate)
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas is present
+                    if (doActivate)
+                    {
+                        // add UnitOnBattleMouseHandler Component
+                        GameObject unitCanvas = unitSlot.GetChild(0).gameObject;
+                        // UnitOnBattleMouseHandler sc = unitCanvas.AddComponent<UnitOnBattleMouseHandler>() as UnitOnBattleMouseHandler;
+                        unitCanvas.AddComponent<UnitOnBattleMouseHandler>();
+                    }
+                    else
+                    {
+                        // remove UnitOnBattleMouseHandler Component
+                        UnitOnBattleMouseHandler unitOnBattleMouseHandlerComponent = unitSlot.GetComponentInChildren<UnitOnBattleMouseHandler>();
+                        Destroy(unitOnBattleMouseHandlerComponent);
+                    }
+                }
+            }
+        }
+    }
+
+    bool GetIsUnitFriendly(PartyUnit unitToActivate)
+    {
+        // method 1
+        // structure: 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanel-3[Left/Right/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
+        GameObject unitToActivatePartyPanel = unitToActivate.transform.parent.parent.parent.parent.parent.gameObject;
+        if (gameObject == unitToActivatePartyPanel)
+        {
+            return true;
+        }
+        // method 2
+        //foreach (string horisontalPanel in horisontalPanels)
+        //{
+        //    foreach (string cell in cells)
+        //    {
+        //        // verify if slot has an unit in it
+        //        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+        //        if (unitSlot.childCount > 0)
+        //        {
+        //            // verify if unit has isLeader atrribute ON
+        //            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+        //            if (unit.GetInstanceID() == unitToActivate.GetInstanceID())
+        //            {
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //}
+        return false;
+    }
+
+    void ApplyHealPower()
+    {
+        Debug.Log("ApplyHealPower");
+    }
+
+    void ApplyResurectPower()
+    {
+        Debug.Log("ApplyResurectPower");
+    }
+
+    void ApplyMelePower()
+    {
+        Debug.Log("ApplyMelePower");
+    }
+
+    void ApplyRangedPower()
+    {
+        Debug.Log("ApplyRangedPower");
+    }
+
+    void ApplyMagicPower()
+    {
+        Debug.Log("ApplyMagicPower");
+    }
+
+    void ApplyPurePower()
+    {
+        Debug.Log("ApplyPurePower");
+    }
+
+    void HighlightActiveUnitInBattle(PartyUnit unitToActivate)
+    {
+        Debug.Log(" HighlightActiveUnitInBattle");
+        // highlight unit canvas with blue color
+        Color highlightColor = Color.blue;
+        // structure: 3[Left/Right/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
+        Transform cellTr = unitToActivate.transform.parent.parent.parent;
+        Text canvasText = cellTr.Find("Br").GetComponent<Text>();
+        canvasText.color = highlightColor;
+    }
+
+    public void SetActiveUnitInBattle(PartyUnit unitToActivate)
+    {
+        Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
+        // new unit became active in battle
+        // highlight differently cells which this unit can or cannot interract and in which way
+        // act based on activated unit relationships with this panel
+        // verify if this is enemy unit or unit from this party
+        if (GetIsUnitFriendly(unitToActivate))
+        {
+            // this is friendly unit
+            // This unit belongs to this party highlight it here
+            HighlightActiveUnitInBattle(unitToActivate);
+            // act based on the unit powers
+            switch (unitToActivate.GetPower()) {
+                // Helping or buf powers
+                case PartyUnit.UnitPower.Heal:
+                    ApplyHealPower();
+                    break;
+                case PartyUnit.UnitPower.Resurect:
+                    ApplyResurectPower();
+                    break;
+                // Mele attack powers
+                case PartyUnit.UnitPower.BlowWithGreatSword:
+                case PartyUnit.UnitPower.BlowWithMaul:
+                case PartyUnit.UnitPower.CutWithAxe:
+                case PartyUnit.UnitPower.CutWithDagger:
+                case PartyUnit.UnitPower.SlashWithSword:
+                case PartyUnit.UnitPower.StabWithDagger:
+                case PartyUnit.UnitPower.StompWithFoot:
+                    ApplyMelePower();
+                    break;
+                // Ranged attack powers
+                case PartyUnit.UnitPower.ShootWithBow:
+                case PartyUnit.UnitPower.ShootWithCompoudBow:
+                case PartyUnit.UnitPower.ThrowSpear:
+                case PartyUnit.UnitPower.ThrowRock:
+                    ApplyRangedPower();
+                    break;
+                // Magic attack powers
+                case PartyUnit.UnitPower.CastChainLightning:
+                case PartyUnit.UnitPower.CastLightningStorm:
+                    ApplyMagicPower();
+                    break;
+                // Pure attack powers
+                case PartyUnit.UnitPower.HolyWord:
+                    ApplyPurePower();
+                    break;
+                default:
+                    Debug.LogError("Unknown unit power");
+                    break;
+            }
+        }
+        else
+        {
+            // this enemy unit
+        }
+    }
+
+    #endregion For Battle Screen
+
     //// Update is called once per frame
     //void Update () {
 
