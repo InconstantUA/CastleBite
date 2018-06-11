@@ -54,7 +54,7 @@ MonoBehaviour:
   isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 35
+  initiative: 350
   unitType: 7
   unitSize: 0
   unitPower: 15

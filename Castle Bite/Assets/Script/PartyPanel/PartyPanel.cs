@@ -1170,18 +1170,18 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    void SetIfCellCanBeTargetedStatus(bool isTargetable, Transform cellTr, string errorMessage = "")
+    void SetIfCellCanBeTargetedStatus(bool isTargetable, Transform cellTr, string errorMessage, Color positiveColor, Color negativeColor)
     {
         // isDroppable means if we can drop units to this cell
         if (isTargetable)
         {
             // Change text box color
-            cellTr.Find("Br").GetComponent<Text>().color = Color.red;
+            cellTr.Find("Br").GetComponent<Text>().color = positiveColor;
         }
         else
         {
             // Change text box color
-            cellTr.Find("Br").GetComponent<Text>().color = Color.gray;
+            cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
         }
         // set UnitSlot in cell as droppable or not
         cellTr.Find("UnitSlot").GetComponent<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
@@ -1192,6 +1192,9 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("PrepareBattleFieldForHealPower");
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "";
+        Color positiveColor = Color.green;
+        // Color negativeColor = new Color32(221, 24, 24, 255); // dark red
+        Color negativeColor = Color.grey;
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
@@ -1226,7 +1229,7 @@ public class PartyPanel : MonoBehaviour {
                         isAllowedToApplyPwrToThisUnit = false;
                         errorMessage = "Cannot heal enemy units.";
                     }
-                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage);
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
                 }
             }
         }
@@ -1235,16 +1238,113 @@ public class PartyPanel : MonoBehaviour {
     void PrepareBattleFieldForResurectPower(bool activeUnitIsFromThisParty)
     {
         Debug.Log("PrepareBattleFieldForResurectPower");
+        bool isAllowedToApplyPwrToThisUnit = false;
+        string errorMessage = "";
+        Color positiveColor = Color.green;
+        Color negativeColor = Color.grey;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas (and unit) is present
+                    if (activeUnitIsFromThisParty)
+                    {
+                        // highlight units which can be healed
+                        // verify if unit is dead
+                        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        if (unit.GetIsAlive())
+                        {
+                            // unit is alive and cannot be resurected
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot resurect alive units.";
+                        }
+                        else
+                        {
+                            // unit is dead and can be resurected
+                            isAllowedToApplyPwrToThisUnit = true;
+                            errorMessage = "";
+                        }
+                    }
+                    else
+                    {
+                        // this is actions for enemy party
+                        // set is as not unit to which we can apply powers
+                        isAllowedToApplyPwrToThisUnit = false;
+                        errorMessage = "Cannot resurect enemy units.";
+                    }
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+                }
+            }
+        }
+    }
+
+    bool FrontRowHasUnitsWhichCanAct()
+    {
+        return false;
     }
 
     void PrepareBattleFieldForMelePower(bool activeUnitIsFromThisParty)
     {
         Debug.Log("PrepareBattleFieldForMelePower");
+        Color positiveColor = Color.yellow;
+        Color negativeColor = Color.grey;
+        bool isAllowedToApplyPwrToThisUnit = false;
+        string errorMessage = "";
+        string meleUnitPosition;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas (and unit) is present
+                    if (activeUnitIsFromThisParty)
+                    {
+                        // cannot attack friendly units
+                        isAllowedToApplyPwrToThisUnit = false;
+                        errorMessage = "Cannot attack friendly units.";
+                    }
+                    else
+                    {
+                        // this is actions for enemy party
+                        // act based on the mele unit position (cell)
+                        // 4[Top/Middle/Bottom]HorizontalPanelGroup-3[Left/Right/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
+                        meleUnitPosition = activeBattleUnit.transform.parent.parent.parent.parent.name;
+                        switch (meleUnitPosition)
+                        {
+                            case "Top":
+                                break;
+                            case "Middle":
+                                // Any unit in front row can be reached
+                                // If front row is empty, then any unit in back row can be reached
+                                break;
+                            case "Bottom":
+                                break;
+                            default:
+                                Debug.LogError("Unknown unit position [" + meleUnitPosition + "]");
+                                break;
+                        }
+                        isAllowedToApplyPwrToThisUnit = true;
+                        errorMessage = "";
+                    }
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+                }
+            }
+        }
     }
 
     void PrepareBattleFieldForRangedPower(bool activeUnitIsFromThisParty)
     {
         Debug.Log("PrepareBattleFieldForRangedPower");
+        Color positiveColor = Color.yellow;
+        // Color negativeColor = new Color32(221, 24, 24, 255); // dark red
+        Color negativeColor = Color.grey;
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "";
         foreach (string horisontalPanel in horisontalPanels)
@@ -1270,7 +1370,7 @@ public class PartyPanel : MonoBehaviour {
                         isAllowedToApplyPwrToThisUnit = true;
                         errorMessage = "";
                     }
-                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage);
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
                 }
             }
         }
@@ -1279,11 +1379,33 @@ public class PartyPanel : MonoBehaviour {
     void PrepareBattleFieldForMagicPower(bool activeUnitIsFromThisParty)
     {
         Debug.Log("PrepareBattleFieldForMagicPower");
-    }
-
-    void PrepareBattleFieldForPurePower(bool activeUnitIsFromThisParty)
-    {
-        Debug.Log("PrepareBattleFieldForPurePower");
+        Color positiveColor = Color.yellow;
+        Color negativeColor = Color.grey;
+        bool isAllowedToApplyPwrToThisUnit = false;
+        string errorMessage = "";
+        // highlight all cells based on friendly/enemy principle
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // Unit canvas (and unit) is present
+                if (activeUnitIsFromThisParty)
+                {
+                    // cannot attack friendly units
+                    isAllowedToApplyPwrToThisUnit = false;
+                    errorMessage = "Cannot attack friendly units.";
+                }
+                else
+                {
+                    // this is actions for enemy party
+                    // ranged units can reach any unit
+                    // so all enemy units can be targeted
+                    isAllowedToApplyPwrToThisUnit = true;
+                    errorMessage = "";
+                }
+                SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+            }
+        }
     }
 
     void HighlightActiveUnitInBattle(PartyUnit unitToActivate)
@@ -1335,14 +1457,11 @@ public class PartyPanel : MonoBehaviour {
             case PartyUnit.UnitPower.ThrowRock:
                 PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
                 break;
-            // Magic attack powers
+            // Magic (including pure) attack powers
             case PartyUnit.UnitPower.CastChainLightning:
             case PartyUnit.UnitPower.CastLightningStorm:
-                PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
-                break;
-            // Pure attack powers
             case PartyUnit.UnitPower.HolyWord:
-                PrepareBattleFieldForPurePower(activeUnitIsFromThisParty);
+                PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
                 break;
             default:
                 Debug.LogError("Unknown unit power");
@@ -1360,6 +1479,7 @@ public class PartyPanel : MonoBehaviour {
     public void ApplyPowersToUnit(PartyUnit dstUnit)
     {
         Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName());
+        // in case of magic power - apply it to all units in enemy party
     }
 
     #endregion For Battle Screen
