@@ -23,7 +23,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
 
     City GetParentCity()
     {
-        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
         return transform.parent.parent.parent.parent.parent.GetComponent<City>();
     }
 
@@ -86,11 +86,11 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         // get horizontal panels for later use
         Transform srcPanelTr = srcCellTr.parent;
         Transform dstPanelTr = dstCellTr.parent;
-        Transform srcL = srcPanelTr.Find("Left");
-        Transform srcR = srcPanelTr.Find("Right");
+        Transform srcL = srcPanelTr.Find("Front");
+        Transform srcR = srcPanelTr.Find("Back");
         Transform srcW = srcPanelTr.Find("Wide");
-        Transform dstL = dstPanelTr.Find("Left");
-        Transform dstR = dstPanelTr.Find("Right");
+        Transform dstL = dstPanelTr.Find("Front");
+        Transform dstR = dstPanelTr.Find("Back");
         Transform dstW = dstPanelTr.Find("Wide");
         SwapTwoCellsContent(srcL, dstL);
         SwapTwoCellsContent(srcR, dstR);
@@ -166,7 +166,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             //    Debug.Log("Drop unit from " + UnitDragHandler.unitBeingDraggedParentTr.parent.gameObject.name);
             //    UnitDragHandler.unitBeingDragged.transform.SetParent(transform);
             //    // disable hire unit button in the destination (this) cell, if it is garnizon panel
-            //    // structure 3PartyPanel-2Top/Middle/Bottom-1Left/Right/Wide-(this)UnitSlot
+            //    // structure 3PartyPanel-2Top/Middle/Bottom-1Front/Back/Wide-(this)UnitSlot
             //    panelMode = transform.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
             //    if (PartyPanel.PanelMode.Garnizon == panelMode)
             //    {

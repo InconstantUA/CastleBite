@@ -363,7 +363,7 @@ public class City : MonoBehaviour {
         // create new party
         GameObject newLeaderParty = CreateNewPartyInCity();
         // set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
-        Transform newUnitParentSlot = newLeaderParty.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Right");
+        Transform newUnitParentSlot = newLeaderParty.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Back");
         // create new unit
         PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
         // Update Left focus with information from new unit;
@@ -443,7 +443,7 @@ public class City : MonoBehaviour {
             // get parent for new cell
             // if it is double size, then place it in the wide cell
             // if hired unit is double unit, then we actually need to change its parent to the wide
-            // hierarchy: [Top/Middle/Bottom panel]-[Left/Right/Wide]-callerCell
+            // hierarchy: [Top/Middle/Bottom panel]-[Front/Back/Wide]-callerCell
             Transform newUnitParentSlot = callerCell.parent.Find("Wide").Find("UnitSlot");
             // create unit
             // PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
@@ -490,7 +490,7 @@ public class City : MonoBehaviour {
 
     PartyPanel GetUnitsParentPartyPanel(Transform unitCell)
     {
-        // structure: 2PartyPanel-1[Top/Middle/Bottom]-[Left/Wide/Right]-UnitSlot-1UnitCanvas-unit
+        // structure: 2PartyPanel-1[Top/Middle/Bottom]-[Front/Wide/Back]-UnitSlot-1UnitCanvas-unit
         return unitCell.transform.parent.parent.GetComponent<PartyPanel>();
     }
 

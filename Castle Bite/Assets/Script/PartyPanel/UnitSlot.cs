@@ -167,19 +167,19 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     City GetParentCity()
     {
-        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
         return transform.parent.parent.parent.parent.parent.GetComponent<City>();
     }
 
     BattleScreen GetParentBattleScreen()
     {
-        // structure: 5[BattleScreen]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        // structure: 5[BattleScreen]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
         return transform.parent.parent.parent.parent.parent.GetComponent<BattleScreen>();
     }
 
     PartyPanel GetParentPartyPanel()
     {
-        // structure: 3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-(this)UnitSlot
+        // structure: 3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
         return transform.parent.parent.parent.GetComponent<PartyPanel>();
     }
 

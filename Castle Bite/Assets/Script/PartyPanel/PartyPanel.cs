@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +10,10 @@ public class PartyPanel : MonoBehaviour {
     [SerializeField]
     PanelMode panelMode;
     string[] horisontalPanels = { "Top", "Middle", "Bottom" };
-    string[] singleUnitCells = { "Left", "Right" };
-    string[] cells = { "Left", "Right", "Wide" };
+    string[] singleUnitCells = { "Front", "Back" };
+    string[] cells = { "Front", "Back", "Wide" };
+    string[] cellsFront = { "Front", "Wide" };
+    string[] cellsBack = { "Back", "Wide" };
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader}
 
     // for battle
@@ -77,8 +80,8 @@ public class PartyPanel : MonoBehaviour {
         // Also we need to enable Wide panel, because by defaut it is disabled
         changedCell.parent.Find("Wide").gameObject.SetActive(true);
         // And disable left and right panels
-        changedCell.parent.Find("Left").gameObject.SetActive(false);
-        changedCell.parent.Find("Right").gameObject.SetActive(false);
+        changedCell.parent.Find("Front").gameObject.SetActive(false);
+        changedCell.parent.Find("Back").gameObject.SetActive(false);
         // Update name and health information
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
@@ -110,8 +113,8 @@ public class PartyPanel : MonoBehaviour {
         // Disable Wide panel
         changedCell.parent.Find("Wide").gameObject.SetActive(false);
         // And enable left and right panels
-        changedCell.parent.Find("Left").gameObject.SetActive(true);
-        changedCell.parent.Find("Right").gameObject.SetActive(true);
+        changedCell.parent.Find("Front").gameObject.SetActive(true);
+        changedCell.parent.Find("Back").gameObject.SetActive(true);
         // Update name and health information
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
@@ -123,8 +126,8 @@ public class PartyPanel : MonoBehaviour {
         if (PartyPanel.PanelMode.Garnizon == panelMode)
         {
             Debug.Log("Activate hire unit button");
-            changedCell.parent.Find("Left/HireUnitPnlBtn").gameObject.SetActive(true);
-            changedCell.parent.Find("Right/HireUnitPnlBtn").gameObject.SetActive(true);
+            changedCell.parent.Find("Front/HireUnitPnlBtn").gameObject.SetActive(true);
+            changedCell.parent.Find("Back/HireUnitPnlBtn").gameObject.SetActive(true);
 
         }
     }
@@ -216,7 +219,7 @@ public class PartyPanel : MonoBehaviour {
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
                     // deactivate hire unit button if panel is in garnizon state and this left or right single panel
-                    if ((PanelMode.Garnizon == panelMode) && (("Left" == cell) || ("Right" == cell)))
+                    if ((PanelMode.Garnizon == panelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
                         unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
                     }
@@ -228,7 +231,7 @@ public class PartyPanel : MonoBehaviour {
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
                     // activate hire unit button if panel is in garnizon state and this left or right single panel
-                    if ((PanelMode.Garnizon == panelMode) && (("Left" == cell) || ("Right" == cell)))
+                    if ((PanelMode.Garnizon == panelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
                         unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
                     }
@@ -238,8 +241,8 @@ public class PartyPanel : MonoBehaviour {
                         // we need to disable Wide panel, because it is still enabled and placed on top of single panels
                         unitPanel.parent.Find("Wide").gameObject.SetActive(false);
                         // and enable left and right panels
-                        unitPanel.parent.Find("Left").gameObject.SetActive(true);
-                        unitPanel.parent.Find("Right").gameObject.SetActive(true);
+                        unitPanel.parent.Find("Front").gameObject.SetActive(true);
+                        unitPanel.parent.Find("Back").gameObject.SetActive(true);
                     }
                 }
             }
@@ -411,17 +414,17 @@ public class PartyPanel : MonoBehaviour {
         // verify cell, which is located nearby
         // if it is occuped, then show an error message
         Transform oppositeCell;
-        if (callerCell.name == "Left")
+        if (callerCell.name == "Front")
         {
-            // check Right cell
-            oppositeCell = callerCell.parent.Find("Right");
+            // check Back cell
+            oppositeCell = callerCell.parent.Find("Back");
         } else
         {
-            // check Left cell
-            oppositeCell = callerCell.parent.Find("Left");
+            // check Front cell
+            oppositeCell = callerCell.parent.Find("Front");
         }
         // check if cell is occupied
-        // structure [Left/Right cell]-UnitSlot-unit
+        // structure [Front/Back cell]-UnitSlot-unit
         if (oppositeCell.Find("UnitSlot").childCount > 0)
         {
             result = false;
@@ -678,7 +681,7 @@ public class PartyPanel : MonoBehaviour {
         //
         // unit being dragged is static, so we do not need to assign it here
         // or send as and argument
-        // structure: 5[City]-4[HeroParty/CityGarnizon]Party-3PartyPanel-2[Top/Middle/Bottom]HorizontalPanelGroup-1[Left/Right/Wide]Cell-UnitSlot-(this)UnitCanvas
+        // structure: 5[City]-4[HeroParty/CityGarnizon]Party-3PartyPanel-2[Top/Middle/Bottom]HorizontalPanelGroup-1[Front/Back/Wide]Cell-UnitSlot-(this)UnitCanvas
         PartyUnit unitBeingDragged = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
         Transform unitCell = UnitDragHandler.unitBeingDragged.transform.parent.parent;
         Transform horizontalPanelGroup = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent;
@@ -783,13 +786,13 @@ public class PartyPanel : MonoBehaviour {
                                                     // 1x/x1        2           not ok
                                                     // get nearby cell
                                                     Transform nearbySrcCellTr;
-                                                    if ("Left" == unitCell.name)
+                                                    if ("Front" == unitCell.name)
                                                     {
-                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Right");
+                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Back");
                                                     }
                                                     else
                                                     {
-                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Left");
+                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Front");
                                                     }
                                                     // verify if nearby source cell is occupied
                                                     UnitDragHandler nearbySrcCellUnitCanvas = nearbySrcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
@@ -882,10 +885,10 @@ public class PartyPanel : MonoBehaviour {
                             GameObject wideCell;
                             Transform leftCell;
                             Transform rightCell;
-                            UnitDragHandler isLeftCellOccupied; // if null - false, if other - true, we use it as bool
-                            UnitDragHandler isRightCellOccupied; // if null - false, if other - true, we use it as bool
-                            bool isLeftCellUnitInterPartyMovable = false;
-                            bool isRightCellUnitInterPartyMovable = false;
+                            UnitDragHandler isFrontCellOccupied; // if null - false, if other - true, we use it as bool
+                            UnitDragHandler isBackCellOccupied; // if null - false, if other - true, we use it as bool
+                            bool isFrontCellUnitInterPartyMovable = false;
+                            bool isBackCellUnitInterPartyMovable = false;
                             foreach (string horisontalPanel in horisontalPanels)
                             {
                                 // verify if wide slot is active
@@ -905,43 +908,43 @@ public class PartyPanel : MonoBehaviour {
                                     // wide slot is not active
                                     // single unit slot should be active
                                     // verify their state
-                                    leftCell = otherPartyPanel.transform.Find(horisontalPanel + "/Left");
-                                    rightCell = otherPartyPanel.transform.Find(horisontalPanel + "/Right");
+                                    leftCell = otherPartyPanel.transform.Find(horisontalPanel + "/Front");
+                                    rightCell = otherPartyPanel.transform.Find(horisontalPanel + "/Back");
                                     // gather input for possible states
                                     // UnitCanvas, which has UnitDragHandler component attached is present
-                                    isLeftCellOccupied = leftCell.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
-                                    isRightCellOccupied = rightCell.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
-                                    if (isLeftCellOccupied)
+                                    isFrontCellOccupied = leftCell.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
+                                    isBackCellOccupied = rightCell.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
+                                    if (isFrontCellOccupied)
                                     {
                                         // occupied
-                                        cellUnit = isLeftCellOccupied.GetComponentInChildren<PartyUnit>();
+                                        cellUnit = isFrontCellOccupied.GetComponentInChildren<PartyUnit>();
                                         isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
                                         if (isUnitInterPartyDraggable)
                                         {
-                                            isLeftCellUnitInterPartyMovable = true;
+                                            isFrontCellUnitInterPartyMovable = true;
                                         }
                                         else
                                         {
-                                            isLeftCellUnitInterPartyMovable = false;
+                                            isFrontCellUnitInterPartyMovable = false;
                                         }
                                     }
-                                    if (isRightCellOccupied)
+                                    if (isBackCellOccupied)
                                     {
                                         // occupied
-                                        cellUnit = isRightCellOccupied.GetComponentInChildren<PartyUnit>();
+                                        cellUnit = isBackCellOccupied.GetComponentInChildren<PartyUnit>();
                                         isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
                                         if (isUnitInterPartyDraggable)
                                         {
-                                            isRightCellUnitInterPartyMovable = true;
+                                            isBackCellUnitInterPartyMovable = true;
                                         }
                                         else
                                         {
-                                            isRightCellUnitInterPartyMovable = false;
+                                            isBackCellUnitInterPartyMovable = false;
                                         }
                                     }
                                     // verify conditions
                                     // 00
-                                    if (!isLeftCellOccupied && !isRightCellOccupied)
+                                    if (!isFrontCellOccupied && !isBackCellOccupied)
                                     {
                                         // check destination overflow +2
                                         if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 2))
@@ -957,8 +960,8 @@ public class PartyPanel : MonoBehaviour {
                                         }
                                     }
                                     // 01/10
-                                    else if ( (!isLeftCellOccupied && (isRightCellOccupied && isRightCellUnitInterPartyMovable))
-                                      || ( (isLeftCellOccupied && isLeftCellUnitInterPartyMovable) && !isRightCellOccupied) )
+                                    else if ( (!isFrontCellOccupied && (isBackCellOccupied && isBackCellUnitInterPartyMovable))
+                                      || ( (isFrontCellOccupied && isFrontCellUnitInterPartyMovable) && !isBackCellOccupied) )
                                     {
                                         // check destination overflow +1
                                         if (otherPartyPanel.GetCapacity() < (otherPartyPanel.GetNumberOfPresentUnits() + 1))
@@ -974,7 +977,7 @@ public class PartyPanel : MonoBehaviour {
                                         }
                                     }
                                     // 11
-                                    else if ((isLeftCellOccupied && isLeftCellUnitInterPartyMovable) && (isRightCellOccupied && isRightCellUnitInterPartyMovable))
+                                    else if ((isFrontCellOccupied && isFrontCellUnitInterPartyMovable) && (isBackCellOccupied && isBackCellUnitInterPartyMovable))
                                     {
                                         // just swap
                                         isDroppable = true;
@@ -1143,7 +1146,7 @@ public class PartyPanel : MonoBehaviour {
     bool GetIsUnitFriendly(PartyUnit unitToActivate)
     {
         // method 1
-        // structure: 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanel-3[Left/Right/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
+        // structure: 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanel-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
         GameObject unitToActivatePartyPanel = unitToActivate.transform.parent.parent.parent.parent.parent.gameObject;
         if (gameObject == unitToActivatePartyPanel)
         {
@@ -1282,9 +1285,93 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    bool FrontRowHasUnitsWhichCanAct()
+    bool DoesCellHasUnitsWhichCanFight(string horisontalPanel, string cell)
     {
+        // verify if slot has an unit in it
+        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+        if (unitSlot.childCount > 0)
+        {
+            // front raw has at least one unit in it
+            // verify if unit can act: alive and did not escape (flee from) the battle
+            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+            if (unit.GetIsAlive() && !unit.GetHasEscaped())
+            {
+                return true;
+            }
+        }
         return false;
+    }
+
+    bool FrontRowHasUnitsWhichCanFight()
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cellsFront)
+            {
+                if (DoesCellHasUnitsWhichCanFight(horisontalPanel, cell))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool BackRowHasUnitsWhichCanFight()
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cellsBack)
+            {
+                if (DoesCellHasUnitsWhichCanFight(horisontalPanel, cell))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    bool HorizontalPanelHasUnitsWhichCanFight(string horisontalPanel)
+    {
+        foreach (string cell in cells)
+        {
+            if (DoesCellHasUnitsWhichCanFight(horisontalPanel, cell))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool IsActiveMeleUnitBlockedByItsPartyMembers()
+    {
+        string activeMeleUnitFrontBackWideRowPosition = activeBattleUnit.transform.parent.parent.parent.name;
+        PartyPanel activeUnitPartyPanel = activeBattleUnit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        bool isBlocked = true;
+        bool frontRowHasUnitsWhichCanFight = activeUnitPartyPanel.FrontRowHasUnitsWhichCanFight();
+        if ("Back" == activeMeleUnitFrontBackWideRowPosition)
+        {
+
+            if (frontRowHasUnitsWhichCanFight)
+            {
+                // mele unit is blocked by its own party units
+                isBlocked = true;
+            }
+            else
+            {
+                // mele unit is not blocked and can fight
+                isBlocked = false;
+            }
+        } else
+        {
+            // active unit is in a front row and cannot be blocked
+            isBlocked = false;
+        }
+        Debug.LogWarning(activeMeleUnitFrontBackWideRowPosition);
+        Debug.LogWarning(isBlocked.ToString());
+        Debug.LogWarning(frontRowHasUnitsWhichCanFight.ToString());
+        return isBlocked;
     }
 
     void PrepareBattleFieldForMelePower(bool activeUnitIsFromThisParty)
@@ -1294,46 +1381,157 @@ public class PartyPanel : MonoBehaviour {
         Color negativeColor = Color.grey;
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "";
-        string meleUnitPosition;
+        bool activeMeleUnitIsBlocked = IsActiveMeleUnitBlockedByItsPartyMembers();
+        string activeMeleUnitTopMiddleBottomPosition = activeBattleUnit.transform.parent.parent.parent.parent.name;
+        bool enemyUnitIsPotentialTarget = false;
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
             {
-                // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
+                // if active mele unit is blocked, then it cannot attack anything
+                if (activeMeleUnitIsBlocked)
                 {
-                    // Unit canvas (and unit) is present
-                    if (activeUnitIsFromThisParty)
+                    // blocked
+                    // set cannot attack error messages depending on friendly or enemy unit types
+                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                    if (unitSlot.childCount > 0)
                     {
-                        // cannot attack friendly units
-                        isAllowedToApplyPwrToThisUnit = false;
-                        errorMessage = "Cannot attack friendly units.";
-                    }
-                    else
-                    {
-                        // this is actions for enemy party
-                        // act based on the mele unit position (cell)
-                        // 4[Top/Middle/Bottom]HorizontalPanelGroup-3[Left/Right/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
-                        meleUnitPosition = activeBattleUnit.transform.parent.parent.parent.parent.name;
-                        switch (meleUnitPosition)
+                        // Unit canvas (and unit) is present
+                        if (activeUnitIsFromThisParty)
                         {
-                            case "Top":
-                                break;
-                            case "Middle":
-                                // Any unit in front row can be reached
-                                // If front row is empty, then any unit in back row can be reached
-                                break;
-                            case "Bottom":
-                                break;
-                            default:
-                                Debug.LogError("Unknown unit position [" + meleUnitPosition + "]");
-                                break;
+                            // cannot attack friendly units
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot attack friendly units.";
                         }
-                        isAllowedToApplyPwrToThisUnit = true;
-                        errorMessage = "";
+                        else
+                        {
+                            // this is actions for enemy party
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = activeBattleUnit.GetUnitName() + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
+                        }
+                        SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
                     }
-                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+                }
+                else
+                {
+                    // not blocked
+                    // verify if slot has an unit in it
+                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                    if (unitSlot.childCount > 0)
+                    {
+                        // Unit canvas (and unit) is present
+                        if (activeUnitIsFromThisParty)
+                        {
+                            // cannot attack friendly units
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot attack friendly units.";
+                        }
+                        else
+                        {
+                            // this is actions for enemy party
+                            // act based on the mele unit position (cell)
+                            // 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanelGroup-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
+                            // if mele unit is in back row, then verify if it is not blocked by front row units
+                            // verify if this enemy unit it from front row or from back row
+                            if ("Back" == cell)
+                            {
+                                // unit is from back row and it may be protected by front row units
+                                // If front row is empty, then unit in back row potentially be reached
+                                // verify if enemy front row is not empty
+                                if (FrontRowHasUnitsWhichCanFight())
+                                {
+                                    // front row has units which can fight
+                                    // this means that this unit is protected from mele atack
+                                    isAllowedToApplyPwrToThisUnit = false;
+                                    enemyUnitIsPotentialTarget = false;
+                                    errorMessage = "This enemy unit cannot be targeted, because it is protected by units in a front row.";
+                                }
+                                else
+                                {
+                                    // front does not have units which can fight
+                                    // it means that active mele unit can potentially reach enemy unit
+                                    enemyUnitIsPotentialTarget = true;
+                                }
+                            }
+                            else
+                            {
+                                // unit is from front row and potentially can be targeted
+                                enemyUnitIsPotentialTarget = true;
+                            }
+                            if (enemyUnitIsPotentialTarget)
+                            {
+                                // verify if mele unit can reach enemy unit depending on active mele unit and enemy positions
+                                switch (activeMeleUnitTopMiddleBottomPosition)
+                                {
+                                    case "Top":
+                                        // can reach closest 2 (top and middle) units
+                                        // and also farest unit (if it is not protected by top and middle) units
+                                        if ( ("Top" == horisontalPanel) || ("Middle" == horisontalPanel) )
+                                        {
+                                            isAllowedToApplyPwrToThisUnit = true;
+                                            errorMessage = "";
+                                        }
+                                        else
+                                        {
+                                            // Bottom horisontalPanel
+                                            // verify if top or middle has units, which can fight
+                                            // which means that they can protect bottom unit from mele attacks
+                                            if ( HorizontalPanelHasUnitsWhichCanFight("Top") 
+                                                || HorizontalPanelHasUnitsWhichCanFight("Middle") )
+                                            {
+                                                // unit is protected
+                                                isAllowedToApplyPwrToThisUnit = false;
+                                                errorMessage = "This unit cannot be targeted by mele attack. It is protected by unit above.";
+                                            }
+                                            else
+                                            {
+                                                // unit is not protected and can be targeted
+                                                isAllowedToApplyPwrToThisUnit = true;
+                                                errorMessage = "";
+                                            }
+                                        }
+                                        break;
+                                    case "Middle":
+                                        // Middle mele unit can reach any unit in front of it
+                                        isAllowedToApplyPwrToThisUnit = true;
+                                        errorMessage = "";
+                                        break;
+                                    case "Bottom":
+                                        // can reach closest 2 (bottom and middle) units
+                                        // and also farest unit (if it is not protected by bottom and middle) units
+                                        if (("Bottom" == horisontalPanel) || ("Middle" == horisontalPanel))
+                                        {
+                                            isAllowedToApplyPwrToThisUnit = true;
+                                            errorMessage = "";
+                                        }
+                                        else
+                                        {
+                                            // Top horisontalPanel
+                                            // verify if bottom or middle has units, which can fight
+                                            // which means that they can protect top unit from mele attacks
+                                            if (HorizontalPanelHasUnitsWhichCanFight("Bottom")
+                                                || HorizontalPanelHasUnitsWhichCanFight("Middle"))
+                                            {
+                                                // unit is protected
+                                                isAllowedToApplyPwrToThisUnit = false;
+                                                errorMessage = "This unit cannot be targeted by mele attack. It is protected by unit below.";
+                                            }
+                                            else
+                                            {
+                                                // unit is not protected and can be targeted
+                                                isAllowedToApplyPwrToThisUnit = true;
+                                                errorMessage = "";
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        Debug.LogError("Unknown unit position [" + activeMeleUnitTopMiddleBottomPosition + "]");
+                                        break;
+                                }
+                            }
+                        }
+                        SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+                    }
                 }
             }
         }
@@ -1413,7 +1611,7 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log(" HighlightActiveUnitInBattle");
         // highlight unit canvas with blue color
         Color highlightColor = Color.blue;
-        // structure: 3[Left/Right/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
+        // structure: 3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
         Transform cellTr = unitToActivate.transform.parent.parent.parent;
         Text canvasText = cellTr.Find("Br").GetComponent<Text>();
         canvasText.color = highlightColor;
@@ -1478,8 +1676,16 @@ public class PartyPanel : MonoBehaviour {
 
     public void ApplyPowersToUnit(PartyUnit dstUnit)
     {
-        Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName());
-        // in case of magic power - apply it to all units in enemy party
+        // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
+        // but still the power should be applied
+        if (dstUnit)
+        {
+            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName());
+        } else
+        {
+            // in case of magic power - apply it to all units in enemy party
+            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon whole enemy party");
+        }
     }
 
     #endregion For Battle Screen

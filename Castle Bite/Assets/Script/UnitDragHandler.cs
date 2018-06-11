@@ -15,7 +15,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // set parent panel to the top layer
         // up to the city garnizon or hero party level
         // there is no need to set city to higher level
-        // hierarchy [City]-[CityGarnizon/HeroParty]-PartyPanel-[Top/Middle/Bottom]-[Left/Right/Wide]-UnitSlot-(this)UnitCanvas
+        // hierarchy [City]-[CityGarnizon/HeroParty]-PartyPanel-[Top/Middle/Bottom]-[Front/Back/Wide]-UnitSlot-(this)UnitCanvas
         transform.parent.SetAsLastSibling(); // unit slot
         transform.parent.parent.SetAsLastSibling(); // left/right/wide panel
         transform.parent.parent.parent.SetAsLastSibling(); // Top/Middle/Bottom panel
@@ -25,7 +25,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     City GetParentCity()
     {
-        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Left/Right/Wide]Panel-UnitSlot-(this)UnitCanvas
+        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-UnitSlot-(this)UnitCanvas
         return transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
     }
 

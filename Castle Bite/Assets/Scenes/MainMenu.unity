@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 5445624}
   - component: {fileID: 5445623}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4999,7 +4999,7 @@ GameObject:
   - component: {fileID: 194092608}
   - component: {fileID: 194092607}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7613,7 +7613,7 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1270522537}
+    m_TransformParent: {fileID: 1373725775}
     m_Modifications:
     - target: {fileID: 224112313859787072, guid: ec18c120febaa3e43872b7a62dc9e8ea,
         type: 2}
@@ -10263,6 +10263,30 @@ Prefab:
       propertyPath: m_Name
       value: HeroParty
       objectReference: {fileID: 0}
+    - target: {fileID: 1143896185337706, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
+      propertyPath: m_Name
+      value: Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 1573339490976188, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
+      propertyPath: m_Name
+      value: Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 1579017378324662, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
+      propertyPath: m_Name
+      value: Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 1376652004498344, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
+      propertyPath: m_Name
+      value: Front
+      objectReference: {fileID: 0}
+    - target: {fileID: 1553331859754780, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
+      propertyPath: m_Name
+      value: Front
+      objectReference: {fileID: 0}
+    - target: {fileID: 1715517906977970, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
+      propertyPath: m_Name
+      value: Front
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 52ae3a0d3e4463e4fb4e9595fa3c5734, type: 2}
   m_IsPrefabParent: 0
@@ -10360,7 +10384,7 @@ GameObject:
   - component: {fileID: 387154139}
   - component: {fileID: 387154138}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10577,7 +10601,7 @@ GameObject:
   - component: {fileID: 389925348}
   - component: {fileID: 389925350}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11923,7 +11947,7 @@ GameObject:
   - component: {fileID: 416436445}
   - component: {fileID: 416436447}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12433,7 +12457,7 @@ GameObject:
   - component: {fileID: 438534151}
   - component: {fileID: 438534153}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14996,7 +15020,7 @@ GameObject:
   - component: {fileID: 502771462}
   - component: {fileID: 502771464}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15247,7 +15271,7 @@ GameObject:
   - component: {fileID: 512533643}
   - component: {fileID: 512533645}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19432,7 +19456,7 @@ GameObject:
   - component: {fileID: 684787774}
   - component: {fileID: 684787776}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26063,7 +26087,7 @@ GameObject:
   - component: {fileID: 942229471}
   - component: {fileID: 942229470}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27415,7 +27439,7 @@ GameObject:
   - component: {fileID: 977196791}
   - component: {fileID: 977196793}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35561,8 +35585,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 949937961}
+  m_Children: []
   m_Father: {fileID: 942229469}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -37430,7 +37453,7 @@ GameObject:
   - component: {fileID: 1322399677}
   - component: {fileID: 1322399676}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39070,7 +39093,8 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 949937961}
   m_Father: {fileID: 5445622}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -42035,7 +42059,7 @@ GameObject:
   - component: {fileID: 1476096180}
   - component: {fileID: 1476096182}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50302,7 +50326,7 @@ GameObject:
   - component: {fileID: 1777624770}
   - component: {fileID: 1777624772}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -53306,7 +53330,7 @@ GameObject:
   - component: {fileID: 1866670160}
   - component: {fileID: 1866670162}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58132,7 +58156,7 @@ GameObject:
   - component: {fileID: 2023468976}
   - component: {fileID: 2023468975}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59054,7 +59078,7 @@ GameObject:
   - component: {fileID: 2037740491}
   - component: {fileID: 2037740493}
   m_Layer: 5
-  m_Name: Right
+  m_Name: Front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -61900,7 +61924,7 @@ GameObject:
   - component: {fileID: 2120607940}
   - component: {fileID: 2120607942}
   m_Layer: 5
-  m_Name: Left
+  m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
