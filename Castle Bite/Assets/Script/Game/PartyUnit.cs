@@ -3,54 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PartyUnit : MonoBehaviour {
-    [SerializeField]
-    int cost;
-    [SerializeField]
-    int healthCurr;
-    [SerializeField]
-    int healthMax;
-    [SerializeField]
-    bool isLeader;
-    [SerializeField]
-    string unitName;
-    [SerializeField]
-    string givenName;
-    [SerializeField]
-    int unitLevel;
-    [SerializeField]
-    int unitLeadership;
-    [SerializeField]
-    string unitRole;
-    [SerializeField]
-    string unitBriefDescription;
-    [SerializeField]
-    string unitFullDescription;
-    [SerializeField]
-    bool isInterpartyMovable;
-    [SerializeField]
-    bool isDismissable;
-    [SerializeField]
-    bool isAlive = true;
-    [SerializeField]
-    bool hasEscaped = false;
-    [SerializeField]
-    bool hasMoved = false;
-    [SerializeField]
-    int initiative = 10;
-
-
-
-    public enum UnitType {
+    // Custom types
+    public enum UnitType
+    {
         CapitalGuard,
         Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer,
         Orc, Goblin, Ogre, Cyclop, Troll,
-        Unknown };
-    public UnitType unitType;
+        Unknown
+    };
 
-    public enum UnitSize { Single, Double };
-    public UnitSize unitSize;
+    public enum UnitSize {
+        Single,
+        Double
+    };
 
-    public enum UnitPower {
+    public enum UnitAbility
+    {
         ThrowRock,          // Greenskin Cyclop
         StompWithFoot,      // Greenskin Ogre
         CutWithAxe,         // Greenskin Orc
@@ -66,11 +34,9 @@ public class PartyUnit : MonoBehaviour {
         ShootWithBow,       // Dominion Archer
         Heal,               // Dominion Priest
         BlowWithMaul,       // Dominion Colossus
-        CastChainLightning,    // Dominion Mage
+        CastChainLightning, // Dominion Mage
         None
     };
-    [SerializeField]
-    UnitPower unitPower;
 
     public enum UnitPowerSource
     {
@@ -83,19 +49,155 @@ public class PartyUnit : MonoBehaviour {
         Pure,       // Cannot be resisted
         None
     }
+
+    public enum UnitPowerDistance
+    {
+        Mele,
+        Ranged
+    }
+
+    public enum UnitPowerScope
+    {
+        OneUnit,
+        EntireParty
+    }
+
+    // Misc attributes
+    [SerializeField]
+    string unitName;
+    [SerializeField]
+    UnitType unitType;
+    // Leader attributes
+    [SerializeField]
+    bool isLeader;
+    [SerializeField]
+    int unitLeadership;
+    [SerializeField]
+    string givenName;
+    // Level and experience
+    [SerializeField]
+    int unitLevel;
+    [SerializeField]
+    int unitExperience;
+    [SerializeField]
+    int unitExperienceReward;
+    // Defensive attributes
+    [SerializeField]
+    int healthCurr;
+    [SerializeField]
+    int healthMax;
+    [SerializeField]
+    bool isAlive = true;
+    [SerializeField]
+    int unitDefence;
+    [SerializeField]
+    UnitPowerSource[] unitResistances;
+    [SerializeField]
+    UnitPowerSource[] unitImmunities;
+    // Offensive attributes
+    [SerializeField]
+    UnitAbility unitAbility;
+    [SerializeField]
+    int unitPower;
     [SerializeField]
     UnitPowerSource unitPowerSource;
+    [SerializeField]
+    UnitPowerDistance unitPowerDistance;
+    [SerializeField]
+    UnitPowerScope unitPowerScope;
+    [SerializeField]
+    int initiative = 10;
+    // Misc Description
+    [SerializeField]
+    string unitRole;
+    [SerializeField]
+    string unitBriefDescription;
+    [SerializeField]
+    string unitFullDescription;
+    // Misc Battle attributes
+    [SerializeField]
+    bool hasEscaped = false;
+    [SerializeField]
+    bool hasMoved = false;
+    // Misc hire and edit unit attributes
+    [SerializeField]
+    int cost;
+    [SerializeField]
+    UnitSize unitSize;
+    [SerializeField]
+    bool isInterpartyMovable;
+    [SerializeField]
+    bool isDismissable;
 
 
-
-    public UnitPower GetPower()
+    public int GetPower()
     {
         return unitPower;
     }
 
-    public void SetPower(UnitPower value)
+    public void SetPower(int value)
     {
         unitPower = value;
+    }
+
+    public int GetExperienceReward()
+    {
+        return unitExperienceReward;
+    }
+
+    public void SetExperienceReward(int value)
+    {
+        unitExperienceReward = value;
+    }
+
+    public int GetExperience()
+    {
+        return unitExperience;
+    }
+
+    public void SetExperience(int value)
+    {
+        unitExperience = value;
+    }
+
+    public int GetDefence()
+    {
+        return unitDefence;
+    }
+
+    public void SetDefence(int value)
+    {
+        unitDefence = value;
+    }
+
+    public UnitAbility GetAbility()
+    {
+        return unitAbility;
+    }
+
+    public void SetAbility(UnitAbility value)
+    {
+        unitAbility = value;
+    }
+
+    public UnitPowerDistance GetPowerDistance()
+    {
+        return unitPowerDistance;
+    }
+
+    public void SetPowerDistance(UnitPowerDistance value)
+    {
+        unitPowerDistance = value;
+    }
+
+    public UnitPowerScope GetPowerScope()
+    {
+        return unitPowerScope;
+    }
+
+    public void SetPowerScope(UnitPowerScope value)
+    {
+        unitPowerScope = value;
     }
 
     public UnitPowerSource GetPowerSource()
@@ -106,6 +208,26 @@ public class PartyUnit : MonoBehaviour {
     public void SetPowerSource(UnitPowerSource value)
     {
         unitPowerSource = value;
+    }
+
+    public UnitPowerSource[] GetResistances()
+    {
+        return unitResistances;
+    }
+
+    public void SetResistances(UnitPowerSource[] value)
+    {
+        unitResistances = value;
+    }
+
+    public UnitPowerSource[] GetImmunities()
+    {
+        return unitImmunities;
+    }
+
+    public void SetImmunities(UnitPowerSource[] value)
+    {
+        unitImmunities = value;
     }
 
     public void SetCost(int requiredCost)

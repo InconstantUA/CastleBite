@@ -1629,36 +1629,36 @@ public class PartyPanel : MonoBehaviour {
         bool activeUnitIsFromThisParty = GetIsUnitFriendly(unitToActivate);
         // defined below how actions applied to the friendly and enemy units
         // based on the active unit powers
-        switch (unitToActivate.GetPower())
+        switch (unitToActivate.GetAbility())
         {
             // Helping or buf powers
-            case PartyUnit.UnitPower.Heal:
+            case PartyUnit.UnitAbility.Heal:
                 PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
                 break;
-            case PartyUnit.UnitPower.Resurect:
+            case PartyUnit.UnitAbility.Resurect:
                 PrepareBattleFieldForResurectPower(activeUnitIsFromThisParty);
                 break;
             // Mele attack powers
-            case PartyUnit.UnitPower.BlowWithGreatSword:
-            case PartyUnit.UnitPower.BlowWithMaul:
-            case PartyUnit.UnitPower.CutWithAxe:
-            case PartyUnit.UnitPower.CutWithDagger:
-            case PartyUnit.UnitPower.SlashWithSword:
-            case PartyUnit.UnitPower.StabWithDagger:
-            case PartyUnit.UnitPower.StompWithFoot:
+            case PartyUnit.UnitAbility.BlowWithGreatSword:
+            case PartyUnit.UnitAbility.BlowWithMaul:
+            case PartyUnit.UnitAbility.CutWithAxe:
+            case PartyUnit.UnitAbility.CutWithDagger:
+            case PartyUnit.UnitAbility.SlashWithSword:
+            case PartyUnit.UnitAbility.StabWithDagger:
+            case PartyUnit.UnitAbility.StompWithFoot:
                 PrepareBattleFieldForMelePower(activeUnitIsFromThisParty);
                 break;
             // Ranged attack powers
-            case PartyUnit.UnitPower.ShootWithBow:
-            case PartyUnit.UnitPower.ShootWithCompoudBow:
-            case PartyUnit.UnitPower.ThrowSpear:
-            case PartyUnit.UnitPower.ThrowRock:
+            case PartyUnit.UnitAbility.ShootWithBow:
+            case PartyUnit.UnitAbility.ShootWithCompoudBow:
+            case PartyUnit.UnitAbility.ThrowSpear:
+            case PartyUnit.UnitAbility.ThrowRock:
                 PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
                 break;
             // Magic (including pure) attack powers
-            case PartyUnit.UnitPower.CastChainLightning:
-            case PartyUnit.UnitPower.CastLightningStorm:
-            case PartyUnit.UnitPower.HolyWord:
+            case PartyUnit.UnitAbility.CastChainLightning:
+            case PartyUnit.UnitAbility.CastLightningStorm:
+            case PartyUnit.UnitAbility.HolyWord:
                 PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
                 break;
             default:
