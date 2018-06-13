@@ -52,8 +52,8 @@ MonoBehaviour:
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
-  unitAbility: 0
-  unitPower: 8
+  unitAbility: 8
+  unitPower: 30
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0

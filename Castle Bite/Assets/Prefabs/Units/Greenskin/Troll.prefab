@@ -38,28 +38,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 500
-  healthCurr: 55
-  healthMax: 55
-  isLeader: 0
   unitName: Troll
+  unitType: 15
+  isLeader: 0
+  unitLeadership: 0
   givenName: Troll
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 55
+  healthMax: 55
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 4
+  unitPower: 25
+  unitPowerSource: 0
+  unitPowerDistance: 1
+  unitPowerScope: 0
+  initiative: 45
   unitRole: Weak ranged fighter
   unitBriefDescription: 
   unitFullDescription: Trolls are tall skinny humanoids with long noses, rubbery skin.
     Use spear to hit his enemies from the distance.
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 45
-  unitType: 15
+  cost: 500
   unitSize: 0
-  unitPower: 0
-  unitPowerSource: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224086146622810032
 RectTransform:
   m_ObjectHideFlags: 1

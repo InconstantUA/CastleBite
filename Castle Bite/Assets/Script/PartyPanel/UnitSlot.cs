@@ -291,6 +291,12 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             // it is allowed to apply powers to the unit in this cell
             GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnit>());
+            // set unit has moved flag
+            BattleScreen battleScreen = GetParentBattleScreen();
+            PartyUnit activeUnit = battleScreen.GetActiveUnit();
+            activeUnit.SetHasMoved(true);
+            // activate next unit
+            battleScreen.ActivateNextUnit();
         }
         else
         {

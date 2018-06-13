@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 45
-  healthCurr: 45
-  healthMax: 45
-  isLeader: 0
   unitName: Priest
+  unitType: 8
+  isLeader: 0
+  unitLeadership: 0
   givenName: Priest
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 45
+  healthMax: 45
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 13
+  unitPower: 35
+  unitPowerSource: 5
+  unitPowerDistance: 1
+  unitPowerScope: 0
+  initiative: 10
   unitRole: Heals other members
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 10
-  unitType: 8
+  cost: 45
   unitSize: 0
-  unitPower: 13
-  unitPowerSource: 5
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224042856222307680
 RectTransform:
   m_ObjectHideFlags: 1

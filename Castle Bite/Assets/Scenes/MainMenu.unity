@@ -24919,27 +24919,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
-  healthCurr: 900
-  healthMax: 1100
-  isLeader: 1
   unitName: Capital guard
+  unitType: 0
+  isLeader: 1
+  unitLeadership: 0
   givenName: Lahabiel
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 900
+  healthMax: 1100
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 0
+  unitPower: 0
+  unitPowerSource: 0
+  unitPowerDistance: 0
+  unitPowerScope: 0
+  initiative: 10
   unitRole: Protects Dominion Capital
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 0
-  isDismissable: 0
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 10
-  unitType: 0
+  cost: 0
   unitSize: 0
-  unitPower: 0
-  unitPowerSource: 0
+  isInterpartyMovable: 0
+  isDismissable: 0
 --- !u!1 &919928147
 GameObject:
   m_ObjectHideFlags: 0
@@ -28528,7 +28536,7 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 847233949}
+    m_TransformParent: {fileID: 1822248701}
     m_Modifications:
     - target: {fileID: 224051042000359588, guid: aa2a23afe7821a14b91d63ac11ccbc55,
         type: 2}
@@ -28573,7 +28581,7 @@ Prefab:
     - target: {fileID: 224051042000359588, guid: aa2a23afe7821a14b91d63ac11ccbc55,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -50
+      value: 63
       objectReference: {fileID: 0}
     - target: {fileID: 224051042000359588, guid: aa2a23afe7821a14b91d63ac11ccbc55,
         type: 2}
@@ -32302,7 +32310,7 @@ Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1822248701}
+    m_TransformParent: {fileID: 847233949}
     m_Modifications:
     - target: {fileID: 224086146622810032, guid: 762cea7ea0acc3940bb6eebb72046ef5,
         type: 2}
@@ -32347,7 +32355,7 @@ Prefab:
     - target: {fileID: 224086146622810032, guid: 762cea7ea0acc3940bb6eebb72046ef5,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -50
+      value: -163
       objectReference: {fileID: 0}
     - target: {fileID: 224086146622810032, guid: 762cea7ea0acc3940bb6eebb72046ef5,
         type: 2}

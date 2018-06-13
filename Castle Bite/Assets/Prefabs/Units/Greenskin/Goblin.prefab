@@ -38,28 +38,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 100
-  healthCurr: 60
-  healthMax: 60
-  isLeader: 0
   unitName: Goblin
+  unitType: 11
+  isLeader: 0
+  unitLeadership: 0
   givenName: Goblin
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 60
+  healthMax: 60
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 3
+  unitPower: 20
+  unitPowerSource: 0
+  unitPowerDistance: 0
+  unitPowerScope: 0
+  initiative: 40
   unitRole: Front line weak mele fighter
   unitBriefDescription: 
   unitFullDescription: Goblins are small and grotesque, mischievous or outright malicious,
     and greedy, especially for gold and jewelry.
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 40
-  unitType: 11
+  cost: 100
   unitSize: 0
-  unitPower: 0
-  unitPowerSource: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224051042000359588
 RectTransform:
   m_ObjectHideFlags: 1

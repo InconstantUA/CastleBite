@@ -32,7 +32,8 @@ public class PartyUnit : MonoBehaviour {
         CastLightningStorm, // Dominion Archmage leader
         SlashWithSword,     // Dominion Swordsman
         ShootWithBow,       // Dominion Archer
-        Heal,               // Dominion Priest
+        HealingWord,        // Dominion Priest
+        HealingSong,        // Dominion ?
         BlowWithMaul,       // Dominion Colossus
         CastChainLightning, // Dominion Mage
         None

@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 45
-  healthCurr: 40
-  healthMax: 40
-  isLeader: 0
   unitName: Archer
+  unitType: 10
+  isLeader: 0
+  unitLeadership: 0
   givenName: Archer
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 40
+  healthMax: 40
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 12
+  unitPower: 30
+  unitPowerSource: 0
+  unitPowerDistance: 1
+  unitPowerScope: 0
+  initiative: 65
   unitRole: Attacks from distance
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 65
-  unitType: 10
+  cost: 45
   unitSize: 0
-  unitPower: 12
-  unitPowerSource: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224655907163409020
 RectTransform:
   m_ObjectHideFlags: 1

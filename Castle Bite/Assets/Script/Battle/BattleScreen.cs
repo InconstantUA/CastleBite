@@ -170,7 +170,7 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
-    bool ActivateNextUnit()
+    public bool ActivateNextUnit()
     {
         Debug.Log("ActivateNextUnit");
         bool canActivate = false;

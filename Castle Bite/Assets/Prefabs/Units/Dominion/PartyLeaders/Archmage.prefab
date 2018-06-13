@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 550
-  healthCurr: 70
-  healthMax: 70
-  isLeader: 1
   unitName: Archmage
+  unitType: 2
+  isLeader: 1
+  unitLeadership: 3
   givenName: Aron
   unitLevel: 1
-  unitLeadership: 3
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 70
+  healthMax: 70
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 10
+  unitPower: 40
+  unitPowerSource: 1
+  unitPowerDistance: 1
+  unitPowerScope: 1
+  initiative: 350
   unitRole: Mage Leader
   unitBriefDescription: Has magic attack that hit all enemy units.
   unitFullDescription: 
-  isInterpartyMovable: 0
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 35
-  unitType: 2
+  cost: 550
   unitSize: 0
-  unitPower: 10
-  unitPowerSource: 1
+  isInterpartyMovable: 0
+  isDismissable: 1
 --- !u!224 &224658346894969760
 RectTransform:
   m_ObjectHideFlags: 1

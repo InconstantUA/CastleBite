@@ -38,28 +38,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 300
-  healthCurr: 250
-  healthMax: 250
-  isLeader: 0
   unitName: Orc
+  unitType: 11
+  isLeader: 0
+  unitLeadership: 0
   givenName: Orc
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 250
+  healthMax: 250
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 2
+  unitPower: 80
+  unitPowerSource: 0
+  unitPowerDistance: 0
+  unitPowerScope: 0
+  initiative: 35
   unitRole: Front line strong and durable mele fighter
   unitBriefDescription: 
   unitFullDescription: Orcs are a brutish, aggressive, repulsive and generally malevolent
     species.
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 35
-  unitType: 11
+  cost: 300
   unitSize: 0
-  unitPower: 0
-  unitPowerSource: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224037969209454766
 RectTransform:
   m_ObjectHideFlags: 1

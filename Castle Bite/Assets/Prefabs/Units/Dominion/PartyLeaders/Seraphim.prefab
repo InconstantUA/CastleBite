@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 350
-  healthCurr: 110
-  healthMax: 110
-  isLeader: 1
   unitName: Seraphim
+  unitType: 3
+  isLeader: 1
+  unitLeadership: 1
   givenName: Lahabiel
   unitLevel: 1
-  unitLeadership: 1
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 110
+  healthMax: 110
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 9
+  unitPower: 50
+  unitPowerSource: 5
+  unitPowerDistance: 0
+  unitPowerScope: 0
+  initiative: 100
   unitRole: Earth control
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 0
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 100
-  unitType: 3
+  cost: 350
   unitSize: 0
-  unitPower: 9
-  unitPowerSource: 5
+  isInterpartyMovable: 0
+  isDismissable: 1
 --- !u!224 &224476769774727542
 RectTransform:
   m_ObjectHideFlags: 1

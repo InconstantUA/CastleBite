@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 550
-  healthCurr: 160
-  healthMax: 160
-  isLeader: 1
   unitName: Knight
+  unitType: 0
+  isLeader: 1
+  unitLeadership: 3
   givenName: Ares
   unitLevel: 1
-  unitLeadership: 3
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 100
+  healthMax: 160
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 6
+  unitPower: 60
+  unitPowerSource: 0
+  unitPowerDistance: 0
+  unitPowerScope: 0
+  initiative: 55
   unitRole: Fighter Leader
   unitBriefDescription: Strong and durable mele fighter.
   unitFullDescription: 
-  isInterpartyMovable: 0
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 60
-  unitType: 0
+  cost: 550
   unitSize: 0
-  unitPower: 6
-  unitPowerSource: 0
+  isInterpartyMovable: 0
+  isDismissable: 1
 --- !u!224 &224364017913245646
 RectTransform:
   m_ObjectHideFlags: 1

@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
-  healthCurr: 1100
-  healthMax: 1100
-  isLeader: 1
   unitName: Capital guard
+  unitType: 0
+  isLeader: 1
+  unitLeadership: 0
   givenName: Lahabiel
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 1100
+  healthMax: 1100
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 5
+  unitPower: 300
+  unitPowerSource: 6
+  unitPowerDistance: 1
+  unitPowerScope: 1
+  initiative: 95
   unitRole: Protects Dominion Capital
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 0
-  isDismissable: 0
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 95
-  unitType: 0
+  cost: 0
   unitSize: 0
-  unitPower: 5
-  unitPowerSource: 6
+  isInterpartyMovable: 0
+  isDismissable: 0
 --- !u!224 &224611576928189082
 RectTransform:
   m_ObjectHideFlags: 1

@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 65
-  healthCurr: 30
-  healthMax: 30
-  isLeader: 0
   unitName: Mage
+  unitType: 7
+  isLeader: 0
+  unitLeadership: 0
   givenName: Mage
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 30
+  healthMax: 30
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 16
+  unitPower: 20
+  unitPowerSource: 1
+  unitPowerDistance: 1
+  unitPowerScope: 1
+  initiative: 35
   unitRole: Attacks with magic
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 35
-  unitType: 7
+  cost: 65
   unitSize: 0
-  unitPower: 15
-  unitPowerSource: 1
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224952783989266610
 RectTransform:
   m_ObjectHideFlags: 1

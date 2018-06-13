@@ -1071,9 +1071,12 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // verify if unit has moved or not
+                    // verify if 
+                    //  - unit has moved or not
+                    //  - unit is alive
+                    //  - unit has not escaped from the battle
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    if (!unit.GetHasMoved())
+                    if (!unit.GetHasMoved() && unit.GetIsAlive() && !unit.GetHasEscaped())
                     {
                         // compare initiative with other unit, if it was found
                         if (unitWithHighestInitiative)
@@ -1212,17 +1215,22 @@ public class PartyPanel : MonoBehaviour {
                         // highlight units which can be healed
                         // verify if unit is damaged
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                        if (unit.GetHealthCurr() < unit.GetHealthMax())
+                        if ( ( unit.GetHealthCurr() < unit.GetHealthMax() ) && unit.GetIsAlive())
                         {
                             // unit can be healed
                             isAllowedToApplyPwrToThisUnit = true;
                             errorMessage = "";
                         }
-                        else
+                        else if ((unit.GetHealthCurr() == unit.GetHealthMax()) && unit.GetIsAlive())
                         {
                             // unit cannot be healed
                             isAllowedToApplyPwrToThisUnit = false;
                             errorMessage = "Cannot heal this unit. Unit health is already full.";
+                        } else if (!unit.GetIsAlive())
+                        {
+                            // unit is dead
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot heal dead units. This unit should be first resurected.";
                         }
                     }
                     else
@@ -1368,9 +1376,9 @@ public class PartyPanel : MonoBehaviour {
             // active unit is in a front row and cannot be blocked
             isBlocked = false;
         }
-        Debug.LogWarning(activeMeleUnitFrontBackWideRowPosition);
-        Debug.LogWarning(isBlocked.ToString());
-        Debug.LogWarning(frontRowHasUnitsWhichCanFight.ToString());
+        // Debug.LogWarning(activeMeleUnitFrontBackWideRowPosition);
+        // Debug.LogWarning(isBlocked.ToString());
+        // Debug.LogWarning(frontRowHasUnitsWhichCanFight.ToString());
         return isBlocked;
     }
 
@@ -1415,7 +1423,7 @@ public class PartyPanel : MonoBehaviour {
                 else
                 {
                     // not blocked
-                    // verify if slot has an unit in it
+                    // verify if destination slot has an unit in it
                     Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                     if (unitSlot.childCount > 0)
                     {
@@ -1428,105 +1436,117 @@ public class PartyPanel : MonoBehaviour {
                         }
                         else
                         {
-                            // this is actions for enemy party
-                            // act based on the mele unit position (cell)
-                            // 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanelGroup-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
-                            // if mele unit is in back row, then verify if it is not blocked by front row units
-                            // verify if this enemy unit it from front row or from back row
-                            if ("Back" == cell)
+                            // first filter out dead units
+                            // get unit for later checks
+                            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                            if (!unit.GetIsAlive())
                             {
-                                // unit is from back row and it may be protected by front row units
-                                // If front row is empty, then unit in back row potentially be reached
-                                // verify if enemy front row is not empty
-                                if (FrontRowHasUnitsWhichCanFight())
-                                {
-                                    // front row has units which can fight
-                                    // this means that this unit is protected from mele atack
-                                    isAllowedToApplyPwrToThisUnit = false;
-                                    enemyUnitIsPotentialTarget = false;
-                                    errorMessage = "This enemy unit cannot be targeted, because it is protected by units in a front row.";
-                                }
-                                else
-                                {
-                                    // front does not have units which can fight
-                                    // it means that active mele unit can potentially reach enemy unit
-                                    enemyUnitIsPotentialTarget = true;
-                                }
+                                // cannot attack dead units
+                                isAllowedToApplyPwrToThisUnit = false;
+                                errorMessage = "Cannot attack dead units.";
                             }
                             else
                             {
-                                // unit is from front row and potentially can be targeted
-                                enemyUnitIsPotentialTarget = true;
-                            }
-                            if (enemyUnitIsPotentialTarget)
-                            {
-                                // verify if mele unit can reach enemy unit depending on active mele unit and enemy positions
-                                switch (activeMeleUnitTopMiddleBottomPosition)
+                                // this is actions for enemy party
+                                // act based on the mele unit position (cell)
+                                // 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanelGroup-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
+                                // if mele unit is in back row, then verify if it is not blocked by front row units
+                                // verify if this enemy unit it from front row or from back row
+                                if ("Back" == cell)
                                 {
-                                    case "Top":
-                                        // can reach closest 2 (top and middle) units
-                                        // and also farest unit (if it is not protected by top and middle) units
-                                        if ( ("Top" == horisontalPanel) || ("Middle" == horisontalPanel) )
-                                        {
-                                            isAllowedToApplyPwrToThisUnit = true;
-                                            errorMessage = "";
-                                        }
-                                        else
-                                        {
-                                            // Bottom horisontalPanel
-                                            // verify if top or middle has units, which can fight
-                                            // which means that they can protect bottom unit from mele attacks
-                                            if ( HorizontalPanelHasUnitsWhichCanFight("Top") 
-                                                || HorizontalPanelHasUnitsWhichCanFight("Middle") )
+                                    // unit is from back row and it may be protected by front row units
+                                    // If front row is empty, then unit in back row potentially be reached
+                                    // verify if enemy front row is not empty
+                                    if (FrontRowHasUnitsWhichCanFight())
+                                    {
+                                        // front row has units which can fight
+                                        // this means that this unit is protected from mele atack
+                                        isAllowedToApplyPwrToThisUnit = false;
+                                        enemyUnitIsPotentialTarget = false;
+                                        errorMessage = "This enemy unit cannot be targeted, because it is protected by units in a front row.";
+                                    }
+                                    else
+                                    {
+                                        // front does not have units which can fight
+                                        // it means that active mele unit can potentially reach enemy unit
+                                        enemyUnitIsPotentialTarget = true;
+                                    }
+                                }
+                                else
+                                {
+                                    // unit is from front row and potentially can be targeted
+                                    enemyUnitIsPotentialTarget = true;
+                                }
+                                if (enemyUnitIsPotentialTarget)
+                                {
+                                    // verify if mele unit can reach enemy unit depending on active mele unit and enemy positions
+                                    switch (activeMeleUnitTopMiddleBottomPosition)
+                                    {
+                                        case "Top":
+                                            // can reach closest 2 (top and middle) units
+                                            // and also farest unit (if it is not protected by top and middle) units
+                                            if (("Top" == horisontalPanel) || ("Middle" == horisontalPanel))
                                             {
-                                                // unit is protected
-                                                isAllowedToApplyPwrToThisUnit = false;
-                                                errorMessage = "This unit cannot be targeted by mele attack. It is protected by unit above.";
-                                            }
-                                            else
-                                            {
-                                                // unit is not protected and can be targeted
                                                 isAllowedToApplyPwrToThisUnit = true;
                                                 errorMessage = "";
                                             }
-                                        }
-                                        break;
-                                    case "Middle":
-                                        // Middle mele unit can reach any unit in front of it
-                                        isAllowedToApplyPwrToThisUnit = true;
-                                        errorMessage = "";
-                                        break;
-                                    case "Bottom":
-                                        // can reach closest 2 (bottom and middle) units
-                                        // and also farest unit (if it is not protected by bottom and middle) units
-                                        if (("Bottom" == horisontalPanel) || ("Middle" == horisontalPanel))
-                                        {
-                                            isAllowedToApplyPwrToThisUnit = true;
-                                            errorMessage = "";
-                                        }
-                                        else
-                                        {
-                                            // Top horisontalPanel
-                                            // verify if bottom or middle has units, which can fight
-                                            // which means that they can protect top unit from mele attacks
-                                            if (HorizontalPanelHasUnitsWhichCanFight("Bottom")
-                                                || HorizontalPanelHasUnitsWhichCanFight("Middle"))
-                                            {
-                                                // unit is protected
-                                                isAllowedToApplyPwrToThisUnit = false;
-                                                errorMessage = "This unit cannot be targeted by mele attack. It is protected by unit below.";
-                                            }
                                             else
                                             {
-                                                // unit is not protected and can be targeted
+                                                // Bottom horisontalPanel
+                                                // verify if top or middle has units, which can fight
+                                                // which means that they can protect bottom unit from mele attacks
+                                                if (HorizontalPanelHasUnitsWhichCanFight("Top")
+                                                    || HorizontalPanelHasUnitsWhichCanFight("Middle"))
+                                                {
+                                                    // unit is protected
+                                                    isAllowedToApplyPwrToThisUnit = false;
+                                                    errorMessage = "This unit cannot be targeted by mele attack. It is protected by unit above.";
+                                                }
+                                                else
+                                                {
+                                                    // unit is not protected and can be targeted
+                                                    isAllowedToApplyPwrToThisUnit = true;
+                                                    errorMessage = "";
+                                                }
+                                            }
+                                            break;
+                                        case "Middle":
+                                            // Middle mele unit can reach any unit in front of it
+                                            isAllowedToApplyPwrToThisUnit = true;
+                                            errorMessage = "";
+                                            break;
+                                        case "Bottom":
+                                            // can reach closest 2 (bottom and middle) units
+                                            // and also farest unit (if it is not protected by bottom and middle) units
+                                            if (("Bottom" == horisontalPanel) || ("Middle" == horisontalPanel))
+                                            {
                                                 isAllowedToApplyPwrToThisUnit = true;
                                                 errorMessage = "";
                                             }
-                                        }
-                                        break;
-                                    default:
-                                        Debug.LogError("Unknown unit position [" + activeMeleUnitTopMiddleBottomPosition + "]");
-                                        break;
+                                            else
+                                            {
+                                                // Top horisontalPanel
+                                                // verify if bottom or middle has units, which can fight
+                                                // which means that they can protect top unit from mele attacks
+                                                if (HorizontalPanelHasUnitsWhichCanFight("Bottom")
+                                                    || HorizontalPanelHasUnitsWhichCanFight("Middle"))
+                                                {
+                                                    // unit is protected
+                                                    isAllowedToApplyPwrToThisUnit = false;
+                                                    errorMessage = "This unit cannot be targeted by mele attack. It is protected by unit below.";
+                                                }
+                                                else
+                                                {
+                                                    // unit is not protected and can be targeted
+                                                    isAllowedToApplyPwrToThisUnit = true;
+                                                    errorMessage = "";
+                                                }
+                                            }
+                                            break;
+                                        default:
+                                            Debug.LogError("Unknown unit position [" + activeMeleUnitTopMiddleBottomPosition + "]");
+                                            break;
+                                    }
                                 }
                             }
                         }
@@ -1553,20 +1573,31 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
+                    // get unit for later checks
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // Unit canvas (and unit) is present
                     if (activeUnitIsFromThisParty)
                     {
                         // cannot attack friendly units
                         isAllowedToApplyPwrToThisUnit = false;
                         errorMessage = "Cannot attack friendly units.";
-                    }
-                    else
+                    } else
                     {
-                        // this is actions for enemy party
-                        // ranged units can reach any unit
-                        // so all enemy units can be targeted
-                        isAllowedToApplyPwrToThisUnit = true;
-                        errorMessage = "";
+                        // these are actions for enemy party
+                        if (!unit.GetIsAlive())
+                        {
+                            // cannot attack dead units
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot attack dead units.";
+                        }
+                        else
+                        {
+                            // alive enemy unit
+                            // ranged units can reach any unit
+                            // so all enemy units can be targeted
+                            isAllowedToApplyPwrToThisUnit = true;
+                            errorMessage = "";
+                        }
                     }
                     SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
                 }
@@ -1595,11 +1626,28 @@ public class PartyPanel : MonoBehaviour {
                 }
                 else
                 {
-                    // this is actions for enemy party
-                    // ranged units can reach any unit
-                    // so all enemy units can be targeted
-                    isAllowedToApplyPwrToThisUnit = true;
-                    errorMessage = "";
+                    // verify if slot has an unit in it
+                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                    if (unitSlot.childCount > 0)
+                    {
+                        // get unit for later checks
+                        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        // these are actions for enemy party
+                        if (!unit.GetIsAlive())
+                        {
+                            // cannot attack dead units
+                            isAllowedToApplyPwrToThisUnit = false;
+                            errorMessage = "Cannot attack dead units.";
+                        }
+                        else
+                        {
+                            // alive enemy unit
+                            // ranged units can reach any unit
+                            // so all enemy units can be targeted
+                            isAllowedToApplyPwrToThisUnit = true;
+                            errorMessage = "";
+                        }
+                    }
                 }
                 SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
             }
@@ -1632,7 +1680,8 @@ public class PartyPanel : MonoBehaviour {
         switch (unitToActivate.GetAbility())
         {
             // Helping or buf powers
-            case PartyUnit.UnitAbility.Heal:
+            case PartyUnit.UnitAbility.HealingWord:
+            case PartyUnit.UnitAbility.HealingSong:
                 PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
                 break;
             case PartyUnit.UnitAbility.Resurect:
@@ -1674,17 +1723,173 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    void ApplyHealPowerToSingleUnit(PartyUnit dstUnit)
+    {
+        Debug.Log("ApplyHealPowerToSingleUnit");
+        // heal destination unit
+        int healthAfterHeal = dstUnit.GetHealthCurr() + activeBattleUnit.GetPower();
+        // make sure that we do not heal to more than maximum health
+        if (healthAfterHeal > dstUnit.GetHealthMax())
+        {
+            healthAfterHeal = dstUnit.GetHealthMax();
+        }
+        dstUnit.SetHealthCurr(healthAfterHeal);
+        // update current health in UI
+        // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
+        // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
+        Transform cell = dstUnit.transform.parent.parent.parent;
+        Text currentHealth = cell.Find("HPPanel/HPcurr").GetComponent<Text>();
+        currentHealth.text = healthAfterHeal.ToString();
+    }
+
+    void ApplyHealPowerToMultipleUnits()
+    {
+        Debug.Log("ApplyHealPowerToMultipleUnits");
+    }
+
+    void ApplyResurectPower(PartyUnit dstUnit)
+    {
+        Debug.Log("ApplyResurectPower");
+    }
+
+    void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
+    {
+        Debug.Log("ApplyDestructivePowerToSingleUnit");
+        // damage destination unit
+        int healthAfterDamage = dstUnit.GetHealthCurr() - activeBattleUnit.GetPower();
+        // make sure that we do not heal to more than maximum health
+        if (healthAfterDamage <= 0)
+        {
+            healthAfterDamage = 0;
+        }
+        dstUnit.SetHealthCurr(healthAfterDamage);
+        // update current health in UI
+        // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
+        // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
+        Transform cell = dstUnit.transform.parent.parent.parent;
+        Text currentHealth = cell.Find("HPPanel/HPcurr").GetComponent<Text>();
+        currentHealth.text = healthAfterDamage.ToString();
+        // verify if unit is dead
+        if (0 == healthAfterDamage)
+        {
+            // set unit is dead attribute
+            dstUnit.SetIsAlive(false);
+            // set color ui more darker
+            Color32 deadColor = new Color32(64, 64, 64, 255);
+            currentHealth.color = deadColor;
+            Text maxHealth = cell.Find("HPPanel/HPmax").GetComponent<Text>();
+            maxHealth.color = deadColor;
+            // set cell canvas to be more darker
+            Text cellCanvas = cell.Find("Br").GetComponent<Text>();
+            cellCanvas.color = deadColor;
+        }
+    }
+
+    void ApplyDestructivePowerToMultipleUnits()
+    {
+        Debug.Log("ApplyDestructivePowerToMultipleUnits");
+        // get all alive units in enemy party and apply damage to them
+        // find enemy party based on activeBattleUnit
+        // structure: 7BattleScreen-6Party-5PartyPanel-4[Top/Middle/Bottom]-3[Front/Back/Wide]cell-2UnitSlot-1UnitCanvas-activeBattleUnit
+        Transform activeBattleUnitPartyTr = activeBattleUnit.transform.parent.parent.parent.parent.parent.parent;
+        Transform battleScreenTr = activeBattleUnitPartyTr.parent;
+        HeroParty[] allHeroesParties = battleScreenTr.GetComponentsInChildren<HeroParty>();
+        // find party which does not match activeBattleUnit Party
+        foreach (HeroParty heroParty in allHeroesParties)
+        {
+            if (heroParty.transform.GetInstanceID() != activeBattleUnitPartyTr.GetInstanceID())
+            {
+                // we found other (enemy hero party)
+                // apply damage to all party members
+                foreach (string horisontalPanel in horisontalPanels)
+                {
+                    foreach (string cell in cells)
+                    {
+                        // verify if slot has an unit in it
+                        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                        if (unitSlot.childCount > 0)
+                        {
+                            // get unit for later checks
+                            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                            // verify if unit is alive and has not escaped the battle
+                            if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                            {
+                                // apply damage to the unit
+                                ApplyDestructivePowerToSingleUnit(unit);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
     public void ApplyPowersToUnit(PartyUnit dstUnit)
     {
         // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
         // but still the power should be applied
         if (dstUnit)
         {
-            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName());
-        } else
+            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName() + " or whole party");
+            switch (activeBattleUnit.GetAbility())
+            {
+                // Helping or buf powers
+                case PartyUnit.UnitAbility.HealingWord:
+                    ApplyHealPowerToSingleUnit(dstUnit);
+                    break;
+                case PartyUnit.UnitAbility.HealingSong:
+                    ApplyHealPowerToMultipleUnits();
+                    break;
+                case PartyUnit.UnitAbility.Resurect:
+                    ApplyResurectPower(dstUnit);
+                    break;
+                // Mele attack powers
+                case PartyUnit.UnitAbility.BlowWithGreatSword:
+                case PartyUnit.UnitAbility.BlowWithMaul:
+                case PartyUnit.UnitAbility.CutWithAxe:
+                case PartyUnit.UnitAbility.CutWithDagger:
+                case PartyUnit.UnitAbility.SlashWithSword:
+                case PartyUnit.UnitAbility.StabWithDagger:
+                case PartyUnit.UnitAbility.StompWithFoot:
+                // Ranged attack powers
+                case PartyUnit.UnitAbility.ShootWithBow:
+                case PartyUnit.UnitAbility.ShootWithCompoudBow:
+                case PartyUnit.UnitAbility.ThrowSpear:
+                case PartyUnit.UnitAbility.ThrowRock:
+                    ApplyDestructivePowerToSingleUnit(dstUnit);
+                    break;
+                // Magic (including pure) attack powers
+                case PartyUnit.UnitAbility.CastChainLightning:
+                case PartyUnit.UnitAbility.CastLightningStorm:
+                case PartyUnit.UnitAbility.HolyWord:
+                    ApplyDestructivePowerToMultipleUnits();
+                    break;
+                default:
+                    Debug.LogError("Unknown unit power");
+                    break;
+            }
+        }
+        else
         {
             // in case of magic power - apply it to all units in enemy party
-            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon whole enemy party");
+            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon whole party");
+            switch (activeBattleUnit.GetAbility())
+            {
+                // Helping or buf powers
+                case PartyUnit.UnitAbility.HealingSong:
+                    ApplyHealPowerToMultipleUnits();
+                    break;
+                // Magic (including pure) attack powers
+                case PartyUnit.UnitAbility.CastChainLightning:
+                case PartyUnit.UnitAbility.CastLightningStorm:
+                case PartyUnit.UnitAbility.HolyWord:
+                    ApplyDestructivePowerToMultipleUnits();
+                    break;
+                default:
+                    Debug.LogError("Unknown unit power");
+                    break;
+            }
         }
     }
 

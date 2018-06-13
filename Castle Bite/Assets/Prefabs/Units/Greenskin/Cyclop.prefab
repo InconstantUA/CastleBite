@@ -38,29 +38,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 2000
-  healthCurr: 350
-  healthMax: 350
-  isLeader: 0
   unitName: Cyclop
+  unitType: 14
+  isLeader: 0
+  unitLeadership: 0
   givenName: Cyclop
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 350
+  healthMax: 350
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 0
+  unitPower: 120
+  unitPowerSource: 0
+  unitPowerDistance: 1
+  unitPowerScope: 0
+  initiative: 35
   unitRole: Large, strong and durable ranged fighter
   unitBriefDescription: 
   unitFullDescription: Cyclop is a member of a primordial race of giants, each with
     a single eye in the center of his forehead. His enourmous strength allows him
     to throw a giant rocks in his enemies.
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 35
-  unitType: 14
+  cost: 2000
   unitSize: 1
-  unitPower: 0
-  unitPowerSource: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224812917071835840
 RectTransform:
   m_ObjectHideFlags: 1

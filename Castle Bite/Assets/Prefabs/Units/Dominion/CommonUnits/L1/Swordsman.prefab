@@ -38,27 +38,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 55
-  healthCurr: 110
-  healthMax: 110
-  isLeader: 0
   unitName: Swordsman
+  unitType: 6
+  isLeader: 0
+  unitLeadership: 0
   givenName: Swordsman
   unitLevel: 1
-  unitLeadership: 0
+  unitExperience: 0
+  unitExperienceReward: 0
+  healthCurr: 110
+  healthMax: 110
+  isAlive: 1
+  unitDefence: 0
+  unitResistances: 
+  unitImmunities: 
+  unitAbility: 11
+  unitPower: 30
+  unitPowerSource: 0
+  unitPowerDistance: 0
+  unitPowerScope: 0
+  initiative: 55
   unitRole: Mele fighter
   unitBriefDescription: 
   unitFullDescription: 
-  isInterpartyMovable: 1
-  isDismissable: 1
-  isAlive: 1
   hasEscaped: 0
   hasMoved: 0
-  initiative: 55
-  unitType: 6
+  cost: 55
   unitSize: 0
-  unitPower: 11
-  unitPowerSource: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
 --- !u!224 &224033413711483370
 RectTransform:
   m_ObjectHideFlags: 1
