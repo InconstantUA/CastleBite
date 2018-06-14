@@ -1382,6 +1382,21 @@ public class PartyPanel : MonoBehaviour {
         return isBlocked;
     }
 
+    void ResetAllCells()
+    {
+        Color positiveColor = Color.yellow;
+        Color negativeColor = Color.grey;
+        bool isAllowedToApplyPwrToThisUnit = false;
+        string errorMessage = "This cannot be targeted";
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+            }
+        }
+    }
+
     void PrepareBattleFieldForMelePower(bool activeUnitIsFromThisParty)
     {
         Debug.Log("PrepareBattleFieldForMelePower");
@@ -1396,58 +1411,62 @@ public class PartyPanel : MonoBehaviour {
         {
             foreach (string cell in cells)
             {
-                // if active mele unit is blocked, then it cannot attack anything
-                if (activeMeleUnitIsBlocked)
+                // verify if destination slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
                 {
-                    // blocked
-                    // set cannot attack error messages depending on friendly or enemy unit types
-                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                    if (unitSlot.childCount > 0)
+                    // Unit canvas (and unit) is present
+                    if (activeUnitIsFromThisParty)
                     {
-                        // Unit canvas (and unit) is present
-                        if (activeUnitIsFromThisParty)
-                        {
-                            // cannot attack friendly units
-                            isAllowedToApplyPwrToThisUnit = false;
-                            errorMessage = "Cannot attack friendly units.";
-                        }
-                        else
-                        {
-                            // this is actions for enemy party
-                            isAllowedToApplyPwrToThisUnit = false;
-                            errorMessage = activeBattleUnit.GetUnitName() + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
-                        }
-                        SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+                        // cannot attack friendly units
+                        isAllowedToApplyPwrToThisUnit = false;
+                        errorMessage = "Cannot attack friendly units.";
                     }
-                }
-                else
-                {
-                    // not blocked
-                    // verify if destination slot has an unit in it
-                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                    if (unitSlot.childCount > 0)
+                    else
                     {
-                        // Unit canvas (and unit) is present
-                        if (activeUnitIsFromThisParty)
+                        // this is actions for enemy party
+                        // first filter out dead units
+                        // get unit for later checks
+                        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        if (!unit.GetIsAlive())
                         {
-                            // cannot attack friendly units
+                            // cannot attack dead units
                             isAllowedToApplyPwrToThisUnit = false;
-                            errorMessage = "Cannot attack friendly units.";
+                            errorMessage = "Cannot attack dead units.";
                         }
                         else
                         {
-                            // first filter out dead units
-                            // get unit for later checks
-                            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                            if (!unit.GetIsAlive())
+                            // if active mele unit is blocked, then it cannot attack anything
+                            if (activeMeleUnitIsBlocked)
                             {
-                                // cannot attack dead units
-                                isAllowedToApplyPwrToThisUnit = false;
-                                errorMessage = "Cannot attack dead units.";
+                                // blocked
+                                // set cannot attack error messages depending on friendly or enemy unit types
+                                if (unitSlot.childCount > 0)
+                                {
+                                    // Unit canvas (and unit) is present
+                                    if (activeUnitIsFromThisParty)
+                                    {
+                                        // cannot attack friendly units
+                                        isAllowedToApplyPwrToThisUnit = false;
+                                        errorMessage = "Cannot attack friendly units.";
+                                    }
+                                    else
+                                    {
+                                        // this is actions for enemy party
+                                        isAllowedToApplyPwrToThisUnit = false;
+                                        errorMessage = activeBattleUnit.GetUnitName() + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
+                                    }
+                                }
+                                else
+                                {
+                                    // this is an empty cell
+                                    isAllowedToApplyPwrToThisUnit = false;
+                                    errorMessage = "No target.";
+                                }
                             }
                             else
                             {
-                                // this is actions for enemy party
+                                // not blocked
                                 // act based on the mele unit position (cell)
                                 // 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanelGroup-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
                                 // if mele unit is in back row, then verify if it is not blocked by front row units
@@ -1461,9 +1480,7 @@ public class PartyPanel : MonoBehaviour {
                                     {
                                         // front row has units which can fight
                                         // this means that this unit is protected from mele atack
-                                        isAllowedToApplyPwrToThisUnit = false;
                                         enemyUnitIsPotentialTarget = false;
-                                        errorMessage = "This enemy unit cannot be targeted, because it is protected by units in a front row.";
                                     }
                                     else
                                     {
@@ -1548,10 +1565,16 @@ public class PartyPanel : MonoBehaviour {
                                             break;
                                     }
                                 }
+                                else
+                                {
+                                    // unit cannot be targeted
+                                    isAllowedToApplyPwrToThisUnit = false;
+                                    errorMessage = "This enemy unit cannot be targeted, because it is protected by units in a front row.";
+                                }
                             }
                         }
-                        SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
                     }
+                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
                 }
             }
         }
@@ -1668,6 +1691,8 @@ public class PartyPanel : MonoBehaviour {
     public void SetActiveUnitInBattle(PartyUnit unitToActivate)
     {
         Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
+        // first reset all cells do default values
+        ResetAllCells();
         // save it locally for later use
         activeBattleUnit = unitToActivate;
         // new unit became active in battle
@@ -1889,6 +1914,202 @@ public class PartyPanel : MonoBehaviour {
                 default:
                     Debug.LogError("Unknown unit power");
                     break;
+            }
+        }
+    }
+
+    public bool HasEscapedBattle()
+    {
+        // verify if at least one unit has escaped the battle
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // get unit for later checks
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // verify if unit has escaped
+                    if (unit.GetHasEscaped())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    int GetExperienceForDestroyedUnits()
+    {
+        int experiencePool = 0;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // get unit for later checks
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // verify if unit is dead
+                    if (!unit.GetIsAlive())
+                    {
+                        // unit is dead, add his experience reward to experiencePool
+                        experiencePool += unit.GetExperienceReward();
+                    }
+                }
+            }
+        }
+        return experiencePool;
+    }
+
+    int GetNumberOfAfterBattleLeftUnit()
+    {
+        int unitsLeft = 0;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // get unit for later checks
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // verify if unit is alive and has not escaped
+                    if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                    {
+                        // unit is alive and has not escaped
+                        // increment units left counter
+                        unitsLeft += 1;
+                    }
+                }
+            }
+        }
+        return unitsLeft;
+    }
+
+    bool UnitCanBeUpgraded()
+    {
+        return true;
+    }
+
+    bool UnitHasReachedUpgradeLimit()
+    {
+        return true;
+    }
+
+    void OfferPartyLeaderToLearnNewAbility()
+    {
+
+    }
+
+    void IncrementUnitMaxStats(PartyUnit unit)
+    {
+        // this is done on lvl up
+        unit.SetExperienceReward(unit.GetExperienceReward() + unit.GetExperienceRewardIncrementOnLevelUp());
+        unit.SetHealthMax(unit.GetHealthMax() + unit.GetHealthMaxIncrementOnLevelUp());
+        unit.SetPower(unit.GetPower() + unit.GetPowerIncrementOnLevelUp());
+    }
+
+    void ResetUnitStatsToMax(PartyUnit unit)
+    {
+        // this is done on lvl up
+        unit.SetHealthCurr(unit.GetHealthMax());
+    }
+
+    void UpgradeUnitClass(PartyUnit unit)
+    {
+        // this is done on lvl up
+
+    }
+
+    void UpgradeUnit(PartyUnit unit)
+    {
+        Debug.Log("UpgradeUnit");
+        // unit has reached new level
+        // verify if this is party leader
+        if (unit.GetIsLeader())
+        {
+            // this party leader
+            // reset his experience to 0
+            unit.SetExperience(0);
+            // and increment his level
+            unit.SetLevel(unit.GetLevel() + 1);
+            // offer party leader to learn new ability
+            OfferPartyLeaderToLearnNewAbility();
+        }
+        else
+        {
+            // this common unit
+            // verify if conditions which allow unit to upgrade are met
+            if (UnitCanBeUpgraded())
+            {
+                // and upgrade unit to the next class 
+                UpgradeUnitClass(unit);
+            }
+            else if (UnitHasReachedUpgradeLimit())
+            {
+                // increment max unit stats
+                IncrementUnitMaxStats(unit);
+                // reset unit stats to maximum and reset experience counter
+                ResetUnitStatsToMax(unit);
+                // reset his experience to 0
+                unit.SetExperience(0);
+                // and increment his level
+                unit.SetLevel(unit.GetLevel() + 1);
+            }
+            else
+            {
+                // wait for upgrade condition to be fulfilled
+                // keep unit's experience at max
+                unit.SetExperience(unit.GetExperienceRequiredToReachNewLevel());
+            }
+        }
+
+    }
+
+    public void GrantAndShowExperienceGained(PartyPanel enemyPartyPanel)
+    {
+        // get all experience gained for destroyed enemy units
+        int gainedExperiencePool = enemyPartyPanel.GetExperienceForDestroyedUnits();
+        // distribute experience between all units, which are alive and not escaped
+        int unitsLeftAfterBattle = GetNumberOfAfterBattleLeftUnit();
+        int experiencePerUnit = gainedExperiencePool / unitsLeftAfterBattle;
+        // grant experience and show gained experience
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // get unit for later checks
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // verify if unit is alive and has not escaped
+                    if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                    {
+                        // add experience to the unit
+                        int newUnitExperienceValue = unit.GetExperience() + experiencePerUnit;
+                        // verify if unit has not reached new level
+                        if (newUnitExperienceValue < unit.GetExperienceRequiredToReachNewLevel())
+                        {
+                            // unit has not reached new level
+                            // just update hist current experience value
+                            unit.SetExperience(newUnitExperienceValue);
+                            // show gained experience
+                        }
+                        else
+                        {
+                            UpgradeUnit(unit);
+                        }
+                    }
+                }
             }
         }
     }

@@ -45,15 +45,19 @@ MonoBehaviour:
   givenName: Lahabiel
   unitLevel: 1
   unitExperience: 0
-  unitExperienceReward: 0
+  unitExperienceRequiredToReachNewLevel: 9999
+  unitExperienceReward: 9999
+  unitExperienceRewardIncrementOnLevelUp: 0
   healthCurr: 1100
   healthMax: 1100
+  healthMaxIncrementOnLevelUp: 550
   isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 5
   unitPower: 300
+  unitPowerIncrementOnLevelUp: 0
   unitPowerSource: 6
   unitPowerDistance: 1
   unitPowerScope: 1

@@ -81,12 +81,18 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     int unitExperience;
     [SerializeField]
+    int unitExperienceRequiredToReachNewLevel;
+    [SerializeField]
     int unitExperienceReward;
+    [SerializeField]
+    int unitExperienceRewardIncrementOnLevelUp;
     // Defensive attributes
     [SerializeField]
     int healthCurr;
     [SerializeField]
     int healthMax;
+    [SerializeField]
+    int healthMaxIncrementOnLevelUp;
     [SerializeField]
     bool isAlive = true;
     [SerializeField]
@@ -100,6 +106,8 @@ public class PartyUnit : MonoBehaviour {
     UnitAbility unitAbility;
     [SerializeField]
     int unitPower;
+    [SerializeField]
+    int unitPowerIncrementOnLevelUp;
     [SerializeField]
     UnitPowerSource unitPowerSource;
     [SerializeField]
@@ -141,6 +149,16 @@ public class PartyUnit : MonoBehaviour {
         unitPower = value;
     }
 
+    public int GetPowerIncrementOnLevelUp()
+    {
+        return unitPowerIncrementOnLevelUp;
+    }
+
+    public void SetPowerIncrementOnLevelUp(int value)
+    {
+        unitPowerIncrementOnLevelUp = value;
+    }
+
     public int GetExperienceReward()
     {
         return unitExperienceReward;
@@ -151,6 +169,16 @@ public class PartyUnit : MonoBehaviour {
         unitExperienceReward = value;
     }
 
+    public int GetExperienceRewardIncrementOnLevelUp()
+    {
+        return unitExperienceRewardIncrementOnLevelUp;
+    }
+
+    public void SetExperienceRewardIncrementOnLevelUp(int value)
+    {
+        unitExperienceRewardIncrementOnLevelUp = value;
+    }
+
     public int GetExperience()
     {
         return unitExperience;
@@ -159,6 +187,16 @@ public class PartyUnit : MonoBehaviour {
     public void SetExperience(int value)
     {
         unitExperience = value;
+    }
+
+    public int GetExperienceRequiredToReachNewLevel()
+    {
+        return unitExperienceRequiredToReachNewLevel;
+    }
+
+    public void SetExperienceRequiredToReachNewLevel(int value)
+    {
+        unitExperienceRequiredToReachNewLevel = value;
     }
 
     public int GetDefence()
@@ -259,6 +297,16 @@ public class PartyUnit : MonoBehaviour {
     public int GetHealthMax()
     {
         return healthMax;
+    }
+
+    public void SetHealthMaxIncrementOnLevelUp(int value)
+    {
+        healthMaxIncrementOnLevelUp = value;
+    }
+
+    public int GetHealthMaxIncrementOnLevelUp()
+    {
+        return healthMaxIncrementOnLevelUp;
     }
 
     public void SetUnitName(string requiredName)

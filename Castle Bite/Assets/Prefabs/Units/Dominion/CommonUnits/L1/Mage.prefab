@@ -45,15 +45,19 @@ MonoBehaviour:
   givenName: Mage
   unitLevel: 1
   unitExperience: 0
-  unitExperienceReward: 0
+  unitExperienceRequiredToReachNewLevel: 100
+  unitExperienceReward: 100
+  unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 30
   healthMax: 30
+  healthMaxIncrementOnLevelUp: 0
   isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 16
   unitPower: 20
+  unitPowerIncrementOnLevelUp: 10
   unitPowerSource: 1
   unitPowerDistance: 1
   unitPowerScope: 1

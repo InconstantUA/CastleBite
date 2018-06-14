@@ -45,15 +45,19 @@ MonoBehaviour:
   givenName: Ares
   unitLevel: 1
   unitExperience: 0
-  unitExperienceReward: 0
+  unitExperienceRequiredToReachNewLevel: 200
+  unitExperienceReward: 200
+  unitExperienceRewardIncrementOnLevelUp: 200
   healthCurr: 100
   healthMax: 160
+  healthMaxIncrementOnLevelUp: 0
   isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 6
   unitPower: 60
+  unitPowerIncrementOnLevelUp: 15
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0

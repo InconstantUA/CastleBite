@@ -65,20 +65,59 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
+
     void EndBattle()
     {
-        // Show who win battle
-        // ..
-        // activate hero edit click and drag handler
-        playerPartyPanel.SetOnEditClickHandler(true);
-        enemyPartyPanel.SetOnEditClickHandler(true);
-        // deactivate battle click handler, which will react on clicks
-        playerPartyPanel.SetOnBattleClickHandler(false);
-        enemyPartyPanel.SetOnBattleClickHandler(false);
-        // Destroy party which lost, unless it has flee from battle
-        //  if it has flee, then move it 1-2 tiles avay from winning hero
         Debug.Log("EndBattle");
+        // Check who win battle
+        if (!playerPartyPanel.CanFight())
+        {
+            // player cannot fight anymore
+            // verify if player has flee from battle
+            if (playerPartyPanel.HasEscapedBattle())
+            {
+                // player has escaped battle
+                // move it 2 tiles away from other party
+            }
+            else
+            {
+                // player lost battle and was destroyed
+                // destroy player party on exit
+                // Destroy(playerPartyPanel.transform.parent.gameObject);
+            }
+            // Show how much experience was earned by enemy party
+            enemyPartyPanel.GrantAndShowExperienceGained(playerPartyPanel);
+            // activate hero edit click and drag handler
+            enemyPartyPanel.SetOnEditClickHandler(true);
+            // deactivate battle click handler, which will react on clicks
+            enemyPartyPanel.SetOnBattleClickHandler(false);
+        }
+        else
+        {
+            // enemy cannot fight anymore
+            // verify if enemy has flee from battle
+            if (enemyPartyPanel.HasEscapedBattle())
+            {
+                // player has escaped battle
+                // move it 2 tiles away from other party
+            }
+            else
+            {
+                // player lost battle and was destroyed
+                // destroy player party on exit
+                // Destroy(enemyPartyPanel.transform.parent.gameObject);
+            }
+            // Show how much experience was earned by enemy party
+            playerPartyPanel.GrantAndShowExperienceGained(enemyPartyPanel);
+            // activate hero edit click and drag handler
+            playerPartyPanel.SetOnEditClickHandler(true);
+            // deactivate battle click handler, which will react on clicks
+            playerPartyPanel.SetOnBattleClickHandler(false);
+        }
         // Activate exit battle button;
+        // ..
+        // Deactivate all other battle buttons;
+        // ..
     }
 
     void ResetHasMovedFlag()
@@ -174,22 +213,30 @@ public class BattleScreen : MonoBehaviour {
     {
         Debug.Log("ActivateNextUnit");
         bool canActivate = false;
-        // find next unit, which can act in the battle
-        PartyUnit nextUnit = FindNextUnit();
-        // save it for later needs
-        activeUnit = nextUnit;
-        if (nextUnit)
+        if (CanContinueBattle())
         {
-            // found next unit
-            // activate it
-            playerPartyPanel.SetActiveUnitInBattle(nextUnit);
-            enemyPartyPanel.SetActiveUnitInBattle(nextUnit);
-            canActivate = true;
-        } else
+            // find next unit, which can act in the battle
+            PartyUnit nextUnit = FindNextUnit();
+            // save it for later needs
+            activeUnit = nextUnit;
+            if (nextUnit)
+            {
+                // found next unit
+                // activate it
+                playerPartyPanel.SetActiveUnitInBattle(nextUnit);
+                enemyPartyPanel.SetActiveUnitInBattle(nextUnit);
+                canActivate = true;
+            }
+            else
+            {
+                // no other units can be activated
+                // go the next turn
+                canActivate = StartTurn();
+            }
+        }
+        else
         {
-            // no other units can be activated
-            // go the next turn
-            canActivate = StartTurn();
+            EndBattle();
         }
         return canActivate;
     }

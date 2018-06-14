@@ -45,15 +45,19 @@ MonoBehaviour:
   givenName: Archer
   unitLevel: 1
   unitExperience: 0
-  unitExperienceReward: 0
+  unitExperienceRequiredToReachNewLevel: 100
+  unitExperienceReward: 100
+  unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 40
   healthMax: 40
+  healthMaxIncrementOnLevelUp: 0
   isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 12
   unitPower: 30
+  unitPowerIncrementOnLevelUp: 10
   unitPowerSource: 0
   unitPowerDistance: 1
   unitPowerScope: 0

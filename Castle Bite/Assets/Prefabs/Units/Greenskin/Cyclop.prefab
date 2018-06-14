@@ -45,15 +45,19 @@ MonoBehaviour:
   givenName: Cyclop
   unitLevel: 1
   unitExperience: 0
-  unitExperienceReward: 0
+  unitExperienceRequiredToReachNewLevel: 2000
+  unitExperienceReward: 1000
+  unitExperienceRewardIncrementOnLevelUp: 500
   healthCurr: 350
   healthMax: 350
+  healthMaxIncrementOnLevelUp: 0
   isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 0
   unitPower: 120
+  unitPowerIncrementOnLevelUp: 30
   unitPowerSource: 0
   unitPowerDistance: 1
   unitPowerScope: 0

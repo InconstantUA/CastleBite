@@ -45,15 +45,19 @@ MonoBehaviour:
   givenName: Priest
   unitLevel: 1
   unitExperience: 0
-  unitExperienceReward: 0
+  unitExperienceRequiredToReachNewLevel: 100
+  unitExperienceReward: 100
+  unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 45
   healthMax: 45
+  healthMaxIncrementOnLevelUp: 0
   isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 13
   unitPower: 35
+  unitPowerIncrementOnLevelUp: 15
   unitPowerSource: 5
   unitPowerDistance: 1
   unitPowerScope: 0
