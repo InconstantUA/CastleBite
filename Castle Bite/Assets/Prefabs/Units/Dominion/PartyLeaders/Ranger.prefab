@@ -64,7 +64,7 @@ MonoBehaviour:
   initiative: 65
   unitRole: Scouting Leader
   unitBriefDescription: Strong ranged fighter. Can cross long distances.
-  unitFullDescription: 
+  unitFullDescription: Full description.
   hasEscaped: 0
   hasMoved: 0
   cost: 550

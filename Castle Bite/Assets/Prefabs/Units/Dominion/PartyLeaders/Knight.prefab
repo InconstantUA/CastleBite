@@ -64,7 +64,7 @@ MonoBehaviour:
   initiative: 55
   unitRole: Fighter Leader
   unitBriefDescription: Strong and durable mele fighter.
-  unitFullDescription: 
+  unitFullDescription: Full description.
   hasEscaped: 0
   hasMoved: 0
   cost: 550

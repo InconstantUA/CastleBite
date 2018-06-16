@@ -64,7 +64,7 @@ MonoBehaviour:
   initiative: 55
   unitRole: Mele fighter
   unitBriefDescription: 
-  unitFullDescription: 
+  unitFullDescription: Full description.
   hasEscaped: 0
   hasMoved: 0
   cost: 55

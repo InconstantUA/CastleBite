@@ -64,7 +64,7 @@ MonoBehaviour:
   initiative: 65
   unitRole: Attacks from distance
   unitBriefDescription: 
-  unitFullDescription: 
+  unitFullDescription: Full description.
   hasEscaped: 0
   hasMoved: 0
   cost: 45

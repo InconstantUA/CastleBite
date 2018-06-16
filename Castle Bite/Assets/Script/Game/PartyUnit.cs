@@ -115,7 +115,7 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     UnitPowerScope unitPowerScope;
     [SerializeField]
-    int initiative = 10;
+    int unitInitiative = 10;
     // Misc Description
     [SerializeField]
     string unitRole;
@@ -461,12 +461,12 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetInitiative()
     {
-        return initiative;
+        return unitInitiative;
     }
 
     public void SetInitiative(int value)
     {
-        initiative = value;
+        unitInitiative = value;
     }
 
     //// Use this for initialization
