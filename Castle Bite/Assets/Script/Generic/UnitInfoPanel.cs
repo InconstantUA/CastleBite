@@ -117,6 +117,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             // Fill in unit initiative
             transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.GetInitiative().ToString();
             // There is no power modifiers yet, so disable it
+            // ..
             transform.Find("Panel/UniquePowerModifiersTable").gameObject.SetActive(false);
             // Fill in description
             transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.GetFullDescription().ToString();
