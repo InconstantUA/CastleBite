@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 45
   healthMax: 45
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 5
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 5
   unitPowerDistance: 1
   unitPowerScope: 0
-  initiative: 10
+  unitInitiative: 10
   unitRole: Heals other members
   unitBriefDescription: 
   unitFullDescription: Full description.

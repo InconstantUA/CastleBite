@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 110
   healthMax: 110
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 15
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0
-  initiative: 55
+  unitInitiative: 10
   unitRole: Mele fighter
   unitBriefDescription: 
   unitFullDescription: Full description.

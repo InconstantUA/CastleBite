@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Goblin
-  unitType: 11
+  unitType: 12
   isLeader: 0
   unitLeadership: 0
   givenName: Goblin
@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 50
   healthCurr: 60
   healthMax: 60
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 10
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0
-  initiative: 40
+  unitInitiative: 10
   unitRole: Front line weak mele fighter
   unitBriefDescription: 
   unitFullDescription: Goblins are small and grotesque, mischievous or outright malicious,

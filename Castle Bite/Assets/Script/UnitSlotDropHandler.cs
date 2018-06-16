@@ -44,7 +44,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
 
     void SwapTwoCellsContent(Transform srcCellTr, Transform dstCellTr)
     {
-        Debug.Log("Swap 2 cells: " + srcCellTr.name + " > " + dstCellTr.name);
+        // Debug.Log("Swap 2 cells: " + srcCellTr.name + " > " + dstCellTr.name);
         // swap all relevan cells content and states
         // swap HPPanel values
         string srcHPcurr = srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;

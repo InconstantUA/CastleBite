@@ -74,14 +74,36 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("OnPointerDown");
-        SetPressedStatus();
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Debug.LogWarning("OnPointerDown");
+            // on left mouse click
+            SetPressedStatus();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            // on right mouse click
+            // show unit info
+            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitSlot.GetComponentInChildren<PartyUnit>());
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         // Debug.Log("OnPointerUp");
-        SetHighlightedStatus();
-        ActOnClick();
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            // Debug.LogWarning("OnPointerUp");
+            SetHighlightedStatus();
+            ActOnClick();
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+            // deactivate unit info
+            transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)

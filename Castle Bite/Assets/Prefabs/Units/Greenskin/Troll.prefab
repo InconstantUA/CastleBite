@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 40
   healthCurr: 55
   healthMax: 55
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 5
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 1
   unitPowerScope: 0
-  initiative: 45
+  unitInitiative: 10
   unitRole: Weak ranged fighter
   unitBriefDescription: 
   unitFullDescription: Trolls are tall skinny humanoids with long noses, rubbery skin.

@@ -185,7 +185,8 @@ public class PartyPanel : MonoBehaviour {
     string GetUnitDisplayName(PartyUnit unit)
     {
         string unitName;
-        if (unit.GetIsLeader())
+        // verify is unit has given name
+        if (unit.GetGivenName() != unit.GetUnitName())
         {
             // start with Hero's given name information
             unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
@@ -342,7 +343,7 @@ public class PartyPanel : MonoBehaviour {
                         }
                         else
                         {
-                            Debug.Log("slot " + horisontalPanel + " " + cell + " has a unit");
+                            // Debug.Log("slot " + horisontalPanel + " " + cell + " has a unit");
                             hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
                             hireUnitPnlBtn.SetActive(false);
                         }
@@ -674,11 +675,6 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetActiveUnitDrag(bool activate)
     {
-        // Todo:
-        // I'm actually doing the same job in each party panel
-        // fix it somehow
-        // this needs to be done only once
-        //
         // unit being dragged is static, so we do not need to assign it here
         // or send as and argument
         // structure: 5[City]-4[HeroParty/CityGarnizon]Party-3PartyPanel-2[Top/Middle/Bottom]HorizontalPanelGroup-1[Front/Back/Wide]Cell-UnitSlot-(this)UnitCanvas
@@ -1995,7 +1991,7 @@ public class PartyPanel : MonoBehaviour {
 
     bool UnitCanBeUpgraded()
     {
-        return true;
+        return false;
     }
 
     bool UnitHasReachedUpgradeLimit()
@@ -2020,6 +2016,9 @@ public class PartyPanel : MonoBehaviour {
     {
         // this is done on lvl up
         unit.SetHealthCurr(unit.GetHealthMax());
+        // update panel
+        unit.GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+        unit.GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
     }
 
     void UpgradeUnitClass(PartyUnit unit)
@@ -2070,7 +2069,6 @@ public class PartyPanel : MonoBehaviour {
                 unit.SetExperience(unit.GetExperienceRequiredToReachNewLevel());
             }
         }
-
     }
 
     public void GrantAndShowExperienceGained(PartyPanel enemyPartyPanel)
@@ -2105,17 +2103,20 @@ public class PartyPanel : MonoBehaviour {
                             // show gained experience
                             // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
                             // UnitCell-InfoPanel
-                            unit.transform.parent.parent.parent.Find("InfoPanel").GetComponent<Text>().text = "+" + experiencePerUnit.ToString() + " Exp";
+                            unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>().text = "+" + experiencePerUnit.ToString() + " Exp";
                         }
                         else
                         {
                             UpgradeUnit(unit);
+                            // update panel to indicate level up
+                            unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>().text = "Level up";
                         }
                     }
                 }
             }
         }
     }
+
 
     #endregion For Battle Screen
 

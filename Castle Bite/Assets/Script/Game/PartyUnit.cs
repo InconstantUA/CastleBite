@@ -139,6 +139,13 @@ public class PartyUnit : MonoBehaviour {
     bool isDismissable;
 
 
+
+    public Transform GetUnitCell()
+    {
+        // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
+        return transform.parent.parent.parent;
+    }
+
     public int GetPower()
     {
         return unitPower;
@@ -468,6 +475,8 @@ public class PartyUnit : MonoBehaviour {
     {
         unitInitiative = value;
     }
+
+
 
     //// Use this for initialization
     //void Start () {

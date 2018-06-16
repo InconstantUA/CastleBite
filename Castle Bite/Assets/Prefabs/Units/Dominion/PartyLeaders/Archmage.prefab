@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 200
   healthCurr: 70
   healthMax: 70
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 15
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 1
   unitPowerDistance: 1
   unitPowerScope: 1
-  initiative: 350
+  unitInitiative: 40
   unitRole: Mage Leader
   unitBriefDescription: Has magic attack that hit all enemy units.
   unitFullDescription: Full description.

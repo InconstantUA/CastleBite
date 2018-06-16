@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 200
   healthCurr: 95
   healthMax: 95
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 20
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 1
   unitPowerScope: 0
-  initiative: 65
+  unitInitiative: 65
   unitRole: Scouting Leader
   unitBriefDescription: Strong ranged fighter. Can cross long distances.
   unitFullDescription: Full description.

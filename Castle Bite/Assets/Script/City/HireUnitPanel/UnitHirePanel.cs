@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
-public class UnitHirePanel : MonoBehaviour {
+public class UnitHirePanel : MonoBehaviour
+{
     public PartyUnit unitToHire;
     public enum Mode {Normal, FirstUnit};
     public Mode mode;

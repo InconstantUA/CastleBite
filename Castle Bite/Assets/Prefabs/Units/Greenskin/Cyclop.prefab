@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 500
   healthCurr: 350
   healthMax: 350
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 50
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 1
   unitPowerScope: 0
-  initiative: 35
+  unitInitiative: 10
   unitRole: Large, strong and durable ranged fighter
   unitBriefDescription: 
   unitFullDescription: Cyclop is a member of a primordial race of giants, each with

@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 200
   healthCurr: 95
   healthMax: 95
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 15
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0
-  initiative: 70
+  unitInitiative: 70
   unitRole: Stealing, spying and special operations
   unitBriefDescription: 
   unitFullDescription: Full description.

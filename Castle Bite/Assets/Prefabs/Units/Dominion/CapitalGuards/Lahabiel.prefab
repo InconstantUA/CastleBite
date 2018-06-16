@@ -40,7 +40,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Capital guard
   unitType: 0
-  isLeader: 1
+  isLeader: 0
   unitLeadership: 0
   givenName: Lahabiel
   unitLevel: 1
@@ -53,18 +53,19 @@ MonoBehaviour:
   healthMaxIncrementOnLevelUp: 550
   isAlive: 1
   unitDefence: 0
-  unitResistances: 
-  unitImmunities: 
+  unitResistances: 04000000010000000200000003000000
+  unitImmunities: 00000000
   unitAbility: 5
   unitPower: 300
   unitPowerIncrementOnLevelUp: 0
   unitPowerSource: 6
   unitPowerDistance: 1
   unitPowerScope: 1
-  initiative: 95
+  unitInitiative: 10
   unitRole: Protects Dominion Capital
   unitBriefDescription: 
-  unitFullDescription: Full description.
+  unitFullDescription: Archangel Lahabiel was sent by the Holy Father to protect Dominion
+    captial.
   hasEscaped: 0
   hasMoved: 0
   cost: 0

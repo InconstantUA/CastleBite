@@ -50,26 +50,46 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("OnPointerDown");
-        // Simulate on/off togle
-        // Do not off, if it was on, because it means that no object is selected
-        // We should have at least one object selected
-        if (!tgl.isOn)
+        if (Input.GetMouseButtonDown(0))
         {
-            SetOnStatus();
-            DeselectAllOtherTogglesInGroup();
+            // Simulate on/off togle
+            // Do not off, if it was on, because it means that no object is selected
+            // We should have at least one object selected
+            if (!tgl.isOn)
+            {
+                SetOnStatus();
+                DeselectAllOtherTogglesInGroup();
+            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            // on right mouse click
+            // show unit info
+            PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().GetUnitToHire();
+            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(partyUnit);
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         // Debug.Log("OnPointerUp");
-        // turn it on if it is not ON already
-        //if (!tgl.isOn)
-        //{
-        //    // was off -> transition to on
-        //    SetOnStatus();
-        //    DeselectAllOtherTogglesInGroup();
-        //}
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            // turn it on if it is not ON already
+            //if (!tgl.isOn)
+            //{
+            //    // was off -> transition to on
+            //    SetOnStatus();
+            //    DeselectAllOtherTogglesInGroup();
+            //}
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+            // deactivate unit info
+            transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)

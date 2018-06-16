@@ -50,7 +50,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 30
   healthMax: 30
-  healthMaxIncrementOnLevelUp: 0
+  healthMaxIncrementOnLevelUp: 5
   isAlive: 1
   unitDefence: 0
   unitResistances: 
@@ -61,7 +61,7 @@ MonoBehaviour:
   unitPowerSource: 1
   unitPowerDistance: 1
   unitPowerScope: 1
-  initiative: 35
+  unitInitiative: 10
   unitRole: Attacks with magic
   unitBriefDescription: 
   unitFullDescription: Full description.
