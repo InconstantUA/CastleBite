@@ -2103,6 +2103,9 @@ public class PartyPanel : MonoBehaviour {
                             // just update hist current experience value
                             unit.SetExperience(newUnitExperienceValue);
                             // show gained experience
+                            // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
+                            // UnitCell-InfoPanel
+                            unit.transform.parent.parent.parent.Find("InfoPanel").GetComponent<Text>().text = "+" + experiencePerUnit.ToString() + " Exp";
                         }
                         else
                         {
