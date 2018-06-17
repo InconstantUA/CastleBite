@@ -147,8 +147,10 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     //}
 
-    //// Update is called once per frame
-    //void Update () {
+    // Update is called once per frame
+    void Update()
+    {
+        // as coroutine fade away information
 
-    //}
+    }
 }

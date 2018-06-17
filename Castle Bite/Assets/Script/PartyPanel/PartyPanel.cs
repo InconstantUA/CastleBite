@@ -701,12 +701,12 @@ public class PartyPanel : MonoBehaviour {
             //  - source of the draggable object
             //  - or destination or other panel
             // find out if current panel is the source panel
-            Debug.Log(sourcePartyPanel.gameObject.GetInstanceID());
-            Debug.Log(gameObject.GetInstanceID());
+            // Debug.Log(sourcePartyPanel.gameObject.GetInstanceID());
+            // Debug.Log(gameObject.GetInstanceID());
             if (sourcePartyPanel.gameObject.GetInstanceID() == gameObject.GetInstanceID())
             {
                 // We are in a source panel
-                Debug.Log("Highlight source panel");
+                // Debug.Log("Highlight source panel");
                 foreach (string horisontalPanel in horisontalPanels)
                 {
                     foreach (string cell in cells)
@@ -724,7 +724,7 @@ public class PartyPanel : MonoBehaviour {
             }
             else
             {
-                Debug.Log("Highlight destination panel");
+                // Debug.Log("Highlight destination panel");
                 // there can be only 2 panels
                 // if i'm not the source panel, then I'm other panel or destination panel
                 // InterParty scope
@@ -1795,11 +1795,54 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("ApplyResurectPower");
     }
 
+    int GetDamageDealt(PartyUnit dstUnit)
+    {
+        int damageDealt = 0;
+        int srcUnitDamage = activeBattleUnit.GetPower();
+        int dstUnitDefence = dstUnit.GetEffectiveDefence();
+        // calculate damage dealt
+        damageDealt = (srcUnitDamage * (100 - dstUnitDefence) ) / 100;
+        return damageDealt;
+    }
+
+    void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
+    {
+        Color32 defaultColor = new Color32(180, 180, 180, 255);
+        Text infoPanelTxt = partyPanelTr.Find(horisontalPanel).Find(cell).Find("InfoPanel").GetComponent<Text>();
+        infoPanelTxt.text = "";
+        infoPanelTxt.color = defaultColor;
+    }
+
+    void ResetUnitCellInfoPanel(Transform partyPanel)
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // Unit canvas (and unit) is present
+                // verify if slot has an unit in it
+                Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // get unit for later checks
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // verify if unit is alive and did not flee from battle
+                    if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                    {
+                        // clear both info panels
+                        ClearInfoPanel(partyPanel, horisontalPanel, cell);
+                    }
+                }
+            }
+        }
+    }
+
     void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
     {
         Debug.Log("ApplyDestructivePowerToSingleUnit");
         // damage destination unit
-        int healthAfterDamage = dstUnit.GetHealthCurr() - activeBattleUnit.GetPower();
+        int damageDealt = GetDamageDealt(dstUnit);
+        int healthAfterDamage = dstUnit.GetHealthCurr() - damageDealt;
         // make sure that we do not heal to more than maximum health
         if (healthAfterDamage <= 0)
         {
@@ -1826,6 +1869,10 @@ public class PartyPanel : MonoBehaviour {
             Text cellCanvas = cell.Find("Br").GetComponent<Text>();
             cellCanvas.color = deadColor;
         }
+        // display damage dealt in info panel
+        Text infoPanel = cell.Find("InfoPanel").GetComponent<Text>();
+        infoPanel.text = "-" + damageDealt + " health";
+        infoPanel.color = Color.red;
     }
 
     void ApplyDestructivePowerToMultipleUnits()
@@ -1870,6 +1917,9 @@ public class PartyPanel : MonoBehaviour {
 
     public void ApplyPowersToUnit(PartyUnit dstUnit)
     {
+        // reset cell info panel beforehand, for both parties, to clean up previous information
+        ResetUnitCellInfoPanel(transform);
+        ResetUnitCellInfoPanel(activeBattleUnit.GetUnitPartyPanel().transform);
         // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
         // but still the power should be applied
         if (dstUnit)
