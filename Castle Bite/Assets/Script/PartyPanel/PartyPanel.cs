@@ -1984,6 +1984,8 @@ public class PartyPanel : MonoBehaviour {
                     break;
             }
         }
+        // Gradually fade away unit cell information
+        StartCoroutine("FadeUnitCellInfo");
     }
 
     public bool HasEscapedBattle()
@@ -2167,6 +2169,7 @@ public class PartyPanel : MonoBehaviour {
                         // add experience to the unit
                         int newUnitExperienceValue = unit.GetExperience() + experiencePerUnit;
                         // verify if unit has not reached new level
+                        Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
                         if (newUnitExperienceValue < unit.GetExperienceRequiredToReachNewLevel())
                         {
                             // unit has not reached new level
@@ -2175,25 +2178,54 @@ public class PartyPanel : MonoBehaviour {
                             // show gained experience
                             // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
                             // UnitCell-InfoPanel
-                            unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>().text = "+" + experiencePerUnit.ToString() + " Exp";
+                            infoPanel.text = "+" + experiencePerUnit.ToString() + " Exp";
                         }
                         else
                         {
                             UpgradeUnit(unit);
                             // update panel to indicate level up
-                            unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>().text = "Level up";
+                            infoPanel.text = "Level up";
                         }
+                        infoPanel.color = Color.green;
                     }
                 }
             }
         }
     }
 
+    IEnumerator FadeUnitCellInfo()
+    {
+        for (float f = 1f; f >= 0; f -= 0.1f)
+        {
+            foreach (string horisontalPanel in horisontalPanels)
+            {
+                foreach (string cell in cells)
+                {
+                    // verify if slot has an unit in it
+                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                    if (unitSlot.childCount > 0)
+                    {
+                        // get unit for later checks
+                        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+                        Color c = infoPanel.color;
+                        c.a = f;
+                        infoPanel.color = c;
+                    }
+                }
+            }
+            yield return new WaitForSeconds(.1f);
+        }
+    }
 
     #endregion For Battle Screen
 
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown("f"))
+        {
+            StartCoroutine("FadeUnitCellInfo");
+        }
+    }
 }
