@@ -65,13 +65,34 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("MapHero OnPointerDown");
-        SetPressedStatus();
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Debug.LogWarning("OnPointerDown");
+            // on left mouse click
+            SetPressedStatus();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            // on right mouse click
+            // show unit info
+            transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(GetComponent<MapHero>());
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         // Debug.Log("MapHero OnPointerUp");
-        // keep state On
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            // keep state On
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+            // deactivate unit info
+            transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
