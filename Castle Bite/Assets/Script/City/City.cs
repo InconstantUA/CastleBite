@@ -280,8 +280,8 @@ public class City : MonoBehaviour {
                     break;
                 case CityViewActiveState.ActiveHeroEquipment:
                     // SetActiveState(cityViewActiveState, false);
-                    transform.GetComponentInChildren<HeroParty>().transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
-                    transform.GetComponentInChildren<HeroParty>().transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
+                    GetHeroPartyByMode(HeroParty.PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
+                    GetHeroPartyByMode(HeroParty.PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
                     break;
             }
             // deactive currently active state
