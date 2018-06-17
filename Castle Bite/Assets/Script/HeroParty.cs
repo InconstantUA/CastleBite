@@ -5,7 +5,10 @@ using UnityEngine;
 public class HeroParty : MonoBehaviour {
     [SerializeField]
     Faction faction;
-    
+    public enum PartyMode { Party, Garnizon };
+    [SerializeField]
+    PartyMode partyMode;
+
     public Faction GetFaction()
     {
         return faction;
@@ -14,6 +17,16 @@ public class HeroParty : MonoBehaviour {
     public void SetFaction(Faction value)
     {
         faction = value;
+    }
+
+    public PartyMode GetMode()
+    {
+        return partyMode;
+    }
+
+    public void SetMode(PartyMode value)
+    {
+        partyMode = value;
     }
 
     // it is created just to be able to find it in city using

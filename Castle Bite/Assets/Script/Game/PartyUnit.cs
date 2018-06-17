@@ -146,6 +146,68 @@ public class PartyUnit : MonoBehaviour {
         return transform.parent.parent.parent;
     }
 
+    public HeroParty GetUnitParty()
+    {
+        // structure: 6HeroParty/CityGarnizon-5PartyPanel-4Row-3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
+        // verify if unit is member of party
+        if (transform.parent.parent.parent)
+        {
+            if (transform.parent.parent.parent.parent)
+            {
+                if (transform.parent.parent.parent.parent.parent.parent)
+                {
+                    return transform.parent.parent.parent.parent.parent.parent.GetComponent<HeroParty>();
+                }
+            }
+        }
+        return null;
+    }
+
+    public City GetUnitCity()
+    {
+        // structure: 7city-6HeroParty/CityGarnizon-5PartyPanel-4Row-3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
+        // verify if unit is member of party and city
+        if (transform.parent.parent.parent)
+        {
+            if (transform.parent.parent.parent.parent)
+            {
+                if (transform.parent.parent.parent.parent.parent.parent)
+                {
+                    if (transform.parent.parent.parent.parent.parent.parent.parent)
+                    {
+                        return transform.parent.parent.parent.parent.parent.parent.parent.GetComponent<City>();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public int GetEffectiveDefence()
+    {
+        // Get additional defence mondifiers:
+        //  - city
+        //  - items
+        // Verify if unit is in a friendly city and get city defence modifier
+        PartyUnit unit = GetComponent<PartyUnit>();
+        City city = unit.GetUnitCity();
+        HeroParty party = unit.GetUnitParty();
+        int cityDefenceModifier = 0;
+        if (city)
+        {
+            // verify if city is friendly
+            if (city.GetFaction() == party.GetFaction())
+            {
+                cityDefenceModifier = city.GetDefence();
+            }
+        }
+        // Get items modifier
+        // no items yet, skip
+        // ..
+        int itemsDefenceModifier = 0;
+        return (unit.GetDefence() + cityDefenceModifier + itemsDefenceModifier);
+    }
+
     public int GetPower()
     {
         return unitPower;

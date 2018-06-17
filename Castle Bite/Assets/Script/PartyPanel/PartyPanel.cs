@@ -677,7 +677,7 @@ public class PartyPanel : MonoBehaviour {
     {
         // unit being dragged is static, so we do not need to assign it here
         // or send as and argument
-        // structure: 5[City]-4[HeroParty/CityGarnizon]Party-3PartyPanel-2[Top/Middle/Bottom]HorizontalPanelGroup-1[Front/Back/Wide]Cell-UnitSlot-(this)UnitCanvas
+        // structure: 6[City]-5[HeroParty/CityGarnizon]Party-4PartyPanel-3[Top/Middle/Bottom]HorizontalPanelGroup-2[Front/Back/Wide]Cell-1UnitSlot-(this)UnitCanvas
         PartyUnit unitBeingDragged = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
         Transform unitCell = UnitDragHandler.unitBeingDragged.transform.parent.parent;
         Transform horizontalPanelGroup = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent;
@@ -701,8 +701,12 @@ public class PartyPanel : MonoBehaviour {
             //  - source of the draggable object
             //  - or destination or other panel
             // find out if current panel is the source panel
-            if (sourcePartyPanel == gameObject.GetComponent<PartyPanel>().transform)
+            Debug.Log(sourcePartyPanel.gameObject.GetInstanceID());
+            Debug.Log(gameObject.GetInstanceID());
+            if (sourcePartyPanel.gameObject.GetInstanceID() == gameObject.GetInstanceID())
             {
+                // We are in a source panel
+                Debug.Log("Highlight source panel");
                 foreach (string horisontalPanel in horisontalPanels)
                 {
                     foreach (string cell in cells)
@@ -720,6 +724,7 @@ public class PartyPanel : MonoBehaviour {
             }
             else
             {
+                Debug.Log("Highlight destination panel");
                 // there can be only 2 panels
                 // if i'm not the source panel, then I'm other panel or destination panel
                 // InterParty scope
@@ -1295,7 +1300,7 @@ public class PartyPanel : MonoBehaviour {
         Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
         if (unitSlot.childCount > 0)
         {
-            // front raw has at least one unit in it
+            // cell has a unit in it
             // verify if unit can act: alive and did not escape (flee from) the battle
             PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
             if (unit.GetIsAlive() && !unit.GetHasEscaped())
@@ -1336,7 +1341,7 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    bool HorizontalPanelHasUnitsWhichCanFight(string horisontalPanel)
+    bool CellsHaveUnit(string horisontalPanel, string[] cells)
     {
         foreach (string cell in cells)
         {
@@ -1344,6 +1349,23 @@ public class PartyPanel : MonoBehaviour {
             {
                 return true;
             }
+        }
+        return false;
+    }
+
+    bool HorizontalPanelHasUnitsWhichCanFightInTheSameRow(string horisontalPanel, string row)
+    {
+        switch (row)
+        {
+            case "Front":
+                return CellsHaveUnit(horisontalPanel, cellsFront);
+            case "Back":
+                return CellsHaveUnit(horisontalPanel, cellsBack);
+            case "Wide":
+                return CellsHaveUnit(horisontalPanel, cellsFront);
+            default:
+                Debug.LogError("Unknown row");
+                break;
         }
         return false;
     }
@@ -1466,7 +1488,7 @@ public class PartyPanel : MonoBehaviour {
                                 // act based on the mele unit position (cell)
                                 // 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanelGroup-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
                                 // if mele unit is in back row, then verify if it is not blocked by front row units
-                                // verify if this enemy unit it from front row or from back row
+                                // verify if this enemy unit is from front row or from back row
                                 if ("Back" == cell)
                                 {
                                     // unit is from back row and it may be protected by front row units
@@ -1508,8 +1530,8 @@ public class PartyPanel : MonoBehaviour {
                                                 // Bottom horisontalPanel
                                                 // verify if top or middle has units, which can fight
                                                 // which means that they can protect bottom unit from mele attacks
-                                                if (HorizontalPanelHasUnitsWhichCanFight("Top")
-                                                    || HorizontalPanelHasUnitsWhichCanFight("Middle"))
+                                                if (HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Top", cell)
+                                                    || HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Middle", cell))
                                                 {
                                                     // unit is protected
                                                     isAllowedToApplyPwrToThisUnit = false;
@@ -1541,8 +1563,8 @@ public class PartyPanel : MonoBehaviour {
                                                 // Top horisontalPanel
                                                 // verify if bottom or middle has units, which can fight
                                                 // which means that they can protect top unit from mele attacks
-                                                if (HorizontalPanelHasUnitsWhichCanFight("Bottom")
-                                                    || HorizontalPanelHasUnitsWhichCanFight("Middle"))
+                                                if (HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Bottom", cell)
+                                                    || HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Middle", cell))
                                                 {
                                                     // unit is protected
                                                     isAllowedToApplyPwrToThisUnit = false;

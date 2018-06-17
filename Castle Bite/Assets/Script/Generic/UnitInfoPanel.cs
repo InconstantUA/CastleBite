@@ -62,8 +62,10 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             }
             // Fill in unit health current and max
             transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = partyUnit.GetHealthCurr().ToString() + "/" + partyUnit.GetHealthMax().ToString();
-            // Fill in unit defence
-            transform.Find("Panel/UnitDefence/Value").GetComponent<Text>().text = partyUnit.GetDefence().ToString();
+            // Fill in unit effective defence including additional defence mondifiers:
+            //  - city
+            //  - items
+            transform.Find("Panel/UnitDefence/Value").GetComponent<Text>().text = partyUnit.GetEffectiveDefence().ToString();
             // Fill in resistances
             string resistances = "";
             // verify if there are any rezistances

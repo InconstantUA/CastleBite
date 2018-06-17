@@ -170,28 +170,38 @@ public class City : MonoBehaviour {
         // if hero party is present,
         // then activate active state highligh
         // if not - then disable hire hero button
-        if (transform.GetComponentInChildren<HeroParty>())
+        HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
+        if (heroParties.Length > 1)
         {
-            switch (cityViewActiveState)
+            // Loop through hero parties untill we find the party in party not garnizon mode
+            foreach (HeroParty heroParty in heroParties)
             {
-                case CityViewActiveState.ActiveDismiss:
-                    transform.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
-                    break;
-                case CityViewActiveState.ActiveHeal:
-                    transform.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
-                    break;
-                case CityViewActiveState.ActiveResurect:
-                    transform.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
-                    break;
-                case CityViewActiveState.ActiveHeroEquipment:
-                    SetActiveHeroEquipment(doActivate);
-                    break;
-                case CityViewActiveState.ActiveUnitDrag:
-                    transform.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
-                    break;
-                default:
-                    Debug.LogError("Unknown condition");
-                    break;
+                // compare if hero party in in party (not in garnizon mode)
+                if (heroParty.GetMode() == HeroParty.PartyMode.Party)
+                {
+                    // Set active state (highligh)
+                    switch (cityViewActiveState)
+                    {
+                        case CityViewActiveState.ActiveDismiss:
+                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
+                            break;
+                        case CityViewActiveState.ActiveHeal:
+                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
+                            break;
+                        case CityViewActiveState.ActiveResurect:
+                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
+                            break;
+                        case CityViewActiveState.ActiveHeroEquipment:
+                            SetActiveHeroEquipment(doActivate);
+                            break;
+                        case CityViewActiveState.ActiveUnitDrag:
+                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                            break;
+                        default:
+                            Debug.LogError("Unknown condition");
+                            break;
+                    }
+                }
             }
         }
         else
