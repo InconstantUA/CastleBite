@@ -124,6 +124,21 @@ public class City : MonoBehaviour {
         return cityViewActiveState;
     }
 
+    public HeroParty GetHeroPartyByMode(HeroParty.PartyMode partyMode)
+    {
+        HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
+        // Loop through hero parties untill we find the party in party not garnizon mode
+        foreach (HeroParty heroParty in heroParties)
+        {
+            // compare if hero party in in party (not in garnizon mode)
+            if (heroParty.GetMode() == partyMode)
+            {
+                return heroParty;
+            }
+        }
+        return null;
+    }
+
     public void SetActiveState(CityViewActiveState requiredState, bool doActivate)
     {
         // if doActivate is true,
@@ -170,15 +185,17 @@ public class City : MonoBehaviour {
         // if hero party is present,
         // then activate active state highligh
         // if not - then disable hire hero button
-        HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
-        if (heroParties.Length > 1)
-        {
-            // Loop through hero parties untill we find the party in party not garnizon mode
-            foreach (HeroParty heroParty in heroParties)
-            {
-                // compare if hero party in in party (not in garnizon mode)
-                if (heroParty.GetMode() == HeroParty.PartyMode.Party)
-                {
+        // HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
+        HeroParty heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party);
+        if (heroParty) { 
+        //if (heroParties.Length > 1)
+        //{
+        //    // Loop through hero parties untill we find the party in party not garnizon mode
+        //    foreach (HeroParty heroParty in heroParties)
+        //    {
+        //        // compare if hero party is in party (not in garnizon mode)
+        //        if (heroParty.GetMode() == HeroParty.PartyMode.Party)
+        //        {
                     // Set active state (highligh)
                     switch (cityViewActiveState)
                     {
@@ -201,8 +218,8 @@ public class City : MonoBehaviour {
                             Debug.LogError("Unknown condition");
                             break;
                     }
-                }
-            }
+            //    }
+            //}
         }
         else
         {
@@ -225,7 +242,7 @@ public class City : MonoBehaviour {
         // Disable Hero equipment menu if it was enabled and enable it otherwise
         // Also disable / enable hero party and city garnizon
         // Structure:   [city]->[HeroParty/CityGarnizon]
-        Transform heroParty = transform.GetComponentInChildren<HeroParty>().transform;
+        Transform heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party).transform;
         GameObject heroEquipmentMenu = heroParty.Find("HeroEquipment").gameObject;
         GameObject heroUnitsPanel = heroParty.Find("PartyPanel").gameObject;
         GameObject cityGarnizon = transform.Find("CityGarnizon").gameObject;
@@ -518,7 +535,8 @@ public class City : MonoBehaviour {
         // Focus panel wil automatically detect changes and update info
         transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissPartyLeader);
         // Dismiss party with all units in it
-        Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
+        // Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
+        Destroy(GetHeroPartyByMode(HeroParty.PartyMode.Party).gameObject);
         // Enable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(true);
     }

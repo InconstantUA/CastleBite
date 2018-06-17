@@ -607,9 +607,13 @@ public class PartyPanel : MonoBehaviour {
         if (PartyPanel.PanelMode.Garnizon == currentPartyPanel.GetComponent<PartyPanel>().GetPanelMode())
         {
             // verify if there is a HeroParty in City
-            if (cityTr.GetComponentInChildren<HeroParty>())
+            //if (cityTr.GetComponentInChildren<HeroParty>())
+            //{
+            //    otherPartyPanel = cityTr.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>();
+            //}
+            if (cityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Party))
             {
-                otherPartyPanel = cityTr.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>();
+                otherPartyPanel = cityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Party).GetComponentInChildren<PartyPanel>();
             }
         } else
         {
@@ -1182,13 +1186,35 @@ public class PartyPanel : MonoBehaviour {
         // isDroppable means if we can drop units to this cell
         if (isTargetable)
         {
+            // Unit can be targeted
             // Change text box color
             cellTr.Find("Br").GetComponent<Text>().color = positiveColor;
         }
         else
         {
+            // Unit can't be targeted
             // Change text box color
-            cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
+            // Skip "Br" modify for dead and units which has escaped from battle
+            // Get unit if it is present in the cell
+            Transform unitSlot = cellTr.Find("UnitSlot");
+            if (unitSlot.childCount > 0)
+            {
+                // Unit present in cell
+                PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                // Verify if unit has not escaped or dead
+                if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                {
+                    // Unit is alive and has not escaped
+                    // Apply default negative Color
+                    cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
+                }
+            }
+            else
+            {
+                // No unit
+                // Apply default negative Color
+                cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
+            }
         }
         // set UnitSlot in cell as droppable or not
         cellTr.Find("UnitSlot").GetComponent<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
@@ -1868,6 +1894,10 @@ public class PartyPanel : MonoBehaviour {
             // set cell canvas to be more darker
             Text cellCanvas = cell.Find("Br").GetComponent<Text>();
             cellCanvas.color = deadColor;
+            // set dead in status
+            Text statusPanel = cell.Find("Status").GetComponent<Text>();
+            statusPanel.text = "Dead";
+            statusPanel.color = deadColor;
         }
         // display damage dealt in info panel
         Text infoPanel = cell.Find("InfoPanel").GetComponent<Text>();
@@ -2170,22 +2200,24 @@ public class PartyPanel : MonoBehaviour {
                         int newUnitExperienceValue = unit.GetExperience() + experiencePerUnit;
                         // verify if unit has not reached new level
                         Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+                        Text statusPanel = unit.GetUnitCell().Find("Status").GetComponent<Text>();
                         if (newUnitExperienceValue < unit.GetExperienceRequiredToReachNewLevel())
                         {
                             // unit has not reached new level
                             // just update hist current experience value
                             unit.SetExperience(newUnitExperienceValue);
-                            // show gained experience
-                            // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
-                            // UnitCell-InfoPanel
-                            infoPanel.text = "+" + experiencePerUnit.ToString() + " Exp";
                         }
                         else
                         {
                             UpgradeUnit(unit);
-                            // update panel to indicate level up
-                            infoPanel.text = "Level up";
+                            // update status panel to indicate level up
+                            statusPanel.text = "Level up";
+                            statusPanel.color = Color.green;
                         }
+                        // show gained experience
+                        // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
+                        // UnitCell-InfoPanel
+                        infoPanel.text = "+" + experiencePerUnit.ToString() + " Exp";
                         infoPanel.color = Color.green;
                     }
                 }
@@ -2221,11 +2253,11 @@ public class PartyPanel : MonoBehaviour {
     #endregion For Battle Screen
 
     // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown("f"))
-        {
-            StartCoroutine("FadeUnitCellInfo");
-        }
-    }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown("f"))
+    //    {
+    //        StartCoroutine("FadeUnitCellInfo");
+    //    }
+    //}
 }
