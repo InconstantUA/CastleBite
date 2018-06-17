@@ -189,7 +189,7 @@ public class PartyPanel : MonoBehaviour {
         if (unit.GetGivenName() != unit.GetUnitName())
         {
             // start with Hero's given name information
-            unitName = unit.GetGivenName().ToString() + "\r\n" + unit.GetUnitName().ToString();
+            unitName = unit.GetGivenName().ToString() + "\r\n<size=12>" + unit.GetUnitName().ToString() + "</size>";
         }
         else
         {
@@ -1824,14 +1824,14 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // get unit for later checks
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    // verify if unit is alive and did not flee from battle
-                    if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                    {
+                    //// get unit for later checks
+                    //PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    //// verify if unit is alive and did not flee from battle
+                    //if (unit.GetIsAlive() && !unit.GetHasEscaped())
+                    //{
                         // clear both info panels
                         ClearInfoPanel(partyPanel, horisontalPanel, cell);
-                    }
+                    //}
                 }
             }
         }
