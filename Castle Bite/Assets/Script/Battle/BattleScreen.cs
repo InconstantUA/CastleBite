@@ -11,13 +11,35 @@ public class BattleScreen : MonoBehaviour {
 
     PartyUnit activeUnit;
 
+    public enum BattlePlace { Map, CityOutside, CityInside };
+    BattlePlace battlePlace;
+
+    //public BattlePlace GetBattlePlace()
+    //{
+    //    return battlePlace;
+    //}
+
+    //public void SetBattlePlace(BattlePlace value)
+    //{
+    //    battlePlace = value;
+    //}
+
     // Use this for initialization
-    void Awake () {
+    void Awake() {
         // initialize internal "static" (non-changeable) resources
         leftFocusPanel = transform.Find("LeftFocus").GetComponent<FocusPanel>();
         rightFocusPanel = transform.Find("RightFocus").GetComponent<FocusPanel>();
     }
-	
+
+    BattlePlace GetBattlePlace(HeroParty playerHeroParty, HeroParty enemyHeroParty)
+    {
+        // Return battle place based on:
+        //  - position of units before battle start
+        //  - who is initiating battle
+        // ..
+        return BattlePlace.Map;
+    }
+
     public void EnterBattle(MapHero playerOnMap, MapHero enemyOnMap)
     {
         // activate this battle sreen
@@ -25,6 +47,8 @@ public class BattleScreen : MonoBehaviour {
         // get hero's parties
         HeroParty playerHeroParty = playerOnMap.linkedPartyTr.GetComponent<HeroParty>();
         HeroParty enemyHeroParty = enemyOnMap.linkedPartyTr.GetComponent<HeroParty>();
+        // get battle place
+        battlePlace = GetBattlePlace(playerHeroParty, enemyHeroParty);
         // move hero parties to the battle screen
         playerHeroParty.transform.SetParent(transform);
         enemyHeroParty.transform.SetParent(transform);
@@ -63,12 +87,98 @@ public class BattleScreen : MonoBehaviour {
             // it is not possible to start new turn
             EndBattle();
         }
+        // Deactivate exit battle button;
+        transform.Find("Exit").gameObject.SetActive(false);
+        // Activate all other battle buttons;
+        transform.Find("CtrlPnlFight").gameObject.SetActive(true);
     }
 
+    void DefaultOnBattleExit()
+    {
+        // if hero is still alive, then set click handler to edit mode
+        BattleExit exitButton = transform.Find("Exit").GetComponent<BattleExit>();
+        if (exitButton.GetExitOption() != BattleExit.ExitOption.DestroyPlayer)
+        {
+            // activate hero edit click and drag handler
+            playerPartyPanel.SetOnEditClickHandler(true);
+            // deactivate battle click handler, which will react on clicks
+            playerPartyPanel.SetOnBattleClickHandler(false);
+        }
+        // Activate other required screen based on the original parties location
+        switch (battlePlace)
+        {
+            case BattlePlace.Map:
+                // Enable map screen
+                Transform mapScreen = transform.root.Find("MapScreen");
+                mapScreen.gameObject.SetActive(true);
+                // Change map mode to browse
+                MapManager mapManager = mapScreen.Find("Map").GetComponent<MapManager>();
+                mapManager.SetMode(MapManager.Mode.Browse);
+                break;
+            case BattlePlace.CityOutside:
+                break;
+            case BattlePlace.CityInside:
+                break;
+            default:
+                Debug.LogError("Unknown battle place");
+                break;
+        }
+        // Reset almost all units statuses and info for panels, if they are still present
+        // Exceptions: Dead
+        if (playerPartyPanel)
+        {
+            playerPartyPanel.ResetUnitCellInfoPanel(playerPartyPanel.transform);
+            playerPartyPanel.ResetUnitCellStatus(playerPartyPanel.transform, new string[] { playerPartyPanel.deadStatus });
+        }
+        if (enemyPartyPanel)
+        {
+            enemyPartyPanel.ResetUnitCellInfoPanel(enemyPartyPanel.transform);
+            enemyPartyPanel.ResetUnitCellStatus(enemyPartyPanel.transform, new string[] { enemyPartyPanel.deadStatus });
+        }
+        // Close battle sreen
+        gameObject.SetActive(false);
+    }
+
+    public void DestroyPlayer()
+    {
+        // set variables
+        HeroParty heroParty = playerPartyPanel.transform.parent.GetComponent<HeroParty>();
+        MapHero heroOnMapRepresentation = heroParty.GetLinkedPartyOnMap();
+        // destroy on map party representation
+        Destroy(heroOnMapRepresentation.gameObject);
+        // destroy party
+        Destroy(heroParty.gameObject);
+        DefaultOnBattleExit();
+    }
+
+    public void DestroyEnemy()
+    {
+        Destroy(enemyPartyPanel.transform.parent.gameObject);
+        DefaultOnBattleExit();
+    }
+
+    public void FleePlayer()
+    {
+        DefaultOnBattleExit();
+    }
+
+    public void FleeEnemy()
+    {
+        DefaultOnBattleExit();
+    }
 
     void EndBattle()
     {
         Debug.Log("EndBattle");
+        // Reset party panels all statuses
+        // Clear units info and status information
+        enemyPartyPanel.ResetUnitCellStatus(enemyPartyPanel.transform, new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
+        // Set exit button variable
+        BattleExit exitButton = transform.Find("Exit").GetComponent<BattleExit>();
+        // Activate exit battle button;
+        exitButton.gameObject.SetActive(true);
+        // Deactivate all other battle buttons;
+        transform.Find("CtrlPnlFight").gameObject.SetActive(false);
         // Check who win battle
         if (!playerPartyPanel.CanFight())
         {
@@ -77,20 +187,17 @@ public class BattleScreen : MonoBehaviour {
             if (playerPartyPanel.HasEscapedBattle())
             {
                 // player has escaped battle
-                // move it 2 tiles away from other party
+                // On exit: move it 2 tiles away from other party
+                exitButton.SetExitOption(BattleExit.ExitOption.FleePlayer);
             }
             else
             {
                 // player lost battle and was destroyed
-                // destroy player party on exit
-                // Destroy(playerPartyPanel.transform.parent.gameObject);
+                // On exit: destroy player party
+                exitButton.SetExitOption(BattleExit.ExitOption.DestroyPlayer);
             }
             // Show how much experience was earned by enemy party
             enemyPartyPanel.GrantAndShowExperienceGained(playerPartyPanel);
-            // activate hero edit click and drag handler
-            enemyPartyPanel.SetOnEditClickHandler(true);
-            // deactivate battle click handler, which will react on clicks
-            enemyPartyPanel.SetOnBattleClickHandler(false);
         }
         else
         {
@@ -98,26 +205,20 @@ public class BattleScreen : MonoBehaviour {
             // verify if enemy has flee from battle
             if (enemyPartyPanel.HasEscapedBattle())
             {
-                // player has escaped battle
-                // move it 2 tiles away from other party
+                // enemy has escaped battle
+                // On exit: move it 2 tiles away from other party
+                exitButton.SetExitOption(BattleExit.ExitOption.FleeEnemy);
             }
             else
             {
                 // player lost battle and was destroyed
-                // destroy player party on exit
+                // On exit: destroy enemy party
                 // Destroy(enemyPartyPanel.transform.parent.gameObject);
+                exitButton.SetExitOption(BattleExit.ExitOption.DestroyEnemy);
             }
-            // Show how much experience was earned by enemy party
+            // Show how much experience was earned by player party
             playerPartyPanel.GrantAndShowExperienceGained(enemyPartyPanel);
-            // activate hero edit click and drag handler
-            playerPartyPanel.SetOnEditClickHandler(true);
-            // deactivate battle click handler, which will react on clicks
-            playerPartyPanel.SetOnBattleClickHandler(false);
         }
-        // Activate exit battle button;
-        // ..
-        // Deactivate all other battle buttons;
-        // ..
     }
 
     void ResetHasMovedFlag()

@@ -82,6 +82,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return mode;
     }
 
+    public void SetMode(Mode value)
+    {
+        mode = value;
+    }
+
     public void SetSelectedHero(MapHero sltdHero)
     {
         selectedHero = sltdHero;
@@ -167,7 +172,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     FindAndHighlightPath();
                     break;
                 case Mode.Move:
-                    // Move();
                     // do nothing, wait for move to finish
                     break;
                 default:
@@ -228,7 +232,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     TileOccupiedBy GetTileOccupationState(NesScripts.Controls.PathFind.Point pathPoint)
     {
-        TileOccupiedBy result = TileOccupiedBy.None;
         Vector2Int tilePosition = new Vector2Int
         {
             x = pathPoint.x,
@@ -268,7 +271,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
-        return result;
+        return TileOccupiedBy.None;
     }
 
     void HighlightLastPathTile()
@@ -278,6 +281,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         lastPathTile = movePath[movePath.Count - 1];
         // set lastTileOccupiedBy value it will be used here and in other functions too
         lastTileOccupiedBy = GetTileOccupationState(lastPathTile);
+        // Debug.Log(lastPathTile.x.ToString() + ":" + lastPathTile.y.ToString() + " " + lastTileOccupiedBy.ToString());
         // highlight based on the occupation type
         switch (lastTileOccupiedBy)
         {
@@ -305,7 +309,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void HighlightMovePath(bool doHighlight)
+    public void HighlightMovePath(bool doHighlight)
     {
         Color highlightColor = Color.green;
         // todo: it is better to make them transparant, then instantiate new and destroy each time
@@ -321,7 +325,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // if for example in the past there was enemy standing and we were highliting is with red color
                 tileHighlighters[pathPoint.x, pathPoint.y].GetComponentInChildren<Text>().color = highlightColor;
             }
-            HighlightLastPathTile();
+            if (doHighlight)
+            {
+                HighlightLastPathTile();
+            }
         }
     }
 
@@ -522,6 +529,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void EndMoveTransition()
     {
+        // Remove path highlight
+        HighlightMovePath(false);
         // transition to required state based on the type of the last occupied cell
         switch (lastTileOccupiedBy)
         {
@@ -548,19 +557,30 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 EnterBattleAfterMove();
                 break;
         }
-
     }
 
     IEnumerator Move()
     {
         Debug.Log("Move");
-        // unlink city from hero and hero from city if they were linked before
+        // Verify if hero was in city
         if (selectedHero.linkedCityOnMapTr)
         {
-            selectedHero.linkedCityOnMapTr.GetComponent<MapCity>().linkedPartyTr = null;
+            // Unlink city from hero and hero from city if they were linked before
+            MapCity linkedCity = selectedHero.linkedCityOnMapTr.GetComponent<MapCity>();
+            linkedCity.linkedPartyTr = null;
             selectedHero.linkedCityOnMapTr = null;
+            // Get current party city
+            HeroParty heroParty = selectedHero.linkedPartyTr.GetComponent<HeroParty>();
+            City currentCity = heroParty.transform.parent.GetComponent<City>();
+            // Enable hire hero panel in city
+            currentCity.ReturnToNomalState();
+            // Move party from city to PartiesOnMap container
+            Transform partiesOnMap = transform.root.Find("PartiesOnMap");
+            heroParty.transform.SetParent(partiesOnMap);
+            // Update hero party place
+            heroParty.SetPlace(HeroParty.PartyPlace.Map);
         }
-        // move
+        // Move
         float deltaTime;
         float previousTime = Time.time;
         if (movePath != null)
@@ -617,8 +637,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 Debug.LogError("Unknown mode");
                 break;
         }
-        
-
     }
 
 }

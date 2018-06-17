@@ -18,6 +18,8 @@ public class PartyPanel : MonoBehaviour {
 
     // for battle
     PartyUnit activeBattleUnit;
+    public string deadStatus = "Dead";
+    public string levelUpStatus = "Level up";
 
     public Transform GetUnitSlotTr(string row, string cell)
     {
@@ -1839,7 +1841,7 @@ public class PartyPanel : MonoBehaviour {
         infoPanelTxt.color = defaultColor;
     }
 
-    void ResetUnitCellInfoPanel(Transform partyPanel)
+    public void ResetUnitCellInfoPanel(Transform partyPanel)
     {
         foreach (string horisontalPanel in horisontalPanels)
         {
@@ -1858,6 +1860,46 @@ public class PartyPanel : MonoBehaviour {
                         // clear both info panels
                         ClearInfoPanel(partyPanel, horisontalPanel, cell);
                     //}
+                }
+            }
+        }
+    }
+
+    void ClearUnitCellStatus(Transform partyPanelTr, string horisontalPanel, string cell)
+    {
+        Color32 defaultColor = new Color32(180, 180, 180, 255);
+        Text infoPanelTxt = partyPanelTr.Find(horisontalPanel).Find(cell).Find("Status").GetComponent<Text>();
+        infoPanelTxt.text = "";
+        infoPanelTxt.color = defaultColor;
+    }
+
+    public void ResetUnitCellStatus(Transform partyPanel, string[] exceptions)
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // Unit canvas (and unit) is present
+                // verify if slot has an unit in it
+                Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Do not remove some statuses, because they should persist
+                    // Verify if it is in exceptions
+                    Text unitStatus = unitSlot.parent.Find("Status").GetComponent<Text>();
+                    bool itIsException = false;
+                    foreach (string exception in exceptions)
+                    {
+                        if (exception == unitStatus.text)
+                        {
+                            itIsException = true;
+                        }
+                    }
+                    if(!itIsException)
+                    {
+                        // Clear status, because it is not in exceptions list
+                        ClearUnitCellStatus(partyPanel, horisontalPanel, cell);
+                    }
                 }
             }
         }
@@ -1896,7 +1938,7 @@ public class PartyPanel : MonoBehaviour {
             cellCanvas.color = deadColor;
             // set dead in status
             Text statusPanel = cell.Find("Status").GetComponent<Text>();
-            statusPanel.text = "Dead";
+            statusPanel.text = deadStatus;
             statusPanel.color = deadColor;
         }
         // display damage dealt in info panel
@@ -2211,7 +2253,7 @@ public class PartyPanel : MonoBehaviour {
                         {
                             UpgradeUnit(unit);
                             // update status panel to indicate level up
-                            statusPanel.text = "Level up";
+                            statusPanel.text = levelUpStatus;
                             statusPanel.color = Color.green;
                         }
                         // show gained experience

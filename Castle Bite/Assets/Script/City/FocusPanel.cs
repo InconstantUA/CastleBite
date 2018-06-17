@@ -11,7 +11,7 @@ public class FocusPanel : MonoBehaviour {
     PartyPanel partyPanel;
     public enum FocusMode { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
     FocusMode focusMode;
-    public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader }
+    public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader, HeroLeaveCity }
 
     // Use this for initialization
     void Start()
@@ -143,6 +143,7 @@ public class FocusPanel : MonoBehaviour {
                 OnHireDoubleUnit();
                 break;
             case ChangeType.DismissPartyLeader:
+            case ChangeType.HeroLeaveCity:
                 SetNoPartyInfo();
                 break;
             case ChangeType.DismissSingleUnit:

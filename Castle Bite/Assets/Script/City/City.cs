@@ -287,6 +287,14 @@ public class City : MonoBehaviour {
             // deactive currently active state
             // SetActiveState(cityViewActiveState, false);
         }
+        // If ther is no hero in the city or hero has left city, then display HireHeroPanel
+        if (GetHeroPartyByMode(HeroParty.PartyMode.Party))
+        {
+            // Instruct Focus panel to update info
+            transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HeroLeaveCity);
+            // Enable Hire leader panel
+            transform.Find("HireHeroPanel").gameObject.SetActive(true);
+        }
     }
 
     public void ExitCity()
@@ -355,6 +363,10 @@ public class City : MonoBehaviour {
         //  set HeroEquipmentBtn Toggle within CityControlPanel, so it can dimm or deselect it when other Toggles in group are activated
         //  this should be set to null on hero leaving or accessed outside of the city.
         toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
+        // Set party mode
+        newPartyUIPanel.GetComponent<HeroParty>().SetMode(HeroParty.PartyMode.Party);
+        // Set party place
+        newPartyUIPanel.GetComponent<HeroParty>().SetPlace(HeroParty.PartyPlace.City);
         // return new party as result
         return newPartyUIPanel;
     }
@@ -374,6 +386,8 @@ public class City : MonoBehaviour {
         // Link hero to the hero on the map
         MapHero heroOnMap = newPartyOnMapUI.GetComponent<MapHero>();
         heroOnMap.linkedPartyTr = newLeaderParty.transform;
+        // Linke hero on the map to hero
+        newLeaderParty.GetComponent<HeroParty>().SetLinkedPartyOnMap(heroOnMap);
         // Update information about hero on the map Lable.
         heroOnMap.UpdateHeroLable(leaderUnit);
         // Link hero on the map to city on the map

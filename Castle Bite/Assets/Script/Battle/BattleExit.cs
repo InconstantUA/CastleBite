@@ -13,6 +13,18 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     Text txt;
     Button btn;
     Color tmpColor;
+    public enum ExitOption { FleePlayer, FleeEnemy, DestroyPlayer, DestroyEnemy };
+    ExitOption exitOption;
+
+    public void SetExitOption(ExitOption value)
+    {
+        exitOption = value;
+    }
+
+    public ExitOption GetExitOption()
+    {
+        return exitOption;
+    }
 
     void Start()
     {
@@ -54,6 +66,25 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         // activate map view
         Debug.Log("Exit");
+        BattleScreen battleScreen = transform.parent.GetComponent<BattleScreen>();
+        switch (exitOption)
+        {
+            case ExitOption.DestroyPlayer:
+                battleScreen.DestroyPlayer();
+                break;
+            case ExitOption.DestroyEnemy:
+                battleScreen.DestroyEnemy();
+                break;
+            case ExitOption.FleePlayer:
+                battleScreen.FleePlayer();
+                break;
+            case ExitOption.FleeEnemy:
+                battleScreen.FleeEnemy();
+                break;
+            default:
+                Debug.LogError("Unknown exit option.");
+                break;
+        }
     }
 
 }

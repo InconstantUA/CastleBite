@@ -5,9 +5,27 @@ using UnityEngine;
 public class HeroParty : MonoBehaviour {
     [SerializeField]
     Faction faction;
+
     public enum PartyMode { Party, Garnizon };
     [SerializeField]
     PartyMode partyMode;
+
+    public enum PartyPlace { Map, City };
+    [SerializeField]
+    PartyPlace partyPlace;
+
+    [SerializeField]
+    MapHero linkedPartyOnMap;
+
+    public void SetLinkedPartyOnMap(MapHero value)
+    {
+        linkedPartyOnMap = value;
+    }
+
+    public MapHero GetLinkedPartyOnMap()
+    {
+        return linkedPartyOnMap;
+    }
 
     public Faction GetFaction()
     {
@@ -29,15 +47,24 @@ public class HeroParty : MonoBehaviour {
         partyMode = value;
     }
 
-    // it is created just to be able to find it in city using
-    // GetComponentInChildren<HeroParty>() function
-    // Use this for initialization
-    void Start () {
+    public PartyPlace GetPlace()
+    {
+        return partyPlace;
+    }
 
-	}
+    public void SetPlace(PartyPlace value)
+    {
+        partyPlace = value;
+    }
+
+
+    // Use this for initialization
+ //   void Start () {
+
+	//}
 	
-	// Update is called once per frame
-	void Update () {
+	//// Update is called once per frame
+	//void Update () {
 		
-	}
+	//}
 }
