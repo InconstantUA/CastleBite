@@ -63,6 +63,35 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    public void SetOnBattleClickHandler(bool doActivate)
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Unit canvas is present
+                    if (doActivate)
+                    {
+                        // add UnitOnBattleMouseHandler Component
+                        GameObject unitCanvas = unitSlot.GetChild(0).gameObject;
+                        // UnitOnBattleMouseHandler sc = unitCanvas.AddComponent<UnitOnBattleMouseHandler>() as UnitOnBattleMouseHandler;
+                        unitCanvas.AddComponent<UnitOnBattleMouseHandler>();
+                    }
+                    else
+                    {
+                        // remove UnitOnBattleMouseHandler Component
+                        UnitOnBattleMouseHandler unitOnBattleMouseHandlerComponent = unitSlot.GetComponentInChildren<UnitOnBattleMouseHandler>();
+                        Destroy(unitOnBattleMouseHandlerComponent);
+                    }
+                }
+            }
+        }
+    }
+
     void OnHireSingleUnit(Transform changedCell)
     {
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
@@ -1124,34 +1153,6 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    public void SetOnBattleClickHandler(bool doActivate)
-    {
-        foreach (string horisontalPanel in horisontalPanels)
-        {
-            foreach (string cell in cells)
-            {
-                // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
-                {
-                    // Unit canvas is present
-                    if (doActivate)
-                    {
-                        // add UnitOnBattleMouseHandler Component
-                        GameObject unitCanvas = unitSlot.GetChild(0).gameObject;
-                        // UnitOnBattleMouseHandler sc = unitCanvas.AddComponent<UnitOnBattleMouseHandler>() as UnitOnBattleMouseHandler;
-                        unitCanvas.AddComponent<UnitOnBattleMouseHandler>();
-                    }
-                    else
-                    {
-                        // remove UnitOnBattleMouseHandler Component
-                        UnitOnBattleMouseHandler unitOnBattleMouseHandlerComponent = unitSlot.GetComponentInChildren<UnitOnBattleMouseHandler>();
-                        Destroy(unitOnBattleMouseHandlerComponent);
-                    }
-                }
-            }
-        }
-    }
 
     bool GetIsUnitFriendly(PartyUnit unitToActivate)
     {
@@ -1428,7 +1429,7 @@ public class PartyPanel : MonoBehaviour {
         return isBlocked;
     }
 
-    void ResetAllCells()
+    void ResetAllCellsCanBeTargetedStatus()
     {
         Color positiveColor = Color.yellow;
         Color negativeColor = Color.grey;
@@ -1723,11 +1724,20 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    void HighlightActiveUnitInBattle(PartyUnit unitToActivate)
+    public void HighlightActiveUnitInBattle(PartyUnit unitToActivate, bool doHighlight = true)
     {
-        Debug.Log(" HighlightActiveUnitInBattle");
-        // highlight unit canvas with blue color
-        Color highlightColor = Color.blue;
+        Color highlightColor;
+        if (doHighlight)
+        {
+            Debug.Log(" HighlightActiveUnitInBattle");
+            highlightColor = Color.white;
+        }
+        else
+        {
+            Debug.Log(" Remove highlight from active unit in battle");
+            highlightColor = Color.grey;
+        }
+        // highlight unit canvas with required color
         // structure: 3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
         Transform cellTr = unitToActivate.transform.parent.parent.parent;
         Text canvasText = cellTr.Find("Br").GetComponent<Text>();
@@ -1738,7 +1748,7 @@ public class PartyPanel : MonoBehaviour {
     {
         Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
         // first reset all cells do default values
-        ResetAllCells();
+        ResetAllCellsCanBeTargetedStatus();
         // save it locally for later use
         activeBattleUnit = unitToActivate;
         // new unit became active in battle

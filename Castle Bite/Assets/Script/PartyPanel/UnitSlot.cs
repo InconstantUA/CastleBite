@@ -205,6 +205,69 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return transform.parent.parent.parent.GetComponent<PartyPanel>();
     }
 
+    void ActOnCityClick()
+    {
+        Debug.Log("UnitSlot ActOnClick in City");
+        // presave state, because we are going to reset it here
+        City.CityViewActiveState cityState = GetParentCity().GetActiveState();
+        // disable dismiss mode and return to normal mode
+        // this looks naturally
+        GetParentCity().ReturnToNomalState();
+        // act based on the city (and cursor) state
+        switch (cityState)
+        {
+            case City.CityViewActiveState.Normal:
+                // do nothing for now
+                break;
+            case City.CityViewActiveState.ActiveHeroEquipment:
+                // do nothing for now
+                break;
+            case City.CityViewActiveState.ActiveDismiss:
+                // try to dismiss unit, if it is possible
+                TryToDismissUnit();
+                break;
+            case City.CityViewActiveState.ActiveHeal:
+                // try to heal unit, if it is possible
+                break;
+            case City.CityViewActiveState.ActiveResurect:
+                // try to resurect unit, if it is possible
+                break;
+            case City.CityViewActiveState.ActiveUnitDrag:
+                // ??
+                break;
+            default:
+                Debug.LogError("Unknown state");
+                break;
+        }
+    }
+
+    void ActOnBattleScreenClick()
+    {
+        BattleScreen battleScreen = GetParentBattleScreen();
+        // Verify if battle has not ended
+        if (!battleScreen.GetBattleHasEnded())
+        {
+            Debug.Log("UnitSlot ActOnClick in Battle screen");
+            // act based on the previously set by SetOnClickAction by PartyPanel conditions
+            if (isAllowedToApplyPowerToThisUnit)
+            {
+                // it is allowed to apply powers to the unit in this cell
+                GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnit>());
+                // set unit has moved flag
+                PartyUnit activeUnit = battleScreen.GetActiveUnit();
+                activeUnit.SetHasMoved(true);
+                // activate next unit
+                battleScreen.ActivateNextUnit();
+            }
+            else
+            {
+                // it is not allowed to use powers on this cell
+                // display error message
+                transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
+            }
+        }
+    }
+
     void ActOnClick()
     {
         // act based on where we are:
@@ -214,41 +277,10 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         BattleScreen battleScreen = GetParentBattleScreen();
         if (city)
         {
-            // presave state, because we are going to reset it here
-            City.CityViewActiveState cityState = GetParentCity().GetActiveState();
-            // disable dismiss mode and return to normal mode
-            // this looks naturally
-            GetParentCity().ReturnToNomalState();
-            // act based on the city (and cursor) state
-            switch (cityState)
-            {
-                case City.CityViewActiveState.Normal:
-                    // do nothing for now
-                    break;
-                case City.CityViewActiveState.ActiveHeroEquipment:
-                    // do nothing for now
-                    break;
-                case City.CityViewActiveState.ActiveDismiss:
-                    // try to dismiss unit, if it is possible
-                    TryToDismissUnit();
-                    break;
-                case City.CityViewActiveState.ActiveHeal:
-                    // try to heal unit, if it is possible
-                    break;
-                case City.CityViewActiveState.ActiveResurect:
-                    // try to resurect unit, if it is possible
-                    break;
-                case City.CityViewActiveState.ActiveUnitDrag:
-                    // ??
-                    break;
-                default:
-                    Debug.LogError("Unknown state");
-                    break;
-            }
+            ActOnCityClick();
         }
         if (battleScreen)
         {
-            Debug.Log("UnitSlot ActOnClick Battle screen");
             ActOnBattleScreenClick();
         }
     }
@@ -304,28 +336,6 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         isAllowedToApplyPowerToThisUnit = isAllowedToApplyPwrToThisUnit;
         errorMessage = errMsg;
-    }
-
-    void ActOnBattleScreenClick()
-    {
-        // act based on the previously set by SetOnClickAction by PartyPanel conditions
-        if (isAllowedToApplyPowerToThisUnit)
-        {
-            // it is allowed to apply powers to the unit in this cell
-            GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnit>());
-            // set unit has moved flag
-            BattleScreen battleScreen = GetParentBattleScreen();
-            PartyUnit activeUnit = battleScreen.GetActiveUnit();
-            activeUnit.SetHasMoved(true);
-            // activate next unit
-            battleScreen.ActivateNextUnit();
-        }
-        else
-        {
-            // it is not allowed to use powers on this cell
-            // display error message
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
-        }
     }
 
     #endregion OnClick

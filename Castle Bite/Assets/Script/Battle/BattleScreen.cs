@@ -14,6 +14,8 @@ public class BattleScreen : MonoBehaviour {
     public enum BattlePlace { Map, CityOutside, CityInside };
     BattlePlace battlePlace;
 
+    bool battleHasEnded;
+
     //public BattlePlace GetBattlePlace()
     //{
     //    return battlePlace;
@@ -23,6 +25,11 @@ public class BattleScreen : MonoBehaviour {
     //{
     //    battlePlace = value;
     //}
+
+    public bool GetBattleHasEnded()
+    {
+        return battleHasEnded;
+    }
 
     // Use this for initialization
     void Awake() {
@@ -75,6 +82,8 @@ public class BattleScreen : MonoBehaviour {
     void StartBattle()
     {
         Debug.Log("StartBattle");
+        // set battle has started
+        battleHasEnded = false;
         // deactivate hero edit click and drag handler
         playerPartyPanel.SetOnEditClickHandler(false);
         enemyPartyPanel.SetOnEditClickHandler(false);
@@ -170,7 +179,10 @@ public class BattleScreen : MonoBehaviour {
     void EndBattle()
     {
         Debug.Log("EndBattle");
-        // Reset party panels all statuses
+        // set battle has ended
+        battleHasEnded = true;
+        // Remove highlight from active unit
+        enemyPartyPanel.HighlightActiveUnitInBattle(activeUnit, false);
         // Clear units info and status information
         enemyPartyPanel.ResetUnitCellStatus(enemyPartyPanel.transform, new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
