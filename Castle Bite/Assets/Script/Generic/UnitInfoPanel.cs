@@ -138,7 +138,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             // on right mouse click
             // deactivate unit info
-            transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 

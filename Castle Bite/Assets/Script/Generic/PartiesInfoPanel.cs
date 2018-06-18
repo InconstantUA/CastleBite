@@ -45,7 +45,7 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
         {
             // on right mouse click
             // deactivate unit info
-            transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 
