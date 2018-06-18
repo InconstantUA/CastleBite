@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PartyUnit : MonoBehaviour {
     // Custom types
@@ -63,6 +64,26 @@ public class PartyUnit : MonoBehaviour {
         EntireParty
     }
 
+    public enum UnitStatus
+    {
+        Active, // not Dead and not Escaped = can fight
+        Dead,
+        Escaped
+    }
+
+    public enum UnitDebuff
+    {
+        Poisoned,
+        Burned,
+        Chilled,
+        Paralyzed
+    }
+
+    public enum UnitBuff
+    {
+        DefenceStance
+    }
+
     // Misc attributes
     [SerializeField]
     string unitName;
@@ -93,8 +114,8 @@ public class PartyUnit : MonoBehaviour {
     int healthMax;
     [SerializeField]
     int healthMaxIncrementOnLevelUp;
-    [SerializeField]
-    bool isAlive = true;
+    //[SerializeField]
+    //bool isAlive = true;
     [SerializeField]
     int unitDefence;
     [SerializeField]
@@ -124,8 +145,8 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     string unitFullDescription;
     // Misc Battle attributes
-    [SerializeField]
-    bool hasEscaped = false;
+    //[SerializeField]
+    //bool hasEscaped = false;
     [SerializeField]
     bool hasMoved = false;
     // Misc hire and edit unit attributes
@@ -137,13 +158,27 @@ public class PartyUnit : MonoBehaviour {
     bool isInterpartyMovable;
     [SerializeField]
     bool isDismissable;
-
-
+    [SerializeField]
+    UnitStatus unitStatus;
+    [SerializeField]
+    UnitDebuff[] unitDebuffs;
+    [SerializeField]
+    UnitBuff[] unitBuffs;
 
     public Transform GetUnitCell()
     {
         // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
         return transform.parent.parent.parent;
+    }
+
+    public Text GetUnitStatusText()
+    {
+        return GetUnitCell().Find("Status").GetComponent<Text>();
+    }
+
+    public Text GetUnitInfoPanelText()
+    {
+        return GetUnitCell().Find("InfoPanel").GetComponent<Text>();
     }
 
     public HeroParty GetUnitParty()
@@ -512,25 +547,25 @@ public class PartyUnit : MonoBehaviour {
         isInterpartyMovable = isLdr;
     }
 
-    public bool GetIsAlive()
-    {
-        return isAlive;
-    }
+    //public bool GetIsAlive()
+    //{
+    //    return isAlive;
+    //}
 
-    public void SetIsAlive(bool value)
-    {
-        isAlive = value;
-    }
+    //public void SetIsAlive(bool value)
+    //{
+    //    isAlive = value;
+    //}
 
-    public bool GetHasEscaped()
-    {
-        return hasEscaped;
-    }
+    //public bool GetHasEscaped()
+    //{
+    //    return hasEscaped;
+    //}
 
-    public void SetHasEscaped(bool value)
-    {
-        hasEscaped = value;
-    }
+    //public void SetHasEscaped(bool value)
+    //{
+    //    hasEscaped = value;
+    //}
 
     public bool GetHasMoved()
     {
@@ -552,7 +587,72 @@ public class PartyUnit : MonoBehaviour {
         unitInitiative = value;
     }
 
+    public UnitStatus GetUnitStatus()
+    {
+        return unitStatus;
+    }
 
+    public string GetUnitStatusString()
+    {
+        switch (unitStatus)
+        {
+            case UnitStatus.Active:
+                return "";
+            case UnitStatus.Dead:
+                return "Dead";
+            case UnitStatus.Escaped:
+                return "Escaped";
+            default:
+                Debug.LogError("Unknown unit status");
+                return null;
+        }
+    }
+
+    public Color GetUnitStatusColor()
+    {
+        switch (unitStatus)
+        {
+            case UnitStatus.Active:
+                return Color.gray;
+            case UnitStatus.Dead:
+                return new Color32(64, 64, 64, 255); // darkest grey
+            case UnitStatus.Escaped:
+                return new Color32(96, 96, 96, 255); // darker grey
+            default:
+                Debug.LogError("Unknown unit status");
+                return Color.red;
+        }
+    }
+
+    public Text GetUnitCurrentHealthText()
+    {
+        return GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>();
+    }
+
+    public Text GetUnitMaxHealthText()
+    {
+        return GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>();
+    }
+
+    public Text GetUnitCanvasText()
+    {
+        return GetUnitCell().Find("Br").GetComponent<Text>();
+    }
+
+    public void SetUnitStatus(UnitStatus value)
+    {
+        unitStatus = value;
+    }
+
+    public UnitDebuff[] GetUnitDebuffs()
+    {
+        return unitDebuffs;
+    }
+
+    public UnitBuff[] GetUnitBuffs()
+    {
+        return unitBuffs;
+    }
 
     //// Use this for initialization
     //void Start () {

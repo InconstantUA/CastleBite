@@ -52,8 +52,15 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     void ActOnClick()
     {
-        // activate map view
+        // Defend
         Debug.Log("Defend");
+        // Get active unit from Battle Screen
+        // Structure: BattleScreen-CtrlPnlFight-this button
+        PartyUnit activeUnit = transform.parent.parent.GetComponent<BattleScreen>().GetActiveUnit();
+        // Apply defence stance status
+        // Get active unit party panel
+        PartyPanel partyPanel = activeUnit.GetUnitPartyPanel();
+        partyPanel.SetUnitDefenceBuffActive(activeUnit, true);
     }
 
 }
