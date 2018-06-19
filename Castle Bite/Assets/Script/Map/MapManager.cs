@@ -574,6 +574,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             City currentCity = heroParty.transform.parent.GetComponent<City>();
             // Enable hire hero panel in city
             currentCity.ReturnToNomalState();
+            currentCity.ActOnHeroLeavingCity();
             // Move party from city to PartiesOnMap container
             Transform partiesOnMap = transform.root.Find("PartiesOnMap");
             heroParty.transform.SetParent(partiesOnMap);

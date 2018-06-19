@@ -50,6 +50,17 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
+    void Proceed()
+    {
+        // get battle screen, structure: BattleScreen-CtrlPnlFight-This
+        BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
+        // set unit has moved flag
+        PartyUnit activeUnit = battleScreen.GetActiveUnit();
+        activeUnit.SetHasMoved(true);
+        // activate next unit
+        battleScreen.ActivateNextUnit();
+    }
+
     void ActOnClick()
     {
         // Defend
@@ -61,6 +72,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         // Get active unit party panel
         PartyPanel partyPanel = activeUnit.GetUnitPartyPanel();
         partyPanel.SetUnitDefenceBuffActive(activeUnit, true);
+        Proceed();
     }
 
 }

@@ -154,6 +154,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2887188aac7166740bae2c18d5f4d461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitDeuff: 1
+  totalDuration: 2
 --- !u!222 &222105449919449538
 CanvasRenderer:
   m_ObjectHideFlags: 1

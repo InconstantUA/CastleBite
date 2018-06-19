@@ -269,22 +269,44 @@ public class PartyUnit : MonoBehaviour {
         // no items yet, skip
         // ..
         int itemsDefenceModifier = 0;
-        return (unit.GetDefence() + cityDefenceModifier + itemsDefenceModifier);
+        // Get total defence modifier
+        int totalDefenceModifier = unit.GetDefence() + cityDefenceModifier + itemsDefenceModifier;
+        // Get status modifiers, example: defence stance buff
+        if (UnitBuff.DefenceStance == unitBuffs[(int)UnitBuff.DefenceStance])
+        {
+            // reduce damage by half
+            totalDefenceModifier = totalDefenceModifier + (100 - totalDefenceModifier) / 2;
+        }
+        return (totalDefenceModifier);
     }
 
     public void RemoveAllBuffs()
     {
+        // in unit properties
         for (int i = 0; i < unitBuffs.Length; i++)
         {
             unitBuffs[i] = UnitBuff.None;
+        }
+        // in UI
+        UnitBuffIndicator[] allBuffs = GetUnitCell().Find("Status/Buffs").GetComponentsInChildren<UnitBuffIndicator>();
+        foreach (UnitBuffIndicator buff in allBuffs)
+        {
+            Destroy(buff.gameObject);
         }
     }
 
     public void RemoveAllDebuffs()
     {
+        // in unit properties
         for (int i = 0; i < unitDebuffs.Length; i++)
         {
             unitDebuffs[i] = UnitDebuff.None;
+        }
+        // in UI
+        UnitBuffIndicator[] allBuffs = GetUnitCell().Find("Status/Debuffs").GetComponentsInChildren<UnitBuffIndicator>();
+        foreach (UnitBuffIndicator buff in allBuffs)
+        {
+            Destroy(buff.gameObject);
         }
     }
 

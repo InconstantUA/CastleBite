@@ -1855,13 +1855,28 @@ public class PartyPanel : MonoBehaviour {
             // Verify if unit has debuffs which should be applied, example: poison
             TriggerAppliedDebuffs(unitToActivate);
             // Deactivate debuffs which has expired, example: poison duration may last 2 turns
-            DeactivateExpiredDeuffs(unitToActivate);
+            DeactivateExpiredDebuffs(unitToActivate);
         }
     }
 
     void DeactivateExpiredBuffs(PartyUnit unit)
     {
-
+        // Deactivate expired buffs in UI
+        UnitBuffIndicator[] buffsUI = unit.GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
+        foreach (UnitBuffIndicator buffUI in buffsUI)
+        {
+            // First decrement buff current duration
+            buffUI.DecrementCurrentDuration();
+            // Verify if it has timed out;
+            if (buffUI.GetCurrentDuration() == 0)
+            {
+                // buff has timed out
+                // deactivate it (it will be destroyed at the end of animation)
+                buffUI.SetActiveAdvance(false);
+                // deactivate it in unit properties too
+                unit.GetUnitBuffs()[(int)buffUI.GetUnitBuff()] = PartyUnit.UnitBuff.None;
+            }
+        }
     }
 
     void TriggerAppliedDebuffs(PartyUnit unit)
@@ -1869,7 +1884,7 @@ public class PartyPanel : MonoBehaviour {
 
     }
 
-    void DeactivateExpiredDeuffs(PartyUnit unit)
+    void DeactivateExpiredDebuffs(PartyUnit unit)
     {
 
     }
@@ -1910,7 +1925,7 @@ public class PartyPanel : MonoBehaviour {
         int srcUnitDamage = activeBattleUnit.GetPower();
         int dstUnitDefence = dstUnit.GetEffectiveDefence();
         // calculate damage dealt
-        damageDealt = (srcUnitDamage * (100 - dstUnitDefence) ) / 100;
+        damageDealt = (int)Math.Round( (((float)srcUnitDamage * (100f - (float)dstUnitDefence) ) / 100f) );
         return damageDealt;
     }
 
@@ -1986,14 +2001,14 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    void ClearUnitCellBuffsOrDebuffs(Transform partyPanelTr, string horisontalPanel, string cell, string whatToRemove)
-    {
-        UnitBuffIndicator[] allBuffs = partyPanelTr.Find(horisontalPanel + "/" + cell + "/" + "Status/" + whatToRemove).GetComponentsInChildren<UnitBuffIndicator>();
-        foreach (UnitBuffIndicator buff in allBuffs)
-        {
-            Destroy(buff.gameObject);
-        }
-    }
+    //void ClearUnitCellBuffsOrDebuffs(Transform partyPanelTr, string horisontalPanel, string cell, string whatToRemove)
+    //{
+    //    UnitBuffIndicator[] allBuffs = partyPanelTr.Find(horisontalPanel + "/" + cell + "/" + "Status/" + whatToRemove).GetComponentsInChildren<UnitBuffIndicator>();
+    //    foreach (UnitBuffIndicator buff in allBuffs)
+    //    {
+    //        Destroy(buff.gameObject);
+    //    }
+    //}
 
     public void RemoveAllBuffsAndDebuffs()
     {
@@ -2006,11 +2021,12 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // Remove all buffs and debuffs in UI
-                    ClearUnitCellBuffsOrDebuffs(transform, horisontalPanel, cell, "Buffs");
-                    ClearUnitCellBuffsOrDebuffs(transform, horisontalPanel, cell, "Debuffs");
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    //// Remove all buffs and debuffs in UI
+                    //ClearUnitCellBuffsOrDebuffs(transform, horisontalPanel, cell, "Buffs");
+                    //ClearUnitCellBuffsOrDebuffs(transform, horisontalPanel, cell, "Debuffs");
                     // Remove all buffs and debuffs from unit
-                    unitSlot.GetComponentInChildren<PartyUnit>().RemoveAllBuffsAndDebuffs();
+                    unit.RemoveAllBuffsAndDebuffs();
                 }
             }
         }
@@ -2039,7 +2055,6 @@ public class PartyPanel : MonoBehaviour {
         {
             // set unit is dead attribute
             dstUnit.SetUnitStatus(PartyUnit.UnitStatus.Dead);
-            // dstUnit.SetIsAlive(false);
             // set color ui more darker
             Color32 newUIColor = dstUnit.GetUnitStatusColor();
             currentHealth.color = newUIColor;
@@ -2052,6 +2067,8 @@ public class PartyPanel : MonoBehaviour {
             Text statusPanel = dstUnit.GetUnitStatusText();
             statusPanel.text = dstUnit.GetUnitStatusString();
             statusPanel.color = newUIColor;
+            // clear unit buffs and debuffs
+            dstUnit.RemoveAllBuffsAndDebuffs();
         }
         // display damage dealt in info panel
         Text infoPanel = dstUnit.GetUnitInfoPanelText();
@@ -2187,7 +2204,7 @@ public class PartyPanel : MonoBehaviour {
             Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defence");
             Transform defenceBuff = Instantiate(buffTemplate, buffsPanel);
             // activate buff
-            defenceBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance();
+            defenceBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance(true);
             // rename it so it can be later found by name
             defenceBuff.name = "Defence";
         } else

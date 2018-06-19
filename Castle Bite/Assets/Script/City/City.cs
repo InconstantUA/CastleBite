@@ -290,11 +290,16 @@ public class City : MonoBehaviour {
         // If ther is no hero in the city or hero has left city, then display HireHeroPanel
         if (!GetHeroPartyByMode(HeroParty.PartyMode.Party))
         {
-            // Instruct Focus panel to update info
-            transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HeroLeaveCity);
-            // Enable Hire leader panel
-            transform.Find("HireHeroPanel").gameObject.SetActive(true);
+            ActOnHeroLeavingCity();
         }
+    }
+
+    public void ActOnHeroLeavingCity()
+    {
+        // Instruct Focus panel to update info
+        transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HeroLeaveCity);
+        // Enable Hire leader panel
+        transform.Find("HireHeroPanel").gameObject.SetActive(true);
     }
 
     public void ExitCity()

@@ -7,6 +7,11 @@ using UnityEngine.EventSystems;
 
 public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
+    [SerializeField]
+    PartyUnit.UnitBuff unitBuff;
+    [SerializeField]
+    int totalDuration;
+    int currentDuration;
     Text symbol;
     AdditionalInfo additionalInfo;
     Image backgroundImage;
@@ -16,6 +21,21 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
         symbol = GetComponent<Text>();
         additionalInfo = GetComponent<AdditionalInfo>();
         backgroundImage = transform.Find("Background").GetComponent<Image>();
+    }
+
+    public PartyUnit.UnitBuff GetUnitBuff()
+    {
+        return unitBuff;
+    }
+
+    public int GetCurrentDuration()
+    {
+        return currentDuration;
+    }
+
+    public void DecrementCurrentDuration()
+    {
+        currentDuration -= 1;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -59,10 +79,34 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
     }
 
-    public void SetActiveAdvance()
+    IEnumerator FadeForegroundAndDestroyBuff()
     {
-        gameObject.SetActive(true);
-        StartCoroutine("FadeBackground");
+        // Fade Foreground
+        for (float f = 1f; f >= 0; f -= 0.1f)
+        {
+            Color c = symbol.color;
+            c.a = f;
+            symbol.color = c;
+            yield return new WaitForSeconds(.05f);
+        }
+        // Destroy buff
+        Destroy(gameObject);
+    }
+
+    public void SetActiveAdvance(bool doActivate)
+    {
+        if (doActivate)
+        {
+            gameObject.SetActive(true);
+            StartCoroutine("FadeBackground");
+            // reset currentDuration
+            currentDuration = totalDuration;
+        }
+        else
+        {
+            // fade away foreground text and at the end of fade destroy buff
+            StartCoroutine("FadeForegroundAndDestroyBuff");
+        }
     }
 
 }
