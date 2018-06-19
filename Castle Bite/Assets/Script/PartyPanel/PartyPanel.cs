@@ -2124,7 +2124,6 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetUnitDefenceBuffActive(PartyUnit partyUnit, bool doActivate)
     {
-        
     }
 
     public bool HasEscapedBattle()
@@ -2365,12 +2364,4 @@ public class PartyPanel : MonoBehaviour {
 
     #endregion For Battle Screen
 
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (Input.GetKeyDown("f"))
-    //    {
-    //        StartCoroutine("FadeUnitCellInfo");
-    //    }
-    //}
 }

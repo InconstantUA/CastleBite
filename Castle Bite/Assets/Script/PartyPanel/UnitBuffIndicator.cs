@@ -9,6 +9,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
 {
     Text symbol;
     AdditionalInfo additionalInfo;
+    Image backgroundImage;
 
     private void Awake()
     {
@@ -46,13 +47,21 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
     }
 
-    //// Use this for initialization
-    //void Start () {
+    IEnumerator FadeUnitCellInfo()
+    {
+        for (float f = 1f; f >= 0; f -= 0.1f)
+        {
+            Color c = backgroundImage.color;
+            c.a = f;
+            backgroundImage.color = c;
+            yield return new WaitForSeconds(.1f);
+        }
+    }
 
-    //}
+    public void SetActiveAdvance()
+    {
+        gameObject.SetActive(true);
+        StartCoroutine("FadeUnitCellInfo");
+    }
 
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
 }

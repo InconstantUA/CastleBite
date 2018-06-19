@@ -142,15 +142,4 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    //// Use this for initialization
-    //void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-    //    // as coroutine fade away information
-
-    //}
 }
