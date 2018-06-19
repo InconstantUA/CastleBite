@@ -39,8 +39,16 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void UpdateHeroLable(PartyUnit leaderUnit)
     {
         // GameObject newPartyHeroLable = newPartyOnMapUI.transform.Find("HeroLabel").gameObject;
-        heroLabel = transform.Find("HeroLabel").GetComponent<Text>();
-        heroLabel.GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
+        MapHeroLabel heroLabel2 = transform.Find("HeroLabel").GetComponent<MapHeroLabel>();
+        // heroLabel2.GetComponent<Text>().text = "test";
+        if (leaderUnit)
+        {
+            heroLabel2.GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
+        }
+        else
+        {
+            Debug.LogError("Party leader not found.");
+        }
     }
 
     // Use this for initialization

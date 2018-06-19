@@ -73,15 +73,19 @@ public class PartyUnit : MonoBehaviour {
 
     public enum UnitDebuff
     {
+        None,
         Poisoned,
         Burned,
         Chilled,
-        Paralyzed
+        Paralyzed,
+        ArrSize
     }
 
-    public enum UnitBuff
+    public enum UnitBuff:int
     {
-        DefenceStance
+        None,
+        DefenceStance,
+        ArrSize // for dynamic resizing of UnitBuffs array
     }
 
     // Misc attributes
@@ -165,6 +169,12 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     UnitBuff[] unitBuffs;
 
+    private void Awake()
+    {
+        unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
+        unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+    }
+
     public Transform GetUnitCell()
     {
         // structure: 3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
@@ -179,6 +189,11 @@ public class PartyUnit : MonoBehaviour {
     public Text GetUnitInfoPanelText()
     {
         return GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+    }
+
+    public Transform GetUnitBuffsPanel()
+    {
+        return GetUnitCell().Find("Status/Buffs");
     }
 
     public HeroParty GetUnitParty()
@@ -255,6 +270,28 @@ public class PartyUnit : MonoBehaviour {
         // ..
         int itemsDefenceModifier = 0;
         return (unit.GetDefence() + cityDefenceModifier + itemsDefenceModifier);
+    }
+
+    public void RemoveAllBuffs()
+    {
+        for (int i = 0; i < unitBuffs.Length; i++)
+        {
+            unitBuffs[i] = UnitBuff.None;
+        }
+    }
+
+    public void RemoveAllDebuffs()
+    {
+        for (int i = 0; i < unitDebuffs.Length; i++)
+        {
+            unitDebuffs[i] = UnitDebuff.None;
+        }
+    }
+
+    public void RemoveAllBuffsAndDebuffs()
+    {
+        RemoveAllBuffs();
+        RemoveAllDebuffs();
     }
 
     public int GetPower()

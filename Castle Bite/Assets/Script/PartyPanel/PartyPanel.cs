@@ -285,8 +285,7 @@ public class PartyPanel : MonoBehaviour {
 
     public PartyUnit GetPartyLeader()
     {
-        PartyUnit leader = null;
-        // find the unit with 
+        // find leader unit
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
@@ -297,14 +296,15 @@ public class PartyPanel : MonoBehaviour {
                 {
                     // verify if unit has isLeader atrribute ON
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    // Debug.Log(unit.GetUnitName());
                     if (unit.GetIsLeader())
                     {
-                        leader = unit;
+                        return unit;
                     }
                 }
             }
         }
-        return leader;
+        return null;
     }
 
     int GetCapacity()
@@ -1850,7 +1850,28 @@ public class PartyPanel : MonoBehaviour {
         {
             // This unit belongs to this party highlight it here
             HighlightActiveUnitInBattle(unitToActivate);
+            // Verify if unit has buffs which should be removed, example: defence
+            DeactivateExpiredBuffs(unitToActivate);
+            // Verify if unit has debuffs which should be applied, example: poison
+            TriggerAppliedDebuffs(unitToActivate);
+            // Deactivate debuffs which has expired, example: poison duration may last 2 turns
+            DeactivateExpiredDeuffs(unitToActivate);
         }
+    }
+
+    void DeactivateExpiredBuffs(PartyUnit unit)
+    {
+
+    }
+
+    void TriggerAppliedDebuffs(PartyUnit unit)
+    {
+
+    }
+
+    void DeactivateExpiredDeuffs(PartyUnit unit)
+    {
+
     }
 
     void ApplyHealPowerToSingleUnit(PartyUnit dstUnit)
@@ -1933,7 +1954,7 @@ public class PartyPanel : MonoBehaviour {
         infoPanelTxt.color = defaultColor;
     }
 
-    public void ResetUnitCellStatus(Transform partyPanel, string[] exceptions)
+    public void ResetUnitCellStatus(string[] exceptions)
     {
         foreach (string horisontalPanel in horisontalPanels)
         {
@@ -1941,7 +1962,7 @@ public class PartyPanel : MonoBehaviour {
             {
                 // Unit canvas (and unit) is present
                 // verify if slot has an unit in it
-                Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // Do not remove some statuses, because they should persist
@@ -1955,11 +1976,41 @@ public class PartyPanel : MonoBehaviour {
                             itIsException = true;
                         }
                     }
-                    if(!itIsException)
+                    if (!itIsException)
                     {
                         // Clear status, because it is not in exceptions list
-                        ClearUnitCellStatus(partyPanel, horisontalPanel, cell);
+                        ClearUnitCellStatus(transform, horisontalPanel, cell);
                     }
+                }
+            }
+        }
+    }
+
+    void ClearUnitCellBuffsOrDebuffs(Transform partyPanelTr, string horisontalPanel, string cell, string whatToRemove)
+    {
+        UnitBuffIndicator[] allBuffs = partyPanelTr.Find(horisontalPanel + "/" + cell + "/" + "Status/" + whatToRemove).GetComponentsInChildren<UnitBuffIndicator>();
+        foreach (UnitBuffIndicator buff in allBuffs)
+        {
+            Destroy(buff.gameObject);
+        }
+    }
+
+    public void RemoveAllBuffsAndDebuffs()
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // Unit canvas (and unit) is present
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    // Remove all buffs and debuffs in UI
+                    ClearUnitCellBuffsOrDebuffs(transform, horisontalPanel, cell, "Buffs");
+                    ClearUnitCellBuffsOrDebuffs(transform, horisontalPanel, cell, "Debuffs");
+                    // Remove all buffs and debuffs from unit
+                    unitSlot.GetComponentInChildren<PartyUnit>().RemoveAllBuffsAndDebuffs();
                 }
             }
         }
@@ -2124,6 +2175,27 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetUnitDefenceBuffActive(PartyUnit partyUnit, bool doActivate)
     {
+        // get unit buffs panel
+        Transform buffsPanel = partyUnit.GetUnitBuffsPanel();
+        if (doActivate)
+        {
+            // add buff to unit
+            Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
+            Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
+            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenceStance] = PartyUnit.UnitBuff.DefenceStance;
+            // create buff by duplicating from template
+            Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defence");
+            Transform defenceBuff = Instantiate(buffTemplate, buffsPanel);
+            // activate buff
+            defenceBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance();
+            // rename it so it can be later found by name
+            defenceBuff.name = "Defence";
+        } else
+        {
+            // remove buff
+            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenceStance] = PartyUnit.UnitBuff.None;
+            Destroy(buffsPanel.Find("Defence").gameObject);
+        }
     }
 
     public bool HasEscapedBattle()

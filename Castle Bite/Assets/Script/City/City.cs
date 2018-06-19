@@ -288,7 +288,7 @@ public class City : MonoBehaviour {
             // SetActiveState(cityViewActiveState, false);
         }
         // If ther is no hero in the city or hero has left city, then display HireHeroPanel
-        if (GetHeroPartyByMode(HeroParty.PartyMode.Party))
+        if (!GetHeroPartyByMode(HeroParty.PartyMode.Party))
         {
             // Instruct Focus panel to update info
             transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HeroLeaveCity);

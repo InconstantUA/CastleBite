@@ -15,6 +15,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
     {
         symbol = GetComponent<Text>();
         additionalInfo = GetComponent<AdditionalInfo>();
+        backgroundImage = transform.Find("Background").GetComponent<Image>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -47,21 +48,21 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
     }
 
-    IEnumerator FadeUnitCellInfo()
+    IEnumerator FadeBackground()
     {
         for (float f = 1f; f >= 0; f -= 0.1f)
         {
             Color c = backgroundImage.color;
             c.a = f;
             backgroundImage.color = c;
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.05f);
         }
     }
 
     public void SetActiveAdvance()
     {
         gameObject.SetActive(true);
-        StartCoroutine("FadeUnitCellInfo");
+        StartCoroutine("FadeBackground");
     }
 
 }

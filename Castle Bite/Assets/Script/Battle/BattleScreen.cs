@@ -137,12 +137,12 @@ public class BattleScreen : MonoBehaviour {
         if (playerPartyPanel)
         {
             playerPartyPanel.ResetUnitCellInfoPanel(playerPartyPanel.transform);
-            playerPartyPanel.ResetUnitCellStatus(playerPartyPanel.transform, new string[] { playerPartyPanel.deadStatus });
+            playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatus });
         }
         if (enemyPartyPanel)
         {
             enemyPartyPanel.ResetUnitCellInfoPanel(enemyPartyPanel.transform);
-            enemyPartyPanel.ResetUnitCellStatus(enemyPartyPanel.transform, new string[] { enemyPartyPanel.deadStatus });
+            enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus });
         }
         // Close battle sreen
         gameObject.SetActive(false);
@@ -184,7 +184,7 @@ public class BattleScreen : MonoBehaviour {
         // Remove highlight from active unit
         enemyPartyPanel.HighlightActiveUnitInBattle(activeUnit, false);
         // Clear units info and status information
-        enemyPartyPanel.ResetUnitCellStatus(enemyPartyPanel.transform, new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
+        enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
         BattleExit exitButton = transform.Find("Exit").GetComponent<BattleExit>();
         // Activate exit battle button;
@@ -231,6 +231,9 @@ public class BattleScreen : MonoBehaviour {
             // Show how much experience was earned by player party
             playerPartyPanel.GrantAndShowExperienceGained(enemyPartyPanel);
         }
+        // Remove all buffs and debuffs
+        enemyPartyPanel.RemoveAllBuffsAndDebuffs();
+        playerPartyPanel.RemoveAllBuffsAndDebuffs();
     }
 
     void ResetHasMovedFlag()
