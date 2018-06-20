@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -327,6 +328,61 @@ public class PartyUnit : MonoBehaviour {
     }
 
 
+    public int GetAbilityDamageDealt(PartyUnit activeBattleUnit)
+    {
+        int damageDealt = 0;
+        int srcUnitDamage = activeBattleUnit.GetPower();
+        int dstUnitDefence = GetEffectiveDefence();
+        // calculate damage dealt
+        damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefence)) / 100f));
+        return damageDealt;
+    }
+
+    public void ApplyDestructiveAbility(int damageDealt)
+    {
+        int healthAfterDamage = GetHealthCurr() - damageDealt;
+        // make sure that we do not set health less then 0
+        if (healthAfterDamage <= 0)
+        {
+            healthAfterDamage = 0;
+        }
+        SetHealthCurr(healthAfterDamage);
+        // update current health in UI
+        // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
+        // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
+        // Transform cell = dstUnit.GetUnitCell();
+        Text currentHealth = GetUnitCurrentHealthText();
+        currentHealth.text = healthAfterDamage.ToString();
+        // verify if unit is dead
+        if (0 == healthAfterDamage)
+        {
+            // set unit is dead attribute
+            SetUnitStatus(PartyUnit.UnitStatus.Dead);
+            // set color ui more darker
+            Color32 newUIColor = GetUnitStatusColor();
+            currentHealth.color = newUIColor;
+            Text maxHealth = GetUnitMaxHealthText();
+            maxHealth.color = newUIColor;
+            // set cell canvas to be more darker
+            Text cellCanvas = GetUnitCanvasText();
+            cellCanvas.color = newUIColor;
+            // set dead in status
+            Text statusPanel = GetUnitStatusText();
+            statusPanel.text = GetUnitStatusString();
+            statusPanel.color = newUIColor;
+            // clear unit buffs and debuffs
+            RemoveAllBuffsAndDebuffs();
+        }
+        // display damage dealt in info panel
+        Text infoPanel = GetUnitInfoPanelText();
+        infoPanel.text = "-" + damageDealt + " health";
+        infoPanel.color = Color.red;
+    }
+
+    public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
+    {
+        return 10;
+    }
 
     public int GetPower()
     {

@@ -1881,12 +1881,35 @@ public class PartyPanel : MonoBehaviour {
 
     void TriggerAppliedDebuffs(PartyUnit unit)
     {
-
+        UnitDebuffIndicator[] debuffsIndicators = unit.GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
+        UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
+        foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
+        {
+            // as long as we cannot initiate all debuffs at the same time
+            // we add debuffs to the queue and they will be triggered one after another
+            unitDebuffsUI.GetQueue().Run(debuffIndicator.TriggerDebuff(unit));
+            // Trigger debuff against player
+            // Decrement buff current duration
+            debuffIndicator.DecrementCurrentDuration();
+        }
     }
 
     void DeactivateExpiredDebuffs(PartyUnit unit)
     {
-
+        // Deactivate expired buffs in UI
+        UnitDebuffIndicator[] debuffsIndicators = unit.GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
+        foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
+        {
+            // Verify if it has timed out;
+            if (debuffIndicator.GetCurrentDuration() == 0)
+            {
+                // buff has timed out
+                // deactivate it (it will be destroyed at the end of animation)
+                debuffIndicator.SetActiveAdvance(false);
+                // deactivate it in unit properties too
+                unit.GetUnitBuffs()[(int)debuffIndicator.GetUnitBuff()] = PartyUnit.UnitBuff.None;
+            }
+        }
     }
 
     void ApplyHealPowerToSingleUnit(PartyUnit dstUnit)
@@ -2022,64 +2045,55 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    int GetDamageDealt(PartyUnit dstUnit)
-    {
-        int damageDealt = 0;
-        int srcUnitDamage = activeBattleUnit.GetPower();
-        int dstUnitDefence = dstUnit.GetEffectiveDefence();
-        // calculate damage dealt
-        damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefence)) / 100f));
-        return damageDealt;
-    }
 
-
-    void ApplyDestructiveAbility(PartyUnit dstUnit)
-    {
-        // damage destination unit
-        int damageDealt = GetDamageDealt(dstUnit);
-        int healthAfterDamage = dstUnit.GetHealthCurr() - damageDealt;
-        // make sure that we do not heal to more than maximum health
-        if (healthAfterDamage <= 0)
-        {
-            healthAfterDamage = 0;
-        }
-        dstUnit.SetHealthCurr(healthAfterDamage);
-        // update current health in UI
-        // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
-        // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
-        // Transform cell = dstUnit.GetUnitCell();
-        Text currentHealth = dstUnit.GetUnitCurrentHealthText();
-        currentHealth.text = healthAfterDamage.ToString();
-        // verify if unit is dead
-        if (0 == healthAfterDamage)
-        {
-            // set unit is dead attribute
-            dstUnit.SetUnitStatus(PartyUnit.UnitStatus.Dead);
-            // set color ui more darker
-            Color32 newUIColor = dstUnit.GetUnitStatusColor();
-            currentHealth.color = newUIColor;
-            Text maxHealth = dstUnit.GetUnitMaxHealthText();
-            maxHealth.color = newUIColor;
-            // set cell canvas to be more darker
-            Text cellCanvas = dstUnit.GetUnitCanvasText();
-            cellCanvas.color = newUIColor;
-            // set dead in status
-            Text statusPanel = dstUnit.GetUnitStatusText();
-            statusPanel.text = dstUnit.GetUnitStatusString();
-            statusPanel.color = newUIColor;
-            // clear unit buffs and debuffs
-            dstUnit.RemoveAllBuffsAndDebuffs();
-        }
-        // display damage dealt in info panel
-        Text infoPanel = dstUnit.GetUnitInfoPanelText();
-        infoPanel.text = "-" + damageDealt + " health";
-        infoPanel.color = Color.red;
-    }
+    //void ApplyDestructiveAbility(PartyUnit dstUnit)
+    //{
+    //    // damage destination unit
+    //    int damageDealt = GetDamageDealt(dstUnit);
+    //    int healthAfterDamage = dstUnit.GetHealthCurr() - damageDealt;
+    //    // make sure that we do not set health less then 0
+    //    if (healthAfterDamage <= 0)
+    //    {
+    //        healthAfterDamage = 0;
+    //    }
+    //    dstUnit.SetHealthCurr(healthAfterDamage);
+    //    // update current health in UI
+    //    // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
+    //    // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
+    //    // Transform cell = dstUnit.GetUnitCell();
+    //    Text currentHealth = dstUnit.GetUnitCurrentHealthText();
+    //    currentHealth.text = healthAfterDamage.ToString();
+    //    // verify if unit is dead
+    //    if (0 == healthAfterDamage)
+    //    {
+    //        // set unit is dead attribute
+    //        dstUnit.SetUnitStatus(PartyUnit.UnitStatus.Dead);
+    //        // set color ui more darker
+    //        Color32 newUIColor = dstUnit.GetUnitStatusColor();
+    //        currentHealth.color = newUIColor;
+    //        Text maxHealth = dstUnit.GetUnitMaxHealthText();
+    //        maxHealth.color = newUIColor;
+    //        // set cell canvas to be more darker
+    //        Text cellCanvas = dstUnit.GetUnitCanvasText();
+    //        cellCanvas.color = newUIColor;
+    //        // set dead in status
+    //        Text statusPanel = dstUnit.GetUnitStatusText();
+    //        statusPanel.text = dstUnit.GetUnitStatusString();
+    //        statusPanel.color = newUIColor;
+    //        // clear unit buffs and debuffs
+    //        dstUnit.RemoveAllBuffsAndDebuffs();
+    //    }
+    //    // display damage dealt in info panel
+    //    Text infoPanel = dstUnit.GetUnitInfoPanelText();
+    //    infoPanel.text = "-" + damageDealt + " health";
+    //    infoPanel.color = Color.red;
+    //}
 
     void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
     {
         Debug.Log("ApplyDestructivePowerToSingleUnit");
-        ApplyDestructiveAbility(dstUnit);
+        // ApplyDestructiveAbility(dstUnit);
+        dstUnit.ApplyDestructiveAbility(dstUnit.GetAbilityDamageDealt(activeBattleUnit));
         ApplyUniquePowerModifiersToSingleUnit(dstUnit);
     }
 

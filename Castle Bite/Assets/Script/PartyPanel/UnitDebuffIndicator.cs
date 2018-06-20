@@ -18,6 +18,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     Text symbol;
     AdditionalInfo additionalInfo;
     Image backgroundImage;
+    UniquePowerModifier appliedUniquePowerModifier;
 
     private void Awake()
     {
@@ -93,6 +94,25 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             yield return new WaitForSeconds(.05f);
         }
         // Destroy buff
+        Destroy(gameObject);
+    }
+
+    public IEnumerator TriggerDebuff(PartyUnit dstUnit)
+    {
+        // Trigger debuff within unit
+        dstUnit.ApplyDestructiveAbility(dstUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
+        // reset background image color to be visible
+        Color cx = backgroundImage.color;
+        cx.a = 1;
+        backgroundImage.color = cx;
+        // trigger animation
+        for (float f = 1f; f >= 0; f -= 0.1f)
+        {
+            Color c = backgroundImage.color;
+            c.a = f;
+            backgroundImage.color = c;
+            yield return new WaitForSeconds(.05f);
+        }
     }
 
     void FillInAdditionalInfo(UniquePowerModifier uniquePowerModifier)
@@ -116,12 +136,15 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
-    public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier)
+    // uniquePowerModifier parameter is optional on deactivation
+    public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier = null)
     {
         if (doActivate)
         {
             // Activate object
             gameObject.SetActive(true);
+            // Save appliedUniquePowerModifier
+            appliedUniquePowerModifier = uniquePowerModifier;
             // Fill in additionalInfo
             FillInAdditionalInfo(uniquePowerModifier);
             // Start animation
