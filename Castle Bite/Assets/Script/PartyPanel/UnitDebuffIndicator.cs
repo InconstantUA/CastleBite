@@ -8,10 +8,13 @@ using UnityEngine.EventSystems;
 public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
-    PartyUnit.UnitDebuff unitDeuff;
+    PartyUnit.UnitDebuff unitDebuff;
     [SerializeField]
     int totalDuration;
+    [SerializeField]
     int currentDuration;
+    [SerializeField]
+    int power;
     Text symbol;
     AdditionalInfo additionalInfo;
     Image backgroundImage;
@@ -21,6 +24,21 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         symbol = GetComponent<Text>();
         additionalInfo = GetComponent<AdditionalInfo>();
         backgroundImage = transform.Find("Background").GetComponent<Image>();
+    }
+
+    public PartyUnit.UnitDebuff GetUnitBuff()
+    {
+        return unitDebuff;
+    }
+
+    public int GetCurrentDuration()
+    {
+        return currentDuration;
+    }
+
+    public void DecrementCurrentDuration()
+    {
+        currentDuration -= 1;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -77,12 +95,39 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         // Destroy buff
     }
 
-    public void SetActiveAdvance(bool doActivate)
+    void FillInAdditionalInfo(UniquePowerModifier uniquePowerModifier)
+    {
+        string[] infoLines = additionalInfo.GetLines();
+        // line 1(0 index in array) already filled in in prefab
+        // fill in next lines
+        infoLines[1] = "Damage type: " + uniquePowerModifier.Source.ToString();
+        infoLines[2] = "Damage dealt: " + uniquePowerModifier.Power.ToString();
+        if (uniquePowerModifier.Duration >= 2)
+        {
+            // duration is 2 or more
+            // add s in turns word
+            infoLines[3] = "Duration: " + uniquePowerModifier.Duration.ToString() + " turns";
+        }
+        else
+        {
+            // when duration is 1 turn
+            // do not add s in turn word
+            infoLines[3] = "Duration: " + uniquePowerModifier.Duration.ToString() + " turn";
+        }
+    }
+
+    public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier)
     {
         if (doActivate)
         {
+            // Activate object
             gameObject.SetActive(true);
+            // Fill in additionalInfo
+            FillInAdditionalInfo(uniquePowerModifier);
+            // Start animation
             StartCoroutine("FadeBackground");
+            // reset currentDuration
+            currentDuration = totalDuration;
         }
         else
         {

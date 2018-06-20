@@ -11,6 +11,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
     PartyUnit.UnitBuff unitBuff;
     [SerializeField]
     int totalDuration;
+    [SerializeField]
     int currentDuration;
     Text symbol;
     AdditionalInfo additionalInfo;

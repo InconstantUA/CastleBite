@@ -118,11 +118,66 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             transform.Find("Panel/UnitPowerScope/Value").GetComponent<Text>().text = partyUnit.GetPowerScope().ToString();
             // Fill in unit initiative
             transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.GetInitiative().ToString();
-            // There is no power modifiers yet, so disable it
-            // ..
-            transform.Find("Panel/UniquePowerModifiersTable").gameObject.SetActive(false);
+            // Fill in information about unique power modifiers
+            FillInUniquePowerModifiersInformation(partyUnit);
             // Fill in description
             transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.GetFullDescription().ToString();
+        }
+    }
+
+    void ActivateModifier(string modifierUIName, UniquePowerModifier uniquePowerModifier)
+    {
+        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
+        modifier.Find("Name").GetComponent<Text>().text = uniquePowerModifier.GetDisplayName();
+        modifier.Find("Power").GetComponent<Text>().text = uniquePowerModifier.Power.ToString();
+        modifier.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.Duration.ToString();
+        modifier.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.Chance.ToString();
+        modifier.Find("Source").GetComponent<Text>().text = uniquePowerModifier.Source.ToString();
+    }
+
+    void DeactivateModifier(string modifierUIName)
+    {
+        // transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName).gameObject.SetActive(false);
+        // keep modifier there, but with empty text, so that rows in the table have the same spacing
+        // and start from header
+        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
+        modifier.Find("Name").GetComponent<Text>().text = "";
+        modifier.Find("Power").GetComponent<Text>().text = "";
+        modifier.Find("Duration").GetComponent<Text>().text = "";
+        modifier.Find("Chance").GetComponent<Text>().text = "";
+        modifier.Find("Source").GetComponent<Text>().text = "";
+    }
+
+    void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
+    {
+        // get Unique power modifiers
+        UniquePowerModifier[] uniquePowerModifiers = partyUnit.GetComponentsInChildren<UniquePowerModifier>();
+        Transform uniquePowerModifiersTable = transform.Find("Panel/UniquePowerModifiersTable");
+        if (uniquePowerModifiers.Length > 0)
+        {
+            // Activate unique power modifiers table
+            uniquePowerModifiersTable.gameObject.SetActive(true);
+            // Define maximum possible modifiers
+            int maxModifiers = 4;
+            // Activate and fill in or deactivate power modifiers
+            for (int i = 1; i <= maxModifiers; i++)
+            {
+                // Activate first modifier
+                if (i == uniquePowerModifiers.Length)
+                {
+                    // activate first modifier
+                    ActivateModifier(("Modifier" + i.ToString()), uniquePowerModifiers[i - 1]);
+                }
+                else
+                {
+                    DeactivateModifier(("Modifier" + i.ToString()));
+                }
+            }
+        }
+        else
+        {
+            // Dectivate unique power modifiers table
+            uniquePowerModifiersTable.gameObject.SetActive(false);
         }
     }
 

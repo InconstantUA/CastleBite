@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class PartyUnit : MonoBehaviour {
     // Custom types
     public enum UnitType
@@ -48,6 +49,7 @@ public class PartyUnit : MonoBehaviour {
         Earth,
         Wind,
         Life,       // Heal
+        Death,      // Poison
         Pure,       // Cannot be resisted
         None
     }
@@ -71,7 +73,7 @@ public class PartyUnit : MonoBehaviour {
         Escaped
     }
 
-    public enum UnitDebuff
+    public enum UnitDebuff:int
     {
         None,
         Poisoned,
@@ -141,6 +143,9 @@ public class PartyUnit : MonoBehaviour {
     UnitPowerScope unitPowerScope;
     [SerializeField]
     int unitInitiative = 10;
+    // Unique power modifiers
+    //[SerializeField]
+    //UniquePowerModifier[] uniquePowerModifiers;
     // Misc Description
     [SerializeField]
     string unitRole;
@@ -194,6 +199,11 @@ public class PartyUnit : MonoBehaviour {
     public Transform GetUnitBuffsPanel()
     {
         return GetUnitCell().Find("Status/Buffs");
+    }
+
+    public Transform GetUnitDebuffsPanel()
+    {
+        return GetUnitCell().Find("Status/Debuffs");
     }
 
     public HeroParty GetUnitParty()
@@ -303,8 +313,8 @@ public class PartyUnit : MonoBehaviour {
             unitDebuffs[i] = UnitDebuff.None;
         }
         // in UI
-        UnitBuffIndicator[] allBuffs = GetUnitCell().Find("Status/Debuffs").GetComponentsInChildren<UnitBuffIndicator>();
-        foreach (UnitBuffIndicator buff in allBuffs)
+        UnitDebuffIndicator[] allDebuffs = GetUnitCell().Find("Status/Debuffs").GetComponentsInChildren<UnitDebuffIndicator>();
+        foreach (UnitDebuffIndicator buff in allDebuffs)
         {
             Destroy(buff.gameObject);
         }
@@ -315,6 +325,8 @@ public class PartyUnit : MonoBehaviour {
         RemoveAllBuffs();
         RemoveAllDebuffs();
     }
+
+
 
     public int GetPower()
     {
@@ -712,6 +724,11 @@ public class PartyUnit : MonoBehaviour {
     {
         return unitBuffs;
     }
+
+    //public UniquePowerModifier[] GetUniquePowerModifiers()
+    //{
+    //    return uniquePowerModifiers;
+    //}
 
     //// Use this for initialization
     //void Start () {

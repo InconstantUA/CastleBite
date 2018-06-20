@@ -1919,16 +1919,6 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("ApplyResurectPower");
     }
 
-    int GetDamageDealt(PartyUnit dstUnit)
-    {
-        int damageDealt = 0;
-        int srcUnitDamage = activeBattleUnit.GetPower();
-        int dstUnitDefence = dstUnit.GetEffectiveDefence();
-        // calculate damage dealt
-        damageDealt = (int)Math.Round( (((float)srcUnitDamage * (100f - (float)dstUnitDefence) ) / 100f) );
-        return damageDealt;
-    }
-
     void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
     {
         Color32 defaultColor = new Color32(180, 180, 180, 255);
@@ -2032,9 +2022,19 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
+    int GetDamageDealt(PartyUnit dstUnit)
     {
-        Debug.Log("ApplyDestructivePowerToSingleUnit");
+        int damageDealt = 0;
+        int srcUnitDamage = activeBattleUnit.GetPower();
+        int dstUnitDefence = dstUnit.GetEffectiveDefence();
+        // calculate damage dealt
+        damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefence)) / 100f));
+        return damageDealt;
+    }
+
+
+    void ApplyDestructiveAbility(PartyUnit dstUnit)
+    {
         // damage destination unit
         int damageDealt = GetDamageDealt(dstUnit);
         int healthAfterDamage = dstUnit.GetHealthCurr() - damageDealt;
@@ -2074,6 +2074,58 @@ public class PartyPanel : MonoBehaviour {
         Text infoPanel = dstUnit.GetUnitInfoPanelText();
         infoPanel.text = "-" + damageDealt + " health";
         infoPanel.color = Color.red;
+    }
+
+    void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
+    {
+        Debug.Log("ApplyDestructivePowerToSingleUnit");
+        ApplyDestructiveAbility(dstUnit);
+        ApplyUniquePowerModifiersToSingleUnit(dstUnit);
+    }
+
+
+    public void SetUnitDebuffActive(PartyUnit partyUnit, UniquePowerModifier uniquePowerModifier, bool doActivate)
+    {
+        // get unit debuffs panel
+        Transform debuffsPanel = partyUnit.GetUnitDebuffsPanel();
+        if (doActivate)
+        {
+            // add debuff to unit
+            Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
+            Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
+            partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
+            // create debuff by duplicating from template
+            // Note: debuff name in template should be the same as in AppliedDebuff
+            Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.AppliedDebuff.ToString());
+            Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
+            // activate buff
+            newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier);
+            // rename it so it can be later found by name
+            newDebuff.name = uniquePowerModifier.AppliedDebuff.ToString();
+        }
+        else
+        {
+            // remove buff
+            partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = PartyUnit.UnitDebuff.None;
+            Destroy(debuffsPanel.Find(uniquePowerModifier.AppliedDebuff.ToString()).gameObject);
+        }
+    }
+
+    //void ApplyUniquePowerModifierToSingleUnit(PartyUnit dstUnit, UniquePowerModifier uniquePowerModifier)
+    //{
+    //    // Set debuff in UI
+    //    // Set debuff in unit properties
+    //    dstUnit.AddDebuff(uniquePowerModifier);
+    //}
+
+    void ApplyUniquePowerModifiersToSingleUnit(PartyUnit dstUnit)
+    {
+        UniquePowerModifier[] uniquePowerModifiers = activeBattleUnit.GetComponentsInChildren<UniquePowerModifier>();
+        foreach (UniquePowerModifier uniquePowerModifier in uniquePowerModifiers)
+        {
+            SetUnitDebuffActive(dstUnit, uniquePowerModifier, true);
+            // ApplyUniquePowerModifierToSingleUnit(dstUnit, uniquePowerModifier);
+        }
     }
 
     void ApplyDestructivePowerToMultipleUnits()

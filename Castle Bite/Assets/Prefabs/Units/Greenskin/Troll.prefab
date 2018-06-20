@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224086146622810032}
   - component: {fileID: 114967515040118940}
+  - component: {fileID: 114185329295694118}
   m_Layer: 5
   m_Name: Troll
   m_TagString: Untagged
@@ -27,6 +28,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &114185329295694118
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1199747042690498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa93057f5663bca49a00d1d0f377a72b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appliedDebuff: 1
+  power: 5
+  duration: 2
+  chance: 70
+  source: 6
 --- !u!114 &114967515040118940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -51,12 +68,11 @@ MonoBehaviour:
   healthCurr: 55
   healthMax: 55
   healthMaxIncrementOnLevelUp: 5
-  isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 4
-  unitPower: 25
+  unitPower: 15
   unitPowerIncrementOnLevelUp: 7
   unitPowerSource: 0
   unitPowerDistance: 1
@@ -64,14 +80,16 @@ MonoBehaviour:
   unitInitiative: 10
   unitRole: Weak ranged fighter
   unitBriefDescription: 
-  unitFullDescription: Trolls are tall skinny humanoids with long noses, rubbery skin.
-    Use spear to hit his enemies from the distance.
-  hasEscaped: 0
+  unitFullDescription: Trolls are tall skinny humanoids with long noses and rubbery
+    skin. Use spear covered with poison to hit their enemies from the distance.
   hasMoved: 0
   cost: 500
   unitSize: 0
   isInterpartyMovable: 1
   isDismissable: 1
+  unitStatus: 0
+  unitDebuffs: 
+  unitBuffs: 
 --- !u!224 &224086146622810032
 RectTransform:
   m_ObjectHideFlags: 1
