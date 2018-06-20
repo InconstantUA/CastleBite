@@ -381,8 +381,33 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
     {
-        return 10;
+        return appliedUniquePowerModifier.Power;
     }
+
+    // Note: animation should be identical to the function with the same name in PartyPanel
+    public void FadeUnitCellInfo(float alpha)
+    {
+        Text infoPanel = GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+        Color c = infoPanel.color;
+        c.a = alpha;
+        infoPanel.color = c;
+    }
+
+    //public IEnumerator FadeUnitCellInfo()
+    //{
+    //    for (float f = 1f; f >= 0; f -= 0.1f)
+    //    {
+    //        // get unit for later checks
+    //        PartyUnit unit = GetComponentInChildren<PartyUnit>();
+    //        Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+    //        Color c = infoPanel.color;
+    //        c.a = f;
+    //        infoPanel.color = c;
+    //        yield return new WaitForSeconds(.1f);
+    //    }
+    //}
+
+
 
     public int GetPower()
     {

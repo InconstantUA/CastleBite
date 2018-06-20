@@ -27,7 +27,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         backgroundImage = transform.Find("Background").GetComponent<Image>();
     }
 
-    public PartyUnit.UnitDebuff GetUnitBuff()
+    public PartyUnit.UnitDebuff GetUnitDebuff()
     {
         return unitDebuff;
     }
@@ -97,6 +97,8 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         Destroy(gameObject);
     }
 
+
+
     public IEnumerator TriggerDebuff(PartyUnit dstUnit)
     {
         // Trigger debuff within unit
@@ -111,7 +113,17 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             Color c = backgroundImage.color;
             c.a = f;
             backgroundImage.color = c;
-            yield return new WaitForSeconds(.05f);
+            dstUnit.FadeUnitCellInfo(f);
+            yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
+        }
+        // Verify if it has timed out;
+        if (GetCurrentDuration() == 0)
+        {
+            // buff has timed out
+            // deactivate it (it will be destroyed at the end of animation)
+            SetActiveAdvance(false);
+            // deactivate it in unit properties too
+            dstUnit.GetUnitDebuffs()[(int)GetUnitDebuff()] = PartyUnit.UnitDebuff.None;
         }
     }
 

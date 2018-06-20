@@ -1855,7 +1855,8 @@ public class PartyPanel : MonoBehaviour {
             // Verify if unit has debuffs which should be applied, example: poison
             TriggerAppliedDebuffs(unitToActivate);
             // Deactivate debuffs which has expired, example: poison duration may last 2 turns
-            DeactivateExpiredDebuffs(unitToActivate);
+            // This is checked and done after debuff trigger
+            //DeactivateExpiredDebuffs(unitToActivate);
         }
     }
 
@@ -1885,32 +1886,35 @@ public class PartyPanel : MonoBehaviour {
         UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
         foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
         {
+            Debug.Log(unit.name);
             // as long as we cannot initiate all debuffs at the same time
             // we add debuffs to the queue and they will be triggered one after another
-            unitDebuffsUI.GetQueue().Run(debuffIndicator.TriggerDebuff(unit));
+            CoroutineQueue queue = unitDebuffsUI.GetQueue();
+            IEnumerator coroutine = debuffIndicator.TriggerDebuff(unit);
+            queue.Run(coroutine);
             // Trigger debuff against player
             // Decrement buff current duration
             debuffIndicator.DecrementCurrentDuration();
         }
     }
 
-    void DeactivateExpiredDebuffs(PartyUnit unit)
-    {
-        // Deactivate expired buffs in UI
-        UnitDebuffIndicator[] debuffsIndicators = unit.GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
-        foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
-        {
-            // Verify if it has timed out;
-            if (debuffIndicator.GetCurrentDuration() == 0)
-            {
-                // buff has timed out
-                // deactivate it (it will be destroyed at the end of animation)
-                debuffIndicator.SetActiveAdvance(false);
-                // deactivate it in unit properties too
-                unit.GetUnitBuffs()[(int)debuffIndicator.GetUnitBuff()] = PartyUnit.UnitBuff.None;
-            }
-        }
-    }
+    //void DeactivateExpiredDebuffs(PartyUnit unit)
+    //{
+    //    // Deactivate expired buffs in UI
+    //    UnitDebuffIndicator[] debuffsIndicators = unit.GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
+    //    foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
+    //    {
+    //        // Verify if it has timed out;
+    //        if (debuffIndicator.GetCurrentDuration() == 0)
+    //        {
+    //            // buff has timed out
+    //            // deactivate it (it will be destroyed at the end of animation)
+    //            debuffIndicator.SetActiveAdvance(false);
+    //            // deactivate it in unit properties too
+    //            unit.GetUnitBuffs()[(int)debuffIndicator.GetUnitBuff()] = PartyUnit.UnitBuff.None;
+    //        }
+    //    }
+    //}
 
     void ApplyHealPowerToSingleUnit(PartyUnit dstUnit)
     {
@@ -2492,6 +2496,7 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    // Note: animation should be identical to the function with the same name in PartyUnit
     IEnumerator FadeUnitCellInfo()
     {
         for (float f = 1f; f >= 0; f -= 0.1f)
