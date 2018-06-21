@@ -102,17 +102,20 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public void SetActiveAdvance(bool doActivate)
     {
+        CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
         if (doActivate)
         {
             gameObject.SetActive(true);
-            StartCoroutine("FadeBackground");
+            //StartCoroutine("FadeBackground");
+            queue.Run(FadeBackground());
             // reset currentDuration
             currentDuration = totalDuration;
         }
         else
         {
             // fade away foreground text and at the end of fade destroy buff
-            StartCoroutine("FadeForegroundAndDestroyBuff");
+            //StartCoroutine("FadeForegroundAndDestroyBuff");
+            queue.Run(FadeForegroundAndDestroyBuff());
         }
     }
 

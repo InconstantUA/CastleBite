@@ -393,6 +393,78 @@ public class PartyUnit : MonoBehaviour {
         infoPanel.color = c;
     }
 
+    public void DeactivateExpiredBuffs()
+    {
+        // Deactivate expired buffs in UI
+        // PartyUnit unit = GetComponent<PartyUnit>();
+        UnitBuffIndicator[] buffsUI = GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
+        foreach (UnitBuffIndicator buffUI in buffsUI)
+        {
+            // First decrement buff current duration
+            buffUI.DecrementCurrentDuration();
+            // Verify if it has timed out;
+            if (buffUI.GetCurrentDuration() == 0)
+            {
+                // buff has timed out
+                // deactivate it (it will be destroyed at the end of animation)
+                buffUI.SetActiveAdvance(false);
+                // deactivate it in unit properties too
+                unitBuffs[(int)buffUI.GetUnitBuff()] = UnitBuff.None;
+            }
+        }
+    }
+
+    public void TriggerAppliedDebuffs()
+    {
+        UnitDebuffIndicator[] debuffsIndicators = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
+        //UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
+        foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
+        {
+            Debug.Log(name);
+            // as long as we cannot initiate all debuffs at the same time
+            // we add debuffs to the queue and they will be triggered one after another
+            // CoroutineQueue queue = unitDebuffsUI.GetQueue();
+            CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
+            if (queue == null)
+            {
+                Debug.LogError("No queue");
+            }
+            if (debuffIndicator == null)
+            {
+                Debug.LogError("No debuffIndicator");
+            }
+            IEnumerator coroutine = debuffIndicator.TriggerDebuff(GetComponent<PartyUnit>());
+            if (coroutine == null)
+            {
+                Debug.LogError("No coroutine");
+            }
+            queue.Run(coroutine);
+            // Trigger debuff against player
+            // Decrement buff current duration
+            debuffIndicator.DecrementCurrentDuration();
+        }
+    }
+
+    public IEnumerator HighlightActiveUnitInBattle(bool doHighlight)
+    {
+        Color highlightColor;
+        if (doHighlight)
+        {
+            Debug.Log(" HighlightActiveUnitInBattle");
+            highlightColor = Color.white;
+        }
+        else
+        {
+            Debug.Log(" Remove highlight from active unit in battle");
+            highlightColor = Color.grey;
+        }
+        // highlight unit canvas with required color
+        Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
+        canvasText.color = highlightColor;
+        yield return null;
+    }
+
+
     public int GetPower()
     {
         return unitPower;

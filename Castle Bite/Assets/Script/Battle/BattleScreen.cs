@@ -16,6 +16,9 @@ public class BattleScreen : MonoBehaviour {
 
     bool battleHasEnded;
 
+    CoroutineQueue queue;
+
+
     //public BattlePlace GetBattlePlace()
     //{
     //    return battlePlace;
@@ -36,6 +39,8 @@ public class BattleScreen : MonoBehaviour {
         // initialize internal "static" (non-changeable) resources
         leftFocusPanel = transform.Find("LeftFocus").GetComponent<FocusPanel>();
         rightFocusPanel = transform.Find("RightFocus").GetComponent<FocusPanel>();
+        // Create a coroutine queue that can run max 1 coroutine at once
+        queue = new CoroutineQueue(1, StartCoroutine);
     }
 
     BattlePlace GetBattlePlace(HeroParty playerHeroParty, HeroParty enemyHeroParty)
@@ -182,7 +187,7 @@ public class BattleScreen : MonoBehaviour {
         // set battle has ended
         battleHasEnded = true;
         // Remove highlight from active unit
-        enemyPartyPanel.HighlightActiveUnitInBattle(activeUnit, false);
+        queue.Run(activeUnit.HighlightActiveUnitInBattle(false));
         // Clear units info and status information
         enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
@@ -339,8 +344,25 @@ public class BattleScreen : MonoBehaviour {
             {
                 // found next unit
                 // activate it
-                playerPartyPanel.SetActiveUnitInBattle(nextUnit);
-                enemyPartyPanel.SetActiveUnitInBattle(nextUnit);
+                // Highlight it and reset all other highlights
+                // first reset all cells do default values
+                playerPartyPanel.ResetAllCellsCanBeTargetedStatus();
+                enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
+                // Highlight next unit
+                // queue.Run(nextUnit.HighlightActiveUnitInBattle(true));
+                queue.Run(nextUnit.HighlightActiveUnitInBattle(true));
+                // first trigger process buffs and debuffs
+                // Then trigger buffs and debuffs before applying highlights
+                // Verify if unit has buffs which should be removed, example: defence
+                nextUnit.DeactivateExpiredBuffs();
+                // Verify if unit has debuffs which should be applied, example: poison
+                // Deactivate debuffs which has expired, example: poison duration may last 2 turns
+                // This is checked and done after debuff trigger
+                nextUnit.TriggerAppliedDebuffs();
+                // do not activate it immediately, instead put it to the queue
+                // to be activated after other animations are finished
+                queue.Run(playerPartyPanel.SetActiveUnitInBattle(nextUnit));
+                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(nextUnit));
                 canActivate = true;
             }
             else
@@ -360,6 +382,11 @@ public class BattleScreen : MonoBehaviour {
     public PartyUnit GetActiveUnit()
     {
         return activeUnit;
+    }
+
+    public CoroutineQueue GetQueue()
+    {
+        return queue;
     }
 
     // Update is called once per frame
