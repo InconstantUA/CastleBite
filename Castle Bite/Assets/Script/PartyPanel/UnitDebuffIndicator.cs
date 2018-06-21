@@ -101,6 +101,9 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public IEnumerator TriggerDebuff(PartyUnit dstUnit)
     {
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
         // Trigger debuff within unit
         dstUnit.ApplyDestructiveAbility(dstUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
         // reset background image color to be visible
@@ -125,6 +128,8 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             // deactivate it in unit properties too
             dstUnit.GetUnitDebuffs()[(int)GetUnitDebuff()] = PartyUnit.UnitDebuff.None;
         }
+        // Enable input
+        inputBlocker.SetActive(false);
     }
 
     void FillInAdditionalInfo(UniquePowerModifier uniquePowerModifier)

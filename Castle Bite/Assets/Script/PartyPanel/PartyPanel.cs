@@ -1890,7 +1890,19 @@ public class PartyPanel : MonoBehaviour {
             // as long as we cannot initiate all debuffs at the same time
             // we add debuffs to the queue and they will be triggered one after another
             CoroutineQueue queue = unitDebuffsUI.GetQueue();
+            if (queue == null)
+            {
+                Debug.LogError("No queue");
+            }
+            if (debuffIndicator == null)
+            {
+                Debug.LogError("No debuffIndicator");
+            }
             IEnumerator coroutine = debuffIndicator.TriggerDebuff(unit);
+            if (coroutine == null)
+            {
+                Debug.LogError("No coroutine");
+            }
             queue.Run(coroutine);
             // Trigger debuff against player
             // Decrement buff current duration
@@ -2499,6 +2511,10 @@ public class PartyPanel : MonoBehaviour {
     // Note: animation should be identical to the function with the same name in PartyUnit
     IEnumerator FadeUnitCellInfo()
     {
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
+        // Fade
         for (float f = 1f; f >= 0; f -= 0.1f)
         {
             foreach (string horisontalPanel in horisontalPanels)
@@ -2520,6 +2536,8 @@ public class PartyPanel : MonoBehaviour {
             }
             yield return new WaitForSeconds(.1f);
         }
+        // Unblock mouse input
+        inputBlocker.SetActive(false);
     }
 
     #endregion For Battle Screen

@@ -71,6 +71,10 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     IEnumerator FadeBackground()
     {
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
+        // Fade
         for (float f = 1f; f >= 0; f -= 0.1f)
         {
             Color c = backgroundImage.color;
@@ -78,6 +82,8 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
             backgroundImage.color = c;
             yield return new WaitForSeconds(.05f);
         }
+        // Unblock mouse input
+        inputBlocker.SetActive(false);
     }
 
     IEnumerator FadeForegroundAndDestroyBuff()

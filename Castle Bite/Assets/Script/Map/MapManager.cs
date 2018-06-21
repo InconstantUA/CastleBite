@@ -561,6 +561,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     IEnumerator Move()
     {
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
         Debug.Log("Move");
         // Verify if hero was in city
         if (selectedHero.linkedCityOnMapTr)
@@ -602,6 +605,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
         EndMoveTransition();
+        // Unblock mouse input
+        inputBlocker.SetActive(false);
     }
 
     public void EnterMoveMode()

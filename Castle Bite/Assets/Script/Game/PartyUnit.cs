@@ -393,22 +393,6 @@ public class PartyUnit : MonoBehaviour {
         infoPanel.color = c;
     }
 
-    //public IEnumerator FadeUnitCellInfo()
-    //{
-    //    for (float f = 1f; f >= 0; f -= 0.1f)
-    //    {
-    //        // get unit for later checks
-    //        PartyUnit unit = GetComponentInChildren<PartyUnit>();
-    //        Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
-    //        Color c = infoPanel.color;
-    //        c.a = f;
-    //        infoPanel.color = c;
-    //        yield return new WaitForSeconds(.1f);
-    //    }
-    //}
-
-
-
     public int GetPower()
     {
         return unitPower;
