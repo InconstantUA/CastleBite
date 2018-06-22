@@ -18,6 +18,13 @@ public class BattleScreen : MonoBehaviour {
 
     CoroutineQueue queue;
 
+    public enum TurnPhase
+    {
+        Main,       // moving all units
+        PostWait    // moving units which activated Wait before hand
+    };
+    TurnPhase turnPhase;
+
 
     //public BattlePlace GetBattlePlace()
     //{
@@ -56,6 +63,8 @@ public class BattleScreen : MonoBehaviour {
     {
         // activate this battle sreen
         gameObject.SetActive(true);
+        // Set turn phase to main phase
+        SetTurnPhase(TurnPhase.Main);
         // get hero's parties
         HeroParty playerHeroParty = playerOnMap.linkedPartyTr.GetComponent<HeroParty>();
         HeroParty enemyHeroParty = enemyOnMap.linkedPartyTr.GetComponent<HeroParty>();
@@ -248,6 +257,51 @@ public class BattleScreen : MonoBehaviour {
         enemyPartyPanel.ResetHasMovedFlag();
     }
 
+    void SetTurnPhase(TurnPhase newPhase)
+    {
+        // Todo: Consider just unsing bool, if there will be no other phases
+        // act based on the previous phase value
+        switch (turnPhase)
+        {
+            case TurnPhase.Main:
+                switch (newPhase)
+                {
+                    case TurnPhase.Main:
+                        // this can happen on the start of the battle
+                        // Debug.LogError("Phase is already " + newPhase.ToString());
+                        break;
+                    case TurnPhase.PostWait:
+                        // Deactivate Wait button
+                        transform.Find("CtrlPnlFight/Wait").gameObject.SetActive(false);
+                        break;
+                    default:
+                        Debug.LogError("Unknown newPhase" + newPhase.ToString());
+                        break;
+                }
+                break;
+            case TurnPhase.PostWait:
+                switch (newPhase)
+                {
+                    case TurnPhase.Main:
+                        // Enable Wait button again
+                        transform.Find("CtrlPnlFight/Wait").gameObject.SetActive(true);
+                        break;
+                    case TurnPhase.PostWait:
+                        Debug.LogError("Phase is already " + newPhase.ToString());
+                        break;
+                    default:
+                        Debug.LogError("Unknown newPhase" + newPhase.ToString());
+                        break;
+                }
+                break;
+            default:
+                Debug.LogError("Unknown turnPhase" + turnPhase.ToString());
+                break;
+        }
+        // set turn phase
+        turnPhase = newPhase;
+    }
+
     bool StartTurn()
     {
         Debug.Log("StartTurn");
@@ -257,6 +311,8 @@ public class BattleScreen : MonoBehaviour {
         {
             // Reset hasMoved flag on all units, so they can now move again;
             ResetHasMovedFlag();
+            // Reset turn phase to main
+            SetTurnPhase(TurnPhase.Main);
             // loop through all units according to their initiative
             // Activate unit with the highest initiative
             canStart = ActivateNextUnit();
@@ -278,8 +334,8 @@ public class BattleScreen : MonoBehaviour {
     PartyUnit FindNextUnit()
     {
         // Find unit with the highest initiative, which can still move during this turn in battle
-        PartyUnit playerNextUnit = playerPartyPanel.GetActiveUnitWithHighestInitiative();
-        PartyUnit enemyNextUnit = enemyPartyPanel.GetActiveUnitWithHighestInitiative();
+        PartyUnit playerNextUnit = playerPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
+        PartyUnit enemyNextUnit = enemyPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
         // verify if player and enemy has more units to move
         if (playerNextUnit && enemyNextUnit)
         {
@@ -324,8 +380,17 @@ public class BattleScreen : MonoBehaviour {
             } else
             {
                 // no any pary has units to move
-                // return null, this should initiate new battle turn
-                return null;
+                // verify current phase
+                if (TurnPhase.Main == turnPhase)
+                {
+                    // do the same check but for units, which are in waiting status
+                    SetTurnPhase(TurnPhase.PostWait);
+                    return FindNextUnit();
+                } else
+                {
+                    // return null, this should initiate new battle turn
+                    return null;
+                }
             }
         }
     }

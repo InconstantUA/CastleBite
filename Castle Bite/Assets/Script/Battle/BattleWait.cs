@@ -50,10 +50,24 @@ public class BattleWait : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
+    IEnumerator Wait()
+    {
+
+        yield return new WaitForSeconds(0.5f);
+    }
+
     void ActOnClick()
     {
-        // activate map view
         Debug.Log("Wait");
+        // get battle screen, structure: BattleScreen-CtrlPnlFight-This
+        BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
+        // set unit is waiting status
+        PartyUnit activeUnit = battleScreen.GetActiveUnit();
+        activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Waiting);
+        // execute wait animation
+        battleScreen.GetQueue().Run(Wait());
+        // activate next unit
+        battleScreen.ActivateNextUnit();
     }
 
 }

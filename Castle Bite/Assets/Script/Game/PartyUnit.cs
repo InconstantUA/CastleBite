@@ -70,8 +70,10 @@ public class PartyUnit : MonoBehaviour {
     public enum UnitStatus
     {
         Active, // not Dead and not Escaped = can fight
-        Dead,
-        Escaped
+        Waiting,
+        Escaping,
+        Escaped,
+        Dead
     }
 
     public enum UnitDebuff:int
@@ -357,21 +359,7 @@ public class PartyUnit : MonoBehaviour {
         if (0 == healthAfterDamage)
         {
             // set unit is dead attribute
-            SetUnitStatus(PartyUnit.UnitStatus.Dead);
-            // set color ui more darker
-            Color32 newUIColor = GetUnitStatusColor();
-            currentHealth.color = newUIColor;
-            Text maxHealth = GetUnitMaxHealthText();
-            maxHealth.color = newUIColor;
-            // set cell canvas to be more darker
-            Text cellCanvas = GetUnitCanvasText();
-            cellCanvas.color = newUIColor;
-            // set dead in status
-            Text statusPanel = GetUnitStatusText();
-            statusPanel.text = GetUnitStatusString();
-            statusPanel.color = newUIColor;
-            // clear unit buffs and debuffs
-            RemoveAllBuffsAndDebuffs();
+            SetUnitStatus(UnitStatus.Dead);
         }
         // display damage dealt in info panel
         Text infoPanel = GetUnitInfoPanelText();
@@ -447,6 +435,12 @@ public class PartyUnit : MonoBehaviour {
 
     public IEnumerator HighlightActiveUnitInBattle(bool doHighlight)
     {
+        // If unit had waiting status in the past, then reset it back to active
+        if (UnitStatus.Waiting == GetUnitStatus())
+        {
+            SetUnitStatus(UnitStatus.Active);
+        }
+        // Highlight
         Color highlightColor;
         if (doHighlight)
         {
@@ -462,6 +456,88 @@ public class PartyUnit : MonoBehaviour {
         Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
         canvasText.color = highlightColor;
         yield return null;
+    }
+
+    //public string GetUnitStatusString()
+    //{
+    //    switch (unitStatus)
+    //    {
+    //        case UnitStatus.Active:
+    //            return "";
+    //        case UnitStatus.Dead:
+    //            return "Dead";
+    //        case UnitStatus.Escaped:
+    //            return "Escaped";
+    //        case UnitStatus.Waiting:
+    //            return "Waiting";
+    //        default:
+    //            Debug.LogError("Unknown unit status");
+    //            return null;
+    //    }
+    //}
+
+    //public Color GetUnitStatusColor()
+    //{
+    //    switch (unitStatus)
+    //    {
+    //        case UnitStatus.Active:
+    //            return Color.gray;
+    //        case UnitStatus.Dead:
+    //            return new Color32(64, 64, 64, 255); // darkest grey
+    //        case UnitStatus.Escaped:
+    //            return new Color32(96, 96, 96, 255); // darker grey
+    //        case UnitStatus.Waiting:
+    //            return new Color32(128, 128, 128, 255); // grey
+    //        default:
+    //            Debug.LogError("Unknown unit status");
+    //            return Color.red;
+    //    }
+    //}
+
+    public void SetUnitStatus(UnitStatus value)
+    {
+        unitStatus = value;
+        // get new UI color according ot unit status
+        Color32 newUIColor;
+        // set dead in status
+        string statusString;
+        switch (value)
+        {
+            case UnitStatus.Active:
+                newUIColor = new Color32(160, 160, 160, 255);
+                statusString = "";
+                break;
+            case UnitStatus.Waiting:
+                newUIColor = new Color32(96, 96, 96, 96);
+                statusString = "Waiting";
+                break;
+            case UnitStatus.Escaping:
+                newUIColor = new Color32(96, 96, 96, 255);
+                statusString = "Escaping";
+                break;
+            case UnitStatus.Escaped:
+                newUIColor = new Color32(64, 64, 64, 255);
+                statusString = "Escaped";
+                // clear unit buffs and debuffs
+                RemoveAllBuffsAndDebuffs();
+                break;
+            case UnitStatus.Dead:
+                newUIColor = new Color32(64, 64, 64, 255);
+                statusString = "Dead";
+                // clear unit buffs and debuffs
+                RemoveAllBuffsAndDebuffs();
+                break;
+            default:
+                Debug.LogError("Unknown status " + value.ToString());
+                newUIColor = Color.red;
+                statusString = "Error";
+                break;
+        }
+        GetUnitCurrentHealthText().color = newUIColor;
+        GetUnitMaxHealthText().color = newUIColor;
+        GetUnitCanvasText().color = newUIColor;
+        GetUnitStatusText().color = newUIColor;
+        GetUnitStatusText().text = statusString;
     }
 
 
@@ -800,38 +876,6 @@ public class PartyUnit : MonoBehaviour {
         return unitStatus;
     }
 
-    public string GetUnitStatusString()
-    {
-        switch (unitStatus)
-        {
-            case UnitStatus.Active:
-                return "";
-            case UnitStatus.Dead:
-                return "Dead";
-            case UnitStatus.Escaped:
-                return "Escaped";
-            default:
-                Debug.LogError("Unknown unit status");
-                return null;
-        }
-    }
-
-    public Color GetUnitStatusColor()
-    {
-        switch (unitStatus)
-        {
-            case UnitStatus.Active:
-                return Color.gray;
-            case UnitStatus.Dead:
-                return new Color32(64, 64, 64, 255); // darkest grey
-            case UnitStatus.Escaped:
-                return new Color32(96, 96, 96, 255); // darker grey
-            default:
-                Debug.LogError("Unknown unit status");
-                return Color.red;
-        }
-    }
-
     public Text GetUnitCurrentHealthText()
     {
         return GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>();
@@ -845,11 +889,6 @@ public class PartyUnit : MonoBehaviour {
     public Text GetUnitCanvasText()
     {
         return GetUnitCell().Find("Br").GetComponent<Text>();
-    }
-
-    public void SetUnitStatus(UnitStatus value)
-    {
-        unitStatus = value;
     }
 
     public UnitDebuff[] GetUnitDebuffs()

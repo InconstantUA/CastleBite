@@ -1083,10 +1083,7 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // verify if unit is alive and it has not escaped yet
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    // if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                    if (GetUnitWhichCanFight(horisontalPanel, cell))
                     {
                         return true;
                     }
@@ -1097,7 +1094,7 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    public PartyUnit GetActiveUnitWithHighestInitiative()
+    public PartyUnit GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
     {
         PartyUnit unitWithHighestInitiative = null;
         foreach (string horisontalPanel in horisontalPanels)
@@ -1113,21 +1110,35 @@ public class PartyPanel : MonoBehaviour {
                     //  - unit is alive
                     //  - unit has not escaped from the battle
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    if (!unit.GetHasMoved() && (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active))
+                    if (!unit.GetHasMoved())
                     {
-                        // compare initiative with other unit, if it was found
-                        if (unitWithHighestInitiative)
+                        // during main phase check for Active units
+                        bool doProceed = false;
+                        if ((BattleScreen.TurnPhase.Main == turnPhase) && (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active))
                         {
-                            if (unit.GetInitiative() > unitWithHighestInitiative.GetInitiative())
+                            doProceed = true;
+                        }
+                        // during post wait phase check for units which are in Waiting status
+                        if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (unit.GetUnitStatus() == PartyUnit.UnitStatus.Waiting))
+                        {
+                            doProceed = true;
+                        }
+                        if (doProceed)
+                        {
+                            // compare initiative with other unit, if it was found
+                            if (unitWithHighestInitiative)
                             {
-                                // found unit with highest initiative, update unitWithHighestInitiative variable
+                                if (unit.GetInitiative() > unitWithHighestInitiative.GetInitiative())
+                                {
+                                    // found unit with highest initiative, update unitWithHighestInitiative variable
+                                    unitWithHighestInitiative = unit;
+                                }
+                            }
+                            else
+                            {
+                                // no other unit found yet, assume that this unit has the highest initiative
                                 unitWithHighestInitiative = unit;
                             }
-                        }
-                        else
-                        {
-                            // no other unit found yet, assume that this unit has the highest initiative
-                            unitWithHighestInitiative = unit;
                         }
                     }
                 }
@@ -1206,12 +1217,17 @@ public class PartyPanel : MonoBehaviour {
                 // Unit present in cell
                 PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                 // Verify if unit has not escaped or dead
-                // if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                if (   (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                    || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Waiting)
+                    || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
                 {
                     // Unit is alive and has not escaped
                     // Apply default negative Color
                     cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
+                }
+                else
+                {
+                    // do not change status of dead or escaped unit, because it is already set correctly
                 }
             }
             else
@@ -1250,6 +1266,8 @@ public class PartyPanel : MonoBehaviour {
                         switch (unit.GetUnitStatus())
                         {
                             case PartyUnit.UnitStatus.Active:
+                            case PartyUnit.UnitStatus.Waiting:
+                            case PartyUnit.UnitStatus.Escaping:
                                 if (unit.GetHealthCurr() < unit.GetHealthMax())
                                 {
                                     // unit can be healed
@@ -1312,6 +1330,8 @@ public class PartyPanel : MonoBehaviour {
                         switch (unit.GetUnitStatus())
                         {
                             case PartyUnit.UnitStatus.Active:
+                            case PartyUnit.UnitStatus.Waiting:
+                            case PartyUnit.UnitStatus.Escaping:
                                 // unit is alive and cannot be resurected
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot resurect alive units.";
@@ -1344,7 +1364,7 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    bool DoesCellHasUnitsWhichCanFight(string horisontalPanel, string cell)
+    PartyUnit GetUnitWhichCanFight(string horisontalPanel, string cell)
     {
         // verify if slot has an unit in it
         Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
@@ -1353,13 +1373,14 @@ public class PartyPanel : MonoBehaviour {
             // cell has a unit in it
             // verify if unit can act: alive and did not escape (flee from) the battle
             PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-            // if (unit.GetIsAlive() && !unit.GetHasEscaped())
-            if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+            if (  (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active) 
+               || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Waiting)
+               || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
             {
-                return true;
+                return unit;
             }
         }
-        return false;
+        return null;
     }
 
     bool FrontRowHasUnitsWhichCanFight()
@@ -1368,7 +1389,7 @@ public class PartyPanel : MonoBehaviour {
         {
             foreach (string cell in cellsFront)
             {
-                if (DoesCellHasUnitsWhichCanFight(horisontalPanel, cell))
+                if (GetUnitWhichCanFight(horisontalPanel, cell))
                 {
                     return true;
                 }
@@ -1383,7 +1404,7 @@ public class PartyPanel : MonoBehaviour {
         {
             foreach (string cell in cellsBack)
             {
-                if (DoesCellHasUnitsWhichCanFight(horisontalPanel, cell))
+                if (GetUnitWhichCanFight(horisontalPanel, cell))
                 {
                     return true;
                 }
@@ -1396,7 +1417,7 @@ public class PartyPanel : MonoBehaviour {
     {
         foreach (string cell in cells)
         {
-            if (DoesCellHasUnitsWhichCanFight(horisontalPanel, cell))
+            if (GetUnitWhichCanFight(horisontalPanel, cell))
             {
                 return true;
             }
@@ -1493,13 +1514,15 @@ public class PartyPanel : MonoBehaviour {
                     }
                     else
                     {
-                        // this is actions for enemy party
+                        // these are actions for enemy party
                         // first filter out dead units
                         // get unit for later checks
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                         switch (unit.GetUnitStatus())
                         {
                             case PartyUnit.UnitStatus.Active:
+                            case PartyUnit.UnitStatus.Waiting:
+                            case PartyUnit.UnitStatus.Escaping:
                                 // if active mele unit is blocked, then it cannot attack anything
                                 if (activeMeleUnitIsBlocked)
                                 {
@@ -1688,6 +1711,8 @@ public class PartyPanel : MonoBehaviour {
                         switch (unit.GetUnitStatus())
                         {
                             case PartyUnit.UnitStatus.Active:
+                            case PartyUnit.UnitStatus.Waiting:
+                            case PartyUnit.UnitStatus.Escaping:
                                 // alive enemy unit
                                 // ranged units can reach any unit
                                 // so all enemy units can be targeted
@@ -1746,6 +1771,8 @@ public class PartyPanel : MonoBehaviour {
                         switch (unit.GetUnitStatus())
                         {
                             case PartyUnit.UnitStatus.Active:
+                            case PartyUnit.UnitStatus.Waiting:
+                            case PartyUnit.UnitStatus.Escaping:
                                 // alive enemy unit
                                 // ranged units can reach any unit
                                 // so all enemy units can be targeted
@@ -2184,20 +2211,24 @@ public class PartyPanel : MonoBehaviour {
                 {
                     foreach (string cell in cells)
                     {
-                        // verify if slot has an unit in it
-                        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                        if (unitSlot.childCount > 0)
+                        PartyUnit unit = GetUnitWhichCanFight(horisontalPanel, cell);
+                        if (unit)
                         {
-                            // get unit for later checks
-                            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                            // verify if unit is alive and has not escaped the battle
-                            //if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                            if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
-                            {
-                                // apply damage to the unit
-                                ApplyDestructivePowerToSingleUnit(unit);
-                            }
+                            ApplyDestructivePowerToSingleUnit(unit);
                         }
+                        //// verify if slot has an unit in it
+                        //Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                        //if (unitSlot.childCount > 0)
+                        //{
+                        //    // get unit for later checks
+                        //    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        //    // verify if unit is alive and has not escaped the battle
+                        //    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                        //    {
+                        //        // apply damage to the unit
+                        //        ApplyDestructivePowerToSingleUnit(unit);
+                        //    }
+                        //}
                     }
                 }
 
@@ -2367,11 +2398,7 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // get unit for later checks
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    // verify if unit is alive and has not escaped
-                    // if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                    if (GetUnitWhichCanFight(horisontalPanel, cell))
                     {
                         // unit is alive and has not escaped
                         // increment units left counter
@@ -2481,11 +2508,8 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    // get unit for later checks
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    // verify if unit is alive and has not escaped
-                    // if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                    PartyUnit unit = GetUnitWhichCanFight(horisontalPanel, cell);
+                    if (unit)
                     {
                         // add experience to the unit
                         int newUnitExperienceValue = unit.GetExperience() + experiencePerUnit;
