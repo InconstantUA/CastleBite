@@ -50,10 +50,25 @@ public class BattleRetreat : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         // Debug.Log("SetPressedStatus " + btn.name + " button");
     }
 
+    IEnumerator StartRetreating()
+    {
+        yield return new WaitForSeconds(0.5f);
+    }
+
     void ActOnClick()
     {
-        // activate map view
         Debug.Log("Retreat");
+        // get battle screen, structure: BattleScreen-CtrlPnlFight-This
+        BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
+        // set unit is waiting status
+        PartyUnit activeUnit = battleScreen.GetActiveUnit();
+        activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaping);
+        // set unit has moved flag
+        activeUnit.SetHasMoved(true);
+        // execute wait animation
+        battleScreen.GetQueue().Run(StartRetreating());
+        // activate next unit
+        battleScreen.ActivateNextUnit();
     }
 
 }

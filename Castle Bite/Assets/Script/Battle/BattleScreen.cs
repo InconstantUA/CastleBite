@@ -15,6 +15,8 @@ public class BattleScreen : MonoBehaviour {
     BattlePlace battlePlace;
 
     bool battleHasEnded;
+    bool canActivate = false; // if it is possible to activate next unit
+
 
     CoroutineQueue queue;
 
@@ -395,10 +397,42 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
+    IEnumerator PostDebuffProcessing()
+    {
+        if (PartyUnit.UnitStatus.Active == activeUnit.GetUnitStatus())
+        {
+            // do not activate it immediately, instead put it to the queue
+            // to be activated after other animations are finished
+            queue.Run(playerPartyPanel.SetActiveUnitInBattle(activeUnit));
+            queue.Run(enemyPartyPanel.SetActiveUnitInBattle(activeUnit));
+            canActivate = true;
+        }
+        else if (PartyUnit.UnitStatus.Escaping == activeUnit.GetUnitStatus())
+        {
+            // Unit has escaped now
+            activeUnit.SetHasMoved(true);
+            queue.Run(activeUnit.EscapeBattle());
+            // Activate next unit
+            canActivate = ActivateNextUnit();
+        }
+        else if (PartyUnit.UnitStatus.Dead == activeUnit.GetUnitStatus())
+        {
+            // Unit was killed by debuff
+            // Activate next unit
+            canActivate = ActivateNextUnit();
+        }
+        else
+        {
+            Debug.LogError("Unknown condition" + activeUnit.GetUnitStatus().ToString());
+            canActivate = false;
+        }
+        yield return null;
+    }
+
     public bool ActivateNextUnit()
     {
         Debug.Log("ActivateNextUnit");
-        bool canActivate = false;
+        canActivate = false;
         if (CanContinueBattle())
         {
             // find next unit, which can act in the battle
@@ -414,7 +448,7 @@ public class BattleScreen : MonoBehaviour {
                 playerPartyPanel.ResetAllCellsCanBeTargetedStatus();
                 enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
                 // Highlight next unit
-                // queue.Run(nextUnit.HighlightActiveUnitInBattle(true));
+                // this function also resets units status from Waiting to Active
                 queue.Run(nextUnit.HighlightActiveUnitInBattle(true));
                 // first trigger process buffs and debuffs
                 // Then trigger buffs and debuffs before applying highlights
@@ -424,10 +458,9 @@ public class BattleScreen : MonoBehaviour {
                 // Deactivate debuffs which has expired, example: poison duration may last 2 turns
                 // This is checked and done after debuff trigger
                 nextUnit.TriggerAppliedDebuffs();
-                // do not activate it immediately, instead put it to the queue
-                // to be activated after other animations are finished
-                queue.Run(playerPartyPanel.SetActiveUnitInBattle(nextUnit));
-                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(nextUnit));
+                // Act based on the unit status
+                // at this stage we can have only 2 possible statuses: Active or Escaping
+                queue.Run(PostDebuffProcessing());
                 canActivate = true;
             }
             else

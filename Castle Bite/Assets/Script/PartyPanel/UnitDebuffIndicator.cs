@@ -86,15 +86,18 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     IEnumerator FadeForegroundAndDestroyBuff()
     {
         // Fade Foreground
-        for (float f = 1f; f >= 0; f -= 0.1f)
+        if (symbol && gameObject) // verify if they are not destroyed yet
         {
-            Color c = symbol.color;
-            c.a = f;
-            symbol.color = c;
-            yield return new WaitForSeconds(.05f);
+            for (float f = 1f; f >= 0; f -= 0.1f)
+            {
+                Color c = symbol.color;
+                c.a = f;
+                symbol.color = c;
+                yield return new WaitForSeconds(.05f);
+            }
+            // Destroy buff
+            Destroy(gameObject);
         }
-        // Destroy buff
-        Destroy(gameObject);
     }
 
 
@@ -106,27 +109,39 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         inputBlocker.SetActive(true);
         // Trigger debuff within unit
         dstUnit.ApplyDestructiveAbility(dstUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
-        // reset background image color to be visible
-        Color cx = backgroundImage.color;
-        cx.a = 1;
-        backgroundImage.color = cx;
-        // trigger animation
-        for (float f = 1f; f >= 0; f -= 0.1f)
+        // Proceed if unit is still alive
+        if (PartyUnit.UnitStatus.Dead != dstUnit.GetUnitStatus())
         {
-            Color c = backgroundImage.color;
-            c.a = f;
-            backgroundImage.color = c;
-            dstUnit.FadeUnitCellInfo(f);
-            yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
+            // reset background image color to be visible
+            Color cx = backgroundImage.color;
+            cx.a = 1;
+            backgroundImage.color = cx;
+            // trigger animation
+            for (float f = 1f; f >= 0; f -= 0.1f)
+            {
+                Color c = backgroundImage.color;
+                c.a = f;
+                backgroundImage.color = c;
+                dstUnit.FadeUnitCellInfo(f);
+                yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
+            }
+            // Verify if it has timed out;
+            if (GetCurrentDuration() == 0)
+            {
+                // buff has timed out
+                // deactivate it (it will be destroyed at the end of animation)
+                SetActiveAdvance(false);
+                // deactivate it in unit properties too
+                dstUnit.GetUnitDebuffs()[(int)GetUnitDebuff()] = PartyUnit.UnitDebuff.None;
+            }
         }
-        // Verify if it has timed out;
-        if (GetCurrentDuration() == 0)
+        else
         {
-            // buff has timed out
-            // deactivate it (it will be destroyed at the end of animation)
-            SetActiveAdvance(false);
-            // deactivate it in unit properties too
-            dstUnit.GetUnitDebuffs()[(int)GetUnitDebuff()] = PartyUnit.UnitDebuff.None;
+            // all debuffs should be already removed by SetUnitStatus(status)
+            // Unit cannot move any more
+            dstUnit.SetHasMoved(true);
+            // Play empty animation
+            yield return new WaitForSeconds(1f);
         }
         // Enable input
         inputBlocker.SetActive(false);

@@ -413,19 +413,19 @@ public class PartyUnit : MonoBehaviour {
             // we add debuffs to the queue and they will be triggered one after another
             // CoroutineQueue queue = unitDebuffsUI.GetQueue();
             CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
-            if (queue == null)
-            {
-                Debug.LogError("No queue");
-            }
-            if (debuffIndicator == null)
-            {
-                Debug.LogError("No debuffIndicator");
-            }
+            //if (queue == null)
+            //{
+            //    Debug.LogError("No queue");
+            //}
+            //if (debuffIndicator == null)
+            //{
+            //    Debug.LogError("No debuffIndicator");
+            //}
             IEnumerator coroutine = debuffIndicator.TriggerDebuff(GetComponent<PartyUnit>());
-            if (coroutine == null)
-            {
-                Debug.LogError("No coroutine");
-            }
+            //if (coroutine == null)
+            //{
+            //    Debug.LogError("No coroutine");
+            //}
             queue.Run(coroutine);
             // Trigger debuff against player
             // Decrement buff current duration
@@ -493,6 +493,15 @@ public class PartyUnit : MonoBehaviour {
     //            return Color.red;
     //    }
     //}
+
+    public IEnumerator EscapeBattle()
+    {
+        Debug.LogWarning("EscapeBattle " + name);
+        // set escaped status
+        SetUnitStatus(UnitStatus.Escaped);
+        // Play animation
+        yield return new WaitForSeconds(1f);
+    }
 
     public void SetUnitStatus(UnitStatus value)
     {

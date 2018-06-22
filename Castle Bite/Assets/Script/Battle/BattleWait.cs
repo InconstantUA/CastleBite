@@ -52,7 +52,6 @@ public class BattleWait : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     IEnumerator Wait()
     {
-
         yield return new WaitForSeconds(0.5f);
     }
 

@@ -1114,7 +1114,9 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // during main phase check for Active units
                         bool doProceed = false;
-                        if ((BattleScreen.TurnPhase.Main == turnPhase) && (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active))
+                        if ( (BattleScreen.TurnPhase.Main == turnPhase)
+                            && ( (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active) 
+                                || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) ) )
                         {
                             doProceed = true;
                         }
