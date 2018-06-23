@@ -65,13 +65,13 @@ public class CoroutineQueue
     {
         if (numActive < maxActive)
         {
-            Debug.Log("Run " + coroutine.ToString());
+            // Debug.Log("Run " + coroutine.ToString());
             var runner = CoroutineRunner(coroutine);
             coroutineStarter(runner);
         }
         else
         {
-            Debug.Log("Queue " + coroutine.ToString());
+            // Debug.Log("Queue " + coroutine.ToString());
             queue.Enqueue(coroutine);
         }
     }

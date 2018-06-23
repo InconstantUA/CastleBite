@@ -20,6 +20,32 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     Image backgroundImage;
     UniquePowerModifier appliedUniquePowerModifier;
 
+    public int CurrentDuration
+    {
+        get
+        {
+            return currentDuration;
+        }
+
+        set
+        {
+            currentDuration = value;
+        }
+    }
+
+    public int TotalDuration
+    {
+        get
+        {
+            return totalDuration;
+        }
+
+        set
+        {
+            totalDuration = value;
+        }
+    }
+
     private void Awake()
     {
         symbol = GetComponent<Text>();
@@ -34,12 +60,12 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
 
     public int GetCurrentDuration()
     {
-        return currentDuration;
+        return CurrentDuration;
     }
 
     public void DecrementCurrentDuration()
     {
-        currentDuration -= 1;
+        CurrentDuration -= 1;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -180,7 +206,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             queue.Run(FadeBackground());
             //StartCoroutine("FadeBackground");
             // reset currentDuration
-            currentDuration = totalDuration;
+            CurrentDuration = TotalDuration;
         }
         else
         {

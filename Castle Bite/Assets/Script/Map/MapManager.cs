@@ -175,7 +175,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // do nothing, wait for move to finish
                     break;
                 default:
-                    Debug.LogError("Unknown mode");
+                    Debug.LogError("Unknown mode " + mode.ToString());
                     break;
             }
         }
@@ -520,7 +520,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void EnterBattleAfterMove()
     {
-        Debug.Log("Enter battle");
+        //Debug.Log("Enter battle");
         // Get Enemy party
         MapHero enemyOnMap = GetEnemyByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
         // initialize battle
@@ -564,7 +564,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Block mouse input
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(true);
-        Debug.Log("Move");
+        //Debug.Log("Move");
         // Verify if hero was in city
         if (selectedHero.linkedCityOnMapTr)
         {

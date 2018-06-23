@@ -295,6 +295,7 @@ public class PartyUnit : MonoBehaviour {
 
     public void RemoveAllBuffs()
     {
+        //Debug.Log("RemoveAllBuffs");
         // in unit properties
         for (int i = 0; i < unitBuffs.Length; i++)
         {
@@ -404,7 +405,7 @@ public class PartyUnit : MonoBehaviour {
 
     public void TriggerAppliedDebuffs()
     {
-        Debug.Log("TriggerAppliedDebuffs");
+        //Debug.Log("TriggerAppliedDebuffs");
         UnitDebuffIndicator[] debuffsIndicators = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
         //UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
         foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
@@ -440,12 +441,12 @@ public class PartyUnit : MonoBehaviour {
         Color highlightColor;
         if (doHighlight)
         {
-            Debug.Log(" HighlightActiveUnitInBattle");
+            //Debug.Log(" HighlightActiveUnitInBattle");
             highlightColor = Color.white;
         }
         else
         {
-            Debug.Log(" Remove highlight from active unit in battle");
+            //Debug.Log(" Remove highlight from active unit in battle");
             highlightColor = Color.grey;
         }
         // highlight unit canvas with required color

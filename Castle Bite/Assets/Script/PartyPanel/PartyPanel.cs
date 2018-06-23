@@ -1491,7 +1491,7 @@ public class PartyPanel : MonoBehaviour {
 
     void PrepareBattleFieldForMelePower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("PrepareBattleFieldForMelePower");
+        //Debug.Log("PrepareBattleFieldForMelePower");
         Color positiveColor = Color.yellow;
         Color negativeColor = Color.grey;
         bool isAllowedToApplyPwrToThisUnit = false;
@@ -1685,7 +1685,7 @@ public class PartyPanel : MonoBehaviour {
 
     void PrepareBattleFieldForRangedPower(bool activeUnitIsFromThisParty)
     {
-        Debug.Log("PrepareBattleFieldForRangedPower");
+        //Debug.Log("PrepareBattleFieldForRangedPower");
         Color positiveColor = Color.yellow;
         // Color negativeColor = new Color32(221, 24, 24, 255); // dark red
         Color negativeColor = Color.grey;
@@ -1824,7 +1824,7 @@ public class PartyPanel : MonoBehaviour {
 
     public IEnumerator SetActiveUnitInBattle(PartyUnit unitToActivate)
     {
-        Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
+        //Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
         // save it locally for later use
         activeBattleUnit = unitToActivate;
         // new unit became active in battle
@@ -2074,7 +2074,7 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    public IEnumerator RemoveAllBuffsAndDebuffs()
+    public void RemoveAllBuffsAndDebuffs()
     {
         foreach (string horisontalPanel in horisontalPanels)
         {
@@ -2094,7 +2094,7 @@ public class PartyPanel : MonoBehaviour {
                 }
             }
         }
-        yield return null;
+        //yield return null;
     }
 
 
@@ -2143,7 +2143,7 @@ public class PartyPanel : MonoBehaviour {
 
     void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
     {
-        Debug.Log("ApplyDestructivePowerToSingleUnit");
+        //Debug.Log("ApplyDestructivePowerToSingleUnit");
         // ApplyDestructiveAbility(dstUnit);
         dstUnit.ApplyDestructiveAbility(dstUnit.GetAbilityDamageDealt(activeBattleUnit));
         ApplyUniquePowerModifiersToSingleUnit(dstUnit);
@@ -2156,18 +2156,30 @@ public class PartyPanel : MonoBehaviour {
         Transform debuffsPanel = partyUnit.GetUnitDebuffsPanel();
         if (doActivate)
         {
-            // add debuff to unit
-            Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
-            Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-            partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
-            // create debuff by duplicating from template
-            // Note: debuff name in template should be the same as in AppliedDebuff
-            Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.AppliedDebuff.ToString());
-            Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
-            // activate buff
-            newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier);
-            // rename it so it can be later found by name
-            newDebuff.name = uniquePowerModifier.AppliedDebuff.ToString();
+            // verify if unit already has this debuf
+            if (uniquePowerModifier.AppliedDebuff == partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff])
+            {
+                // the same debuff is already applied
+                // reset its counter to max
+                UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.AppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
+                unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
+            }
+            else
+            {
+                // debuff is not applied yet
+                // add debuff to unit
+                //Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
+                //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
+                partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
+                // create debuff by duplicating from template
+                // Note: debuff name in template should be the same as in AppliedDebuff
+                Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.AppliedDebuff.ToString());
+                Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
+                // activate buff
+                newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier);
+                // rename it so it can be later found by name
+                newDebuff.name = uniquePowerModifier.AppliedDebuff.ToString();
+            }
         }
         else
         {
@@ -2248,7 +2260,7 @@ public class PartyPanel : MonoBehaviour {
         // but still the power should be applied
         if (dstUnit)
         {
-            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName() + " or whole party");
+            //Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName() + " or whole party");
             switch (activeBattleUnit.GetAbility())
             {
                 // Helping or buf powers

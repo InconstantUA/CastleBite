@@ -247,7 +247,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // Verify if battle has not ended
         if (!battleScreen.GetBattleHasEnded())
         {
-            Debug.Log("UnitSlot ActOnClick in Battle screen");
+            //Debug.Log("UnitSlot ActOnClick in Battle screen");
             // act based on the previously set by SetOnClickAction by PartyPanel conditions
             if (isAllowedToApplyPowerToThisUnit)
             {

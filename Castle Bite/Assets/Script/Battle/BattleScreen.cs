@@ -97,7 +97,7 @@ public class BattleScreen : MonoBehaviour {
 
     void StartBattle()
     {
-        Debug.Log("StartBattle");
+        //Debug.Log("StartBattle");
         // set battle has started
         battleHasEnded = false;
         // deactivate hero edit click and drag handler
@@ -307,7 +307,7 @@ public class BattleScreen : MonoBehaviour {
 
     bool StartTurn()
     {
-        Debug.Log("StartTurn");
+        //Debug.Log("StartTurn");
         bool canStart = false;
         // Verify if battle has not ended yet, if there are still units which can fight on both sides
         if (CanContinueBattle())
@@ -407,7 +407,7 @@ public class BattleScreen : MonoBehaviour {
 
     void ExecutePreActivateActions()
     {
-        Debug.Log("ExecutePreActivateActions");
+        //Debug.Log("ExecutePreActivateActions");
         // Block mouse input
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(true);
@@ -429,10 +429,6 @@ public class BattleScreen : MonoBehaviour {
                 activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Active);
                 break;
             case PartyUnit.UnitStatus.Escaping:
-                // Escape unit
-                // Unit has escaped now
-                activeUnit.SetHasMoved(true);
-                activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
                 break;
             case PartyUnit.UnitStatus.Dead:
             case PartyUnit.UnitStatus.Escaped:
@@ -447,7 +443,7 @@ public class BattleScreen : MonoBehaviour {
 
     void ProcessBuffsAndDebuffs()
     {
-        Debug.Log("ProcessBuffsAndDebuffs");
+        //Debug.Log("ProcessBuffsAndDebuffs");
         //// Wait while all previously triggered actions are complete
         //while (queueIsActive)
         //{
@@ -456,8 +452,9 @@ public class BattleScreen : MonoBehaviour {
         //}
         // Set Queue is active flag
         //queueIsActive = true;
-        // Next actions are applicably only to active unit
-        if (activeUnit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+        // Next actions are applicably only to active or escaping unit
+        if (  (activeUnit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+           || (activeUnit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
         {
             activeUnit.HighlightActiveUnitInBattle(true);
             // Trigger buffs and debuffs before applying highlights
@@ -473,7 +470,7 @@ public class BattleScreen : MonoBehaviour {
 
     IEnumerator ActivateUnit()
     {
-        Debug.Log("ActivateUnit");
+        //Debug.Log("ActivateUnit");
         // Wait while all previously triggered actions are complete
         //while (queueIsActive)
         //{
@@ -491,15 +488,24 @@ public class BattleScreen : MonoBehaviour {
                 queue.Run(enemyPartyPanel.SetActiveUnitInBattle(activeUnit));
                 canActivate = true;
                 break;
-            case PartyUnit.UnitStatus.Waiting:
             case PartyUnit.UnitStatus.Escaping:
-                Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
+                // If there were debuffs applied and unit has survived,
+                // then unit may escape now
+                // Escape unit
+                activeUnit.SetHasMoved(true);
+                activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
+                // This unit can't act any more
+                // Skip post-move actions and Activate next unit
+                canActivate = ActivateNextUnit();
                 break;
             case PartyUnit.UnitStatus.Dead:
-            case PartyUnit.UnitStatus.Escaped:
-                // This unit cannot act any more
-                // Scip post-move actions and Activate next unit
+                // This unit can't act any more
+                // Skip post-move actions and Activate next unit
                 canActivate = ActivateNextUnit();
+                break;
+            case PartyUnit.UnitStatus.Waiting:
+            case PartyUnit.UnitStatus.Escaped:
+                Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
                 break;
             default:
                 Debug.LogError("Unknown unit status " + unitStatus.ToString());
@@ -511,28 +517,30 @@ public class BattleScreen : MonoBehaviour {
         yield return null;
     }
 
-
+    IEnumerator NextUnit()
+    {
+        ExecutePreActivateActions();
+        ProcessBuffsAndDebuffs();
+        queue.Run(ActivateUnit());
+        yield return null;
+    }
 
     public bool ActivateNextUnit()
     {
-        Debug.Log("ActivateNextUnit");
+        //Debug.Log("ActivateNextUnit");
         canActivate = false;
         if (CanContinueBattle())
         {
             // find next unit, which can act in the battle
             PartyUnit nextUnit = FindNextUnit();
-            Debug.Log("Next unit is " + nextUnit);
+            //Debug.Log("Next unit is " + nextUnit);
             // save it for later needs
             activeUnit = nextUnit;
             if (nextUnit)
             {
                 // found next unit
                 // activate it
-                //queue.Run(ExecutePreActivateActions());
-                //queue.Run(ProcessBuffsAndDebuffs());
-                ExecutePreActivateActions();
-                ProcessBuffsAndDebuffs();
-                queue.Run(ActivateUnit());
+                queue.Run(NextUnit());
                 canActivate = true;
             }
             else
