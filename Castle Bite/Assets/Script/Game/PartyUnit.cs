@@ -404,6 +404,7 @@ public class PartyUnit : MonoBehaviour {
 
     public void TriggerAppliedDebuffs()
     {
+        Debug.Log("TriggerAppliedDebuffs");
         UnitDebuffIndicator[] debuffsIndicators = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
         //UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
         foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
@@ -433,13 +434,8 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public IEnumerator HighlightActiveUnitInBattle(bool doHighlight)
+    public void HighlightActiveUnitInBattle(bool doHighlight)
     {
-        // If unit had waiting status in the past, then reset it back to active
-        if (UnitStatus.Waiting == GetUnitStatus())
-        {
-            SetUnitStatus(UnitStatus.Active);
-        }
         // Highlight
         Color highlightColor;
         if (doHighlight)
@@ -455,7 +451,6 @@ public class PartyUnit : MonoBehaviour {
         // highlight unit canvas with required color
         Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
         canvasText.color = highlightColor;
-        yield return null;
     }
 
     //public string GetUnitStatusString()
@@ -494,14 +489,14 @@ public class PartyUnit : MonoBehaviour {
     //    }
     //}
 
-    public IEnumerator EscapeBattle()
-    {
-        Debug.LogWarning("EscapeBattle " + name);
-        // set escaped status
-        SetUnitStatus(UnitStatus.Escaped);
-        // Play animation
-        yield return new WaitForSeconds(1f);
-    }
+    //public IEnumerator EscapeBattle()
+    //{
+    //    Debug.LogWarning("EscapeBattle " + name);
+    //    // set escaped status
+    //    SetUnitStatus(UnitStatus.Escaped);
+    //    // Play animation
+    //    yield return new WaitForSeconds(1f);
+    //}
 
     public void SetUnitStatus(UnitStatus value)
     {

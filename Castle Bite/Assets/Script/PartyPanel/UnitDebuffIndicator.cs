@@ -86,27 +86,21 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     IEnumerator FadeForegroundAndDestroyBuff()
     {
         // Fade Foreground
-        if (symbol && gameObject) // verify if they are not destroyed yet
+        for (float f = 1f; f >= 0; f -= 0.1f)
         {
-            for (float f = 1f; f >= 0; f -= 0.1f)
-            {
-                Color c = symbol.color;
-                c.a = f;
-                symbol.color = c;
-                yield return new WaitForSeconds(.05f);
-            }
-            // Destroy buff
-            Destroy(gameObject);
+            Color c = symbol.color;
+            c.a = f;
+            symbol.color = c;
+            yield return new WaitForSeconds(.05f);
         }
+        // Destroy buff
+        Destroy(gameObject);
     }
 
 
 
     public IEnumerator TriggerDebuff(PartyUnit dstUnit)
     {
-        // Block mouse input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(true);
         // Trigger debuff within unit
         dstUnit.ApplyDestructiveAbility(dstUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
         // Proceed if unit is still alive
@@ -140,11 +134,13 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             // all debuffs should be already removed by SetUnitStatus(status)
             // Unit cannot move any more
             dstUnit.SetHasMoved(true);
-            // Play empty animation
-            yield return new WaitForSeconds(1f);
+            // Fade unit cell info
+            for (float f = 1f; f >= 0; f -= 0.1f)
+            {
+                dstUnit.FadeUnitCellInfo(f);
+                yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
+            }
         }
-        // Enable input
-        inputBlocker.SetActive(false);
     }
 
     void FillInAdditionalInfo(UniquePowerModifier uniquePowerModifier)

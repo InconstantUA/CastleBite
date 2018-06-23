@@ -16,7 +16,7 @@ public class BattleScreen : MonoBehaviour {
 
     bool battleHasEnded;
     bool canActivate = false; // if it is possible to activate next unit
-
+    //bool queueIsActive;
 
     CoroutineQueue queue;
 
@@ -110,7 +110,7 @@ public class BattleScreen : MonoBehaviour {
         if (!StartTurn())
         {
             // it is not possible to start new turn
-            EndBattle();
+            queue.Run(EndBattle());
         }
         // Deactivate exit battle button;
         transform.Find("Exit").gameObject.SetActive(false);
@@ -192,13 +192,13 @@ public class BattleScreen : MonoBehaviour {
         DefaultOnBattleExit();
     }
 
-    void EndBattle()
+    IEnumerator EndBattle()
     {
         Debug.Log("EndBattle");
         // set battle has ended
         battleHasEnded = true;
         // Remove highlight from active unit
-        queue.Run(activeUnit.HighlightActiveUnitInBattle(false));
+        activeUnit.HighlightActiveUnitInBattle(false);
         // Clear units info and status information
         enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
@@ -250,6 +250,7 @@ public class BattleScreen : MonoBehaviour {
         // Remove all buffs and debuffs
         enemyPartyPanel.RemoveAllBuffsAndDebuffs();
         playerPartyPanel.RemoveAllBuffsAndDebuffs();
+        yield return null;
     }
 
     void ResetHasMovedFlag()
@@ -396,38 +397,121 @@ public class BattleScreen : MonoBehaviour {
             }
         }
     }
+    
+    //IEnumerator EmptyQueueIndicator()
+    //{
+    //    Debug.Log("Queue is empty");
+    //    queueIsActive = false;
+    //    yield return null;
+    //}
 
-    IEnumerator PostDebuffProcessing()
+    void ExecutePreActivateActions()
     {
-        if (PartyUnit.UnitStatus.Active == activeUnit.GetUnitStatus())
+        Debug.Log("ExecutePreActivateActions");
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
+        //// Set Queue is active flag
+        //queueIsActive = true;
+        // Highlight it and reset all other highlights
+        // first reset all cells do default values
+        playerPartyPanel.ResetAllCellsCanBeTargetedStatus();
+        enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
+        // Highlight next unit
+        // If unit had waiting status in the past, then reset it back to active
+        PartyUnit.UnitStatus unitStatus = activeUnit.GetUnitStatus();
+        switch (unitStatus)
         {
-            // do not activate it immediately, instead put it to the queue
-            // to be activated after other animations are finished
-            queue.Run(playerPartyPanel.SetActiveUnitInBattle(activeUnit));
-            queue.Run(enemyPartyPanel.SetActiveUnitInBattle(activeUnit));
-            canActivate = true;
+            case PartyUnit.UnitStatus.Active:
+                break;
+            case PartyUnit.UnitStatus.Waiting:
+                // Activate unit
+                activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Active);
+                break;
+            case PartyUnit.UnitStatus.Escaping:
+                // Escape unit
+                // Unit has escaped now
+                activeUnit.SetHasMoved(true);
+                activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
+                break;
+            case PartyUnit.UnitStatus.Dead:
+            case PartyUnit.UnitStatus.Escaped:
+                Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
+                break;
+            default:
+                Debug.LogError("Unknown unit status " + unitStatus.ToString());
+                break;
         }
-        else if (PartyUnit.UnitStatus.Escaping == activeUnit.GetUnitStatus())
+        //yield return null;
+    }
+
+    void ProcessBuffsAndDebuffs()
+    {
+        Debug.Log("ProcessBuffsAndDebuffs");
+        //// Wait while all previously triggered actions are complete
+        //while (queueIsActive)
+        //{
+        //    Debug.Log("Queue is active");
+        //    yield return new WaitForSeconds(1f);
+        //}
+        // Set Queue is active flag
+        //queueIsActive = true;
+        // Next actions are applicably only to active unit
+        if (activeUnit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
         {
-            // Unit has escaped now
-            activeUnit.SetHasMoved(true);
-            queue.Run(activeUnit.EscapeBattle());
-            // Activate next unit
-            canActivate = ActivateNextUnit();
+            activeUnit.HighlightActiveUnitInBattle(true);
+            // Trigger buffs and debuffs before applying highlights
+            // Verify if unit has buffs which should be removed, example: defence
+            activeUnit.DeactivateExpiredBuffs();
+            // Verify if unit has debuffs which should be applied, example: poison
+            // Deactivate debuffs which has expired, example: poison duration may last 2 turns
+            // This is checked and done after debuff trigger
+            activeUnit.TriggerAppliedDebuffs();
         }
-        else if (PartyUnit.UnitStatus.Dead == activeUnit.GetUnitStatus())
+        //yield return null;
+    }
+
+    IEnumerator ActivateUnit()
+    {
+        Debug.Log("ActivateUnit");
+        // Wait while all previously triggered actions are complete
+        //while (queueIsActive)
+        //{
+        //    Debug.Log("Queue is active");
+        //    yield return new WaitForSeconds(1f);
+        //}
+        //// Set Queue is active flag
+        //queueIsActive = true;
+        PartyUnit.UnitStatus unitStatus = activeUnit.GetUnitStatus();
+        switch (unitStatus)
         {
-            // Unit was killed by debuff
-            // Activate next unit
-            canActivate = ActivateNextUnit();
+            case PartyUnit.UnitStatus.Active:
+                // Activate highlights of which cells can or cannot be targeted
+                queue.Run(playerPartyPanel.SetActiveUnitInBattle(activeUnit));
+                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(activeUnit));
+                canActivate = true;
+                break;
+            case PartyUnit.UnitStatus.Waiting:
+            case PartyUnit.UnitStatus.Escaping:
+                Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
+                break;
+            case PartyUnit.UnitStatus.Dead:
+            case PartyUnit.UnitStatus.Escaped:
+                // This unit cannot act any more
+                // Scip post-move actions and Activate next unit
+                canActivate = ActivateNextUnit();
+                break;
+            default:
+                Debug.LogError("Unknown unit status " + unitStatus.ToString());
+                break;
         }
-        else
-        {
-            Debug.LogError("Unknown condition" + activeUnit.GetUnitStatus().ToString());
-            canActivate = false;
-        }
+        // Unblock mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(false);
         yield return null;
     }
+
+
 
     public bool ActivateNextUnit()
     {
@@ -437,30 +521,18 @@ public class BattleScreen : MonoBehaviour {
         {
             // find next unit, which can act in the battle
             PartyUnit nextUnit = FindNextUnit();
+            Debug.Log("Next unit is " + nextUnit);
             // save it for later needs
             activeUnit = nextUnit;
             if (nextUnit)
             {
                 // found next unit
                 // activate it
-                // Highlight it and reset all other highlights
-                // first reset all cells do default values
-                playerPartyPanel.ResetAllCellsCanBeTargetedStatus();
-                enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
-                // Highlight next unit
-                // this function also resets units status from Waiting to Active
-                queue.Run(nextUnit.HighlightActiveUnitInBattle(true));
-                // first trigger process buffs and debuffs
-                // Then trigger buffs and debuffs before applying highlights
-                // Verify if unit has buffs which should be removed, example: defence
-                nextUnit.DeactivateExpiredBuffs();
-                // Verify if unit has debuffs which should be applied, example: poison
-                // Deactivate debuffs which has expired, example: poison duration may last 2 turns
-                // This is checked and done after debuff trigger
-                nextUnit.TriggerAppliedDebuffs();
-                // Act based on the unit status
-                // at this stage we can have only 2 possible statuses: Active or Escaping
-                queue.Run(PostDebuffProcessing());
+                //queue.Run(ExecutePreActivateActions());
+                //queue.Run(ProcessBuffsAndDebuffs());
+                ExecutePreActivateActions();
+                ProcessBuffsAndDebuffs();
+                queue.Run(ActivateUnit());
                 canActivate = true;
             }
             else
@@ -472,7 +544,7 @@ public class BattleScreen : MonoBehaviour {
         }
         else
         {
-            EndBattle();
+            queue.Run(EndBattle());
         }
         return canActivate;
     }

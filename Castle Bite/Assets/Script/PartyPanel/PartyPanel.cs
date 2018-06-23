@@ -1889,7 +1889,7 @@ public class PartyPanel : MonoBehaviour {
         {
             // This unit belongs to this party highlight it here
             // without adding to a queue
-            StartCoroutine(unitToActivate.HighlightActiveUnitInBattle(true));
+            unitToActivate.HighlightActiveUnitInBattle(true);
         }
         yield return null;
     }
@@ -2074,7 +2074,7 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    public void RemoveAllBuffsAndDebuffs()
+    public IEnumerator RemoveAllBuffsAndDebuffs()
     {
         foreach (string horisontalPanel in horisontalPanels)
         {
@@ -2094,6 +2094,7 @@ public class PartyPanel : MonoBehaviour {
                 }
             }
         }
+        yield return null;
     }
 
 
@@ -2320,8 +2321,8 @@ public class PartyPanel : MonoBehaviour {
         if (doActivate)
         {
             // add buff to unit
-            Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
-            Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
+            // Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
+            // Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
             partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenceStance] = PartyUnit.UnitBuff.DefenceStance;
             // create buff by duplicating from template
             Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defence");
