@@ -150,11 +150,13 @@ public class BattleScreen : MonoBehaviour {
         }
         // Reset almost all units statuses and info for panels, if they are still present
         // Exceptions: Dead
+        // Verify if player party is not destroyed
         if (playerPartyPanel)
         {
             playerPartyPanel.ResetUnitCellInfoPanel(playerPartyPanel.transform);
             playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatus });
         }
+        // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
         {
             enemyPartyPanel.ResetUnitCellInfoPanel(enemyPartyPanel.transform);
@@ -164,21 +166,26 @@ public class BattleScreen : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void DestroyPlayer()
+    public void DestroyParty(PartyPanel partyPanel)
     {
         // set variables
-        HeroParty heroParty = playerPartyPanel.transform.parent.GetComponent<HeroParty>();
+        HeroParty heroParty = partyPanel.transform.parent.GetComponent<HeroParty>();
         MapHero heroOnMapRepresentation = heroParty.GetLinkedPartyOnMap();
         // destroy on map party representation
         Destroy(heroOnMapRepresentation.gameObject);
         // destroy party
         Destroy(heroParty.gameObject);
+    }
+
+    public void DestroyPlayer()
+    {
+        DestroyParty(playerPartyPanel);
         DefaultOnBattleExit();
     }
 
     public void DestroyEnemy()
     {
-        Destroy(enemyPartyPanel.transform.parent.gameObject);
+        DestroyParty(enemyPartyPanel);
         DefaultOnBattleExit();
     }
 
