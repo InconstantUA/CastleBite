@@ -51,12 +51,11 @@ MonoBehaviour:
   healthCurr: 70
   healthMax: 70
   healthMaxIncrementOnLevelUp: 15
-  isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 10
-  unitPower: 40
+  unitPower: 500
   unitPowerIncrementOnLevelUp: 10
   unitPowerSource: 1
   unitPowerDistance: 1
@@ -65,12 +64,14 @@ MonoBehaviour:
   unitRole: Mage Leader
   unitBriefDescription: Has magic attack that hit all enemy units.
   unitFullDescription: Full description.
-  hasEscaped: 0
   hasMoved: 0
   cost: 550
   unitSize: 0
   isInterpartyMovable: 0
   isDismissable: 1
+  unitStatus: 0
+  unitDebuffs: 
+  unitBuffs: 
 --- !u!224 &224658346894969760
 RectTransform:
   m_ObjectHideFlags: 1
