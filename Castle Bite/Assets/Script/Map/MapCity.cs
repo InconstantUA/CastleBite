@@ -189,8 +189,10 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void EnterCityEditMode()
     {
         // go to city edit mode
+        // get variables
         GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
         GameObject cityMenu = linkedCity.gameObject;
+        // Deactivate map and activate city
         mapScreen.SetActive(false);
         cityMenu.SetActive(true);
     }
@@ -201,7 +203,8 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         // so it is not in pressed status any more
         SetHighlightedStatus();
         // act based on the MapManager state
-        switch (transform.parent.GetComponent<MapManager>().GetMode())
+        MapManager.Mode mMode = transform.parent.GetComponent<MapManager>().GetMode();
+        switch (mMode)
         {
             case MapManager.Mode.Browse:
                 EnterCityEditMode();
@@ -211,7 +214,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
                 transform.parent.GetComponent<MapManager>().EnterMoveMode();
                 break;
             default:
-                Debug.LogError("unknown MapManager mode");
+                Debug.LogError("unknown MapManager mode " + mMode);
                 break;
         }
     }

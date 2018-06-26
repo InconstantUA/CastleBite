@@ -2162,7 +2162,14 @@ public class PartyPanel : MonoBehaviour {
                 // the same debuff is already applied
                 // reset its counter to max
                 UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.AppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
-                unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
+                if (unitDebuffIndicator)
+                {
+                    unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
+                }
+                else
+                {
+                    Debug.LogError("No unitDebuffIndicator");
+                }
             }
             else
             {

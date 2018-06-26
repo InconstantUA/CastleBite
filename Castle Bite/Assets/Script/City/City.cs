@@ -302,6 +302,14 @@ public class City : MonoBehaviour {
         transform.Find("HireHeroPanel").gameObject.SetActive(true);
     }
 
+    public void ActOnHeroEnteringCity()
+    {
+        // Instruct Focus panel to update info
+        transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.Init);
+        // Enable Hire leader panel
+        transform.Find("HireHeroPanel").gameObject.SetActive(false);
+    }
+
     public void ExitCity()
     {
         ReturnToNomalState();
