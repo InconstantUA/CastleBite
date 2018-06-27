@@ -17,6 +17,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         EnterBattle,
         EnterCastSpell
     };
+
+    // for path highlighting
+    public enum TileState
+    {
+        None,
+        ImpassableTerrain,
+        SelectedParty,
+        PlayerParty,
+        EnemyParty,
+        AlliedParty,
+        Treasure,
+        PlayerCity,
+        EnemyCity,
+        Protected
+    }
+
     [SerializeField]
     Mode mode;
     Vector3 startPosition;
@@ -33,25 +49,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
     GameObject[,] tileHighlighters;
-    // for path highlighting
-    public enum TileState {
-        None,
-        ImpassableTerrain,
-        SelectedParty,
-        PlayerParty,
-        EnemyParty,
-        AlliedParty,
-        Treasure,
-        PlayerCity,
-        EnemyCity,
-        Protected
-    }
     // for hero moving
     public float heroMoveSpeed = 10.1f;
     public float heroMoveSpeedDelay = 0.1f;
     TileState lastTileState = TileState.None;
     NesScripts.Controls.PathFind.Point lastPathTile;
-
 
     // Map Sprite size
     float mapWidth;
@@ -225,6 +227,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     break;
             }
         }
+        // Upgrade grid
         grid.UpdateGrid(tilesmap);
     }
 
@@ -611,23 +614,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         };
     }
 
-    MapCity GetCityByTile(Vector2Int tilePosition)
-    {
-        MapCity mapCity = null;
-        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
-        {
-            // verify if not null
-            if (city)
-            {
-                if (GetTilePosition(city.transform) == tilePosition)
-                {
-                    return city;
-                }
-            }
-        }
-        return mapCity;
-    }
-
     void EnterCityAfterMove()
     {
         Debug.Log("Enter city");
@@ -646,6 +632,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         mapCity.linkedCityTr.GetComponent<City>().ActOnHeroEnteringCity();
     }
 
+    MapCity GetCityByTile(Vector2Int tilePosition)
+    {
+        MapCity mapCity = null;
+        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
+        {
+            // verify if not null
+            if (city)
+            {
+                if (GetTilePosition(city.transform) == tilePosition)
+                {
+                    return city;
+                }
+            }
+        }
+        return mapCity;
+    }
 
     MapHero GetEnemyByTile(Vector2Int tilePosition)
     {
@@ -716,8 +718,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void EndMoveTransition()
     {
-        // Remove path highlight
-        HighlightMovePath(false);
         // transition to required state based on the type of the last occupied cell
         switch (lastTileState)
         {
