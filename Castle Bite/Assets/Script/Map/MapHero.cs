@@ -61,15 +61,6 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 		
 	}
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        // Debug.Log("MapHero OnPointerEnter");
-        // dimm all other menus
-        // DimmAllOtherMenus();
-        // highlight this menu
-        SetHighlightedStatus();
-    }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("MapHero OnPointerDown");
@@ -103,12 +94,27 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // Debug.Log("MapHero OnPointerEnter");
+        // dimm all other menus
+        // DimmAllOtherMenus();
+        // highlight this menu
+        SetHighlightedStatus();
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        mapManager.OnPointerEnterChildObject(gameObject, eventData);
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         // Debug.Log("MapHero OnPointerExit");
         // return to previous toggle state
         SetNormalStatus();
         HideLable();
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        mapManager.OnPointerExitChildObject(gameObject, eventData);
     }
 
     void HideLable()
@@ -129,7 +135,9 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
         else
         {
-            ActOnClick();
+            // give control on actions to map manager
+            MapManager mapManager = transform.parent.GetComponent<MapManager>();
+            mapManager.ActOnClick(gameObject, eventData);
         }
     }
 
@@ -138,18 +146,10 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         // select this hero
         if (doActivate)
         {
-            // deselect previously selected hero if it was present
-            MapHero previouslySelectedHero = transform.parent.GetComponent<MapManager>().GetSelectedHero();
-            if (previouslySelectedHero)
-            {
-                previouslySelectedHero.SetSelectedState(false);
-            }
             // higlight it with red blinking
             state = State.Selected;
             // start blinking (selection) animation
             InvokeRepeating("Blink", 0, animationDuration);
-            // inform MapManager about selected hero
-            transform.parent.GetComponent<MapManager>().SetSelectedHero(GetComponent<MapHero>());
         }
         else
         {
@@ -195,7 +195,7 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             case MapManager.Mode.Browse:
                 ToggleSelectedState();
                 break;
-            case MapManager.Mode.HighlightMovePath:
+            case MapManager.Mode.Animation:
                 // act based on the fact of it is the same hero or not
                 // check if we click on ourselves in highlight move path mode
                 if (State.Selected == state)
@@ -226,11 +226,11 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
                                 break;
                             case Relationships.State.AtWar:
                                 // move, attack will be triggered automatically at the end of the move
-                                transform.parent.GetComponent<MapManager>().EnterMoveMode();
+                                //transform.parent.GetComponent<MapManager>().EnterMoveMode();
                                 break;
                             case Relationships.State.Neutral:
                                 // move, attack will be triggered automatically at the end of the move
-                                transform.parent.GetComponent<MapManager>().EnterMoveMode();
+                                //transform.parent.GetComponent<MapManager>().EnterMoveMode();
                                 break;
                             case Relationships.State.SameFaction:
                                 // this should not happen here, because we check this previously

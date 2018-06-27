@@ -10,6 +10,8 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
+    enum State { NotSelected, Selected };
+
     public Transform linkedCityTr;
     public Transform linkedPartyTr;
     public float heroLableSubmenuDimTimeout;
@@ -18,9 +20,17 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     Button btn;
     Color tmpColor;
     bool isMouseOver;
+    // for map logic
+    State state = State.NotSelected;
+    // for animation
+    bool isOn;
+    [SerializeField]
+    float animationDuration = 1f;
 
     void Start()
     {
+        // for anmimation
+        isOn = true;
         // init linkedCity object
         linkedCity = linkedCityTr.GetComponent<City>();
         // init text object
@@ -42,16 +52,6 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        // Debug.Log("MapCity OnPointerEnter");
-        // dimm all other menus
-        DimmAllOtherMenus();
-        // highlight this menu
-        SetHighlightedStatus();
-        isMouseOver = true;
-    }
-
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("MapCity OnPointerDown");
@@ -64,18 +64,39 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         // keep state On
     }
 
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // Debug.Log("MapCity OnPointerEnter");
+        // dimm all other menus
+        DimmAllOtherMenus();
+        // highlight this menu
+        SetHighlightedStatus();
+        isMouseOver = true;
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        mapManager.OnPointerEnterChildObject(gameObject, eventData);
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         // Debug.Log("MapCity OnPointerExit");
         isMouseOver = false;
         // return to previous toggle state
         SetNormalStatus();
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        mapManager.OnPointerExitChildObject(gameObject, eventData);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         // Debug.Log("MapCity OnPointerClick");
-        ActOnClick();
+        // change city pressed status to city highlighted color
+        // so it is not in pressed status any more
+        SetHighlightedStatus();
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        mapManager.ActOnClick(gameObject, eventData);
     }
 
     bool CompareColors(Color a, Color b)
@@ -197,27 +218,70 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         cityMenu.SetActive(true);
     }
 
-    void ActOnClick()
+    //void ActOnClick()
+    //{
+    //    // act based on the MapManager state
+    //    MapManager.Mode mMode = transform.parent.GetComponent<MapManager>().GetMode();
+    //    switch (mMode)
+    //    {
+    //        case MapManager.Mode.Browse:
+    //            EnterCityEditMode();
+    //            break;
+    //        case MapManager.Mode.HighlightMovePath:
+    //            // Move hero to the city
+    //            transform.parent.GetComponent<MapManager>().EnterMoveMode();
+    //            break;
+    //        default:
+    //            Debug.LogError("unknown MapManager mode " + mMode);
+    //            break;
+    //    }
+    //}
+
+    public void SetSelectedState(bool doActivate)
     {
-        // change city pressed status to city highlighted color
-        // so it is not in pressed status any more
-        SetHighlightedStatus();
-        // act based on the MapManager state
-        MapManager.Mode mMode = transform.parent.GetComponent<MapManager>().GetMode();
-        switch (mMode)
+        // select this hero
+        if (doActivate)
         {
-            case MapManager.Mode.Browse:
-                EnterCityEditMode();
-                break;
-            case MapManager.Mode.HighlightMovePath:
-                // Move hero to the city
-                transform.parent.GetComponent<MapManager>().EnterMoveMode();
-                break;
-            default:
-                Debug.LogError("unknown MapManager mode " + mMode);
-                break;
+            // higlight it with red blinking
+            state = State.Selected;
+            //// start blinking (selection) animation
+            //InvokeRepeating("Blink", 0, animationDuration);
+        }
+        else
+        {
+            // exit selected mode
+            state = State.NotSelected;
+            //// stop blinking
+            //CancelInvoke();
+            //// show marker, it is needed because sometimes it may cancel invoke, when we are blinked off and invisible
+            //Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 1);
+            //markerTxt.color = tmpClr;
         }
     }
 
     #endregion OnClick
+
+    #region Animation
+    void Blink()
+    {
+        if (isOn)
+        {
+            // fade away until is off, reduce alpha to 0
+            //Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 0);
+            //markerTxt.color = tmpClr;
+            //Debug.Log("disable");
+            isOn = false;
+        }
+        else
+        {
+            // appear until is on, increase alpha to 1 
+            //Color tmpClr = new Color(markerTxt.color.r, markerTxt.color.g, markerTxt.color.b, 1);
+            //markerTxt.color = tmpClr;
+            //Debug.Log("enable");
+            isOn = true;
+        }
+        // yield return new WaitForSeconds(0.2f);
+    }
+    #endregion Animation
+
 }

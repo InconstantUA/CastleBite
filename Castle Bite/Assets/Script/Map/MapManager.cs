@@ -9,14 +9,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public enum Mode {
         Browse,
         Drag,
-        Selection,
-        HighlightMovePath,
-        Move,
-        EnterHeroEdit,
-        EnterCity,
-        EnterBattle,
-        EnterCastSpell
+        Animation
     };
+
+    public enum Selection
+    {
+        None,
+        PlayerHero,
+        PlayerCity
+    }
 
     // for path highlighting
     public enum TileState
@@ -35,6 +36,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     [SerializeField]
     Mode mode;
+    [SerializeField]
+    Selection selection;
     Vector3 startPosition;
     // Transform startParent;
     [SerializeField]
@@ -46,6 +49,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     int tileMapWidth = 60;
     int tileMapHeight = 60;
     MapHero selectedHero;
+    MapCity selectedCity;
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
     GameObject[,] tileHighlighters;
@@ -81,21 +85,17 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     float xCorrectionOnDragStart;
     float yCorrectionOnDragStart;
 
+    // for logic
+    PlayerObj player;
+
     public Mode GetMode()
     {
         return mode;
     }
 
-    public void SetMode(Mode value)
-    {
-        mode = value;
-    }
-
     public void SetSelectedHero(MapHero sltdHero)
     {
         selectedHero = sltdHero;
-        // enter HighlightMovePath mode
-        mode = Mode.HighlightMovePath;
     }
 
     public MapHero GetSelectedHero()
@@ -103,10 +103,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return selectedHero;
     }
 
+    public void SetSelectedCity(MapCity sltCity)
+    {
+        selectedCity = sltCity;
+    }
+
     void Start()
     {
-        // Init map mode
-        mode = Mode.Browse;
+        // preapre commonly used variables
+        player = transform.root.Find("PlayerObj").GetComponent<PlayerObj>();
         // For map drag
         //  get map width and height
         mapWidth = gameObject.GetComponentInChildren<SpriteRenderer>().size.x;
@@ -126,7 +131,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // For map tile highligter in selection mode
         tileHighlighterTr = transform.Find("TileHighlighter");
         tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
-        tileHighlighter.OnChange(); // set highlighter according to the map mode;
+        // Init map mode
+        SetMode(Mode.Browse);
         // Initialize path finder
         InitTilesMap();
         InitPathFinder();
@@ -241,21 +247,16 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 case Mode.Browse:
                     // update tile highliter position
                     UpdateTileHighlighterToMousePoistion();
-                    break;
-                case Mode.HighlightMovePath:
-                    // update tile highliter position
-                    UpdateGridBasedOnHighlightedTile();
-                    UpdateTileHighlighterToMousePoistion();
-                    FindAndHighlightPath();
-                    break;
-                case Mode.Move:
-                    // do nothing, wait for move to finish
-                    break;
-                case Mode.Selection:
-                    // do nothing, wait for move to finish
+                    //// update tile highliter position
+                    //UpdateGridBasedOnHighlightedTile();
+                    //UpdateTileHighlighterToMousePoistion();
+                    //FindAndHighlightPath();
                     break;
                 case Mode.Drag:
-                    // do nothing, wait for move to finish
+                    // do nothing wait for drag to finish
+                    break;
+                case Mode.Animation:
+                    // do nothing, wait for animation to finish
                     break;
                 default:
                     Debug.LogError("Unknown mode " + mode.ToString());
@@ -520,9 +521,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void OnBeginDrag(PointerEventData eventData)
     {
         // enter Drag mode
-        mode = Mode.Drag;
-        // update tileHighlighter
-        tileHighlighter.OnChange();
+        SetMode(Mode.Drag);
         // prepare for drag
         startPosition = transform.position;
         // startParent = transform.parent;
@@ -585,9 +584,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void OnEndDrag(PointerEventData eventData)
     {
         // enter back to Browse mode
-        mode = Mode.Browse;
-        // update tile highlighter
-        tileHighlighter.OnChange();
+        SetMode(Mode.Browse);
+        // set tile highighter under mouse
         UpdateTileHighlighterToMousePoistion();
         // allow map to block raycasts
         GetComponent<CanvasGroup>().blocksRaycasts = true;
@@ -722,28 +720,20 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         switch (lastTileState)
         {
             case TileState.None:
-                // exit move state and enter previous HighlightMovePath state
-                mode = Mode.HighlightMovePath;
-                break;
-            case TileState.SelectedParty:
-                // this should not be possible, because move path in this case is 0
-                Debug.LogError("Not possible condition");
-                break;
-            case TileState.PlayerParty:
-                // not possible that we move the same tile where previously our own party was
-                Debug.LogError("Not possible condition");
+                // Nothing special to do here
                 break;
             case TileState.PlayerCity:
-                // exit move state and enter previous HighlightMovePath state
-                mode = Mode.HighlightMovePath;
                 // enter city
                 EnterCityAfterMove();
                 break;
             case TileState.EnemyParty:
             case TileState.Protected:
-                // enter battle
                 Debug.LogError("This state should not be here, but we should enter this state during move, state: " + lastTileState.ToString());
-                //EnterBattleOnMove(lastTileState);
+                break;
+            case TileState.SelectedParty:
+            case TileState.PlayerParty:
+                // this should not be possible, because move path in this case is 0
+                Debug.LogError("Not possible condition " + lastTileState.ToString());
                 break;
             default:
                 Debug.LogError("Unknown tile state " + lastTileState.ToString());
@@ -753,6 +743,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     IEnumerator Move()
     {
+        // exit exit browse mode and enter animation mode
+        SetMode(Mode.Animation);
         // Block mouse input
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(true);
@@ -819,42 +811,279 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
         // Remove path highlight
         HighlightMovePath(false);
+        // exit animation mode and enter browse mode
+        SetMode(Mode.Browse);
         // Unblock mouse input
         inputBlocker.SetActive(false);
     }
 
-    public void EnterMoveMode()
+    public void SetMode(Mode value)
     {
-        mode = Mode.Move;
-        StartCoroutine(Move());
+        mode = value;
+        switch (mode)
+        {
+            case Mode.Browse:
+                tileHighlighter.EnterBrowseMode();
+                break;
+            case Mode.Animation:
+                // change tile highlighter mode
+                tileHighlighter.EnterAnimationMode();
+                break;
+            case Mode.Drag:
+                // update tileHighlighter
+                tileHighlighter.EnterDragMode();
+                break;
+            default:
+                Debug.LogError("Unknown mode " + mode.ToString());
+                break;
+        }
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        // act based on current mode
+        ActOnClick(gameObject, pointerEventData);
+    }
+
+    public void OnPointerEnterChildObject(GameObject childGameObject, PointerEventData eventData)
+    {
+        // predefine variables
+        MapHero mapHero = childGameObject.GetComponent<MapHero>();
+        MapCity mapCity = childGameObject.GetComponent<MapCity>();
         switch (mode)
         {
             case Mode.Browse:
-                // verify if we can enter selection mode
-                // if we can, then update tile highlighter
-                mode = Mode.Selection;
-                tileHighlighter.OnChange();
+                // act based on current selection
+                switch (selection)
+                {
+                    case Selection.None:
+                        // act based on the object over which mouse is now
+                        if (mapHero)
+                        {
+                            // verify if this is player's hero
+                            HeroParty heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            if (player.Faction == heroParty.GetFaction())
+                            {
+                                // highlighted hero belongs to player
+                                // change cursor to selection hand
+                                transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                            }
+                            else
+                            {
+                                // highlighted hero is from other faction
+                                // do nothing
+                            }
+                        }
+                        if (mapCity)
+                        {
+                            // verify if this is player's city
+                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            if (player.Faction == city.GetFaction())
+                            {
+                                // highlighted city belongs to player
+                                // change cursor to selection hand
+                                transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                            }
+                            else
+                            {
+                                // highlighted city is from other faction
+                                // do nothing
+                            }
+                        }
+                        break;
+                    case Selection.PlayerHero:
+                        break;
+                    case Selection.PlayerCity:
+                        break;
+                    default:
+                        Debug.LogError("Unknown selection " + selection.ToString());
+                        break;
+                }
                 break;
-            case Mode.Selection:
-                // verify if we should
-                //  - highlight move path for selected unit 
-                //  - select other unit
-                //  - ...
-                // if we can, then update tile highlighter
-                mode = Mode.Selection;
-                // tileHighlighter.OnChange();
+            case Mode.Animation:
+                // Ignore mouse enter in this mode
                 break;
-            case Mode.HighlightMovePath:
-                // enter move mode
-                EnterMoveMode();
+            case Mode.Drag:
+                // Ignore mouse enter in this mode
                 break;
             default:
-                Debug.LogError("Unknown mode");
+                Debug.LogError("Unknown mode " + mode.ToString());
+                break;
+        }
+    }
+
+    public void OnPointerExitChildObject(GameObject childGameObject, PointerEventData eventData)
+    {
+        switch (mode)
+        {
+            case Mode.Browse:
+                // change cursor
+                transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                break;
+            case Mode.Animation:
+                // Ignore mouse exit in this mode
+                break;
+            case Mode.Drag:
+                // Ignore mouse exit in this mode
+                break;
+            default:
+                Debug.LogError("Unknown mode " + mode.ToString());
+                break;
+        }
+    }
+
+    public void ActOnClick(GameObject childGameObject, PointerEventData pointerEventData)
+    {
+        // predefine variables
+        MapHero mapHero = childGameObject.GetComponent<MapHero>();
+        MapCity mapCity = childGameObject.GetComponent<MapCity>();
+        MapManager mapMgr = childGameObject.GetComponent<MapManager>();
+        Debug.Log("Mode " + mode.ToString());
+        // act based on current mode
+        switch (mode)
+        {
+            // city click
+            //        case MapManager.Mode.Browse:
+            //            EnterCityEditMode();
+            //            break;
+            //        case MapManager.Mode.HighlightMovePath:
+            //            // Move hero to the city
+            //            transform.parent.GetComponent<MapManager>().EnterMoveMode();
+            //            break;
+            case Mode.Browse:
+                // act based on current selection
+                Debug.Log("Selection " + selection.ToString());
+                switch (selection)
+                {
+                    case Selection.None:
+                        // act based on the object over which mouse is now
+                        if (mapHero)
+                        {
+                            Debug.Log("Clicked on hero party on map");
+                            // verify if this is player's hero
+                            HeroParty heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            if (player.Faction == heroParty.GetFaction())
+                            {
+                                // highlighted hero belongs to player
+                                // deselect previous hero if it was present
+                                if (selectedHero)
+                                {
+                                    selectedHero.SetSelectedState(false);
+                                }
+                                // select this hero
+                                selection = Selection.PlayerHero;
+                                SetSelectedHero(mapHero);
+                                mapHero.SetSelectedState(true);
+                            }
+                            else
+                            {
+                                // highlighted hero is from other faction
+                                // do nothing, because we did not select our hero which can attack it
+                            }
+                        }
+                        if (mapCity)
+                        {
+                            Debug.Log("Clicked on city on map");
+                            // verify if this is player's city
+                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            if (player.Faction == city.GetFaction())
+                            {
+                                // highlighted city belongs to player
+                                // deselect previous city if it was selected
+                                if (selectedCity)
+                                {
+                                    selectedCity.SetSelectedState(false);
+                                }
+                                // select this city
+                                SetSelectedCity(mapCity);
+                                selection = Selection.PlayerCity;
+                                mapCity.SetSelectedState(true);
+                            }
+                            else
+                            {
+                                // highlighted city is from other faction
+                                // do nothing
+                            }
+                        }
+                        break;
+                    case Selection.PlayerHero:
+                        // verify if this hero was already selected
+                        StartCoroutine(Move());
+                        break;
+                    case Selection.PlayerCity:
+                        if (mapCity)
+                        {
+                            // verify if this is player's city
+                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            if (player.Faction == city.GetFaction())
+                            {
+                                Debug.LogWarning("1");
+                                // highlighted city belongs to player
+                                // verify it it is the same city as already selected
+                                if (selectedCity.GetInstanceID() == mapCity.GetInstanceID())
+                                {
+                                    Debug.LogWarning("2");
+                                    // same city as selected
+                                    // Enter city edit mode
+                                    mapCity.EnterCityEditMode();
+                                }
+                                else
+                                {
+                                    Debug.LogWarning("3");
+                                    // other city
+                                    // select other city
+                                    // deselect previous city if it was selected
+                                    if (selectedCity)
+                                    {
+                                        selectedCity.SetSelectedState(false);
+                                    }
+                                    // select this city
+                                    SetSelectedCity(selectedCity);
+                                    selection = Selection.PlayerCity;
+                                    mapCity.SetSelectedState(true);
+                                }
+                            }
+                            else
+                            {
+                                // highlighted city is from other faction
+                                // remove selection
+                                selection = Selection.None;
+                                if (selectedCity)
+                                {
+                                    selectedCity.SetSelectedState(false);
+                                }
+                                if (selectedHero)
+                                {
+                                    selectedHero.SetSelectedState(false);
+                                }
+                            }
+                        }
+                        if (mapMgr)
+                        {
+                            // remove selection
+                            selection = Selection.None;
+                            if (selectedCity)
+                            {
+                                selectedCity.SetSelectedState(false);
+                            }
+                            if (selectedHero)
+                            {
+                                selectedHero.SetSelectedState(false);
+                            }
+                        }
+                        break;
+                    default:
+                        Debug.LogError("Unknown selection " + selection.ToString());
+                        break;
+                }
+                break;
+            case Mode.Animation:
+                // Ignore mouse clicks in this mode
+                break;
+            case Mode.Drag:
+                // Ignore mouse clicks in this mode
+                break;
+            default:
+                Debug.LogError("Unknown mode " + mode.ToString());
                 break;
         }
     }

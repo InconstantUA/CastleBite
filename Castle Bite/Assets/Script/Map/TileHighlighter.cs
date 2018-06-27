@@ -35,59 +35,61 @@ public class TileHighlighter : MonoBehaviour {
         // yield return new WaitForSeconds(0.2f);
     }
 
-    public void OnChange()
-    {
-        // act based on the Map mode
-        switch (transform.parent.GetComponent<MapManager>().GetMode())
-        {
-            case MapManager.Mode.Browse:
-                EnterBrowseMode();
-                break;
-            case MapManager.Mode.Drag:
-                EnterDragMode();
-                break;
-            case MapManager.Mode.Selection:
-                EnterSelectionMode();
-                break;
-            case MapManager.Mode.Move:
-                break;
-            default:
-                Debug.LogError("Unknown mode");
-                break;
-        }
-    }
+    //public void OnChange()
+    //{
+    //    // act based on the Map mode
+    //    switch (transform.parent.GetComponent<MapManager>().GetMode())
+    //    {
+    //        case MapManager.Mode.Browse:
+    //            EnterBrowseMode();
+    //            break;
+    //        case MapManager.Mode.Drag:
+    //            EnterDragMode();
+    //            break;
+    //        case MapManager.Mode.Animation:
+    //            break;
+    //        default:
+    //            Debug.LogError("Unknown mode");
+    //            break;
+    //    }
+    //}
 
     public void SetActive(bool state)
     {
         txt.gameObject.SetActive(state);
     }
 
-    void EnterBrowseMode()
+    public void EnterBrowseMode()
     {
         // make TileHighligter visible
         // enable txt
         txt.gameObject.SetActive(true);
-        // stop blinking (selection) animation
-        CancelInvoke();
+        //// stop blinking (selection) animation
+        //CancelInvoke();
     }
 
-    void EnterDragMode()
+    public void EnterDragMode()
     {
         // make TileHighligter invisible
         // disable txt
         txt.gameObject.SetActive(false);
-        // stop blinking (selection) animation
-        CancelInvoke();
     }
 
-    void EnterSelectionMode()
+    public void EnterAnimationMode()
     {
-        // make TileHighligter visible
-        // enable txt
+        // make TileHighligter invisible
+        // disable txt
         txt.gameObject.SetActive(false);
-        // start blinking (selection) animation
-        InvokeRepeating("Blink", 0, animationDuration);
     }
+
+    //void EnterSelectionMode()
+    //{
+    //    // make TileHighligter visible
+    //    // enable txt
+    //    txt.gameObject.SetActive(false);
+    //    // start blinking (selection) animation
+    //    InvokeRepeating("Blink", 0, animationDuration);
+    //}
 
     // Update is called once per frame
     void Update()

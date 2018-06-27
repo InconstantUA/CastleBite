@@ -17,6 +17,9 @@ public class CursorController : MonoBehaviour {
     private Texture2D dragUnitCursor;
     [SerializeField]
     private Texture2D blockInputCursor;
+    [SerializeField]
+    private Texture2D selectionHandCursor;
+
     public static CursorController Instance { get; private set; }
 
     private void Awake()
@@ -38,6 +41,11 @@ public class CursorController : MonoBehaviour {
     public void SetBlockInputCursor()
     {
         Cursor.SetCursor(blockInputCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetSelectionHandCursor()
+    {
+        Cursor.SetCursor(selectionHandCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetCityActiveViewStateCursor(City.CityViewActiveState requiredState, bool doActivate)

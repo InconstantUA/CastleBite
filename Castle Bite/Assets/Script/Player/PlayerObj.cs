@@ -4,10 +4,26 @@ using UnityEngine;
 
 public class PlayerObj : MonoBehaviour {
 
-    public int totalGold;
+    [SerializeField]
+    int totalGold;
+    [SerializeField]
+    Faction faction;
 
-	// Use this for initialization
-	void Start () {
+    public Faction Faction
+    {
+        get
+        {
+            return faction;
+        }
+
+        set
+        {
+            faction = value;
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
