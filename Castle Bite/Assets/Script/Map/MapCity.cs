@@ -3,11 +3,7 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Use the same colors as defined for the button but for the text
-// Button in our case is not visible, only text is visible
-// We set alpha in button properties to 0
-// Later, before assigning button colors to the text we reset transprancy to 1(255)
-[RequireComponent(typeof(Button))]
+
 public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     enum State { NotSelected, Selected };
@@ -17,8 +13,12 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public float heroLableSubmenuDimTimeout;
     City linkedCity;
     Text cityDescrTxt;
-    Button btn;
-    Color tmpColor;
+    [SerializeField]
+    Color normalColor;
+    [SerializeField]
+    Color highlightedColor;
+    [SerializeField]
+    Color pressedColor;
     bool isMouseOver;
     // for map logic
     State state = State.NotSelected;
@@ -26,6 +26,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     bool isOn;
     [SerializeField]
     float animationDuration = 1f;
+    Image image;
 
     void Start()
     {
@@ -38,7 +39,8 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         cityDescrTxt.text = "[" + linkedCity.GetCityName() + "]\n\r <size=12>" + linkedCity.GetCityDescription() + "</size>";
         // hide it
         cityDescrTxt.color = new Color(0, 0, 0, 0);
-        btn = gameObject.GetComponent<Button>();
+        // get image
+        image = GetComponent<Image>();
     }
 
     void Update()
@@ -55,7 +57,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("MapCity OnPointerDown");
-        SetPressedStatus();
+        // SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -111,63 +113,33 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     void SetHighlightedStatus()
     {
-        // avoid double job
-        if (!CompareColors(btn.colors.highlightedColor, cityDescrTxt.color))
+        // Debug.Log("SetHighlightedStatus " + btn.name + " button");
+        // change to highlighted color
+        cityDescrTxt.color = highlightedColor;
+        // also highlight party in the city if it is present
+        // but do it a little dimmed to show that it will not be activated on press
+        // but to indicate that you can move mouse left to activate it
+        if (linkedPartyTr)
         {
-            // change to highlighted color
-            if (btn.interactable)
-            {
-                tmpColor = btn.colors.highlightedColor;
-            }
-            else
-            {
-                tmpColor = btn.colors.disabledColor;
-            }
-            tmpColor.a = 1;
-            cityDescrTxt.color = tmpColor;
-            // also highlight party in the city if it is present
-            // but do it a little dimmed to show that it will not be activated on press
-            // but to indicate that you can move mouse left to activate it
-            if (linkedPartyTr)
-            {
-                linkedPartyTr.GetComponent<MapHero>().SetNormalStatus();
-                // also show hero label
-                linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>().SetVisibleAndClickableStatus();
-                // stop courutine, if it was running to prevent it to dimm out hero lable
-                // this does not work
-                // StopCoroutine(DimmHeroLabelWithDelay());
-            }
-            // Debug.Log("SetHighlightedStatus " + btn.name + " button");
+            linkedPartyTr.GetComponent<MapHero>().SetNormalStatus();
+            // also show hero label
+            linkedPartyTr.Find("HeroLabel").GetComponent<MapHeroLabel>().SetVisibleAndClickableStatus();
+            // stop courutine, if it was running to prevent it to dimm out hero lable
+            // this does not work
+            // StopCoroutine(DimmHeroLabelWithDelay());
         }
     }
 
     void SetPressedStatus()
     {
-        if (btn.interactable)
-        {
-            tmpColor = btn.colors.pressedColor;
-        }
-        else
-        {
-            tmpColor = btn.colors.disabledColor;
-        }
-        tmpColor.a = 1;
-        cityDescrTxt.color = tmpColor;
         // Debug.Log("SetPressedStatus " + btn.name + " button");
+        cityDescrTxt.color = pressedColor;
     }
 
     void SetNormalStatus()
     {
-        if (btn.interactable)
-        {
-            tmpColor = btn.colors.normalColor;
-        }
-        else
-        {
-            tmpColor = btn.colors.disabledColor;
-        }
-        tmpColor.a = 0;
-        cityDescrTxt.color = tmpColor;
+        // Debug.Log("SetNormalStatus " + btn.name + " button");
+        cityDescrTxt.color = normalColor;
         // also hide map hero lable
         if (linkedPartyTr)
         {
@@ -175,7 +147,6 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
             // also show hero label
             StartCoroutine(DimmHeroLabelWithDelay());
         }
-        // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
     IEnumerator DimmHeroLabelWithDelay()
@@ -209,9 +180,11 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void EnterCityEditMode()
     {
+        // Return to normal status
+        SetNormalStatus();
         // go to city edit mode
         // get variables
-        GameObject mapScreen = btn.transform.root.Find("MapScreen").gameObject;
+        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
         GameObject cityMenu = linkedCity.gameObject;
         // Deactivate map and activate city
         mapScreen.SetActive(false);
@@ -244,6 +217,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         {
             // higlight it with red blinking
             state = State.Selected;
+            image.color = highlightedColor;
             //// start blinking (selection) animation
             //InvokeRepeating("Blink", 0, animationDuration);
         }
@@ -251,6 +225,7 @@ public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         {
             // exit selected mode
             state = State.NotSelected;
+            image.color = normalColor;
             //// stop blinking
             //CancelInvoke();
             //// show marker, it is needed because sometimes it may cancel invoke, when we are blinked off and invisible

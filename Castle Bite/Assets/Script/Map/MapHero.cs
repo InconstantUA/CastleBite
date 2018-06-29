@@ -16,8 +16,13 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     float animationDuration = 1f;
     Text markerTxt;
     // for highlight
-    Button btn;
-    Color tmpColor;
+    [SerializeField]
+    Color normalColor;
+    [SerializeField]
+    Color highlightedColor;
+    [SerializeField]
+    Color pressedColor;
+
     Text heroLabel;
     // for path finding
     Vector2 heroTilePosition;
@@ -26,7 +31,6 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     {
         isOn = true;
         markerTxt = gameObject.GetComponent<Text>();
-        btn = gameObject.GetComponent<Button>();
         heroLabel = transform.Find("HeroLabel").GetComponent<Text>();
         // set party leader lable if hero is already linked
         if (linkedPartyTr)
@@ -285,55 +289,22 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 
     public void SetHighlightedStatus()
     {
-        // avoid double job
-        if (!CompareColors(btn.colors.highlightedColor, markerTxt.color))
-        {
-            // change to highlighted color
-            if (btn.interactable)
-            {
-                tmpColor = btn.colors.highlightedColor;
-            }
-            else
-            {
-                tmpColor = btn.colors.disabledColor;
-            }
-            tmpColor.a = 1;
-            markerTxt.color = tmpColor;
-            // make also highlight hero label
-            heroLabel.color = tmpColor;
-            // Debug.Log("SetHighlightedStatus " + btn.name + " button");
-        }
+        // Debug.Log("SetHighlightedStatus " + btn.name + " button");
+        markerTxt.color = highlightedColor;
+        // make also highlight hero label
+        heroLabel.color = highlightedColor;
     }
 
     void SetPressedStatus()
     {
-        if (btn.interactable)
-        {
-            tmpColor = btn.colors.pressedColor;
-        }
-        else
-        {
-            tmpColor = btn.colors.disabledColor;
-        }
-        tmpColor.a = 1;
-        markerTxt.color = tmpColor;
         // Debug.Log("SetPressedStatus " + btn.name + " button");
+        markerTxt.color = pressedColor;
     }
 
     public void SetNormalStatus()
     {
-        // btn = gameObject.GetComponent<Button>();
-        if (btn.interactable)
-        {
-            tmpColor = btn.colors.normalColor;
-        }
-        else
-        {
-            tmpColor = btn.colors.disabledColor;
-        }
-        tmpColor.a = 1;
-        markerTxt.color = tmpColor;
         // Debug.Log("SetNormalStatus " + btn.name + " button");
+        markerTxt.color = normalColor;
     }
 
 }

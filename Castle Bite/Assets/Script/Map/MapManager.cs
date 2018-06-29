@@ -514,7 +514,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // save mouse position, it may be required for OnBeginDrag
         mouseOnDownStartPosition = Input.mousePosition;
         // disable tile highliter
-        tileHighlighter.SetActive(false);
+        // tileHighlighter.SetActive(false);
     }
 
     #region IBeginDragHandler implementation
@@ -1016,19 +1016,19 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             City city = mapCity.linkedCityTr.GetComponent<City>();
                             if (player.Faction == city.GetFaction())
                             {
-                                Debug.LogWarning("1");
+                                // Debug.LogWarning("1");
                                 // highlighted city belongs to player
                                 // verify it it is the same city as already selected
                                 if (selectedCity.GetInstanceID() == mapCity.GetInstanceID())
                                 {
-                                    Debug.LogWarning("2");
+                                    // Debug.LogWarning("2");
                                     // same city as selected
                                     // Enter city edit mode
                                     mapCity.EnterCityEditMode();
                                 }
                                 else
                                 {
-                                    Debug.LogWarning("3");
+                                    // Debug.LogWarning("3");
                                     // other city
                                     // select other city
                                     // deselect previous city if it was selected
