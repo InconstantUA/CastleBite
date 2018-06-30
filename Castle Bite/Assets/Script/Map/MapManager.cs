@@ -50,6 +50,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     int tileMapHeight = 60;
     MapHero selectedHero;
     MapCity selectedCity;
+    NesScripts.Controls.PathFind.Point selectedTargetPathPoint;
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
     GameObject[,] tileHighlighters;
@@ -517,7 +518,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // tileHighlighter.SetActive(false);
     }
 
-    #region IBeginDragHandler implementation
     public void OnBeginDrag(PointerEventData eventData)
     {
         // enter Drag mode
@@ -543,9 +543,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         yMin = yMinDef - yCorrectionOnDragStart;
         yMax = yMaxDef - yCorrectionOnDragStart;
     }
-    #endregion
 
-    #region IDragHandler implementation
     public void OnDrag(PointerEventData eventData)
     {
         mousePosition = Input.mousePosition;
@@ -578,9 +576,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         transform.position = Camera.main.ScreenToWorldPoint(newPosition);
         //    Debug.Log("transform " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
     }
-    #endregion
 
-    #region IEndDragHandler implementation
     public void OnEndDrag(PointerEventData eventData)
     {
         // enter back to Browse mode
@@ -590,7 +586,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // allow map to block raycasts
         GetComponent<CanvasGroup>().blocksRaycasts = true;
     }
-    #endregion
 
     float GetRemainingDistance(NesScripts.Controls.PathFind.Point pathPoint)
     {
@@ -931,11 +926,65 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    void DeselectPreviouslySelectedObjectsOnMap()
+    {
+        // deselect previous hero if it was present
+        if (selectedHero)
+        {
+            selectedHero.SetSelectedState(false);
+            selectedHero = null;
+        }
+        // deselect previous city if it was selected
+        if (selectedCity)
+        {
+            selectedCity.SetSelectedState(false);
+            selectedCity = null;
+        }
+        // remove move path highlight
+        if (selectedTargetPathPoint != null)
+        {
+            HighlightMovePath(false);
+            selectedTargetPathPoint = null;
+        }
+    }
+
+    void VerifyMovePathAndMoveIfNeeded()
+    {
+        // verify if we already highlighted path
+        if (selectedTargetPathPoint != null)
+        {
+            // We already have path highlighted
+            // verify if it is path to the same target
+            if (selectedTargetPathPoint == movePath[movePath.Count - 1])
+            {
+                // we target the same path point
+                // Move to the point
+                StartCoroutine(Move());
+            }
+            else
+            {
+                // we target new path point
+                // find and highlight new path
+                FindAndHighlightPath();
+                selectedTargetPathPoint = movePath[movePath.Count - 1];
+            }
+        }
+        else
+        {
+            // there is no yet path highlighted
+            // find and highlight new path
+            FindAndHighlightPath();
+            selectedTargetPathPoint = movePath[movePath.Count - 1];
+        }
+    }
+
     public void ActOnClick(GameObject childGameObject, PointerEventData pointerEventData)
     {
         // predefine variables
         MapHero mapHero = childGameObject.GetComponent<MapHero>();
+        MapHeroLabel mapHeroLabel = childGameObject.GetComponent<MapHeroLabel>();
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
+        MapCityLabel mapCityLabel = childGameObject.GetComponent<MapCityLabel>();
         MapManager mapMgr = childGameObject.GetComponent<MapManager>();
         Debug.Log("Mode " + mode.ToString());
         // act based on current mode
@@ -956,19 +1005,24 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 {
                     case Selection.None:
                         // act based on the object over which mouse is now
-                        if (mapHero)
+                        if (mapHero || mapHeroLabel)
                         {
                             Debug.Log("Clicked on hero party on map");
+                            // get Hero Party depending on wheter user clicked on mapHero or its label
+                            HeroParty heroParty = null;
+                            if (mapHero)
+                            {
+                                heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            }
+                            if (mapHeroLabel)
+                            {
+                                heroParty = mapHeroLabel.MapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            }
                             // verify if this is player's hero
-                            HeroParty heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
                             if (player.Faction == heroParty.GetFaction())
                             {
                                 // highlighted hero belongs to player
-                                // deselect previous hero if it was present
-                                if (selectedHero)
-                                {
-                                    selectedHero.SetSelectedState(false);
-                                }
+                                DeselectPreviouslySelectedObjectsOnMap();
                                 // select this hero
                                 selection = Selection.PlayerHero;
                                 SetSelectedHero(mapHero);
@@ -980,19 +1034,25 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // do nothing, because we did not select our hero which can attack it
                             }
                         }
-                        if (mapCity)
+                        if (mapCity || mapCityLabel)
                         {
                             Debug.Log("Clicked on city on map");
+                            // get Hero City depending on wheter user clicked on mapCity or its label
+                            City city = null;
+                            if (mapCity)
+                            {
+                                city = mapCity.linkedCityTr.GetComponent<City>();
+                            }
+                            if (mapCityLabel)
+                            {
+                                city = mapCityLabel.MapCity.linkedCityTr.GetComponent<City>();
+                                mapCity = mapCityLabel.MapCity;
+                            }
                             // verify if this is player's city
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
                             if (player.Faction == city.GetFaction())
                             {
                                 // highlighted city belongs to player
-                                // deselect previous city if it was selected
-                                if (selectedCity)
-                                {
-                                    selectedCity.SetSelectedState(false);
-                                }
+                                DeselectPreviouslySelectedObjectsOnMap();
                                 // select this city
                                 SetSelectedCity(mapCity);
                                 selection = Selection.PlayerCity;
@@ -1006,14 +1066,134 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         break;
                     case Selection.PlayerHero:
-                        // verify if this hero was already selected
-                        StartCoroutine(Move());
-                        break;
-                    case Selection.PlayerCity:
                         if (mapCity)
                         {
+                            Debug.Log("Clicked on city on map");
+                            VerifyMovePathAndMoveIfNeeded();
+                        }
+                        if (mapCityLabel)
+                        {
+                            Debug.Log("Clicked on city label on map");
+                            // get Hero City
+                            City city = mapCityLabel.MapCity.linkedCityTr.GetComponent<City>();
                             // verify if this is player's city
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            if (player.Faction == city.GetFaction())
+                            {
+                                // highlighted city belongs to player
+                                // deselect hero party
+                                DeselectPreviouslySelectedObjectsOnMap();
+                                // select this city instead of previously selected city
+                                selection = Selection.PlayerCity;
+                                SetSelectedCity(mapCityLabel.MapCity);
+                                mapCityLabel.MapCity.SetSelectedState(true);
+                            }
+                            else
+                            {
+                                // highlighted city is from other faction
+                                // deselect hero party
+                                DeselectPreviouslySelectedObjectsOnMap();
+                                // remove selection
+                                selection = Selection.None;
+                            }
+                        }
+                        if (mapHero)
+                        {
+                            Debug.Log("Clicked on hero party on map");
+                            VerifyMovePathAndMoveIfNeeded();
+                        }
+                        if (mapHeroLabel)
+                        {
+                            Debug.Log("Clicked on hero party on map");
+                            // get Hero Party depending on wheter user clicked on mapHero or its label
+                            HeroParty heroParty = mapHeroLabel.MapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            // verify if this is player's hero
+                            if (player.Faction == heroParty.GetFaction())
+                            {
+                                // Debug.LogWarning("1");
+                                // highlighted hero belongs to player
+                                // verify it it is the same hero as already selected
+                                if (selectedHero.GetInstanceID() == mapHero.GetInstanceID())
+                                {
+                                    // Debug.LogWarning("2");
+                                    // same hero as selected
+                                    // remove selection
+                                    selection = Selection.None;
+                                    DeselectPreviouslySelectedObjectsOnMap();
+                                    // Enter hero edit mode
+                                    mapHero.EnterHeroEditMode();
+                                }
+                                else
+                                {
+                                    // Debug.LogWarning("3");
+                                    // other hero
+                                    // select new hero
+                                    DeselectPreviouslySelectedObjectsOnMap();
+                                    SetSelectedHero(mapHero);
+                                    selection = Selection.PlayerHero;
+                                    mapHero.SetSelectedState(true);
+                                }
+                            }
+                            else
+                            {
+                                // highlighted hero is from other faction
+                                // deselect hero party
+                                DeselectPreviouslySelectedObjectsOnMap();
+                                // remove selection
+                                selection = Selection.None;
+                            }
+                        }
+                        if (mapMgr)
+                        {
+                            VerifyMovePathAndMoveIfNeeded();
+                        }
+                        break;
+                    case Selection.PlayerCity:
+                        if (mapHero || mapHeroLabel)
+                        {
+                            Debug.Log("Clicked on hero party on map");
+                            // get Hero Party depending on wheter user clicked on mapHero or its label
+                            HeroParty heroParty = null;
+                            if (mapHero)
+                            {
+                                heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            }
+                            if (mapHeroLabel)
+                            {
+                                heroParty = mapHeroLabel.MapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            }
+                            // verify if this is player's hero
+                            if (player.Faction == heroParty.GetFaction())
+                            {
+                                // highlighted hero belongs to player
+                                DeselectPreviouslySelectedObjectsOnMap();
+                                // select this hero instead of previously selected city
+                                selection = Selection.PlayerHero;
+                                SetSelectedHero(mapHero);
+                                mapHero.SetSelectedState(true);
+                            }
+                            else
+                            {
+                                // highlighted hero is from other faction
+                                // remove selection
+                                selection = Selection.None;
+                                DeselectPreviouslySelectedObjectsOnMap();
+                            }
+                        }
+                        if (mapCity || mapCityLabel)
+                        {
+                            Debug.Log("Clicked on city on map");
+                            // get Hero Party depending on wheter user clicked on mapCity or its label
+                            City city = null;
+                            if (mapCity)
+                            {
+                                city = mapCity.linkedCityTr.GetComponent<City>();
+                            }
+                            if (mapCityLabel)
+                            {
+                                city = mapCityLabel.MapCity.linkedCityTr.GetComponent<City>();
+                                mapCity = mapCityLabel.MapCity;
+                            }
+                            // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {
                                 // Debug.LogWarning("1");
@@ -1023,6 +1203,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 {
                                     // Debug.LogWarning("2");
                                     // same city as selected
+                                    // remove selection
+                                    selection = Selection.None;
+                                    DeselectPreviouslySelectedObjectsOnMap();
                                     // Enter city edit mode
                                     mapCity.EnterCityEditMode();
                                 }
@@ -1030,14 +1213,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 {
                                     // Debug.LogWarning("3");
                                     // other city
-                                    // select other city
-                                    // deselect previous city if it was selected
-                                    if (selectedCity)
-                                    {
-                                        selectedCity.SetSelectedState(false);
-                                    }
-                                    // select this city
-                                    SetSelectedCity(selectedCity);
+                                    DeselectPreviouslySelectedObjectsOnMap();
+                                    // select new city
+                                    SetSelectedCity(mapCity);
                                     selection = Selection.PlayerCity;
                                     mapCity.SetSelectedState(true);
                                 }
@@ -1047,28 +1225,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // highlighted city is from other faction
                                 // remove selection
                                 selection = Selection.None;
-                                if (selectedCity)
-                                {
-                                    selectedCity.SetSelectedState(false);
-                                }
-                                if (selectedHero)
-                                {
-                                    selectedHero.SetSelectedState(false);
-                                }
+                                DeselectPreviouslySelectedObjectsOnMap();
                             }
                         }
                         if (mapMgr)
                         {
                             // remove selection
                             selection = Selection.None;
-                            if (selectedCity)
-                            {
-                                selectedCity.SetSelectedState(false);
-                            }
-                            if (selectedHero)
-                            {
-                                selectedHero.SetSelectedState(false);
-                            }
+                            DeselectPreviouslySelectedObjectsOnMap();
                         }
                         break;
                     default:

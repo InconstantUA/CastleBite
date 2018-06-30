@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 224290115509911020}
   - component: {fileID: 222446390339089456}
   - component: {fileID: 114520936170249512}
-  - component: {fileID: 114925158081718882}
   - component: {fileID: 114374570444624018}
   m_Layer: 0
   m_Name: HeroLabel
@@ -39,57 +38,16 @@ GameObject:
   m_Component:
   - component: {fileID: 224797448737503888}
   - component: {fileID: 222680354761521770}
-  - component: {fileID: 114157624716552404}
   - component: {fileID: 114689956747166328}
   - component: {fileID: 114881583066773808}
+  - component: {fileID: 114830867087179466}
   m_Layer: 0
   m_Name: PartyOnMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &114157624716552404
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1411813971605468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
-    m_HighlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  m_IsActive: 0
 --- !u!114 &114374570444624018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -101,6 +59,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f907130b76c4d14bb2ed60cdfc21b0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inactiveColor: {r: 0, g: 0, b: 0, a: 0}
+  activeColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  highlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  pressedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!114 &114520936170249512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -169,6 +131,17 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "\u25A0"
+--- !u!114 &114830867087179466
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1411813971605468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356e3c930cc8b244d82d14e728930687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114881583066773808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -180,49 +153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb72dc55517a4442ae59b00d42f2130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  linkedHeroTr: {fileID: 0}
+  linkedPartyTr: {fileID: 0}
+  linkedCityOnMapTr: {fileID: 0}
   animationDuration: 0.6
---- !u!114 &114925158081718882
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1263920043651060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
-    m_HighlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
+  normalColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  highlightedColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
+  pressedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
 --- !u!222 &222446390339089456
 CanvasRenderer:
   m_ObjectHideFlags: 1

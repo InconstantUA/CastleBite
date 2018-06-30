@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+public class MapCityLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     // for highlight
     [SerializeField]
@@ -16,19 +16,19 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField]
     Color pressedColor;
     Text labelTxt;
-    MapHero mapHero;
+    MapCity mapCity;
     bool isMouseOver = false;
 
-    public MapHero MapHero
+    public MapCity MapCity
     {
         get
         {
-            return mapHero;
+            return mapCity;
         }
 
         set
         {
-            mapHero = value;
+            mapCity = value;
         }
     }
 
@@ -48,42 +48,42 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     void Awake()
     {
         labelTxt = gameObject.GetComponent<Text>();
-        MapHero = transform.parent.GetComponent<MapHero>();
+        MapCity = transform.parent.GetComponent<MapCity>();
         labelTxt.color = inactiveColor;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Debug.Log("MapHeroLabel OnPointerEnter");
+        // Debug.Log("MapCityLabel OnPointerEnter");
+        // dimm all other menus
+        // DimmAllOtherMenus();
         // highlight this menu
         isMouseOver = true;
-        labelTxt.raycastTarget = true;
         SetHighlightedStatus();
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Debug.Log("MapHeroLabel OnPointerExit");
+        // Debug.Log("MapCityLabel OnPointerExit");
         isMouseOver = false;
-        labelTxt.raycastTarget = false;
         SetHiddenStatus();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Debug.Log("MapHeroLabel OnPointerDown");
+        // Debug.Log("MapCityLabel OnPointerDown");
         SetPressedStatus();
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // Debug.Log("MapHeroLabel OnPointerUp");
+        // Debug.Log("MapCityLabel OnPointerUp");
         // keep state On
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // Debug.Log("MapHeroLabel OnPointerClick");
+        // Debug.Log("MapCityLabel OnPointerClick");
         // give control on actions to map manager
         MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
         mapManager.ActOnClick(gameObject, eventData);
@@ -105,8 +105,8 @@ public class MapHeroLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         // Debug.Log("SetHiddenStatus " + btn.name + " button");
         // disable labels clickability, so it does not pop up when you mouse over map on top of it
-        // do this only if mouse is not over this lable
-        if (!isMouseOver)
+        // do this only if mouse is not over this lable and not over parent city marker
+        if (!isMouseOver && !mapCity.IsMouseOver)
         {
             labelTxt.color = inactiveColor;
             labelTxt.raycastTarget = false;

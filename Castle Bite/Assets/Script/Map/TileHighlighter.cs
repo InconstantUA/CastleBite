@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TileHighlighter : MonoBehaviour {
     bool isOn;
     [SerializeField]
-    float animationDuration = 1f;
+    //float animationDuration = 1f;
     Text txt;
 
     // Use this for initialization

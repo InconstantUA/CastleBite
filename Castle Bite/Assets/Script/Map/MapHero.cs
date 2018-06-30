@@ -8,6 +8,8 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
 {
     public Transform linkedPartyTr;
     public Transform linkedCityOnMapTr;
+    [SerializeField]
+    public float labelDimTimeout;
     enum State { NotSelected, Selected };
     State state = State.NotSelected;
     // for animation
@@ -22,7 +24,6 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     Color highlightedColor;
     [SerializeField]
     Color pressedColor;
-
     Text heroLabel;
     // for path finding
     Vector2 heroTilePosition;
@@ -253,6 +254,21 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
     }
 
+
+    public void EnterHeroEditMode()
+    {
+        Debug.Log("Enter hero edit mode.");
+        // Return to normal status
+        SetNormalStatus();
+        // go to hero edit mode
+        // get variables
+        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
+        // .. set hero edit menu game object
+        // Deactivate map and activate hero edit menu
+        //mapScreen.SetActive(false);
+        // .. activate hero edit menu
+    }
+
     #region Animation
     void Blink()
     {
@@ -277,15 +293,15 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     #endregion Animation
 
 
-    bool CompareColors(Color a, Color b)
-    {
-        bool result = false;
-        if (((int)(a.r * 1000) == (int)(b.r * 1000)) || ((int)(a.g * 1000) == (int)(b.g * 1000)) || ((int)(a.b * 1000) == (int)(b.b * 1000)))
-        {
-            result = true;
-        }
-        return result;
-    }
+    //bool CompareColors(Color a, Color b)
+    //{
+    //    bool result = false;
+    //    if (((int)(a.r * 1000) == (int)(b.r * 1000)) || ((int)(a.g * 1000) == (int)(b.g * 1000)) || ((int)(a.b * 1000) == (int)(b.b * 1000)))
+    //    {
+    //        result = true;
+    //    }
+    //    return result;
+    //}
 
     public void SetHighlightedStatus()
     {
