@@ -155,30 +155,21 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
         // Set all tiles occupied by heroes or cities on map as non-passable
-        foreach (EnemyPartyOnMap enemyParty in transform.GetComponentsInChildren<EnemyPartyOnMap>())
+        foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
         {
             // verify if not null
-            if (enemyParty)
+            if (party)
             {
-                Vector2Int pos = GetTilePosition(enemyParty.transform);
+                Vector2Int pos = GetTilePosition(party.transform);
                 tilesmap[pos.x, pos.y] = false;
             }
         }
-        foreach (PlayerPartyOnMap playerParty in transform.GetComponentsInChildren<PlayerPartyOnMap>())
+        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
         {
             // verify if not null
-            if (playerParty)
+            if (city)
             {
-                Vector2Int pos = GetTilePosition(playerParty.transform);
-                tilesmap[pos.x, pos.y] = false;
-            }
-        }
-        foreach (PlayerCityOnMap playerCity in transform.GetComponentsInChildren<PlayerCityOnMap>())
-        {
-            // verify if not null
-            if (playerCity)
-            {
-                Vector2Int pos = GetTilePosition(playerCity.transform);
+                Vector2Int pos = GetTilePosition(city.transform);
                 tilesmap[pos.x, pos.y] = false;
             }
         }
@@ -345,6 +336,36 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return false;
     }
 
+    bool PartyIsEnemy(MapHero party)
+    {
+        // verify if this is friendly or enemy party
+        if (party.LinkedPartyTr.GetComponent<HeroParty>().GetFaction() != selectedHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction())
+        {
+            // different faction -enemy
+            return true;
+        }
+        else
+        {
+            // same faction - friendly
+            return false;
+        }
+    }
+
+    bool CityIsEnemy(MapCity city)
+    {
+        // verify if this is friendly or enemy party
+        if (city.linkedCityTr.GetComponent<City>().GetFaction() != selectedHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction())
+        {
+            // different faction -enemy
+            return true;
+        }
+        else
+        {
+            // same faction - friendly
+            return false;
+        }
+    }
+
     TileState GetTileOccupationState(NesScripts.Controls.PathFind.Point pathPoint)
     {
         Vector2Int tilePosition = new Vector2Int
@@ -353,42 +374,59 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             y = pathPoint.y
         };
         // go over all objects and verify if they are on the tile
-        foreach (EnemyPartyOnMap enemyParty in transform.GetComponentsInChildren<EnemyPartyOnMap>())
+        foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
         {
             // verify if not null
-            if (enemyParty)
+            if (party)
             {
-                Vector2Int enemyTilePosition = GetTilePosition(enemyParty.transform);
-                if (enemyTilePosition == tilePosition)
+                Vector2Int partyTilePosition = GetTilePosition(party.transform);
+                // verify if this is enemy or friendly party
+                if (PartyIsEnemy(party))
                 {
-                    return TileState.EnemyParty;
+                    // verify if enemy party located in tile
+                    if (partyTilePosition == tilePosition)
+                    {
+                        return TileState.EnemyParty;
+                    }
+                    // verify if enemy party located in nearby tiles
+                    else if (TileIsProtectedByEnemyParty(partyTilePosition, tilePosition))
+                    {
+                        // Debug.LogWarning("Protected");
+                        return TileState.Protected;
+                    }
                 }
-                else if (TileIsProtectedByEnemyParty(enemyTilePosition, tilePosition))
+                else
                 {
-                    // Debug.LogWarning("Protected");
-                    return TileState.Protected;
+                    // verify if friendly party located in tile
+                    if (partyTilePosition == tilePosition)
+                    {
+                        return TileState.PlayerParty;
+                    }
                 }
             }
         }
-        foreach (PlayerPartyOnMap playerParty in transform.GetComponentsInChildren<PlayerPartyOnMap>())
+        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
         {
             // verify if not null
-            if (playerParty)
+            if (city)
             {
-                if (GetTilePosition(playerParty.transform) == tilePosition)
+                Vector2Int cityTilePosition = GetTilePosition(city.transform);
+                // verify if this is enemy or friendly city
+                if (CityIsEnemy(city))
                 {
-                    return TileState.PlayerParty;
+                    // verify if enemy city located in tile
+                    if (cityTilePosition == tilePosition)
+                    {
+                        return TileState.EnemyCity;
+                    }
                 }
-            }
-        }
-        foreach (PlayerCityOnMap playerCity in transform.GetComponentsInChildren<PlayerCityOnMap>())
-        {
-            // verify if not null
-            if (playerCity)
-            {
-                if (GetTilePosition(playerCity.transform) == tilePosition)
+                else
                 {
-                    return TileState.PlayerCity;
+                    // verify if friendly party located in tile
+                    if (cityTilePosition == tilePosition)
+                    {
+                        return TileState.PlayerCity;
+                    }
                 }
             }
         }
@@ -613,12 +651,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Get City
         MapCity mapCity = GetCityByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
         // Link hero on the map to city on the map
-        mapCity.linkedPartyTr = selectedHero.transform;
+        mapCity.linkedPartyOnMapTr = selectedHero.transform;
         // And do the opposite 
         // Link city on the map to hero on the map
         selectedHero.linkedCityOnMapTr = mapCity.transform;
         // Move hero UI to City
-        selectedHero.linkedPartyTr.SetParent(mapCity.linkedCityTr);
+        selectedHero.LinkedPartyTr.SetParent(mapCity.linkedCityTr);
         // Enter city edit mode
         mapCity.EnterCityEditMode();
         // Trigger on hero entering city
@@ -644,14 +682,17 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     MapHero GetEnemyByTile(Vector2Int tilePosition)
     {
-        foreach (EnemyPartyOnMap enemyOnMap in transform.GetComponentsInChildren<EnemyPartyOnMap>())
+        foreach (MapHero partyOnMap in transform.GetComponentsInChildren<MapHero>())
         {
             // verify if not null
-            if (enemyOnMap)
+            if (partyOnMap)
             {
-                if (GetTilePosition(enemyOnMap.transform) == tilePosition)
+                if (PartyIsEnemy(partyOnMap))
                 {
-                    return enemyOnMap.GetComponent<MapHero>();
+                    if (GetTilePosition(partyOnMap.transform) == tilePosition)
+                    {
+                        return partyOnMap.GetComponent<MapHero>();
+                    }
                 }
             }
         }
@@ -661,17 +702,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     MapHero GetEnemyByProtectedTile(Vector2Int tilePosition)
     {
         Vector2Int[] surroundingTilesPositions = GetAllSurroundingTilesPositions(tilePosition);
-        foreach (EnemyPartyOnMap enemyOnMap in transform.GetComponentsInChildren<EnemyPartyOnMap>())
+        foreach (MapHero partyOnMap in transform.GetComponentsInChildren<MapHero>())
         {
             // verify if not null
-            if (enemyOnMap)
+            if (partyOnMap)
             {
-                Vector2Int enemyTilePos = GetTilePosition(enemyOnMap.transform);
-                foreach (Vector2Int tilePos in surroundingTilesPositions)
+                // verify if party is enemy
+                if (PartyIsEnemy(partyOnMap))
                 {
-                    if (enemyTilePos == tilePos)
+                    // verify if enemy is located on one of the surrounding tiles
+                    Vector2Int enemyTilePos = GetTilePosition(partyOnMap.transform);
+                    foreach (Vector2Int tilePos in surroundingTilesPositions)
                     {
-                        return enemyOnMap.GetComponent<MapHero>();
+                        if (enemyTilePos == tilePos)
+                        {
+                            return partyOnMap.GetComponent<MapHero>();
+                        }
                     }
                 }
             }
@@ -749,10 +795,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             // Unlink city from hero and hero from city if they were linked before
             MapCity linkedCity = selectedHero.linkedCityOnMapTr.GetComponent<MapCity>();
-            linkedCity.linkedPartyTr = null;
+            linkedCity.linkedPartyOnMapTr = null;
             selectedHero.linkedCityOnMapTr = null;
             // Get current party city
-            HeroParty heroParty = selectedHero.linkedPartyTr.GetComponent<HeroParty>();
+            HeroParty heroParty = selectedHero.LinkedPartyTr.GetComponent<HeroParty>();
             City currentCity = heroParty.transform.parent.GetComponent<City>();
             // Enable hire hero panel in city
             currentCity.ReturnToNomalState();
@@ -855,7 +901,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHero)
                         {
                             // verify if this is player's hero
-                            HeroParty heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
                             if (player.Faction == heroParty.GetFaction())
                             {
                                 // highlighted hero belongs to player
@@ -982,9 +1028,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // predefine variables
         MapHero mapHero = childGameObject.GetComponent<MapHero>();
-        MapHeroLabel mapHeroLabel = childGameObject.GetComponent<MapHeroLabel>();
+        MapHero mapHeroViaLabel = childGameObject.transform.parent.GetComponent<MapHero>();
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
-        MapCityLabel mapCityLabel = childGameObject.GetComponent<MapCityLabel>();
+        MapCity mapCityViaLabel = childGameObject.transform.parent.GetComponent<MapCity>();
         MapManager mapMgr = childGameObject.GetComponent<MapManager>();
         Debug.Log("Mode " + mode.ToString());
         // act based on current mode
@@ -1005,19 +1051,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 {
                     case Selection.None:
                         // act based on the object over which mouse is now
-                        if (mapHero || mapHeroLabel)
+                        if (mapHero || mapHeroViaLabel)
                         {
                             Debug.Log("Clicked on hero party on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
-                            HeroParty heroParty = null;
-                            if (mapHero)
+                            if (mapHeroViaLabel)
                             {
-                                heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                                mapHero = mapHeroViaLabel;
                             }
-                            if (mapHeroLabel)
-                            {
-                                heroParty = mapHeroLabel.MapHero.linkedPartyTr.GetComponent<HeroParty>();
-                            }
+                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
                             // verify if this is player's hero
                             if (player.Faction == heroParty.GetFaction())
                             {
@@ -1034,20 +1076,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // do nothing, because we did not select our hero which can attack it
                             }
                         }
-                        if (mapCity || mapCityLabel)
+                        if (mapCity || mapCityViaLabel)
                         {
                             Debug.Log("Clicked on city on map");
                             // get Hero City depending on wheter user clicked on mapCity or its label
-                            City city = null;
-                            if (mapCity)
+                            if (mapCityViaLabel)
                             {
-                                city = mapCity.linkedCityTr.GetComponent<City>();
+                                mapCity = mapCityViaLabel;
                             }
-                            if (mapCityLabel)
-                            {
-                                city = mapCityLabel.MapCity.linkedCityTr.GetComponent<City>();
-                                mapCity = mapCityLabel.MapCity;
-                            }
+                            City city = mapCity.linkedCityTr.GetComponent<City>();
                             // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {
@@ -1071,11 +1108,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             Debug.Log("Clicked on city on map");
                             VerifyMovePathAndMoveIfNeeded();
                         }
-                        if (mapCityLabel)
+                        if (mapCityViaLabel)
                         {
                             Debug.Log("Clicked on city label on map");
                             // get Hero City
-                            City city = mapCityLabel.MapCity.linkedCityTr.GetComponent<City>();
+                            mapCity = mapCityViaLabel;
+                            City city = mapCity.linkedCityTr.GetComponent<City>();
                             // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {
@@ -1084,8 +1122,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 DeselectPreviouslySelectedObjectsOnMap();
                                 // select this city instead of previously selected city
                                 selection = Selection.PlayerCity;
-                                SetSelectedCity(mapCityLabel.MapCity);
-                                mapCityLabel.MapCity.SetSelectedState(true);
+                                SetSelectedCity(mapCity);
+                                mapCity.SetSelectedState(true);
                             }
                             else
                             {
@@ -1101,11 +1139,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             Debug.Log("Clicked on hero party on map");
                             VerifyMovePathAndMoveIfNeeded();
                         }
-                        if (mapHeroLabel)
+                        if (mapHeroViaLabel)
                         {
                             Debug.Log("Clicked on hero party on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
-                            HeroParty heroParty = mapHeroLabel.MapHero.linkedPartyTr.GetComponent<HeroParty>();
+                            mapHero = mapHeroViaLabel;
+                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
                             // verify if this is player's hero
                             if (player.Faction == heroParty.GetFaction())
                             {
@@ -1148,19 +1187,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         break;
                     case Selection.PlayerCity:
-                        if (mapHero || mapHeroLabel)
+                        if (mapHero || mapHeroViaLabel)
                         {
                             Debug.Log("Clicked on hero party on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
-                            HeroParty heroParty = null;
-                            if (mapHero)
+                            if (mapHeroViaLabel)
                             {
-                                heroParty = mapHero.linkedPartyTr.GetComponent<HeroParty>();
+                                mapHero = mapHeroViaLabel;
                             }
-                            if (mapHeroLabel)
-                            {
-                                heroParty = mapHeroLabel.MapHero.linkedPartyTr.GetComponent<HeroParty>();
-                            }
+                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
                             // verify if this is player's hero
                             if (player.Faction == heroParty.GetFaction())
                             {
@@ -1179,20 +1214,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 DeselectPreviouslySelectedObjectsOnMap();
                             }
                         }
-                        if (mapCity || mapCityLabel)
+                        if (mapCity || mapCityViaLabel)
                         {
                             Debug.Log("Clicked on city on map");
                             // get Hero Party depending on wheter user clicked on mapCity or its label
-                            City city = null;
-                            if (mapCity)
+                            if (mapCityViaLabel)
                             {
-                                city = mapCity.linkedCityTr.GetComponent<City>();
+                                mapCity = mapCityViaLabel;
                             }
-                            if (mapCityLabel)
-                            {
-                                city = mapCityLabel.MapCity.linkedCityTr.GetComponent<City>();
-                                mapCity = mapCityLabel.MapCity;
-                            }
+                            City city = mapCity.linkedCityTr.GetComponent<City>();
                             // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {

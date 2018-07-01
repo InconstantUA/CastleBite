@@ -68,8 +68,8 @@ public class BattleScreen : MonoBehaviour {
         // Set turn phase to main phase
         SetTurnPhase(TurnPhase.Main);
         // get hero's parties
-        HeroParty playerHeroParty = playerOnMap.linkedPartyTr.GetComponent<HeroParty>();
-        HeroParty enemyHeroParty = enemyOnMap.linkedPartyTr.GetComponent<HeroParty>();
+        HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
+        HeroParty enemyHeroParty = enemyOnMap.LinkedPartyTr.GetComponent<HeroParty>();
         // get battle place
         battlePlace = GetBattlePlace(playerHeroParty, enemyHeroParty);
         // move hero parties to the battle screen

@@ -304,6 +304,7 @@ public class PartyPanel : MonoBehaviour {
                 }
             }
         }
+        Debug.LogError("No Leader in party.");
         return null;
     }
 

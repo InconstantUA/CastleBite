@@ -4,147 +4,151 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+// public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+public class MapHero : MonoBehaviour
 {
-    public Transform linkedPartyTr;
+    enum State { NotSelected, Selected };
+
+    [SerializeField]
+    private Transform linkedPartyTr;
     public Transform linkedCityOnMapTr;
     [SerializeField]
     public float labelDimTimeout;
-    enum State { NotSelected, Selected };
     State state = State.NotSelected;
     // for animation
     bool isOn;
     [SerializeField]
     float animationDuration = 1f;
     Text markerTxt;
-    // for highlight
+    //// for highlight
+    //[SerializeField]
+    //Color normalColor;
+    //[SerializeField]
+    //Color highlightedColor;
+    //[SerializeField]
+    //Color pressedColor;
     [SerializeField]
-    Color normalColor;
-    [SerializeField]
-    Color highlightedColor;
-    [SerializeField]
-    Color pressedColor;
-    Text heroLabel;
+    MapObjectLabel label;
     // for path finding
-    Vector2 heroTilePosition;
+    //Vector2 heroTilePosition;
+
+    public Transform LinkedPartyTr
+    {
+        get
+        {
+            return linkedPartyTr;
+        }
+
+        set
+        {
+            linkedPartyTr = value;
+            UpdateLabelText();
+        }
+    }
 
     void Awake()
     {
         isOn = true;
         markerTxt = gameObject.GetComponent<Text>();
-        heroLabel = transform.Find("HeroLabel").GetComponent<Text>();
-        // set party leader lable if hero is already linked
+        // update linked party transform if it is already predefined
+        // - this is predefined of object alreayd created on the map
+        // - this is set autmoatically when new party leader is highered
         if (linkedPartyTr)
         {
-            PartyPanel partyPanel = linkedPartyTr.GetComponentInChildren<PartyPanel>();
-            UpdateHeroLable(partyPanel.GetPartyLeader());
+            UpdateLabelText();
         }
     }
 
-    public void UpdateHeroLable(PartyUnit leaderUnit)
+    void UpdateLabelText()
     {
-        // GameObject newPartyHeroLable = newPartyOnMapUI.transform.Find("HeroLabel").gameObject;
-        MapHeroLabel heroLabel2 = transform.Find("HeroLabel").GetComponent<MapHeroLabel>();
-        // heroLabel2.GetComponent<Text>().text = "test";
-        if (leaderUnit)
-        {
-            heroLabel2.GetComponent<Text>().text = "[" + leaderUnit.GetGivenName() + "]\r\n <size=12>" + leaderUnit.GetUnitName() + "</size> ";
-        }
-        else
-        {
-            Debug.LogError("Party leader not found.");
-        }
+        // set label
+        label = GetComponentInChildren<MapObjectLabel>();
+        // set label text
+        PartyUnit leaderUnit = linkedPartyTr.GetComponentInChildren<PartyPanel>().GetPartyLeader();
+        string givenName = leaderUnit.GetGivenName();
+        string unitName = leaderUnit.GetUnitName();
+        label.LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    //public void OnPointerDown(PointerEventData eventData)
+    //{
+    //    // Debug.Log("MapHero OnPointerDown");
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        // Debug.LogWarning("OnPointerDown");
+    //        // on left mouse click
+    //        SetPressedStatus();
+    //    }
+    //    else if (Input.GetMouseButtonDown(1))
+    //    {
+    //        // on right mouse click
+    //        // show unit info
+    //        transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(GetComponent<MapHero>());
+    //    }
+    //}
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        // Debug.Log("MapHero OnPointerDown");
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Debug.LogWarning("OnPointerDown");
-            // on left mouse click
-            SetPressedStatus();
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            // on right mouse click
-            // show unit info
-            transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(GetComponent<MapHero>());
-        }
-    }
+    //public void OnPointerUp(PointerEventData eventData)
+    //{
+    //    // Debug.Log("MapHero OnPointerUp");
+    //    if (Input.GetMouseButtonUp(0))
+    //    {
+    //        // on left mouse click
+    //        // keep state On
+    //    }
+    //    else if (Input.GetMouseButtonUp(1))
+    //    {
+    //        // on right mouse click
+    //        // deactivate unit info
+    //        transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
+    //    }
+    //}
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        // Debug.Log("MapHero OnPointerUp");
-        if (Input.GetMouseButtonUp(0))
-        {
-            // on left mouse click
-            // keep state On
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            // on right mouse click
-            // deactivate unit info
-            transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
-        }
-    }
+    //public void OnPointerEnter(PointerEventData eventData)
+    //{
+    //    // Debug.Log("MapHero OnPointerEnter");
+    //    // dimm all other menus
+    //    // DimmAllOtherMenus();
+    //    // highlight this menu
+    //    SetHighlightedStatus();
+    //    // give control on actions to map manager
+    //    MapManager mapManager = transform.parent.GetComponent<MapManager>();
+    //    mapManager.OnPointerEnterChildObject(gameObject, eventData);
+    //}
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        // Debug.Log("MapHero OnPointerEnter");
-        // dimm all other menus
-        // DimmAllOtherMenus();
-        // highlight this menu
-        SetHighlightedStatus();
-        // give control on actions to map manager
-        MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        mapManager.OnPointerEnterChildObject(gameObject, eventData);
-    }
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    // Debug.Log("MapHero OnPointerExit");
+    //    // return to previous toggle state
+    //    SetNormalStatus();
+    //    HideLable();
+    //    // give control on actions to map manager
+    //    MapManager mapManager = transform.parent.GetComponent<MapManager>();
+    //    mapManager.OnPointerExitChildObject(gameObject, eventData);
+    //}
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        // Debug.Log("MapHero OnPointerExit");
-        // return to previous toggle state
-        SetNormalStatus();
-        HideLable();
-        // give control on actions to map manager
-        MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        mapManager.OnPointerExitChildObject(gameObject, eventData);
-    }
+    //void HideLable()
+    //{
+    //    heroLabel.GetComponent<MapHeroLabel>().SetHiddenStatus();
+    //}
 
-    void HideLable()
-    {
-        heroLabel.GetComponent<MapHeroLabel>().SetHiddenStatus();
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        // Debug.Log("MapHero OnPointerClick");
-        // verify if we are inside the city
-        MapCity city = transform.parent.GetComponent<MapCity>();
-        if (city)
-        {
-            // we clicked on a hero's lable, but because hero is inside the city
-            // we transfer control to the city's script
-            city.OnPointerClick(eventData);
-        }
-        else
-        {
-            // give control on actions to map manager
-            MapManager mapManager = transform.parent.GetComponent<MapManager>();
-            mapManager.ActOnClick(gameObject, eventData);
-        }
-    }
+    //public void OnPointerClick(PointerEventData eventData)
+    //{
+    //    // Debug.Log("MapHero OnPointerClick");
+    //    // verify if we are inside the city
+    //    MapCity city = transform.parent.GetComponent<MapCity>();
+    //    if (city)
+    //    {
+    //        // we clicked on a hero's lable, but because hero is inside the city
+    //        // we transfer control to the city's script
+    //        city.OnPointerClick(eventData);
+    //    }
+    //    else
+    //    {
+    //        // give control on actions to map manager
+    //        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+    //        mapManager.ActOnClick(gameObject, eventData);
+    //    }
+    //}
 
     public void SetSelectedState(bool doActivate)
     {
@@ -173,24 +177,24 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         Debug.Log("Enter party edit mode");
     }
 
-    void ToggleSelectedState()
-    {
-        switch (state)
-        {
-            case State.NotSelected:
-                // select it
-                SetSelectedState(true);
-                break;
-            case State.Selected:
-                // enter edit hero mode
-                SetSelectedState(false);
-                EnterEditMode();
-                break;
-            default:
-                Debug.LogError("Unknown state");
-                break;
-        }
-    }
+    //void ToggleSelectedState()
+    //{
+    //    switch (state)
+    //    {
+    //        case State.NotSelected:
+    //            // select it
+    //            SetSelectedState(true);
+    //            break;
+    //        case State.Selected:
+    //            // enter edit hero mode
+    //            SetSelectedState(false);
+    //            EnterEditMode();
+    //            break;
+    //        default:
+    //            Debug.LogError("Unknown state");
+    //            break;
+    //    }
+    //}
 
     public void ActOnClick()
     {
@@ -198,7 +202,7 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         switch (transform.parent.GetComponent<MapManager>().GetMode())
         {
             case MapManager.Mode.Browse:
-                ToggleSelectedState();
+                //ToggleSelectedState();
                 break;
             case MapManager.Mode.Animation:
                 // act based on the fact of it is the same hero or not
@@ -258,8 +262,8 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
     public void EnterHeroEditMode()
     {
         Debug.Log("Enter hero edit mode.");
-        // Return to normal status
-        SetNormalStatus();
+        // Hide label
+        label.HideLabel();
         // go to hero edit mode
         // get variables
         GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
@@ -269,7 +273,6 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         // .. activate hero edit menu
     }
 
-    #region Animation
     void Blink()
     {
         if (isOn)
@@ -290,37 +293,25 @@ public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
         // yield return new WaitForSeconds(0.2f);
     }
-    #endregion Animation
 
-
-    //bool CompareColors(Color a, Color b)
+    //public void SetHighlightedStatus()
     //{
-    //    bool result = false;
-    //    if (((int)(a.r * 1000) == (int)(b.r * 1000)) || ((int)(a.g * 1000) == (int)(b.g * 1000)) || ((int)(a.b * 1000) == (int)(b.b * 1000)))
-    //    {
-    //        result = true;
-    //    }
-    //    return result;
+    //    // Debug.Log("SetHighlightedStatus " + btn.name + " button");
+    //    markerTxt.color = highlightedColor;
+    //    // make also highlight hero label
+    //    heroLabel.color = highlightedColor;
     //}
 
-    public void SetHighlightedStatus()
-    {
-        // Debug.Log("SetHighlightedStatus " + btn.name + " button");
-        markerTxt.color = highlightedColor;
-        // make also highlight hero label
-        heroLabel.color = highlightedColor;
-    }
+    //void SetPressedStatus()
+    //{
+    //    // Debug.Log("SetPressedStatus " + btn.name + " button");
+    //    markerTxt.color = pressedColor;
+    //}
 
-    void SetPressedStatus()
-    {
-        // Debug.Log("SetPressedStatus " + btn.name + " button");
-        markerTxt.color = pressedColor;
-    }
-
-    public void SetNormalStatus()
-    {
-        // Debug.Log("SetNormalStatus " + btn.name + " button");
-        markerTxt.color = normalColor;
-    }
+    //public void SetNormalStatus()
+    //{
+    //    // Debug.Log("SetNormalStatus " + btn.name + " button");
+    //    markerTxt.color = normalColor;
+    //}
 
 }

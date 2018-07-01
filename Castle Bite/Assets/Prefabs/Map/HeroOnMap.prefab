@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224290115509911020}
   - component: {fileID: 222446390339089456}
   - component: {fileID: 114520936170249512}
-  - component: {fileID: 114374570444624018}
+  - component: {fileID: 114416283692886778}
   m_Layer: 0
   m_Name: HeroLabel
   m_TagString: Untagged
@@ -38,17 +38,17 @@ GameObject:
   m_Component:
   - component: {fileID: 224797448737503888}
   - component: {fileID: 222680354761521770}
+  - component: {fileID: 114925890714897108}
   - component: {fileID: 114689956747166328}
   - component: {fileID: 114881583066773808}
-  - component: {fileID: 114830867087179466}
   m_Layer: 0
-  m_Name: PartyOnMap
+  m_Name: HeroOnMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &114374570444624018
+--- !u!114 &114416283692886778
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -56,13 +56,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1263920043651060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f907130b76c4d14bb2ed60cdfc21b0b, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b70c4450353c3348a99fd0bda75141b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inactiveColor: {r: 0, g: 0, b: 0, a: 0}
-  activeColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
-  highlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
-  pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  isMouseOver: 0
 --- !u!114 &114520936170249512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -76,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -131,17 +128,6 @@ MonoBehaviour:
     m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: "\u25A0"
---- !u!114 &114830867087179466
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1411813971605468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 356e3c930cc8b244d82d14e728930687, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114881583066773808
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -155,10 +141,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedPartyTr: {fileID: 0}
   linkedCityOnMapTr: {fileID: 0}
+  labelDimTimeout: 0.5
   animationDuration: 0.6
-  normalColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
-  highlightedColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
-  pressedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  label: {fileID: 0}
+--- !u!114 &114925890714897108
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1411813971605468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2539f3f17e372e24390433e841e0e3a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelDimTimeout: 0.5
+  hiddenLabelColor: {r: 1, g: 1, b: 1, a: 0}
+  notHighlightedLabelColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  highlightedLabelColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  pressedLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  isMouseOver: 0
 --- !u!222 &222446390339089456
 CanvasRenderer:
   m_ObjectHideFlags: 1

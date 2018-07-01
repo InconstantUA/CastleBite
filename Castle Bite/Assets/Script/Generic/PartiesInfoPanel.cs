@@ -9,9 +9,23 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
 {
     Transform duplicate;
 
+    public void ActivateAdvance(GameObject gameObject)
+    {
+        if (gameObject.GetComponent<MapHero>())
+        {
+            ActivateAdvance(gameObject.GetComponent<MapHero>());
+            return;
+        }
+        if (gameObject.GetComponent<MapCity>())
+        {
+            ActivateAdvance(gameObject.GetComponent<MapCity>());
+            return;
+        }
+    }
+
     public void ActivateAdvance(MapHero mapHero)
     {
-        // Debug.Log("ActivateAdvance");
+        Debug.Log("Show Party Info");
         // remove previous duplicate if it was present
         if (duplicate)
         {
@@ -22,7 +36,7 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
         singlePartyPlaceholder.gameObject.SetActive(true);
         // create duplicate of the party panel and place it into placeholder
         gameObject.SetActive(true);
-        Transform partyPanelTr = mapHero.linkedPartyTr.Find("PartyPanel");
+        Transform partyPanelTr = mapHero.LinkedPartyTr.Find("PartyPanel");
         duplicate = Instantiate(partyPanelTr, singlePartyPlaceholder);
         // stretch duplicate transform
         RectTransform rectTransform = duplicate.GetComponent<RectTransform>();
@@ -31,6 +45,11 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
         // Reset to 0, 0, 0, 0 position
         rectTransform.offsetMin = new Vector2(0, 0); // left, bottom
         rectTransform.offsetMax = new Vector2(0, 0); // -right, -top
+    }
+
+    public void ActivateAdvance(MapCity mapCity)
+    {
+        Debug.Log("Show City info");
     }
 
     public void OnPointerDown(PointerEventData eventData)
