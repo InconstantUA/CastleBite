@@ -14,7 +14,7 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     void Awake()
     {
         labelTxt = GetComponent<Text>();
-        Debug.LogWarning("Label text: " + labelTxt.text);
+        //Debug.Log("Label text: " + labelTxt.text);
         mapObject = transform.parent.GetComponent<MapObject>();
         labelTxt.color = mapObject.HiddenLabelColor;
     }
@@ -27,6 +27,9 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         // highlight this menu
         isMouseOver = true;
         labelTxt.color = mapObject.HighlightedLabelColor;
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+        mapManager.OnPointerEnterChildObject(gameObject, eventData);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -39,6 +42,9 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         {
             HideLabel();
         }
+        // give control on actions to map manager
+        MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+        mapManager.OnPointerExitChildObject(gameObject, eventData);
     }
 
     public void HideLabel()

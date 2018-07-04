@@ -48,10 +48,9 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevel: 200
   unitExperienceReward: 200
   unitExperienceRewardIncrementOnLevelUp: 200
-  healthCurr: 100
-  healthMax: 160
+  healthCurr: 180
+  healthMax: 180
   healthMaxIncrementOnLevelUp: 30
-  isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
@@ -65,12 +64,14 @@ MonoBehaviour:
   unitRole: Fighter Leader
   unitBriefDescription: Strong and durable mele fighter.
   unitFullDescription: Full description.
-  hasEscaped: 0
   hasMoved: 0
   cost: 550
   unitSize: 0
   isInterpartyMovable: 0
   isDismissable: 1
+  unitStatus: 0
+  unitDebuffs: 
+  unitBuffs: 
 --- !u!224 &224364017913245646
 RectTransform:
   m_ObjectHideFlags: 1

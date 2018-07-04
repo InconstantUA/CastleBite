@@ -560,8 +560,12 @@ public class City : MonoBehaviour {
         // Focus panel wil automatically detect changes and update info
         transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissPartyLeader);
         // Dismiss party with all units in it
+        HeroParty heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party);
+        MapHero mapHero = heroParty.GetLinkedPartyOnMap();
+        // Destroy hero's represetnation on map
+        Destroy(mapHero.gameObject);
         // Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
-        Destroy(GetHeroPartyByMode(HeroParty.PartyMode.Party).gameObject);
+        Destroy(heroParty.gameObject);
         // Enable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(true);
     }

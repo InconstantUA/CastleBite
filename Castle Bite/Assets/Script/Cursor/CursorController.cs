@@ -19,6 +19,12 @@ public class CursorController : MonoBehaviour {
     private Texture2D blockInputCursor;
     [SerializeField]
     private Texture2D selectionHandCursor;
+    [SerializeField]
+    private Texture2D openDoorsCursor;
+    [SerializeField]
+    private Texture2D editHeroCursor;
+    [SerializeField]
+    private Texture2D attackCursor;
 
     public static CursorController Instance { get; private set; }
 
@@ -46,6 +52,21 @@ public class CursorController : MonoBehaviour {
     public void SetSelectionHandCursor()
     {
         Cursor.SetCursor(selectionHandCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetOpenDoorsCursor()
+    {
+        Cursor.SetCursor(openDoorsCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetEditHeroCursor()
+    {
+        Cursor.SetCursor(editHeroCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetAttackCursor()
+    {
+        Cursor.SetCursor(attackCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetCityActiveViewStateCursor(City.CityViewActiveState requiredState, bool doActivate)

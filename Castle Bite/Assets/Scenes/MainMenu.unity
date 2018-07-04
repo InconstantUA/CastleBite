@@ -7486,7 +7486,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1575848954}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -29213,7 +29213,7 @@ RectTransform:
   m_Children:
   - {fileID: 543920897}
   m_Father: {fileID: 1575848954}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -50853,8 +50853,8 @@ RectTransform:
   - {fileID: 2068441751}
   - {fileID: 398761135}
   - {fileID: 1446435359}
-  - {fileID: 266719550}
   - {fileID: 919928148}
+  - {fileID: 266719550}
   m_Father: {fileID: 235041195}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -67688,6 +67688,9 @@ MonoBehaviour:
   dragUnitCursor: {fileID: 0}
   blockInputCursor: {fileID: 2800000, guid: 57e027108a23fd84fa4c5d2b2588139f, type: 3}
   selectionHandCursor: {fileID: 2800000, guid: 9a58c80996148994f9d50c985474965d, type: 3}
+  openDoorsCursor: {fileID: 2800000, guid: 7658cb5b8e18a3549927c983c78c3f3e, type: 3}
+  editHeroCursor: {fileID: 2800000, guid: 82c724afe5b4485468cc92cbaa019bc9, type: 3}
+  attackCursor: {fileID: 2800000, guid: 361b58fd2d3587d46843631c59b68d2e, type: 3}
 --- !u!1 &2114261823
 GameObject:
   m_ObjectHideFlags: 0
