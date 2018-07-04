@@ -96,12 +96,21 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // change city pressed status to city highlighted color
-        // so it is not in pressed status any more
-        SetHighlightedStatus();
-        // give control on actions to map manager
-        MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        mapManager.ActOnClick(gameObject, eventData);
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            // change city pressed status to city highlighted color
+            // so it is not in pressed status any more
+            SetHighlightedStatus();
+            // give control on actions to map manager
+            MapManager mapManager = transform.parent.GetComponent<MapManager>();
+            mapManager.ActOnClick(gameObject, eventData);
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+
+        }
     }
 
     void SetHighlightedStatus()

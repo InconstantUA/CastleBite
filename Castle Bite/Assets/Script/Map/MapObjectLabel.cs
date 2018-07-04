@@ -38,13 +38,20 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         isMouseOver = false;
         // SetHiddenStatus();
         // Verify if mouse is not over MapObject, because in this case we do not need to hide label
+        // otherwise it will first trigger enter on map object and then exit on map object label, which will cause troubles
         if (!mapObject.IsMouseOver)
         {
             HideLabel();
+            // give control on actions to map manager
+            MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+            mapManager.OnPointerExitChildObject(gameObject, eventData);
         }
-        // give control on actions to map manager
-        MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-        mapManager.OnPointerExitChildObject(gameObject, eventData);
+        else
+        {
+            // trigger eneter on the parent object, like we entered it again
+            // because it will not trigger, because it does not know that mouse left it, because mosue was over child object
+            mapObject.OnPointerEnter(eventData);
+        }
     }
 
     public void HideLabel()

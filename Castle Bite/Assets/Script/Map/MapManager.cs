@@ -229,8 +229,53 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     GameObject GetObjectUnderMouse()
     {
-
+        // This requires 2d box collider to be attached to the object
+        // also triggers if the object's text or image is not set as raycast target
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //Debug.DrawLine(ray.origin, Camera.main.transform.forward * 50000000, Color.red);
+        //RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, Camera.main.transform.forward);
+        if (hit)
+        {
+            string name = hit.collider.gameObject.name;
+            Debug.Log("hit " + name);
+            return hit.collider.gameObject;
+        }
         return null;
+    }
+
+    List<GameObject> GetActiveLabels()
+    {
+        List<GameObject> labels = new List<GameObject>();
+        // loop through all lables and find the one which is active now
+        // Set all tiles occupied by heroes or cities on map as non-passable
+        foreach (MapHero mapHero in transform.GetComponentsInChildren<MapHero>())
+        {
+            // verify if not null
+            if (mapHero)
+            {
+                // verify if mouse is over label
+                MapObjectLabel label = mapHero.GetComponentInChildren<MapObjectLabel>();
+                if (label.IsMouseOver)
+                {
+                    labels.Add(label.gameObject);
+                }
+            }
+        }
+        foreach (MapCity mapCity in transform.GetComponentsInChildren<MapCity>())
+        {
+            // verify if not null
+            if (mapCity)
+            {
+                // verify if mouse is over label
+                MapObjectLabel label = mapCity.GetComponentInChildren<MapObjectLabel>();
+                if (label.IsMouseOver)
+                {
+                    labels.Add(label.gameObject);
+                }
+            }
+        }
+        return labels;
     }
 
     public void UpdateTileHighighterBasedOnMousePosition()
@@ -260,14 +305,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     tileHighlighterColor = Color.white;
                     // get game object below the tile highlighter
                     GameObject childGameObject = GetObjectOnTile(highlightedPoint);
-                    GameObject getObjectUnderMouse = GetObjectUnderMouse();
+                    //GameObject getObjectUnderMouse = GetObjectUnderMouse();
+
                     MapHero mapHero = null;
                     MapCity mapCity = null;
-                    MapObjectLabel label = null;
-                    if (getObjectUnderMouse)
+                    bool label = false;
+                    if (GetActiveLabels().Count > 0)
                     {
                         // verify if mouse is over label
-                        label = getObjectUnderMouse.GetComponent<MapObjectLabel>();
+                        label = true;
                     }
                     if (childGameObject)
                     {
@@ -397,12 +443,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     }
                     else if (label)
                     {
-                        if (label)
-                        {
-                            // Hide tile highlighter if mouse if over label
-                            Debug.Log("Hide tile highlighter");
-                            tileHighlighterColor = new Color32(0, 0, 0, 0);
-                        }
+                        // Hide tile highlighter if mouse if over label
+                        // Debug.Log("Hide tile highlighter");
+                        tileHighlighterColor = new Color32(0, 0, 0, 0);
                     }
                     else
                     {
@@ -908,10 +951,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         HighlightMovePath(false);
         // create source and target points
         NesScripts.Controls.PathFind.Point _from = new NesScripts.Controls.PathFind.Point(GetHeroTilePosition().x, GetHeroTilePosition().y);
-        Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
+        //Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
         Vector2Int highlighterPosition = GetTileHighlighterPosition();
         NesScripts.Controls.PathFind.Point _to = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
-        Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
+        //Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
         // Debug.Log("Length [" + (grid.nodes.GetLength(0) - 1).ToString() + "]:[" + (grid.nodes.GetLength(1) - 1).ToString() + "]");
         // get path
         // path will either be a list of Points (x, y), or an empty list if no path is found.
@@ -1424,7 +1467,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        ActOnClick(gameObject, pointerEventData);
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            ActOnClick(gameObject, pointerEventData);
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+            //Debug.Log("Right mouse click on map");
+            // Remove selection
+            SetSelection(Selection.None);
+        }
     }
 
     //public void OnPointerEnterChildObject(GameObject childGameObject, PointerEventData eventData)
@@ -1506,7 +1560,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         break;
                     case Selection.PlayerHero:
                         // act based on the object over which mouse is now
-                        if (mapHero)
+                        if (mapHero && !label)
                         {
                             // change cursor to different based on the relationships between factions
                             Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
@@ -1540,8 +1594,43 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     break;
                             }
                         }
+                        if (mapHeroViaLabel)
+                        {
+                            // change cursor to different based on the relationships between factions
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
+                            switch (relationships)
+                            {
+                                case Relationships.State.SameFaction:
+                                    // highlighted hero belongs to player
+                                    // check if this is the same hero as selected
+                                    if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
+                                    {
+                                        // change cursor to edit hero cursor
+                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                                        //tileHighlighterColor = Color.blue;
+                                    }
+                                    else
+                                    {
+                                        // change cursor to selection hand
+                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                        //tileHighlighterColor = Color.blue;
+                                    }
+                                    break;
+                                case Relationships.State.Allies:
+                                    break;
+                                case Relationships.State.Neutral:
+                                case Relationships.State.AtWar:
+                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                                    //tileHighlighterColor = Color.red;
+                                    break;
+                                default:
+                                    Debug.LogError("Unknown relationships " + relationships.ToString());
+                                    break;
+                            }
+                        }
                         if (mapCity && !label)
                         {
+                            Debug.Log("Enter city box " + mapCity.name);
                             // check relationships with active player
                             Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
                             switch (relationships)
@@ -1566,6 +1655,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapCityViaLabel)
                         {
+                            Debug.Log("Enter city lable box " + mapCity.name);
                             // check relationships with active player
                             Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
                             switch (relationships)
@@ -1834,7 +1924,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
         MapManager mapMgr = childGameObject.GetComponent<MapManager>();
-        Debug.Log("Mode " + mode.ToString());
+        //Debug.Log("Mode " + mode.ToString());
         // act based on current mode
         switch (mode)
         {
@@ -1848,14 +1938,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             //            break;
             case Mode.Browse:
                 // act based on current selection
-                Debug.Log("Selection " + selection.ToString());
+                //Debug.Log("Selection " + selection.ToString());
                 switch (selection)
                 {
                     case Selection.None:
                         // act based on the object over which mouse is now
                         if (mapHero || mapHeroViaLabel)
                         {
-                            Debug.Log("Clicked on hero party on map");
+                            //Debug.Log("Clicked on hero party on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
                             if (mapHeroViaLabel)
                             {
@@ -1877,7 +1967,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapCity || mapCityViaLabel)
                         {
-                            Debug.Log("Clicked on city on map");
+                            //Debug.Log("Clicked on city on map");
                             // get Hero City depending on wheter user clicked on mapCity or its label
                             if (mapCityViaLabel)
                             {
@@ -1901,12 +1991,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     case Selection.PlayerHero:
                         if (mapCity)
                         {
-                            Debug.Log("Clicked on city on map");
+                            //Debug.Log("Clicked on city on map");
                             VerifyMovePathAndMoveIfNeeded(pointerEventData);
                         }
                         if (mapCityViaLabel)
                         {
-                            Debug.Log("Clicked on city label on map");
+                            //Debug.Log("Clicked on city label on map");
                             // get Hero City
                             mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
                             City city = mapCity.linkedCityTr.GetComponent<City>();
@@ -1925,7 +2015,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapHero)
                         {
-                            Debug.Log("Clicked on hero's partie's marker on map");
+                            //Debug.Log("Clicked on hero's partie's marker on map");
                             HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
                             // verify if this is player's hero
                             if (player.Faction == heroParty.GetFaction())
@@ -1957,7 +2047,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapHeroViaLabel)
                         {
-                            Debug.Log("Clicked on hero's partie's lable on map");
+                            //Debug.Log("Clicked on hero's partie's lable on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
                             mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
                             HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
@@ -1998,7 +2088,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     case Selection.PlayerCity:
                         if (mapHero || mapHeroViaLabel)
                         {
-                            Debug.Log("Clicked on hero party on map");
+                            //Debug.Log("Clicked on hero party on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
                             if (mapHeroViaLabel)
                             {
@@ -2021,7 +2111,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapCity || mapCityViaLabel)
                         {
-                            Debug.Log("Clicked on city on map");
+                            //Debug.Log("Clicked on city on map");
                             // get Hero Party depending on wheter user clicked on mapCity or its label
                             if (mapCityViaLabel)
                             {
