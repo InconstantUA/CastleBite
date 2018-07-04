@@ -14,7 +14,7 @@ public class MapHero : MonoBehaviour
     public Transform linkedCityOnMapTr;
     [SerializeField]
     public float labelDimTimeout;
-    State state = State.NotSelected;
+    State state;
     // for animation
     bool isOn;
     [SerializeField]

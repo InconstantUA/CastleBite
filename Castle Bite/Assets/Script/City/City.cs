@@ -402,7 +402,7 @@ public class City : MonoBehaviour {
         // Link hero on the map to hero
         newLeaderParty.GetComponent<HeroParty>().SetLinkedPartyOnMap(heroOnMap);
         // Link hero on the map to city on the map
-        parentCityOnMap.GetComponent<MapCity>().linkedPartyOnMapTr = newPartyOnMapUI.transform;
+        parentCityOnMap.GetComponent<MapCity>().LinkedPartyOnMapTr = newPartyOnMapUI.transform;
         // And do the opposite 
         // Link city on the map to hero on the map
         newPartyOnMapUI.GetComponent<MapHero>().linkedCityOnMapTr = parentCityOnMap;

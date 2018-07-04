@@ -62,6 +62,23 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
     }
 
+    MapObject GetLinkedMapObject()
+    {
+        // verify if there is linked object (stacked objects on the same tile and trigger its OnPointerEnter too)
+        // verify if this map object is linked to city on map
+        if (GetComponent<MapCity>())
+        {
+            // verify if there is linked party = hero inside of this city
+            Transform linkedMapHeroTr = GetComponent<MapCity>().LinkedPartyOnMapTr;
+            if (linkedMapHeroTr)
+            {
+                // return map object of linked hero
+                return linkedMapHeroTr.GetComponent<MapObject>();
+            }
+        }
+        return null;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         // highlight this menu
@@ -71,6 +88,12 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         // give control on actions to map manager
         MapManager mapManager = transform.parent.GetComponent<MapManager>();
         mapManager.OnPointerEnterChildObject(gameObject, eventData);
+        // tigger on pointer enter event on linked object, if it is present
+        MapObject linkedMapHeroMapObj = GetLinkedMapObject();
+        if (GetLinkedMapObject())
+        {
+            linkedMapHeroMapObj.OnPointerEnter(eventData);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -82,6 +105,12 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         // give control on actions to map manager
         MapManager mapManager = transform.parent.GetComponent<MapManager>();
         mapManager.OnPointerExitChildObject(gameObject, eventData);
+        // tigger on pointer exit event on linked object, if it is present
+        MapObject linkedMapHeroMapObj = GetLinkedMapObject();
+        if (GetLinkedMapObject())
+        {
+            linkedMapHeroMapObj.OnPointerExit(eventData);
+        }
     }
 
     IEnumerator DimmLabelWithDelay()

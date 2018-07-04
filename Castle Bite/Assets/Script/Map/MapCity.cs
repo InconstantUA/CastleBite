@@ -10,7 +10,7 @@ public class MapCity : MonoBehaviour
     enum State { NotSelected, Selected };
 
     public Transform linkedCityTr;
-    public Transform linkedPartyOnMapTr;
+    private Transform linkedPartyOnMapTr;
     //[SerializeField]
     //public float labelDimTimeout;
     [SerializeField]
@@ -23,6 +23,20 @@ public class MapCity : MonoBehaviour
     Color hiddenMarkerColor;
     [SerializeField]
     Color highlightedMarkerColor;
+
+    public Transform LinkedPartyOnMapTr
+    {
+        get
+        {
+            return linkedPartyOnMapTr;
+        }
+
+        set
+        {
+            linkedPartyOnMapTr = value;
+        }
+    }
+
     // Colors for Label
     //[SerializeField]
     //Color hiddenLabelColor;

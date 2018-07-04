@@ -1080,7 +1080,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //// Get City
         //MapCity mapCity = GetCityByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
         // Link hero on the map to city on the map
-        mapCity.linkedPartyOnMapTr = selectedHero.transform;
+        mapCity.LinkedPartyOnMapTr = selectedHero.transform;
         // And do the opposite 
         // Link city on the map to hero on the map
         selectedHero.linkedCityOnMapTr = mapCity.transform;
@@ -1244,7 +1244,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             // Unlink city from hero and hero from city if they were linked before
             MapCity linkedCity = selectedHero.linkedCityOnMapTr.GetComponent<MapCity>();
-            linkedCity.linkedPartyOnMapTr = null;
+            linkedCity.LinkedPartyOnMapTr = null;
             selectedHero.linkedCityOnMapTr = null;
             // Get current party city
             HeroParty heroParty = selectedHero.LinkedPartyTr.GetComponent<HeroParty>();
