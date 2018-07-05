@@ -10726,7 +10726,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Objective: destroy Megara the Cold-Blooded.'
+  m_Text: "Objective: destroy Megara the Cold-Blooded\n        and liberate Nartley
+    castle."
 --- !u!222 &355720026
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -25240,7 +25241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -58, y: 17.5}
+  m_AnchoredPosition: {x: -65, y: 17.5}
   m_SizeDelta: {x: 116, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &784024374
@@ -34516,7 +34517,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1713389793}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -48641,6 +48642,7 @@ GameObject:
   - component: {fileID: 1517272797}
   - component: {fileID: 1517272799}
   - component: {fileID: 1517272798}
+  - component: {fileID: 1517272800}
   m_Layer: 5
   m_Name: Prolog
   m_TagString: Untagged
@@ -48701,6 +48703,17 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1517272796}
+--- !u!114 &1517272800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1517272796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b94a229034f172428207855d16606b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1519359677
 GameObject:
   m_ObjectHideFlags: 0
@@ -54684,6 +54697,7 @@ RectTransform:
   - {fileID: 164374030}
   - {fileID: 637408235}
   - {fileID: 1288346178}
+  - {fileID: 2005617935}
   - {fileID: 1069906424}
   - {fileID: 2111856612}
   m_Father: {fileID: 0}
@@ -58851,6 +58865,25 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1411813971605468, guid: 7b27db02a00e8a54da671f3fa21d0c18, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114689956747166328, guid: 7b27db02a00e8a54da671f3fa21d0c18,
+        type: 2}
+      propertyPath: m_Color.r
+      value: 0.6309185
+      objectReference: {fileID: 0}
+    - target: {fileID: 114689956747166328, guid: 7b27db02a00e8a54da671f3fa21d0c18,
+        type: 2}
+      propertyPath: m_Color.g
+      value: 0.6309185
+      objectReference: {fileID: 0}
+    - target: {fileID: 114689956747166328, guid: 7b27db02a00e8a54da671f3fa21d0c18,
+        type: 2}
+      propertyPath: m_Color.b
+      value: 0.9622642
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7b27db02a00e8a54da671f3fa21d0c18, type: 2}
   m_IsPrefabParent: 0
@@ -60377,7 +60410,7 @@ MonoBehaviour:
 
     [                                                 ]
 
-    [---                                           ---]
+    [-------------------------------------------------]
 
     [                                                 ]
 
@@ -62510,6 +62543,38 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 144eabcc2e5dfa24a84a9dec222df78f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1953002518 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1472650992108566, guid: 4bf48eea0cc71de4f96d1051b8b18dc8,
+    type: 2}
+  m_PrefabInternal: {fileID: 2068441750}
+--- !u!114 &1953002523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1953002518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c7333fdddda8754191e891cefb56b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnCityHasBeenCaptured:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2005617936}
+        m_MethodName: OnGoalCityCapture
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1642937549}
+          m_ObjectArgumentAssemblyTypeName: City, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1958607634
 GameObject:
   m_ObjectHideFlags: 0
@@ -64393,6 +64458,51 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 891cc91b60d937244ade1cf27d50f0a7, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &2005617934
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2005617935}
+  - component: {fileID: 2005617936}
+  m_Layer: 5
+  m_Name: ChapterManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2005617935
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2005617934}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1713389793}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2005617936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2005617934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28214e667f4acf642b6843b339a9f1b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2007468445
 GameObject:
   m_ObjectHideFlags: 0
@@ -67662,7 +67772,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1713389793}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}

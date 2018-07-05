@@ -16,6 +16,11 @@ public class NotificationPopUp : MonoBehaviour {
     public void DisplayMessage(string message)
     {
         gameObject.SetActive(true);
+        SetMessage(message);
+    }
+
+    public void SetMessage(string message)
+    {
         // This does not work
         // Debug.Log(transform.Find("Panel").name);
         // Debug.Log(transform.Find("Panel").Find("Text").name);

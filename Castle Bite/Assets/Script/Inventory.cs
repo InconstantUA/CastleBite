@@ -10,6 +10,7 @@ public class Inventory : MonoBehaviour, IHasChanged {
 
 	// Use this for initialization
 	void Start () {
+        // call it once to represent current slots state text
         HasChanged();
 	}
 	

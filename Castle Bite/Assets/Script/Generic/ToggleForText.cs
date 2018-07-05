@@ -64,9 +64,17 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         else if (Input.GetMouseButtonDown(1))
         {
             // on right mouse click
-            // show unit info
-            PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().GetUnitToHire();
-            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(partyUnit);
+            // verify if this is unit hire menu and display unit info
+            if (gameObject.GetComponent<UnitHirePanel>())
+            {
+                // show unit info
+                PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().GetUnitToHire();
+                // verify if this is partyUnit
+                if (partyUnit)
+                {
+                    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(partyUnit);
+                }
+            }
         }
     }
 

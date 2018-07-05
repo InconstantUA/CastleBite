@@ -13,6 +13,8 @@ public class NotificationPopUpOkButton : MonoBehaviour, IPointerEnterHandler, IP
     Text txt;
     Button btn;
     Color tmpColor;
+    public delegate void OnClick();
+    OnClick OnClickFunc;
 
     void Start()
     {
@@ -28,15 +30,14 @@ public class NotificationPopUpOkButton : MonoBehaviour, IPointerEnterHandler, IP
         if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
         {
             Cursor.visible = true;
-            // highlight button if it was highlighted before
-            //if (CompareColors(btn.colors.highlightedColor, txt.color))
-            //{
-            //    DimmAllOtherMenus();
-            //    SetHighlightedStatus();
-            //}
             // Highlight button, if needed by triggering on point enter
             OnPointerEnter(null);
         }
+    }
+
+    public void SetOnClickFunc(OnClick Func)
+    {
+        OnClickFunc = Func;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -44,6 +45,12 @@ public class NotificationPopUpOkButton : MonoBehaviour, IPointerEnterHandler, IP
         // Debug.Log("OnPointerEnter");
         // highlight this menu
         SetHighlightedStatus();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // return to previous toggle state
+        SetNormalStatus();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -57,12 +64,6 @@ public class NotificationPopUpOkButton : MonoBehaviour, IPointerEnterHandler, IP
         // Debug.Log("OnPointerUp");
         // keep state On
         ActOnClick();
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        // return to previous toggle state
-        SetNormalStatus();
     }
 
     bool CompareColors(Color a, Color b)
@@ -125,13 +126,16 @@ public class NotificationPopUpOkButton : MonoBehaviour, IPointerEnterHandler, IP
         // Debug.Log("SetNormalStatus " + btn.name + " button");
     }
 
-    #region OnClick
-
     void ActOnClick()
     {
+        // Trigger function on click function if it set
+        if (OnClickFunc != null)
+        {
+            OnClickFunc();
+            // remove this function
+            OnClickFunc = null;
+        }
         // deactivate Notification pop up
         btn.transform.parent.parent.gameObject.SetActive(false);
     }
-
-    #endregion OnClick
 }

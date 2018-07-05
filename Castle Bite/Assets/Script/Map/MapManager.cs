@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
+public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public enum Mode {
         Browse,
@@ -77,6 +77,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     // for animation and transition between states
     CoroutineQueue queue;
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //Debug.Log("Map manager: pointer enter");
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //Debug.Log("Map manager: pointer exit");
+        // Hide tile highlighter
+        tileHighlighterColor = new Color32(0, 0, 0, 0);
+    }
 
     public CoroutineQueue Queue
     {
@@ -326,9 +338,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // set default tile highlighter color
                     tileHighlighterColor = Color.white;
                     // get game object below the tile highlighter
-                    GameObject childGameObject = GetObjectOnTile(highlightedPoint);
-                    //GameObject getObjectUnderMouse = GetObjectUnderMouse();
-
+                    GameObject childGameObject = GetObjectOnTile(highlightedPoint); // return map's objects: hero, city, other..
                     MapHero mapHero = null;
                     MapCity mapCity = null;
                     bool label = false;
@@ -337,6 +347,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         // verify if mouse is over label
                         label = true;
                     }
+                    //GameObject getObjectUnderMouse = GetObjectUnderMouse();
                     if (childGameObject)
                     {
                         // predefine variables

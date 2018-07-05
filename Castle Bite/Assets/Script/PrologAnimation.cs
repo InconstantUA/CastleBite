@@ -28,16 +28,21 @@ public class PrologAnimation : MonoBehaviour {
         // brief = gameObject.transform.Find("Brief").GetComponentInChildren<VerticalLayoutGroup>().GetComponentsInChildren<Text>();
         brief = gameObject.transform.Find("Brief").gameObject.GetComponentsInChildren<Text>();
         // Hide all text
+        SetAllTextAlphaColor(0);
+    }
+
+    void SetAllTextAlphaColor(float alphaColor)
+    {
         //  Hide header and objective
         Color tmpClr;
-        tmpClr = new Color(header.color.r, header.color.g, header.color.b, 0);
+        tmpClr = new Color(header.color.r, header.color.g, header.color.b, alphaColor);
         header.color = tmpClr;
-        tmpClr = new Color(objective.color.r, objective.color.g, objective.color.b, 0);
+        tmpClr = new Color(objective.color.r, objective.color.g, objective.color.b, alphaColor);
         objective.color = tmpClr;
         //  hide brief
-        foreach(Text line in brief)
+        foreach (Text line in brief)
         {
-            tmpClr = new Color(line.color.r, line.color.g, line.color.b, 0);
+            tmpClr = new Color(line.color.r, line.color.g, line.color.b, alphaColor);
             line.color = tmpClr;
         }
     }
@@ -129,5 +134,12 @@ public class PrologAnimation : MonoBehaviour {
         // curColAlpha = 0;
         animationStartTime = Time.time;
         previousAnimationTime = Time.time;
+    }
+
+    public void Skip()
+    {
+        Debug.Log("Skip");
+        state = State.End;
+        SetAllTextAlphaColor(1);
     }
 }
