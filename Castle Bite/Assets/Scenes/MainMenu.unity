@@ -67685,7 +67685,7 @@ MonoBehaviour:
   healUnitCursor: {fileID: 2800000, guid: 10e19d6a2364cc84c998e43f443dca04, type: 3}
   resurectUnitCursor: {fileID: 2800000, guid: 59fb61cc8896fe242b82d09fe365f4cd, type: 3}
   invenotryUnitCursor: {fileID: 2800000, guid: b33edc60e2197444fbd5cfb8db01625b, type: 3}
-  dragUnitCursor: {fileID: 0}
+  dragUnitCursor: {fileID: 2800000, guid: e1c4749225831724c8a713d397bb8266, type: 3}
   blockInputCursor: {fileID: 2800000, guid: 57e027108a23fd84fa4c5d2b2588139f, type: 3}
   selectionHandCursor: {fileID: 2800000, guid: 9a58c80996148994f9d50c985474965d, type: 3}
   openDoorsCursor: {fileID: 2800000, guid: 7658cb5b8e18a3549927c983c78c3f3e, type: 3}
