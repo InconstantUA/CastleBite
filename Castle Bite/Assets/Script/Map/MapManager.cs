@@ -1235,31 +1235,70 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     //    }
     //}
 
-    void EnterBattleCommon()
+    IEnumerator EnterBattleCommonStart(MapHero mapHero)
     {
+        Debug.Log("EnterBattleCommonStart1");
+        SetMode(Mode.Animation);
+        // Block mouse input
+        // this is not needed here because it is still blocked my Move() function
+        // show animation before immediately entering battle
+        yield return new WaitForSeconds(mapHero.GetComponent<MapObject>().LabelDimTimeout + 0.1f);
+        Debug.Log("EnterBattleCommonStart2");
+    }
+
+    IEnumerator EnterBattleCommonStart(MapCity mapCity)
+    {
+        Debug.Log("EnterBattleCommonStart1");
+        SetMode(Mode.Animation);
+        // Block mouse input
+        // this is not needed here because it is still blocked my Move() function
+        // show animation before immediately entering battle
+        yield return new WaitForSeconds(mapCity.GetComponent<MapObject>().LabelDimTimeout + 0.1f);
+        Debug.Log("EnterBattleCommonStart2");
+    }
+
+    IEnumerator EnterBattleCommonEnd()
+    {
+        Debug.Log("EnterBattleCommonEnd");
         SetSelection(Selection.None);
+        SetMode(Mode.Browse);
+        // unblock input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(false);
+        yield return null;
+    }
+
+    IEnumerator EnterBattleStep(MapHero mapHero)
+    {
+        Debug.Log("EnterBattleStep");
+        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapHero);
+        yield return null;
+    }
+
+    IEnumerator EnterBattleStep(MapCity mapCity)
+    {
+        Debug.Log("EnterBattleStep");
+        //transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapCity);
+        yield return null;
     }
 
     void EnterBattle(MapHero mapHero)
     {
-        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapHero);
-        EnterBattleCommon();
+        queue.Run(EnterBattleCommonStart(mapHero));
+        queue.Run(EnterBattleStep(mapHero));
+        queue.Run(EnterBattleCommonEnd());
     }
 
     void EnterBattle(MapCity mapCity)
     {
         Debug.Log("Enter City battle");
-        //transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapCity);
-        EnterBattleCommon();
+        queue.Run(EnterBattleCommonStart(mapCity));
+        queue.Run(EnterBattleStep(mapCity));
+        queue.Run(EnterBattleCommonEnd());
     }
 
     IEnumerator Move()
     {
-        // exit exit browse mode and enter animation mode
-        SetMode(Mode.Animation);
-        // Block mouse input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(true);
         //Debug.Log("Move");
         // Verify if hero was in city
         if (selectedHero.linkedCityOnMapTr)
@@ -1285,6 +1324,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         float previousTime = Time.time;
         if (movePath != null)
         {
+            // exit exit browse mode and enter animation mode
+            SetMode(Mode.Animation);
+            // Block mouse input
+            InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+            inputBlocker.SetActive(true);
             // initialize break move condition
             bool breakMove = false;
             MapCity enterCity = null;
@@ -1456,13 +1500,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 //    EndMoveTransition();
                 //}
             }
+            // verify if we reached this code without breaking move or entering city or protected enemy tile
+            if (!(breakMove || enterCity || protectedTileEnemy))
+            {
+                // this was just move on the map without any additional challanges on the way
+                // exit animation mode and enter browse mode
+                SetMode(Mode.Browse);
+                // Unblock mouse input
+                inputBlocker.SetActive(false);
+            }
+            // Remove path highlight
+            HighlightMovePath(false);
         }
-        // Remove path highlight
-        HighlightMovePath(false);
-        // exit animation mode and enter browse mode
-        SetMode(Mode.Browse);
-        // Unblock mouse input
-        inputBlocker.SetActive(false);
     }
 
     public void SetMode(Mode value)
@@ -1600,7 +1649,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     else
                                     {
                                         // change cursor to selection hand
-                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
                                         //tileHighlighterColor = Color.blue;
                                     }
                                     break;
@@ -1658,12 +1707,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
+                                case Relationships.State.Allies:
                                     // change cursor to selection hand
                                     // Todo: change to move to city cursor
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
                                     //tileHighlighterColor = Color.blue;
-                                    break;
-                                case Relationships.State.Allies:
                                     break;
                                 case Relationships.State.Neutral:
                                 case Relationships.State.AtWar:
@@ -1691,7 +1739,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     break;
                                 case Relationships.State.Neutral:
                                 case Relationships.State.AtWar:
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetAttackCursor();
+                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
                                     //tileHighlighterColor = Color.red;
                                     break;
                                 default:

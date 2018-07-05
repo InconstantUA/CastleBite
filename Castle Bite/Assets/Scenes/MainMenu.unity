@@ -67691,6 +67691,7 @@ MonoBehaviour:
   openDoorsCursor: {fileID: 2800000, guid: 7658cb5b8e18a3549927c983c78c3f3e, type: 3}
   editHeroCursor: {fileID: 2800000, guid: 82c724afe5b4485468cc92cbaa019bc9, type: 3}
   attackCursor: {fileID: 2800000, guid: 361b58fd2d3587d46843631c59b68d2e, type: 3}
+  moveArrowCursor: {fileID: 2800000, guid: 5f6daceccc1348248a5b6f02d4607a02, type: 3}
 --- !u!1 &2114261823
 GameObject:
   m_ObjectHideFlags: 0

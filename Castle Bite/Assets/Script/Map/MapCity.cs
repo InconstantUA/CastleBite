@@ -136,14 +136,17 @@ public class MapCity : MonoBehaviour
     //    }
     //}
 
-    
-
     public IEnumerator EnterCityEditMode()
     {
-        Debug.Log("EnterCityEditMode");
+        //Debug.Log("EnterCityEditMode");
         // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
         //label.HideLabel();
-        GetComponent<MapObject>().OnPointerExit(null);
+        // verify if MapObject's labe is still active and mouse over it
+        if (GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && GetComponentInChildren<MapObjectLabel>().IsMouseOver)
+        {
+            // disable it
+            GetComponent<MapObject>().OnPointerExit(null);
+        }
         //Debug.Log("1 - triggered on exit");
         //yield return new WaitForSeconds(2f);
         // Block mouse input
@@ -166,8 +169,8 @@ public class MapCity : MonoBehaviour
         // Deactivate map and activate city
         mapScreen.SetActive(false);
         cityMenu.SetActive(true);
-        //Debug.Log("4 activated map screen");
-        //yield return new WaitForSeconds(2f);
+        // everything below related to mapManager or mapScreen will not be processed
+        // because map manager is disabled
     }
 
     public void SetSelectedState(bool doActivate)

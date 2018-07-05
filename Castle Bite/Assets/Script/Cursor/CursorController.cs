@@ -25,6 +25,8 @@ public class CursorController : MonoBehaviour {
     private Texture2D editHeroCursor;
     [SerializeField]
     private Texture2D attackCursor;
+    [SerializeField]
+    private Texture2D moveArrowCursor;
 
     public static CursorController Instance { get; private set; }
 
@@ -41,13 +43,13 @@ public class CursorController : MonoBehaviour {
 
     public void SetNormalCursor()
     {
-        Debug.Log("SetNormalCursor");
+        //Debug.Log("SetNormalCursor");
         Cursor.SetCursor(normalCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetBlockInputCursor()
     {
-        Debug.Log("SetBlockInputCursor");
+        //Debug.Log("SetBlockInputCursor");
         Cursor.SetCursor(blockInputCursor, Vector2.zero, CursorMode.Auto);
     }
 
@@ -69,6 +71,11 @@ public class CursorController : MonoBehaviour {
     public void SetAttackCursor()
     {
         Cursor.SetCursor(attackCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetMoveArrowCursor()
+    {
+        Cursor.SetCursor(moveArrowCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetCityActiveViewStateCursor(City.CityViewActiveState requiredState, bool doActivate)
