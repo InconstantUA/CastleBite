@@ -136,17 +136,38 @@ public class MapCity : MonoBehaviour
     //    }
     //}
 
-    public void EnterCityEditMode()
+    
+
+    public IEnumerator EnterCityEditMode()
     {
-        // Hide label
-        label.HideLabel();
+        Debug.Log("EnterCityEditMode");
+        // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
+        //label.HideLabel();
+        GetComponent<MapObject>().OnPointerExit(null);
+        //Debug.Log("1 - triggered on exit");
+        //yield return new WaitForSeconds(2f);
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
+        //Debug.Log("2 - blocked input");
+        // Wait for all animations to finish
+        // this depends on the labelDimTimeout parameter in MapObject, we add additional 0.1f just in case
+        yield return new WaitForSeconds(GetComponent<MapObject>().LabelDimTimeout + 0.1f); 
         // go to city edit mode
         // get variables
         GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
         GameObject cityMenu = linkedCity.gameObject;
+        // Unblock mouse input
+        inputBlocker.SetActive(false);
+        //Debug.Log("3 unblocked mouse input");
+        // map manager change to browse mode back
+        MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        mapManager.SetMode(MapManager.Mode.Browse);
         // Deactivate map and activate city
         mapScreen.SetActive(false);
         cityMenu.SetActive(true);
+        //Debug.Log("4 activated map screen");
+        //yield return new WaitForSeconds(2f);
     }
 
     public void SetSelectedState(bool doActivate)

@@ -41,11 +41,13 @@ public class CursorController : MonoBehaviour {
 
     public void SetNormalCursor()
     {
+        Debug.Log("SetNormalCursor");
         Cursor.SetCursor(normalCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetBlockInputCursor()
     {
+        Debug.Log("SetBlockInputCursor");
         Cursor.SetCursor(blockInputCursor, Vector2.zero, CursorMode.Auto);
     }
 

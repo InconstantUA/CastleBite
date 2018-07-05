@@ -75,6 +75,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // for logic
     PlayerObj player;
 
+    // for animation and transition between states
+    CoroutineQueue queue;
+
+    public CoroutineQueue Queue
+    {
+        get
+        {
+            return queue;
+        }
+
+        set
+        {
+            queue = value;
+        }
+    }
+
     public Mode GetMode()
     {
         return mode;
@@ -93,6 +109,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetSelectedCity(MapCity sltCity)
     {
         selectedCity = sltCity;
+    }
+
+    void Awake()
+    {
+        // Create a coroutine queue that can run max 1 coroutine at once
+        queue = new CoroutineQueue(1, StartCoroutine);
     }
 
     void Start()
@@ -1087,7 +1109,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Move hero UI to City
         selectedHero.LinkedPartyTr.SetParent(mapCity.linkedCityTr);
         // Enter city edit mode
-        mapCity.EnterCityEditMode();
+        queue.Run(mapCity.EnterCityEditMode());
         // Trigger on hero entering city
         mapCity.linkedCityTr.GetComponent<City>().ActOnHeroEnteringCity();
         // reset map state and selections, because hero can be removed while in city
@@ -1910,17 +1932,17 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
         MapObjectLabel mapHeroViaLabel = null;
         MapObjectLabel mapCityViaLabel = null;
-        MapObjectLabel clickedLabel = childGameObject.GetComponent<MapObjectLabel>();
-        if (clickedLabel)
+        MapObjectLabel label = childGameObject.GetComponent<MapObjectLabel>();
+        if (label)
         {
             // find out on which label we clicked
-            if (clickedLabel.transform.parent.GetComponent<MapHero>())
+            if (label.transform.parent.GetComponent<MapHero>())
             {
-                mapHeroViaLabel = clickedLabel;
+                mapHeroViaLabel = label;
             }
-            if (clickedLabel.transform.parent.GetComponent<MapCity>())
+            if (label.transform.parent.GetComponent<MapCity>())
             {
-                mapCityViaLabel = clickedLabel;
+                mapCityViaLabel = label;
             }
         }
         MapManager mapMgr = childGameObject.GetComponent<MapManager>();
@@ -2131,7 +2153,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // remove selection
                                     SetSelection(Selection.None);
                                     // Enter city edit mode
-                                    mapCity.EnterCityEditMode();
+                                    SetMode(Mode.Animation);
+                                    queue.Run(mapCity.EnterCityEditMode());
                                 }
                                 else
                                 {

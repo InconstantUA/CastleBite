@@ -8,7 +8,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
     // For UI user interraction
     [SerializeField]
-    public float labelDimTimeout;
+    private float labelDimTimeout;
     MapObjectLabel label;
     Text labelTxt;
     // Colors for Label
@@ -213,4 +213,16 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
     }
 
+    public float LabelDimTimeout
+    {
+        get
+        {
+            return labelDimTimeout;
+        }
+
+        set
+        {
+            labelDimTimeout = value;
+        }
+    }
 }

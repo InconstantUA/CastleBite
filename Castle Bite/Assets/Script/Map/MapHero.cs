@@ -156,14 +156,14 @@ public class MapHero : MonoBehaviour
         if (doActivate)
         {
             // higlight it with red blinking
-            state = State.Selected;
+            //state = State.Selected;
             // start blinking (selection) animation
             InvokeRepeating("Blink", 0, animationDuration);
         }
         else
         {
             // exit selected mode
-            state = State.NotSelected;
+            //state = State.NotSelected;
             // stop blinking
             CancelInvoke();
             // show marker, it is needed because sometimes it may cancel invoke, when we are blinked off and invisible
