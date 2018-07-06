@@ -18,12 +18,12 @@ public class ChapterManager : MonoBehaviour {
     [SerializeField]
     bool lastChapter;
     // define chapter goals
-    bool goalTargetCityCaptured;
-    bool goalTargetHeroDestroyed = true;
+    bool goalTargetCityCaptured = false;
+    bool goalTargetHeroDestroyed = false;
     // for end (exit) chapter logic
-    bool completed;
-    bool failed;
-    string failureReason;
+    bool completed = false;
+    bool failed = false;
+    string failureReason = "";
 
     void Awake () {
         //Instance = this;
@@ -96,6 +96,13 @@ public class ChapterManager : MonoBehaviour {
         // Disable map and enable main menu
         map.SetActive(false);
         mainMenu.SetActive(true);
+        // Activate and deactivate required menus in main menu so it looks like during game start
+        // As long as we are in game mode now, then Start button is not needed any more
+        // instead activate Continue button
+        GameObject startButton = mainMenu.transform.Find("MainMenuPanel/Start").gameObject;
+        GameObject continueButton = mainMenu.transform.Find("MainMenuPanel/Continue").gameObject;
+        startButton.SetActive(true);
+        continueButton.SetActive(false);
     }
 
     void ExitChapter()
