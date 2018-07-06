@@ -15,13 +15,15 @@ using UnityEngine;
 public class ChapterManager : MonoBehaviour {
     //public static ChapterManager Instance { get; private set; }
 
+    [SerializeField]
+    bool lastChapter;
+    // define chapter goals
     bool goalTargetCityCaptured;
     bool goalTargetHeroDestroyed = true;
+    // for end (exit) chapter logic
     bool completed;
     bool failed;
     string failureReason;
-    [SerializeField]
-    bool lastChapter = false;
 
     void Awake () {
         //Instance = this;
@@ -63,16 +65,37 @@ public class ChapterManager : MonoBehaviour {
     void GoToNextChapter()
     {
         Debug.Log("Go to next chapter");
+        // I assume that we were at map before game end
+        // Get vars
+        GameObject map = transform.root.Find("MapScreen").gameObject;
+        GameObject transferHeroScreen = transform.root.Find("MiscUI/TransferHeroAndItemsToNextChapter").gameObject;
+        // Disable map and enable main menu
+        map.SetActive(false);
+        transferHeroScreen.SetActive(true);
     }
 
     void ShowCredits()
     {
         Debug.Log("Show credits");
+        // I assume that we were at map before game end
+        // Get vars
+        GameObject map = transform.root.Find("MapScreen").gameObject;
+        GameObject credits = transform.root.Find("MiscUI/Credits").gameObject;
+        // Disable map and enable main menu
+        map.SetActive(false);
+        credits.SetActive(true);
     }
 
     void EndGame()
     {
         Debug.Log("End game");
+        // I assume that we were at map before game end
+        // Get vars
+        GameObject map = transform.root.Find("MapScreen").gameObject;
+        GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
+        // Disable map and enable main menu
+        map.SetActive(false);
+        mainMenu.SetActive(true);
     }
 
     void ExitChapter()
@@ -92,7 +115,7 @@ public class ChapterManager : MonoBehaviour {
             if (lastChapter)
             {
                 notificationPopup.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(ShowCredits);
-                messageText = "Congratulations! You have finished game!";
+                messageText = "Congratulations! You have completed this game!";
             }
             else
             {
