@@ -24,7 +24,7 @@ public class PartyUnit : MonoBehaviour {
     {
         ThrowRock,          // Greenskin Cyclop
         StompWithFoot,      // Greenskin Ogre
-        CutWithAxe,         // Greenskin Orc
+        CutWithAxe,         // Greenskin Orc warrior
         CutWithDagger,      // Greenskin Goblin
         ThrowSpear,         // Greenskin Troll
         HolyWord,           // Dominion Lahabiel capital guard
@@ -39,6 +39,8 @@ public class PartyUnit : MonoBehaviour {
         HealingSong,        // Dominion ?
         BlowWithMaul,       // Dominion Colossus
         CastChainLightning, // Dominion Mage
+        EarthShatteringLeap,// Greenskin Bombul captial guard
+        Malediction,        // Greenskin Orc shaman
         None
     };
 

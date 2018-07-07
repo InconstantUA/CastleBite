@@ -15,6 +15,8 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     [SerializeField]
     Color hiddenLabelColor;
     [SerializeField]
+    Color alwaysOnLabelColor;
+    [SerializeField]
     Color notHighlightedLabelColor;
     [SerializeField]
     Color highlightedLabelColor;
@@ -23,6 +25,9 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     // For dimm
     [SerializeField]
     bool isMouseOver;
+    // For always On lable
+    [SerializeField]
+    bool labelAlwaysOn;
 
     void Start()
     {
@@ -99,9 +104,16 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void OnPointerExit(PointerEventData eventData)
     {
         isMouseOver = false;
-        labelTxt.color = notHighlightedLabelColor;
-        // Dimm label
-        StartCoroutine(DimmLabelWithDelay());
+        if (labelAlwaysOn)
+        {
+            labelTxt.color = alwaysOnLabelColor;
+        }
+        else
+        {
+            labelTxt.color = notHighlightedLabelColor;
+            // Dimm label
+            StartCoroutine(DimmLabelWithDelay());
+        }
         // give control on actions to map manager
         MapManager mapManager = transform.parent.GetComponent<MapManager>();
         mapManager.OnPointerExitChildObject(gameObject, eventData);
@@ -223,6 +235,32 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         set
         {
             labelDimTimeout = value;
+        }
+    }
+
+    public bool LabelAlwaysOn
+    {
+        get
+        {
+            return labelAlwaysOn;
+        }
+
+        set
+        {
+            labelAlwaysOn = value;
+        }
+    }
+
+    public Color AlwaysOnLabelColor
+    {
+        get
+        {
+            return alwaysOnLabelColor;
+        }
+
+        set
+        {
+            alwaysOnLabelColor = value;
         }
     }
 }

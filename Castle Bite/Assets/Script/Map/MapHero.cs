@@ -259,18 +259,36 @@ public class MapHero : MonoBehaviour
     //}
 
 
-    public void EnterHeroEditMode()
+    public IEnumerator EnterHeroEditMode()
     {
         Debug.Log("Enter hero edit mode.");
-        // Hide label
-        label.HideLabel();
-        // go to hero edit mode
-        // get variables
+        // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
+        // verify if MapObject's labe is still active and mouse over it
+        if (GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && GetComponentInChildren<MapObjectLabel>().IsMouseOver)
+        {
+            // disable it
+            GetComponent<MapObject>().OnPointerExit(null);
+        }
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
+        // Wait for all animations to finish
+        // this depends on the labelDimTimeout parameter in MapObject, we add additional 0.1f just in case
+        yield return new WaitForSeconds(GetComponent<MapObject>().LabelDimTimeout + 0.1f);
+        // Unblock mouse input
+        inputBlocker.SetActive(false);
+        // map manager change to browse mode back
+        // . - this is done by OnDisable() automatically in MapManager
+        //MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        //mapManager.SetMode(MapManager.Mode.Browse);
+        // Deactivate map
         GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
-        // .. set hero edit menu game object
-        // Deactivate map and activate hero edit menu
-        //mapScreen.SetActive(false);
+        mapScreen.SetActive(false);
+        // everything below related to mapManager or mapScreen will not be processed
+        // because map manager is disabled
         // .. activate hero edit menu
+        //GameObject cityMenu = linkedCity.gameObject;
+        //cityMenu.SetActive(true);
     }
 
     void Blink()

@@ -57,8 +57,13 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("OnPointerDown");
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        // Debug.Log("OnPointerUp");
+        // keep state On
         // Simulate on/off togle
-        // if (CompareColors(btn.colors.pressedColor, preHighlightColor))
         if (isOn)
         {
             // was on -> transition to off
@@ -68,14 +73,7 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
         {
             // was off -> transition to on
             SetOnStatus();
-
         }
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        // Debug.Log("OnPointerUp");
-        // keep state On
         ActOnClick();
     }
 
@@ -201,26 +199,22 @@ public class MapShowOrHideCityNamesToggle : MonoBehaviour, IPointerEnterHandler,
 
     void ActOnClick()
     {
+        Debug.Log("Show or hide all cities' lables");
         // Find all city objects and show their names
-        GameObject[] allCities = GameObject.FindGameObjectsWithTag("MapCity");
-        foreach (GameObject city in allCities)
+        Transform mapTr = transform.root.Find("MapScreen/Map");
+        foreach (MapCity city in mapTr.GetComponents<MapCity>())
         {
-            Text tmpTxt = city.GetComponentInChildren<Text>();
-            Button tmpBtn = city.GetComponentInChildren<Button>();
+            // get city label text
             if (isOn)
             {
-                tmpColor = tmpBtn.colors.highlightedColor;
-                tmpColor.a = 1; // show it
+                // show it
                 // Debug.Log("Show all cities names");
             }
             else
             {
-                tmpColor = tmpBtn.colors.normalColor;
-                tmpColor.a = 0; // hide it
+                // hide it
                 // Debug.Log("Hide all cities names");
             }
-            tmpTxt.color = tmpColor;
-            // Debug.Log("dimm " + otherButton.name + " button");
         }
     }
 

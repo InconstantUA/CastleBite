@@ -140,37 +140,32 @@ public class MapCity : MonoBehaviour
     {
         //Debug.Log("EnterCityEditMode");
         // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
-        //label.HideLabel();
         // verify if MapObject's labe is still active and mouse over it
         if (GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && GetComponentInChildren<MapObjectLabel>().IsMouseOver)
         {
             // disable it
             GetComponent<MapObject>().OnPointerExit(null);
         }
-        //Debug.Log("1 - triggered on exit");
-        //yield return new WaitForSeconds(2f);
         // Block mouse input
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(true);
-        //Debug.Log("2 - blocked input");
         // Wait for all animations to finish
         // this depends on the labelDimTimeout parameter in MapObject, we add additional 0.1f just in case
         yield return new WaitForSeconds(GetComponent<MapObject>().LabelDimTimeout + 0.1f); 
-        // go to city edit mode
-        // get variables
-        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
-        GameObject cityMenu = linkedCity.gameObject;
         // Unblock mouse input
         inputBlocker.SetActive(false);
-        //Debug.Log("3 unblocked mouse input");
         // map manager change to browse mode back
-        MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        mapManager.SetMode(MapManager.Mode.Browse);
-        // Deactivate map and activate city
+        // . - this is done by OnDisable() automatically in MapManager
+        //MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        //mapManager.SetMode(MapManager.Mode.Browse);
+        // Deactivate map
+        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
         mapScreen.SetActive(false);
-        cityMenu.SetActive(true);
         // everything below related to mapManager or mapScreen will not be processed
         // because map manager is disabled
+        // Activate city = go to city edit mode
+        GameObject cityMenu = linkedCity.gameObject;
+        cityMenu.SetActive(true);
     }
 
     public void SetSelectedState(bool doActivate)

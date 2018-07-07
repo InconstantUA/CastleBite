@@ -23,7 +23,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Mode mode;
     [SerializeField]
     Selection selection;
-    Vector3 startPosition;
+    //Vector3 startPosition;
     // Transform startParent;
     [SerializeField]
     int tileSize = 16;
@@ -160,6 +160,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         InitializePathHighligters();
     }
 
+    bool PositionIsWithinTilesMap(Vector2Int pos)
+    {
+        if (
+            (pos.x > 0) &&
+            (pos.y > 0) &&
+            (pos.x < tilesmap.GetLength(0) - 1) &&
+            (pos.y < tilesmap.GetLength(1) - 1)
+           )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     void InitTilesMap()
     {
         // create the tiles map
@@ -181,7 +198,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (party)
             {
                 Vector2Int pos = GetTilePosition(party.transform);
-                tilesmap[pos.x, pos.y] = false;
+                if (PositionIsWithinTilesMap(pos))
+                {
+                    tilesmap[pos.x, pos.y] = false;
+                }
             }
         }
         foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
@@ -190,7 +210,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (city)
             {
                 Vector2Int pos = GetTilePosition(city.transform);
-                tilesmap[pos.x, pos.y] = false;
+                if (PositionIsWithinTilesMap(pos))
+                {
+                    tilesmap[pos.x, pos.y] = false;
+                }
             }
         }
     }
@@ -1020,71 +1043,106 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // enter Drag mode
-        SetMode(Mode.Drag);
-        // prepare for drag
-        startPosition = transform.position;
-        // startParent = transform.parent;
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
-        // get mouse start possition and calculate which offset to apply to final transform
-        // this is because I would like to avoid that map center is also centered under mouse
-        // this create strange map jumps
-        // mouseOnDragStartPosition = Input.mousePosition;
-        // apply corrections depeding on location from the canvas center
-        // this actually depends one the current position of the map
-        mapPosiiton = Camera.main.WorldToScreenPoint(transform.position);
-        // xCorrectionOnDragStart = (Screen.width / 2) - mouseOnDragStartPosition.x;
-        // yCorrectionOnDragStart = (Screen.height / 2) - mouseOnDragStartPosition.y;
-        xCorrectionOnDragStart = mapPosiiton.x - mouseOnDownStartPosition.x;
-        yCorrectionOnDragStart = mapPosiiton.y - mouseOnDownStartPosition.y;
-        // this corrections should also be applied to x and y min and max
-        xMin = xMinDef - xCorrectionOnDragStart;
-        xMax = xMaxDef - xCorrectionOnDragStart;
-        yMin = yMinDef - yCorrectionOnDragStart;
-        yMax = yMaxDef - yCorrectionOnDragStart;
+        // verify if user clicked left or right mouse button
+        if (Input.GetMouseButton(0))
+        {
+            // on left mouse down
+            // enter Drag mode
+            SetMode(Mode.Drag);
+            // prepare for drag
+            //startPosition = transform.position;
+            // startParent = transform.parent;
+            GetComponent<CanvasGroup>().blocksRaycasts = false;
+            // get mouse start possition and calculate which offset to apply to final transform
+            // this is because I would like to avoid that map center is also centered under mouse
+            // this create strange map jumps
+            // mouseOnDragStartPosition = Input.mousePosition;
+            // apply corrections depeding on location from the canvas center
+            // this actually depends one the current position of the map
+            Vector3 mapNewPosiiton = Camera.main.WorldToScreenPoint(transform.position);
+            // keep z position otherwise map will disappear
+            mapPosiiton = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
+            // xCorrectionOnDragStart = (Screen.width / 2) - mouseOnDragStartPosition.x;
+            // yCorrectionOnDragStart = (Screen.height / 2) - mouseOnDragStartPosition.y;
+            xCorrectionOnDragStart = mapPosiiton.x - mouseOnDownStartPosition.x;
+            yCorrectionOnDragStart = mapPosiiton.y - mouseOnDownStartPosition.y;
+            // this corrections should also be applied to x and y min and max
+            xMin = xMinDef - xCorrectionOnDragStart;
+            xMax = xMaxDef - xCorrectionOnDragStart;
+            yMin = yMinDef - yCorrectionOnDragStart;
+            yMax = yMaxDef - yCorrectionOnDragStart;
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            // on right mouse down
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        mousePosition = Input.mousePosition;
-        mapPosiiton = Camera.main.WorldToScreenPoint(transform.position);
-        // make sure that new position is within the borders of the map
-        float newPositionX = mousePosition.x;
-        if (mousePosition.x <= xMin)
+        // verify if user clicked left or right mouse button
+        if (Input.GetMouseButton(0))
         {
-            newPositionX = xMin;
+            // on left mouse held down
+            mousePosition = Input.mousePosition;
+            mapPosiiton = Camera.main.WorldToScreenPoint(transform.position);
+            // make sure that new position is within the borders of the map
+            float newPositionX = mousePosition.x;
+            if (mousePosition.x <= xMin)
+            {
+                newPositionX = xMin;
+            }
+            else if (mousePosition.x >= xMax)
+            {
+                newPositionX = xMax;
+            }
+            float newPositionY = mousePosition.y;
+            if (mousePosition.y <= yMin)
+            {
+                newPositionY = yMin;
+            }
+            else if (mousePosition.y >= yMax)
+            {
+                newPositionY = yMax;
+            }
+            // for unknown reason z is set to -30000 on drag, that is why I use original value
+            Vector3 newPosition = new Vector3(newPositionX + xCorrectionOnDragStart, newPositionY + yCorrectionOnDragStart, 0);
+            // make drag to allign with tile size
+            float x = Mathf.RoundToInt(newPosition.x / tileSize) * tileSize;
+            float y = Mathf.RoundToInt(newPosition.y / tileSize) * tileSize;
+            newPosition = new Vector3(x, y, newPosition.z);
+            Vector3 newPositionTransformed = Camera.main.ScreenToWorldPoint(newPosition);
+            transform.position = new Vector3(newPositionTransformed.x, newPositionTransformed.y, 0);
+            //    Debug.Log("transform " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
         }
-        else if (mousePosition.x >= xMax)
+        else if (Input.GetMouseButton(1))
         {
-            newPositionX = xMax;
+            // on right mouse held down
         }
-        float newPositionY = mousePosition.y;
-        if (mousePosition.y <= yMin)
-        {
-            newPositionY = yMin;
-        }
-        else if (mousePosition.y >= yMax)
-        {
-            newPositionY = yMax;
-        }
-        // for unknown reason z is set to -30000 on drag, that is why I use original value
-        Vector3 newPosition = new Vector3(newPositionX + xCorrectionOnDragStart, newPositionY + yCorrectionOnDragStart, startPosition.z);
-        // make drag to allign with tile size
-        float x = Mathf.RoundToInt(newPosition.x / tileSize) * tileSize;
-        float y = Mathf.RoundToInt(newPosition.y / tileSize) * tileSize;
-        newPosition = new Vector3(x, y, newPosition.z);
-        transform.position = Camera.main.ScreenToWorldPoint(newPosition);
-        //    Debug.Log("transform " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // enter back to Browse mode
-        SetMode(Mode.Browse);
-        // set tile highighter under mouse
-        SetTileHighlighterToMousePoistion();
-        // allow map to block raycasts
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        // verify if user clicked left or right mouse button
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse up
+            // enter back to Browse mode
+            SetMode(Mode.Browse);
+            // set tile highighter under mouse
+            SetTileHighlighterToMousePoistion();
+            // allow map to block raycasts
+            GetComponent<CanvasGroup>().blocksRaycasts = true;
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse up
+        }
+    }
+
+    void OnDisable()
+    {
+        SetMode(MapManager.Mode.Browse);
     }
 
     float GetRemainingDistance(NesScripts.Controls.PathFind.Point pathPoint)
@@ -2111,7 +2169,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // remove selection
                                     SetSelection(Selection.None);
                                     // Enter hero edit mode
-                                    mapHero.EnterHeroEditMode();
+                                    SetMode(Mode.Animation);
+                                    queue.Run(mapHero.EnterHeroEditMode());
                                 }
                                 else
                                 {
@@ -2145,7 +2204,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // remove selection
                                     SetSelection(Selection.None);
                                     // Enter hero edit mode
-                                    mapHero.EnterHeroEditMode();
+                                    SetMode(Mode.Animation);
+                                    queue.Run(mapHero.EnterHeroEditMode());
                                 }
                                 else
                                 {

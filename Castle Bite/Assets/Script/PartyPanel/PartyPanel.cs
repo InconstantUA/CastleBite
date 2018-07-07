@@ -316,8 +316,15 @@ public class PartyPanel : MonoBehaviour {
         // in party mode we get hero leadership
         if (panelMode == PanelMode.Garnizon)
         {
+            // this can be triggered by clonned party panel,
+            // when user right clicks on a city
+            // but clonned panel does not have city attached
+            // that is why we need to check if return city is not null
             City city = transform.parent.parent.GetComponent<City>();
-            capacity = city.GetUnitsCapacity();
+            if (city)
+            {
+                capacity = city.GetUnitsCapacity();
+            }
         } else
         {
             capacity = GetPartyLeader().GetLeadership() + 1; // +1 because we do not count leader

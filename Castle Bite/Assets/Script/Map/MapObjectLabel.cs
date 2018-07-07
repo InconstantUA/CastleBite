@@ -41,7 +41,14 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         // otherwise it will first trigger enter on map object and then exit on map object label, which will cause troubles
         if (!mapObject.IsMouseOver)
         {
-            HideLabel();
+            if (mapObject.LabelAlwaysOn)
+            {
+                HideLabel();
+            }
+            else
+            {
+                labelTxt.color = mapObject.AlwaysOnLabelColor;
+            }
             // give control on actions to map manager
             MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
             mapManager.OnPointerExitChildObject(gameObject, eventData);
