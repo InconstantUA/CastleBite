@@ -51,7 +51,6 @@ MonoBehaviour:
   healthCurr: 300
   healthMax: 300
   healthMaxIncrementOnLevelUp: 80
-  isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
@@ -61,16 +60,18 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0
-  unitInitiative: 10
+  unitInitiative: 55
   unitRole: Unique strong mele fighter
   unitBriefDescription: 
   unitFullDescription: Full description.
-  hasEscaped: 0
   hasMoved: 0
   cost: 350
   unitSize: 1
   isInterpartyMovable: 1
   isDismissable: 1
+  unitStatus: 0
+  unitDebuffs: 
+  unitBuffs: 
 --- !u!224 &224274748400919076
 RectTransform:
   m_ObjectHideFlags: 1

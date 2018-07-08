@@ -29,7 +29,6 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
     }
 
-    #region IBeginDragHandler implementation
     public void OnBeginDrag(PointerEventData eventData)
     {
         // Debug.Log("OnBeginDrag");
@@ -59,8 +58,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // do nothing
         }
     }
-    #endregion
-    #region IDragHandler implementation
+
     public void OnDrag(PointerEventData eventData)
     {
         // Debug.Log("OnDrag");
@@ -77,11 +75,12 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // do nothing
         }
     }
-    #endregion
-    #region IEndDragHandler implementation
+
     public void OnEndDrag(PointerEventData eventData)
     {
         // Debug.Log("OnEndDrag");
+        // disable drag state
+        GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, false);
         // verify if user has activated unit info panel by right click and then moved mouse
         // which triggered drag function
         GameObject unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").gameObject;
@@ -106,12 +105,15 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 transform.position = startPosition;
             }
-            // activate hire unit buttons again, after it was disabled
-            // this is should be done in City Garnizon panel
-            PartyPanel garnizonPanel = GetParentCity().transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
-            garnizonPanel.SetHireUnitPnlButtonActive(true);
+            // verify if we are in city edit mode and not in hero edit mode
+            if (GetParentCity().transform.Find("CityGarnizon"))
+            {
+                // activate hire unit buttons again, after it was disabled
+                // this is should be done in City Garnizon panel
+                PartyPanel garnizonPanel = GetParentCity().transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
+                garnizonPanel.SetHireUnitPnlButtonActive(true);
+            }
         }
     }
 
-    #endregion
 }

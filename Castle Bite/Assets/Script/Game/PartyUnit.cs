@@ -182,7 +182,23 @@ public class PartyUnit : MonoBehaviour {
     private void Awake()
     {
         unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
+        for (int i = 0; i < (int)UnitDebuff.ArrSize; i++)
+        {
+            unitDebuffs[i] = UnitDebuff.None;
+        }
         unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+        for (int i = 0; i < (int)UnitBuff.ArrSize; i++)
+        {
+            unitBuffs[i] = UnitBuff.None;
+        }
+        //Debug.Log("Awake " + GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+    }
+
+    private void Start()
+    {
+        //unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
+        //unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+        //Debug.Log("Start " + GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
     }
 
     public Transform GetUnitCell()
@@ -287,6 +303,14 @@ public class PartyUnit : MonoBehaviour {
         // Get total defence modifier
         int totalDefenceModifier = unit.GetDefence() + cityDefenceModifier + itemsDefenceModifier;
         // Get status modifiers, example: defence stance buff
+        if (unitBuffs != null)
+        {
+            Debug.Log(GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+        }
+        else
+        {
+            Debug.Log("Unit buffs array is null");
+        }
         if (UnitBuff.DefenceStance == unitBuffs[(int)UnitBuff.DefenceStance])
         {
             // reduce damage by half

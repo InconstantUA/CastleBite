@@ -40,7 +40,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Capital guard
   unitType: 0
-  isLeader: 0
+  isLeader: 1
   unitLeadership: 0
   givenName: Bombul
   unitLevel: 1
@@ -48,7 +48,7 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevel: 9999
   unitExperienceReward: 9999
   unitExperienceRewardIncrementOnLevelUp: 0
-  healthCurr: 2200
+  healthCurr: 220
   healthMax: 2200
   healthMaxIncrementOnLevelUp: 550
   unitDefence: 0
@@ -60,7 +60,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 1
   unitPowerScope: 1
-  unitInitiative: 10
+  unitInitiative: 25
   unitRole: Protects Greenskin Capital
   unitBriefDescription: Giant toad squashing its enemies by earth-shattering leaps.
   unitFullDescription: Bombul is a giant toad fed and kept by Orcs to protect Greenskin's

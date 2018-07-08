@@ -277,6 +277,9 @@ public class MapHero : MonoBehaviour
         yield return new WaitForSeconds(GetComponent<MapObject>().LabelDimTimeout + 0.1f);
         // Unblock mouse input
         inputBlocker.SetActive(false);
+        // Move edited hero to HeroEditScreen
+        Transform heroEditScreenTr = transform.root.Find("MiscUI/HeroEditScreen");
+        linkedPartyTr.SetParent(heroEditScreenTr);
         // map manager change to browse mode back
         // . - this is done by OnDisable() automatically in MapManager
         //MapManager mapManager = transform.parent.GetComponent<MapManager>();
@@ -286,9 +289,8 @@ public class MapHero : MonoBehaviour
         mapScreen.SetActive(false);
         // everything below related to mapManager or mapScreen will not be processed
         // because map manager is disabled
-        // .. activate hero edit menu
-        //GameObject cityMenu = linkedCity.gameObject;
-        //cityMenu.SetActive(true);
+        // Activate hero edit menu
+        heroEditScreenTr.gameObject.SetActive(true);
     }
 
     void Blink()

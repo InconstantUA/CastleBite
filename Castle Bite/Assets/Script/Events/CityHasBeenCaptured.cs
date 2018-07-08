@@ -26,7 +26,7 @@ public class CityHasBeenCaptured : MonoBehaviour, IFactionHasChanged
 
     void Awake()
     {
-        city = GetComponent<MapCity>().linkedCityTr.GetComponent<City>();
+        city = GetComponent<MapCity>().LinkedCityTr.GetComponent<City>();
         faction = city.GetFaction();
     }
 

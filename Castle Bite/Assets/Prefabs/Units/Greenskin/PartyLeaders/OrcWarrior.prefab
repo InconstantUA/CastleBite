@@ -60,7 +60,7 @@ MonoBehaviour:
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0
-  unitInitiative: 10
+  unitInitiative: 50
   unitRole: Front line strong and durable mele fighter
   unitBriefDescription: 
   unitFullDescription: Orcs are a brutish, aggressive, repulsive and generally malevolent

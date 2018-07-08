@@ -135,8 +135,6 @@ public class CityBackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         // Debug.Log("DimmAllOtherMenus");
     }
 
-    #region OnClick
-
     void ActOnClick()
     {
         // activate map view
@@ -147,5 +145,4 @@ public class CityBackButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         transform.parent.GetComponent<City>().ExitCity();
     }
 
-    #endregion OnClick
 }

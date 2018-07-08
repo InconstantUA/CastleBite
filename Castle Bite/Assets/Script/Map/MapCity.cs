@@ -9,11 +9,10 @@ public class MapCity : MonoBehaviour
 {
     enum State { NotSelected, Selected };
 
-    public Transform linkedCityTr;
-    private Transform linkedPartyOnMapTr;
-    //[SerializeField]
-    //public float labelDimTimeout;
     [SerializeField]
+    private Transform linkedCityTr;
+    private Transform linkedPartyOnMapTr;
+    //public float labelDimTimeout;
     City linkedCity;
     MapObjectLabel label;
     //Text labelTxt;
@@ -37,6 +36,19 @@ public class MapCity : MonoBehaviour
         }
     }
 
+    public Transform LinkedCityTr
+    {
+        get
+        {
+            return linkedCityTr;
+        }
+
+        set
+        {
+            linkedCityTr = value;
+        }
+    }
+
     // Colors for Label
     //[SerializeField]
     //Color hiddenLabelColor;
@@ -54,6 +66,8 @@ public class MapCity : MonoBehaviour
     {
         // init linkedCity object
         linkedCity = linkedCityTr.GetComponent<City>();
+        // update link in opposite direction
+        linkedCity.LinkedMapCity = GetComponent<MapCity>();
         // set markerImage
         markerImage = GetComponent<Image>();
         // set label

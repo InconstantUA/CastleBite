@@ -22,9 +22,23 @@ public class City : MonoBehaviour {
     CityOccupationState cityOccupationState;
     [SerializeField]
     Faction faction;
+    MapCity linkedMapCity;
 
     // add player here, because it accessed by many functions
     PlayerObj player;
+
+    public MapCity LinkedMapCity
+    {
+        get
+        {
+            return linkedMapCity;
+        }
+
+        set
+        {
+            linkedMapCity = value;
+        }
+    }
 
     // City view state is required to effectively change between different states
     // and do not forget to enable or disable something
@@ -160,31 +174,35 @@ public class City : MonoBehaviour {
         // instruct party and garnizon panels to
         // highlight differently cells with and without units
         // and disable hire buttons
-        switch (cityViewActiveState)
+        // verfiy if there is a city garnizon == we are in city edit mode and not in hero party edit mode
+        if (transform.Find("CityGarnizon"))
         {
-            case CityViewActiveState.ActiveDismiss:
-                transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
-                break;
-            case CityViewActiveState.ActiveHeal:
-                transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
-                break;
-            case CityViewActiveState.ActiveResurect:
-                transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
-                break;
-            case CityViewActiveState.ActiveHeroEquipment:
-                // this is not applicable to garnizon, garnizon does not have hero or eqipment
-                // it is only appicable to hero party
-                break;
-            case CityViewActiveState.ActiveUnitDrag:
-                transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
-                break;
-            default:
-                Debug.LogError("Unknown condition");
-                break;
+            switch (cityViewActiveState)
+            {
+                case CityViewActiveState.ActiveDismiss:
+                    transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
+                    break;
+                case CityViewActiveState.ActiveHeal:
+                    transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
+                    break;
+                case CityViewActiveState.ActiveResurect:
+                    transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
+                    break;
+                case CityViewActiveState.ActiveHeroEquipment:
+                    // this is not applicable to garnizon, garnizon does not have hero or eqipment
+                    // it is only appicable to hero party
+                    break;
+                case CityViewActiveState.ActiveUnitDrag:
+                    transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                    break;
+                default:
+                    Debug.LogError("Unknown condition");
+                    break;
+            }
         }
         // if hero party is present,
         // then activate active state highligh
-        // if not - then disable hire hero button
+        // if not - then disable hire hero button, if we are entering one of active states or enable it if we exit one of active states
         // HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
         HeroParty heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party);
         if (heroParty) { 
@@ -223,7 +241,12 @@ public class City : MonoBehaviour {
         }
         else
         {
-            transform.Find("HireHeroPanel/HireHeroPanelBtn").gameObject.SetActive(!doActivate);
+            // verfiy if there is a city garnizon == we are in city edit mode and not in hero party edit mode
+            if (transform.Find("CityGarnizon"))
+            {
+                // there is no hero in city any more, activate or deactivate hire hero panel button
+                transform.Find("HireHeroPanel/HireHeroPanelBtn").gameObject.SetActive(!doActivate);
+            }
         }
         // Update cursor
         CursorController.Instance.SetCityActiveViewStateCursor(cityViewActiveState, doActivate);
@@ -245,10 +268,14 @@ public class City : MonoBehaviour {
         Transform heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party).transform;
         GameObject heroEquipmentMenu = heroParty.Find("HeroEquipment").gameObject;
         GameObject heroUnitsPanel = heroParty.Find("PartyPanel").gameObject;
-        GameObject cityGarnizon = transform.Find("CityGarnizon").gameObject;
         heroEquipmentMenu.SetActive(doActivate);
         heroUnitsPanel.SetActive(!doActivate);
-        cityGarnizon.SetActive(!doActivate);
+        // verify if we are in city and not in hero edit mode
+        if (transform.Find("CityGarnizon"))
+        {
+            GameObject cityGarnizon = transform.Find("CityGarnizon").gameObject;
+            cityGarnizon.SetActive(!doActivate);
+        }
     }
 
     public void ReturnToNomalState()
@@ -284,8 +311,6 @@ public class City : MonoBehaviour {
                     GetHeroPartyByMode(HeroParty.PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
                     break;
             }
-            // deactive currently active state
-            // SetActiveState(cityViewActiveState, false);
         }
         // If ther is no hero in the city or hero has left city, then display HireHeroPanel
         if (!GetHeroPartyByMode(HeroParty.PartyMode.Party))
@@ -298,8 +323,12 @@ public class City : MonoBehaviour {
     {
         // Instruct Focus panel to update info
         transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HeroLeaveCity);
-        // Enable Hire leader panel
-        transform.Find("HireHeroPanel").gameObject.SetActive(true);
+        // verify if we are in city and not in hero edit mode
+        if (transform.Find("CityGarnizon"))
+        {
+            // Enable Hire leader panel
+            transform.Find("HireHeroPanel").gameObject.SetActive(true);
+        }
     }
 
     public void ActOnHeroEnteringCity()
@@ -407,7 +436,10 @@ public class City : MonoBehaviour {
         // Link city on the map to hero on the map
         newPartyOnMapUI.GetComponent<MapHero>().linkedCityOnMapTr = parentCityOnMap;
         // bring city to the front
-        parentCityOnMap.SetAsLastSibling();
+        // . - this does not work as expected, if hero is highered in other city and move to other city, then we have a problem that hero is on top
+        //parentCityOnMap.SetAsLastSibling();
+        // move hero party to the back instead
+        heroOnMap.transform.SetAsFirstSibling();
     }
 
     void HirePartyLeader(PartyUnit hiredUnitTemplate)
@@ -566,8 +598,12 @@ public class City : MonoBehaviour {
         Destroy(mapHero.gameObject);
         // Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
         Destroy(heroParty.gameObject);
-        // Enable Hire leader panel
-        transform.Find("HireHeroPanel").gameObject.SetActive(true);
+        // verify if we are in city and not in hero edit mode
+        if (transform.Find("CityGarnizon"))
+        {
+            // Enable Hire leader panel
+            transform.Find("HireHeroPanel").gameObject.SetActive(true);
+        }
     }
 
     public void DismissGenericUnit(UnitSlot unitSlot)

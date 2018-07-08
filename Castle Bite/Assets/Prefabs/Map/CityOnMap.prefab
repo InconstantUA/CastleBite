@@ -100,10 +100,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelDimTimeout: 0.5
   hiddenLabelColor: {r: 1, g: 1, b: 1, a: 0}
+  alwaysOnLabelColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   notHighlightedLabelColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   highlightedLabelColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
   pressedLabelColor: {r: 1, g: 1, b: 1, a: 1}
   isMouseOver: 0
+  labelAlwaysOn: 0
 --- !u!114 &114823760322365018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -149,7 +151,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linkedCityTr: {fileID: 0}
-  linkedPartyOnMapTr: {fileID: 0}
   linkedCity: {fileID: 0}
   hiddenMarkerColor: {r: 1, g: 1, b: 1, a: 0}
   highlightedMarkerColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}

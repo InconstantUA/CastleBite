@@ -60,11 +60,13 @@ public class CursorController : MonoBehaviour {
 
     public void SetOpenDoorsCursor()
     {
+        //Debug.Log("SetOpenDoorsCursor");
         Cursor.SetCursor(openDoorsCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetEditHeroCursor()
     {
+        //Debug.Log("SetEditHeroCursor");
         Cursor.SetCursor(editHeroCursor, Vector2.zero, CursorMode.Auto);
     }
 

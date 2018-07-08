@@ -105,8 +105,6 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        // disable drag state
-        GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, false);
         // act based on the previously set by OnDrag condition
         if (isDropAllowed)
         {

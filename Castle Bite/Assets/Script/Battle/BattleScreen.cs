@@ -9,6 +9,9 @@ public class BattleScreen : MonoBehaviour {
     PartyPanel playerPartyPanel;
     PartyPanel enemyPartyPanel;
 
+    Transform playerHeroPartyPreBattleParentTr;
+    Transform enemyHeroPartyPreBattleParentTr;
+
     PartyUnit activeUnit;
 
     public enum BattlePlace { Map, CityOutside, CityInside };
@@ -52,14 +55,14 @@ public class BattleScreen : MonoBehaviour {
         queue = new CoroutineQueue(1, StartCoroutine);
     }
 
-    BattlePlace GetBattlePlace(HeroParty playerHeroParty, HeroParty enemyHeroParty)
-    {
-        // Return battle place based on:
-        //  - position of units before battle start
-        //  - who is initiating battle
-        // ..
-        return BattlePlace.Map;
-    }
+    //BattlePlace GetBattlePlace(HeroParty playerHeroParty, HeroParty enemyHeroParty)
+    //{
+    //    // Return battle place based on:
+    //    //  - position of units before battle start
+    //    //  - who is initiating battle
+    //    // ..
+    //    return BattlePlace.Map;
+    //}
 
     public void EnterBattle(MapHero playerOnMap, MapHero enemyOnMap)
     {
@@ -70,8 +73,11 @@ public class BattleScreen : MonoBehaviour {
         // get hero's parties
         HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
         HeroParty enemyHeroParty = enemyOnMap.LinkedPartyTr.GetComponent<HeroParty>();
-        // get battle place
-        battlePlace = GetBattlePlace(playerHeroParty, enemyHeroParty);
+        // set battle place
+        battlePlace = BattlePlace.Map;
+        // Record original poisitions
+        playerHeroPartyPreBattleParentTr = playerHeroParty.transform.parent;
+        enemyHeroPartyPreBattleParentTr = enemyHeroParty.transform.parent;
         // move hero parties to the battle screen
         playerHeroParty.transform.SetParent(transform);
         enemyHeroParty.transform.SetParent(transform);
@@ -93,6 +99,69 @@ public class BattleScreen : MonoBehaviour {
         rightFocusPanel.OnChange(FocusPanel.ChangeType.Init);
         // start turn based battle
         StartBattle();
+    }
+
+    public void EnterBattle(MapHero playerOnMap, MapCity enemyCityOnMap)
+    {
+        // get hero's parties
+        HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
+        // Verify if city is protected by Hero's party
+        HeroParty enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Party);
+        if (enemyHeroParty)
+        {
+            // set battle place on a city gates
+            battlePlace = BattlePlace.CityOutside;
+        }
+        else
+        {
+            // no enemy hero protecting city
+            // set battle place inside city
+            battlePlace = BattlePlace.CityInside;
+            // get garnizon party
+            enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Garnizon);
+        }
+        // verify if there are units in party protecting this city, which can fight
+        // it is possible that city is not protected
+        if (enemyHeroParty.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main))
+        {
+            // city is protected
+            // proceed with preparations for the battle
+            // activate this battle sreen
+            gameObject.SetActive(true);
+            // Record original poisitions
+            playerHeroPartyPreBattleParentTr = playerHeroParty.transform.parent;
+            enemyHeroPartyPreBattleParentTr = enemyHeroParty.transform.parent;
+            // Set turn phase to main phase
+            SetTurnPhase(TurnPhase.Main);
+            // move hero parties to the battle screen
+            playerHeroParty.transform.SetParent(transform);
+            enemyHeroParty.transform.SetParent(transform);
+            // disable player party inventory and equipment
+            playerHeroParty.transform.Find("PartyInventory").gameObject.SetActive(false);
+            playerHeroParty.transform.Find("HeroEquipment").gameObject.SetActive(false);
+            playerHeroParty.transform.Find("HeroEquipmentBtn").gameObject.SetActive(false);
+            // Get parties panels
+            playerPartyPanel = playerHeroParty.GetComponentInChildren<PartyPanel>();
+            enemyPartyPanel = enemyHeroParty.GetComponentInChildren<PartyPanel>();
+            // Get parties leaders
+            PartyUnit playerPartyLeader = playerPartyPanel.GetPartyLeader();
+            PartyUnit enemyPartyLeader = enemyPartyPanel.GetPartyLeader();
+            // Link parties leaders to the focus panels
+            leftFocusPanel.focusedObject = playerPartyLeader.gameObject;
+            rightFocusPanel.focusedObject = enemyPartyLeader.gameObject;
+            // Initialize focus panel with information from linked leaders
+            leftFocusPanel.OnChange(FocusPanel.ChangeType.Init);
+            rightFocusPanel.OnChange(FocusPanel.ChangeType.Init);
+            // start turn based battle
+            StartBattle();
+        }
+        else
+        {
+            // city is not protected
+            // no need to battle
+            // move to and enter city
+            EnterCity();
+        }
     }
 
     void StartBattle()
@@ -118,6 +187,11 @@ public class BattleScreen : MonoBehaviour {
         transform.Find("CtrlPnlFight").gameObject.SetActive(true);
     }
 
+    MapManager GetMapManager()
+    {
+        return transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+    }
+
     void DefaultOnBattleExit()
     {
         // if hero is still alive, then set click handler to edit mode
@@ -130,15 +204,16 @@ public class BattleScreen : MonoBehaviour {
             playerPartyPanel.SetOnBattleClickHandler(false);
         }
         // Activate other required screen based on the original parties location
+        // Always start with map screen, no matter where battle took place
+        // Enable map screen
+        Transform mapScreen = transform.root.Find("MapScreen");
+        mapScreen.gameObject.SetActive(true);
+        // Change map mode to browse
+        MapManager mapManager = GetMapManager();
+        mapManager.SetMode(MapManager.Mode.Browse);
         switch (battlePlace)
         {
             case BattlePlace.Map:
-                // Enable map screen
-                Transform mapScreen = transform.root.Find("MapScreen");
-                mapScreen.gameObject.SetActive(true);
-                // Change map mode to browse
-                MapManager mapManager = mapScreen.Find("Map").GetComponent<MapManager>();
-                mapManager.SetMode(MapManager.Mode.Browse);
                 break;
             case BattlePlace.CityOutside:
                 break;
@@ -148,6 +223,17 @@ public class BattleScreen : MonoBehaviour {
                 Debug.LogError("Unknown battle place");
                 break;
         }
+        // Move heroes parties to thier initial positions before battle
+        // Verify if player party is not destroyed
+        if (playerPartyPanel)
+        {
+            playerPartyPanel.GetHeroParty().transform.SetParent(playerHeroPartyPreBattleParentTr);
+        }
+        // Verify if enemy party is not destroyed
+        if (enemyPartyPanel)
+        {
+            enemyPartyPanel.GetHeroParty().transform.SetParent(enemyHeroPartyPreBattleParentTr);
+        }
         // Reset almost all units statuses and info for panels, if they are still present
         // Exceptions: Dead
         // Verify if player party is not destroyed
@@ -155,21 +241,23 @@ public class BattleScreen : MonoBehaviour {
         {
             playerPartyPanel.ResetUnitCellInfoPanel(playerPartyPanel.transform);
             playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatus });
+            playerPartyPanel.ResetUnitCellHighlight();
         }
         // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
         {
             enemyPartyPanel.ResetUnitCellInfoPanel(enemyPartyPanel.transform);
             enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus });
+            enemyPartyPanel.ResetUnitCellHighlight();
         }
-        // Close battle sreen
+        // Close battle screen
         gameObject.SetActive(false);
     }
 
     public void DestroyParty(PartyPanel partyPanel)
     {
         // set variables
-        HeroParty heroParty = partyPanel.transform.parent.GetComponent<HeroParty>();
+        HeroParty heroParty = partyPanel.GetHeroParty();
         MapHero heroOnMapRepresentation = heroParty.GetLinkedPartyOnMap();
         // destroy on map party representation
         Destroy(heroOnMapRepresentation.gameObject);
@@ -197,6 +285,25 @@ public class BattleScreen : MonoBehaviour {
     public void FleeEnemy()
     {
         DefaultOnBattleExit();
+    }
+
+    public void EnterCity()
+    {
+        Debug.Log("BattleScreen: EnterCity");
+        DefaultOnBattleExit();
+        Debug.Log("1");
+        // remove dead units from city garnizon's party panel
+        enemyPartyPanel.GetHeroParty().GetComponentInChildren<PartyPanel>().RemoveDeadUnits();
+        Debug.Log("2");
+        // Change city faction to player's faction
+        enemyPartyPanel.GetCity().SetFaction(playerPartyPanel.GetHeroParty().GetFaction());
+        Debug.Log("3");
+        // Trigger map hero move to and enter city
+        MapHero mapHero = playerPartyPanel.GetHeroParty().GetLinkedPartyOnMap();
+        MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LinkedMapCity;
+        MapManager mapManager = GetMapManager();
+        mapManager.MapHeroMoveToAndEnterCity(mapHero, destinationCityOnMap);
+        Debug.Log("4");
     }
 
     IEnumerator EndBattle()
@@ -228,6 +335,8 @@ public class BattleScreen : MonoBehaviour {
             else
             {
                 // player lost battle and was destroyed
+                // verify if battle was with city Garnizon:
+                // .. this is not needed here because city garnizon cannot initiate fight
                 // On exit: destroy player party
                 exitButton.SetExitOption(BattleExit.ExitOption.DestroyPlayer);
             }
@@ -247,9 +356,22 @@ public class BattleScreen : MonoBehaviour {
             else
             {
                 // player lost battle and was destroyed
-                // On exit: destroy enemy party
-                // Destroy(enemyPartyPanel.transform.parent.gameObject);
-                exitButton.SetExitOption(BattleExit.ExitOption.DestroyEnemy);
+                // verify if battle was with city Garnizon:
+                if (enemyPartyPanel.GetHeroParty().GetMode() == HeroParty.PartyMode.Garnizon)
+                {
+                    // On exit: enter city
+                    Debug.Log("Enter city on exit");
+                    exitButton.SetExitOption(BattleExit.ExitOption.EnterCity);
+                }
+                else if (enemyPartyPanel.GetHeroParty().GetMode() == HeroParty.PartyMode.Party)
+                {
+                    // On exit: destroy enemy party
+                    exitButton.SetExitOption(BattleExit.ExitOption.DestroyEnemy);
+                }
+                else
+                {
+                    Debug.LogError("Unknown party mode " + enemyPartyPanel.GetHeroParty().GetMode().ToString());
+                }
             }
             // Show how much experience was earned by player party
             playerPartyPanel.GrantAndShowExperienceGained(enemyPartyPanel);

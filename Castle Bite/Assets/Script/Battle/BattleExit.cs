@@ -13,7 +13,7 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     Text txt;
     Button btn;
     Color tmpColor;
-    public enum ExitOption { FleePlayer, FleeEnemy, DestroyPlayer, DestroyEnemy };
+    public enum ExitOption { FleePlayer, FleeEnemy, DestroyPlayer, DestroyEnemy, EnterCity };
     ExitOption exitOption;
 
     public void SetExitOption(ExitOption value)
@@ -80,6 +80,9 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 break;
             case ExitOption.FleeEnemy:
                 battleScreen.FleeEnemy();
+                break;
+            case ExitOption.EnterCity:
+                battleScreen.EnterCity();
                 break;
             default:
                 Debug.LogError("Unknown exit option.");

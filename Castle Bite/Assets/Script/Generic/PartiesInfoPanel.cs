@@ -76,7 +76,7 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
             transform.Find("LeftPartyInfoPlaceHolder").gameObject.SetActive(true);
         }
         // clone city panel and place it into the right placeholder
-        CloneAndPlacePartyPanel(mapCity.linkedCityTr.Find("CityGarnizon/PartyPanel"), transform.Find("RightPartyInfoPlaceHolder"));
+        CloneAndPlacePartyPanel(mapCity.LinkedCityTr.Find("CityGarnizon/PartyPanel"), transform.Find("RightPartyInfoPlaceHolder"));
     }
 
     public void OnPointerDown(PointerEventData eventData)

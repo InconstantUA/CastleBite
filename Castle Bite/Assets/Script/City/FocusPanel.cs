@@ -32,7 +32,11 @@ public class FocusPanel : MonoBehaviour {
             // focus is set
             if (focusedObject.GetComponent<City>())
             {
-                SetCityInformation();
+                // verify if city is in city edit mode and not in edit hero party mode
+                if (focusedObject.GetComponent<City>().transform.Find("CityGarnizon"))
+                {
+                    SetCityInformation();
+                }
             }
             else if (focusedObject.GetComponent<PartyUnit>())
             {
@@ -50,7 +54,11 @@ public class FocusPanel : MonoBehaviour {
             // this is only relevan if focus panel is in city, not relevant for battle screen
             if (transform.parent.GetComponent<City>())
             {
-                SetNoPartyInfo();
+                // verify if we are in city edit mode and not in hero edit mode
+                if (transform.parent.GetComponent<City>().transform.Find("CityGarnizon"))
+                {
+                    SetNoPartyInfo();
+                }
             }
         }
     }
@@ -144,7 +152,11 @@ public class FocusPanel : MonoBehaviour {
                 break;
             case ChangeType.DismissPartyLeader:
             case ChangeType.HeroLeaveCity:
-                SetNoPartyInfo();
+                // verify if we are in city or edit hero mode
+                if (transform.parent.GetComponent<City>().transform.Find("CityGarnizon"))
+                {
+                    SetNoPartyInfo();
+                }
                 break;
             case ChangeType.DismissSingleUnit:
                 OnDismissSingleUnit();

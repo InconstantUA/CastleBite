@@ -125,12 +125,24 @@ public class PartyPanel : MonoBehaviour {
         parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
     }
 
+    void CleanHealthUI(Transform targetCell)
+    {
+        Color defaultColor = new Color32(128, 128, 128, 255);
+        targetCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+        targetCell.Find("HPPanel/HPcurr").GetComponent<Text>().color = defaultColor;
+        targetCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+        targetCell.Find("HPPanel/HPmax").GetComponent<Text>().color = defaultColor;
+    }
+
     void OnDismissSingleUnit(Transform changedCell)
     {
         // it is possile that unit was dismissed
-        // clean health information
-        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+        // Clean health information
+        CleanHealthUI(changedCell);
+        // Clean info
+        ClearInfoPanel(changedCell);
+        // Clean status
+        ClearUnitCellStatus(changedCell);
         // activate hire unit button if panel is in garnizon state
         if (PartyPanel.PanelMode.Garnizon == panelMode)
         {
@@ -141,6 +153,10 @@ public class PartyPanel : MonoBehaviour {
 
     void OnDimissDoubleUnit(Transform changedCell)
     {
+        // Clean info
+        ClearInfoPanel(changedCell);
+        // Clean status
+        ClearUnitCellStatus(changedCell);
         // Disable Wide panel
         changedCell.parent.Find("Wide").gameObject.SetActive(false);
         // And enable left and right panels
@@ -150,16 +166,13 @@ public class PartyPanel : MonoBehaviour {
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
         Transform parentCell = changedCell.parent.Find("Wide");
-        // fill in highered object UI panel
-        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+        CleanHealthUI(parentCell);
         // activate hire unit buttons on left and right cells if panel is in garnizon state
         if (PartyPanel.PanelMode.Garnizon == panelMode)
         {
             Debug.Log("Activate hire unit button");
             changedCell.parent.Find("Front/HireUnitPnlBtn").gameObject.SetActive(true);
             changedCell.parent.Find("Back/HireUnitPnlBtn").gameObject.SetActive(true);
-
         }
     }
 
@@ -308,6 +321,16 @@ public class PartyPanel : MonoBehaviour {
         return null;
     }
 
+    public HeroParty GetHeroParty()
+    {
+        return transform.parent.GetComponent<HeroParty>();
+    }
+
+    public City GetCity()
+    {
+        return transform.parent.parent.GetComponent<City>();
+    }
+
     int GetCapacity()
     {
         int capacity = 0;
@@ -320,7 +343,7 @@ public class PartyPanel : MonoBehaviour {
             // when user right clicks on a city
             // but clonned panel does not have city attached
             // that is why we need to check if return city is not null
-            City city = transform.parent.parent.GetComponent<City>();
+            City city = GetCity();
             if (city)
             {
                 capacity = city.GetUnitsCapacity();
@@ -428,7 +451,7 @@ public class PartyPanel : MonoBehaviour {
             result = false;
             // show error message
             // this depends if city has reached max level
-            City city = transform.parent.parent.GetComponent<City>();
+            City city = GetCity();
             string errMsg;
             if (city.GetCityLevel() == 1)
             {
@@ -1881,10 +1904,12 @@ public class PartyPanel : MonoBehaviour {
             case PartyUnit.UnitAbility.ThrowRock:
                 PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
                 break;
-            // Magic (including pure) attack powers
+            // Magic (including pure or whole-party) attack powers
             case PartyUnit.UnitAbility.CastChainLightning:
             case PartyUnit.UnitAbility.CastLightningStorm:
             case PartyUnit.UnitAbility.HolyWord:
+            case PartyUnit.UnitAbility.EarthShatteringLeap:
+            case PartyUnit.UnitAbility.Malediction:
                 PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
                 break;
             default:
@@ -2001,12 +2026,17 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("ApplyResurectPower");
     }
 
-    void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
+    void ClearInfoPanel(Transform changedCell)
     {
         Color32 defaultColor = new Color32(180, 180, 180, 255);
-        Text infoPanelTxt = partyPanelTr.Find(horisontalPanel).Find(cell).Find("InfoPanel").GetComponent<Text>();
+        Text infoPanelTxt = changedCell.Find("InfoPanel").GetComponent<Text>();
         infoPanelTxt.text = "";
         infoPanelTxt.color = defaultColor;
+    }
+
+    void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
+    {
+        ClearInfoPanel(partyPanelTr.Find(horisontalPanel).Find(cell));
     }
 
     public void ResetUnitCellInfoPanel(Transform partyPanel)
@@ -2033,12 +2063,53 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    void ClearUnitCellStatus(Transform partyPanelTr, string horisontalPanel, string cell)
+    public void ResetUnitCellHighlight()
+    {
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                transform.Find(horisontalPanel).Find(cell).Find("Br").GetComponent<Text>().color = new Color32(128, 128, 128, 255);
+            }
+        }
+    }
+
+    public void RemoveDeadUnits()
+    {
+        City city = GetCity();
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // Unit canvas (and unit) is present
+                // verify if slot has an unit in it
+                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                if (unitSlot.childCount > 0)
+                {
+                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Dead)
+                    {
+                        // destroy unit canvas
+                        Debug.Log("Verify: destroy dead unit " + unit.name);
+                        city.DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
+                        // Destroy(unitSlot.GetChild(0).gameObject);
+                    }
+                }
+            }
+        }
+    }
+
+    void ClearUnitCellStatus(Transform targetCell)
     {
         Color32 defaultColor = new Color32(180, 180, 180, 255);
-        Text infoPanelTxt = partyPanelTr.Find(horisontalPanel).Find(cell).Find("Status").GetComponent<Text>();
+        Text infoPanelTxt = targetCell.Find("Status").GetComponent<Text>();
         infoPanelTxt.text = "";
         infoPanelTxt.color = defaultColor;
+    }
+
+    void ClearUnitCellStatus(Transform partyPanelTr, string horisontalPanel, string cell)
+    {
+        ClearUnitCellStatus(partyPanelTr.Find(horisontalPanel).Find(cell));
     }
 
     public void ResetUnitCellStatus(string[] exceptions)
@@ -2065,8 +2136,11 @@ public class PartyPanel : MonoBehaviour {
                     }
                     if (!itIsException)
                     {
-                        // Clear status, because it is not in exceptions list
+                        // Clear status in UI, because it is not in exceptions list
                         ClearUnitCellStatus(transform, horisontalPanel, cell);
+                        // Reset status in unit
+                        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
+                        unit.SetUnitStatus(PartyUnit.UnitStatus.Active);
                     }
                 }
             }
@@ -2303,10 +2377,12 @@ public class PartyPanel : MonoBehaviour {
                 case PartyUnit.UnitAbility.ThrowRock:
                     ApplyDestructivePowerToSingleUnit(dstUnit);
                     break;
-                // Magic (including pure) attack powers
+                // Magic (including pure or whole-party) attack powers
                 case PartyUnit.UnitAbility.CastChainLightning:
                 case PartyUnit.UnitAbility.CastLightningStorm:
                 case PartyUnit.UnitAbility.HolyWord:
+                case PartyUnit.UnitAbility.EarthShatteringLeap:
+                case PartyUnit.UnitAbility.Malediction:
                     ApplyDestructivePowerToMultipleUnits();
                     break;
                 default:
@@ -2324,10 +2400,12 @@ public class PartyPanel : MonoBehaviour {
                 case PartyUnit.UnitAbility.HealingSong:
                     ApplyHealPowerToMultipleUnits();
                     break;
-                // Magic (including pure) attack powers
+                // Magic (including pure or whole-party) attack powers
                 case PartyUnit.UnitAbility.CastChainLightning:
                 case PartyUnit.UnitAbility.CastLightningStorm:
                 case PartyUnit.UnitAbility.HolyWord:
+                case PartyUnit.UnitAbility.EarthShatteringLeap:
+                case PartyUnit.UnitAbility.Malediction:
                     ApplyDestructivePowerToMultipleUnits();
                     break;
                 default:

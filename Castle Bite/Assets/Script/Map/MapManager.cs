@@ -408,7 +408,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapCity)
                                 {
                                     // check relationships with active player
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
+                                    Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                                     switch (relationships)
                                     {
                                         case Relationships.State.SameFaction:
@@ -468,7 +468,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapCity)
                                 {
                                     // check relationships with active player
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
+                                    Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                                     switch (relationships)
                                     {
                                         case Relationships.State.SameFaction:
@@ -691,8 +691,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     //bool CityIsEnemy(MapCity city)
     //{
     //    // verify if this is friendly or enemy party
-    //    //if (city.linkedCityTr.GetComponent<City>().GetFaction() != selectedHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction())
-    //    if (city.linkedCityTr.GetComponent<City>().GetFaction() != player.Faction)
+    //    //if (city.LinkedCityTr.GetComponent<City>().GetFaction() != selectedHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction())
+    //    if (city.LinkedCityTr.GetComponent<City>().GetFaction() != player.Faction)
     //    {
     //        // different faction -enemy
     //        return true;
@@ -810,7 +810,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             } else if (mapCity)
             {
                 // check relationships with active player
-                Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
+                Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                 switch (relationships)
                 {
                     case Relationships.State.SameFaction:
@@ -1001,36 +1001,60 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return IsTileProtected(checkedTilePositoin);
     }
 
-    void FindAndHighlightPath()
+    void SetMovePath(Vector3 from, Vector3 to)
     {
-        // First remove highlight from previous path
-        HighlightMovePath(false);
+        SetMovePath(GetTileByPosition(from), GetTileByPosition(to));
+    }
+
+    void SetMovePath(Vector2Int from, Vector2Int to)
+    {
+        Debug.Log("SetMovePath");
         // create source and target points
-        NesScripts.Controls.PathFind.Point _from = new NesScripts.Controls.PathFind.Point(GetHeroTilePosition().x, GetHeroTilePosition().y);
-        //Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
-        Vector2Int highlighterPosition = GetTileHighlighterPosition();
-        NesScripts.Controls.PathFind.Point _to = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
-        //Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
+        NesScripts.Controls.PathFind.Point _from = new NesScripts.Controls.PathFind.Point(from.x, from.y);
+        Debug.Log("From [" + _from.x + "]:[" + _from.y + "]");
+        NesScripts.Controls.PathFind.Point _to = new NesScripts.Controls.PathFind.Point(to.x, to.y);
+        Debug.Log("To [" + _to.x + "]:[" + _to.y + "]");
         // Debug.Log("Length [" + (grid.nodes.GetLength(0) - 1).ToString() + "]:[" + (grid.nodes.GetLength(1) - 1).ToString() + "]");
         // get path
         // path will either be a list of Points (x, y), or an empty list if no path is found.
         // verify if mouse is not over screen
-        if (   (_to.x > grid.nodes.GetLength(0) - 1) 
+        if ((_to.x > grid.nodes.GetLength(0) - 1)
             || (_to.y > grid.nodes.GetLength(1) - 1)
             || (_to.x < 0)
-            || (_to.y < 0) )
+            || (_to.y < 0))
         {
             // nothing to highlight, mouse is over the screen
         }
         else
         {
+            // before setting move path make the last tile passable, if it is tile with city on it
+            if (GetObjectOnTile(_to))
+            {
+                if (GetObjectOnTile(_to).GetComponent<MapCity>())
+                {
+                    Debug.Log("Make destination tile with city passable");
+                    // some object is present
+                    // adjust grid to make this tile passable (highlightable)
+                    // this is needed if user conquered this city and need to move to it
+                    tilesmap[_to.x, _to.y] = true;
+                    // Upgrade grid
+                    grid.UpdateGrid(tilesmap);
+                }
+            }
             movePath = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to);
             // for Manhattan distance
             // List<NesScripts.Controls.PathFind.Point> path = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to, NesScripts.Controls.Pathfinding.DistanceType.Manhattan);
-            // highlight new path
-            HighlightMovePath(true);
         }
+    }
+
+    void FindAndHighlightPath()
+    {
+        // First remove highlight from previous path
+        HighlightMovePath(false);
         // Debug.Log("FindAndHighlightPath");
+        SetMovePath(new Vector2Int(GetHeroTilePosition().x, GetHeroTilePosition().y), new Vector2Int(GetTileHighlighterPosition().x, GetTileHighlighterPosition().y));
+        // highlight new path
+        HighlightMovePath(true);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -1165,9 +1189,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         };
     }
 
+    public void MapHeroMoveToAndEnterCity(MapHero mapHero, MapCity mapCity)
+    {
+        // set selectedHero - it will be later used by EnterCityAfterMove function
+        selectedHero = mapHero;
+        // set move path
+        SetMovePath(mapHero.transform.position, mapCity.transform.position);
+        Debug.Log("StartCoroutine(Move())");
+        StartCoroutine(Move());
+        // Execute default enter city after move sequence
+        // . - this is not needed below, because it will be executed automatically
+        //EnterCityAfterMove(mapCity);
+    }
+
     void EnterCityAfterMove(MapCity mapCity)
     {
-        Debug.Log("Enter city");
+        Debug.Log("MapManager: EnterCityAfterMove");
         //// Get City
         //MapCity mapCity = GetCityByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
         // Link hero on the map to city on the map
@@ -1176,11 +1213,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Link city on the map to hero on the map
         selectedHero.linkedCityOnMapTr = mapCity.transform;
         // Move hero UI to City
-        selectedHero.LinkedPartyTr.SetParent(mapCity.linkedCityTr);
+        selectedHero.LinkedPartyTr.SetParent(mapCity.LinkedCityTr);
         // Enter city edit mode
         queue.Run(mapCity.EnterCityEditMode());
         // Trigger on hero entering city
-        mapCity.linkedCityTr.GetComponent<City>().ActOnHeroEnteringCity();
+        mapCity.LinkedCityTr.GetComponent<City>().ActOnHeroEnteringCity();
         // reset map state and selections, because hero can be removed while in city
         SetSelection(Selection.None);
     }
@@ -1347,7 +1384,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     IEnumerator EnterBattleStep(MapCity mapCity)
     {
         Debug.Log("EnterBattleStep");
-        //transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapCity);
+        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapCity);
         yield return null;
     }
 
@@ -1368,7 +1405,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     IEnumerator Move()
     {
-        //Debug.Log("Move");
+        Debug.Log("MapManager: Move");
         // Verify if hero was in city
         if (selectedHero.linkedCityOnMapTr)
         {
@@ -1391,8 +1428,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Move
         float deltaTime;
         float previousTime = Time.time;
-        if (movePath != null)
+        // verify if move path is not null and has at least one move point
+        if ((movePath != null) && (movePath.Count >= 1))
         {
+            Debug.Log("Move path is not null");
             // exit exit browse mode and enter animation mode
             SetMode(Mode.Animation);
             // Block mouse input
@@ -1403,22 +1442,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             MapCity enterCity = null;
             MapHero protectedTileEnemy = null;
             // loop through path points
+            Debug.Log("Move path count: " + movePath.Count.ToString());
             for (int i = 0; i < movePath.Count; i++)
             {
                 var pathPoint = movePath[i];
                 // act based on what is located on this (next) tile before we actually move into it
                 GameObject nextGameObjectOnPath = GetObjectOnTile(pathPoint);
-                //GameObject nextGameObjectOnPath;
-                //if (i != movePath.Count - 1)
-                //{
-                //    nextGameObjectOnPath = GetObjectOnTile(movePath[i + 1]);
-                //}
-                //else
-                //{
-                //    nextGameObjectOnPath = null;
-                //}
                 if (nextGameObjectOnPath)
                 {
+                    Debug.Log("04");
                     MapHero mapHero = nextGameObjectOnPath.GetComponent<MapHero>();
                     MapCity mapCity = nextGameObjectOnPath.GetComponent<MapCity>();
                     if (mapHero)
@@ -1444,8 +1476,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     }
                     else if (mapCity)
                     {
+                        Debug.Log("Move(): it is map city");
                         // check relationships with active player
-                        Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
@@ -1680,7 +1713,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapCity)
                         {
                             // verify if this is player's city
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            City city = mapCity.LinkedCityTr.GetComponent<City>();
                             if (player.Faction == city.GetFaction())
                             {
                                 // highlighted city belongs to player
@@ -1711,15 +1744,27 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // check if this is the same hero as selected
                                     if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
                                     {
-                                        // change cursor to edit hero cursor
-                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
-                                        //tileHighlighterColor = Color.blue;
+                                        // verify if hero is in city
+                                        if (mapHero.linkedCityOnMapTr)
+                                        {
+                                            //Debug.Log("hero in city");
+                                            // hero is in city
+                                            // change cursor to open doors cursor -> enter city edit mode indicator
+                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                                        }
+                                        else
+                                        {
+                                            //Debug.Log("hero on map");
+                                            // her os on map
+                                            // change cursor to edit hero cursor
+                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                                            //tileHighlighterColor = Color.blue;
+                                        }
                                     }
                                     else
                                     {
                                         // change cursor to selection hand
                                         transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
-                                        //tileHighlighterColor = Color.blue;
                                     }
                                     break;
                                 case Relationships.State.Allies:
@@ -1745,9 +1790,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // check if this is the same hero as selected
                                     if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
                                     {
-                                        // change cursor to edit hero cursor
-                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
-                                        //tileHighlighterColor = Color.blue;
+                                        Debug.Log("Same hero");
+                                        // verify if hero is in city
+                                        if (mapHero.linkedCityOnMapTr)
+                                        {
+                                            Debug.Log("hero in city");
+                                            // hero is in city
+                                            // change cursor to open doors cursor -> enter city edit mode indicator
+                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                                        }
+                                        else
+                                        {
+                                            Debug.Log("hero on map");
+                                            // her os on map
+                                            // change cursor to edit hero cursor
+                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                                            //tileHighlighterColor = Color.blue;
+                                        }
                                     }
                                     else
                                     {
@@ -1770,9 +1829,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapCity && !label)
                         {
-                            Debug.Log("Enter city box " + mapCity.name);
+                            //Debug.Log("Enter city box " + mapCity.name);
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1796,7 +1855,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             Debug.Log("Enter city lable box " + mapCity.name);
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.linkedCityTr.GetComponent<City>().GetFaction());
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1841,7 +1900,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapCity)
                         {
                             // verify if this is player's city
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            City city = mapCity.LinkedCityTr.GetComponent<City>();
                             if (player.Faction == city.GetFaction())
                             {
                                 // highlighted city belongs to player
@@ -1939,6 +1998,35 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    void VerifyLastPathPoint(NesScripts.Controls.PathFind.Point clickedTargetPathPoint)
+    {
+        // this is may be overhead
+        int lastPathPoint = movePath.Count - 1;
+        if (lastPathPoint >= 0)
+        {
+            Debug.Log("lastPathPoint " + lastPathPoint.ToString());
+            if (clickedTargetPathPoint != movePath[lastPathPoint])
+            {
+                Debug.LogError("Logical error. They should be equal");
+            }
+        }
+    }
+
+    void SaveLastPathPoint()
+    {
+        // verify that we have 1 or more move path points
+        if (movePath.Count >= 1)
+        {
+            // Save target path point for later checks
+            selectedTargetPathPoint = movePath[movePath.Count - 1];
+        }
+        else
+        {
+            // no path
+            selectedTargetPathPoint = null;
+        }
+    }
+
     void VerifyMovePathAndMoveIfNeeded(PointerEventData eventData)
     {
         Vector2Int clickedTargetTile = GetTileByPosition(eventData.position);
@@ -1961,13 +2049,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // we target new path point
                 // find and highlight new path
                 FindAndHighlightPath();
-                int lastPathPoint = movePath.Count - 1;
-                Debug.Log("lastPathPoint " + lastPathPoint.ToString());
-                selectedTargetPathPoint = movePath[lastPathPoint];
-                if (clickedTargetPathPoint != movePath[lastPathPoint])
-                {
-                    Debug.LogError("Logical error. They should be equal");
-                }
+                // Save target path point for later checks
+                SaveLastPathPoint();
+                // just in case do verifications
+                VerifyLastPathPoint(clickedTargetPathPoint);
             }
         }
         else
@@ -1975,11 +2060,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // there is no yet path highlighted
             // find and highlight new path
             FindAndHighlightPath();
-            selectedTargetPathPoint = movePath[movePath.Count - 1];
-            if (clickedTargetPathPoint != movePath[movePath.Count - 1])
-            {
-                Debug.LogError("Logical error. They should be equal");
-            }
+            // Save target path point for later checks
+            SaveLastPathPoint();
+            // just in case do verifications
+            VerifyLastPathPoint(clickedTargetPathPoint);
         }
     }
 
@@ -2013,8 +2097,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedHero(mH);
                 mH.SetSelectedState(true);
-                // change cursor to edit hero cursor
-                transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                // verify if hero is in city
+                if (mH.linkedCityOnMapTr)
+                {
+                    //Debug.Log("SetSelection hero in city");
+                    // hero is in city
+                    // change cursor to open doors cursor -> enter city edit mode indicator
+                    transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                }
+                else
+                {
+                    //Debug.Log("SetSelection hero on map");
+                    // her os on map
+                    // change cursor to edit hero cursor
+                    transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                    //tileHighlighterColor = Color.blue;
+                }
                 break;
             default:
                 Debug.LogError("Unknown or incompatible selection " + selection);
@@ -2112,7 +2210,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
                             }
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            City city = mapCity.LinkedCityTr.GetComponent<City>();
                             // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {
@@ -2131,14 +2229,37 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapCity)
                         {
                             //Debug.Log("Clicked on city on map");
-                            VerifyMovePathAndMoveIfNeeded(pointerEventData);
+                            // verify if hero is already in the same city
+                            if (selectedHero.linkedCityOnMapTr)
+                            {
+                                if (selectedHero.linkedCityOnMapTr.GetComponent<MapCity>().GetInstanceID() == mapCity.GetInstanceID())
+                                {
+                                    // Hero is in the same city
+                                    // Enter city edit mode
+                                    // remove selection
+                                    SetSelection(Selection.None);
+                                    // Enter city edit mode
+                                    SetMode(Mode.Animation);
+                                    queue.Run(mapCity.EnterCityEditMode());
+                                }
+                                else
+                                {
+                                    // Move to the city
+                                    VerifyMovePathAndMoveIfNeeded(pointerEventData);
+                                }
+                            }
+                            else
+                            {
+                                // Move to the city
+                                VerifyMovePathAndMoveIfNeeded(pointerEventData);
+                            }
                         }
                         if (mapCityViaLabel)
                         {
                             //Debug.Log("Clicked on city label on map");
                             // get Hero City
                             mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            City city = mapCity.LinkedCityTr.GetComponent<City>();
                             // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {
@@ -2203,9 +2324,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // same hero as selected
                                     // remove selection
                                     SetSelection(Selection.None);
-                                    // Enter hero edit mode
+                                    // enter animation mode to disable all input
                                     SetMode(Mode.Animation);
-                                    queue.Run(mapHero.EnterHeroEditMode());
+                                    // verify if hero is in city
+                                    if (mapHero.linkedCityOnMapTr)
+                                    {
+                                        // hero is in city
+                                        // enter city edit mode
+                                        MapCity _mapCity = mapHero.linkedCityOnMapTr.GetComponent<MapCity>();
+                                        queue.Run(_mapCity.EnterCityEditMode());
+                                    }
+                                    else
+                                    {
+                                        // her os on map
+                                        // enter hero edit mode
+                                        queue.Run(mapHero.EnterHeroEditMode());
+                                    }
                                 }
                                 else
                                 {
@@ -2258,7 +2392,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
                             }
-                            City city = mapCity.linkedCityTr.GetComponent<City>();
+                            City city = mapCity.LinkedCityTr.GetComponent<City>();
                             // verify if this is player's city
                             if (player.Faction == city.GetFaction())
                             {

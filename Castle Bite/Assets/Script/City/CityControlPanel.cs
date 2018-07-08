@@ -4,13 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityControlPanel : MonoBehaviour {
-    Toggle[] allTogglesInGroup;
     Toggle heroEquipmentToggle;
 
     // Use this for initialization
     void Start () {
-        // get all toggles in Toggle group
-        allTogglesInGroup = transform.parent.GetComponentsInChildren<Toggle>();
     }
 
     //// Update is called once per frame
@@ -34,6 +31,10 @@ public class CityControlPanel : MonoBehaviour {
 
     public void DimmAllOtherMenusExceptToggled(Toggle callingToggle)
     {
+        // get all toggles in Toggle group
+        // this might change after hero dismiss, because Hero's equipment button is also member of toggle group
+        Toggle[] allTogglesInGroup = transform.parent.GetComponentsInChildren<Toggle>();
+        // 
         foreach (Toggle tmpTgl in allTogglesInGroup)
         {
             VerifyAndDimmToggle(callingToggle, tmpTgl);
@@ -58,6 +59,10 @@ public class CityControlPanel : MonoBehaviour {
 
     public void DeselectAllOtherTogglesInGroup(Toggle callingToggle)
     {
+        // get all toggles in Toggle group
+        // this might change after hero dismiss, because Hero's equipment button is also member of toggle group
+        Toggle[] allTogglesInGroup = transform.parent.GetComponentsInChildren<Toggle>();
+        // 
         foreach (Toggle tmpTgl in allTogglesInGroup)
         {
             VerifyAndDeselectToggle(callingToggle, tmpTgl);
