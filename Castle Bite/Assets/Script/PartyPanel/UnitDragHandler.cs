@@ -79,40 +79,49 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnEndDrag(PointerEventData eventData)
     {
         // Debug.Log("OnEndDrag");
-        // disable drag state
-        GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, false);
-        // verify if user has activated unit info panel by right click and then moved mouse
-        // which triggered drag function
-        GameObject unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").gameObject;
-        if (unitInfoPanel.activeSelf)
+        // verify if user clicked left or right mouse button
+        if (Input.GetMouseButtonUp(0))
         {
-            // unit info panel was active
-            // Debug.LogWarning("OnEndDrag right mouse");
-            // deactivate it
-            unitInfoPanel.SetActive(false);
+            // on left mouse up
+            // disable drag state
+            GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, false);
+            // verify if user has activated unit info panel by right click and then moved mouse
+            // which triggered drag function
+            GameObject unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").gameObject;
+            if (unitInfoPanel.activeSelf)
+            {
+                // unit info panel was active
+                // Debug.LogWarning("OnEndDrag right mouse");
+                // deactivate it
+                unitInfoPanel.SetActive(false);
+            }
+            else
+            {
+                // unit info panel was not active and it most probably was normal left mouse drag operation
+                //Debug.LogWarning("OnEndDrag left mouse");
+                // on left mouse drag
+                // clean up unit being dragged
+                unitBeingDragged = null;
+                // enable blocksRaycasts
+                GetComponent<CanvasGroup>().blocksRaycasts = true;
+                // reset position to original if parent has not changed
+                if (transform.parent == startParent)
+                {
+                    transform.position = startPosition;
+                }
+                // verify if we are in city edit mode and not in hero edit mode
+                if (GetParentCity().transform.Find("CityGarnizon"))
+                {
+                    // activate hire unit buttons again, after it was disabled
+                    // this is should be done in City Garnizon panel
+                    PartyPanel garnizonPanel = GetParentCity().transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
+                    garnizonPanel.SetHireUnitPnlButtonActive(true);
+                }
+            }
         }
-        else
+        else if (Input.GetMouseButtonUp(1))
         {
-            // unit info panel was not active and it most probably was normal left mouse drag operation
-            //Debug.LogWarning("OnEndDrag left mouse");
-            // on left mouse drag
-            // clean up unit being dragged
-            unitBeingDragged = null;
-            // enable blocksRaycasts
-            GetComponent<CanvasGroup>().blocksRaycasts = true;
-            // reset position to original if parent has not changed
-            if (transform.parent == startParent)
-            {
-                transform.position = startPosition;
-            }
-            // verify if we are in city edit mode and not in hero edit mode
-            if (GetParentCity().transform.Find("CityGarnizon"))
-            {
-                // activate hire unit buttons again, after it was disabled
-                // this is should be done in City Garnizon panel
-                PartyPanel garnizonPanel = GetParentCity().transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
-                garnizonPanel.SetHireUnitPnlButtonActive(true);
-            }
+            // on right mouse up
         }
     }
 

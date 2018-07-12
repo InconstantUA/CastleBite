@@ -7,13 +7,31 @@ using UnityEngine.EventSystems;
 
 public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
+    Dictionary<Transform, Transform> originalParent;
+    Dictionary<Transform, Vector3> originalPosition;
+
+    void OnEnable()
+    {
+        originalParent = new Dictionary<Transform, Transform>();
+        originalPosition = new Dictionary<Transform, Vector3>();
+    }
 
     void OnDisable()
     {
-        // destroy clonned panels
-        foreach (PartyPanel partyPanel in transform.GetComponentsInChildren<PartyPanel>())
+        //// destroy clonned panels
+        //foreach (PartyPanel partyPanel in transform.GetComponentsInChildren<PartyPanel>())
+        //{
+        //    Destroy(partyPanel.gameObject);
+        //}
+        // return to original parent
+        foreach (KeyValuePair<Transform, Transform> original in originalParent)
         {
-            Destroy(partyPanel.gameObject);
+            original.Key.SetParent(original.Value);
+        }
+        // return to original position
+        foreach (KeyValuePair<Transform, Vector3> original in originalPosition)
+        {
+            original.Key.position = original.Value;
         }
         // deactivate all child panels
         transform.Find("SinglePartyPlaceholder").gameObject.SetActive(false);
@@ -42,9 +60,15 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
         // Activate PartiesInfoPanel
         gameObject.SetActive(true);
         // create duplicate of the party panel and place it into placeholder
-        Transform destinationPartyPanelTr = Instantiate(sourcePartyPanelTr.gameObject, partyPanelPlaceholder).transform;
+        //Transform destinationPartyPanelTr = Instantiate(sourcePartyPanelTr.gameObject, partyPanelPlaceholder).transform;
+        // save orignal parent
+        originalParent.Add(sourcePartyPanelTr, sourcePartyPanelTr.parent);
+        // save original position
+        originalPosition.Add(sourcePartyPanelTr, sourcePartyPanelTr.position);
+        // change parent
+        sourcePartyPanelTr.SetParent(partyPanelPlaceholder);
         // stretch heroPartyPanelClone transform
-        RectTransform rectTransform = destinationPartyPanelTr.GetComponent<RectTransform>();
+        RectTransform rectTransform = sourcePartyPanelTr.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0, 0);
         rectTransform.anchorMax = new Vector2(1f, 1f);
         // Reset to 0, 0, 0, 0 position
@@ -68,6 +92,7 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
             // clone hero in city panel and place it into the left placeholder
             MapHero mapHero = mapCity.LinkedPartyOnMapTr.GetComponent<MapHero>();
             CloneAndPlacePartyPanel(mapHero.LinkedPartyTr.Find("PartyPanel"), transform.Find("LeftPartyInfoPlaceHolder"));
+            Debug.Log("Show linked party panel");
         }
         else
         {
@@ -77,6 +102,7 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
         }
         // clone city panel and place it into the right placeholder
         CloneAndPlacePartyPanel(mapCity.LinkedCityTr.Find("CityGarnizon/PartyPanel"), transform.Find("RightPartyInfoPlaceHolder"));
+        Debug.Log("Show city garnizon party panel " + mapCity.LinkedCityTr.name);
     }
 
     public void OnPointerDown(PointerEventData eventData)

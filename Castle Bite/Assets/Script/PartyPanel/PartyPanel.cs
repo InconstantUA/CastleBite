@@ -20,6 +20,20 @@ public class PartyPanel : MonoBehaviour {
     PartyUnit activeBattleUnit;
     public string deadStatus = "Dead";
     public string levelUpStatus = "Level up";
+    bool isAIControlled = false;
+
+    public bool IsAIControlled
+    {
+        get
+        {
+            return isAIControlled;
+        }
+
+        set
+        {
+            isAIControlled = value;
+        }
+    }
 
     public Transform GetUnitSlotTr(string row, string cell)
     {
@@ -425,6 +439,25 @@ public class PartyPanel : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public List<UnitSlot> GetAllPowerTargetableUnitSlots()
+    {
+        List<UnitSlot> unitSlots = new List<UnitSlot> { };
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                Transform unitSlotTr = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                UnitSlot unitSlot = unitSlotTr.GetComponent<UnitSlot>();
+                // verify if slot has an unit in it and it is allowed to apply power to this unit
+                if ((unitSlotTr.childCount > 0) && (unitSlot.IsAllowedToApplyPowerToThisUnit))
+                {
+                    unitSlots.Add(unitSlot);
+                }
+            }
+        }
+        return unitSlots;
     }
 
     void VerifyCityCapacity()

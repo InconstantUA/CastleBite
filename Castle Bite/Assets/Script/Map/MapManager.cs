@@ -1368,6 +1368,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Debug.Log("EnterBattleCommonEnd");
         SetSelection(Selection.None);
         SetMode(Mode.Browse);
+        //// Deactivate map screen
+        //transform.root.Find("MapScreen").gameObject.SetActive(false);
         // unblock input
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(false);

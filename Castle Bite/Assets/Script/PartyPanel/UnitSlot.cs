@@ -25,6 +25,24 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
 
+    public bool IsAllowedToApplyPowerToThisUnit
+    {
+        get
+        {
+            return isAllowedToApplyPowerToThisUnit;
+        }
+    }
+
+    public PartyUnit GetUnit()
+    {
+        // verify if slot has unit in it
+        if (transform.childCount > 0)
+        {
+            return unitSlot.GetComponentInChildren<PartyUnit>();
+        }
+        return null;
+    }
+
     private void Awake()
     {
         confirmationPopUp = ConfirmationPopUp.Instance();
@@ -241,7 +259,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    void ActOnBattleScreenClick()
+    public void ActOnBattleScreenClick()
     {
         BattleScreen battleScreen = GetParentBattleScreen();
         // Verify if battle has not ended

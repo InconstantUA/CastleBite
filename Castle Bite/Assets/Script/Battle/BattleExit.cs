@@ -88,6 +88,8 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 Debug.LogError("Unknown exit option.");
                 break;
         }
+        //// Activate map screen
+        //transform.root.Find("MapScreen").gameObject.SetActive(true);
     }
 
 }

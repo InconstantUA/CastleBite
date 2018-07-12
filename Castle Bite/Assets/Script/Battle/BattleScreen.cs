@@ -14,14 +14,13 @@ public class BattleScreen : MonoBehaviour {
 
     PartyUnit activeUnit;
 
-    public enum BattlePlace { Map, CityOutside, CityInside };
-    BattlePlace battlePlace;
-
     bool battleHasEnded;
     bool canActivate = false; // if it is possible to activate next unit
     //bool queueIsActive;
 
     CoroutineQueue queue;
+
+    BattleAI battleAI;
 
     public enum TurnPhase
     {
@@ -30,16 +29,20 @@ public class BattleScreen : MonoBehaviour {
     };
     TurnPhase turnPhase;
 
+    public TurnPhase GetTurnPhase()
+    {
+        return turnPhase;
+    }
 
-    //public BattlePlace GetBattlePlace()
-    //{
-    //    return battlePlace;
-    //}
+    public PartyPanel GetPlayerPartyPanel()
+    {
+        return playerPartyPanel;
+    }
 
-    //public void SetBattlePlace(BattlePlace value)
-    //{
-    //    battlePlace = value;
-    //}
+    public PartyPanel GetEnemyPartyPanel()
+    {
+        return enemyPartyPanel;
+    }
 
     public bool GetBattleHasEnded()
     {
@@ -53,6 +56,7 @@ public class BattleScreen : MonoBehaviour {
         rightFocusPanel = transform.Find("RightFocus").GetComponent<FocusPanel>();
         // Create a coroutine queue that can run max 1 coroutine at once
         queue = new CoroutineQueue(1, StartCoroutine);
+        battleAI = GetComponent<BattleAI>();
     }
 
     //BattlePlace GetBattlePlace(HeroParty playerHeroParty, HeroParty enemyHeroParty)
@@ -64,20 +68,35 @@ public class BattleScreen : MonoBehaviour {
     //    return BattlePlace.Map;
     //}
 
-    public void EnterBattle(MapHero playerOnMap, MapHero enemyOnMap)
+    bool CanEscape(Transform parentLocation)
+    {
+        Debug.LogWarning("Location " + parentLocation.name);
+        if (parentLocation.GetComponent<City>())
+        {
+            // if party was in city, then it cannot escape
+            return false;
+        }
+        else
+        {
+            // other options:
+            //  - party was on map
+            // can escape
+            return true;
+        }
+    }
+
+    void EnterBattleCommon(HeroParty playerHeroParty, HeroParty enemyHeroParty)
     {
         // activate this battle sreen
         gameObject.SetActive(true);
         // Set turn phase to main phase
         SetTurnPhase(TurnPhase.Main);
-        // get hero's parties
-        HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
-        HeroParty enemyHeroParty = enemyOnMap.LinkedPartyTr.GetComponent<HeroParty>();
-        // set battle place
-        battlePlace = BattlePlace.Map;
         // Record original poisitions
         playerHeroPartyPreBattleParentTr = playerHeroParty.transform.parent;
         enemyHeroPartyPreBattleParentTr = enemyHeroParty.transform.parent;
+        // set if party can escape based on its original position
+        playerHeroParty.CanEscapeFromBattle = CanEscape(playerHeroPartyPreBattleParentTr);
+        enemyHeroParty.CanEscapeFromBattle = CanEscape(enemyHeroPartyPreBattleParentTr);
         // move hero parties to the battle screen
         playerHeroParty.transform.SetParent(transform);
         enemyHeroParty.transform.SetParent(transform);
@@ -88,6 +107,10 @@ public class BattleScreen : MonoBehaviour {
         // Get parties panels
         playerPartyPanel = playerHeroParty.GetComponentInChildren<PartyPanel>();
         enemyPartyPanel = enemyHeroParty.GetComponentInChildren<PartyPanel>();
+        // Set if parties panels are AI or player controllable
+        // .. do it automatically in future, based on ...
+        playerPartyPanel.IsAIControlled = false;
+        enemyPartyPanel.IsAIControlled = true;
         // Get parties leaders
         PartyUnit playerPartyLeader = playerPartyPanel.GetPartyLeader();
         PartyUnit enemyPartyLeader = enemyPartyPanel.GetPartyLeader();
@@ -101,6 +124,14 @@ public class BattleScreen : MonoBehaviour {
         StartBattle();
     }
 
+    public void EnterBattle(MapHero playerOnMap, MapHero enemyOnMap)
+    {
+        // get hero's parties
+        HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
+        HeroParty enemyHeroParty = enemyOnMap.LinkedPartyTr.GetComponent<HeroParty>();
+        EnterBattleCommon(playerHeroParty, enemyHeroParty);
+    }
+
     public void EnterBattle(MapHero playerOnMap, MapCity enemyCityOnMap)
     {
         // get hero's parties
@@ -110,13 +141,10 @@ public class BattleScreen : MonoBehaviour {
         if (enemyHeroParty)
         {
             // set battle place on a city gates
-            battlePlace = BattlePlace.CityOutside;
         }
         else
         {
             // no enemy hero protecting city
-            // set battle place inside city
-            battlePlace = BattlePlace.CityInside;
             // get garnizon party
             enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Garnizon);
         }
@@ -126,34 +154,7 @@ public class BattleScreen : MonoBehaviour {
         {
             // city is protected
             // proceed with preparations for the battle
-            // activate this battle sreen
-            gameObject.SetActive(true);
-            // Record original poisitions
-            playerHeroPartyPreBattleParentTr = playerHeroParty.transform.parent;
-            enemyHeroPartyPreBattleParentTr = enemyHeroParty.transform.parent;
-            // Set turn phase to main phase
-            SetTurnPhase(TurnPhase.Main);
-            // move hero parties to the battle screen
-            playerHeroParty.transform.SetParent(transform);
-            enemyHeroParty.transform.SetParent(transform);
-            // disable player party inventory and equipment
-            playerHeroParty.transform.Find("PartyInventory").gameObject.SetActive(false);
-            playerHeroParty.transform.Find("HeroEquipment").gameObject.SetActive(false);
-            playerHeroParty.transform.Find("HeroEquipmentBtn").gameObject.SetActive(false);
-            // Get parties panels
-            playerPartyPanel = playerHeroParty.GetComponentInChildren<PartyPanel>();
-            enemyPartyPanel = enemyHeroParty.GetComponentInChildren<PartyPanel>();
-            // Get parties leaders
-            PartyUnit playerPartyLeader = playerPartyPanel.GetPartyLeader();
-            PartyUnit enemyPartyLeader = enemyPartyPanel.GetPartyLeader();
-            // Link parties leaders to the focus panels
-            leftFocusPanel.focusedObject = playerPartyLeader.gameObject;
-            rightFocusPanel.focusedObject = enemyPartyLeader.gameObject;
-            // Initialize focus panel with information from linked leaders
-            leftFocusPanel.OnChange(FocusPanel.ChangeType.Init);
-            rightFocusPanel.OnChange(FocusPanel.ChangeType.Init);
-            // start turn based battle
-            StartBattle();
+            EnterBattleCommon(playerHeroParty, enemyHeroParty);
         }
         else
         {
@@ -211,18 +212,6 @@ public class BattleScreen : MonoBehaviour {
         // Change map mode to browse
         MapManager mapManager = GetMapManager();
         mapManager.SetMode(MapManager.Mode.Browse);
-        switch (battlePlace)
-        {
-            case BattlePlace.Map:
-                break;
-            case BattlePlace.CityOutside:
-                break;
-            case BattlePlace.CityInside:
-                break;
-            default:
-                Debug.LogError("Unknown battle place");
-                break;
-        }
         // Move heroes parties to thier initial positions before battle
         // Verify if player party is not destroyed
         if (playerPartyPanel)
@@ -643,11 +632,38 @@ public class BattleScreen : MonoBehaviour {
         // Unblock mouse input
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(false);
+        Debug.Log("Unit has been activated");
+        // verify if active unit's party panel is AI controlled => faction not equal to player's faction
+        if (activeUnit.GetUnitPartyPanel().IsAIControlled)
+        {
+            // give control to battle AI
+            queue.Run(battleAI.Act());
+        }
+        else
+        {
+            // wait for user to act
+        }
         yield return null;
+    }
+
+    void UpdateBattleControlPanelAccordingToUnitPossibilities()
+    {
+        // verify if party can flee
+        if (activeUnit.GetUnitParty().CanEscapeFromBattle)
+        {
+            // activate flee button
+            transform.Find("CtrlPnlFight/Retreat").gameObject.SetActive(true);
+        }
+        else
+        {
+            // deactivate flee button
+            transform.Find("CtrlPnlFight/Retreat").gameObject.SetActive(false);
+        }
     }
 
     IEnumerator NextUnit()
     {
+        UpdateBattleControlPanelAccordingToUnitPossibilities();
         ExecutePreActivateActions();
         ProcessBuffsAndDebuffs();
         queue.Run(ActivateUnit());

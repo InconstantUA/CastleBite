@@ -8,7 +8,7 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     Text txt;
     Button btn;
@@ -31,8 +31,19 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerUp(PointerEventData eventData)
     {
         // Debug.Log("OnPointerUp");
-        // keep state On
-        ActOnClick();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            ActOnClick();
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+        }
     }
 
     void SetPressedStatus()
@@ -61,7 +72,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         battleScreen.ActivateNextUnit();
     }
 
-    void ActOnClick()
+    public void ActOnClick()
     {
         // Defend
         Debug.Log("Defend");

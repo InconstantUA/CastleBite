@@ -17,6 +17,8 @@ public class HeroParty : MonoBehaviour {
     [SerializeField]
     MapHero linkedPartyOnMap;
 
+    public bool CanEscapeFromBattle { get; set; }
+
     public void SetLinkedPartyOnMap(MapHero value)
     {
         linkedPartyOnMap = value;
