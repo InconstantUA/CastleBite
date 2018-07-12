@@ -704,13 +704,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     //    }
     //}
 
-    GameObject GetObjectOnTile(NesScripts.Controls.PathFind.Point pathPoint)
+    GameObject GetObjectOnTile(Vector2Int tilePosition)
     {
-        Vector2Int tilePosition = new Vector2Int
-        {
-            x = pathPoint.x,
-            y = pathPoint.y
-        };
         // go over all objects and verify if they are on the tile
         foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
         {
@@ -778,6 +773,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
         // Everything else is just terrain without hero, city or treasure on it.
         return null;
+    }
+    GameObject GetObjectOnTile(NesScripts.Controls.PathFind.Point pathPoint)
+    {
+        Vector2Int tilePosition = new Vector2Int
+        {
+            x = pathPoint.x,
+            y = pathPoint.y
+        };
+        return GetObjectOnTile(tilePosition);
     }
 
     Color GetTileHighlightColor(GameObject gameObjectOnTile)
@@ -1443,6 +1447,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             bool breakMove = false;
             MapCity enterCity = null;
             MapHero protectedTileEnemy = null;
+            Faction selectedHeroFaction = selectedHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction();
             // loop through path points
             Debug.Log("Move path count: " + movePath.Count.ToString());
             for (int i = 0; i < movePath.Count; i++)
@@ -1457,8 +1462,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     MapCity mapCity = nextGameObjectOnPath.GetComponent<MapCity>();
                     if (mapHero)
                     {
-                        // check relationships with active player
-                        Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
+                        // check relationships with moving party faction
+                        //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
@@ -1479,8 +1485,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     else if (mapCity)
                     {
                         Debug.Log("Move(): it is map city");
-                        // check relationships with active player
-                        Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
+                        // check relationships with moving party faction
+                        //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapCity.LinkedCityTr.GetComponent<City>().GetFaction());
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
@@ -1520,8 +1527,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         // verify if not null
                         if (mapHero)
                         {
-                            // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
+                            // check relationships with moving party faction
+                            //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().GetFaction());
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -2449,4 +2457,43 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    Vector2Int GetEscapeDestination(Vector2Int fleeingPartyPositionOnMap, Vector2Int direction)
+    {
+        Vector2Int destination = direction + fleeingPartyPositionOnMap;
+        // verify if destination is within map borders
+        if (
+            (destination.x >= 1)
+            && (destination.y >= 1)
+            && (destination.x <= tilesmap.GetLength(0))
+            && (destination.y <= tilesmap.GetLength(1))
+            )
+        {
+            // verify if destination tile is not occupied
+            if (!GetObjectOnTile(destination))
+            {
+                return destination;
+            }
+        }
+        // by default return the same position where party is now, if there is no place to escape
+        return fleeingPartyPositionOnMap;
+    }
+
+    public void EscapeBattle(Transform fleeingPartyTransform, Transform oppositeObjectTransform)
+    {
+        // fleeing party position on map
+        Vector2Int fleeingPartyPositionOnMap = GetTileByPosition(fleeingPartyTransform.position);
+        Vector2Int oppositeObjectPositionOnMap = GetTileByPosition(oppositeObjectTransform.position);
+        // get flee vector based on current position of the objects
+        Vector2Int direction = fleeingPartyPositionOnMap - oppositeObjectPositionOnMap;
+        Debug.Log(direction);
+        // get destination
+        Vector2Int destination = GetEscapeDestination(fleeingPartyPositionOnMap, direction);
+        // set selectedHero - it will be later used by EnterCityAfterMove function
+        selectedHero = fleeingPartyTransform.GetComponent<MapHero>();
+        // set move path
+        SetMovePath(fleeingPartyPositionOnMap, destination);
+        // start move 
+        Debug.Log("StartCoroutine(Move())");
+        StartCoroutine(Move());
+    }
 }

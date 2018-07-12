@@ -9,9 +9,6 @@ public class BattleScreen : MonoBehaviour {
     PartyPanel playerPartyPanel;
     PartyPanel enemyPartyPanel;
 
-    Transform playerHeroPartyPreBattleParentTr;
-    Transform enemyHeroPartyPreBattleParentTr;
-
     PartyUnit activeUnit;
 
     bool battleHasEnded;
@@ -92,11 +89,11 @@ public class BattleScreen : MonoBehaviour {
         // Set turn phase to main phase
         SetTurnPhase(TurnPhase.Main);
         // Record original poisitions
-        playerHeroPartyPreBattleParentTr = playerHeroParty.transform.parent;
-        enemyHeroPartyPreBattleParentTr = enemyHeroParty.transform.parent;
+        playerHeroParty.PreBattleParentTr = playerHeroParty.transform.parent;
+        enemyHeroParty.PreBattleParentTr = enemyHeroParty.transform.parent;
         // set if party can escape based on its original position
-        playerHeroParty.CanEscapeFromBattle = CanEscape(playerHeroPartyPreBattleParentTr);
-        enemyHeroParty.CanEscapeFromBattle = CanEscape(enemyHeroPartyPreBattleParentTr);
+        playerHeroParty.CanEscapeFromBattle = CanEscape(playerHeroParty.PreBattleParentTr);
+        enemyHeroParty.CanEscapeFromBattle = CanEscape(enemyHeroParty.PreBattleParentTr);
         // move hero parties to the battle screen
         playerHeroParty.transform.SetParent(transform);
         enemyHeroParty.transform.SetParent(transform);
@@ -110,7 +107,7 @@ public class BattleScreen : MonoBehaviour {
         // Set if parties panels are AI or player controllable
         // .. do it automatically in future, based on ...
         playerPartyPanel.IsAIControlled = false;
-        enemyPartyPanel.IsAIControlled = true;
+        enemyPartyPanel.IsAIControlled = false;
         // Get parties leaders
         PartyUnit playerPartyLeader = playerPartyPanel.GetPartyLeader();
         PartyUnit enemyPartyLeader = enemyPartyPanel.GetPartyLeader();
@@ -216,12 +213,12 @@ public class BattleScreen : MonoBehaviour {
         // Verify if player party is not destroyed
         if (playerPartyPanel)
         {
-            playerPartyPanel.GetHeroParty().transform.SetParent(playerHeroPartyPreBattleParentTr);
+            playerPartyPanel.GetHeroParty().transform.SetParent(playerPartyPanel.GetHeroParty().PreBattleParentTr);
         }
         // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
         {
-            enemyPartyPanel.GetHeroParty().transform.SetParent(enemyHeroPartyPreBattleParentTr);
+            enemyPartyPanel.GetHeroParty().transform.SetParent(enemyPartyPanel.GetHeroParty().PreBattleParentTr);
         }
         // Reset almost all units statuses and info for panels, if they are still present
         // Exceptions: Dead
@@ -245,6 +242,7 @@ public class BattleScreen : MonoBehaviour {
 
     public void DestroyParty(PartyPanel partyPanel)
     {
+        Debug.Log("Destroy party");
         // set variables
         HeroParty heroParty = partyPanel.GetHeroParty();
         MapHero heroOnMapRepresentation = heroParty.GetLinkedPartyOnMap();
@@ -266,33 +264,56 @@ public class BattleScreen : MonoBehaviour {
         DefaultOnBattleExit();
     }
 
+    void FleeXFromY(PartyPanel fleeingPartyPanel, PartyPanel otherPartyPanel)
+    {
+        Debug.Log("Flee");
+        // get fleeing party transform on map
+        // it is not possible to flee if your party is not on map, that is why there is no additional checks here
+        Transform fleeingPartyTransform = fleeingPartyPanel.GetHeroParty().GetLinkedPartyOnMap().transform;
+        // get other party or city transform on map
+        Transform oppositeTransform;
+        // verify if prebattle parent was city
+        if (otherPartyPanel.GetHeroParty().PreBattleParentTr.GetComponent<City>())
+        {
+            // player was in city or it was city garnizon
+            // get city on map transform
+            oppositeTransform = otherPartyPanel.GetHeroParty().PreBattleParentTr.GetComponent<City>().LinkedMapCity.transform;
+        }
+        else
+        {
+            // player was on map
+            // get linked party on map transform
+            oppositeTransform = otherPartyPanel.GetHeroParty().GetLinkedPartyOnMap().transform;
+        }
+        // give control to map manager to flee
+        GetMapManager().EscapeBattle(fleeingPartyTransform, oppositeTransform);
+    }
+
     public void FleePlayer()
     {
         DefaultOnBattleExit();
+        FleeXFromY(playerPartyPanel, enemyPartyPanel);
     }
 
     public void FleeEnemy()
     {
         DefaultOnBattleExit();
+        FleeXFromY(enemyPartyPanel, playerPartyPanel);
     }
 
     public void EnterCity()
     {
         Debug.Log("BattleScreen: EnterCity");
         DefaultOnBattleExit();
-        Debug.Log("1");
         // remove dead units from city garnizon's party panel
         enemyPartyPanel.GetHeroParty().GetComponentInChildren<PartyPanel>().RemoveDeadUnits();
-        Debug.Log("2");
         // Change city faction to player's faction
         enemyPartyPanel.GetCity().SetFaction(playerPartyPanel.GetHeroParty().GetFaction());
-        Debug.Log("3");
         // Trigger map hero move to and enter city
         MapHero mapHero = playerPartyPanel.GetHeroParty().GetLinkedPartyOnMap();
         MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LinkedMapCity;
         MapManager mapManager = GetMapManager();
         mapManager.MapHeroMoveToAndEnterCity(mapHero, destinationCityOnMap);
-        Debug.Log("4");
     }
 
     IEnumerator EndBattle()
@@ -302,8 +323,8 @@ public class BattleScreen : MonoBehaviour {
         battleHasEnded = true;
         // Remove highlight from active unit
         activeUnit.HighlightActiveUnitInBattle(false);
-        // Clear units info and status information
-        enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
+        //// Clear units info and status information
+        //enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
         BattleExit exitButton = transform.Find("Exit").GetComponent<BattleExit>();
         // Activate exit battle button;
@@ -313,17 +334,18 @@ public class BattleScreen : MonoBehaviour {
         // Check who win battle
         if (!playerPartyPanel.CanFight())
         {
+            Debug.Log("Player cannot fight anymore");
             // player cannot fight anymore
             // verify if player has flee from battle
             if (playerPartyPanel.HasEscapedBattle())
             {
-                // player has escaped battle
+                Debug.Log("Player has escaped battle");
                 // On exit: move it 2 tiles away from other party
                 exitButton.SetExitOption(BattleExit.ExitOption.FleePlayer);
             }
             else
             {
-                // player lost battle and was destroyed
+                Debug.Log("Player lost battle and was destroyed");
                 // verify if battle was with city Garnizon:
                 // .. this is not needed here because city garnizon cannot initiate fight
                 // On exit: destroy player party
@@ -334,17 +356,17 @@ public class BattleScreen : MonoBehaviour {
         }
         else
         {
-            // enemy cannot fight anymore
+            Debug.Log("Enemy cannot fight anymore");
             // verify if enemy has flee from battle
             if (enemyPartyPanel.HasEscapedBattle())
             {
-                // enemy has escaped battle
+                Debug.Log("Enemy has escaped battle");
                 // On exit: move it 2 tiles away from other party
                 exitButton.SetExitOption(BattleExit.ExitOption.FleeEnemy);
             }
             else
             {
-                // player lost battle and was destroyed
+                Debug.Log("Enemy lost battle and was destroyed");
                 // verify if battle was with city Garnizon:
                 if (enemyPartyPanel.GetHeroParty().GetMode() == HeroParty.PartyMode.Garnizon)
                 {
@@ -586,6 +608,17 @@ public class BattleScreen : MonoBehaviour {
         //yield return null;
     }
 
+    IEnumerator EscapeUnit()
+    {
+        yield return new WaitForSeconds(0.25f);
+        activeUnit.SetHasMoved(true);
+        activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
+        // This unit can't act any more
+        // Skip post-move actions and Activate next unit
+        canActivate = ActivateNextUnit();
+        yield return new WaitForSeconds(0.25f);
+    }
+
     IEnumerator ActivateUnit()
     {
         //Debug.Log("ActivateUnit");
@@ -604,17 +637,23 @@ public class BattleScreen : MonoBehaviour {
                 // Activate highlights of which cells can or cannot be targeted
                 queue.Run(playerPartyPanel.SetActiveUnitInBattle(activeUnit));
                 queue.Run(enemyPartyPanel.SetActiveUnitInBattle(activeUnit));
+                // verify if active unit's party panel is AI controlled => faction not equal to player's faction
+                if (activeUnit.GetUnitPartyPanel().IsAIControlled)
+                {
+                    // give control to battle AI
+                    queue.Run(battleAI.Act());
+                }
+                else
+                {
+                    // wait for user to act
+                }
                 canActivate = true;
                 break;
             case PartyUnit.UnitStatus.Escaping:
                 // If there were debuffs applied and unit has survived,
                 // then unit may escape now
                 // Escape unit
-                activeUnit.SetHasMoved(true);
-                activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
-                // This unit can't act any more
-                // Skip post-move actions and Activate next unit
-                canActivate = ActivateNextUnit();
+                queue.Run(EscapeUnit());
                 break;
             case PartyUnit.UnitStatus.Dead:
                 // This unit can't act any more
@@ -633,16 +672,6 @@ public class BattleScreen : MonoBehaviour {
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(false);
         Debug.Log("Unit has been activated");
-        // verify if active unit's party panel is AI controlled => faction not equal to player's faction
-        if (activeUnit.GetUnitPartyPanel().IsAIControlled)
-        {
-            // give control to battle AI
-            queue.Run(battleAI.Act());
-        }
-        else
-        {
-            // wait for user to act
-        }
         yield return null;
     }
 

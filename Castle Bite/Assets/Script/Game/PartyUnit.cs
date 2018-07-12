@@ -527,6 +527,7 @@ public class PartyUnit : MonoBehaviour {
 
     public void SetUnitStatus(UnitStatus value)
     {
+        Debug.Log("Set unit " + unitName + " status " + value.ToString());
         unitStatus = value;
         // get new UI color according ot unit status
         Color32 newUIColor;

@@ -19,6 +19,8 @@ public class HeroParty : MonoBehaviour {
 
     public bool CanEscapeFromBattle { get; set; }
 
+    public Transform PreBattleParentTr { get; set; }
+
     public void SetLinkedPartyOnMap(MapHero value)
     {
         linkedPartyOnMap = value;
