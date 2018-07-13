@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
+    public bool interactable;
 
     public void ActivateAdvance(PartyUnit partyUnit)
     {
@@ -189,11 +190,14 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public void OnPointerUp(PointerEventData eventData)
     {
         // Debug.Log("OnPointerUp");
-        if (Input.GetMouseButtonUp(1))
+        if (interactable)
         {
-            // on right mouse click
-            // deactivate unit info
-            gameObject.SetActive(false);
+            if (Input.GetMouseButtonUp(1))
+            {
+                // on right mouse click
+                // deactivate unit info
+                gameObject.SetActive(false);
+            }
         }
     }
 

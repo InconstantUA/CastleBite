@@ -8,15 +8,19 @@ using UnityEngine.UI;
 public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
 
-    Text txt;
+    public bool interactable;
     [SerializeField]
     Color normalColor;
     [SerializeField]
     Color highlightedColor;
     [SerializeField]
     Color pressedColor;
+    [SerializeField]
+    Color disabledColor;
     // create event, which later can be configured in Unity Editor
     public UnityEvent OnClick;
+    // link to text
+    Text txt;
 
     void Start()
     {
@@ -28,54 +32,69 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         // Debug.Log("OnPointerEnter");
         // highlight this menu
-        SetHighlightedStatus();
+        if (interactable)
+        {
+            SetHighlightedStatus();
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("OnPointerDown");
-        if (Input.GetMouseButtonDown(0))
+        if (interactable)
         {
-            // on left mouse
-            SetPressedStatus();
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            // on right mouse
+            if (Input.GetMouseButtonDown(0))
+            {
+                // on left mouse
+                SetPressedStatus();
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                // on right mouse
+            }
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // Debug.Log("OnPointerUp");
-        if (Input.GetMouseButtonUp(0))
+        if (interactable)
         {
-            // on left mouse
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            // on right mouse
+            // Debug.Log("OnPointerUp");
+            if (Input.GetMouseButtonUp(0))
+            {
+                // on left mouse
+            }
+            else if (Input.GetMouseButtonUp(1))
+            {
+                // on right mouse
+            }
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // return to previous toggle state
-        SetNormalStatus();
+        if (interactable)
+        {
+            // return to previous toggle state
+            SetNormalStatus();
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // trigger registered via Unity editor functions
-        if (Input.GetMouseButtonUp(0))
+        if (interactable)
         {
-            // on left mouse click
-            SetHighlightedStatus();
-            OnClick.Invoke();
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            // on right mouse click
+            // trigger registered via Unity editor functions
+            if (Input.GetMouseButtonUp(0))
+            {
+                // on left mouse click
+                SetHighlightedStatus();
+                OnClick.Invoke();
+            }
+            else if (Input.GetMouseButtonUp(1))
+            {
+                // on right mouse click
+            }
         }
     }
 
@@ -89,7 +108,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         txt.color = pressedColor;
     }
 
-    void SetNormalStatus()
+    public void SetNormalStatus()
     {
         txt.color = normalColor;
     }
