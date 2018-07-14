@@ -51,7 +51,6 @@ MonoBehaviour:
   healthCurr: 45
   healthMax: 45
   healthMaxIncrementOnLevelUp: 5
-  isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
@@ -65,12 +64,20 @@ MonoBehaviour:
   unitRole: Heals other members
   unitBriefDescription: 
   unitFullDescription: Full description.
-  hasEscaped: 0
   hasMoved: 0
   cost: 45
   unitSize: 0
   isInterpartyMovable: 1
   isDismissable: 1
+  unitStatus: 0
+  unitDebuffs: 
+  unitBuffs: 
+  unitUpgradePoints: 0
+  unitStatPoints: 0
+  classIsUpgradable: 1
+  unitClassPoints: 0
+  canLearnSkills: 0
+  unitSkillPoints: 0
 --- !u!224 &224042856222307680
 RectTransform:
   m_ObjectHideFlags: 1

@@ -72,6 +72,12 @@ MonoBehaviour:
   unitStatus: 0
   unitDebuffs: 
   unitBuffs: 
+  unitUpgradePoints: 0
+  unitStatPoints: 0
+  classIsUpgradable: 1
+  unitClassPoints: 0
+  canLearnSkills: 0
+  unitSkillPoints: 0
 --- !u!224 &224033413711483370
 RectTransform:
   m_ObjectHideFlags: 1

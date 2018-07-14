@@ -35,7 +35,7 @@ public class AdditionalInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDow
         if (Input.GetMouseButtonUp(1))
         {
             // on right mouse click
-            // deactivate unit info
+            // deactivate additional info
             gameObject.SetActive(false);
         }
     }

@@ -51,7 +51,6 @@ MonoBehaviour:
   healthCurr: 95
   healthMax: 95
   healthMaxIncrementOnLevelUp: 15
-  isAlive: 1
   unitDefence: 0
   unitResistances: 
   unitImmunities: 
@@ -65,12 +64,20 @@ MonoBehaviour:
   unitRole: Stealing, spying and special operations
   unitBriefDescription: 
   unitFullDescription: Full description.
-  hasEscaped: 0
   hasMoved: 0
   cost: 220
   unitSize: 0
   isInterpartyMovable: 0
   isDismissable: 1
+  unitStatus: 0
+  unitDebuffs: 
+  unitBuffs: 
+  unitUpgradePoints: 0
+  unitStatPoints: 0
+  classIsUpgradable: 0
+  unitClassPoints: 0
+  canLearnSkills: 1
+  unitSkillPoints: 0
 --- !u!224 &224051252343539266
 RectTransform:
   m_ObjectHideFlags: 1

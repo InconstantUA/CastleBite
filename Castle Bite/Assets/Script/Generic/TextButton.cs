@@ -113,4 +113,22 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         txt.color = normalColor;
     }
 
+    public void SetDisabledStatus()
+    {
+        txt = GetComponent<Text>();
+        txt.color = disabledColor;
+    }
+
+    public void SetInteractable(bool value)
+    {
+        interactable = value;
+        if (interactable)
+        {
+            SetNormalStatus();
+        }
+        else
+        {
+            SetDisabledStatus();
+        }
+    }
 }

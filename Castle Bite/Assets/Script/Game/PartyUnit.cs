@@ -178,6 +178,20 @@ public class PartyUnit : MonoBehaviour {
     UnitDebuff[] unitDebuffs;
     [SerializeField]
     UnitBuff[] unitBuffs;
+    // For Upgrade
+    [SerializeField]
+    int unitUpgradePoints;
+    [SerializeField]
+    int unitStatPoints;
+    [SerializeField]
+    bool classIsUpgradable;
+    [SerializeField]
+    int unitClassPoints;
+    [SerializeField]
+    bool canLearnSkills;
+    [SerializeField]
+    int unitSkillPoints;
+
 
     private void Awake()
     {
@@ -933,6 +947,83 @@ public class PartyUnit : MonoBehaviour {
         return unitBuffs;
     }
 
+    public int UnitUpgradePoints
+    {
+        get
+        {
+            return unitUpgradePoints;
+        }
+
+        set
+        {
+            unitUpgradePoints = value;
+        }
+    }
+
+    public int UnitStatPoints
+    {
+        get
+        {
+            return unitStatPoints;
+        }
+
+        set
+        {
+            unitStatPoints = value;
+        }
+    }
+
+    public bool ClassIsUpgradable
+    {
+        get
+        {
+            return classIsUpgradable;
+        }
+
+        set
+        {
+            classIsUpgradable = value;
+        }
+    }
+
+    public int UnitClassPoints
+    {
+        get
+        {
+            return unitClassPoints;
+        }
+
+        set
+        {
+            unitClassPoints = value;
+        }
+    }
+
+    public bool CanLearnSkills
+    {
+        get
+        {
+            return canLearnSkills;
+        }
+
+        set
+        {
+            canLearnSkills = value;
+        }
+    }
+
+    public int UnitSkillPoints
+    {
+        get
+        {
+            return unitSkillPoints;
+        }
+
+        set
+        {
+            unitSkillPoints = value;
+        }
+    }
     //public UniquePowerModifier[] GetUniquePowerModifiers()
     //{
     //    return uniquePowerModifiers;
