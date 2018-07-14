@@ -10,8 +10,9 @@ public class PartyUnit : MonoBehaviour {
     public enum UnitType
     {
         CapitalGuard,
-        Knight, Ranger, Archmage, Seraphim, Thief, Swordsman, Mage, Priest, Colossus, Archer,
+        Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer,
         Orc, Goblin, Ogre, Cyclop, Troll,
+        Chevalier, Gladiator, Templar, Lancer, Warlord, Paladin, Champion, // Warrior upgrades
         Unknown
     };
 
