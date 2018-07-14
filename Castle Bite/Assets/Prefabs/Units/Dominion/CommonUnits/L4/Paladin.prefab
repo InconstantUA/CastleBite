@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Paladin
-  unitType: 6
+  unitType: 21
   isLeader: 0
   unitLeadership: 0
   givenName: Paladin
@@ -78,6 +78,9 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 114542759371375566, guid: ca1da36938c728a44bba0e4a7df1f991,
+    type: 2}
+  unlocksUnits: []
 --- !u!224 &224813333760397050
 RectTransform:
   m_ObjectHideFlags: 1

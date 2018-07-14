@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Templar
-  unitType: 6
+  unitType: 18
   isLeader: 0
   unitLeadership: 0
   givenName: Templar
@@ -78,6 +78,10 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 114357453069376760, guid: 8294e367542eb5b4b84bdfede8009c29,
+    type: 2}
+  unlocksUnits:
+  - {fileID: 114977175714539972, guid: 5d04dd3710f0dfe4f888ff3aa71d3aa6, type: 2}
 --- !u!224 &224282622572146444
 RectTransform:
   m_ObjectHideFlags: 1

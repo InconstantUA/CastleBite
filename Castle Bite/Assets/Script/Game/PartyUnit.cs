@@ -192,20 +192,35 @@ public class PartyUnit : MonoBehaviour {
     bool canLearnSkills;
     [SerializeField]
     int unitSkillPoints;
+    // For class upgrade
+    [SerializeField]
+    PartyUnit requiresUnit;
+    [SerializeField]
+    PartyUnit[] unlocksUnits;
 
 
-    private void Awake()
+    void InitUnitBuffs()
+    {
+        unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+        for (int i = 0; i < (int)UnitBuff.ArrSize; i++)
+        {
+            unitBuffs[i] = UnitBuff.None;
+        }
+    }
+
+    void InitUnitDebuffs()
     {
         unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
         for (int i = 0; i < (int)UnitDebuff.ArrSize; i++)
         {
             unitDebuffs[i] = UnitDebuff.None;
         }
-        unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
-        for (int i = 0; i < (int)UnitBuff.ArrSize; i++)
-        {
-            unitBuffs[i] = UnitBuff.None;
-        }
+    }
+
+    private void Awake()
+    {
+        InitUnitBuffs();
+        InitUnitDebuffs();
         //Debug.Log("Awake " + GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
     }
 
@@ -246,16 +261,12 @@ public class PartyUnit : MonoBehaviour {
     {
         // structure: 6HeroParty/CityGarnizon-5PartyPanel-4Row-3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
         // verify if unit is member of party
-        if (transform.parent.parent.parent)
-        {
-            if (transform.parent.parent.parent.parent)
-            {
-                if (transform.parent.parent.parent.parent.parent.parent)
-                {
-                    return transform.parent.parent.parent.parent.parent.parent.GetComponent<HeroParty>();
-                }
-            }
-        }
+        if (transform.parent)
+            if (transform.parent.parent)
+                if (transform.parent.parent.parent)
+                    if (transform.parent.parent.parent.parent)
+                        if (transform.parent.parent.parent.parent.parent.parent)
+                            return transform.parent.parent.parent.parent.parent.parent.GetComponent<HeroParty>();
         return null;
     }
 
@@ -277,19 +288,14 @@ public class PartyUnit : MonoBehaviour {
     {
         // structure: 7city-6HeroParty/CityGarnizon-5PartyPanel-4Row-3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
         // verify if unit is member of party and city
-        if (transform.parent.parent.parent)
-        {
-            if (transform.parent.parent.parent.parent)
-            {
-                if (transform.parent.parent.parent.parent.parent.parent)
-                {
-                    if (transform.parent.parent.parent.parent.parent.parent.parent)
-                    {
-                        return transform.parent.parent.parent.parent.parent.parent.parent.GetComponent<City>();
-                    }
-                }
-            }
-        }
+        if (transform.parent)
+            if (transform.parent.parent)
+                if (transform.parent.parent.parent)
+                    if (transform.parent.parent.parent)
+                        if (transform.parent.parent.parent.parent)
+                            if (transform.parent.parent.parent.parent.parent.parent)
+                                if (transform.parent.parent.parent.parent.parent.parent.parent)
+                                    return transform.parent.parent.parent.parent.parent.parent.parent.GetComponent<City>();
         return null;
     }
 
@@ -321,6 +327,10 @@ public class PartyUnit : MonoBehaviour {
         if (unitBuffs != null)
         {
             Debug.Log(GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+            if (unitBuffs.Length != (int)UnitBuff.ArrSize)
+            {
+                InitUnitBuffs();
+            }
         }
         else
         {
@@ -1023,6 +1033,32 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             unitSkillPoints = value;
+        }
+    }
+
+    public PartyUnit RequiresUnit
+    {
+        get
+        {
+            return requiresUnit;
+        }
+
+        set
+        {
+            requiresUnit = value;
+        }
+    }
+
+    public PartyUnit[] UnlocksUnits
+    {
+        get
+        {
+            return unlocksUnits;
+        }
+
+        set
+        {
+            unlocksUnits = value;
         }
     }
     //public UniquePowerModifier[] GetUniquePowerModifiers()

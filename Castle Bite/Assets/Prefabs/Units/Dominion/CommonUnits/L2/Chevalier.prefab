@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Chevalier
-  unitType: 6
+  unitType: 16
   isLeader: 0
   unitLeadership: 0
   givenName: Chevalier
@@ -78,6 +78,10 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 114444176595269638, guid: 891cc91b60d937244ade1cf27d50f0a7,
+    type: 2}
+  unlocksUnits:
+  - {fileID: 114947958277756772, guid: e07a5bf91aff45c4c910a845b2315582, type: 2}
 --- !u!224 &224385724514051918
 RectTransform:
   m_ObjectHideFlags: 1

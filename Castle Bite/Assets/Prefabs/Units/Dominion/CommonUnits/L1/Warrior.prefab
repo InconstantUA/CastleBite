@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 224033413711483370}
   - component: {fileID: 114444176595269638}
   m_Layer: 5
-  m_Name: Swordsman
+  m_Name: Warrior
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,6 +78,10 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 0}
+  unlocksUnits:
+  - {fileID: 114311484087478972, guid: 6b20d236dc5bd044e976c5ae92f157e2, type: 2}
+  - {fileID: 114357453069376760, guid: 8294e367542eb5b4b84bdfede8009c29, type: 2}
 --- !u!224 &224033413711483370
 RectTransform:
   m_ObjectHideFlags: 1

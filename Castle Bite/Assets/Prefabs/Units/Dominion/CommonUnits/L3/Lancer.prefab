@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Lancer
-  unitType: 6
+  unitType: 19
   isLeader: 0
   unitLeadership: 0
   givenName: Lancer
@@ -78,6 +78,9 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 114311484087478972, guid: 6b20d236dc5bd044e976c5ae92f157e2,
+    type: 2}
+  unlocksUnits: []
 --- !u!224 &224642395508435766
 RectTransform:
   m_ObjectHideFlags: 1

@@ -19,6 +19,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     Color disabledColor;
     // create event, which later can be configured in Unity Editor
     public UnityEvent OnClick;
+    public UnityEvent OnRightMouseButtonDown;
     // link to text
     Text txt;
 
@@ -51,6 +52,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             else if (Input.GetMouseButtonDown(1))
             {
                 // on right mouse
+                OnRightMouseButtonDown.Invoke();
             }
         }
     }

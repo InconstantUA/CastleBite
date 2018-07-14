@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class UpgradeUnit : MonoBehaviour {
 
     PartyUnit focusedPartyUnit;
+    //[SerializeField]
+    //int classUIPosition = -89;  // starting position + current position for iteration
+    //[SerializeField]
+    //int classUIStep = -16;      // next class will be displayed in UI after this pixels
 
 	// Use this for initialization
 	void Start () {
@@ -182,6 +186,164 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/ClassUpgrade/Class/Plus").GetComponent<TextButton>().SetInteractable(doActivate);
     }
 
+    void SetClassUISeparators(Transform classUI, int level)
+    {
+        // we assume that we have levels from 0 to 3 (4 levels in total with root level), so we have only 3 separators in UI
+        switch (level)
+        {
+            case 0:
+                classUI.Find("Separator1").SetAsFirstSibling();
+                classUI.Find("Separator2").SetAsFirstSibling();
+                classUI.Find("Separator3").SetAsFirstSibling();
+                classUI.Find("ClassName").SetAsFirstSibling();
+                break;
+            case 1:
+                classUI.Find("Separator2").SetAsFirstSibling();
+                classUI.Find("Separator3").SetAsFirstSibling();
+                classUI.Find("ClassName").SetAsFirstSibling();
+                classUI.Find("Separator1").SetAsFirstSibling();
+                break;
+            case 2:
+                classUI.Find("Separator3").SetAsFirstSibling();
+                classUI.Find("ClassName").SetAsFirstSibling();
+                classUI.Find("Separator1").SetAsFirstSibling();
+                classUI.Find("Separator2").SetAsFirstSibling();
+                break;
+            case 3:
+                classUI.Find("ClassName").SetAsFirstSibling();
+                classUI.Find("Separator1").SetAsFirstSibling();
+                classUI.Find("Separator2").SetAsFirstSibling();
+                classUI.Find("Separator3").SetAsFirstSibling();
+                break;
+            default:
+                Debug.LogError("Unhandled condition " + level.ToString());
+                break;
+        }
+    }
+
+    void SetClassUIName(Transform classUI, PartyUnit unitClass)
+    {
+        // set text to unit name
+        classUI.Find("ClassName").GetComponent<Text>().text = unitClass.GetUnitName();
+    }
+
+    void SetClassUIRequiredLevel(Transform classUI, PartyUnit unitClass, int classLevel)
+    {
+        // set text to level + 1
+        classUI.Find("RequiredLevel").GetComponent<Text>().text = (classLevel + 1).ToString();
+    }
+
+    void SetClassUIMinusButtonInteractable(Transform classUI, bool doActivate)
+    {
+        classUI.Find("Minus").GetComponent<TextButton>().SetInteractable(doActivate);
+    }
+
+    void SetClassUIPlusButtonInteractable(Transform classUI, bool doActivate)
+    {
+        classUI.Find("Plus").GetComponent<TextButton>().SetInteractable(doActivate);
+    }
+
+    void InitClassUIMinusButton(Transform classUI)
+    {
+        // disable it by default
+        SetClassUIMinusButtonInteractable(classUI, false);
+    }
+
+    bool VerifyClassPrerequisites(PartyUnit checkedUnitClass, int classLevel)
+    {
+        // compare checkedUnitClass with focusedPartyUnit
+        // verify if checked unit class is one of the classes which are unlocked by focusedPartyUnit
+        foreach (PartyUnit unlockedClass in focusedPartyUnit.UnlocksUnits)
+        {
+            if (checkedUnitClass.GetUnitType() == unlockedClass.GetUnitType())
+            {
+                // verify if unit mets level requirements
+                if (focusedPartyUnit.GetLevel() >= (classLevel + 1))
+                return false;
+            }
+        }
+        // everything else does not meet requirements
+        return false;
+    }
+
+    void InitClassUIPlusButton(Transform classUI, PartyUnit unitClass, int classLevel)
+    {
+        // verify if prerequsities are met
+        //  met prerequisites == can change to this class
+        //  does not met prerequisites == cannot change to this class
+        SetClassUIPlusButtonInteractable(classUI, VerifyClassPrerequisites(unitClass, classLevel));
+    }
+
+    void ShowUnitInfo(PartyUnit unitClass)
+    {
+        Debug.Log("Show " + unitClass.GetUnitName() + " unit info.");
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass);
+    }
+
+    void SetClassNameUIShowUnitInfoOnRightClick(Transform classUI, PartyUnit unitClass)
+    {
+        // Get Text button
+        classUI.Find("ClassName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowUnitInfo(unitClass); });
+    }
+
+    void CleanClassUIClasses()
+    {
+        foreach(Transform child in transform.Find("Panel/ClassUpgrade/ClassesTree"))
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    void SetClassUI(PartyUnit unitClass, int classLevel)
+    {
+        // create class string in UI
+        // Get class UI template
+        Transform classUITemplate = transform.Find("Panel/ClassUpgrade/ClassTemplate");
+        // Get class UI parent transform
+        Transform classUIParent = transform.Find("Panel/ClassUpgrade/ClassesTree");
+        // Clone class UI and place it in parent
+        Transform newClassUI = Instantiate(classUITemplate, classUIParent);
+        // Activate it
+        newClassUI.gameObject.SetActive(true);
+        // Fill in all required information
+        SetClassUISeparators(newClassUI, classLevel);
+        SetClassUIName(newClassUI, unitClass);
+        SetClassUIRequiredLevel(newClassUI, unitClass, classLevel);
+        InitClassUIMinusButton(newClassUI);
+        InitClassUIPlusButton(newClassUI, unitClass, classLevel);
+        SetClassNameUIShowUnitInfoOnRightClick(newClassUI, unitClass);
+        // create class strings recursively for all child classes
+        foreach (PartyUnit unitSubClass in unitClass.UnlocksUnits)
+        {
+            SetClassUI(unitSubClass, classLevel + 1);
+        }
+    }
+
+    PartyUnit GetRootClass(PartyUnit partyUnit)
+    {
+        Debug.Log("Get required class for " + partyUnit.GetUnitName());
+        if (partyUnit.RequiresUnit != null)
+        {
+            return GetRootClass(partyUnit.RequiresUnit);
+        }
+        else
+        {
+            Debug.Log("Root class is " + partyUnit.GetUnitName());
+            return partyUnit;
+        }
+    }
+
+    void SetClasses()
+    {
+        // Get root
+        PartyUnit rootClass = GetRootClass(focusedPartyUnit);
+        // Display all classes starting from root, but do not display root class
+        foreach(PartyUnit unitClass in rootClass.UnlocksUnits)
+        {
+            SetClassUI(unitClass, 1);
+        }
+    }
+
     void InitClasses()
     {
         // verify if unit's class is upgradable
@@ -206,21 +368,23 @@ public class UpgradeUnit : MonoBehaviour {
             }
             // Init Upgrade stats info
             SetUnitClassInfoUI();
+            // Clean previous classes;
+            CleanClassUIClasses();
             // Set options for all classes:
-            // ..
-            // Disable minus option, it should be enabled only if user clicked on plus
-            SetUnitClassMinusUIInteractable(false);
-            // Verify if there are free upgrade stats points available
-            if (focusedPartyUnit.UnitClassPoints >= 1)
-            {
-                // enable plus button
-                SetUnitClassPlusUIInteractable(true);
-            }
-            else
-            {
-                // disable plus button
-                SetUnitClassPlusUIInteractable(false);
-            }
+            SetClasses();
+            //// Disable minus option, it should be enabled only if user clicked on plus
+            //SetUnitClassMinusUIInteractable(false);
+            //// Verify if there are free upgrade stats points available
+            //if (focusedPartyUnit.UnitClassPoints >= 1)
+            //{
+            //    // enable plus button
+            //    SetUnitClassPlusUIInteractable(true);
+            //}
+            //else
+            //{
+            //    // disable plus button
+            //    SetUnitClassPlusUIInteractable(false);
+            //}
         }
         else
         {

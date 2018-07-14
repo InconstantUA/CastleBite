@@ -39,7 +39,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Gladiator
-  unitType: 6
+  unitType: 17
   isLeader: 0
   unitLeadership: 0
   givenName: Gladiator
@@ -78,6 +78,11 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 114444176595269638, guid: 891cc91b60d937244ade1cf27d50f0a7,
+    type: 2}
+  unlocksUnits:
+  - {fileID: 114542759371375566, guid: ca1da36938c728a44bba0e4a7df1f991, type: 2}
+  - {fileID: 114544563285027172, guid: 8aead34638b2b7a4c86be2ff64e78cb4, type: 2}
 --- !u!224 &224807160554163244
 RectTransform:
   m_ObjectHideFlags: 1
