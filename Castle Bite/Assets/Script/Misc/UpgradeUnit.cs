@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class UpgradeUnit : MonoBehaviour {
 
+    GameObject unitBackupGameObject;
     PartyUnit focusedPartyUnit;
     //[SerializeField]
     //int classUIPosition = -89;  // starting position + current position for iteration
@@ -868,12 +869,50 @@ public class UpgradeUnit : MonoBehaviour {
     }
     #endregion SkillsUpgrade
 
+    //void CopyClassValues(PartyUnit sourceComp, PartyUnit targetComp)
+    //{
+    //    FieldInfo[] sourceFields = sourceComp.GetType().GetFields(BindingFlags.Public |
+    //                                                     BindingFlags.NonPublic |
+    //                                                     BindingFlags.Instance);
+    //    int i = 0;
+    //    for (i = 0; i < sourceFields.Length; i++)
+    //    {
+    //        var value = sourceFields[i].GetValue(sourceComp);
+    //        sourceFields[i].SetValue(targetComp, value);
+    //    }
+    //}
+
+    void Backup()
+    {
+        // clone object
+        unitBackupGameObject = Instantiate(focusedPartyUnit.gameObject, transform.root.Find("Backup"));
+        // copy name of the focused game object to backup game object
+        unitBackupGameObject.name = focusedPartyUnit.gameObject.name;
+
+    }
+
+    void RestoreBackup()
+    {
+        // get parent game object
+        Transform parentGameObjectTr = focusedPartyUnit.transform.parent;
+        // change parent of backuped object
+        unitBackupGameObject.transform.SetParent(parentGameObjectTr);
+    }
+
+    void CleanBackup()
+    {
+        // destroy backup
+        Destroy(unitBackupGameObject);
+    }
+
     public void ActivateAdvance(PartyUnit partyUnit)
     {
         // Activate this object
         gameObject.SetActive(true);
-        // Save Party unit for later use
+        // Save link to Party unit for later use
         focusedPartyUnit = partyUnit;
+        // Save backup of party unit component
+        Backup();
         // Activate unit info panel
         ActivateUnitInfoPanel(partyUnit);
         // Fill in generic information
@@ -896,15 +935,30 @@ public class UpgradeUnit : MonoBehaviour {
         DeactivateUnitInfoPanel();
     }
 
+    void CommonOnExit()
+    {
+        // close upgrade unit window
+        gameObject.SetActive(false);
+    }
+
     public void Cancel()
     {
         Debug.Log("Cancel");
-        gameObject.SetActive(false);
+        // revert changes back
+        // restore backup of unit
+        RestoreBackup();
+        // destroy current PartyUnit component
+        Destroy(focusedPartyUnit.gameObject);
+        // execute common on exit actions
+        CommonOnExit();
     }
 
     public void Apply()
     {
         Debug.Log("Apply");
-        gameObject.SetActive(false);
+        // remove backup
+        CleanBackup();
+        // execute common on exit actions
+        CommonOnExit();
     }
 }
