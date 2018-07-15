@@ -7,13 +7,15 @@ public class UpgradeUnit : MonoBehaviour {
 
     GameObject unitBackupGameObject;
     PartyUnit focusedPartyUnit;
+    UnitInfoPanel unitInfoPanel;
+    int statsUpgradeCount;
     //[SerializeField]
     //int classUIPosition = -89;  // starting position + current position for iteration
     //[SerializeField]
     //int classUIStep = -16;      // next class will be displayed in UI after this pixels
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -25,7 +27,7 @@ public class UpgradeUnit : MonoBehaviour {
     void ActivateUnitInfoPanel(PartyUnit partyUnit)
     {
         Transform unitInfoPanelTr = transform.root.Find("MiscUI/UnitInfoPanel");
-        UnitInfoPanel unitInfoPanel = unitInfoPanelTr.GetComponent<UnitInfoPanel>();
+        unitInfoPanel = unitInfoPanelTr.GetComponent<UnitInfoPanel>();
         unitInfoPanel.ActivateAdvance(partyUnit);
         // Adjust position of unit info panel, so it appears on the right side
         RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
@@ -147,6 +149,7 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/StatsUpgrade/UpgradeStats/Plus").GetComponent<TextButton>().SetInteractable(doActivate);
     }
 
+    #region Stat points
     void AddStatPoint()
     {
         // add 1 point to stat points
@@ -200,6 +203,166 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/StatsUpgrade/StatPoints/Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
         transform.Find("Panel/StatsUpgrade/StatPoints/Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitStatPointMinusUIActions(); });
     }
+    #endregion Stat points
+
+    #region Upgrade stats
+
+    #region Health
+    void UpdateHealthInfo()
+    {
+        // upgrade health in unit Info UI
+        unitInfoPanel.SetHealthPreview(
+            focusedPartyUnit.GetHealthCurr(),
+            focusedPartyUnit.GetHealthMax(),
+            focusedPartyUnit.GetHealthMaxIncrementOnLevelUp() * statsUpgradeCount
+        );
+    }
+
+    void UpgradeHealth()
+    {
+        // upgrade health in unit object
+        focusedPartyUnit.SetHealthCurr(focusedPartyUnit.GetHealthCurr() + focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
+        focusedPartyUnit.SetHealthMax(focusedPartyUnit.GetHealthMax() + focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
+        // upgrade health in unit Info UI
+        UpdateHealthInfo();
+    }
+
+    void DowngradeHealth()
+    {
+        // downgrade health in unit object
+        focusedPartyUnit.SetHealthCurr(focusedPartyUnit.GetHealthCurr() - focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
+        focusedPartyUnit.SetHealthMax(focusedPartyUnit.GetHealthMax() - focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
+        // upgrade health in unit Info UI
+        UpdateHealthInfo();
+    }
+    #endregion Health
+
+    #region Ability Power
+    void UpdateAbilityPowerInfo()
+    {
+        // upgrade Ability Power in unit Info UI
+        unitInfoPanel.SetAbilityPowerPreview(
+            focusedPartyUnit.GetPower(),
+            focusedPartyUnit.GetPowerIncrementOnLevelUp() * statsUpgradeCount
+        );
+    }
+
+    void UpgradeAbilityPower()
+    {
+        // upgrade Ability Power in unit object
+        focusedPartyUnit.SetPower(focusedPartyUnit.GetPower() + focusedPartyUnit.GetPowerIncrementOnLevelUp());
+        // upgrade Ability Power in unit Info UI
+        UpdateAbilityPowerInfo();
+    }
+
+    void DowngradeAbilityPower()
+    {
+        // downgrade Ability Power in unit object
+        focusedPartyUnit.SetPower(focusedPartyUnit.GetPower() - focusedPartyUnit.GetPowerIncrementOnLevelUp());
+        // upgrade Ability Power in unit Info UI
+        UpdateAbilityPowerInfo();
+    }
+    #endregion Ability Power
+
+    #region Unique power modifiers
+    void UpdateUniquePowerModifiersInfo()
+    {
+        UniquePowerModifier[] uniquePowerModifiers = focusedPartyUnit.GetComponentsInChildren<UniquePowerModifier>();
+        for (int i = 1; i <= uniquePowerModifiers.Length; i++)
+        {
+            unitInfoPanel.SetUniquePowerModifiersPreview(
+                i,
+                uniquePowerModifiers[i - 1].Power,
+                uniquePowerModifiers[i - 1].PowerIncrementOnLevelUp * statsUpgradeCount,
+                uniquePowerModifiers[i - 1].Chance,
+                uniquePowerModifiers[i - 1].ChanceIncrementOnLevelUp * statsUpgradeCount
+            );
+        }
+    }
+
+    void UpgradeUniquePowerModifiers()
+    {
+        // upgrade Unique power modifier object
+        foreach (UniquePowerModifier upm in focusedPartyUnit.GetComponentsInChildren<UniquePowerModifier>())
+        {
+            upm.Power += upm.PowerIncrementOnLevelUp;
+            upm.Chance += upm.ChanceIncrementOnLevelUp;
+        }
+        // upgrade Unique power modifier Info UI
+        UpdateUniquePowerModifiersInfo();
+    }
+
+    void DowngradeUniquePowerModifiers()
+    {
+        // downgrade Unique power modifier object
+        foreach (UniquePowerModifier upm in focusedPartyUnit.GetComponentsInChildren<UniquePowerModifier>())
+        {
+            upm.Power -= upm.PowerIncrementOnLevelUp;
+            upm.Chance -= upm.ChanceIncrementOnLevelUp;
+        }
+        // upgrade Unique power modifier Info UI
+        UpdateUniquePowerModifiersInfo();
+    }
+    #endregion Unique power modifiers
+
+    void UpgradeStats()
+    {
+        // consume stat point
+        WithdrawStatPoint();
+        // increment stats upgrade count
+        statsUpgradeCount += 1;
+        // enable minus to roll back upgrade
+        SetUnitUpgradeStatsMinusUIInteractable(true);
+        // upgrade unit stats
+        UpgradeHealth();
+        UpgradeAbilityPower();
+        UpgradeUniquePowerModifiers();
+    }
+
+    void DowngradeStats()
+    {
+        // release stat point
+        AddStatPoint();
+        // decrement stats upgrade count
+        statsUpgradeCount -= 1;
+        // enable plus to do upgrade
+        SetUnitUpgradeStatsPlusUIInteractable(true);
+        // verify if minus should be deactivated, when we reach 0, so we do not downgrade more than we upgraded
+        if (statsUpgradeCount == 0)
+        {
+            // disable minus
+            SetUnitUpgradeStatsMinusUIInteractable(false);
+        }
+        // downgrade unit stats
+        DowngradeHealth();
+        DowngradeAbilityPower();
+        DowngradeUniquePowerModifiers();
+    }
+
+    void UnitStatsUpgradePlusUIActions()
+    {
+        Debug.Log("UnitStatsUpgradePlusUIActions");
+        UpgradeStats();
+    }
+
+    void SetUnitStatsUpgradePlusUIActions()
+    {
+        transform.Find("Panel/StatsUpgrade/UpgradeStats/Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        transform.Find("Panel/StatsUpgrade/UpgradeStats/Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitStatsUpgradePlusUIActions(); });
+    }
+
+    void UnitStatsUpgradeMinusUIActions()
+    {
+        Debug.Log("UnitStatsUpgradeMinusUIActions");
+        DowngradeStats();
+    }
+
+    void SetUnitStatsUpgradeMinusUIActions()
+    {
+        transform.Find("Panel/StatsUpgrade/UpgradeStats/Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        transform.Find("Panel/StatsUpgrade/UpgradeStats/Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitStatsUpgradeMinusUIActions(); });
+    }
+    #endregion Upgrade stats
 
     void InitStats()
     {
@@ -231,6 +394,9 @@ public class UpgradeUnit : MonoBehaviour {
         // Set actions for Stat points plus and minus
         SetUnitStatPointPlusUIActions();
         SetUnitStatPointMinusUIActions();
+        // Set actions for Stat upgrade plus and minus
+        SetUnitStatsUpgradePlusUIActions();
+        SetUnitStatsUpgradeMinusUIActions();
         // Init Upgrade stats info
         SetUnitUpgradeStatsInfoUI();
         // Disable minus option, it should be enabled only if user clicked on plus
@@ -923,6 +1089,8 @@ public class UpgradeUnit : MonoBehaviour {
         InitClasses();
         // Fill in skills learning information
         InitSkills();
+        // Reset counters
+        statsUpgradeCount = 0;
     }
 
     void OnEnable()
@@ -956,6 +1124,8 @@ public class UpgradeUnit : MonoBehaviour {
     public void Apply()
     {
         Debug.Log("Apply");
+        // Update party panel UI to represent changes
+        focusedPartyUnit.SetUnitCellInfoUI();
         // remove backup
         CleanBackup();
         // execute common on exit actions

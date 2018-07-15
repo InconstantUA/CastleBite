@@ -240,7 +240,7 @@ public class PartyPanel : MonoBehaviour {
         OnChange(ChangeType.Init, null);
     }
 
-    string GetUnitDisplayName(PartyUnit unit)
+    public string GetUnitDisplayName(PartyUnit unit)
     {
         string unitName;
         // verify is unit has given name
@@ -2296,6 +2296,7 @@ public class PartyPanel : MonoBehaviour {
                 // create debuff by duplicating from template
                 // Note: debuff name in template should be the same as in AppliedDebuff
                 Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.AppliedDebuff.ToString());
+                Debug.Log("Applying " + uniquePowerModifier.AppliedDebuff.ToString() + " debuff");
                 Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
                 // activate buff
                 newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier);

@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
     public bool interactable;
+    public readonly int maxModifiers = 4;
 
     public void ActivateAdvance(PartyUnit partyUnit)
     {
@@ -126,6 +127,64 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
+    string bonusPreviewStyleStart = "<color=green><size=12>+";
+    string bonusPreviewStyleEnd = "</size></color>";
+
+    public void SetHealthPreview(int currentHealth, int maxHealth, int maxHealthBonus)
+    {
+        // verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
+        if (0 == maxHealthBonus)
+        {
+            // do not display + info
+            transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = currentHealth.ToString() + "/" + maxHealth.ToString();
+        }
+        else
+        {
+            // display + bonus info
+            transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = currentHealth.ToString() + "/" + maxHealth.ToString() + bonusPreviewStyleStart + maxHealthBonus.ToString() + bonusPreviewStyleEnd;
+        }
+    }
+
+    public void SetAbilityPowerPreview(int power, int powerBonus)
+    {
+        // verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
+        if (0 == powerBonus)
+        {
+            // do not display + info
+            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text = power.ToString();
+        }
+        else
+        {
+            // display + bonus info
+            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text = power.ToString() + bonusPreviewStyleStart + powerBonus.ToString() + bonusPreviewStyleEnd;
+        }
+    }
+
+    public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus, int chance, int chanceBonus)
+    {
+        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/Modifier" + modifierID.ToString());
+        if (0 == powerBonus)
+        {
+            // do not display + info
+            modifier.Find("Power").GetComponent<Text>().text = power.ToString();
+        }
+        else
+        {
+            // display + bonus info
+            modifier.Find("Power").GetComponent<Text>().text = power.ToString() + bonusPreviewStyleStart + powerBonus.ToString() + bonusPreviewStyleEnd;
+        }
+        if (0 == chanceBonus)
+        {
+            // do not display + info
+            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString();
+        }
+        else
+        {
+            // display + bonus info
+            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + bonusPreviewStyleStart + chanceBonus.ToString() + bonusPreviewStyleEnd;
+        }
+    }
+
     void ActivateModifier(string modifierUIName, UniquePowerModifier uniquePowerModifier)
     {
         Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
@@ -134,6 +193,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         modifier.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.Duration.ToString();
         modifier.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.Chance.ToString();
         modifier.Find("Source").GetComponent<Text>().text = uniquePowerModifier.Source.ToString();
+        modifier.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.Origin.ToString();
     }
 
     void DeactivateModifier(string modifierUIName)
@@ -147,6 +207,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         modifier.Find("Duration").GetComponent<Text>().text = "";
         modifier.Find("Chance").GetComponent<Text>().text = "";
         modifier.Find("Source").GetComponent<Text>().text = "";
+        modifier.Find("Origin").GetComponent<Text>().text = "";
     }
 
     void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
@@ -158,13 +219,11 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             // Activate unique power modifiers table
             uniquePowerModifiersTable.gameObject.SetActive(true);
-            // Define maximum possible modifiers
-            int maxModifiers = 4;
             // Activate and fill in or deactivate power modifiers
             for (int i = 1; i <= maxModifiers; i++)
             {
                 // Activate first modifier
-                if (i == uniquePowerModifiers.Length)
+                if (i <= uniquePowerModifiers.Length)
                 {
                     // activate first modifier
                     ActivateModifier(("Modifier" + i.ToString()), uniquePowerModifiers[i - 1]);

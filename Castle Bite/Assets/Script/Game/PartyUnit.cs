@@ -1176,6 +1176,15 @@ public class PartyUnit : MonoBehaviour {
             unlocksUnits = value;
         }
     }
+
+    public void SetUnitCellInfoUI()
+    {
+        // set Name
+        GetUnitCell().Find("UnitSlot").GetChild(0).Find("Name").GetComponent<Text>().text = GetUnitPartyPanel().GetUnitDisplayName(GetComponent<PartyUnit>());
+        // set Health
+        GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = healthCurr.ToString();
+        GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = healthMax.ToString();
+    }
     //public UniquePowerModifier[] GetUniquePowerModifiers()
     //{
     //    return uniquePowerModifiers;
