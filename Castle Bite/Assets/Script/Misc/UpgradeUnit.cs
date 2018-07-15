@@ -176,16 +176,6 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/ClassUpgrade/ChooseClassUpgradePath/Info").GetComponent<TextButton>().OnClick.AddListener(delegate { ShowInfo(info); });
     }
 
-    void SetUnitClassMinusUIInteractable(bool doActivate)
-    {
-        transform.Find("Panel/ClassUpgrade/Class/Minus").GetComponent<TextButton>().SetInteractable(doActivate);
-    }
-
-    void SetUnitClassPlusUIInteractable(bool doActivate)
-    {
-        transform.Find("Panel/ClassUpgrade/Class/Plus").GetComponent<TextButton>().SetInteractable(doActivate);
-    }
-
     void SetClassUISeparators(Transform classUI, int level)
     {
         // we assume that we have levels from 0 to 3 (4 levels in total with root level), so we have only 3 separators in UI
@@ -268,19 +258,20 @@ public class UpgradeUnit : MonoBehaviour {
 
     void InitClassUIPlusButton(Transform classUI, PartyUnit unitClass, int classLevel)
     {
-        // verify if prerequsities are met
-        //  met prerequisites == can change to this class
-        //  does not met prerequisites == cannot change to this class
-        SetClassUIPlusButtonInteractable(classUI, VerifyClassPrerequisites(unitClass, classLevel));
-    }
-
-    void ShowUnitInfo(PartyUnit unitClass)
-    {
-        // Show unit info
-        Debug.Log("Show " + unitClass.GetUnitName() + " unit info.");
-        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass);
-        // Show preview text and button
-        ShowPreview();
+        // verify if unit has class points
+        if (focusedPartyUnit.UnitClassPoints >= 1)
+        {
+            // has points
+            // verify if prerequsities are met
+            //  met prerequisites == can change to this class
+            //  does not met prerequisites == cannot change to this class
+            SetClassUIPlusButtonInteractable(classUI, VerifyClassPrerequisites(unitClass, classLevel));
+        }
+        else
+        {
+            // no class points
+            SetClassUIPlusButtonInteractable(classUI, false);
+        }
     }
 
     void HidePreview()
@@ -311,6 +302,15 @@ public class UpgradeUnit : MonoBehaviour {
             // add new listener to exit preview button
             exitPreviewBtn.OnClick.AddListener(delegate { HidePreview(); });
         }
+    }
+
+    void ShowUnitInfo(PartyUnit unitClass)
+    {
+        // Show unit info
+        Debug.Log("Show " + unitClass.GetUnitName() + " unit info.");
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass);
+        // Show preview text and button
+        ShowPreview();
     }
 
     void SetClassNameUIShowUnitInfoOnRightClick(Transform classUI, PartyUnit unitClass)
@@ -405,19 +405,6 @@ public class UpgradeUnit : MonoBehaviour {
             CleanClassUIClasses();
             // Set options for all classes:
             SetClasses();
-            //// Disable minus option, it should be enabled only if user clicked on plus
-            //SetUnitClassMinusUIInteractable(false);
-            //// Verify if there are free upgrade stats points available
-            //if (focusedPartyUnit.UnitClassPoints >= 1)
-            //{
-            //    // enable plus button
-            //    SetUnitClassPlusUIInteractable(true);
-            //}
-            //else
-            //{
-            //    // disable plus button
-            //    SetUnitClassPlusUIInteractable(false);
-            //}
         }
         else
         {
@@ -456,14 +443,128 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/SkillsUpgrade/ChooseAndLearnSkills/Info").GetComponent<TextButton>().OnClick.AddListener(delegate { ShowInfo(info); });
     }
 
-    void SetUnitSkillMinusUIInteractable(bool doActivate)
+    void SetSkillUICurrentLevel(Transform skillUI, PartyUnit.UnitSkill skill)
     {
-        transform.Find("Panel/SkillsUpgrade/SkillsRow1/Minus").GetComponent<TextButton>().SetInteractable(doActivate);
+        // set text to level + 1
+        skillUI.Find("SkillLevel").GetComponent<Text>().text = skill.Level.Current.ToString();
     }
 
-    void SetUnitSkillPlusUIInteractable(bool doActivate)
+    void SetSkillUIName(Transform skillUI, PartyUnit.UnitSkill skill)
     {
-        transform.Find("Panel/SkillsUpgrade/SkillsRow1/Plus").GetComponent<TextButton>().SetInteractable(doActivate);
+        // set text to unit name
+        skillUI.Find("SkillName").GetComponent<Text>().text = skill.Name;
+    }
+
+    int GetSkillRequiredLevel(PartyUnit.UnitSkill skill)
+    {
+        // act based on the current skill level
+        if (0 == skill.Level.Current)
+        {
+            return skill.RequiredHeroLevel;
+        }
+        else if (1 == skill.Level.Current)
+        {
+            return skill.RequiredHeroLevel + skill.LevelUpIncrementStep;
+        }
+        else if (1 < skill.Level.Current)
+        {
+            return skill.RequiredHeroLevel + skill.Level.Current * skill.LevelUpIncrementStep;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    void SetSkillUIRequiredLevel(Transform skillUI, PartyUnit.UnitSkill skill)
+    {
+        // verify if skill level is already maximum
+        if (skill.Level.Current == skill.Level.Max)
+        {
+            skillUI.Find("RequiredLevel").GetComponent<Text>().text = "max";
+        }
+        else
+        {
+            skillUI.Find("RequiredLevel").GetComponent<Text>().text = GetSkillRequiredLevel(skill).ToString();
+        }
+    }
+
+    void SetSkillUIMinusButtonInteractable(Transform skillUI, bool doActivate)
+    {
+        skillUI.Find("Minus").GetComponent<TextButton>().SetInteractable(doActivate);
+    }
+
+    void SetSkillUIPlusButtonInteractable(Transform skillUI, bool doActivate)
+    {
+        skillUI.Find("Plus").GetComponent<TextButton>().SetInteractable(doActivate);
+    }
+
+    void InitSkillUIMinusButton(Transform skillUI)
+    {
+        // disable it by default
+        SetSkillUIMinusButtonInteractable(skillUI, false);
+    }
+
+    bool VerifySkillPrerequisites(PartyUnit.UnitSkill skill)
+    {
+        // verify if hero level meets skill level requirements
+        if (focusedPartyUnit.GetLevel() >= GetSkillRequiredLevel(skill))
+        {
+            return true;
+        }
+        // everything else does not meet requirements
+        return false;
+    }
+
+    void InitSkillUIPlusButton(Transform skillUI, PartyUnit.UnitSkill skill)
+    {
+        // Verify if there are free upgrade stats points available
+        if (focusedPartyUnit.UnitSkillPoints >= 1)
+        {
+            // verify if prerequsities are met
+            //  met prerequisites == can change to this class
+            //  does not met prerequisites == cannot change to this class
+            SetSkillUIPlusButtonInteractable(skillUI, VerifySkillPrerequisites(skill));
+        }
+        else
+        {
+            // disable plus button
+            SetSkillUIPlusButtonInteractable(skillUI, false);
+        }
+    }
+
+    void SetSkillNameUIShowUnitInfoOnRightClick(Transform skillUI, PartyUnit.UnitSkill skill)
+    {
+        // Get Text button
+        skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowInfo(skill.Description); });
+    }
+
+    void SetSkillUI(PartyUnit.UnitSkill skill)
+    {
+        // create skill string in UI
+        // Get class UI template
+        Transform skillUITemplate = transform.Find("Panel/SkillsUpgrade/SkillTemplate");
+        // Get class UI parent transform
+        Transform skillUIParent = transform.Find("Panel/SkillsUpgrade/Skills");
+        // Clone class UI and place it in parent
+        Transform newSkillUI = Instantiate(skillUITemplate, skillUIParent);
+        // Activate it
+        newSkillUI.gameObject.SetActive(true);
+        // Fill in all required information
+        SetSkillUICurrentLevel(newSkillUI, skill);
+        SetSkillUIName(newSkillUI, skill);
+        SetSkillUIRequiredLevel(newSkillUI, skill);
+        InitSkillUIMinusButton(newSkillUI);
+        InitSkillUIPlusButton(newSkillUI, skill);
+        SetSkillNameUIShowUnitInfoOnRightClick(newSkillUI, skill);
+    }
+
+    void SetUnitSkillsUI()
+    {
+        foreach (PartyUnit.UnitSkill skill in focusedPartyUnit.skills)
+        {
+            SetSkillUI(skill);
+        }
     }
 
     void InitSkills()
@@ -490,21 +591,8 @@ public class UpgradeUnit : MonoBehaviour {
             }
             // Init Upgrade stats info
             SetUnitSkillInfoUI();
-            // Set options for all classes:
-            // ..
-            // Disable minus option, it should be enabled only if user clicked on plus
-            SetUnitSkillMinusUIInteractable(false);
-            // Verify if there are free upgrade stats points available
-            if (focusedPartyUnit.UnitSkillPoints >= 1)
-            {
-                // enable plus button
-                SetUnitSkillPlusUIInteractable(true);
-            }
-            else
-            {
-                // disable plus button
-                SetUnitSkillPlusUIInteractable(false);
-            }
+            // Set options for all skills:
+            SetUnitSkillsUI();
         }
         else
         {

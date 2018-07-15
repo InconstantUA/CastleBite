@@ -96,6 +96,101 @@ public class PartyUnit : MonoBehaviour {
         ArrSize // for dynamic resizing of UnitBuffs array
     }
 
+    public class UnitSkill
+    {
+        public string Name { get; set; }
+        public class SkillLevel
+        {
+            public int Current { get; set; }
+            public int Max { get; set; }
+            public SkillLevel(int current, int max)
+            {
+                Current = current;
+                Max = max;
+            }
+        }
+        public SkillLevel Level { get; set; }
+        public int RequiredHeroLevel { get; set; }
+        public int LevelUpIncrementStep { get; set; } // skill can be learned only after this number of levels has passed
+        public string Description { get; set; }
+        public UnitSkill(string name, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
+        {
+            Name = name;
+            Level = new SkillLevel(currentLevel, maxLevel);
+            RequiredHeroLevel = requiredHeroLevel;
+            LevelUpIncrementStep = levelUpIncrementStep;
+            Description = description;
+        }
+    }
+
+    public UnitSkill[] skills = new UnitSkill[]
+    {
+        new UnitSkill(
+            "Leadership",
+            0, 3,
+            3, 2,
+            "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
+        ),
+        new UnitSkill(
+            "Offence",
+            0, 3,
+            2, 2,
+            "Increase hero attack power by 15% multiplied by skill level."
+        ),
+        new UnitSkill(
+            "Defence",
+            0, 3,
+            2, 2,
+            "Increase hero defence from all sources by adding 10 defence points multiplied by skill level to current hero defence value."
+        ),
+        new UnitSkill(
+            "Pathfinding",
+            0, 3,
+            2, 1,
+            "Increase hero move points by 50% multiplied by skill level."
+        ),
+        new UnitSkill(
+            "Scouting",
+            0, 2,
+            2, 1,
+            "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
+        ),
+        new UnitSkill(
+            "Healing",
+            0, 2,
+            2, 3,
+            "Increase hero and its party members daily healing rate by 20% from total health multiplied by skill level."
+        ),
+        new UnitSkill(
+            "Death Resistance",
+            0, 2,
+            5, 5,
+            "Increase hero change to resist Death-based attacks, for example Poison."
+            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        ),
+        new UnitSkill(
+            "Fire Resistance",
+            0, 2,
+            5, 5,
+            "Increase hero change to resist Fire-based attacks, for example Burning."
+            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        ),
+        new UnitSkill(
+            "Water Resistance",
+            0, 2,
+            5, 5,
+            "Increase hero change to resist Water-based attacks, for example Chill."
+            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        ),
+        new UnitSkill(
+            "Mind Resistance",
+            0, 2,
+            7, 7,
+            "Increase hero change to resist Mind-based attacks, for example paralyze."
+            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        ),
+    };
+
     // Misc attributes
     [SerializeField]
     string unitName;
