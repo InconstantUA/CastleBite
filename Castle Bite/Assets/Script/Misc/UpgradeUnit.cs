@@ -166,13 +166,13 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/ClassUpgrade/ClassPoints/Plus").GetComponent<TextButton>().SetInteractable(doActivate);
     }
 
-    void SetUnitClassInfoUI()
+    void SetClassUpgradeInfoUI()
     {
         string info = "Click [+] to spend 1 class point to upgrade unit's class."
            + "\r\n" + "Click [-] to roll back changes."
            + "\r\n" + "Some classes require specific unit level before unit can change class."
            + "\r\n" + "First change to lower level classes. Once applied, it is not possible to change it aftwards, also other class branches on the same level will be locked."
-           + "\r\n" + "Right click on a class name to get additional information.";
+           + "\r\n" + "Right click on a class name to preview class unit information.";
         transform.Find("Panel/ClassUpgrade/ChooseClassUpgradePath/Info").GetComponent<TextButton>().OnClick.AddListener(delegate { ShowInfo(info); });
     }
 
@@ -276,8 +276,41 @@ public class UpgradeUnit : MonoBehaviour {
 
     void ShowUnitInfo(PartyUnit unitClass)
     {
+        // Show unit info
         Debug.Log("Show " + unitClass.GetUnitName() + " unit info.");
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass);
+        // Show preview text and button
+        ShowPreview();
+    }
+
+    void HidePreview()
+    {
+        // get preview transform
+        Transform previewTr = transform.root.Find("MiscUI/UnitInfoPanel/Preview");
+        // first change color to normal
+        previewTr.Find("ExitPreview").GetComponent<TextButton>().SetNormalStatus();
+        // show preview text and button
+        previewTr.gameObject.SetActive(false);
+    }
+
+    void ShowPreview()
+    {
+        // get preview transform
+        Transform previewTr = transform.root.Find("MiscUI/UnitInfoPanel/Preview");
+        // verify if it is not active already
+        if (!previewTr.gameObject.activeSelf)
+        {
+            // show preview text and button
+            previewTr.gameObject.SetActive(true);
+            // Get exit preview button
+            TextButton exitPreviewBtn = previewTr.Find("ExitPreview").GetComponent<TextButton>();
+            // remove all previously set via script listeners
+            exitPreviewBtn.OnClick.RemoveAllListeners();
+            // add new listener to activate unit info with focused unit info
+            exitPreviewBtn.OnClick.AddListener(delegate { ShowUnitInfo(focusedPartyUnit); });
+            // add new listener to exit preview button
+            exitPreviewBtn.OnClick.AddListener(delegate { HidePreview(); });
+        }
     }
 
     void SetClassNameUIShowUnitInfoOnRightClick(Transform classUI, PartyUnit unitClass)
@@ -367,7 +400,7 @@ public class UpgradeUnit : MonoBehaviour {
                 SetUnitClassPointPlusUIInteractable(false);
             }
             // Init Upgrade stats info
-            SetUnitClassInfoUI();
+            SetClassUpgradeInfoUI();
             // Clean previous classes;
             CleanClassUIClasses();
             // Set options for all classes:
