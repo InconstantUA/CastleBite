@@ -64,6 +64,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetUnitUpgradePointsInfo()
     {
+        transform.Find("Panel/Generic/UpgradePoints/Info").GetComponent<TextButton>().OnClick.RemoveAllListeners();
         string info = "Each time common unit gets new level it gains 1 upgrade point, party leaders gain 2 points."
            + "\r\n" + "Decide where to spend upgrade points: to upgrade stats (health, damage), to upgrade unit class for common units or to learn new skills for party leaders.";
         transform.Find("Panel/Generic/UpgradePoints/Info").GetComponent<TextButton>().OnClick.AddListener(delegate { ShowInfo(info); });
@@ -75,12 +76,45 @@ public class UpgradeUnit : MonoBehaviour {
         SetUnitUpgradePointsUI();
         SetUnitUpgradePointsInfo();
     }
+
+    void AddUpgradePoint()
+    {
+        // add 1 point from upgrade points
+        focusedPartyUnit.UnitUpgradePoints += 1;
+        // update UI
+        SetUnitUpgradePointsUI();
+        // enable plus on stats, class and skill points
+        // enable plus on stat points
+        SetUnitStatPointPlusUIInteractable(true);
+        // enable plus on skill points, because it use the same pool as stat points
+        SetUnitSkillPointsPlusUIInteractable(true);
+        // enable plus on class points, because it use the same pool as stat points
+        SetUnitClassPointPlusUIInteractable(true);
+    }
+
+    void WithdrawUpgradePoint()
+    {
+        // remove 1 point from upgrade points
+        focusedPartyUnit.UnitUpgradePoints -= 1;
+        // update UI
+        SetUnitUpgradePointsUI();
+        // verify if upgrade pool does not reach 0 points
+        if (focusedPartyUnit.UnitUpgradePoints == 0)
+        {
+            // disable plus on stat points
+            SetUnitStatPointPlusUIInteractable(false);
+            // disable plus on skill points, because it use the same pool as stat points
+            SetUnitSkillPointsPlusUIInteractable(false);
+            // disable plus on class points, because it use the same pool as stat points
+            SetUnitClassPointPlusUIInteractable(false);
+        }
+    }
     #endregion Generic/UpgradePoints
 
     #region StatsUpgrade
     void SetUnitStatPointsValueUI()
     {
-        transform.Find("Panel/StatsUpgrade/StatPoints/Value").GetComponent<Text>().text = focusedPartyUnit.UnitClassPoints.ToString();
+        transform.Find("Panel/StatsUpgrade/StatPoints/Value").GetComponent<Text>().text = focusedPartyUnit.UnitStatPoints.ToString();
     }
 
     void SetUnitStatPointMinusUIInteractable(bool doActivate)
@@ -95,6 +129,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetUnitUpgradeStatsInfoUI()
     {
+        transform.Find("Panel/StatsUpgrade/UpgradeStats/Info").GetComponent<TextButton>().OnClick.RemoveAllListeners();
         string info = "Click [+] to spend 1 stat point to upgrade unit's health, power of ability, power of unique attack modifier."
            + "\r\n" + "Once applied, it is not possible to reclaim upgrade points back."
            + "\r\n" + "Click [-] to roll back changes.";
@@ -111,12 +146,76 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/StatsUpgrade/UpgradeStats/Plus").GetComponent<TextButton>().SetInteractable(doActivate);
     }
 
+    void AddStatPoint()
+    {
+        // add 1 point to stat points
+        focusedPartyUnit.UnitStatPoints += 1;
+        // update UI
+        SetUnitStatPointsValueUI();
+        // enable plus on upgrade stats
+        SetUnitUpgradeStatsPlusUIInteractable(true);
+        // enable minus on stat points, so user can revert changes back
+        SetUnitStatPointMinusUIInteractable(true);
+    }
+
+    void WithdrawStatPoint()
+    {
+        // remove 1 point to stat points
+        focusedPartyUnit.UnitStatPoints -= 1;
+        // update UI
+        SetUnitStatPointsValueUI();
+        // verify if we still have points to spend on stats upgrades
+        if (focusedPartyUnit.UnitStatPoints == 0)
+        {
+            // disable plus on upgrade stats
+            SetUnitUpgradeStatsPlusUIInteractable(false);
+            // disable minus on stat pints, so we do not go to negative values
+            SetUnitStatPointMinusUIInteractable(false);
+        }
+    }
+
+    void UnitStatPointPlusUIActions()
+    {
+        Debug.Log("UnitStatPointPlusUIActions");
+        WithdrawUpgradePoint();
+        AddStatPoint();
+    }
+
+    void SetUnitStatPointPlusUIActions()
+    {
+        transform.Find("Panel/StatsUpgrade/StatPoints/Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        transform.Find("Panel/StatsUpgrade/StatPoints/Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitStatPointPlusUIActions(); });
+    }
+
+    void UnitStatPointMinusUIActions()
+    {
+        Debug.Log("UnitStatPointMinusUIActions");
+        WithdrawStatPoint();
+        AddUpgradePoint();
+    }
+
+    void SetUnitStatPointMinusUIActions()
+    {
+        transform.Find("Panel/StatsUpgrade/StatPoints/Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        transform.Find("Panel/StatsUpgrade/StatPoints/Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitStatPointMinusUIActions(); });
+    }
+
     void InitStats()
     {
         // Display current number of unitStatPoints
         SetUnitStatPointsValueUI();
-        // Disable minus option, it should be enabled only if user clicked on plus
-        SetUnitStatPointMinusUIInteractable(false);
+        // verify if unit has stats points
+        if (focusedPartyUnit.UnitStatPoints >= 1)
+        {
+            // allow user to convert those points back to upgrade points, if needed
+            // enable minus option
+            SetUnitStatPointMinusUIInteractable(true);
+        }
+        else
+        {
+            // Disable minus option, it will be enabled if use click on plus button
+            SetUnitStatPointMinusUIInteractable(false);
+        }
         // Verify if there are free upgrade points available
         if (focusedPartyUnit.UnitUpgradePoints >= 1)
         {
@@ -128,6 +227,9 @@ public class UpgradeUnit : MonoBehaviour {
             // disable plus button
             SetUnitStatPointPlusUIInteractable(false);
         }
+        // Set actions for Stat points plus and minus
+        SetUnitStatPointPlusUIActions();
+        SetUnitStatPointMinusUIActions();
         // Init Upgrade stats info
         SetUnitUpgradeStatsInfoUI();
         // Disable minus option, it should be enabled only if user clicked on plus
@@ -168,6 +270,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetClassUpgradeInfoUI()
     {
+        transform.Find("Panel/ClassUpgrade/ChooseClassUpgradePath/Info").GetComponent<TextButton>().OnClick.RemoveAllListeners();
         string info = "Click [+] to spend 1 class point to upgrade unit's class."
            + "\r\n" + "Click [-] to roll back changes."
            + "\r\n" + "Some classes require specific unit level before unit can change class."
@@ -249,7 +352,9 @@ public class UpgradeUnit : MonoBehaviour {
             {
                 // verify if unit mets level requirements
                 if (focusedPartyUnit.GetLevel() >= (classLevel + 1))
-                return false;
+                {
+                    return true;
+                }
             }
         }
         // everything else does not meet requirements
@@ -315,7 +420,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetClassNameUIShowUnitInfoOnRightClick(Transform classUI, PartyUnit unitClass)
     {
-        // Get Text button
+        classUI.Find("ClassName").GetComponent<TextButton>().OnRightMouseButtonDown.RemoveAllListeners();
         classUI.Find("ClassName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowUnitInfo(unitClass); });
     }
 
@@ -325,6 +430,68 @@ public class UpgradeUnit : MonoBehaviour {
         {
             Destroy(child.gameObject);
         }
+    }
+
+    void AddClassPoint()
+    {
+        // add 1 point to class points
+        focusedPartyUnit.UnitClassPoints += 1;
+        // update UI
+        SetUnitClassPointsValueUI();
+        // enable minus on class points, so user can revert changes back
+        SetUnitClassPointMinusUIInteractable(true);
+        // Update classes
+        // Clean previous classes;
+        CleanClassUIClasses();
+        // Set options for all classes:
+        SetClasses();
+    }
+
+    void WithdrawClassPoint()
+    {
+        // remove 1 point to class points
+        focusedPartyUnit.UnitClassPoints -= 1;
+        // update UI
+        SetUnitClassPointsValueUI();
+        // verify if we still have points to spend on classs upgrades
+        if (focusedPartyUnit.UnitClassPoints == 0)
+        {
+            // disable minus on class pints, so we do not go to negative values
+            SetUnitClassPointMinusUIInteractable(false);
+            // Update classes
+            // Clean previous classes;
+            CleanClassUIClasses();
+            // Set options for all classes:
+            SetClasses();
+        }
+    }
+
+    void UnitClassPointPlusUIActions()
+    {
+        Debug.Log("UnitClassPointPlusUIActions");
+        WithdrawUpgradePoint();
+        AddClassPoint();
+    }
+
+    void SetUnitClassPointPlusUIActions()
+    {
+        // clean prevoius actions, just in case
+        transform.Find("Panel/ClassUpgrade/ClassPoints/Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        // set new actions
+        transform.Find("Panel/ClassUpgrade/ClassPoints/Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitClassPointPlusUIActions(); });
+    }
+
+    void UnitClassPointMinusUIActions()
+    {
+        Debug.Log("UnitClassPointMinusUIActions");
+        WithdrawClassPoint();
+        AddUpgradePoint();
+    }
+
+    void SetUnitClassPointMinusUIActions()
+    {
+        transform.Find("Panel/ClassUpgrade/ClassPoints/Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        transform.Find("Panel/ClassUpgrade/ClassPoints/Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitClassPointMinusUIActions(); });
     }
 
     void SetClassUI(PartyUnit unitClass, int classLevel)
@@ -386,8 +553,18 @@ public class UpgradeUnit : MonoBehaviour {
             SetClassUpgradeUIActive(true);
             // Display current number of UnitClassPoints
             SetUnitClassPointsValueUI();
-            // Disable minus option, it should be enabled only if user clicked on plus
-            SetUnitClassPointMinusUIInteractable(false);
+            // verify if there are points available
+            if (focusedPartyUnit.UnitClassPoints >= 1)
+            {
+                // Enable minus option
+                // allow user to convert those points back to upgrade points, if needed
+                SetUnitClassPointMinusUIInteractable(true);
+            }
+            else
+            {
+                // Disable minus option, it will be enabled if user click on plus
+                SetUnitClassPointMinusUIInteractable(false);
+            }
             // Verify if there are free upgrade points available
             if (focusedPartyUnit.UnitUpgradePoints >= 1)
             {
@@ -401,6 +578,9 @@ public class UpgradeUnit : MonoBehaviour {
             }
             // Init Upgrade stats info
             SetClassUpgradeInfoUI();
+            // Set actions for Class points plus and minus
+            SetUnitClassPointPlusUIActions();
+            SetUnitClassPointMinusUIActions();
             // Clean previous classes;
             CleanClassUIClasses();
             // Set options for all classes:
@@ -436,6 +616,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetUnitSkillInfoUI()
     {
+        transform.Find("Panel/SkillsUpgrade/ChooseAndLearnSkills/Info").GetComponent<TextButton>().OnClick.RemoveAllListeners();
         string info = "Click [+] to spend 1 skill point to learn new skill or upgrade already known skill to a higher level, if this is applicable."
            + "\r\n" + "Click [-] to roll back changes."
            + "\r\n" + "Some skills require specific hero level, before hero can learn them."
@@ -536,6 +717,7 @@ public class UpgradeUnit : MonoBehaviour {
     void SetSkillNameUIShowUnitInfoOnRightClick(Transform skillUI, PartyUnit.UnitSkill skill)
     {
         // Get Text button
+        skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.RemoveAllListeners();
         skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowInfo(skill.Description); });
     }
 
@@ -567,6 +749,76 @@ public class UpgradeUnit : MonoBehaviour {
         }
     }
 
+    void CleanSkillUISkills()
+    {
+        foreach (Transform child in transform.Find("Panel/SkillsUpgrade/Skills"))
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    void AddSkillPoint()
+    {
+        // add 1 point to skill points
+        focusedPartyUnit.UnitSkillPoints += 1;
+        // update UI
+        SetUnitSkillPointsValueUI();
+        // enable minus on skill points, so user can revert changes back
+        SetUnitSkillPointsMinusUIInteractable(true);
+        // Update skills
+        // Clean previous skills;
+        CleanSkillUISkills();
+        // Set options for all skills:
+        SetUnitSkillsUI();
+    }
+
+    void WithdrawSkillPoint()
+    {
+        // remove 1 point to skill points
+        focusedPartyUnit.UnitSkillPoints -= 1;
+        // update UI
+        SetUnitSkillPointsValueUI();
+        // verify if we still have points to spend on classs upgrades
+        if (focusedPartyUnit.UnitSkillPoints == 0)
+        {
+            // disable minus on skill pints, so we do not go to negative values
+            SetUnitSkillPointsMinusUIInteractable(false);
+            // Update skills
+            // Clean previous skills;
+            CleanSkillUISkills();
+            // Set options for all skills:
+            SetUnitSkillsUI();
+        }
+    }
+
+    void UnitSkillPointPlusUIActions()
+    {
+        Debug.Log("UnitSkillPointPlusUIActions");
+        WithdrawUpgradePoint();
+        AddSkillPoint();
+    }
+
+    void SetUnitSkillPointPlusUIActions()
+    {
+        // clean prevoius actions, just in case
+        transform.Find("Panel/SkillsUpgrade/SkillPoints/Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        // set new actions
+        transform.Find("Panel/SkillsUpgrade/SkillPoints/Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitSkillPointPlusUIActions(); });
+    }
+
+    void UnitSkillPointMinusUIActions()
+    {
+        Debug.Log("UnitSkillPointMinusUIActions");
+        WithdrawSkillPoint();
+        AddUpgradePoint();
+    }
+
+    void SetUnitSkillPointMinusUIActions()
+    {
+        transform.Find("Panel/SkillsUpgrade/SkillPoints/Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        transform.Find("Panel/SkillsUpgrade/SkillPoints/Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitSkillPointMinusUIActions(); });
+    }
+
     void InitSkills()
     {
         // verify if unit's can learn new skills
@@ -576,8 +828,17 @@ public class UpgradeUnit : MonoBehaviour {
             SetSkillsUpgradeUIActive(true);
             // Display current number of UnitSkillPoints
             SetUnitSkillPointsValueUI();
-            // Disable minus option, it should be enabled only if user clicked on plus
-            SetUnitSkillPointsMinusUIInteractable(false);
+            // verify if unit has skill points
+            if (focusedPartyUnit.UnitSkillPoints >= 1)
+            {
+                // allow user to convert those points back to upgrade points, if needed
+                SetUnitSkillPointsMinusUIInteractable(true);
+            }
+            else
+            {
+                // Disable minus option, it will be enabled if user click on plus
+                SetUnitSkillPointsMinusUIInteractable(false);
+            }
             // Verify if there are free upgrade points available
             if (focusedPartyUnit.UnitUpgradePoints >= 1)
             {
@@ -591,6 +852,11 @@ public class UpgradeUnit : MonoBehaviour {
             }
             // Init Upgrade stats info
             SetUnitSkillInfoUI();
+            // Set Skill Point plus and minus actions
+            SetUnitSkillPointMinusUIActions();
+            SetUnitSkillPointPlusUIActions();
+            // Clean previous skills;
+            CleanSkillUISkills();
             // Set options for all skills:
             SetUnitSkillsUI();
         }

@@ -130,64 +130,84 @@ public class PartyUnit : MonoBehaviour {
             0, 3,
             3, 2,
             "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
+            + "\r\n" + "Maximum level: 3."
+            //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
             "Offence",
             0, 3,
             2, 2,
             "Increase hero attack power by 15% multiplied by skill level."
+            + "\r\n" + "Maximum level: 3."
+            //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
             "Defence",
             0, 3,
             2, 2,
             "Increase hero defence from all sources by adding 10 defence points multiplied by skill level to current hero defence value."
+            + "\r\n" + "Maximum level: 3."
+            //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
             "Pathfinding",
             0, 3,
             2, 1,
             "Increase hero move points by 50% multiplied by skill level."
+            + "\r\n" + "Maximum level: 3."
+            //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
         ),
         new UnitSkill(
             "Scouting",
-            0, 2,
+            0, 3,
             2, 1,
             "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
+            + "\r\n" + "Maximum level: 3."
+            //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
         ),
         new UnitSkill(
             "Healing",
             0, 2,
             2, 3,
             "Increase hero and its party members daily healing rate by 20% from total health multiplied by skill level."
+            + "\r\n" + "Maximum level: 2."
+            //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
         ),
         new UnitSkill(
             "Death Resistance",
             0, 2,
             5, 5,
             "Increase hero change to resist Death-based attacks, for example Poison."
-            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Maximum level: 2."
+            //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
             "Fire Resistance",
             0, 2,
             5, 5,
             "Increase hero change to resist Fire-based attacks, for example Burning."
-            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Maximum level: 2."
+            //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
             "Water Resistance",
             0, 2,
             5, 5,
             "Increase hero change to resist Water-based attacks, for example Chill."
-            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Maximum level: 2."
+            //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
             "Mind Resistance",
             0, 2,
             7, 7,
             "Increase hero change to resist Mind-based attacks, for example paralyze."
-            + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+            + "\r\n" + "Maximum level: 2."
+            //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
         ),
     };
 

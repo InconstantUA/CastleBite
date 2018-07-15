@@ -20,13 +20,9 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // create event, which later can be configured in Unity Editor
     public UnityEvent OnClick;
     public UnityEvent OnRightMouseButtonDown;
-    // link to text
-    Text txt;
 
     void Start()
     {
-        // init text object
-        txt = GetComponent<Text>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -102,23 +98,22 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void SetHighlightedStatus()
     {
-        txt.color = highlightedColor;
+        GetComponent<Text>().color = highlightedColor;
     }
 
     void SetPressedStatus()
     {
-        txt.color = pressedColor;
+        GetComponent<Text>().color = pressedColor;
     }
 
     public void SetNormalStatus()
     {
-        txt.color = normalColor;
+        GetComponent<Text>().color = normalColor;
     }
 
     public void SetDisabledStatus()
     {
-        txt = GetComponent<Text>();
-        txt.color = disabledColor;
+        GetComponent<Text>().color = disabledColor;
     }
 
     public void SetInteractable(bool value)
