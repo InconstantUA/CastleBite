@@ -115,11 +115,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appliedDebuff: 2
-  power: 5
-  powerIncrementOnLevelUp: 5
+  power: 60
+  powerIncrementOnLevelUp: 20
   duration: 2
   chance: 70
-  chanceIncrementOnLevelUp: 5
+  chanceIncrementOnLevelUp: 7
   source: 2
   origin: 0
 --- !u!224 &224033413711483370
