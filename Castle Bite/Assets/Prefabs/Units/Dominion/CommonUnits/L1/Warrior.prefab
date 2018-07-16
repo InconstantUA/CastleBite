@@ -103,6 +103,7 @@ MonoBehaviour:
   unlocksUnits:
   - {fileID: 114311484087478972, guid: 6b20d236dc5bd044e976c5ae92f157e2, type: 2}
   - {fileID: 114357453069376760, guid: 8294e367542eb5b4b84bdfede8009c29, type: 2}
+  upgradeCost: 0
 --- !u!114 &114607355488880364
 MonoBehaviour:
   m_ObjectHideFlags: 1

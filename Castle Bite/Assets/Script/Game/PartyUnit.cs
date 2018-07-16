@@ -312,6 +312,8 @@ public class PartyUnit : MonoBehaviour {
     PartyUnit requiresUnit;
     [SerializeField]
     PartyUnit[] unlocksUnits;
+    [SerializeField]
+    int upgradeCost;
 
 
     void InitUnitBuffs()
@@ -1174,6 +1176,19 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             unlocksUnits = value;
+        }
+    }
+
+    public int UpgradeCost
+    {
+        get
+        {
+            return upgradeCost;
+        }
+
+        set
+        {
+            upgradeCost = value;
         }
     }
 

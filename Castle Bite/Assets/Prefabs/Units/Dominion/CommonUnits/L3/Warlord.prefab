@@ -43,9 +43,9 @@ MonoBehaviour:
   isLeader: 0
   unitLeadership: 0
   givenName: Warlord
-  unitLevel: 1
+  unitLevel: 3
   unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 100
+  unitExperienceRequiredToReachNewLevel: 900
   unitExperienceReward: 100
   unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 110
@@ -71,7 +71,7 @@ MonoBehaviour:
   isDismissable: 1
   unitStatus: 0
   unitDebuffs: 
-  unitBuffs: 
+  unitBuffs: 0000000000000000
   unitUpgradePoints: 0
   unitStatPoints: 0
   classIsUpgradable: 1
@@ -82,6 +82,7 @@ MonoBehaviour:
     type: 2}
   unlocksUnits:
   - {fileID: 114531675050321408, guid: feaa5a7f8cde506498631cc0467595d6, type: 2}
+  upgradeCost: 350
 --- !u!224 &224226211287530746
 RectTransform:
   m_ObjectHideFlags: 1

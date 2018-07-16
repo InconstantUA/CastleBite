@@ -9,6 +9,10 @@ public class UpgradeUnit : MonoBehaviour {
     PartyUnit focusedPartyUnit;
     UnitInfoPanel unitInfoPanel;
     int statsUpgradeCount;
+    List<PartyUnit.UnitType> upgradedToClasses;
+
+    [SerializeField] Color satisfiedRequirementsColor;
+    [SerializeField] Color dissatisfiedRequirementsColor;
     //[SerializeField]
     //int classUIPosition = -89;  // starting position + current position for iteration
     //[SerializeField]
@@ -416,10 +420,12 @@ public class UpgradeUnit : MonoBehaviour {
     #endregion StatsUpgrade
 
     #region ClassUpgrade
+
     void SetClassUpgradeUIActive(bool doActivate)
     {
         transform.Find("Panel/ClassUpgrade").gameObject.SetActive(doActivate);
     }
+
     void SetUnitClassPointsValueUI()
     {
         transform.Find("Panel/ClassUpgrade/ClassPoints/Value").GetComponent<Text>().text = focusedPartyUnit.UnitClassPoints.ToString();
@@ -489,8 +495,36 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetClassUIRequiredLevel(Transform classUI, PartyUnit unitClass, int classLevel)
     {
+        // get Text
+        Text requiredLevelText = classUI.Find("RequiredLevel").GetComponent<Text>();
         // set text to level + 1
-        classUI.Find("RequiredLevel").GetComponent<Text>().text = (classLevel + 1).ToString();
+        requiredLevelText.text = (classLevel + 1).ToString();
+        // verify if player has enough level and set color
+        if (focusedPartyUnit.GetLevel() >= unitClass.GetLevel())
+        {
+            requiredLevelText.color = satisfiedRequirementsColor;
+        }
+        else
+        {
+            requiredLevelText.color = dissatisfiedRequirementsColor;
+        }
+    }
+
+    void SetClassUICost(Transform classUI, PartyUnit unitClass)
+    {
+        // get Text
+        Text costText = classUI.Find("Cost").GetComponent<Text>();
+        // set text
+        costText.text = unitClass.UpgradeCost.ToString();
+        // verify if player has enough gold and set color
+        if (GetActivePlayer().GetTotalGold() >= unitClass.UpgradeCost)
+        {
+            costText.color = satisfiedRequirementsColor;
+        }
+        else
+        {
+            costText.color = dissatisfiedRequirementsColor;
+        }
     }
 
     void SetClassUIMinusButtonInteractable(Transform classUI, bool doActivate)
@@ -503,10 +537,116 @@ public class UpgradeUnit : MonoBehaviour {
         classUI.Find("Plus").GetComponent<TextButton>().SetInteractable(doActivate);
     }
 
-    void InitClassUIMinusButton(Transform classUI)
+    #region Class Plus and Minus button actions
+    void ReplacePartyUnit(PartyUnit newPartyUnitTemplate)
     {
-        // disable it by default
-        SetClassUIMinusButtonInteractable(classUI, false);
+        // Get parent of current party unit object
+        Transform parentTr = focusedPartyUnit.transform.parent;
+        // Instantiate new party unit at parent
+        GameObject newPartyUnitGameObj = Instantiate(newPartyUnitTemplate.gameObject, parentTr);
+        PartyUnit newPartyUnit = newPartyUnitGameObj.GetComponent<PartyUnit>();
+        // Set level of new party unit to the level of existing unit
+        newPartyUnit.SetLevel(focusedPartyUnit.GetLevel());
+        // Copy upgrade, update class and update skills points
+        newPartyUnit.UnitClassPoints = focusedPartyUnit.UnitClassPoints;
+        newPartyUnit.UnitSkillPoints = focusedPartyUnit.UnitSkillPoints;
+        newPartyUnit.UnitStatPoints = focusedPartyUnit.UnitStatPoints;
+        newPartyUnit.UnitUpgradePoints = focusedPartyUnit.UnitUpgradePoints;
+        // Update unit info UI
+        ShowUnitInfo(newPartyUnit);
+        // Remove old party unit game object
+        PartyUnit oldFocusedPartyUnit = focusedPartyUnit;
+        Destroy(oldFocusedPartyUnit.gameObject);
+        // Update link to focused party unit to new unit
+        focusedPartyUnit = newPartyUnit;
+    }
+
+    void ClassPlusUIActions(Transform classUI, PartyUnit unitClass)
+    {
+        Debug.Log("ClassPlusUIActions");
+        // record class to which we have just upgraded for later use
+        upgradedToClasses.Add(unitClass.GetUnitType());
+        // replace party unit
+        ReplacePartyUnit(unitClass);
+        // consume class upgrade points - this will also trigger all classes info regeneration
+        WithdrawClassPoint();
+    }
+
+    void SetClassPlusUIActions(Transform classUI, PartyUnit unitClass)
+    {
+        classUI.Find("Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        classUI.Find("Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { ClassPlusUIActions(classUI, unitClass); });
+    }
+
+    void ClassMinusUIActions(Transform classUI, PartyUnit unitClass)
+    {
+        Debug.Log("ClassMinusUIActions");
+        // verify this class position in hierachy of already upgraded classes
+        // this is need to avoid that we roll back class in the middle of the higherarchy or in not the same order in which we added them (upgraded to them)
+        // get rolled back class index
+        int rolledbackClassIndex = upgradedToClasses.IndexOf(unitClass.GetUnitType());
+        // get last upgraded class index in a list
+        int lastUpgradedClassIndex = upgradedToClasses.Count - 1;
+        // verify if user rolling back changes not from the last upgraded class
+        // define rolled back classes counter
+        int rolledBackClasses = 1;
+        if (rolledbackClassIndex < lastUpgradedClassIndex)
+        {
+            // rolling changes not from last upgraded class
+            // get number of classes rolled back
+            rolledBackClasses = lastUpgradedClassIndex - rolledbackClassIndex + 1;
+        }
+        else
+        {
+            // rolling changes from last upgraded class
+        }
+        // remove just upgarded class from the list
+        // for each rolled back class
+        // starting from the last element
+        for (int i = lastUpgradedClassIndex; i >= rolledbackClassIndex; i--)
+        {
+            upgradedToClasses.RemoveAt(i);
+        }
+        // get parent unit
+        PartyUnit parentUnit = unitClass.RequiresUnit;
+        // replace party unit with parent unit
+        ReplacePartyUnit(parentUnit);
+        // return back class upgrade point to the pool - this will also trigger all classes info regeneration
+        // for each rolled back class
+        for (int i = 0; i < rolledBackClasses; i++)
+        {
+            AddClassPoint();
+        }
+    }
+
+    void SetClassMinusUIActions(Transform classUI, PartyUnit unitClass)
+    {
+        classUI.Find("Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        classUI.Find("Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { ClassMinusUIActions(classUI, unitClass); });
+    }
+    #endregion Class Plus and Minus button actions
+
+    void InitClassUIMinusButton(Transform classUI, PartyUnit unitClass)
+    {
+        // verify if we just upgraded to this class and not clicked Apply button yet
+        if (upgradedToClasses.Contains(unitClass.GetUnitType()))
+        {
+            // we have just upgraded ot this class
+            // enable minus button, so user can revert changes back
+            SetClassUIMinusButtonInteractable(classUI, true);
+        }
+        else
+        {
+            // we did not upgraded to thsi class, so disable minus button
+            SetClassUIMinusButtonInteractable(classUI, false);
+        }
+        // Set on click actions
+        SetClassMinusUIActions(classUI, unitClass);
+    }
+
+    PlayerObj GetActivePlayer()
+    {
+        return transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer();
     }
 
     bool VerifyClassPrerequisites(PartyUnit checkedUnitClass, int classLevel)
@@ -520,7 +660,11 @@ public class UpgradeUnit : MonoBehaviour {
                 // verify if unit mets level requirements
                 if (focusedPartyUnit.GetLevel() >= (classLevel + 1))
                 {
-                    return true;
+                    // verify if player has enough gold
+                    if (GetActivePlayer().GetTotalGold() >= checkedUnitClass.UpgradeCost)
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -544,6 +688,8 @@ public class UpgradeUnit : MonoBehaviour {
             // no class points
             SetClassUIPlusButtonInteractable(classUI, false);
         }
+        // Set on click actions
+        SetClassPlusUIActions(classUI, unitClass);
     }
 
     void HidePreview()
@@ -552,8 +698,10 @@ public class UpgradeUnit : MonoBehaviour {
         Transform previewTr = transform.root.Find("MiscUI/UnitInfoPanel/Preview");
         // first change color to normal
         previewTr.Find("ExitPreview").GetComponent<TextButton>().SetNormalStatus();
-        // show preview text and button
+        // hide preview text and button
         previewTr.gameObject.SetActive(false);
+        // disable preview input blocker
+        transform.Find("Panel/ClassPreviewInputBlocker").gameObject.SetActive(false);
     }
 
     void ShowPreview()
@@ -573,6 +721,8 @@ public class UpgradeUnit : MonoBehaviour {
             exitPreviewBtn.OnClick.AddListener(delegate { ShowUnitInfo(focusedPartyUnit); });
             // add new listener to exit preview button
             exitPreviewBtn.OnClick.AddListener(delegate { HidePreview(); });
+            // enable preview input blocker
+            transform.Find("Panel/ClassPreviewInputBlocker").gameObject.SetActive(true);
         }
     }
 
@@ -581,6 +731,11 @@ public class UpgradeUnit : MonoBehaviour {
         // Show unit info
         Debug.Log("Show " + unitClass.GetUnitName() + " unit info.");
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass);
+    }
+
+    void ShowUnitInfoWithPreview(PartyUnit unitClass)
+    {
+        ShowUnitInfo(unitClass);
         // Show preview text and button
         ShowPreview();
     }
@@ -588,7 +743,7 @@ public class UpgradeUnit : MonoBehaviour {
     void SetClassNameUIShowUnitInfoOnRightClick(Transform classUI, PartyUnit unitClass)
     {
         classUI.Find("ClassName").GetComponent<TextButton>().OnRightMouseButtonDown.RemoveAllListeners();
-        classUI.Find("ClassName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowUnitInfo(unitClass); });
+        classUI.Find("ClassName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowUnitInfoWithPreview(unitClass); });
     }
 
     void CleanClassUIClasses()
@@ -599,6 +754,7 @@ public class UpgradeUnit : MonoBehaviour {
         }
     }
 
+    #region Class Points
     void AddClassPoint()
     {
         // add 1 point to class points
@@ -625,12 +781,12 @@ public class UpgradeUnit : MonoBehaviour {
         {
             // disable minus on class pints, so we do not go to negative values
             SetUnitClassPointMinusUIInteractable(false);
-            // Update classes
-            // Clean previous classes;
-            CleanClassUIClasses();
-            // Set options for all classes:
-            SetClasses();
         }
+        // Update classes
+        // Clean previous classes;
+        CleanClassUIClasses();
+        // Set options for all classes:
+        SetClasses();
     }
 
     void UnitClassPointPlusUIActions()
@@ -660,6 +816,7 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/ClassUpgrade/ClassPoints/Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
         transform.Find("Panel/ClassUpgrade/ClassPoints/Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { UnitClassPointMinusUIActions(); });
     }
+    #endregion Class Points
 
     void SetClassUI(PartyUnit unitClass, int classLevel)
     {
@@ -675,8 +832,9 @@ public class UpgradeUnit : MonoBehaviour {
         // Fill in all required information
         SetClassUISeparators(newClassUI, classLevel);
         SetClassUIName(newClassUI, unitClass);
+        SetClassUICost(newClassUI, unitClass);
         SetClassUIRequiredLevel(newClassUI, unitClass, classLevel);
-        InitClassUIMinusButton(newClassUI);
+        InitClassUIMinusButton(newClassUI, unitClass);
         InitClassUIPlusButton(newClassUI, unitClass, classLevel);
         SetClassNameUIShowUnitInfoOnRightClick(newClassUI, unitClass);
         // create class strings recursively for all child classes
@@ -1075,6 +1233,9 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // Activate this object
         gameObject.SetActive(true);
+        // Reset counters
+        statsUpgradeCount = 0;
+        upgradedToClasses = new List<PartyUnit.UnitType>();
         // Save link to Party unit for later use
         focusedPartyUnit = partyUnit;
         // Save backup of party unit component
@@ -1089,8 +1250,6 @@ public class UpgradeUnit : MonoBehaviour {
         InitClasses();
         // Fill in skills learning information
         InitSkills();
-        // Reset counters
-        statsUpgradeCount = 0;
     }
 
     void OnEnable()

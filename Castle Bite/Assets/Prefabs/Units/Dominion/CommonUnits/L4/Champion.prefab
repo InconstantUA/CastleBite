@@ -43,9 +43,9 @@ MonoBehaviour:
   isLeader: 0
   unitLeadership: 0
   givenName: Champion
-  unitLevel: 1
+  unitLevel: 4
   unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 100
+  unitExperienceRequiredToReachNewLevel: 1500
   unitExperienceReward: 100
   unitExperienceRewardIncrementOnLevelUp: 100
   healthCurr: 110
@@ -71,7 +71,7 @@ MonoBehaviour:
   isDismissable: 1
   unitStatus: 0
   unitDebuffs: 
-  unitBuffs: 
+  unitBuffs: 0000000000000000
   unitUpgradePoints: 0
   unitStatPoints: 0
   classIsUpgradable: 1
@@ -81,6 +81,7 @@ MonoBehaviour:
   requiresUnit: {fileID: 114544563285027172, guid: 8aead34638b2b7a4c86be2ff64e78cb4,
     type: 2}
   unlocksUnits: []
+  upgradeCost: 750
 --- !u!224 &224452955009247438
 RectTransform:
   m_ObjectHideFlags: 1
