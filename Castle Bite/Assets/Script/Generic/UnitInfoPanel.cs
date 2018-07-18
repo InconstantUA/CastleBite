@@ -39,22 +39,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             // Verify if unit is leader
             if (partyUnit.GetIsLeader())
             {
-                // unit is leader
-                transform.Find("Panel/UnitLeadership").gameObject.SetActive(true);
-                // verify if unit is member of party
-                // structure 5PartyPanel-4Row-3Cell-2UnitSlot-1UnitCanvas-Unit
-                PartyPanel partyPanel = partyUnit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
-                if (partyPanel)
-                {
-                    // set current and max leadership
-                    int currentLeadership = partyPanel.GetNumberOfPresentUnits() - 1;
-                    transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text = currentLeadership.ToString() + "/" + partyUnit.GetLeadership().ToString();
-                }
-                else
-                {
-                    // set only max leadership
-                    transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text = partyUnit.GetLeadership().ToString();
-                }
+                // unit is leader, set leadership values
+                SetUnitLeadershipInfo(partyUnit);
             }
             else
             {
@@ -182,6 +168,65 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             // display + bonus info
             modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + bonusPreviewStyleStart + chanceBonus.ToString() + bonusPreviewStyleEnd;
+        }
+    }
+
+    void SetUnitLeadershipInfo(PartyUnit partyUnit)
+    {
+        transform.Find("Panel/UnitLeadership").gameObject.SetActive(true);
+        // verify if unit is member of party
+        // structure 5PartyPanel-4Row-3Cell-2UnitSlot-1UnitCanvas-Unit
+        PartyPanel partyPanel = partyUnit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        if (partyPanel)
+        {
+            // set current and max leadership
+            int currentLeadership = partyPanel.GetNumberOfPresentUnits() - 1;
+            transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text = currentLeadership.ToString() + "/" + partyUnit.GetLeadership().ToString();
+        }
+        else
+        {
+            // set only max leadership
+            transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text = partyUnit.GetLeadership().ToString();
+        }
+    }
+
+    public void SetLearnedSkillsBonusPreview(PartyUnit.UnitSkill learnedSkill, PartyUnit partyUnit)
+    {
+        switch (learnedSkill.Name)
+        {
+            case PartyUnit.UnitSkill.SkillName.Leadership:
+                // update normal values
+                SetUnitLeadershipInfo(partyUnit);
+                if (learnedSkill.Level.Current > 0)
+                {
+                    // display bonus info
+                    // get bonus
+                    int learnedSkillBonus = learnedSkill.Level.Current;
+                    // add bonus value to the text
+                    transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text += bonusPreviewStyleStart + learnedSkillBonus.ToString() + bonusPreviewStyleEnd;
+                }
+                break;
+            case PartyUnit.UnitSkill.SkillName.Offence:
+                break;
+            case PartyUnit.UnitSkill.SkillName.Defence:
+                break;
+            case PartyUnit.UnitSkill.SkillName.Pathfinding:
+                break;
+            case PartyUnit.UnitSkill.SkillName.Scouting:
+                break;
+            case PartyUnit.UnitSkill.SkillName.Healing:
+                break;
+            case PartyUnit.UnitSkill.SkillName.DeathResistance:
+                break;
+            case PartyUnit.UnitSkill.SkillName.FireResistance:
+                break;
+            case PartyUnit.UnitSkill.SkillName.WaterResistance:
+                break;
+            case PartyUnit.UnitSkill.SkillName.MindResistance:
+                break;
+            default:
+                Debug.LogError("Unknown skill: " + learnedSkill.Name);
+                break;
         }
     }
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class PartyUnit : MonoBehaviour {
     // Custom types
     public enum UnitType
@@ -98,7 +97,9 @@ public class PartyUnit : MonoBehaviour {
 
     public class UnitSkill
     {
-        public string Name { get; set; }
+        public enum SkillName { Leadership, Offence, Defence, Pathfinding, Scouting, Healing, DeathResistance, FireResistance, WaterResistance, MindResistance }
+        public SkillName Name { get; set; }
+        public string DisplayName { get; set; }
         public class SkillLevel
         {
             public int Current { get; set; }
@@ -113,9 +114,10 @@ public class PartyUnit : MonoBehaviour {
         public int RequiredHeroLevel { get; set; }
         public int LevelUpIncrementStep { get; set; } // skill can be learned only after this number of levels has passed
         public string Description { get; set; }
-        public UnitSkill(string name, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
+        public UnitSkill(SkillName name, string displayName, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
         {
             Name = name;
+            DisplayName = displayName;
             Level = new SkillLevel(currentLevel, maxLevel);
             RequiredHeroLevel = requiredHeroLevel;
             LevelUpIncrementStep = levelUpIncrementStep;
@@ -142,10 +144,11 @@ public class PartyUnit : MonoBehaviour {
             return false;
         }
     }
-
+    
     public UnitSkill[] skills = new UnitSkill[]
     {
         new UnitSkill(
+            UnitSkill.SkillName.Leadership,
             "Leadership",
             0, 3,
             3, 2,
@@ -154,6 +157,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.Offence,
             "Offence",
             0, 3,
             2, 2,
@@ -162,6 +166,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.Defence,
             "Defence",
             0, 3,
             2, 2,
@@ -170,6 +175,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.Pathfinding,
             "Pathfinding",
             0, 3,
             2, 1,
@@ -178,6 +184,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.Scouting,
             "Scouting",
             0, 3,
             2, 1,
@@ -186,6 +193,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.Healing,
             "Healing",
             0, 2,
             2, 3,
@@ -194,6 +202,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.DeathResistance,
             "Death Resistance",
             0, 2,
             5, 5,
@@ -203,6 +212,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.FireResistance,
             "Fire Resistance",
             0, 2,
             5, 5,
@@ -212,6 +222,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.WaterResistance,
             "Water Resistance",
             0, 2,
             5, 5,
@@ -221,6 +232,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
+            UnitSkill.SkillName.MindResistance,
             "Mind Resistance",
             0, 2,
             7, 7,
@@ -230,7 +242,7 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
         ),
     };
-
+    
     // Misc attributes
     [SerializeField]
     string unitName;
@@ -942,7 +954,10 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetLeadership()
     {
-        return unitLeadership;
+        // get current skill leadership bonus = skill level
+        UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Leadership);
+        int skillBonus = skill.Level.Current;
+        return unitLeadership + skillBonus;
     }
 
     public void SetRole(string requiredRole)
