@@ -121,6 +121,26 @@ public class PartyUnit : MonoBehaviour {
             LevelUpIncrementStep = levelUpIncrementStep;
             Description = description;
         }
+        public bool EqualTo(UnitSkill unitSkill)
+        {
+            
+            if (
+                // verify skill name
+                (unitSkill.Name == Name) &&
+                // verify skill current level
+                (unitSkill.Level.Current == Level.Current) &&
+                // verify skill max level
+                (unitSkill.Level.Max == Level.Max) &&
+                // verify skill required hero level level
+                (unitSkill.RequiredHeroLevel == RequiredHeroLevel) &&
+                // verify skill level up increment step level
+                (unitSkill.LevelUpIncrementStep == LevelUpIncrementStep)
+            )
+            {
+                return true;
+            }
+            return false;
+        }
     }
 
     public UnitSkill[] skills = new UnitSkill[]

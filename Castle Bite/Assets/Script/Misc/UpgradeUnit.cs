@@ -10,6 +10,7 @@ public class UpgradeUnit : MonoBehaviour {
     UnitInfoPanel unitInfoPanel;
     int statsUpgradeCount;
     List<PartyUnit.UnitType> upgradedToClasses;
+    List<PartyUnit.UnitSkill> learnedSkills;
 
     [SerializeField] Color satisfiedRequirementsColor;
     [SerializeField] Color dissatisfiedRequirementsColor;
@@ -1005,10 +1006,77 @@ public class UpgradeUnit : MonoBehaviour {
         skillUI.Find("Plus").GetComponent<TextButton>().SetInteractable(doActivate);
     }
 
-    void InitSkillUIMinusButton(Transform skillUI)
+    #region Skill Plus and Minus button actions
+    void LearnSkill(PartyUnit.UnitSkill unitSkill)
     {
-        // disable it by default
-        SetSkillUIMinusButtonInteractable(skillUI, false);
+        // find skill and upgrade it's level
+        // Upgrade UI to represent skill bonus
+    }
+
+    void ForgetSkill(PartyUnit.UnitSkill unitSkill)
+    {
+
+    }
+
+    void SkillPlusUIActions(Transform skillUI, PartyUnit.UnitSkill unitSkill)
+    {
+        Debug.Log("SkillPlusUIActions");
+        // record skill to which we have just upgraded for later use
+        learnedSkills.Add(unitSkill);
+        // replace party unit
+        LearnSkill(unitSkill);
+        // consume skill upgrade points - this will also trigger all skills info regeneration
+        WithdrawSkillPoint();
+    }
+
+    void SetSkillPlusUIActions(Transform skillUI, PartyUnit.UnitSkill unitSkill)
+    {
+        skillUI.Find("Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        skillUI.Find("Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { SkillPlusUIActions(skillUI, unitSkill); });
+    }
+
+    void SkillMinusUIActions(Transform skillUI, PartyUnit.UnitSkill unitSkill)
+    {
+        Debug.Log("SkillMinusUIActions");
+        // remove just upgarded skill from the list
+        learnedSkills.Remove(unitSkill);
+        // forget learned skill or decrease skill level
+        ForgetSkill(unitSkill);
+        // return back skill upgrade point to the pool - this will also trigger all skills info regeneration
+        AddSkillPoint();
+    }
+
+    void SetSkillMinusUIActions(Transform skillUI, PartyUnit.UnitSkill unitSkill)
+    {
+        skillUI.Find("Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
+        skillUI.Find("Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { SkillMinusUIActions(skillUI, unitSkill); });
+    }
+    #endregion Skill Plus and Minus button actions
+    bool WasSkillJustLearned(PartyUnit.UnitSkill skill)
+    {
+        foreach (PartyUnit.UnitSkill justLearnedSkill in learnedSkills)
+        {
+            if (skill.EqualTo(justLearnedSkill))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void InitSkillUIMinusButton(Transform skillUI, PartyUnit.UnitSkill skill)
+    {
+        // verify if this is not the skill which was just learned
+        if (WasSkillJustLearned(skill))
+        {
+            // enable minus, so user can roll back changes
+            SetSkillUIMinusButtonInteractable(skillUI, true);
+        }
+        else
+        {
+            // disable minus
+            SetSkillUIMinusButtonInteractable(skillUI, false);
+        }
     }
 
     bool VerifySkillPrerequisites(PartyUnit.UnitSkill skill)
@@ -1016,7 +1084,11 @@ public class UpgradeUnit : MonoBehaviour {
         // verify if hero level meets skill level requirements
         if (focusedPartyUnit.GetLevel() >= GetSkillRequiredLevel(skill))
         {
-            return true;
+            // verify if skill level is not maximum
+            if (skill.Level.Current < skill.Level.Max)
+            {
+                return true;
+            }
         }
         // everything else does not meet requirements
         return false;
@@ -1061,8 +1133,10 @@ public class UpgradeUnit : MonoBehaviour {
         SetSkillUICurrentLevel(newSkillUI, skill);
         SetSkillUIName(newSkillUI, skill);
         SetSkillUIRequiredLevel(newSkillUI, skill);
-        InitSkillUIMinusButton(newSkillUI);
+        InitSkillUIMinusButton(newSkillUI, skill);
         InitSkillUIPlusButton(newSkillUI, skill);
+        SetSkillMinusUIActions(newSkillUI, skill);
+        SetSkillPlusUIActions(newSkillUI, skill);
         SetSkillNameUIShowUnitInfoOnRightClick(newSkillUI, skill);
     }
 
@@ -1108,12 +1182,12 @@ public class UpgradeUnit : MonoBehaviour {
         {
             // disable minus on skill pints, so we do not go to negative values
             SetUnitSkillPointsMinusUIInteractable(false);
-            // Update skills
-            // Clean previous skills;
-            CleanSkillUISkills();
-            // Set options for all skills:
-            SetUnitSkillsUI();
         }
+        // Update skills
+        // Clean previous skills;
+        CleanSkillUISkills();
+        // Set options for all skills:
+        SetUnitSkillsUI();
     }
 
     void UnitSkillPointPlusUIActions()
@@ -1236,6 +1310,7 @@ public class UpgradeUnit : MonoBehaviour {
         // Reset counters
         statsUpgradeCount = 0;
         upgradedToClasses = new List<PartyUnit.UnitType>();
+        learnedSkills = new List<PartyUnit.UnitSkill>();
         // Save link to Party unit for later use
         focusedPartyUnit = partyUnit;
         // Save backup of party unit component
