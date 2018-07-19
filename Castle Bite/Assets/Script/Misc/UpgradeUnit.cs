@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -125,6 +126,11 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/StatsUpgrade/StatPoints/Value").GetComponent<Text>().text = focusedPartyUnit.UnitStatPoints.ToString();
     }
 
+    void SetUnitStatsUpgradeCounterValueUI()
+    {
+        transform.Find("Panel/StatsUpgrade/UpgradeStats/Value").GetComponent<Text>().text = focusedPartyUnit.StatsUpgradesCount.ToString();
+    }
+
     void SetUnitStatPointMinusUIInteractable(bool doActivate)
     {
         transform.Find("Panel/StatsUpgrade/StatPoints/Minus").GetComponent<TextButton>().SetInteractable(doActivate);
@@ -247,6 +253,7 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // upgrade Ability Power in unit Info UI
         unitInfoPanel.SetAbilityPowerPreview(
+            focusedPartyUnit,
             focusedPartyUnit.GetPower(),
             focusedPartyUnit.GetPowerIncrementOnLevelUp() * statsUpgradeCount
         );
@@ -314,8 +321,12 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // consume stat point
         WithdrawStatPoint();
-        // increment stats upgrade count
+        // increment stats upgrade count local counter
         statsUpgradeCount += 1;
+        // increment stats upgrade couter for party unit
+        focusedPartyUnit.StatsUpgradesCount += 1;
+        // upgrade stats upgrade counter UI info
+        SetUnitStatsUpgradeCounterValueUI();
         // enable minus to roll back upgrade
         SetUnitUpgradeStatsMinusUIInteractable(true);
         // upgrade unit stats
@@ -330,6 +341,10 @@ public class UpgradeUnit : MonoBehaviour {
         AddStatPoint();
         // decrement stats upgrade count
         statsUpgradeCount -= 1;
+        // decrement stats upgrade couter for party unit
+        focusedPartyUnit.StatsUpgradesCount -= 1;
+        // upgrade stats upgrade counter UI info
+        SetUnitStatsUpgradeCounterValueUI();
         // enable plus to do upgrade
         SetUnitUpgradeStatsPlusUIInteractable(true);
         // verify if minus should be deactivated, when we reach 0, so we do not downgrade more than we upgraded
@@ -373,6 +388,8 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // Display current number of unitStatPoints
         SetUnitStatPointsValueUI();
+        // Display current stats upgrade counter UI info
+        SetUnitStatsUpgradeCounterValueUI();
         // verify if unit has stats points
         if (focusedPartyUnit.UnitStatPoints >= 1)
         {
@@ -1336,7 +1353,13 @@ public class UpgradeUnit : MonoBehaviour {
         unitBackupGameObject = Instantiate(focusedPartyUnit.gameObject, transform.root.Find("Backup"));
         // copy name of the focused game object to backup game object
         unitBackupGameObject.name = focusedPartyUnit.gameObject.name;
-
+        // copy skills current levels
+        PartyUnit.UnitSkill[] skills = unitBackupGameObject.GetComponent<PartyUnit>().skills;
+        foreach (PartyUnit.UnitSkill skill in focusedPartyUnit.skills)
+        {
+            // copy skill level
+            Array.Find(skills, element => element.Name == skill.Name).Level = skill.Level;
+        }
     }
 
     void RestoreBackup()

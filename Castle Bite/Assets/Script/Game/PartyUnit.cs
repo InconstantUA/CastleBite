@@ -346,6 +346,7 @@ public class PartyUnit : MonoBehaviour {
     PartyUnit[] unlocksUnits;
     [SerializeField]
     int upgradeCost;
+    public int StatsUpgradesCount { get; set; }
 
 
     void InitUnitBuffs()
@@ -750,6 +751,23 @@ public class PartyUnit : MonoBehaviour {
     public int GetPower()
     {
         return unitPower;
+    }
+
+    public int GetOffenceSkillPowerBonus(UnitSkill skill = null)
+    {
+        // verify if custom skill parameter was passed
+        if (skill == null)
+        {
+            // get local party unit skill
+            skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Offence);
+        }
+        return (int)Math.Round(unitPower * skill.Level.Current * 0.15f);
+    }
+
+    public int GetUnitEffectivePower()
+    {
+        // get unit power plus skill bonus
+        return unitPower + GetOffenceSkillPowerBonus();
     }
 
     public void SetPower(int value)

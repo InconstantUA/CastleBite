@@ -20,6 +20,8 @@ GameObject:
   m_Component:
   - component: {fileID: 224364017913245646}
   - component: {fileID: 114844794765295986}
+  - component: {fileID: 114979954818577572}
+  - component: {fileID: 114949980695238148}
   m_Layer: 5
   m_Name: Knight
   m_TagString: Untagged
@@ -78,6 +80,47 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 1
   unitSkillPoints: 0
+  requiresUnit: {fileID: 0}
+  unlocksUnits: []
+  upgradeCost: 0
+--- !u!114 &114949980695238148
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1737202263520784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa93057f5663bca49a00d1d0f377a72b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appliedDebuff: 4
+  power: 0
+  powerIncrementOnLevelUp: 0
+  duration: 1
+  chance: 80
+  chanceIncrementOnLevelUp: 0
+  source: 6
+  origin: 1
+--- !u!114 &114979954818577572
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1737202263520784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa93057f5663bca49a00d1d0f377a72b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appliedDebuff: 3
+  power: 20
+  powerIncrementOnLevelUp: 5
+  duration: 2
+  chance: 75
+  chanceIncrementOnLevelUp: 5
+  source: 1
+  origin: 0
 --- !u!224 &224364017913245646
 RectTransform:
   m_ObjectHideFlags: 1

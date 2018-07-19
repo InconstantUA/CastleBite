@@ -4,11 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System;
 
 public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
     public bool interactable;
     public readonly int maxModifiers = 4;
+
+    string bonusPreviewStyleStart = "<color=green><size=12>+";
+    string bonusPreviewStyleEnd = "</size></color>";
+
+    string powerSkillBonusPreviewStyleStart = "<color=blue>";
+    string powerSkillBonusPreviewStyleEnd = "</color>";
 
     public void ActivateAdvance(PartyUnit partyUnit)
     {
@@ -97,7 +104,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             // Fill in unit ability
             transform.Find("Panel/UnitAbility/Value").GetComponent<Text>().text = partyUnit.GetAbility().ToString();
             // Fill in unit power
-            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text = partyUnit.GetPower().ToString();
+            SetUnitPowerInfo(partyUnit);
             // Fill in unit power source
             transform.Find("Panel/UnitPowerSource/Value").GetComponent<Text>().text = partyUnit.GetPowerSource().ToString();
             // Fill in unit distance
@@ -112,9 +119,6 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.GetFullDescription().ToString();
         }
     }
-
-    string bonusPreviewStyleStart = "<color=green><size=12>+";
-    string bonusPreviewStyleEnd = "</size></color>";
 
     public void SetHealthPreview(int currentHealth, int maxHealth, int maxHealthBonus)
     {
@@ -131,18 +135,19 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    public void SetAbilityPowerPreview(int power, int powerBonus)
+    public void SetAbilityPowerPreview(PartyUnit partyUnit, int power, int powerBonus)
     {
+        // set normal power into
+        SetUnitPowerInfo(partyUnit);
         // verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
         if (0 == powerBonus)
         {
             // do not display + info
-            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text = power.ToString();
         }
         else
         {
             // display + bonus info
-            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text = power.ToString() + bonusPreviewStyleStart + powerBonus.ToString() + bonusPreviewStyleEnd;
+            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text += bonusPreviewStyleStart + powerBonus.ToString() + bonusPreviewStyleEnd;
         }
     }
 
@@ -190,6 +195,25 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
+    void SetUnitPowerInfo(PartyUnit partyUnit, PartyUnit.UnitSkill skill = null)
+    {
+        // Get power text
+        Text powerText = transform.Find("Panel/UnitPower/Value").GetComponent<Text>();
+        powerText.text = partyUnit.GetPower().ToString();
+        // get skill
+        if (skill == null)
+        {
+            // get skill from partyUnit
+            skill = Array.Find(partyUnit.skills, element => element.Name == PartyUnit.UnitSkill.SkillName.Offence);
+        }
+        // verify if skill level is at least 1
+        if (skill.Level.Current >= 1)
+        {
+            // show skill bonus
+            powerText.text += powerSkillBonusPreviewStyleStart + "+" + partyUnit.GetOffenceSkillPowerBonus(skill).ToString() + powerSkillBonusPreviewStyleEnd;
+        }
+    }
+
     public void SetLearnedSkillsBonusPreview(PartyUnit.UnitSkill learnedSkill, PartyUnit partyUnit)
     {
         switch (learnedSkill.Name)
@@ -207,6 +231,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 }
                 break;
             case PartyUnit.UnitSkill.SkillName.Offence:
+                SetUnitPowerInfo(partyUnit, learnedSkill);
                 break;
             case PartyUnit.UnitSkill.SkillName.Defence:
                 break;
