@@ -1360,6 +1360,17 @@ public class UpgradeUnit : MonoBehaviour {
             // copy skill level
             Array.Find(skills, element => element.Name == skill.Name).Level = skill.Level;
         }
+        // copy buffs and defbuffs
+        PartyUnit.UnitBuff[] buffs = unitBackupGameObject.GetComponent<PartyUnit>().GetUnitBuffs();
+        for (int i = 0; i < focusedPartyUnit.GetUnitBuffs().Length; i++)
+        {
+            buffs[i] = focusedPartyUnit.GetUnitBuffs()[i];
+        }
+        PartyUnit.UnitDebuff[] debuffs = unitBackupGameObject.GetComponent<PartyUnit>().GetUnitDebuffs();
+        for (int i = 0; i < focusedPartyUnit.GetUnitDebuffs().Length; i++)
+        {
+            debuffs[i] = focusedPartyUnit.GetUnitDebuffs()[i];
+        }
     }
 
     void RestoreBackup()

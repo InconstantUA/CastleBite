@@ -9,7 +9,8 @@ public class BattleScreen : MonoBehaviour {
     PartyPanel playerPartyPanel;
     PartyPanel enemyPartyPanel;
 
-    PartyUnit activeUnit;
+    // save active unit parent, because active unit may change
+    Transform activeUnitParent;
 
     bool battleHasEnded;
     bool canActivate = false; // if it is possible to activate next unit
@@ -25,6 +26,19 @@ public class BattleScreen : MonoBehaviour {
         PostWait    // moving units which activated Wait before hand
     };
     TurnPhase turnPhase;
+
+    public PartyUnit ActiveUnit
+    {
+        get
+        {
+            return activeUnitParent.GetComponentInChildren<PartyUnit>();
+        }
+
+        set
+        {
+            activeUnitParent = value.transform.parent;
+        }
+    }
 
     public TurnPhase GetTurnPhase()
     {
@@ -322,7 +336,7 @@ public class BattleScreen : MonoBehaviour {
         // set battle has ended
         battleHasEnded = true;
         // Remove highlight from active unit
-        activeUnit.HighlightActiveUnitInBattle(false);
+        ActiveUnit.HighlightActiveUnitInBattle(false);
         //// Clear units info and status information
         //enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
@@ -559,14 +573,14 @@ public class BattleScreen : MonoBehaviour {
         enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
         // Highlight next unit
         // If unit had waiting status in the past, then reset it back to active
-        PartyUnit.UnitStatus unitStatus = activeUnit.GetUnitStatus();
+        PartyUnit.UnitStatus unitStatus = ActiveUnit.GetUnitStatus();
         switch (unitStatus)
         {
             case PartyUnit.UnitStatus.Active:
                 break;
             case PartyUnit.UnitStatus.Waiting:
                 // Activate unit
-                activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Active);
+                ActiveUnit.SetUnitStatus(PartyUnit.UnitStatus.Active);
                 break;
             case PartyUnit.UnitStatus.Escaping:
                 break;
@@ -593,17 +607,17 @@ public class BattleScreen : MonoBehaviour {
         // Set Queue is active flag
         //queueIsActive = true;
         // Next actions are applicably only to active or escaping unit
-        if (  (activeUnit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
-           || (activeUnit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
+        if (  (ActiveUnit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+           || (ActiveUnit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
         {
-            activeUnit.HighlightActiveUnitInBattle(true);
+            ActiveUnit.HighlightActiveUnitInBattle(true);
             // Trigger buffs and debuffs before applying highlights
             // Verify if unit has buffs which should be removed, example: defence
-            activeUnit.DeactivateExpiredBuffs();
+            ActiveUnit.DeactivateExpiredBuffs();
             // Verify if unit has debuffs which should be applied, example: poison
             // Deactivate debuffs which has expired, example: poison duration may last 2 turns
             // This is checked and done after debuff trigger
-            activeUnit.TriggerAppliedDebuffs();
+            ActiveUnit.TriggerAppliedDebuffs();
         }
         //yield return null;
     }
@@ -611,8 +625,8 @@ public class BattleScreen : MonoBehaviour {
     IEnumerator EscapeUnit()
     {
         yield return new WaitForSeconds(0.25f);
-        activeUnit.SetHasMoved(true);
-        activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
+        ActiveUnit.SetHasMoved(true);
+        ActiveUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
         // This unit can't act any more
         // Skip post-move actions and Activate next unit
         canActivate = ActivateNextUnit();
@@ -630,15 +644,15 @@ public class BattleScreen : MonoBehaviour {
         //}
         //// Set Queue is active flag
         //queueIsActive = true;
-        PartyUnit.UnitStatus unitStatus = activeUnit.GetUnitStatus();
+        PartyUnit.UnitStatus unitStatus = ActiveUnit.GetUnitStatus();
         switch (unitStatus)
         {
             case PartyUnit.UnitStatus.Active:
                 // Activate highlights of which cells can or cannot be targeted
-                queue.Run(playerPartyPanel.SetActiveUnitInBattle(activeUnit));
-                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(activeUnit));
+                queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnit));
+                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnit));
                 // verify if active unit's party panel is AI controlled => faction not equal to player's faction
-                if (activeUnit.GetUnitPartyPanel().IsAIControlled)
+                if (ActiveUnit.GetUnitPartyPanel().IsAIControlled)
                 {
                     // give control to battle AI
                     queue.Run(battleAI.Act());
@@ -678,7 +692,7 @@ public class BattleScreen : MonoBehaviour {
     void UpdateBattleControlPanelAccordingToUnitPossibilities()
     {
         // verify if party can flee
-        if (activeUnit.GetUnitParty().CanEscapeFromBattle)
+        if (ActiveUnit.GetUnitParty().CanEscapeFromBattle)
         {
             // activate flee button
             transform.Find("CtrlPnlFight/Retreat").gameObject.SetActive(true);
@@ -708,11 +722,11 @@ public class BattleScreen : MonoBehaviour {
             // find next unit, which can act in the battle
             PartyUnit nextUnit = FindNextUnit();
             //Debug.Log("Next unit is " + nextUnit);
-            // save it for later needs
-            activeUnit = nextUnit;
             if (nextUnit)
             {
                 // found next unit
+                // save it for later needs
+                ActiveUnit = nextUnit;
                 // activate it
                 queue.Run(NextUnit());
                 canActivate = true;
@@ -731,10 +745,10 @@ public class BattleScreen : MonoBehaviour {
         return canActivate;
     }
 
-    public PartyUnit GetActiveUnit()
-    {
-        return activeUnit;
-    }
+    //public PartyUnit GetActiveUnit()
+    //{
+    //    return ActiveUnit;
+    //}
 
     public CoroutineQueue GetQueue()
     {

@@ -449,49 +449,95 @@ public class PartyUnit : MonoBehaviour {
         return null;
     }
 
-    public int GetEffectiveDefence()
+    public int GetCityDefenceBonus()
     {
-        // Get additional defence mondifiers:
-        //  - city
-        //  - items
-        // Verify if unit is in a friendly city and get city defence modifier
-        PartyUnit unit = GetComponent<PartyUnit>();
-        City city = unit.GetUnitCity();
-        HeroParty party = unit.GetUnitParty();
-        int cityDefenceModifier = 0;
+        City city = GetUnitCity();
         if (city)
         {
             // verify if city is friendly
+            HeroParty party = GetUnitParty();
             if (city.GetFaction() == party.GetFaction())
             {
-                cityDefenceModifier = city.GetDefence();
+                return city.GetDefence();
             }
         }
-        // Get items modifier
-        // no items yet, skip
-        // ..
-        int itemsDefenceModifier = 0;
-        // Get total defence modifier
-        int totalDefenceModifier = unit.GetDefence() + cityDefenceModifier + itemsDefenceModifier;
-        // Get status modifiers, example: defence stance buff
+        return 0;
+    }
+
+    public int GetSkillDefenceBonus()
+    {
+        // get skill from partyUnit
+        UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Defence);
+        // get bonus based on fact that 1 skill level = 10 defence
+        return skill.Level.Current * 10;
+    }
+
+    public float GetStatusDefenceBonus()
+    {
+        // Applied Multiplicatively
+        // verify if buffs array is not null
         if (unitBuffs != null)
         {
             Debug.Log(GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+            // verify if buffs array was initialized properly
             if (unitBuffs.Length != (int)UnitBuff.ArrSize)
             {
+                // initialize buffs array
                 InitUnitBuffs();
             }
         }
         else
         {
-            Debug.Log("Unit buffs array is null");
+            Debug.LogError("Unit buffs array is null");
         }
+        // verify if unit has defence stance buff
         if (UnitBuff.DefenceStance == unitBuffs[(int)UnitBuff.DefenceStance])
         {
             // reduce damage by half
-            totalDefenceModifier = totalDefenceModifier + (100 - totalDefenceModifier) / 2;
+            return 0.5f;
         }
-        return (totalDefenceModifier);
+        return 0f; // no impact on defence
+    }
+
+    public int GetTotalAdditiveDefence()
+    {
+        // init with 0
+        int totalDefence = 0;
+        // Get base defence
+        int baseDefence = GetDefence();
+        // apply base defence
+        totalDefence += baseDefence;
+        // Verify if unit is in a friendly city and get city defence modifier
+        int cityDefenceModifier = GetCityDefenceBonus();
+        // apply city defence modifier
+        totalDefence += cityDefenceModifier;
+        // Get items modifier
+        // no items yet, skip
+        // ..
+        int itemsDefenceModifier = 0;
+        // apply items defence modifier
+        totalDefence += itemsDefenceModifier;
+        // Get skills modifier
+        int skillsDefenceModifier = GetSkillDefenceBonus();
+        // apply skills defence modifier
+        totalDefence += skillsDefenceModifier;
+        // return result
+        return totalDefence;
+    }
+
+    public int GetEffectiveDefence()
+    {
+        // ADDITIVE
+        int totalDefence = GetTotalAdditiveDefence();
+        // MULTIPLICATIVE
+        // Get additional defence mondifiers:
+        // Get status modifiers, example: defence stance buff
+        float statusModifier = GetStatusDefenceBonus();
+        // Apply status modifier;
+        int restDamagePercent = 100 - totalDefence;
+        int totalDefenceWithModifiers = totalDefence + (int)Math.Round(restDamagePercent * statusModifier);
+        // Return result
+        return totalDefenceWithModifiers;
     }
 
     public void RemoveAllBuffs()

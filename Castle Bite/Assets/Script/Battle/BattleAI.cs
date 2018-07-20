@@ -40,7 +40,7 @@ public class BattleAI : MonoBehaviour {
         // verify if it is possible to flee
         // this only possible if hero party was on map
         //  get active unit
-        PartyUnit activeUnit = battleScreen.GetActiveUnit();
+        PartyUnit activeUnit = battleScreen.ActiveUnit;
         //  get party
         HeroParty heroParty = activeUnit.GetUnitParty();
         if (heroParty.CanEscapeFromBattle)

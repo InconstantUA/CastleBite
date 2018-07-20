@@ -66,7 +66,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         // get battle screen, structure: BattleScreen-CtrlPnlFight-This
         BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
         // set unit has moved flag
-        PartyUnit activeUnit = battleScreen.GetActiveUnit();
+        PartyUnit activeUnit = battleScreen.ActiveUnit;
         activeUnit.SetHasMoved(true);
         // activate next unit
         battleScreen.ActivateNextUnit();
@@ -78,7 +78,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         Debug.Log("Defend");
         // Get active unit from Battle Screen
         // Structure: BattleScreen-CtrlPnlFight-this button
-        PartyUnit activeUnit = transform.parent.parent.GetComponent<BattleScreen>().GetActiveUnit();
+        PartyUnit activeUnit = transform.parent.parent.GetComponent<BattleScreen>().ActiveUnit;
         // Apply defence stance status
         // Get active unit party panel
         PartyPanel partyPanel = activeUnit.GetUnitPartyPanel();
