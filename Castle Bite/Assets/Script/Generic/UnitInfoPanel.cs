@@ -11,8 +11,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public bool interactable;
     public readonly int maxModifiers = 4;
 
-    string statsBonusPreviewStyleStart = "<color=green><size=12>+";
-    string statsBonusPreviewStyleEnd = "</size></color>";
+    string statsBonusPreviewStyleStart = "<color=green>";
+    string statsBonusPreviewStyleEnd = "</color>";
 
     string skillBonusPreviewStyleStart = "<color=blue>";
     string skillBonusPreviewStyleEnd = "</color>";
@@ -48,18 +48,22 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             transform.Find("Panel/UnitLevel/Value").GetComponent<Text>().text = partyUnit.GetLevel().ToString();
             // Fill in unit current and experience required to reach next level
             transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.GetExperience().ToString() + "/" + partyUnit.GetExperienceRequiredToReachNewLevel().ToString();
-            // Fill in leadership information
             // Verify if unit is leader
             if (partyUnit.GetIsLeader())
             {
-                // unit is leader, set leadership values
+                // unit is leader
+                // Fill in leadership information
                 SetUnitLeadershipInfo(partyUnit);
+                // Set unit move points info
+                SetUnitMovePointsInfo(partyUnit);
             }
             else
             {
                 // unit is common unit
                 // deactivate leadership info
                 transform.Find("Panel/UnitLeadership").gameObject.SetActive(false);
+                // deactivate move points info
+                transform.Find("Panel/UnitMovePoints").gameObject.SetActive(false);
             }
             // Fill in unit health current and max
             transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = partyUnit.GetHealthCurr().ToString() + "/" + partyUnit.GetHealthMax().ToString();
@@ -105,18 +109,18 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 }
             }
             transform.Find("Panel/UnitImmunities/Value").GetComponent<Text>().text = immunities;
+            // Fill in unit initiative
+            transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.GetInitiative().ToString();
             // Fill in unit ability
-            transform.Find("Panel/UnitAbility/Value").GetComponent<Text>().text = partyUnit.GetAbility().ToString();
+            transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.GetAbility().ToString();
             // Fill in unit power
             SetUnitPowerInfo(partyUnit);
             // Fill in unit power source
-            transform.Find("Panel/UnitPowerSource/Value").GetComponent<Text>().text = partyUnit.GetPowerSource().ToString();
+            transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.GetPowerSource().ToString();
             // Fill in unit distance
-            transform.Find("Panel/UnitPowerDistance/Value").GetComponent<Text>().text = partyUnit.GetPowerDistance().ToString();
+            transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.GetPowerDistance().ToString();
             // Fill in unit power scope
-            transform.Find("Panel/UnitPowerScope/Value").GetComponent<Text>().text = partyUnit.GetPowerScope().ToString();
-            // Fill in unit initiative
-            transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.GetInitiative().ToString();
+            transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.GetPowerScope().ToString();
             // Fill in information about unique power modifiers
             FillInUniquePowerModifiersInformation(partyUnit);
             // Fill in description
@@ -126,33 +130,27 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public void SetHealthPreview(int currentHealth, int maxHealth, int maxHealthBonus)
     {
-        // verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
-        if (0 == maxHealthBonus)
-        {
-            // do not display + info
-            transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = currentHealth.ToString() + "/" + maxHealth.ToString();
-        }
-        else
-        {
-            // display + bonus info
-            transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = currentHealth.ToString() + "/" + maxHealth.ToString() + statsBonusPreviewStyleStart + maxHealthBonus.ToString() + statsBonusPreviewStyleEnd;
-        }
-    }
-
-    public void SetAbilityPowerPreview(PartyUnit partyUnit, int power, int powerBonus)
-    {
-        // set normal power into
-        SetUnitPowerInfo(partyUnit);
-        // verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
-        if (0 == powerBonus)
-        {
-            // do not display + info
-        }
-        else
-        {
-            // display + bonus info
-            transform.Find("Panel/UnitPower/Value").GetComponent<Text>().text += statsBonusPreviewStyleStart + powerBonus.ToString() + statsBonusPreviewStyleEnd;
-        }
+        Text healthText = transform.Find("Panel/UnitHealth/Value").GetComponent<Text>();
+        // display without bonus
+        healthText.text = currentHealth.ToString() + "/" + maxHealth.ToString();
+        // show bonuses calculation
+        healthText.text += "(";
+        // show original health without bonuses
+        healthText.text += maxHealth - maxHealthBonus;
+        // show health bonus
+        AddBonusInfoToText(healthText, maxHealthBonus, statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
+        healthText.text += ")";
+        //// verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
+        //if (0 == maxHealthBonus)
+        //{
+        //    // do not display + info
+        //    transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = currentHealth.ToString() + "/" + maxHealth.ToString();
+        //}
+        //else
+        //{
+        //    // display + bonus info
+        //    transform.Find("Panel/UnitHealth/Value").GetComponent<Text>().text = currentHealth.ToString() + "/" + maxHealth.ToString() + statsBonusPreviewStyleStart + maxHealthBonus.ToString() + statsBonusPreviewStyleEnd;
+        //}
     }
 
     public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus, int chance, int chanceBonus)
@@ -166,7 +164,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         else
         {
             // display + bonus info
-            modifier.Find("Power").GetComponent<Text>().text = power.ToString() + statsBonusPreviewStyleStart + powerBonus.ToString() + statsBonusPreviewStyleEnd;
+            modifier.Find("Power").GetComponent<Text>().text = power.ToString() + statsBonusPreviewStyleStart + "+" + powerBonus.ToString() + statsBonusPreviewStyleEnd;
         }
         if (0 == chanceBonus)
         {
@@ -176,7 +174,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         else
         {
             // display + bonus info
-            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + statsBonusPreviewStyleStart + chanceBonus.ToString() + statsBonusPreviewStyleEnd;
+            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + statsBonusPreviewStyleStart + "+" + chanceBonus.ToString() + statsBonusPreviewStyleEnd;
         }
     }
 
@@ -209,16 +207,55 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    void SetUnitPowerInfo(PartyUnit partyUnit, PartyUnit.UnitSkill skill = null)
+    //public void SetAbilityPowerPreview(PartyUnit partyUnit, int power, int powerBonus)
+    //{
+    //    // set normal power into
+    //    SetUnitPowerInfo(partyUnit);
+    //    // verify if max health bonus is not zero (this is possible, when we downgrade to the initial point)
+    //    if (0 == powerBonus)
+    //    {
+    //        // do not display + info
+    //    }
+    //    else
+    //    {
+    //        // display + bonus info
+    //        transform.Find("Panel/AbilityParameters/Power").GetComponent<Text>().text += statsBonusPreviewStyleStart + powerBonus.ToString() + statsBonusPreviewStyleEnd;
+    //    }
+    //}
+
+    int GetStatsPowerBonus(PartyUnit partyUnit)
     {
-        // Consider removing "PartyUnit.UnitSkill skill = null" parameter
-        // ..
+        // get stats upgrade menu
+        UpgradeUnit upgradeUnit = transform.root.Find("MiscUI/UpgradeUnit").GetComponent<UpgradeUnit>();
+        // verify if it is active now
+        if (upgradeUnit.gameObject.activeInHierarchy)
+        {
+            //  get stats upgrade count during current upgrade session
+            int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
+            return partyUnit.GetPowerIncrementOnLevelUp() * statsUpgradeCount;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public void SetUnitPowerInfo(PartyUnit partyUnit)
+    {
         // Get power text
-        Text powerText = transform.Find("Panel/UnitPower/Value").GetComponent<Text>();
-        // set default unit power without bonuses
-        powerText.text = partyUnit.GetPower().ToString();
-        // get and add offence skill bonus to text
-        AddBonusInfoToText(powerText, partyUnit.GetOffenceSkillPowerBonus(skill), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+        Text powerText = transform.Find("Panel/AbilityParameters/Power").GetComponent<Text>();
+        // Display total power
+        powerText.text = partyUnit.GetUnitEffectivePower().ToString();
+        // Display additional modifiers between brackets
+        powerText.text += "(";
+        // set default unit power without bonuses (without just upgraded stats power bonus)
+        powerText.text += (partyUnit.GetPower() - GetStatsPowerBonus(partyUnit)).ToString();
+        // get and add stats power bonus if it is present
+        AddBonusInfoToText(powerText, GetStatsPowerBonus(partyUnit), statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
+        // get and add offence skill bonus to text if upgrade unit panel is active
+        AddBonusInfoToText(powerText, partyUnit.GetOffenceSkillPowerBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+        // close brackets
+        powerText.text += ")";
     }
 
     void SetUnitDefenceInfo(PartyUnit partyUnit)
@@ -228,6 +265,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // display total defence
         defenceText.text = partyUnit.GetEffectiveDefence().ToString();
         // Display how defence is calculated
+        // open brackets
         defenceText.text += "(";
         // set default unit defence without bonuses
         defenceText.text += "<color=#606060>" + partyUnit.GetDefence().ToString() + "</color>";
@@ -238,6 +276,24 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // get and add status bonus (example: defence stance) to text
         AddBonusInfoToText(defenceText, (int)(partyUnit.GetStatusDefenceBonus() * (100 - partyUnit.GetTotalAdditiveDefence())), statusBonusPreviewStyleStart, statusBonusPreviewStyleEnd);
         // not needed - stats do no give defence bonus
+        // close brackets
+        defenceText.text += ")";
+    }
+
+    public void SetUnitMovePointsInfo(PartyUnit partyUnit)
+    {
+        // Get move points text
+        Text defenceText = transform.Find("Panel/UnitMovePoints/Value").GetComponent<Text>();
+        // display total move points
+        defenceText.text = partyUnit.MovePointsCurrent.ToString() + "/" + partyUnit.GetEffectiveMaxMovePoints().ToString();
+        // Display how move points are calculated
+        // open brackets
+        defenceText.text += "(";
+        // set default unit  move points without bonuses
+        defenceText.text += "<color=#606060>" + partyUnit.MovePointsMax.ToString() + "</color>";
+        // get and add path finding skill bonus to text
+        AddBonusInfoToText(defenceText, partyUnit.GetPathfindingSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+        // close brackets
         defenceText.text += ")";
     }
 
@@ -254,7 +310,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                     // get bonus
                     int learnedSkillBonus = learnedSkill.Level.Current;
                     // add bonus value to the text
-                    transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text += statsBonusPreviewStyleStart + learnedSkillBonus.ToString() + statsBonusPreviewStyleEnd;
+                    transform.Find("Panel/UnitLeadership/Value").GetComponent<Text>().text += statsBonusPreviewStyleStart + "+" + learnedSkillBonus.ToString() + statsBonusPreviewStyleEnd;
                 }
                 break;
             case PartyUnit.UnitSkill.SkillName.Offence:
@@ -265,6 +321,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 SetUnitDefenceInfo(partyUnit);
                 break;
             case PartyUnit.UnitSkill.SkillName.Pathfinding:
+                SetUnitMovePointsInfo(partyUnit);
                 break;
             case PartyUnit.UnitSkill.SkillName.Scouting:
                 break;

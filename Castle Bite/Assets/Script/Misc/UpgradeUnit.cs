@@ -15,6 +15,20 @@ public class UpgradeUnit : MonoBehaviour {
 
     [SerializeField] Color satisfiedRequirementsColor;
     [SerializeField] Color dissatisfiedRequirementsColor;
+
+    public int StatsUpgradeCount
+    {
+        get
+        {
+            return statsUpgradeCount;
+        }
+
+        set
+        {
+            statsUpgradeCount = value;
+        }
+    }
+
     //[SerializeField]
     //int classUIPosition = -89;  // starting position + current position for iteration
     //[SerializeField]
@@ -249,22 +263,23 @@ public class UpgradeUnit : MonoBehaviour {
     #endregion Health
 
     #region Ability Power
-    void UpdateAbilityPowerInfo()
-    {
-        // upgrade Ability Power in unit Info UI
-        unitInfoPanel.SetAbilityPowerPreview(
-            focusedPartyUnit,
-            focusedPartyUnit.GetPower(),
-            focusedPartyUnit.GetPowerIncrementOnLevelUp() * statsUpgradeCount
-        );
-    }
+    //void UpdateAbilityPowerInfo()
+    //{
+    //    // upgrade Ability Power in unit Info UI
+    //    unitInfoPanel.SetAbilityPowerPreview(
+    //        focusedPartyUnit,
+    //        focusedPartyUnit.GetPower(),
+    //        focusedPartyUnit.GetPowerIncrementOnLevelUp() * statsUpgradeCount
+    //    );
+    //}
 
     void UpgradeAbilityPower()
     {
         // upgrade Ability Power in unit object
         focusedPartyUnit.SetPower(focusedPartyUnit.GetPower() + focusedPartyUnit.GetPowerIncrementOnLevelUp());
         // upgrade Ability Power in unit Info UI
-        UpdateAbilityPowerInfo();
+        unitInfoPanel.SetUnitPowerInfo(focusedPartyUnit);
+        //UpdateAbilityPowerInfo();
     }
 
     void DowngradeAbilityPower()
@@ -272,7 +287,8 @@ public class UpgradeUnit : MonoBehaviour {
         // downgrade Ability Power in unit object
         focusedPartyUnit.SetPower(focusedPartyUnit.GetPower() - focusedPartyUnit.GetPowerIncrementOnLevelUp());
         // upgrade Ability Power in unit Info UI
-        UpdateAbilityPowerInfo();
+        unitInfoPanel.SetUnitPowerInfo(focusedPartyUnit);
+        //UpdateAbilityPowerInfo();
     }
     #endregion Ability Power
 
@@ -1358,7 +1374,8 @@ public class UpgradeUnit : MonoBehaviour {
         foreach (PartyUnit.UnitSkill skill in focusedPartyUnit.skills)
         {
             // copy skill level
-            Array.Find(skills, element => element.Name == skill.Name).Level = skill.Level;
+            Array.Find(skills, element => element.Name == skill.Name).Level.Current = skill.Level.Current;
+            Array.Find(skills, element => element.Name == skill.Name).Level.Max = skill.Level.Max;
         }
         // copy buffs and defbuffs
         PartyUnit.UnitBuff[] buffs = unitBackupGameObject.GetComponent<PartyUnit>().GetUnitBuffs();

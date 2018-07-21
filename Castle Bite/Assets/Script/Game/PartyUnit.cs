@@ -347,6 +347,10 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     int upgradeCost;
     public int StatsUpgradesCount { get; set; }
+    [SerializeField]
+    int movePointsCurrent;
+    [SerializeField]
+    int movePointsMax;
 
 
     void InitUnitBuffs()
@@ -1288,6 +1292,64 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             upgradeCost = value;
+        }
+    }
+
+    public float GetPathfindingSkillMultiplier()
+    {
+        // get current skill level
+        int currentSkillLevel = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Pathfinding).Level.Current;
+        // get and return bonus multiplier
+        return (float)currentSkillLevel * 0.5f;
+    }
+
+    public int GetAdditiveMovePoints()
+    {
+        // get all move points which stack additively
+        // get move points without bonuses
+        int totalMovePoints = movePointsMax;
+        // get other move points
+        // ..
+        return totalMovePoints;
+    }
+
+    public int GetPathfindingSkillBonus()
+    {
+        // get return additional move points
+        return (int)Math.Round(GetPathfindingSkillMultiplier() * GetAdditiveMovePoints());
+    }
+
+    public int GetEffectiveMaxMovePoints()
+    {
+        // get total move points
+        int totalMovePoints = GetAdditiveMovePoints() + GetPathfindingSkillBonus();
+        // return result
+        return totalMovePoints;
+    }
+
+    public int MovePointsMax
+    {
+        get
+        {
+            return movePointsMax;
+        }
+
+        set
+        {
+            movePointsMax = value;
+        }
+    }
+
+    public int MovePointsCurrent
+    {
+        get
+        {
+            return movePointsCurrent;
+        }
+
+        set
+        {
+            movePointsCurrent = value;
         }
     }
 

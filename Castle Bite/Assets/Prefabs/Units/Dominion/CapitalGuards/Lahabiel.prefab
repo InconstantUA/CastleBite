@@ -57,7 +57,7 @@ MonoBehaviour:
   unitAbility: 5
   unitPower: 300
   unitPowerIncrementOnLevelUp: 0
-  unitPowerSource: 6
+  unitPowerSource: 7
   unitPowerDistance: 1
   unitPowerScope: 1
   unitInitiative: 10
@@ -73,6 +73,17 @@ MonoBehaviour:
   unitStatus: 0
   unitDebuffs: 
   unitBuffs: 
+  unitUpgradePoints: 0
+  unitStatPoints: 0
+  classIsUpgradable: 0
+  unitClassPoints: 0
+  canLearnSkills: 0
+  unitSkillPoints: 0
+  requiresUnit: {fileID: 0}
+  unlocksUnits: []
+  upgradeCost: 0
+  movePointsCurrent: 0
+  movePointsMax: 0
 --- !u!224 &224611576928189082
 RectTransform:
   m_ObjectHideFlags: 1

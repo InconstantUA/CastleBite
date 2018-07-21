@@ -57,8 +57,8 @@ MonoBehaviour:
   unitResistances: 
   unitImmunities: 
   unitAbility: 6
-  unitPower: 60
-  unitPowerIncrementOnLevelUp: 15
+  unitPower: 200
+  unitPowerIncrementOnLevelUp: 50
   unitPowerSource: 0
   unitPowerDistance: 0
   unitPowerScope: 0
@@ -83,6 +83,8 @@ MonoBehaviour:
   requiresUnit: {fileID: 0}
   unlocksUnits: []
   upgradeCost: 0
+  movePointsCurrent: 19
+  movePointsMax: 20
 --- !u!114 &114949980695238148
 MonoBehaviour:
   m_ObjectHideFlags: 1

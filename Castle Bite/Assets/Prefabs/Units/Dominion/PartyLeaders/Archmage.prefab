@@ -78,6 +78,11 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 1
   unitSkillPoints: 0
+  requiresUnit: {fileID: 0}
+  unlocksUnits: []
+  upgradeCost: 0
+  movePointsCurrent: 14
+  movePointsMax: 15
 --- !u!224 &224658346894969760
 RectTransform:
   m_ObjectHideFlags: 1
