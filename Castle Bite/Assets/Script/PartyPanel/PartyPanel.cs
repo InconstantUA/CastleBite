@@ -364,7 +364,7 @@ public class PartyPanel : MonoBehaviour {
             }
         } else
         {
-            capacity = GetPartyLeader().GetLeadership() + 1; // +1 because we do not count leader
+            capacity = GetPartyLeader().GetEffectiveLeadership() + 1; // +1 because we do not count leader
         }
         return capacity;
     }

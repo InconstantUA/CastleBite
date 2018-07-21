@@ -44,7 +44,7 @@ public class PartyUnit : MonoBehaviour {
         None
     };
 
-    public enum UnitPowerSource
+    public enum UnitPowerSource:int
     {
         Physical,   // Attack with metal weapons
         Water,
@@ -54,7 +54,15 @@ public class PartyUnit : MonoBehaviour {
         Life,       // Heal
         Death,      // Poison
         Pure,       // Cannot be resisted
-        None
+        Mind,       // Paralyze
+        None        // last element
+    }
+
+    [Serializable]
+    public struct Resistance
+    {
+        public UnitPowerSource source;
+        public int percent;
     }
 
     public enum UnitPowerDistance
@@ -202,11 +210,11 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
         ),
         new UnitSkill(
-            UnitSkill.SkillName.DeathResistance,
-            "Death Resistance",
+            UnitSkill.SkillName.WaterResistance,
+            "Water Resistance",
             0, 2,
             5, 5,
-            "Increase hero change to resist Death-based attacks, for example Poison."
+            "Increase hero change to resist Water-based attacks, for example Chill."
             + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
             + "\r\n" + "Maximum level: 2."
             //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
@@ -222,11 +230,11 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
         ),
         new UnitSkill(
-            UnitSkill.SkillName.WaterResistance,
-            "Water Resistance",
+            UnitSkill.SkillName.DeathResistance,
+            "Death Resistance",
             0, 2,
             5, 5,
-            "Increase hero change to resist Water-based attacks, for example Chill."
+            "Increase hero change to resist Death-based attacks, for example Poison."
             + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
             + "\r\n" + "Maximum level: 2."
             //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
@@ -300,10 +308,12 @@ public class PartyUnit : MonoBehaviour {
     //bool isAlive = true;
     [SerializeField]
     int unitDefense;
+    //[SerializeField]
+    //UnitPowerSource[] unitResistances;
     [SerializeField]
-    UnitPowerSource[] unitResistances;
-    [SerializeField]
-    UnitPowerSource[] unitImmunities;
+    Resistance[] resistances;
+    //[SerializeField]
+    //UnitPowerSource[] unitImmunities;
     // Offensive attributes
     [SerializeField]
     UnitAbility unitAbility;
@@ -952,25 +962,25 @@ public class PartyUnit : MonoBehaviour {
         unitPowerSource = value;
     }
 
-    public UnitPowerSource[] GetResistances()
-    {
-        return unitResistances;
-    }
+    //public UnitPowerSource[] GetResistances()
+    //{
+    //    return unitResistances;
+    //}
 
-    public void SetResistances(UnitPowerSource[] value)
-    {
-        unitResistances = value;
-    }
+    //public void SetResistances(UnitPowerSource[] value)
+    //{
+    //    unitResistances = value;
+    //}
 
-    public UnitPowerSource[] GetImmunities()
-    {
-        return unitImmunities;
-    }
+    //public UnitPowerSource[] GetImmunities()
+    //{
+    //    return unitImmunities;
+    //}
 
-    public void SetImmunities(UnitPowerSource[] value)
-    {
-        unitImmunities = value;
-    }
+    //public void SetImmunities(UnitPowerSource[] value)
+    //{
+    //    unitImmunities = value;
+    //}
 
     public void SetCost(int requiredCost)
     {
@@ -1048,6 +1058,11 @@ public class PartyUnit : MonoBehaviour {
     }
 
     public int GetLeadership()
+    {
+        return unitLeadership;
+    }
+
+    public int GetEffectiveLeadership()
     {
         // get current skill leadership bonus = skill level
         UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Leadership);
@@ -1424,31 +1439,93 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
+    public Resistance[] Resistances
+    {
+        get
+        {
+            return resistances;
+        }
+
+        set
+        {
+            resistances = value;
+        }
+    }
+
     public int GetUnitHealthRegenPerDay()
     {
-        return (int)Math.Round(((float)healthMax * (float)healthRegenPercent) / 100f);
+        return (int)Math.Floor(((float)healthMax * (float)healthRegenPercent) / 100f);
     }
 
     public float GetUnitHealSkillHealthRegenModifier()
     {
         // get and return skill current level multiplied by 0.15
-        return Array.Find(skills, element => element.Name == UnitSkill.SkillName.Healing).Level.Current * 0.15f;
+        return (float)Array.Find(skills, element => element.Name == UnitSkill.SkillName.Healing).Level.Current * 0.15f;
     }
 
     public int GetUnitHealSkillHealthRegenBonusPerDay()
     {
         // get and return skill current level multiplied by 0.15
-        return (int)Math.Round((float)Array.Find(skills, element => element.Name == UnitSkill.SkillName.Healing).Level.Current * 0.15f * (float)healthMax);
+        return (int)Math.Floor(GetUnitHealSkillHealthRegenModifier() * (float)healthMax);
     }
 
     public float GetUnitEffectiveHealthRegen()
     {
-        return (float)healthRegenPercent / 100f + GetUnitHealSkillHealthRegenModifier();
+        return ((float)healthRegenPercent / 100f + GetUnitHealSkillHealthRegenModifier());
     }
 
     public int GetUnitEffectiveHealthRegenPerDay()
     {
-        return (int)Math.Round(((float)healthMax * GetUnitEffectiveHealthRegen()) / 100f);
+        return (int)Math.Floor((float)healthMax * GetUnitEffectiveHealthRegen());
+    }
+
+    public int GetUnitResistanceSkillBonus(UnitPowerSource source)
+    {
+        switch (source)
+        {
+            case UnitPowerSource.Death:
+                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.DeathResistance).Level.Current * 50;
+            case UnitPowerSource.Fire:
+                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.FireResistance).Level.Current * 50;
+            case UnitPowerSource.Mind:
+                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.MindResistance).Level.Current * 50;
+            case UnitPowerSource.Water:
+                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.WaterResistance).Level.Current * 50;
+            case UnitPowerSource.Wind:
+            case UnitPowerSource.Pure:
+            case UnitPowerSource.Earth:
+            case UnitPowerSource.Life:
+            case UnitPowerSource.Physical:
+                return 0;
+            default:
+                Debug.LogError("Unknown source " + source.ToString());
+                return 0;
+        }
+    }
+
+    public int GetUnitBaseResistance(UnitPowerSource source)
+    {
+        // verify if unit has this base resistance
+        foreach (Resistance resistance in resistances)
+        {
+            // verify if there is resistance with the same name
+            if (resistance.source == source)
+            {
+                // return resistance percent
+                return resistance.percent;
+            }
+        }
+        return 0;
+    }
+
+    public int GetUnitEffectiveResistance(UnitPowerSource source)
+    {
+        // get base resistance
+        int baseResistance = GetUnitBaseResistance(source);
+        // get skill resistance
+        int skillResistance = GetUnitResistanceSkillBonus(source);
+        // get and return effective resistance
+        return baseResistance + skillResistance;
     }
 
     public void SetUnitCellInfoUI()

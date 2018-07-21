@@ -95,7 +95,7 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("FocusedName").GetComponent<Text>().text = partyLeader.GetGivenName();
         transform.Find("FocusedDescription").GetComponent<Text>().text = partyLeader.GetUnitName();
         transform.Find("PartyFocus").Find("LevelValue").GetComponent<Text>().text = partyLeader.GetLevel().ToString();
-        transform.Find("PartyFocus").Find("LeadershipValue").GetComponent<Text>().text = partyLeader.GetLeadership().ToString();
+        transform.Find("PartyFocus").Find("LeadershipValue").GetComponent<Text>().text = partyLeader.GetEffectiveLeadership().ToString();
     }
 
     void SetNoPartyInfo()

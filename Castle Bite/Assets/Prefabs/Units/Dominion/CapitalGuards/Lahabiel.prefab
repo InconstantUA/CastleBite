@@ -52,8 +52,17 @@ MonoBehaviour:
   healthMax: 1100
   healthMaxIncrementOnLevelUp: 550
   unitDefense: 0
-  unitResistances: 04000000010000000200000003000000
-  unitImmunities: 00000000
+  resistances:
+  - source: 1
+    percent: 50
+  - source: 2
+    percent: 50
+  - source: 3
+    percent: 50
+  - source: 4
+    percent: 50
+  - source: 6
+    percent: 50
   unitAbility: 5
   unitPower: 300
   unitPowerIncrementOnLevelUp: 0

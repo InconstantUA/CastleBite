@@ -233,15 +233,15 @@ public class UpgradeUnit : MonoBehaviour {
     #region Upgrade stats
 
     #region Health
-    void UpdateHealthInfo()
-    {
-        // upgrade health in unit Info UI
-        unitInfoPanel.SetHealthPreview(
-            focusedPartyUnit.GetHealthCurr(),
-            focusedPartyUnit.GetHealthMax(),
-            focusedPartyUnit.GetHealthMaxIncrementOnLevelUp() * statsUpgradeCount
-        );
-    }
+    //void UpdateHealthInfo()
+    //{
+    //    // upgrade health in unit Info UI
+    //    unitInfoPanel.SetHealthPreview(
+    //        focusedPartyUnit.GetHealthCurr(),
+    //        focusedPartyUnit.GetHealthMax(),
+    //        focusedPartyUnit.GetHealthMaxIncrementOnLevelUp() * statsUpgradeCount
+    //    );
+    //}
 
     void UpgradeHealth()
     {
@@ -249,7 +249,8 @@ public class UpgradeUnit : MonoBehaviour {
         focusedPartyUnit.SetHealthCurr(focusedPartyUnit.GetHealthCurr() + focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
         focusedPartyUnit.SetHealthMax(focusedPartyUnit.GetHealthMax() + focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
         // upgrade health in unit Info UI
-        UpdateHealthInfo();
+        unitInfoPanel.SetUnitHealthInfo(focusedPartyUnit);
+        //UpdateHealthInfo();
     }
 
     void DowngradeHealth()
@@ -258,7 +259,8 @@ public class UpgradeUnit : MonoBehaviour {
         focusedPartyUnit.SetHealthCurr(focusedPartyUnit.GetHealthCurr() - focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
         focusedPartyUnit.SetHealthMax(focusedPartyUnit.GetHealthMax() - focusedPartyUnit.GetHealthMaxIncrementOnLevelUp());
         // upgrade health in unit Info UI
-        UpdateHealthInfo();
+        unitInfoPanel.SetUnitHealthInfo(focusedPartyUnit);
+        //UpdateHealthInfo();
     }
     #endregion Health
 
