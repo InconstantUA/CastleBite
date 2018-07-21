@@ -91,13 +91,13 @@ public class PartyUnit : MonoBehaviour {
     public enum UnitBuff:int
     {
         None,
-        DefenceStance,
+        DefenseStance,
         ArrSize // for dynamic resizing of UnitBuffs array
     }
 
     public class UnitSkill
     {
-        public enum SkillName { Leadership, Offence, Defence, Pathfinding, Scouting, Healing, DeathResistance, FireResistance, WaterResistance, MindResistance }
+        public enum SkillName { Leadership, Offence, Defense, Pathfinding, Scouting, Healing, DeathResistance, FireResistance, WaterResistance, MindResistance, ShardAura, LifelessContinuation }
         public SkillName Name { get; set; }
         public string DisplayName { get; set; }
         public class SkillLevel
@@ -166,11 +166,11 @@ public class PartyUnit : MonoBehaviour {
             //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
         new UnitSkill(
-            UnitSkill.SkillName.Defence,
-            "Defence",
+            UnitSkill.SkillName.Defense,
+            "Defense",
             0, 3,
             2, 2,
-            "Increase hero defence from all sources by adding 10 defence points multiplied by skill level to current hero defence value."
+            "Increase hero defense from all sources by adding 10 defense points multiplied by skill level to current hero defense value."
             + "\r\n" + "Maximum level: 3."
             //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
         ),
@@ -197,7 +197,7 @@ public class PartyUnit : MonoBehaviour {
             "Healing",
             0, 2,
             2, 3,
-            "Increase hero and its party members daily healing rate by 20% from total health multiplied by skill level."
+            "Increase hero and its party members daily healing rate by 15% from total health multiplied by skill level."
             + "\r\n" + "Maximum level: 2."
             //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
         ),
@@ -241,6 +241,29 @@ public class PartyUnit : MonoBehaviour {
             + "\r\n" + "Maximum level: 2."
             //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
         ),
+        new UnitSkill(
+            UnitSkill.SkillName.ShardAura,
+            "Shard Aura",
+            0, 3,
+            8, 5,
+            "Allow hero to use shards which emit different aura based on the shard type."
+            + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
+            + "\r\n" + "Each level increases shards aura bonus by 5."
+            + "\r\n" + "Maximum level: 3."
+            //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        ),
+        new UnitSkill(
+            UnitSkill.SkillName.LifelessContinuation,
+            "Lifeless Continuation",
+            0, 1,
+            9, 0,
+            "Allow hero to continue battle after death."
+            + "\r\n" + "After death all debuffs are removed and hero enters spirit form with half of the normal health and physical damage immunity. "
+            + "Hero can be resurected by friendly party unit or by using blood stone during the battle. "
+            + "If not resurected before the end of the battle hero dies without gainig experience."
+            + "\r\n" + "Maximum level: 1."
+            //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        ),
     };
     
     // Misc attributes
@@ -276,7 +299,7 @@ public class PartyUnit : MonoBehaviour {
     //[SerializeField]
     //bool isAlive = true;
     [SerializeField]
-    int unitDefence;
+    int unitDefense;
     [SerializeField]
     UnitPowerSource[] unitResistances;
     [SerializeField]
@@ -351,6 +374,10 @@ public class PartyUnit : MonoBehaviour {
     int movePointsCurrent;
     [SerializeField]
     int movePointsMax;
+    [SerializeField]
+    int scoutingRange;
+    [SerializeField]
+    int healthRegenPercent;
 
 
     void InitUnitBuffs()
@@ -453,7 +480,7 @@ public class PartyUnit : MonoBehaviour {
         return null;
     }
 
-    public int GetCityDefenceBonus()
+    public int GetCityDefenseBonus()
     {
         City city = GetUnitCity();
         if (city)
@@ -462,21 +489,21 @@ public class PartyUnit : MonoBehaviour {
             HeroParty party = GetUnitParty();
             if (city.GetFaction() == party.GetFaction())
             {
-                return city.GetDefence();
+                return city.GetDefense();
             }
         }
         return 0;
     }
 
-    public int GetSkillDefenceBonus()
+    public int GetSkillDefenseBonus()
     {
         // get skill from partyUnit
-        UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Defence);
-        // get bonus based on fact that 1 skill level = 10 defence
+        UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Defense);
+        // get bonus based on fact that 1 skill level = 10 defense
         return skill.Level.Current * 10;
     }
 
-    public float GetStatusDefenceBonus()
+    public float GetStatusDefenseBonus()
     {
         // Applied Multiplicatively
         // verify if buffs array is not null
@@ -494,54 +521,54 @@ public class PartyUnit : MonoBehaviour {
         {
             Debug.LogError("Unit buffs array is null");
         }
-        // verify if unit has defence stance buff
-        if (UnitBuff.DefenceStance == unitBuffs[(int)UnitBuff.DefenceStance])
+        // verify if unit has defense stance buff
+        if (UnitBuff.DefenseStance == unitBuffs[(int)UnitBuff.DefenseStance])
         {
             // reduce damage by half
             return 0.5f;
         }
-        return 0f; // no impact on defence
+        return 0f; // no impact on defense
     }
 
-    public int GetTotalAdditiveDefence()
+    public int GetTotalAdditiveDefense()
     {
         // init with 0
-        int totalDefence = 0;
-        // Get base defence
-        int baseDefence = GetDefence();
-        // apply base defence
-        totalDefence += baseDefence;
-        // Verify if unit is in a friendly city and get city defence modifier
-        int cityDefenceModifier = GetCityDefenceBonus();
-        // apply city defence modifier
-        totalDefence += cityDefenceModifier;
+        int totalDefense = 0;
+        // Get base defense
+        int baseDefense = GetDefense();
+        // apply base defense
+        totalDefense += baseDefense;
+        // Verify if unit is in a friendly city and get city defense modifier
+        int cityDefenseModifier = GetCityDefenseBonus();
+        // apply city defense modifier
+        totalDefense += cityDefenseModifier;
         // Get items modifier
         // no items yet, skip
         // ..
-        int itemsDefenceModifier = 0;
-        // apply items defence modifier
-        totalDefence += itemsDefenceModifier;
+        int itemsDefenseModifier = 0;
+        // apply items defense modifier
+        totalDefense += itemsDefenseModifier;
         // Get skills modifier
-        int skillsDefenceModifier = GetSkillDefenceBonus();
-        // apply skills defence modifier
-        totalDefence += skillsDefenceModifier;
+        int skillsDefenseModifier = GetSkillDefenseBonus();
+        // apply skills defense modifier
+        totalDefense += skillsDefenseModifier;
         // return result
-        return totalDefence;
+        return totalDefense;
     }
 
-    public int GetEffectiveDefence()
+    public int GetEffectiveDefense()
     {
         // ADDITIVE
-        int totalDefence = GetTotalAdditiveDefence();
+        int totalDefense = GetTotalAdditiveDefense();
         // MULTIPLICATIVE
-        // Get additional defence mondifiers:
-        // Get status modifiers, example: defence stance buff
-        float statusModifier = GetStatusDefenceBonus();
+        // Get additional defense mondifiers:
+        // Get status modifiers, example: defense stance buff
+        float statusModifier = GetStatusDefenseBonus();
         // Apply status modifier;
-        int restDamagePercent = 100 - totalDefence;
-        int totalDefenceWithModifiers = totalDefence + (int)Math.Round(restDamagePercent * statusModifier);
+        int restDamagePercent = 100 - totalDefense;
+        int totalDefenseWithModifiers = totalDefense + (int)Math.Round(restDamagePercent * statusModifier);
         // Return result
-        return totalDefenceWithModifiers;
+        return totalDefenseWithModifiers;
     }
 
     public void RemoveAllBuffs()
@@ -586,9 +613,9 @@ public class PartyUnit : MonoBehaviour {
     {
         int damageDealt = 0;
         int srcUnitDamage = activeBattleUnit.GetPower();
-        int dstUnitDefence = GetEffectiveDefence();
+        int dstUnitDefense = GetEffectiveDefense();
         // calculate damage dealt
-        damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefence)) / 100f));
+        damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefense)) / 100f));
         return damageDealt;
     }
 
@@ -875,14 +902,14 @@ public class PartyUnit : MonoBehaviour {
         unitExperienceRequiredToReachNewLevel = value;
     }
 
-    public int GetDefence()
+    public int GetDefense()
     {
-        return unitDefence;
+        return unitDefense;
     }
 
-    public void SetDefence(int value)
+    public void SetDefense(int value)
     {
-        unitDefence = value;
+        unitDefense = value;
     }
 
     public UnitAbility GetAbility()
@@ -1319,12 +1346,30 @@ public class PartyUnit : MonoBehaviour {
         return (int)Math.Round(GetPathfindingSkillMultiplier() * GetAdditiveMovePoints());
     }
 
+    public int GetScoutingSkillBonus()
+    {
+        // get and return current skill level (= scouting bonus)
+        return Array.Find(skills, element => element.Name == UnitSkill.SkillName.Scouting).Level.Current;
+    }
+
+    public int GetLeadershipSkillBonus()
+    {
+        // get and return current skill level (= scouting bonus)
+        return Array.Find(skills, element => element.Name == UnitSkill.SkillName.Leadership).Level.Current;
+    }
+
     public int GetEffectiveMaxMovePoints()
     {
         // get total move points
         int totalMovePoints = GetAdditiveMovePoints() + GetPathfindingSkillBonus();
         // return result
         return totalMovePoints;
+    }
+
+    public int GetEffectiveScoutingRange()
+    {
+        // get and return sum of default scouting range plus skill bonus
+        return ScoutingRange + GetScoutingSkillBonus();
     }
 
     public int MovePointsMax
@@ -1351,6 +1396,59 @@ public class PartyUnit : MonoBehaviour {
         {
             movePointsCurrent = value;
         }
+    }
+
+    public int ScoutingRange
+    {
+        get
+        {
+            return scoutingRange;
+        }
+
+        set
+        {
+            scoutingRange = value;
+        }
+    }
+
+    public int HealthRegenPercent
+    {
+        get
+        {
+            return healthRegenPercent;
+        }
+
+        set
+        {
+            healthRegenPercent = value;
+        }
+    }
+
+    public int GetUnitHealthRegenPerDay()
+    {
+        return (int)Math.Round(((float)healthMax * (float)healthRegenPercent) / 100f);
+    }
+
+    public float GetUnitHealSkillHealthRegenModifier()
+    {
+        // get and return skill current level multiplied by 0.15
+        return Array.Find(skills, element => element.Name == UnitSkill.SkillName.Healing).Level.Current * 0.15f;
+    }
+
+    public int GetUnitHealSkillHealthRegenBonusPerDay()
+    {
+        // get and return skill current level multiplied by 0.15
+        return (int)Math.Round((float)Array.Find(skills, element => element.Name == UnitSkill.SkillName.Healing).Level.Current * 0.15f * (float)healthMax);
+    }
+
+    public float GetUnitEffectiveHealthRegen()
+    {
+        return (float)healthRegenPercent / 100f + GetUnitHealSkillHealthRegenModifier();
+    }
+
+    public int GetUnitEffectiveHealthRegenPerDay()
+    {
+        return (int)Math.Round(((float)healthMax * GetUnitEffectiveHealthRegen()) / 100f);
     }
 
     public void SetUnitCellInfoUI()

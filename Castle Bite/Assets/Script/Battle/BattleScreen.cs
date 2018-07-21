@@ -612,7 +612,7 @@ public class BattleScreen : MonoBehaviour {
         {
             ActiveUnit.HighlightActiveUnitInBattle(true);
             // Trigger buffs and debuffs before applying highlights
-            // Verify if unit has buffs which should be removed, example: defence
+            // Verify if unit has buffs which should be removed, example: defense
             ActiveUnit.DeactivateExpiredBuffs();
             // Verify if unit has debuffs which should be applied, example: poison
             // Deactivate debuffs which has expired, example: poison duration may last 2 turns

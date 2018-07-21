@@ -51,7 +51,7 @@ MonoBehaviour:
   healthCurr: 1100
   healthMax: 1100
   healthMaxIncrementOnLevelUp: 550
-  unitDefence: 0
+  unitDefense: 0
   unitResistances: 04000000010000000200000003000000
   unitImmunities: 00000000
   unitAbility: 5
@@ -84,6 +84,8 @@ MonoBehaviour:
   upgradeCost: 0
   movePointsCurrent: 0
   movePointsMax: 0
+  scoutingRange: 0
+  healthRegenPercent: 15
 --- !u!224 &224611576928189082
 RectTransform:
   m_ObjectHideFlags: 1

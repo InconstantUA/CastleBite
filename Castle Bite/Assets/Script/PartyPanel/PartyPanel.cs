@@ -1900,7 +1900,7 @@ public class PartyPanel : MonoBehaviour {
         //// Then trigger buffs and debuffs before applying highlights
         //if (activeUnitIsFromThisParty)
         //{
-        //    // Verify if unit has buffs which should be removed, example: defence
+        //    // Verify if unit has buffs which should be removed, example: defense
         //    DeactivateExpiredBuffs(unitToActivate);
         //    // Verify if unit has debuffs which should be applied, example: poison
         //    TriggerAppliedDebuffs(unitToActivate);
@@ -2290,7 +2290,7 @@ public class PartyPanel : MonoBehaviour {
             {
                 // debuff is not applied yet
                 // add debuff to unit
-                //Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
+                //Debug.Log(((int)PartyUnit.UnitBuff.DefenseStance).ToString());
                 //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
                 partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
                 // create debuff by duplicating from template
@@ -2453,28 +2453,28 @@ public class PartyPanel : MonoBehaviour {
         // StartCoroutine("FadeUnitCellInfo");
     }
 
-    public void SetUnitDefenceBuffActive(PartyUnit partyUnit, bool doActivate)
+    public void SetUnitDefenseBuffActive(PartyUnit partyUnit, bool doActivate)
     {
         // get unit buffs panel
         Transform buffsPanel = partyUnit.GetUnitBuffsPanel();
         if (doActivate)
         {
             // add buff to unit
-            // Debug.Log(((int)PartyUnit.UnitBuff.DefenceStance).ToString());
+            // Debug.Log(((int)PartyUnit.UnitBuff.DefenseStance).ToString());
             // Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenceStance] = PartyUnit.UnitBuff.DefenceStance;
+            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenseStance] = PartyUnit.UnitBuff.DefenseStance;
             // create buff by duplicating from template
-            Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defence");
-            Transform defenceBuff = Instantiate(buffTemplate, buffsPanel);
+            Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defense");
+            Transform defenseBuff = Instantiate(buffTemplate, buffsPanel);
             // activate buff
-            defenceBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance(true);
+            defenseBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance(true);
             // rename it so it can be later found by name
-            defenceBuff.name = "Defence";
+            defenseBuff.name = "Defense";
         } else
         {
             // remove buff
-            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenceStance] = PartyUnit.UnitBuff.None;
-            Destroy(buffsPanel.Find("Defence").gameObject);
+            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenseStance] = PartyUnit.UnitBuff.None;
+            Destroy(buffsPanel.Find("Defense").gameObject);
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UniqueAbility : MonoBehaviour {
 
-    public enum Ability { Offence, Defence, Sorcery, Hardcore };
+    public enum Ability { Offence, Defense, Sorcery, Hardcore };
     public Ability ability;
 
 	// Use this for initialization

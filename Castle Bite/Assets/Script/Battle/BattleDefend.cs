@@ -79,10 +79,10 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         // Get active unit from Battle Screen
         // Structure: BattleScreen-CtrlPnlFight-this button
         PartyUnit activeUnit = transform.parent.parent.GetComponent<BattleScreen>().ActiveUnit;
-        // Apply defence stance status
+        // Apply defense stance status
         // Get active unit party panel
         PartyPanel partyPanel = activeUnit.GetUnitPartyPanel();
-        partyPanel.SetUnitDefenceBuffActive(activeUnit, true);
+        partyPanel.SetUnitDefenseBuffActive(activeUnit, true);
         Proceed();
     }
 

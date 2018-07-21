@@ -51,7 +51,7 @@ MonoBehaviour:
   healthCurr: 30
   healthMax: 30
   healthMaxIncrementOnLevelUp: 5
-  unitDefence: 0
+  unitDefense: 0
   unitResistances: 
   unitImmunities: 
   unitAbility: 16
@@ -78,6 +78,13 @@ MonoBehaviour:
   unitClassPoints: 0
   canLearnSkills: 0
   unitSkillPoints: 0
+  requiresUnit: {fileID: 0}
+  unlocksUnits: []
+  upgradeCost: 0
+  movePointsCurrent: 0
+  movePointsMax: 0
+  scoutingRange: 0
+  healthRegenPercent: 10
 --- !u!224 &224952783989266610
 RectTransform:
   m_ObjectHideFlags: 1

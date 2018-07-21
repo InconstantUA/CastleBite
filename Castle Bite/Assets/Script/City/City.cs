@@ -84,7 +84,7 @@ public class City : MonoBehaviour {
 
     //}
 
-    public int GetDefence()
+    public int GetDefense()
     {
         int bonus = 0;
         if (cityType == CityType.Capital)

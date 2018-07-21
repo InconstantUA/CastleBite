@@ -70,7 +70,7 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("FocusedName").GetComponent<Text>().text = city.GetCityName();
         transform.Find("FocusedDescription").GetComponent<Text>().text = city.GetCityDescription();
         transform.Find("CityFocus").Find("LevelValue").GetComponent<Text>().text = city.GetCityLevel().ToString();
-        transform.Find("CityFocus").Find("DefenceValue").GetComponent<Text>().text = city.GetDefence().ToString();
+        transform.Find("CityFocus").Find("DefenseValue").GetComponent<Text>().text = city.GetDefense().ToString();
         transform.Find("CityFocus").Find("HealPerDayValue").GetComponent<Text>().text = city.GetHealPerDay().ToString();
         partyPanel = focusedObject.transform.Find("CityGarnizon").Find("PartyPanel").GetComponent<PartyPanel>();
         // partyPanel = transform.parent.Find("CityGarnizon").Find("PartyPanel").GetComponent<PartyPanel>();
