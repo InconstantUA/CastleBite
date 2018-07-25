@@ -262,10 +262,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void SaveGame()
     {
+        Debug.Log("Save game");
     }
 
     void LoadGame()
     {
+        Debug.Log("Load game");
     }
 
     void OnOptionsSubmenuL2Click()
@@ -295,12 +297,15 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Debug.Log("OnOptionsSubmenuL2Click on " + selectedMBtnName + " button");
     }
 
+
+
     void OptionsGameSubmenuL3PanelClick()
     {
         string selectedMBtnName = btn.name;
         switch (selectedMBtnName)
         {
             case "ReturnToTheOptionsMenu":
+                // go to previous menu
                 SetActiveMenuTo("OptionsSubmenuL2Panel");
                 break;
             case "Autosave":
@@ -309,10 +314,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 if (btnTxt.text == "Off")
                 {
                     btnTxt.text = "On";
+                    GameOptions.options.gameOpt.autosave = 1;
                 }
                 else
                 {
                     btnTxt.text = "Off";
+                    GameOptions.options.gameOpt.autosave = 0;
                 }
                 break;
             default:
@@ -367,7 +374,10 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             case "ReturnToTheOptionsMenu":
                 SetActiveMenuTo("OptionsSubmenuL2Panel");
                 break;
-            case "DoCustomAction":
+            case "MoveUp":
+                // Change key binding
+                break;
+            case "MoveDown":
                 // Change key binding
                 break;
             case "SaveAndReturn":
