@@ -38,11 +38,6 @@ public class SaveGame : MonoBehaviour {
         fileStream.Close();
     }
 
-    public void Load()
-    {
-
-    }
-
 }
 
 [Serializable]

@@ -262,12 +262,18 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void SaveGame()
     {
-        Debug.Log("Save game");
+        Debug.Log("Activate Save game menu");
+        transform.root.Find("MainMenu/SaveGame").gameObject.SetActive(true);
+        // deactivate main menu panel
+        transform.root.Find("MainMenu/MainMenuPanel").gameObject.SetActive(false);
     }
 
     void LoadGame()
     {
-        Debug.Log("Load game");
+        Debug.Log("Activate Load game menu");
+        transform.root.Find("MainMenu/LoadGame").gameObject.SetActive(true);
+        // deactivate main menu panel
+        transform.root.Find("MainMenu/MainMenuPanel").gameObject.SetActive(false);
     }
 
     void OnOptionsSubmenuL2Click()
