@@ -5,10 +5,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
+public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
 
     public bool interactable;
+    public bool selected;
+    public TextToggleGroup toggleGroup;
     [SerializeField]
     Color normalColor;
     [SerializeField]
@@ -18,8 +20,10 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField]
     Color disabledColor;
     // create event, which later can be configured in Unity Editor
-    public UnityEvent OnClick;
+    public UnityEvent OnTurnOn;
+    public UnityEvent OnTurnOff;
     public UnityEvent OnRightMouseButtonDown;
+    bool mouseIsOver = false;
 
     void Start()
     {
@@ -32,6 +36,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (interactable)
         {
             SetHighlightedStatus();
+            mouseIsOver = true;
         }
     }
 
@@ -73,9 +78,41 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (interactable)
         {
-            // return to previous toggle state
+            // verify if it is selected
+            if (selected)
+            {
+                // return to pressed state
+                SetPressedStatus();
+            }
+            else
+            {
+                // return to normal state
+                SetNormalStatus();
+            }
+            mouseIsOver = false;
+        }
+    }
+
+    public void TurnOff()
+    {
+        // deselect
+        selected = false;
+        // verify if mouse is over
+        if (mouseIsOver)
+        {
+            SetHighlightedStatus();
+        }
+        else
+        {
             SetNormalStatus();
         }
+    }
+
+    public void TurnOn()
+    {
+        // select
+        selected = true;
+        SetPressedStatus();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -86,8 +123,29 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             if (Input.GetMouseButtonUp(0))
             {
                 // on left mouse click
-                SetHighlightedStatus();
-                OnClick.Invoke();
+                // verify if it is selected
+                if (selected)
+                {
+                    TurnOff();
+                    OnTurnOff.Invoke();
+                    // verify if toggle is part of the group
+                    if (toggleGroup != null)
+                    {
+                        // instruct toggle group to act on this
+                        toggleGroup.DeselectToggle();
+                    }
+                }
+                else
+                {
+                    TurnOn();
+                    OnTurnOn.Invoke();
+                    // verify if toggle is part of the group
+                    if (toggleGroup != null)
+                    {
+                        // instruct toggle group to act on this
+                        toggleGroup.SetSelectedToggle(this);
+                    }
+                }
             }
             else if (Input.GetMouseButtonUp(1))
             {
