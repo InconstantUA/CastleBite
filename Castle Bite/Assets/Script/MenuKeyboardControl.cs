@@ -129,6 +129,8 @@ public class MenuKeyboardControl : MonoBehaviour {
     string GetActiveMenuName()
     {
         string[] allMenuNames = {   "MainMenuPanel",
+                                    "SaveGame",
+                                    "LoadGame",
                                     "OptionsSubmenuL2Panel",
                                     "OptionsGameSubmenuL3Panel",
                                     "OptionsVideoSubmenuL3Panel",

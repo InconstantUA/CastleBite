@@ -4,23 +4,43 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class PlayerObj : MonoBehaviour {
+public class PlayerData : System.Object
+{
+    public int totalGold;
+    public Faction faction;
+}
 
+public class PlayerObj : MonoBehaviour {
     [SerializeField]
-    int totalGold;
-    [SerializeField]
-    Faction faction;
+    PlayerData playerData;
+    //[SerializeField]
+    //int totalGold;
+    //[SerializeField]
+    //Faction faction;
 
     public Faction Faction
     {
         get
         {
-            return faction;
+            return playerData.faction;
         }
 
         set
         {
-            faction = value;
+            playerData.faction = value;
+        }
+    }
+
+    public PlayerData PlayerData
+    {
+        get
+        {
+            return playerData;
+        }
+
+        set
+        {
+            playerData = value;
         }
     }
 
@@ -36,12 +56,12 @@ public class PlayerObj : MonoBehaviour {
 
     public int GetTotalGold()
     {
-        return totalGold;
+        return playerData.totalGold;
     }
 
     public void SetTotalGold(int newTotalGoldValue)
     {
-        totalGold = newTotalGoldValue;
+        playerData.totalGold = newTotalGoldValue;
         // Trigger gold update event to update gold value in UI
     }
 }
