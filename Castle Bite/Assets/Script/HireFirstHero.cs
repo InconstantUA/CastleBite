@@ -16,6 +16,13 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     Color tmpColor;
     public GameObject gameObjectToBeActivated;
     public GameObject gameObjectToBeDeactivated;
+    public string defaultPlayerName;
+
+    void OnEnable()
+    {
+        // reset player name placeholder text to default hero name
+        transform.root.Find("ChooseYourFirstHero/HireUnit/Panel/InputField/Placeholder").GetComponent<Text>().text = defaultPlayerName;
+    }
 
     void Start()
     {
@@ -176,10 +183,28 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return city;
     }
 
+    string GetPlayerName()
+    {
+        // get name from input
+        string name = transform.root.Find("ChooseYourFirstHero/HireUnit/Panel/InputField").GetComponent<InputField>().text;
+        // verify if name is not empty
+        if ("" == name)
+        {
+            // reset name to default
+            name = defaultPlayerName;
+        }
+        // return name
+        return name;
+    }
+
     void ActOnClick()
     {
+        // Get player object
+        PlayerObj playerObj = transform.root.Find("PlayerObj").GetComponent<PlayerObj>();
+        // Set player name
+        playerObj.GivenName = GetPlayerName();
         // Apply selected special ability to the player
-        transform.root.Find("PlayerObj").GetComponent<UniqueAbility>().ability = GetSelectedUniqueAbility();
+        playerObj.GetComponent<UniqueAbility>().ability = GetSelectedUniqueAbility();
         // Ask City to Hire unit
         GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnit());
         // Activate required object

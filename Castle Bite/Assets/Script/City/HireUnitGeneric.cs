@@ -31,6 +31,8 @@ public class HireUnitGeneric : MonoBehaviour {
         unitsPanel = Instantiate(unitsPanelTemplate, transform.Find("Panel"));
         // turn it on
         unitsPanel.SetActive(true);
+        // change position
+        unitsPanel.transform.localPosition = new Vector3(0, 20, 0);
     }
 
     //// Use this for initialization

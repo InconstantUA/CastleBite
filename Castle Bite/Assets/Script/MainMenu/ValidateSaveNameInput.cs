@@ -10,6 +10,8 @@ public class ValidateSaveNameInput : MonoBehaviour
     [SerializeField]
     Color errorColor;
     public InputField mainInputField;
+    [SerializeField]
+    int maxLength;
 
     IEnumerator ActivateInputField()
     {
@@ -38,7 +40,7 @@ public class ValidateSaveNameInput : MonoBehaviour
     {
         // check if size limit is not reached
         // limit is 25 characters
-        if (mainInputField.text.Length > 25)
+        if (mainInputField.text.Length > maxLength)
         {
             // change it to an empty character.
             charToValidate = '\0';

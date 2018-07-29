@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerData : System.Object
 {
+    public string givenName;
     public int totalGold;
     public Faction faction;
 }
@@ -28,6 +29,19 @@ public class PlayerObj : MonoBehaviour {
         set
         {
             playerData.faction = value;
+        }
+    }
+
+    public string GivenName
+    {
+        get
+        {
+            return playerData.givenName;
+        }
+
+        set
+        {
+            playerData.givenName = value;
         }
     }
 
