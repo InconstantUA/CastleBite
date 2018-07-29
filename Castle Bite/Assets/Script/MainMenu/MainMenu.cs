@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,19 @@ public class MainMenu : MonoBehaviour {
         // Keyboard and Mouse options
         GameOptions.options.keyboardAndMouseOpt.moveUp = PlayerPrefs.GetInt("KeyboardMoveUp", 1); // this is not implemented - just use something as default value
         GameOptions.options.keyboardAndMouseOpt.moveDown = PlayerPrefs.GetInt("KeyboardMoveDown", 2); // this is not implemented - just use something as default value
+        //// Verify if there are saves available
+        //string fileExtension = ".save";
+        //FileInfo[] files = new DirectoryInfo(Application.persistentDataPath).GetFiles("*" + fileExtension);
+        //if (files.Length >= 1)
+        //{
+        //    // activate Load game menu
+        //    transform.Find("MainMenuPanel/Load").gameObject.SetActive(true);
+        //}
+        //else
+        //{
+        //    // deactivate Load game menu (this might be needed if all saves were removed)
+        //    transform.Find("MainMenuPanel/Load").gameObject.SetActive(false);
+        //}
     }
 
     void OnEnable()

@@ -222,6 +222,9 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             case "Quit":
                 Application.Quit();
                 break;
+            case "QuitToMainMenu":
+                QuitToMainMenu();
+                break;
             default:
                 Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
@@ -229,25 +232,39 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
+    void QuitToMainMenu()
+    {
+        // Activate main menu
+        transform.root.Find("MainMenu").gameObject.SetActive(true);
+        // Get main menu panel transform
+        Transform mainMenuPanel = transform.root.Find("MainMenu/MainMenuPanel");
+        // activate and deactivate required menus
+        mainMenuPanel.Find("Start").gameObject.SetActive(true);
+        mainMenuPanel.Find("Continue").gameObject.SetActive(false);
+        mainMenuPanel.Find("Quit").gameObject.SetActive(true);
+        mainMenuPanel.Find("QuitToMainMenu").gameObject.SetActive(false);
+        // Also activate Save and Load buttons for future use
+        mainMenuPanel.Find("Save").gameObject.SetActive(false);
+        mainMenuPanel.Find("Load").gameObject.SetActive(true);
+        // Activate ChooseYourFirstHero
+        transform.root.Find("MapScreen").gameObject.SetActive(false);
+    }
+
     void StartGame()
     {
         // Activate Game canvas and deactivate menu canvas
-        GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
-        mainMenu.SetActive(false);
-        GameObject miscUI = transform.root.Find("MiscUI").gameObject;
-        miscUI.SetActive(true);
+        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        transform.root.Find("MiscUI").gameObject.SetActive(true);
         // As long as we are in game mode now, then Start button is not needed any more
         // instead activate Continue button
-        GameObject mainMenuPanel = mainMenu.transform.Find("MainMenuPanel").gameObject;
-        GameObject startButton = mainMenuPanel.transform.Find("Start").gameObject;
-        GameObject continueButton = mainMenuPanel.transform.Find("Continue").gameObject;
-        startButton.SetActive(false);
-        continueButton.SetActive(true);
+        Transform mainMenuPanel = transform.root.Find("MainMenu/MainMenuPanel");
+        mainMenuPanel.Find("Start").gameObject.SetActive(false);
+        mainMenuPanel.Find("Continue").gameObject.SetActive(true);
+        mainMenuPanel.Find("Quit").gameObject.SetActive(false);
+        mainMenuPanel.Find("QuitToMainMenu").gameObject.SetActive(true);
         // Also activate Save and Load buttons for future use
-        GameObject saveButton = mainMenuPanel.transform.Find("Save").gameObject;
-        GameObject loadButton = mainMenuPanel.transform.Find("Load").gameObject;
-        saveButton.SetActive(true);
-        loadButton.SetActive(true);
+        mainMenuPanel.Find("Save").gameObject.SetActive(true);
+        mainMenuPanel.Find("Load").gameObject.SetActive(true);
         // Activate ChooseYourFirstHero
         transform.root.Find("ChooseYourFirstHero").gameObject.SetActive(true);
     }

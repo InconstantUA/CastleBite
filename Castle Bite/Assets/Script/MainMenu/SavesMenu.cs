@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class SavesMenu : MonoBehaviour {
-
+    public enum Mode { Save, Load };
+    [SerializeField]
+    Mode mode;
     GameObject selectedSave;
 
     void OnDisable()
@@ -16,16 +18,38 @@ public class SavesMenu : MonoBehaviour {
     {
         // save selected save
         selectedSave = save;
-        // change save name for new save
-        transform.Find("NewSave/InputField").GetComponent<InputField>().text = save.GetComponent<Save>().saveName;
+        // verify if what mode we operate Save or Load game
+        if (mode == Mode.Save)
+        {
+            // change save name for new save
+            transform.Find("NewSave/InputField").GetComponent<InputField>().text = save.GetComponent<Save>().saveName;
+            // update save details
+            // ..
+        }
+        else if (mode == Mode.Load)
+        {
+            // update save details
+            // ..
+        }
     }
 
     public void DeselectSave()
     {
         // clean up selectedSave
         selectedSave = null;
-        // clean save name for new save
-        transform.Find("NewSave/InputField").GetComponent<InputField>().text = "";
+        // verify if what mode we operate Save or Load game
+        if (mode == Mode.Save)
+        {
+            // clean save name for new save
+            transform.Find("NewSave/InputField").GetComponent<InputField>().text = "";
+            // clean up save details
+            // ..
+        }
+        else if (mode == Mode.Load)
+        {
+            // clean up save details
+            // ..
+        }
     }
 
     public void SetSelectedSave(GameObject value)

@@ -67,22 +67,52 @@ public class MenuKeyboardControl : MonoBehaviour {
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
             menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
-            Cursor.visible = false;
-            currSelctdBtnID = GetCurrentlySelectedBtnID();
-            btn = menuBtnsList[currSelctdBtnID];
-            SetPressedStatus();
+            // verify if there is any button
+            if (menuBtnsList.Length == 0)
+            {
+                // there are no objects with Button component
+                // check if active menu name is "SaveGame"
+                if ("SaveGame" == GetActiveMenuName())
+                {
+                    // Set pressed status for Save TextButton
+                    transform.root.Find("MainMenu/SaveGame/SaveBtn").GetComponent<TextButton>().SetPressedStatus();
+                }
+            }
+            else
+            {
+                // found buttons
+                Cursor.visible = false;
+                currSelctdBtnID = GetCurrentlySelectedBtnID();
+                btn = menuBtnsList[currSelctdBtnID];
+                SetPressedStatus();
+            }
         }
         if (Input.GetKeyUp(KeyCode.Return) == true)
         {
             // menu may be changed by mouse, that is why we get current menu and update menuBtnsList
             menuBtnsList = transform.root.Find("MainMenu").Find(GetActiveMenuName()).gameObject.GetComponentsInChildren<Button>();
-            Cursor.visible = false;
-            // update btn object, which later will be used in act on click
-            currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
-            btn = menuBtnsList[currSelctdBtnID];
-            // release color back to highlighted
-            HighlightSelectedMenu();
-            ActOnClick();
+            // verify if there is any button
+            if (menuBtnsList.Length == 0)
+            {
+                // there are no objects with Button component
+                // check if active menu name is "SaveGame"
+                if ("SaveGame" == GetActiveMenuName())
+                {
+                    // simulate click on a button
+                    transform.root.Find("MainMenu/SaveGame/SaveBtn").GetComponent<TextButton>().OnClick.Invoke();
+                }
+            }
+            else
+            {
+                // found buttons
+                Cursor.visible = false;
+                // update btn object, which later will be used in act on click
+                currSelctdBtnID = GetCurrentlyPressedOrHighlightedBtnID();
+                btn = menuBtnsList[currSelctdBtnID];
+                // release color back to highlighted
+                HighlightSelectedMenu();
+                ActOnClick();
+            }
         }
         if (Input.GetKeyUp(KeyCode.LeftArrow) == true)
         {
@@ -289,6 +319,9 @@ public class MenuKeyboardControl : MonoBehaviour {
             case "Quit":
                 Application.Quit();
                 break;
+            case "QuitToMainMenu":
+                QuitToMainMenu();
+                break;
             default:
                 Debug.LogError("Error: unknown selected button name [" + selectedMBtnName + "]");
                 break;
@@ -296,24 +329,41 @@ public class MenuKeyboardControl : MonoBehaviour {
         // Debug.Log("OnMainMenuClick on " + selectedMBtnName + " button");
     }
 
+    void QuitToMainMenu()
+    {
+        // Activate main menu
+        transform.root.Find("MainMenu").gameObject.SetActive(true);
+        // Get main menu panel transform
+        Transform mainMenuPanel = transform.root.Find("MainMenu/MainMenuPanel");
+        // activate and deactivate required menus
+        mainMenuPanel.Find("Start").gameObject.SetActive(true);
+        mainMenuPanel.Find("Continue").gameObject.SetActive(false);
+        mainMenuPanel.Find("Quit").gameObject.SetActive(true);
+        mainMenuPanel.Find("QuitToMainMenu").gameObject.SetActive(false);
+        // Also activate Save and Load buttons for future use
+        mainMenuPanel.Find("Save").gameObject.SetActive(false);
+        mainMenuPanel.Find("Load").gameObject.SetActive(true);
+        // Activate ChooseYourFirstHero
+        transform.root.Find("MapScreen").gameObject.SetActive(false);
+    }
+
     void StartGame()
     {
         // Activate Game canvas and deactivate menu canvas
-        GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
-        mainMenu.SetActive(false);
-        transform.root.Find("Cities").gameObject.SetActive(true);
+        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        transform.root.Find("MiscUI").gameObject.SetActive(true);
         // As long as we are in game mode now, then Start button is not needed any more
         // instead activate Continue button
-        GameObject mainMenuPanel = mainMenu.transform.Find("MainMenuPanel").gameObject;
-        GameObject startButton = mainMenuPanel.transform.Find("Start").gameObject;
-        GameObject continueButton = mainMenuPanel.transform.Find("Continue").gameObject;
-        startButton.SetActive(false);
-        continueButton.SetActive(true);
+        Transform mainMenuPanel = transform.root.Find("MainMenu/MainMenuPanel");
+        mainMenuPanel.Find("Start").gameObject.SetActive(false);
+        mainMenuPanel.Find("Continue").gameObject.SetActive(true);
+        mainMenuPanel.Find("Quit").gameObject.SetActive(false);
+        mainMenuPanel.Find("QuitToMainMenu").gameObject.SetActive(true);
         // Also activate Save and Load buttons for future use
-        GameObject saveButton = mainMenuPanel.transform.Find("Save").gameObject;
-        GameObject loadButton = mainMenuPanel.transform.Find("Load").gameObject;
-        saveButton.SetActive(true);
-        loadButton.SetActive(true);
+        mainMenuPanel.Find("Save").gameObject.SetActive(true);
+        mainMenuPanel.Find("Load").gameObject.SetActive(true);
+        // Activate ChooseYourFirstHero
+        transform.root.Find("ChooseYourFirstHero").gameObject.SetActive(true);
     }
 
     void ContinueGame()
@@ -326,10 +376,14 @@ public class MenuKeyboardControl : MonoBehaviour {
 
     void SaveGame()
     {
+        transform.root.Find("MainMenu/MainMenuPanel").gameObject.SetActive(false);
+        transform.root.Find("MainMenu/SaveGame").gameObject.SetActive(true);
     }
 
     void LoadGame()
     {
+        transform.root.Find("MainMenu/MainMenuPanel").gameObject.SetActive(false);
+        transform.root.Find("MainMenu/LoadGame").gameObject.SetActive(true);
     }
 
     void OnOptionsSubmenuL2Click()

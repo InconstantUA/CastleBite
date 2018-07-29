@@ -115,6 +115,33 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         SetPressedStatus();
     }
 
+    public void ActOnLeftMouseClick()
+    {
+        // verify if it is selected
+        if (selected)
+        {
+            TurnOff();
+            OnTurnOff.Invoke();
+            // verify if toggle is part of the group
+            if (toggleGroup != null)
+            {
+                // instruct toggle group to act on this
+                toggleGroup.DeselectToggle();
+            }
+        }
+        else
+        {
+            TurnOn();
+            OnTurnOn.Invoke();
+            // verify if toggle is part of the group
+            if (toggleGroup != null)
+            {
+                // instruct toggle group to act on this
+                toggleGroup.SetSelectedToggle(this);
+            }
+        }
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (interactable)
@@ -123,29 +150,7 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             if (Input.GetMouseButtonUp(0))
             {
                 // on left mouse click
-                // verify if it is selected
-                if (selected)
-                {
-                    TurnOff();
-                    OnTurnOff.Invoke();
-                    // verify if toggle is part of the group
-                    if (toggleGroup != null)
-                    {
-                        // instruct toggle group to act on this
-                        toggleGroup.DeselectToggle();
-                    }
-                }
-                else
-                {
-                    TurnOn();
-                    OnTurnOn.Invoke();
-                    // verify if toggle is part of the group
-                    if (toggleGroup != null)
-                    {
-                        // instruct toggle group to act on this
-                        toggleGroup.SetSelectedToggle(this);
-                    }
-                }
+                ActOnLeftMouseClick();
             }
             else if (Input.GetMouseButtonUp(1))
             {

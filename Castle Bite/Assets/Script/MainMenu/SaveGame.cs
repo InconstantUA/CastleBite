@@ -7,13 +7,6 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-// define custom unity event which accepts strings as arguments
-[Serializable]
-public class StringUnityEvent : UnityEvent<string>
-{
-    public string stringParam;
-}
-
 public class SaveGame : MonoBehaviour {
     [SerializeField]
     string fileExtension;
