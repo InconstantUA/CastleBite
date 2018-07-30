@@ -85,6 +85,7 @@ public class LoadGame : MonoBehaviour
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         // open file stream for read
         FileStream file = File.OpenRead(fullFilePath);
+        Debug.Log("Loading game data from " + fullFilePath + " file");
         // Get game data
         GameData gameData = (GameData)binaryFormatter.Deserialize(file);
         // Update game with data from save
@@ -236,7 +237,7 @@ public class LoadGame : MonoBehaviour
             {
                 //  construct full file name
                 fullFilePath = Application.persistentDataPath + "/" + fileName + fileExtension;
-                Debug.Log("File name is " + fullFilePath + "");
+                //Debug.Log("File name is " + fullFilePath + "");
                 // verify if file exists
                 if (File.Exists(fullFilePath))
                 {

@@ -553,7 +553,7 @@ public class UpgradeUnit : MonoBehaviour {
         // set text
         costText.text = unitClass.UpgradeCost.ToString();
         // verify if player has enough gold and set color
-        if (GetActivePlayer().GetTotalGold() >= unitClass.UpgradeCost)
+        if (GetActivePlayer().PlayerGold >= unitClass.UpgradeCost)
         {
             costText.color = satisfiedRequirementsColor;
         }
@@ -697,7 +697,7 @@ public class UpgradeUnit : MonoBehaviour {
                 if (focusedPartyUnit.GetLevel() >= (classLevel + 1))
                 {
                     // verify if player has enough gold
-                    if (GetActivePlayer().GetTotalGold() >= checkedUnitClass.UpgradeCost)
+                    if (GetActivePlayer().PlayerGold >= checkedUnitClass.UpgradeCost)
                     {
                         return true;
                     }

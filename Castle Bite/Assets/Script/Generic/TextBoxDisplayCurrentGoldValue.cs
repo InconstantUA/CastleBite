@@ -11,11 +11,11 @@ public class TextBoxDisplayCurrentGoldValue : MonoBehaviour {
     void Start () {
         player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
         txt = gameObject.GetComponent<Text>();
-        txt.text = player.GetTotalGold().ToString();
+        txt.text = player.PlayerGold.ToString();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        txt.text = player.GetTotalGold().ToString();
+        txt.text = player.PlayerGold.ToString();
     }
 }

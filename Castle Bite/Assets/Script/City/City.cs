@@ -356,7 +356,7 @@ public class City : MonoBehaviour {
         int requiredGold = hiredUnitTemplate.GetCost();
         //  Verify if player has enough gold
         player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
-        if (player.GetTotalGold() >= requiredGold)
+        if (player.PlayerGold >= requiredGold)
         {
             result = true;
         } else
@@ -461,7 +461,7 @@ public class City : MonoBehaviour {
         // Disable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(false);
         // take gold from player
-        player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
+        player.PlayerGold -= hiredUnitTemplate.GetCost();
         // Create hero's representation on the map
         SetHeroPartyRepresentationOnTheMap(newLeaderParty, newPartyUnit);
     }
@@ -494,7 +494,7 @@ public class City : MonoBehaviour {
             // Instruct Right focus panel to update information
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
             // take gold from player
-            player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
+            player.PlayerGold -= hiredUnitTemplate.GetCost();
         }
     }
     #endregion
@@ -537,7 +537,7 @@ public class City : MonoBehaviour {
             // Instruct Right focus panel to update information
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
             // take gold from player
-            player.SetTotalGold(player.GetTotalGold() - hiredUnitTemplate.GetCost());
+            player.PlayerGold -= hiredUnitTemplate.GetCost();
         }
     }
 
