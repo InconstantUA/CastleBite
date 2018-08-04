@@ -12,9 +12,10 @@ public class SaveGame : MonoBehaviour {
     string fileExtension;
     string fullFilePath;
 
-    void OnEnable()
+    IEnumerator LoadSaves()
     {
-        // update list of saves
+        // number of saves to load at one time
+        int numberOfSavesToLoadAtOneTime = 10;
         // get list of .save files in directory
         FileInfo[] files = new DirectoryInfo(Application.persistentDataPath).GetFiles("*" + fileExtension);
         // sort them by modify date older -> jonger
@@ -23,22 +24,39 @@ public class SaveGame : MonoBehaviour {
             return f2.LastWriteTime.CompareTo(f1.LastWriteTime);
         });
         // Get save UI template
-        GameObject saveUITemplate = transform.Find("Saves/SavesList/Grid/SaveTemplate").gameObject;
+        GameObject saveUITemplate = transform.Find("Saves/SavesList/SaveTemplate").gameObject;
         // Get parent for new saves UI
         Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
         // create entry in UI for each *.save file, if it does not exist
         GameObject newSave;
-        foreach (FileInfo file in files)
+        for(int i = 0; i < files.Length; i++)
+        //foreach (FileInfo file in files)
         {
             // create save UI
             newSave = Instantiate(saveUITemplate, savesParentTr);
-            // set save name in Save object to the name of the file without extension
-            newSave.GetComponent<Save>().saveName = file.Name.Replace(fileExtension, "");
+            // read and set save data
+            newSave.GetComponent<Save>().SetSaveData(files[i]);
             // rename game object 
-            newSave.name = newSave.GetComponent<Save>().saveName;
+            newSave.name = newSave.GetComponent<Save>().SaveName;
             // enable save
             newSave.gameObject.SetActive(true);
+            // verify if it is time to wait
+            if (i % numberOfSavesToLoadAtOneTime == 0)
+            {
+                // skip to next frame
+                yield return null;
+                //yield return new WaitForSeconds(2);
+            }
         }
+        yield return null;
+    }
+
+    void OnEnable()
+    {
+        // update list of saves
+        StartCoroutine(LoadSaves());
+        // set save details
+        transform.Find("Saves").GetComponent<SavesMenu>().SetSaveDetails();
     }
 
     void OnDisable()
@@ -52,17 +70,22 @@ public class SaveGame : MonoBehaviour {
         }
     }
 
-    void SaveGameData(FileStream file)
+    GameData GetGameData()
     {
-        // Set game data
+        Debug.Log("Get game data");
         GameData gameData = new GameData
         {
             playerData = transform.root.Find("PlayerObj").GetComponent<PlayerObj>().PlayerData
         };
+        return gameData;
+    }
+
+    void SaveGameData(FileStream file)
+    {
         // Create binary formater
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         // Put data to a file
-        binaryFormatter.Serialize(file, gameData);
+        binaryFormatter.Serialize(file, GetGameData());
         // Close file
         file.Close();
         // Activate main menu panel
@@ -135,8 +158,10 @@ public class SaveGame : MonoBehaviour {
 class GameData : System.Object
 {
     // Map (Scene)
+    // ..
     // Players
     public PlayerData playerData;
     // Cities
+    // ..
     // Parties with units
 }

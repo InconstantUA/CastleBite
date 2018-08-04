@@ -14,8 +14,9 @@ public class LoadGame : MonoBehaviour
     string fullFilePath;
     TextToggle selectedToggle;
 
-    void SetListOfSaves()
+    IEnumerator SetListOfSaves()
     {
+        int numberOfSavesToLoadAtOneTime = 10;
         // update list of saves
         // get list of .save files in directory
         FileInfo[] files = new DirectoryInfo(Application.persistentDataPath).GetFiles("*" + fileExtension);
@@ -27,35 +28,43 @@ public class LoadGame : MonoBehaviour
         // verify if all object are loaded
         if (transform.Find("Saves"))
             if (transform.Find("Saves/SavesList"))
-                if (transform.Find("Saves/SavesList/Grid"))
-                    if (transform.Find("Saves/SavesList/Grid/SaveTemplate"))
+                if (transform.Find("Saves/SavesList/SaveTemplate"))
+                {
+                    // Get save UI template
+                    GameObject saveUITemplate = transform.Find("Saves/SavesList/SaveTemplate").gameObject;
+                    // Get parent for new saves UI
+                    Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
+                    // create entry in UI for each *.save file, if it does not exist
+                    GameObject newSave;
+                    for (int i = 0; i < files.Length; i++)
+                    //foreach (FileInfo file in files)
                     {
-                        // Get save UI template
-                        GameObject saveUITemplate = transform.Find("Saves/SavesList/Grid/SaveTemplate").gameObject;
-                        // Get parent for new saves UI
-                        Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
-                        // create entry in UI for each *.save file, if it does not exist
-                        GameObject newSave;
-                        foreach (FileInfo file in files)
+                        // create save UI
+                        newSave = Instantiate(saveUITemplate, savesParentTr);
+                        // read and set save data
+                        newSave.GetComponent<Save>().SetSaveData(files[i]);
+                        // rename game object 
+                        newSave.name = newSave.GetComponent<Save>().SaveName;
+                        // enable save
+                        newSave.gameObject.SetActive(true);
+                        // verify if it is time to wait
+                        if (i % numberOfSavesToLoadAtOneTime == 0)
                         {
-                            // create save UI
-                            newSave = Instantiate(saveUITemplate, savesParentTr);
-                            // set save name in Save object to the name of the file without extension
-                            newSave.GetComponent<Save>().saveName = file.Name.Replace(fileExtension, "");
-                            // rename game object 
-                            newSave.name = newSave.GetComponent<Save>().saveName;
-                            // enable save
-                            newSave.gameObject.SetActive(true);
+                            // skip to next frame
+                            yield return null;
+                            //yield return new WaitForSeconds(2);
                         }
-                        // preselect first save in the list on the next frame
-                        StartCoroutine(SelectLastestSave());
                     }
+                    // preselect first save in the list on the next frame
+                    StartCoroutine(SelectLastestSave());
+                }
+        yield return null;
     }
 
     void OnEnable()
     {
         // update list of saves on a next frame
-        SetListOfSaves();
+        StartCoroutine(SetListOfSaves());
     }
 
     void OnDisable()
@@ -79,19 +88,25 @@ public class LoadGame : MonoBehaviour
                 }
     }
 
-    void LoadGameData()
+    void SetGameData(GameData gameData)
     {
-        // Create binary formater
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        // open file stream for read
-        FileStream file = File.OpenRead(fullFilePath);
-        Debug.Log("Loading game data from " + fullFilePath + " file");
-        // Get game data
-        GameData gameData = (GameData)binaryFormatter.Deserialize(file);
         // Update game with data from save
         transform.root.Find("PlayerObj").GetComponent<PlayerObj>().PlayerData = gameData.playerData;
+    }
+
+    void LoadGameData()
+    {
+        // open file stream for read
+        Debug.Log("Loading game data from " + fullFilePath + " file");
+        FileStream file = File.OpenRead(fullFilePath);
+        // Create binary formater
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        // Deserialize game data
+        GameData gameData = (GameData)binaryFormatter.Deserialize(file);
         // Close file
         file.Close();
+        // Set game data
+        SetGameData(gameData);
         // Activate map screen
         transform.root.Find("MapScreen").gameObject.SetActive(true);
         // Deactivate this screen
@@ -169,7 +184,7 @@ public class LoadGame : MonoBehaviour
         {
             // toggle is selected
             //  get file name from selected save
-            string fileName = selectedToggle.name;
+            string fileName = selectedToggle.GetComponent<Save>().SaveName;
             // verify if file name is set
             if (fileName == "")
             {
@@ -225,7 +240,7 @@ public class LoadGame : MonoBehaviour
         {
             // toggle is selected
             //  get file name from selected save
-            string fileName = selectedToggle.name;
+            string fileName = selectedToggle.GetComponent<Save>().SaveName;
             // verify if file name is set
             if (fileName == "")
             {

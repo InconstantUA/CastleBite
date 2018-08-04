@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,60 @@ public class SavesMenu : MonoBehaviour {
         DeselectSave();
     }
 
+    public void SetSaveDetails(GameObject save = null)
+    {
+        // init save data
+        SaveData saveData;
+        // get save data
+        if (save != null)
+        {
+            saveData = save.GetComponent<Save>().SaveData;
+        }
+        else
+        {
+            // set save data from currently running game
+            saveData = new SaveData
+            {
+                saveName = "",
+                date = DateTime.Now,
+                turnNumber = 0,
+                playersData = new List<PlayerData>
+                {
+                    transform.root.Find("PlayerObj").GetComponent<PlayerObj>().PlayerData
+                }
+            };
+        }
+        // update UI
+        // set save details  transform
+        Transform saveDetails = transform.parent.Find("SaveDetails");
+        // activate info
+        saveDetails.Find("Info").gameObject.SetActive(true);
+        // set turn nuber
+        saveDetails.Find("Info/Turn/Value").GetComponent<Text>().text = saveData.turnNumber.ToString();
+        // set date string
+        saveDetails.Find("Info/Date/Value").GetComponent<Text>().text = saveData.date.ToLocalTime().ToShortDateString() + " " + saveData.date.ToLocalTime().ToShortTimeString();
+        // set player information
+        // get players info root UI
+        Transform playersInfoRoot = saveDetails.Find("Info/Players/List");
+        // remove old information
+        foreach(Transform child in playersInfoRoot)
+        {
+            Destroy(child.gameObject);
+        }
+        // get player info template
+        GameObject playerInfoTemplateUI = transform.root.Find("Templates/UI/Menu/PlayerInfoTemplate").gameObject;
+        foreach (PlayerData playerData in saveData.playersData)
+        {
+            // clone template
+            GameObject newPlayerInfo = Instantiate(playerInfoTemplateUI, playersInfoRoot);
+            // activate it
+            newPlayerInfo.SetActive(true);
+            // set player name
+            newPlayerInfo.transform.Find("Name").GetComponent<Text>().text = playerData.givenName;
+            newPlayerInfo.transform.Find("Faction").GetComponent<Text>().text = playerData.faction.ToString();
+        }
+    }
+
     void SelectSave(GameObject save)
     {
         // save selected save
@@ -22,14 +77,14 @@ public class SavesMenu : MonoBehaviour {
         if (mode == Mode.Save)
         {
             // change save name for new save
-            transform.Find("NewSave/InputField").GetComponent<InputField>().text = save.GetComponent<Save>().saveName;
+            transform.Find("NewSave/InputField").GetComponent<InputField>().text = save.GetComponent<Save>().SaveName;
             // update save details
-            // ..
+            SetSaveDetails(save);
         }
         else if (mode == Mode.Load)
         {
             // update save details
-            // ..
+            SetSaveDetails(save);
         }
     }
 
@@ -42,13 +97,13 @@ public class SavesMenu : MonoBehaviour {
         {
             // clean save name for new save
             transform.Find("NewSave/InputField").GetComponent<InputField>().text = "";
-            // clean up save details
-            // ..
+            // set current save (which is about to be saved) details
+            SetSaveDetails();
         }
         else if (mode == Mode.Load)
         {
-            // clean up save details
-            // ..
+            // clean up save details by deactivating info UI
+            transform.parent.Find("SaveDetails/Info").gameObject.SetActive(false);
         }
     }
 
