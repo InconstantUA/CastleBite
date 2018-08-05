@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
+public class PartyUnitData : System.Object
+{
+
+}
+
 public class PartyUnit : MonoBehaviour {
     // Custom types
     public enum UnitType
@@ -497,7 +503,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // verify if city is friendly
             HeroParty party = GetUnitParty();
-            if (city.GetFaction() == party.GetFaction())
+            if (city.Faction == party.Faction)
             {
                 return city.GetDefense();
             }

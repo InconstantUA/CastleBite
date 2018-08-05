@@ -27,15 +27,15 @@ public class CityHasBeenCaptured : MonoBehaviour, IFactionHasChanged
     void Awake()
     {
         city = GetComponent<MapCity>().LinkedCityTr.GetComponent<City>();
-        faction = city.GetFaction();
+        faction = city.Faction;
     }
 
     public bool FactionHasChanged()
     {
-        if (city.GetFaction() != faction)
+        if (city.Faction != faction)
         {
             // update faction, so this function stops triggering on every update
-            faction = city.GetFaction();
+            faction = city.Faction;
             return true;
         }
         else

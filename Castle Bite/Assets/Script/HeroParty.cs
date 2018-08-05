@@ -1,25 +1,50 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum PartyMode
+{
+    Party,
+    Garnizon
+}
+
+[Serializable]
+public class PartyData : System.Object
+{
+    public Faction faction;
+    public PartyMode partyMode;
+    public PartyPanelData partyPanelData; // initialized and used only during game save and load
+}
+
 public class HeroParty : MonoBehaviour {
-    [SerializeField]
-    Faction faction;
-
-    public enum PartyMode { Party, Garnizon };
-    [SerializeField]
-    PartyMode partyMode;
-
-    public enum PartyPlace { Map, City };
-    [SerializeField]
-    PartyPlace partyPlace;
-
+    [SerializeField] // required for parties creation and configuration via Unity Editor
+    PartyData partyData;
+    //[SerializeField]
+    //Faction faction;
+    //[SerializeField]
+    //PartyMode partyMode;
     [SerializeField]
     MapHero linkedPartyOnMap;
-
+    //public enum PartyPlace { Map, City };
+    //[SerializeField]
+    //PartyPlace partyPlace;
+    // For battle
     public bool CanEscapeFromBattle { get; set; }
-
     public Transform PreBattleParentTr { get; set; }
+
+    public PartyData PartyData
+    {
+        get
+        {
+            return partyData;
+        }
+
+        set
+        {
+            partyData = value;
+        }
+    }
 
     public void SetLinkedPartyOnMap(MapHero value)
     {
@@ -31,44 +56,70 @@ public class HeroParty : MonoBehaviour {
         return linkedPartyOnMap;
     }
 
-    public Faction GetFaction()
+    public Faction Faction
     {
-        return faction;
+        get
+        {
+            return partyData.faction;
+        }
+
+        set
+        {
+            partyData.faction = value;
+        }
     }
 
-    public void SetFaction(Faction value)
+    public PartyMode PartyMode
     {
-        faction = value;
+        get
+        {
+            return partyData.partyMode;
+        }
+
+        set
+        {
+            partyData.partyMode = value;
+        }
     }
 
-    public PartyMode GetMode()
-    {
-        return partyMode;
-    }
+    //public Faction GetFaction()
+    //{
+    //    return faction;
+    //}
 
-    public void SetMode(PartyMode value)
-    {
-        partyMode = value;
-    }
+    //public void SetFaction(Faction value)
+    //{
+    //    faction = value;
+    //}
 
-    public PartyPlace GetPlace()
-    {
-        return partyPlace;
-    }
+    //public PartyMode GetMode()
+    //{
+    //    return partyMode;
+    //}
 
-    public void SetPlace(PartyPlace value)
-    {
-        partyPlace = value;
-    }
+    //public void SetMode(PartyMode value)
+    //{
+    //    partyMode = value;
+    //}
+
+    //public PartyPlace GetPlace()
+    //{
+    //    return partyPlace;
+    //}
+
+    //public void SetPlace(PartyPlace value)
+    //{
+    //    partyPlace = value;
+    //}
 
 
     // Use this for initialization
- //   void Start () {
+    //   void Start () {
 
-	//}
-	
-	//// Update is called once per frame
-	//void Update () {
-		
-	//}
+    //}
+
+    //// Update is called once per frame
+    //void Update () {
+
+    //}
 }

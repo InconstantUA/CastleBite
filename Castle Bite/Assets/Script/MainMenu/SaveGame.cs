@@ -12,7 +12,7 @@ public class SaveGame : MonoBehaviour {
     string fileExtension;
     string fullFilePath;
 
-    IEnumerator LoadSaves()
+    IEnumerator SetListOfSaves()
     {
         // number of saves to load at one time
         int numberOfSavesToLoadAtOneTime = 10;
@@ -54,7 +54,7 @@ public class SaveGame : MonoBehaviour {
     void OnEnable()
     {
         // update list of saves
-        StartCoroutine(LoadSaves());
+        StartCoroutine(SetListOfSaves());
         // set save details
         transform.Find("Saves").GetComponent<SavesMenu>().SetSaveDetails();
     }
@@ -172,4 +172,5 @@ class GameData : System.Object
     // Cities
     // ..
     // Parties with units
+    public PartyData[] partiesData;
 }

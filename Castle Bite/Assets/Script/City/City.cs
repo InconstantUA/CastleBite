@@ -100,15 +100,28 @@ public class City : MonoBehaviour {
         return cityLevel;
     }
 
-    public Faction GetFaction()
+    public Faction Faction
     {
-        return faction;
+        get
+        {
+            return faction;
+        }
+
+        set
+        {
+            faction = value;
+        }
     }
 
-    public void SetFaction(Faction value)
-    {
-        faction = value;
-    }
+    //public Faction GetFaction()
+    //{
+    //    return faction;
+    //}
+
+    //public void SetFaction(Faction value)
+    //{
+    //    faction = value;
+    //}
 
     public bool HasCityReachedMaximumLevel()
     {
@@ -129,14 +142,14 @@ public class City : MonoBehaviour {
         return cityViewActiveState;
     }
 
-    public HeroParty GetHeroPartyByMode(HeroParty.PartyMode partyMode)
+    public HeroParty GetHeroPartyByMode(PartyMode partyMode)
     {
         HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
         // Loop through hero parties untill we find the party in party not garnizon mode
         foreach (HeroParty heroParty in heroParties)
         {
             // compare if hero party in in party (not in garnizon mode)
-            if (heroParty.GetMode() == partyMode)
+            if (heroParty.PartyMode == partyMode)
             {
                 return heroParty;
             }
@@ -195,7 +208,7 @@ public class City : MonoBehaviour {
         // then activate active state highligh
         // if not - then disable hire hero button, if we are entering one of active states or enable it if we exit one of active states
         // HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
-        HeroParty heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party);
+        HeroParty heroParty = GetHeroPartyByMode(PartyMode.Party);
         if (heroParty) { 
         //if (heroParties.Length > 1)
         //{
@@ -203,7 +216,7 @@ public class City : MonoBehaviour {
         //    foreach (HeroParty heroParty in heroParties)
         //    {
         //        // compare if hero party is in party (not in garnizon mode)
-        //        if (heroParty.GetMode() == HeroParty.PartyMode.Party)
+        //        if (heroParty.PartyMode == PartyMode.Party)
         //        {
                     // Set active state (highligh)
                     switch (cityViewActiveState)
@@ -256,7 +269,7 @@ public class City : MonoBehaviour {
         // Disable Hero equipment menu if it was enabled and enable it otherwise
         // Also disable / enable hero party and city garnizon
         // Structure:   [city]->[HeroParty/CityGarnizon]
-        Transform heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party).transform;
+        Transform heroParty = GetHeroPartyByMode(PartyMode.Party).transform;
         GameObject heroEquipmentMenu = heroParty.Find("HeroEquipment").gameObject;
         GameObject heroUnitsPanel = heroParty.Find("PartyPanel").gameObject;
         heroEquipmentMenu.SetActive(doActivate);
@@ -298,13 +311,13 @@ public class City : MonoBehaviour {
                     break;
                 case CityViewActiveState.ActiveHeroEquipment:
                     // SetActiveState(cityViewActiveState, false);
-                    GetHeroPartyByMode(HeroParty.PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
-                    GetHeroPartyByMode(HeroParty.PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
+                    GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
+                    GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
                     break;
             }
         }
         // If ther is no hero in the city or hero has left city, then display HireHeroPanel
-        if (!GetHeroPartyByMode(HeroParty.PartyMode.Party))
+        if (!GetHeroPartyByMode(PartyMode.Party))
         {
             ActOnHeroLeavingCity();
         }
@@ -396,9 +409,9 @@ public class City : MonoBehaviour {
         //  this should be set to null on hero leaving or accessed outside of the city.
         toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
         // Set party mode
-        newPartyUIPanel.GetComponent<HeroParty>().SetMode(HeroParty.PartyMode.Party);
+        newPartyUIPanel.GetComponent<HeroParty>().PartyMode = PartyMode.Party;
         // Set party place
-        newPartyUIPanel.GetComponent<HeroParty>().SetPlace(HeroParty.PartyPlace.City);
+        //newPartyUIPanel.GetComponent<HeroParty>().SetPlace(HeroParty.PartyPlace.City);
         // return new party as result
         return newPartyUIPanel;
     }
@@ -582,7 +595,7 @@ public class City : MonoBehaviour {
         // Focus panel wil automatically detect changes and update info
         transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissPartyLeader);
         // Dismiss party with all units in it
-        HeroParty heroParty = GetHeroPartyByMode(HeroParty.PartyMode.Party);
+        HeroParty heroParty = GetHeroPartyByMode(PartyMode.Party);
         MapHero mapHero = heroParty.GetLinkedPartyOnMap();
         // Destroy hero's represetnation on map
         Destroy(mapHero.gameObject);
@@ -620,7 +633,7 @@ public class City : MonoBehaviour {
         }
         // if parent Party panel is in Garnizon state, then update right focus
         // no need to update left focus, because it is only updated on leader dismiss
-        if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
+        if (PartyPanelMode.Garnizon == partyPanel.PartyPanelMode)
         {
             // Instruct Right focus panel to update information
             // act based on the unit size

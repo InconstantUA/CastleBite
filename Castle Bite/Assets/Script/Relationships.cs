@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public enum Faction { Dominion, Greenskin };
+public enum Faction
+{
+    Dominion,
+    Greenskin
+};
 
 public class Relationships : MonoBehaviour {
     public enum State { Allies, AtWar, Neutral, SameFaction };

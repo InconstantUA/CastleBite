@@ -151,8 +151,8 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             //// drop unit if there is no other unit already present
             //if (!unit)
             //{
-            //    PartyPanel.PanelMode panelMode = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
-            //    if (PartyPanel.PanelMode.Garnizon == panelMode)
+            //    PartyPanelMode panelMode = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
+            //    if (PartyPanelMode.Garnizon == panelMode)
             //    {
             //        // enable hire unit button in the original parent cell and bring it to the front
             //        // and it is not wide
@@ -166,7 +166,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             //    // disable hire unit button in the destination (this) cell, if it is garnizon panel
             //    // structure 3PartyPanel-2Top/Middle/Bottom-1Front/Back/Wide-(this)UnitSlot
             //    panelMode = transform.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
-            //    if (PartyPanel.PanelMode.Garnizon == panelMode)
+            //    if (PartyPanelMode.Garnizon == panelMode)
             //    {
             //        // todo: add not wide condition check
             //        transform.parent.Find("HireUnitPnlBtn").gameObject.SetActive(false);

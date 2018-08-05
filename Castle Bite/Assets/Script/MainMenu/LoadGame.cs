@@ -122,6 +122,24 @@ public class LoadGame : MonoBehaviour
         CreateGamePlayers(gameData.playersData);
     }
 
+    public void RemoveAllParties()
+    {
+
+    }
+
+    public void CreateParties(PartyData[] partiesData)
+    {
+
+    }
+
+    void SetParties(GameData gameData)
+    {
+        // remove old data
+        RemoveAllParties();
+        // Update game with data from save
+        CreateParties(gameData.partiesData);
+    }
+
     void SetGameData(GameData gameData)
     {
         // .. Set map

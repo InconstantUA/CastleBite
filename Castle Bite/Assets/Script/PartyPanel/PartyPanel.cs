@@ -4,11 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
+public enum PartyPanelMode {
+    Party,
+    Garnizon
+}
+
+
+[Serializable]
+public class PartyPanelData : System.Object
+{
+    public PartyPanelMode partyPanelMode;
+}
+
 // Controls all operations with child panels
 public class PartyPanel : MonoBehaviour {
-    public enum PanelMode { Party, Garnizon };
     [SerializeField]
-    PanelMode panelMode;
+    PartyPanelData partyPanelData;
     string[] horisontalPanels = { "Top", "Middle", "Bottom" };
     string[] singleUnitCells = { "Front", "Back" };
     string[] cells = { "Front", "Back", "Wide" };
@@ -18,8 +30,8 @@ public class PartyPanel : MonoBehaviour {
 
     // for battle
     PartyUnit activeBattleUnit;
-    public string deadStatus = "Dead";
-    public string levelUpStatus = "Level up";
+    public string deadStatusText = "Dead";
+    public string levelUpStatusText = "Level up";
     bool isAIControlled = false;
 
     public bool IsAIControlled
@@ -35,16 +47,37 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    public PartyPanelData PartyPanelData
+    {
+        get
+        {
+            return partyPanelData;
+        }
+
+        set
+        {
+            partyPanelData = value;
+        }
+    }
+
     public Transform GetUnitSlotTr(string row, string cell)
     {
         // Debug.Log(row + " " + cell);
         return transform.Find(row).Find(cell).Find("UnitSlot");
     }
 
-    public PanelMode GetPanelMode()
+    public PartyPanelMode PartyPanelMode
     {
-        return panelMode;
+        get
+        {
+            return partyPanelData.partyPanelMode;
+        }
     }
+
+    //public PartyPanelMode GetPanelMode()
+    //{
+    //    return panelMode;
+    //}
 
     #region On Change: hire or dismiss unit, for unit edit mode
 
@@ -158,7 +191,7 @@ public class PartyPanel : MonoBehaviour {
         // Clean status
         ClearUnitCellStatus(changedCell);
         // activate hire unit button if panel is in garnizon state
-        if (PartyPanel.PanelMode.Garnizon == panelMode)
+        if (PartyPanelMode.Garnizon == PartyPanelMode)
         {
             Debug.Log("Activate hire unit button");
             changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(true);
@@ -182,7 +215,7 @@ public class PartyPanel : MonoBehaviour {
         Transform parentCell = changedCell.parent.Find("Wide");
         CleanHealthUI(parentCell);
         // activate hire unit buttons on left and right cells if panel is in garnizon state
-        if (PartyPanel.PanelMode.Garnizon == panelMode)
+        if (PartyPanelMode.Garnizon == PartyPanelMode)
         {
             Debug.Log("Activate hire unit button");
             changedCell.parent.Find("Front/HireUnitPnlBtn").gameObject.SetActive(true);
@@ -224,7 +257,7 @@ public class PartyPanel : MonoBehaviour {
         // verify if city or hero capacity has not been reached
         // if number of units in city or hero party reaches maximum, 
         // then hire unit button is disabled
-        if (panelMode == PanelMode.Garnizon)
+        if (PartyPanelMode == PartyPanelMode.Garnizon)
         {
             // this is needed to disable or enable hire units button
             // hero party does not have this functionality
@@ -278,7 +311,7 @@ public class PartyPanel : MonoBehaviour {
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
                     // deactivate hire unit button if panel is in garnizon state and this left or right single panel
-                    if ((PanelMode.Garnizon == panelMode) && (("Front" == cell) || ("Back" == cell)))
+                    if ((PartyPanelMode.Garnizon == PartyPanelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
                         unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
                     }
@@ -290,7 +323,7 @@ public class PartyPanel : MonoBehaviour {
                     unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
                     unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
                     // activate hire unit button if panel is in garnizon state and this left or right single panel
-                    if ((PanelMode.Garnizon == panelMode) && (("Front" == cell) || ("Back" == cell)))
+                    if ((PartyPanelMode.Garnizon == PartyPanelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
                         unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
                     }
@@ -351,7 +384,7 @@ public class PartyPanel : MonoBehaviour {
         // return capacity based on the parent mode
         // in garnizon mode we get city capacity
         // in party mode we get hero leadership
-        if (panelMode == PanelMode.Garnizon)
+        if (PartyPanelMode == PartyPanelMode.Garnizon)
         {
             // this can be triggered by clonned party panel,
             // when user right clicks on a city
@@ -399,7 +432,7 @@ public class PartyPanel : MonoBehaviour {
     {
         GameObject hireUnitPnlBtn;
         // this is only needed in garnizon mode, only in this mode hire buttons are present
-        if (panelMode == PanelMode.Garnizon)
+        if (PartyPanelMode == PartyPanelMode.Garnizon)
         {
             foreach (string horisontalPanel in horisontalPanels)
             {
@@ -699,16 +732,16 @@ public class PartyPanel : MonoBehaviour {
         PartyPanel otherPartyPanel = null;
         // get city transform, this actually can be inter-hero exchange root transform
         Transform cityTr = currentPartyPanel.transform.parent.parent;
-        if (PartyPanel.PanelMode.Garnizon == currentPartyPanel.GetComponent<PartyPanel>().GetPanelMode())
+        if (PartyPanelMode.Garnizon == currentPartyPanel.PartyPanelMode)
         {
             // verify if there is a HeroParty in City
             //if (cityTr.GetComponentInChildren<HeroParty>())
             //{
             //    otherPartyPanel = cityTr.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>();
             //}
-            if (cityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Party))
+            if (cityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party))
             {
-                otherPartyPanel = cityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Party).GetComponentInChildren<PartyPanel>();
+                otherPartyPanel = cityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party).GetComponentInChildren<PartyPanel>();
             }
         } else
         {
@@ -761,7 +794,7 @@ public class PartyPanel : MonoBehaviour {
         {
             directionStr = "target";
         }
-        if (PartyPanel.PanelMode.Garnizon == partyPanel.GetPanelMode())
+        if (PartyPanelMode.Garnizon == partyPanel.PartyPanelMode)
         {
             errorMessage = "Not enough " + directionStr + " city capacity.";
         }
@@ -2668,7 +2701,7 @@ public class PartyPanel : MonoBehaviour {
                         {
                             UpgradeUnit(unit);
                             // update status panel to indicate level up
-                            statusPanel.text = levelUpStatus;
+                            statusPanel.text = levelUpStatusText;
                             statusPanel.color = Color.green;
                         }
                         // show gained experience

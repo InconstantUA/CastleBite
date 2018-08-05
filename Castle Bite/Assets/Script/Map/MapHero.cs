@@ -4,17 +4,16 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// public class MapHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 public class MapHero : MonoBehaviour
 {
     enum State { NotSelected, Selected };
+    State state;
 
     [SerializeField]
     private Transform linkedPartyTr;
     public Transform linkedCityOnMapTr;
     [SerializeField]
     public float labelDimTimeout;
-    State state;
     // for animation
     bool isOn;
     [SerializeField]
@@ -27,8 +26,8 @@ public class MapHero : MonoBehaviour
     //Color highlightedColor;
     //[SerializeField]
     //Color pressedColor;
-    [SerializeField]
-    MapObjectLabel label;
+    //[SerializeField]
+    //MapObjectLabel label;
     // for path finding
     //Vector2 heroTilePosition;
 
@@ -62,12 +61,12 @@ public class MapHero : MonoBehaviour
     void UpdateLabelText()
     {
         // set label
-        label = GetComponentInChildren<MapObjectLabel>();
+        //label = GetComponentInChildren<MapObjectLabel>();
         // set label text
         PartyUnit leaderUnit = linkedPartyTr.GetComponentInChildren<PartyPanel>().GetPartyLeader();
         string givenName = leaderUnit.GetGivenName();
         string unitName = leaderUnit.GetUnitName();
-        label.LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
+        GetComponentInChildren<MapObjectLabel>().LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
     }
 
     //public void OnPointerDown(PointerEventData eventData)
@@ -217,7 +216,7 @@ public class MapHero : MonoBehaviour
     //                // find out if both heros are from the same faction or not
     //                HeroParty selectedParty = transform.parent.GetComponent<MapManager>().GetSelectedHero().linkedPartyTr.GetComponent<HeroParty>();
     //                HeroParty thisParty = linkedPartyTr.GetComponent<HeroParty>();
-    //                if (selectedParty.GetFaction() == thisParty.GetFaction())
+    //                if (selectedParty.Faction == thisParty.Faction)
     //                {
     //                    // highlight this new hero instead
     //                    SetSelectedState(true);
@@ -225,7 +224,7 @@ public class MapHero : MonoBehaviour
     //                {
     //                    // other faction hero is clicked
     //                    // verify faction relationships
-    //                    Relationships.State relationships = Relationships.Instance.GetRelationships(selectedParty.GetFaction(), thisParty.GetFaction());
+    //                    Relationships.State relationships = Relationships.Instance.GetRelationships(selectedParty.Faction, thisParty.Faction);
     //                    switch (relationships)
     //                    {
     //                        case Relationships.State.Allies:

@@ -1387,9 +1387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 0
-  partyMode: 1
-  partyPlace: 0
+  partyData:
+    faction: 0
+    partyMode: 1
   linkedPartyOnMap: {fileID: 0}
 --- !u!1 &45151526
 GameObject:
@@ -8315,9 +8315,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c92d0cc90605ac49b61756cc736e137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelMode: 1
-  deadStatus: Dead
-  levelUpStatus: Level up
+  partyPanelData:
+    partyPanelMode: 1
+  deadStatusText: Dead
+  levelUpStatusText: Level up
 --- !u!1 &215632778
 GameObject:
   m_ObjectHideFlags: 0
@@ -12750,7 +12751,7 @@ Prefab:
     - target: {fileID: 224823442446638656, guid: 4bf48eea0cc71de4f96d1051b8b18dc8,
         type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 224823442446638656, guid: 4bf48eea0cc71de4f96d1051b8b18dc8,
         type: 2}
@@ -18020,7 +18021,7 @@ MonoBehaviour:
   players:
   - playerUniqueAbility: 0
     playerType: 0
-    givenName: Hiro
+    givenName: Shiro
     totalGold: 9999
     faction: 0
   - playerUniqueAbility: 0
@@ -21914,7 +21915,7 @@ Prefab:
     - target: {fileID: 224958924274679954, guid: 07d597d1aed741640a7c48c0754cdbc7,
         type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 224958924274679954, guid: 07d597d1aed741640a7c48c0754cdbc7,
         type: 2}
@@ -22214,9 +22215,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c92d0cc90605ac49b61756cc736e137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelMode: 0
-  deadStatus: Dead
-  levelUpStatus: Level up
+  partyPanelData:
+    partyPanelMode: 0
+  deadStatusText: Dead
+  levelUpStatusText: Level up
 --- !u!1001 &525187905
 Prefab:
   m_ObjectHideFlags: 0
@@ -24150,7 +24152,7 @@ RectTransform:
   m_Children:
   - {fileID: 1325765865}
   m_Father: {fileID: 2091902298}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -33201,7 +33203,7 @@ RectTransform:
   - {fileID: 397424802}
   - {fileID: 1068792424}
   m_Father: {fileID: 2091902298}
-  m_RootOrder: 7
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -38220,9 +38222,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c92d0cc90605ac49b61756cc736e137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelMode: 0
-  deadStatus: Dead
-  levelUpStatus: Level up
+  partyPanelData:
+    partyPanelMode: 0
+  deadStatusText: Dead
+  levelUpStatusText: Level up
 --- !u!1 &929631018
 GameObject:
   m_ObjectHideFlags: 0
@@ -56286,7 +56289,7 @@ RectTransform:
   m_Children:
   - {fileID: 1426085428}
   m_Father: {fileID: 2091902298}
-  m_RootOrder: 1
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -57235,7 +57238,7 @@ Prefab:
     - target: {fileID: 224112313859787072, guid: ec18c120febaa3e43872b7a62dc9e8ea,
         type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 224112313859787072, guid: ec18c120febaa3e43872b7a62dc9e8ea,
         type: 2}
@@ -62482,9 +62485,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 0
-  partyMode: 0
-  partyPlace: 0
+  partyData:
+    faction: 0
+    partyMode: 0
   linkedPartyOnMap: {fileID: 0}
 --- !u!1 &1535160389
 GameObject:
@@ -64001,9 +64004,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 0
-  partyMode: 1
-  partyPlace: 0
+  partyData:
+    faction: 0
+    partyMode: 1
   linkedPartyOnMap: {fileID: 0}
 --- !u!1 &1569415508
 GameObject:
@@ -64390,9 +64393,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  faction: 1
-  partyMode: 0
-  partyPlace: 0
+  partyData:
+    faction: 1
+    partyMode: 0
   linkedPartyOnMap: {fileID: 1446435362}
 --- !u!1 &1578765596
 GameObject:
@@ -73811,7 +73814,7 @@ Prefab:
     - target: {fileID: 224112313859787072, guid: ec18c120febaa3e43872b7a62dc9e8ea,
         type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 224112313859787072, guid: ec18c120febaa3e43872b7a62dc9e8ea,
         type: 2}
@@ -74182,7 +74185,7 @@ Prefab:
     - target: {fileID: 224797448737503888, guid: 7b27db02a00e8a54da671f3fa21d0c18,
         type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224797448737503888, guid: 7b27db02a00e8a54da671f3fa21d0c18,
         type: 2}
@@ -76629,7 +76632,7 @@ RectTransform:
   - {fileID: 2137901270}
   - {fileID: 1260858335}
   m_Father: {fileID: 2091902298}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -77819,9 +77822,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c92d0cc90605ac49b61756cc736e137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelMode: 1
-  deadStatus: Dead
-  levelUpStatus: Level up
+  partyPanelData:
+    partyPanelMode: 1
+  deadStatusText: Dead
+  levelUpStatusText: Level up
 --- !u!1 &1942989653
 GameObject:
   m_ObjectHideFlags: 0
@@ -84166,15 +84170,15 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1533293657}
-  - {fileID: 1371336768}
   - {fileID: 352064010}
-  - {fileID: 1900561123}
+  - {fileID: 801461584}
   - {fileID: 136395717}
+  - {fileID: 312414351}
+  - {fileID: 1371336768}
+  - {fileID: 1900561123}
   - {fileID: 574829728}
   - {fileID: 1916181419}
-  - {fileID: 801461584}
   - {fileID: 521182431}
-  - {fileID: 312414351}
   - {fileID: 150036391}
   m_Father: {fileID: 637408235}
   m_RootOrder: 1

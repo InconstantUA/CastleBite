@@ -148,7 +148,7 @@ public class BattleScreen : MonoBehaviour {
         // get hero's parties
         HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
         // Verify if city is protected by Hero's party
-        HeroParty enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Party);
+        HeroParty enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party);
         if (enemyHeroParty)
         {
             // set battle place on a city gates
@@ -157,7 +157,7 @@ public class BattleScreen : MonoBehaviour {
         {
             // no enemy hero protecting city
             // get garnizon party
-            enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(HeroParty.PartyMode.Garnizon);
+            enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Garnizon);
         }
         // verify if there are units in party protecting this city, which can fight
         // it is possible that city is not protected
@@ -240,14 +240,14 @@ public class BattleScreen : MonoBehaviour {
         if (playerPartyPanel)
         {
             playerPartyPanel.ResetUnitCellInfoPanel(playerPartyPanel.transform);
-            playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatus });
+            playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatusText });
             playerPartyPanel.ResetUnitCellHighlight();
         }
         // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
         {
             enemyPartyPanel.ResetUnitCellInfoPanel(enemyPartyPanel.transform);
-            enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus });
+            enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatusText });
             enemyPartyPanel.ResetUnitCellHighlight();
         }
         // Close battle screen
@@ -322,7 +322,7 @@ public class BattleScreen : MonoBehaviour {
         // remove dead units from city garnizon's party panel
         enemyPartyPanel.GetHeroParty().GetComponentInChildren<PartyPanel>().RemoveDeadUnits();
         // Change city faction to player's faction
-        enemyPartyPanel.GetCity().SetFaction(playerPartyPanel.GetHeroParty().GetFaction());
+        enemyPartyPanel.GetCity().Faction = playerPartyPanel.GetHeroParty().Faction;
         // Trigger map hero move to and enter city
         MapHero mapHero = playerPartyPanel.GetHeroParty().GetLinkedPartyOnMap();
         MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LinkedMapCity;
@@ -338,7 +338,7 @@ public class BattleScreen : MonoBehaviour {
         // Remove highlight from active unit
         ActiveUnit.HighlightActiveUnitInBattle(false);
         //// Clear units info and status information
-        //enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatus, enemyPartyPanel.levelUpStatus });
+        //enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatusText, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
         BattleExit exitButton = transform.Find("Exit").GetComponent<BattleExit>();
         // Activate exit battle button;
@@ -382,20 +382,20 @@ public class BattleScreen : MonoBehaviour {
             {
                 Debug.Log("Enemy lost battle and was destroyed");
                 // verify if battle was with city Garnizon:
-                if (enemyPartyPanel.GetHeroParty().GetMode() == HeroParty.PartyMode.Garnizon)
+                if (enemyPartyPanel.GetHeroParty().PartyMode == PartyMode.Garnizon)
                 {
                     // On exit: enter city
                     Debug.Log("Enter city on exit");
                     exitButton.SetExitOption(BattleExit.ExitOption.EnterCity);
                 }
-                else if (enemyPartyPanel.GetHeroParty().GetMode() == HeroParty.PartyMode.Party)
+                else if (enemyPartyPanel.GetHeroParty().PartyMode == PartyMode.Party)
                 {
                     // On exit: destroy enemy party
                     exitButton.SetExitOption(BattleExit.ExitOption.DestroyEnemy);
                 }
                 else
                 {
-                    Debug.LogError("Unknown party mode " + enemyPartyPanel.GetHeroParty().GetMode().ToString());
+                    Debug.LogError("Unknown party mode " + enemyPartyPanel.GetHeroParty().PartyMode.ToString());
                 }
             }
             // Show how much experience was earned by player party
