@@ -14,7 +14,7 @@ public class SaveData : System.Object
     public DateTime date;
     // values below actually are read from other datas
     public int turnNumber;
-    public List<PlayerData> playersData;
+    public PlayerData[] playersData;
 }
 
 public class Save : MonoBehaviour {
@@ -63,11 +63,7 @@ public class Save : MonoBehaviour {
             // .. read turn number from save file
             saveData.turnNumber = 0;
             // init list of players
-            saveData.playersData = new List<PlayerData>
-            {
-                // set information about players
-                gameData.playerData
-            };
+            saveData.playersData = gameData.playersData;
         }
         else
         {

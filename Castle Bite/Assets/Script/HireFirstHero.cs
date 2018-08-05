@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -16,12 +18,14 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     Color tmpColor;
     public GameObject gameObjectToBeActivated;
     public GameObject gameObjectToBeDeactivated;
-    public string defaultPlayerName;
+    [SerializeField]
+    PlayerData[] players;
 
     void OnEnable()
     {
         // reset player name placeholder text to default hero name
-        transform.root.Find("ChooseYourFirstHero/HireUnit/Panel/InputField/Placeholder").GetComponent<Text>().text = defaultPlayerName;
+        // use first defined in Editor player name as default name
+        transform.root.Find("ChooseYourFirstHero/HireUnit/Panel/InputField/Placeholder").GetComponent<Text>().text = players[0].givenName;
     }
 
     void Start()
@@ -146,17 +150,17 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     #region OnClick
 
-    UniqueAbility.Ability GetSelectedUniqueAbility()
+    PlayerUniqueAbility GetSelectedUniqueAbility()
     {
         //  Find selected toggle and get attached to it unit template
         //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
         Toggle[] toggles = transform.parent.parent.GetComponentsInChildren<ToggleGroup>()[0].GetComponentsInChildren<Toggle>();
-        UniqueAbility.Ability selectedAbility = UniqueAbility.Ability.Hardcore;
+        PlayerUniqueAbility selectedAbility = PlayerUniqueAbility.Hardcore;
         foreach (Toggle toggle in toggles)
         {
             if (toggle.isOn)
             {
-                selectedAbility = toggle.GetComponent<UniqueAbility>().ability;
+                selectedAbility = toggle.GetComponent<ChooseAbility>().ability;
             }
         }
         return selectedAbility;
@@ -191,7 +195,7 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if ("" == name)
         {
             // reset name to default
-            name = defaultPlayerName;
+            name = players[0].givenName;
         }
         // return name
         return name;
@@ -199,13 +203,10 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void ActOnClick()
     {
-        // Get player object
-        PlayerObj playerObj = transform.root.Find("PlayerObj").GetComponent<PlayerObj>();
-        // Set player name
-        playerObj.GivenName = GetPlayerName();
-        // Apply selected special ability to the player
-        playerObj.GetComponent<UniqueAbility>().ability = GetSelectedUniqueAbility();
-        // Ask City to Hire unit
+        // Create game players
+        transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
+        transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(players);
+        // Ask City to Hire chosen unit
         GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnit());
         // Activate required object
         gameObjectToBeActivated.SetActive(true);

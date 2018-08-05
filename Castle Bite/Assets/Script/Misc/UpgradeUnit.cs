@@ -680,7 +680,7 @@ public class UpgradeUnit : MonoBehaviour {
         SetClassMinusUIActions(classUI, unitClass);
     }
 
-    PlayerObj GetActivePlayer()
+    GamePlayer GetActivePlayer()
     {
         return transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer();
     }

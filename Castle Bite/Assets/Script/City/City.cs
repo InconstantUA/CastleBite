@@ -24,9 +24,6 @@ public class City : MonoBehaviour {
     Faction faction;
     MapCity linkedMapCity;
 
-    // add player here, because it accessed by many functions
-    PlayerObj player;
-
     public MapCity LinkedMapCity
     {
         get
@@ -71,12 +68,6 @@ public class City : MonoBehaviour {
     public CityType GetCityType()
     {
         return cityType;
-    }
-
-    // Use this for initialization
-    void Awake()
-    {
-        player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
     }
 
     //// Update is called once per frame
@@ -355,8 +346,7 @@ public class City : MonoBehaviour {
         bool result = false;
         int requiredGold = hiredUnitTemplate.GetCost();
         //  Verify if player has enough gold
-        player = transform.root.Find("PlayerObj").gameObject.GetComponent<PlayerObj>();
-        if (player.PlayerGold >= requiredGold)
+        if (TurnsManager.Instance.GetActivePlayer().PlayerGold >= requiredGold)
         {
             result = true;
         } else
@@ -461,7 +451,7 @@ public class City : MonoBehaviour {
         // Disable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(false);
         // take gold from player
-        player.PlayerGold -= hiredUnitTemplate.GetCost();
+        TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.GetCost();
         // Create hero's representation on the map
         SetHeroPartyRepresentationOnTheMap(newLeaderParty, newPartyUnit);
     }
@@ -494,7 +484,7 @@ public class City : MonoBehaviour {
             // Instruct Right focus panel to update information
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
             // take gold from player
-            player.PlayerGold -= hiredUnitTemplate.GetCost();
+            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.GetCost();
         }
     }
     #endregion
@@ -537,7 +527,7 @@ public class City : MonoBehaviour {
             // Instruct Right focus panel to update information
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
             // take gold from player
-            player.PlayerGold -= hiredUnitTemplate.GetCost();
+            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.GetCost();
         }
     }
 

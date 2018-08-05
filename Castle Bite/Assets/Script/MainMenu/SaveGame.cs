@@ -29,7 +29,7 @@ public class SaveGame : MonoBehaviour {
         Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
         // create entry in UI for each *.save file, if it does not exist
         GameObject newSave;
-        for(int i = 0; i < files.Length; i++)
+        for (int i = 0; i < files.Length; i++)
         //foreach (FileInfo file in files)
         {
             // create save UI
@@ -73,10 +73,18 @@ public class SaveGame : MonoBehaviour {
     GameData GetGameData()
     {
         Debug.Log("Get game data");
+        // Get game players
+        GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
+        // init game data
         GameData gameData = new GameData
         {
-            playerData = transform.root.Find("PlayerObj").GetComponent<PlayerObj>().PlayerData
+            playersData = new PlayerData[players.Length]
         };
+        // Get and save players data
+        for (int i = 0; i < players.Length; i++)
+        {
+            gameData.playersData[i] = players[i].PlayerData;
+        }
         return gameData;
     }
 
@@ -160,7 +168,7 @@ class GameData : System.Object
     // Map (Scene)
     // ..
     // Players
-    public PlayerData playerData;
+    public PlayerData[] playersData;
     // Cities
     // ..
     // Parties with units

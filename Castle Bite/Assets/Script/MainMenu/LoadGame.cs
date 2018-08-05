@@ -88,10 +88,47 @@ public class LoadGame : MonoBehaviour
                 }
     }
 
+    public void CreateGamePlayers(PlayerData[] players)
+    {
+        // Get player object Template
+        GameObject gamePlayerTemplate = transform.root.Find("Templates/Obj/GamePlayer").gameObject;
+        // Get players root
+        Transform gamePlayersRoot = transform.root.Find("GamePlayers");
+        // Init new player
+        GameObject newGamePlayer;
+        // Create players
+        foreach (PlayerData player in players)
+        {
+            // instantiate new player
+            newGamePlayer = Instantiate(gamePlayerTemplate, gamePlayersRoot);
+            // Set player data
+            newGamePlayer.GetComponent<GamePlayer>().PlayerData = player;
+        }
+    }
+
+    public void RemoveAllPlayers()
+    {
+        foreach (Transform child in transform.root.Find("GamePlayers"))
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    void SetPlayers(GameData gameData)
+    {
+        // Remove old data
+        RemoveAllPlayers();
+        // Update game with data from save
+        CreateGamePlayers(gameData.playersData);
+    }
+
     void SetGameData(GameData gameData)
     {
-        // Update game with data from save
-        transform.root.Find("PlayerObj").GetComponent<PlayerObj>().PlayerData = gameData.playerData;
+        // .. Set map
+        // Remove old and create new players
+        SetPlayers(gameData);
+        // .. Set cities
+        // .. Set Parties
     }
 
     void LoadGameData()

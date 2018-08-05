@@ -130,8 +130,13 @@ public class FocusPanel : MonoBehaviour {
 
     void OnDimissDoubleUnit()
     {
-        // update number of units
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        if (partyPanel)
+        {
+            partyPanel.GetNumberOfPresentUnits().ToString();
+            city.GetUnitsCapacity().ToString();
+            // update number of units
+            transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        }
     }
 
     public void OnChange(ChangeType changeType)

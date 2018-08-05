@@ -26,17 +26,21 @@ public class SavesMenu : MonoBehaviour {
         }
         else
         {
+            // Get game players
+            GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
             // set save data from currently running game
             saveData = new SaveData
             {
                 saveName = "",
                 date = DateTime.Now,
                 turnNumber = 0,
-                playersData = new List<PlayerData>
-                {
-                    transform.root.Find("PlayerObj").GetComponent<PlayerObj>().PlayerData
-                }
+                playersData = new PlayerData[players.Length]
             };
+            // Get and save players data
+            for (int i = 0; i < players.Length; i++)
+            {
+                saveData.playersData[i] = players[i].PlayerData;
+            }
         }
         // update UI
         // set save details  transform

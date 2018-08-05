@@ -19,7 +19,7 @@ public class ChapterManager : MonoBehaviour {
     bool lastChapter;
     // define chapter goals
     bool goalTargetCityCaptured = false;
-    bool goalTargetHeroDestroyed = false;
+    bool goalTargetHeroDestroyed = true;
     // for end (exit) chapter logic
     bool completed = false;
     bool failed = false;
@@ -31,8 +31,10 @@ public class ChapterManager : MonoBehaviour {
 
     public void OnGoalCityCapture(City city)
     {
-        PlayerObj player = transform.root.Find("PlayerObj").GetComponent<PlayerObj>();
-        if (city.GetFaction() == player.Faction)
+        GamePlayer player = TurnsManager.Instance.GetActivePlayer();
+        // verify if city has been captured by human player
+        // .. I assume that game is in single player game mode, where there is only one human player and all others are AI players
+        if ( (city.GetFaction() == player.Faction) && (PlayerType.Human == player.PlayerType) )
         {
             goalTargetCityCaptured = true;
             Debug.Log("Target city has been captured by player");

@@ -4,20 +4,63 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+public enum PlayerType
+{
+    Human,
+    AI
+}
+
+[Serializable]
+public enum PlayerUniqueAbility {
+    Offence,
+    Defense,
+    Sorcery,
+    Hardcore
+};
+
+[Serializable]
 public class PlayerData : System.Object
 {
+    public PlayerUniqueAbility playerUniqueAbility;
+    public PlayerType playerType;
     public string givenName;
     public int totalGold;
     public Faction faction;
 }
 
-public class PlayerObj : MonoBehaviour {
+public class GamePlayer : MonoBehaviour {
     [SerializeField]
     PlayerData playerData;
     //[SerializeField]
     //int totalGold;
     //[SerializeField]
     //Faction faction;
+
+    public PlayerUniqueAbility PlayerUniqueAbility
+    {
+        get
+        {
+            return playerData.playerUniqueAbility;
+        }
+
+        set
+        {
+            playerData.playerUniqueAbility = value;
+        }
+    }
+
+    public PlayerType PlayerType
+    {
+        get
+        {
+            return playerData.playerType;
+        }
+
+        set
+        {
+            playerData.playerType = value;
+        }
+    }
 
     public Faction Faction
     {

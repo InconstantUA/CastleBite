@@ -260,12 +260,13 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         Transform mainMenuPanel = transform.root.Find("MainMenu/MainMenuPanel");
         mainMenuPanel.Find("Start").gameObject.SetActive(false);
         mainMenuPanel.Find("Continue").gameObject.SetActive(true);
+        // Replace quit button with quit to main menu
         mainMenuPanel.Find("Quit").gameObject.SetActive(false);
         mainMenuPanel.Find("QuitToMainMenu").gameObject.SetActive(true);
         // Also activate Save and Load buttons for future use
         mainMenuPanel.Find("Save").gameObject.SetActive(true);
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
-        // Activate ChooseYourFirstHero
+        // Activate ChooseYourFirstHero menu
         transform.root.Find("ChooseYourFirstHero").gameObject.SetActive(true);
     }
 
