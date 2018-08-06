@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
-    PartyUnit.UnitDebuff unitDebuff;
+    UnitDebuff unitDebuff;
     [SerializeField]
     int totalDuration;
     [SerializeField]
@@ -53,7 +53,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         backgroundImage = transform.Find("Background").GetComponent<Image>();
     }
 
-    public PartyUnit.UnitDebuff GetUnitDebuff()
+    public UnitDebuff GetUnitDebuff()
     {
         return unitDebuff;
     }
@@ -130,7 +130,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         // Trigger debuff within unit
         dstUnit.ApplyDestructiveAbility(dstUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
         // Proceed if unit is still alive
-        if (PartyUnit.UnitStatus.Dead != dstUnit.GetUnitStatus())
+        if (UnitStatus.Dead != dstUnit.UnitStatus)
         {
             // reset background image color to be visible
             Color cx = backgroundImage.color;
@@ -152,14 +152,14 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
                 // deactivate it (it will be destroyed at the end of animation)
                 SetActiveAdvance(false);
                 // deactivate it in unit properties too
-                dstUnit.GetUnitDebuffs()[(int)GetUnitDebuff()] = PartyUnit.UnitDebuff.None;
+                dstUnit.UnitDebuffs[(int)GetUnitDebuff()] = UnitDebuff.None;
             }
         }
         else
         {
             // all debuffs should be already removed by SetUnitStatus(status)
             // Unit cannot move any more
-            dstUnit.SetHasMoved(true);
+            dstUnit.HasMoved = true;
             // Fade unit cell info
             for (float f = 1f; f >= 0; f -= 0.1f)
             {

@@ -14,32 +14,32 @@ public class UnitHirePanel : MonoBehaviour
     // Use this for initialization
     void Start() {
         // populate panel with information from attached unitToHire
-        transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.GetUnitName() + "]";
+        transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.UnitName + "]";
         // pupulate additional unit information
         if (Mode.FirstUnit == mode)
         {
             // fill in first hero hire menu with hero's most important characteristics
             transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                unitToHire.GetRole() + "\r\n" +
-                unitToHire.GetBriefDescription();
+                unitToHire.UnitRole + "\r\n" +
+                unitToHire.UnitBriefDescription;
         }
         else
         {
             // Normal mode
-            if (unitToHire.GetUnitSize() == PartyUnit.UnitSize.Double)
+            if (unitToHire.UnitSize == UnitSize.Double)
             {
                 // for double size units also indicate their size
                 transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                    unitToHire.GetCost().ToString() + "\r\n" +
-                    unitToHire.GetLeadership().ToString() + "\r\n" +
-                    unitToHire.GetRole() + "\r\n" + "Large";
+                    unitToHire.UnitCost.ToString() + "\r\n" +
+                    unitToHire.UnitLeadership.ToString() + "\r\n" +
+                    unitToHire.UnitRole + "\r\n" + "Large";
             }
             else
             {
                 transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                    unitToHire.GetCost().ToString() + "\r\n" +
-                    unitToHire.GetLeadership().ToString() + "\r\n" +
-                    unitToHire.GetRole();
+                    unitToHire.UnitCost.ToString() + "\r\n" +
+                    unitToHire.UnitLeadership.ToString() + "\r\n" +
+                    unitToHire.UnitRole;
             }
         }
     }

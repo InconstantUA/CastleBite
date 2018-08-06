@@ -75,7 +75,7 @@ public class City : MonoBehaviour {
 
     //}
 
-    public int GetDefense()
+    public int GetCityDefense()
     {
         int bonus = 0;
         if (cityType == CityType.Capital)
@@ -357,7 +357,7 @@ public class City : MonoBehaviour {
     bool VerifyIfPlayerHasEnoughGoldToBuyUnit(PartyUnit hiredUnitTemplate)
     {
         bool result = false;
-        int requiredGold = hiredUnitTemplate.GetCost();
+        int requiredGold = hiredUnitTemplate.UnitCost;
         //  Verify if player has enough gold
         if (TurnsManager.Instance.GetActivePlayer().PlayerGold >= requiredGold)
         {
@@ -366,7 +366,7 @@ public class City : MonoBehaviour {
         {
             // display message that is not enough gold
             NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
-            if (hiredUnitTemplate.GetIsLeader())
+            if (hiredUnitTemplate.IsLeader)
             {
                 notificationPopup.DisplayMessage("More gold is needed to hire this party leader.");
             }
@@ -464,7 +464,7 @@ public class City : MonoBehaviour {
         // Disable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(false);
         // take gold from player
-        TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.GetCost();
+        TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
         // Create hero's representation on the map
         SetHeroPartyRepresentationOnTheMap(newLeaderParty, newPartyUnit);
     }
@@ -497,7 +497,7 @@ public class City : MonoBehaviour {
             // Instruct Right focus panel to update information
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
             // take gold from player
-            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.GetCost();
+            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
         }
     }
     #endregion
@@ -540,7 +540,7 @@ public class City : MonoBehaviour {
             // Instruct Right focus panel to update information
             transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
             // take gold from player
-            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.GetCost();
+            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
         }
     }
 
@@ -552,14 +552,14 @@ public class City : MonoBehaviour {
         if (VerifyIfPlayerHasEnoughGoldToBuyUnit(hiredUnitTemplate))
         {
             // 2 act based on the unit type: leader or normal unit
-            if (hiredUnitTemplate.GetIsLeader())
+            if (hiredUnitTemplate.IsLeader)
             {
                 HirePartyLeader(hiredUnitTemplate);
             }
             else
             {
                 // act based on the unit type
-                if (PartyUnit.UnitSize.Single == hiredUnitTemplate.GetUnitSize())
+                if (UnitSize.Single == hiredUnitTemplate.UnitSize)
                 {
                     HireSingleUnit(callerCell, hiredUnitTemplate);
                 }
@@ -623,7 +623,7 @@ public class City : MonoBehaviour {
         unitSlot.transform.DetachChildren(); // this is needed otherwise child count will remain the same, because object is destroyed after Update()
         // Update party panel
         // act based on the unit size
-        if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
+        if (unit.UnitSize == UnitSize.Single)
         {
             partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
         }
@@ -637,7 +637,7 @@ public class City : MonoBehaviour {
         {
             // Instruct Right focus panel to update information
             // act based on the unit size
-            if (unit.GetUnitSize() == PartyUnit.UnitSize.Single)
+            if (unit.UnitSize == UnitSize.Single)
             {
                 transform.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissSingleUnit);
             }
@@ -652,7 +652,7 @@ public class City : MonoBehaviour {
     {
         Debug.Log("Dismiss unit");
         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-        bool wasLeader = unit.GetIsLeader();
+        bool wasLeader = unit.IsLeader;
         if (wasLeader)
         {
             DismissPartyLeader();

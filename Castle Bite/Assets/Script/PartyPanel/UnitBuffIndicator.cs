@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
-    PartyUnit.UnitBuff unitBuff;
+    UnitBuff unitBuff;
     [SerializeField]
     int totalDuration;
     [SerializeField]
@@ -24,7 +24,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
         backgroundImage = transform.Find("Background").GetComponent<Image>();
     }
 
-    public PartyUnit.UnitBuff GetUnitBuff()
+    public UnitBuff GetUnitBuff()
     {
         return unitBuff;
     }

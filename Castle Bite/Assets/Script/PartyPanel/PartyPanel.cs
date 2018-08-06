@@ -147,8 +147,8 @@ public class PartyPanel : MonoBehaviour {
         PartyUnit unit = unitCanvas.GetComponentInChildren<PartyUnit>();
         // fill in highered object UI panel
         unitCanvas.Find("Name").GetComponent<Text>().text = GetUnitDisplayName(unit);
-        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
-        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
+        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
         // disable hire unit button
         changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
     }
@@ -168,8 +168,8 @@ public class PartyPanel : MonoBehaviour {
         PartyUnit unit = unitCanvas.GetComponentInChildren<PartyUnit>();
         // fill in highered object UI panel
         unitCanvas.Find("Name").GetComponent<Text>().text = GetUnitDisplayName(unit);
-        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
-        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
+        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
     }
 
     void CleanHealthUI(Transform targetCell)
@@ -277,14 +277,14 @@ public class PartyPanel : MonoBehaviour {
     {
         string unitName;
         // verify is unit has given name
-        if (unit.GetGivenName() != unit.GetUnitName())
+        if (unit.GivenName != unit.UnitName)
         {
             // start with Hero's given name information
-            unitName = unit.GetGivenName().ToString() + "\r\n<size=12>" + unit.GetUnitName().ToString() + "</size>";
+            unitName = unit.GivenName.ToString() + "\r\n<size=12>" + unit.UnitName.ToString() + "</size>";
         }
         else
         {
-            unitName = unit.GetUnitName().ToString();
+            unitName = unit.UnitName.ToString();
         }
         return unitName;
     }
@@ -308,8 +308,8 @@ public class PartyPanel : MonoBehaviour {
                     unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // fill in highered object UI panel
                     unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = GetUnitDisplayName(unit);
-                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthCurr().ToString();
-                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
+                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
                     // deactivate hire unit button if panel is in garnizon state and this left or right single panel
                     if ((PartyPanelMode.Garnizon == PartyPanelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
@@ -356,8 +356,8 @@ public class PartyPanel : MonoBehaviour {
                 {
                     // verify if unit has isLeader atrribute ON
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    // Debug.Log(unit.GetUnitName());
-                    if (unit.GetIsLeader())
+                    // Debug.Log(unit.UnitName);
+                    if (unit.IsLeader)
                     {
                         return unit;
                     }
@@ -588,7 +588,7 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // activate highlight
                         // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
-                        if ( (unit.GetHealthCurr()>0) && (unit.GetHealthCurr() < unit.GetHealthMax()) )
+                        if ( (unit.UnitHealthCurr>0) && (unit.UnitHealthCurr < unit.UnitHealthMax) )
                         {
                             // unit can be healed
                             // highlight it with green
@@ -643,7 +643,7 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // activate highlight
                         // make sure that unit is dismissable
-                        if (unit.GetIsDismissable())
+                        if (unit.IsDismissable)
                         {
                             // unit can be dismissed
                             // highlight it with green
@@ -697,7 +697,7 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // activate highlight
                         // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
-                        if (0 == unit.GetHealthCurr())
+                        if (0 == unit.UnitHealthCurr)
                         {
                             // unit is dead and can be resurected
                             // highlight it with green
@@ -866,7 +866,7 @@ public class PartyPanel : MonoBehaviour {
                 PartyPanel otherPartyPanel = GetOtherPartyPanel(sourcePartyPanel.GetComponent<PartyPanel>());
                 if (otherPartyPanel)
                 {
-                    if (unitBeingDragged.GetIsInterpartyMovable())
+                    if (unitBeingDragged.IsInterpartyMovable)
                     {
                         // unit is movable
                         // find in other panel where it can or cannot be placed and highlight accordingly
@@ -875,7 +875,7 @@ public class PartyPanel : MonoBehaviour {
                         // skip highlighting for the non-interparty-movable objects
                         // on double unit hire, skip also highlighting of nearby cell near non-interparty-movable
                         // act based on the unit size
-                        if (PartyUnit.UnitSize.Single == unitBeingDragged.GetUnitSize())
+                        if (UnitSize.Single == unitBeingDragged.UnitSize)
                         {
                             // Single unit size
                             // act based on the destination cell type
@@ -901,7 +901,7 @@ public class PartyPanel : MonoBehaviour {
                                         {
                                             // occupied
                                             cellUnit = unitCanvas.GetComponentInChildren<PartyUnit>();
-                                            isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
+                                            isUnitInterPartyDraggable = cellUnit.IsInterpartyMovable;
                                             if (isUnitInterPartyDraggable)
                                             {
                                                 // unit can be dragged to other party
@@ -935,7 +935,7 @@ public class PartyPanel : MonoBehaviour {
                                                         // check if it is occupied by non-inter-party-movable unit, 
                                                         // because we cannot swap those units
                                                         PartyUnit nearbySrcUnit = nearbySrcCellUnitCanvas.GetComponentInChildren<PartyUnit>();
-                                                        if (nearbySrcUnit.GetIsInterpartyMovable())
+                                                        if (nearbySrcUnit.IsInterpartyMovable)
                                                         {
                                                             // it is inter-party movable unit
                                                             // we can safely swap between src horizontal panel and destination panel with double unit
@@ -1051,7 +1051,7 @@ public class PartyPanel : MonoBehaviour {
                                     {
                                         // occupied
                                         cellUnit = isFrontCellOccupied.GetComponentInChildren<PartyUnit>();
-                                        isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
+                                        isUnitInterPartyDraggable = cellUnit.IsInterpartyMovable;
                                         if (isUnitInterPartyDraggable)
                                         {
                                             isFrontCellUnitInterPartyMovable = true;
@@ -1065,7 +1065,7 @@ public class PartyPanel : MonoBehaviour {
                                     {
                                         // occupied
                                         cellUnit = isBackCellOccupied.GetComponentInChildren<PartyUnit>();
-                                        isUnitInterPartyDraggable = cellUnit.GetIsInterpartyMovable();
+                                        isUnitInterPartyDraggable = cellUnit.IsInterpartyMovable;
                                         if (isUnitInterPartyDraggable)
                                         {
                                             isBackCellUnitInterPartyMovable = true;
@@ -1207,18 +1207,18 @@ public class PartyPanel : MonoBehaviour {
                     //  - unit is alive
                     //  - unit has not escaped from the battle
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    if (!unit.GetHasMoved())
+                    if (!unit.HasMoved)
                     {
                         // during main phase check for Active units
                         bool doProceed = false;
                         if ( (BattleScreen.TurnPhase.Main == turnPhase)
-                            && ( (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active) 
-                                || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) ) )
+                            && ( (unit.UnitStatus == UnitStatus.Active) 
+                                || (unit.UnitStatus == UnitStatus.Escaping) ) )
                         {
                             doProceed = true;
                         }
                         // during post wait phase check for units which are in Waiting status
-                        if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (unit.GetUnitStatus() == PartyUnit.UnitStatus.Waiting))
+                        if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (unit.UnitStatus == UnitStatus.Waiting))
                         {
                             doProceed = true;
                         }
@@ -1227,7 +1227,7 @@ public class PartyPanel : MonoBehaviour {
                             // compare initiative with other unit, if it was found
                             if (unitWithHighestInitiative)
                             {
-                                if (unit.GetInitiative() > unitWithHighestInitiative.GetInitiative())
+                                if (unit.UnitInitiative > unitWithHighestInitiative.UnitInitiative)
                                 {
                                     // found unit with highest initiative, update unitWithHighestInitiative variable
                                     unitWithHighestInitiative = unit;
@@ -1258,7 +1258,7 @@ public class PartyPanel : MonoBehaviour {
                 {
                     // set unit has moved to false, so it can move again
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    unit.SetHasMoved(false);
+                    unit.HasMoved = false;
                 }
             }
         }
@@ -1316,9 +1316,9 @@ public class PartyPanel : MonoBehaviour {
                 // Unit present in cell
                 PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                 // Verify if unit has not escaped or dead
-                if (   (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
-                    || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Waiting)
-                    || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
+                if (   (unit.UnitStatus == UnitStatus.Active)
+                    || (unit.UnitStatus == UnitStatus.Waiting)
+                    || (unit.UnitStatus == UnitStatus.Escaping) )
                 {
                     // Unit is alive and has not escaped
                     // Apply default negative Color
@@ -1362,29 +1362,29 @@ public class PartyPanel : MonoBehaviour {
                         // highlight units which can be healed
                         // verify if unit is damaged
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                        switch (unit.GetUnitStatus())
+                        switch (unit.UnitStatus)
                         {
-                            case PartyUnit.UnitStatus.Active:
-                            case PartyUnit.UnitStatus.Waiting:
-                            case PartyUnit.UnitStatus.Escaping:
-                                if (unit.GetHealthCurr() < unit.GetHealthMax())
+                            case UnitStatus.Active:
+                            case UnitStatus.Waiting:
+                            case UnitStatus.Escaping:
+                                if (unit.UnitHealthCurr < unit.UnitHealthMax)
                                 {
                                     // unit can be healed
                                     isAllowedToApplyPwrToThisUnit = true;
                                     errorMessage = "";
                                 }
-                                else if (unit.GetHealthCurr() == unit.GetHealthMax())
+                                else if (unit.UnitHealthCurr == unit.UnitHealthMax)
                                 {
                                     // unit cannot be healed
                                     isAllowedToApplyPwrToThisUnit = false;
                                     errorMessage = "Cannot heal this unit. Unit health is already full.";
                                 }
                                 break;
-                            case PartyUnit.UnitStatus.Dead:
+                            case UnitStatus.Dead:
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot heal dead units. This unit should be first resurected.";
                                 break;
-                            case PartyUnit.UnitStatus.Escaped:
+                            case UnitStatus.Escaped:
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot heal units which escaped from the battle field.";
                                 break;
@@ -1426,21 +1426,21 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // highlight units which can be healed
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                        switch (unit.GetUnitStatus())
+                        switch (unit.UnitStatus)
                         {
-                            case PartyUnit.UnitStatus.Active:
-                            case PartyUnit.UnitStatus.Waiting:
-                            case PartyUnit.UnitStatus.Escaping:
+                            case UnitStatus.Active:
+                            case UnitStatus.Waiting:
+                            case UnitStatus.Escaping:
                                 // unit is alive and cannot be resurected
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot resurect alive units.";
                                 break;
-                            case PartyUnit.UnitStatus.Dead:
+                            case UnitStatus.Dead:
                                 // unit is dead and can be resurected
                                 isAllowedToApplyPwrToThisUnit = true;
                                 errorMessage = "";
                                 break;
-                            case PartyUnit.UnitStatus.Escaped:
+                            case UnitStatus.Escaped:
                                 // unit has escaped from the battle field and can be resurected
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot resurect units which escaped from the battle field.";
@@ -1472,9 +1472,9 @@ public class PartyPanel : MonoBehaviour {
             // cell has a unit in it
             // verify if unit can act: alive and did not escape (flee from) the battle
             PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-            if (  (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active) 
-               || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Waiting)
-               || (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
+            if (  (unit.UnitStatus == UnitStatus.Active) 
+               || (unit.UnitStatus == UnitStatus.Waiting)
+               || (unit.UnitStatus == UnitStatus.Escaping) )
             {
                 return unit;
             }
@@ -1617,11 +1617,11 @@ public class PartyPanel : MonoBehaviour {
                         // first filter out dead units
                         // get unit for later checks
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                        switch (unit.GetUnitStatus())
+                        switch (unit.UnitStatus)
                         {
-                            case PartyUnit.UnitStatus.Active:
-                            case PartyUnit.UnitStatus.Waiting:
-                            case PartyUnit.UnitStatus.Escaping:
+                            case UnitStatus.Active:
+                            case UnitStatus.Waiting:
+                            case UnitStatus.Escaping:
                                 // if active mele unit is blocked, then it cannot attack anything
                                 if (activeMeleUnitIsBlocked)
                                 {
@@ -1640,7 +1640,7 @@ public class PartyPanel : MonoBehaviour {
                                         {
                                             // this is actions for enemy party
                                             isAllowedToApplyPwrToThisUnit = false;
-                                            errorMessage = activeBattleUnit.GetUnitName() + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
+                                            errorMessage = activeBattleUnit.UnitName + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
                                         }
                                     }
                                     else
@@ -1759,12 +1759,12 @@ public class PartyPanel : MonoBehaviour {
                                     }
                                 }
                                 break;
-                            case PartyUnit.UnitStatus.Dead:
+                            case UnitStatus.Dead:
                                 // cannot attack dead units
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot attack dead units.";
                                 break;
-                            case PartyUnit.UnitStatus.Escaped:
+                            case UnitStatus.Escaped:
                                 // cannot attack dead units
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot attack units which escaped from the battle field.";
@@ -1807,23 +1807,23 @@ public class PartyPanel : MonoBehaviour {
                     } else
                     {
                         // these are actions for enemy party
-                        switch (unit.GetUnitStatus())
+                        switch (unit.UnitStatus)
                         {
-                            case PartyUnit.UnitStatus.Active:
-                            case PartyUnit.UnitStatus.Waiting:
-                            case PartyUnit.UnitStatus.Escaping:
+                            case UnitStatus.Active:
+                            case UnitStatus.Waiting:
+                            case UnitStatus.Escaping:
                                 // alive enemy unit
                                 // ranged units can reach any unit
                                 // so all enemy units can be targeted
                                 isAllowedToApplyPwrToThisUnit = true;
                                 errorMessage = "";
                                 break;
-                            case PartyUnit.UnitStatus.Dead:
+                            case UnitStatus.Dead:
                                 // cannot attack dead units
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot attack dead units.";
                                 break;
-                            case PartyUnit.UnitStatus.Escaped:
+                            case UnitStatus.Escaped:
                                 // unit has escaped from the battle field and can't be attacked
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot attack units which escaped from the battle field.";
@@ -1867,23 +1867,23 @@ public class PartyPanel : MonoBehaviour {
                         // get unit for later checks
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                         // these are actions for enemy party
-                        switch (unit.GetUnitStatus())
+                        switch (unit.UnitStatus)
                         {
-                            case PartyUnit.UnitStatus.Active:
-                            case PartyUnit.UnitStatus.Waiting:
-                            case PartyUnit.UnitStatus.Escaping:
+                            case UnitStatus.Active:
+                            case UnitStatus.Waiting:
+                            case UnitStatus.Escaping:
                                 // alive enemy unit
                                 // ranged units can reach any unit
                                 // so all enemy units can be targeted
                                 isAllowedToApplyPwrToThisUnit = true;
                                 errorMessage = "";
                                 break;
-                            case PartyUnit.UnitStatus.Dead:
+                            case UnitStatus.Dead:
                                 // cannot attack dead units
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot attack dead units.";
                                 break;
-                            case PartyUnit.UnitStatus.Escaped:
+                            case UnitStatus.Escaped:
                                 // unit has escaped from the battle field and can't be attacked
                                 isAllowedToApplyPwrToThisUnit = false;
                                 errorMessage = "Cannot attack units which escaped from the battle field.";
@@ -1921,7 +1921,7 @@ public class PartyPanel : MonoBehaviour {
 
     public IEnumerator SetActiveUnitInBattle(PartyUnit unitToActivate)
     {
-        //Debug.Log("SetActiveUnitInBattle " + unitToActivate.GetUnitName());
+        //Debug.Log("SetActiveUnitInBattle " + unitToActivate.UnitName);
         // save it locally for later use
         activeBattleUnit = unitToActivate;
         // new unit became active in battle
@@ -1943,39 +1943,39 @@ public class PartyPanel : MonoBehaviour {
         //}
         // defined below how actions applied to the friendly and enemy units
         // based on the active unit powers
-        switch (unitToActivate.GetAbility())
+        switch (unitToActivate.UnitAbility)
         {
             // Helping or buf powers
-            case PartyUnit.UnitAbility.HealingWord:
-            case PartyUnit.UnitAbility.HealingSong:
+            case UnitAbility.HealingWord:
+            case UnitAbility.HealingSong:
                 PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
                 break;
-            case PartyUnit.UnitAbility.Resurect:
+            case UnitAbility.Resurect:
                 PrepareBattleFieldForResurectPower(activeUnitIsFromThisParty);
                 break;
             // Mele attack powers
-            case PartyUnit.UnitAbility.BlowWithGreatSword:
-            case PartyUnit.UnitAbility.BlowWithMaul:
-            case PartyUnit.UnitAbility.CutWithAxe:
-            case PartyUnit.UnitAbility.CutWithDagger:
-            case PartyUnit.UnitAbility.SlashWithSword:
-            case PartyUnit.UnitAbility.StabWithDagger:
-            case PartyUnit.UnitAbility.StompWithFoot:
+            case UnitAbility.BlowWithGreatSword:
+            case UnitAbility.BlowWithMaul:
+            case UnitAbility.CutWithAxe:
+            case UnitAbility.CutWithDagger:
+            case UnitAbility.SlashWithSword:
+            case UnitAbility.StabWithDagger:
+            case UnitAbility.StompWithFoot:
                 PrepareBattleFieldForMelePower(activeUnitIsFromThisParty);
                 break;
             // Ranged attack powers
-            case PartyUnit.UnitAbility.ShootWithBow:
-            case PartyUnit.UnitAbility.ShootWithCompoudBow:
-            case PartyUnit.UnitAbility.ThrowSpear:
-            case PartyUnit.UnitAbility.ThrowRock:
+            case UnitAbility.ShootWithBow:
+            case UnitAbility.ShootWithCompoudBow:
+            case UnitAbility.ThrowSpear:
+            case UnitAbility.ThrowRock:
                 PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
                 break;
             // Magic (including pure or whole-party) attack powers
-            case PartyUnit.UnitAbility.CastChainLightning:
-            case PartyUnit.UnitAbility.CastLightningStorm:
-            case PartyUnit.UnitAbility.HolyWord:
-            case PartyUnit.UnitAbility.EarthShatteringLeap:
-            case PartyUnit.UnitAbility.Malediction:
+            case UnitAbility.CastChainLightning:
+            case UnitAbility.CastLightningStorm:
+            case UnitAbility.HolyWord:
+            case UnitAbility.EarthShatteringLeap:
+            case UnitAbility.Malediction:
                 PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
                 break;
             default:
@@ -2008,7 +2008,7 @@ public class PartyPanel : MonoBehaviour {
     //            // deactivate it (it will be destroyed at the end of animation)
     //            buffUI.SetActiveAdvance(false);
     //            // deactivate it in unit properties too
-    //            unit.GetUnitBuffs()[(int)buffUI.GetUnitBuff()] = PartyUnit.UnitBuff.None;
+    //            unit.GetUnitBuffs()[(int)buffUI.GetUnitBuff()] = UnitBuff.None;
     //        }
     //    }
     //}
@@ -2057,7 +2057,7 @@ public class PartyPanel : MonoBehaviour {
     //            // deactivate it (it will be destroyed at the end of animation)
     //            debuffIndicator.SetActiveAdvance(false);
     //            // deactivate it in unit properties too
-    //            unit.GetUnitBuffs()[(int)debuffIndicator.GetUnitBuff()] = PartyUnit.UnitBuff.None;
+    //            unit.GetUnitBuffs()[(int)debuffIndicator.GetUnitBuff()] = UnitBuff.None;
     //        }
     //    }
     //}
@@ -2066,19 +2066,19 @@ public class PartyPanel : MonoBehaviour {
     {
         Debug.Log("ApplyHealPowerToSingleUnit");
         // heal destination unit
-        int healthAfterHeal = dstUnit.GetHealthCurr() + activeBattleUnit.GetPower();
+        int healthAfterHeal = dstUnit.UnitHealthCurr + activeBattleUnit.UnitPower;
         // make sure that we do not heal to more than maximum health
-        if (healthAfterHeal > dstUnit.GetHealthMax())
+        if (healthAfterHeal > dstUnit.UnitHealthMax)
         {
-            healthAfterHeal = dstUnit.GetHealthMax();
+            healthAfterHeal = dstUnit.UnitHealthMax;
         }
-        dstUnit.SetHealthCurr(healthAfterHeal);
+        dstUnit.UnitHealthCurr = (healthAfterHeal);
         // update current health in UI
         Text currentHealth = dstUnit.GetUnitCurrentHealthText();
         currentHealth.text = healthAfterHeal.ToString();
         // update info panel
         Text unitInfoText = dstUnit.GetUnitInfoPanelText();
-        unitInfoText.text = "+" + activeBattleUnit.GetPower().ToString();
+        unitInfoText.text = "+" + activeBattleUnit.UnitPower.ToString();
         unitInfoText.color = Color.green;
     }
 
@@ -2153,7 +2153,7 @@ public class PartyPanel : MonoBehaviour {
                 if (unitSlot.childCount > 0)
                 {
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Dead)
+                    if (unit.UnitStatus == UnitStatus.Dead)
                     {
                         // destroy unit canvas
                         Debug.Log("Verify: destroy dead unit " + unit.name);
@@ -2206,7 +2206,7 @@ public class PartyPanel : MonoBehaviour {
                         ClearUnitCellStatus(transform, horisontalPanel, cell);
                         // Reset status in unit
                         PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-                        unit.SetUnitStatus(PartyUnit.UnitStatus.Active);
+                        unit.SetUnitStatus(UnitStatus.Active);
                     }
                 }
             }
@@ -2250,13 +2250,13 @@ public class PartyPanel : MonoBehaviour {
     //{
     //    // damage destination unit
     //    int damageDealt = GetDamageDealt(dstUnit);
-    //    int healthAfterDamage = dstUnit.GetHealthCurr() - damageDealt;
+    //    int healthAfterDamage = dstUnit.UnitHealthCurr - damageDealt;
     //    // make sure that we do not set health less then 0
     //    if (healthAfterDamage <= 0)
     //    {
     //        healthAfterDamage = 0;
     //    }
-    //    dstUnit.SetHealthCurr(healthAfterDamage);
+    //    dstUnit.UnitHealthCurr = (healthAfterDamage);
     //    // update current health in UI
     //    // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
     //    // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
@@ -2267,7 +2267,7 @@ public class PartyPanel : MonoBehaviour {
     //    if (0 == healthAfterDamage)
     //    {
     //        // set unit is dead attribute
-    //        dstUnit.SetUnitStatus(PartyUnit.UnitStatus.Dead);
+    //        dstUnit.SetUnitStatus(UnitStatus.Dead);
     //        // set color ui more darker
     //        Color32 newUIColor = dstUnit.GetUnitStatusColor();
     //        currentHealth.color = newUIColor;
@@ -2305,7 +2305,7 @@ public class PartyPanel : MonoBehaviour {
         if (doActivate)
         {
             // verify if unit already has this debuf
-            if (uniquePowerModifier.AppliedDebuff == partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff])
+            if (uniquePowerModifier.AppliedDebuff == partyUnit.UnitDebuffs[(int)uniquePowerModifier.AppliedDebuff])
             {
                 // the same debuff is already applied
                 // reset its counter to max
@@ -2323,9 +2323,9 @@ public class PartyPanel : MonoBehaviour {
             {
                 // debuff is not applied yet
                 // add debuff to unit
-                //Debug.Log(((int)PartyUnit.UnitBuff.DefenseStance).ToString());
+                //Debug.Log(((int)UnitBuff.DefenseStance).ToString());
                 //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-                partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
+                partyUnit.UnitDebuffs[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
                 // create debuff by duplicating from template
                 // Note: debuff name in template should be the same as in AppliedDebuff
                 Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.AppliedDebuff.ToString());
@@ -2340,7 +2340,7 @@ public class PartyPanel : MonoBehaviour {
         else
         {
             // remove buff
-            partyUnit.GetUnitDebuffs()[(int)uniquePowerModifier.AppliedDebuff] = PartyUnit.UnitDebuff.None;
+            partyUnit.UnitDebuffs[(int)uniquePowerModifier.AppliedDebuff] = UnitDebuff.None;
             Destroy(debuffsPanel.Find(uniquePowerModifier.AppliedDebuff.ToString()).gameObject);
         }
     }
@@ -2394,7 +2394,7 @@ public class PartyPanel : MonoBehaviour {
                         //    // get unit for later checks
                         //    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                         //    // verify if unit is alive and has not escaped the battle
-                        //    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
+                        //    if (unit.UnitStatus == UnitStatus.Active)
                         //    {
                         //        // apply damage to the unit
                         //        ApplyDestructivePowerToSingleUnit(unit);
@@ -2416,40 +2416,40 @@ public class PartyPanel : MonoBehaviour {
         // but still the power should be applied
         if (dstUnit)
         {
-            //Debug.Log(activeBattleUnit.GetUnitName() + " acting upon " + dstUnit.GetUnitName() + " or whole party");
-            switch (activeBattleUnit.GetAbility())
+            //Debug.Log(activeBattleUnit.UnitName + " acting upon " + dstUnit.UnitName + " or whole party");
+            switch (activeBattleUnit.UnitAbility)
             {
                 // Helping or buf powers
-                case PartyUnit.UnitAbility.HealingWord:
+                case UnitAbility.HealingWord:
                     ApplyHealPowerToSingleUnit(dstUnit);
                     break;
-                case PartyUnit.UnitAbility.HealingSong:
+                case UnitAbility.HealingSong:
                     ApplyHealPowerToMultipleUnits();
                     break;
-                case PartyUnit.UnitAbility.Resurect:
+                case UnitAbility.Resurect:
                     ApplyResurectPower(dstUnit);
                     break;
                 // Mele attack powers
-                case PartyUnit.UnitAbility.BlowWithGreatSword:
-                case PartyUnit.UnitAbility.BlowWithMaul:
-                case PartyUnit.UnitAbility.CutWithAxe:
-                case PartyUnit.UnitAbility.CutWithDagger:
-                case PartyUnit.UnitAbility.SlashWithSword:
-                case PartyUnit.UnitAbility.StabWithDagger:
-                case PartyUnit.UnitAbility.StompWithFoot:
+                case UnitAbility.BlowWithGreatSword:
+                case UnitAbility.BlowWithMaul:
+                case UnitAbility.CutWithAxe:
+                case UnitAbility.CutWithDagger:
+                case UnitAbility.SlashWithSword:
+                case UnitAbility.StabWithDagger:
+                case UnitAbility.StompWithFoot:
                 // Ranged attack powers
-                case PartyUnit.UnitAbility.ShootWithBow:
-                case PartyUnit.UnitAbility.ShootWithCompoudBow:
-                case PartyUnit.UnitAbility.ThrowSpear:
-                case PartyUnit.UnitAbility.ThrowRock:
+                case UnitAbility.ShootWithBow:
+                case UnitAbility.ShootWithCompoudBow:
+                case UnitAbility.ThrowSpear:
+                case UnitAbility.ThrowRock:
                     ApplyDestructivePowerToSingleUnit(dstUnit);
                     break;
                 // Magic (including pure or whole-party) attack powers
-                case PartyUnit.UnitAbility.CastChainLightning:
-                case PartyUnit.UnitAbility.CastLightningStorm:
-                case PartyUnit.UnitAbility.HolyWord:
-                case PartyUnit.UnitAbility.EarthShatteringLeap:
-                case PartyUnit.UnitAbility.Malediction:
+                case UnitAbility.CastChainLightning:
+                case UnitAbility.CastLightningStorm:
+                case UnitAbility.HolyWord:
+                case UnitAbility.EarthShatteringLeap:
+                case UnitAbility.Malediction:
                     ApplyDestructivePowerToMultipleUnits();
                     break;
                 default:
@@ -2460,19 +2460,19 @@ public class PartyPanel : MonoBehaviour {
         else
         {
             // in case of magic power - apply it to all units in enemy party
-            Debug.Log(activeBattleUnit.GetUnitName() + " acting upon whole party");
-            switch (activeBattleUnit.GetAbility())
+            Debug.Log(activeBattleUnit.UnitName + " acting upon whole party");
+            switch (activeBattleUnit.UnitAbility)
             {
                 // Helping or buf powers
-                case PartyUnit.UnitAbility.HealingSong:
+                case UnitAbility.HealingSong:
                     ApplyHealPowerToMultipleUnits();
                     break;
                 // Magic (including pure or whole-party) attack powers
-                case PartyUnit.UnitAbility.CastChainLightning:
-                case PartyUnit.UnitAbility.CastLightningStorm:
-                case PartyUnit.UnitAbility.HolyWord:
-                case PartyUnit.UnitAbility.EarthShatteringLeap:
-                case PartyUnit.UnitAbility.Malediction:
+                case UnitAbility.CastChainLightning:
+                case UnitAbility.CastLightningStorm:
+                case UnitAbility.HolyWord:
+                case UnitAbility.EarthShatteringLeap:
+                case UnitAbility.Malediction:
                     ApplyDestructivePowerToMultipleUnits();
                     break;
                 default:
@@ -2493,9 +2493,9 @@ public class PartyPanel : MonoBehaviour {
         if (doActivate)
         {
             // add buff to unit
-            // Debug.Log(((int)PartyUnit.UnitBuff.DefenseStance).ToString());
+            // Debug.Log(((int)UnitBuff.DefenseStance).ToString());
             // Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenseStance] = PartyUnit.UnitBuff.DefenseStance;
+            partyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.DefenseStance;
             // create buff by duplicating from template
             Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defense");
             Transform defenseBuff = Instantiate(buffTemplate, buffsPanel);
@@ -2506,7 +2506,7 @@ public class PartyPanel : MonoBehaviour {
         } else
         {
             // remove buff
-            partyUnit.GetUnitBuffs()[(int)PartyUnit.UnitBuff.DefenseStance] = PartyUnit.UnitBuff.None;
+            partyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.None;
             Destroy(buffsPanel.Find("Defense").gameObject);
         }
     }
@@ -2526,7 +2526,7 @@ public class PartyPanel : MonoBehaviour {
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // verify if unit has escaped
                     // if (unit.GetHasEscaped())
-                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Escaped)
+                    if (unit.UnitStatus == UnitStatus.Escaped)
                     {
                         return true;
                     }
@@ -2551,10 +2551,10 @@ public class PartyPanel : MonoBehaviour {
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // verify if unit is dead
                     // if (!unit.GetIsAlive())
-                    if (unit.GetUnitStatus() == PartyUnit.UnitStatus.Dead)
+                    if (unit.UnitStatus == UnitStatus.Dead)
                     {
                         // unit is dead, add his experience reward to experiencePool
-                        experiencePool += unit.GetExperienceReward();
+                        experiencePool += unit.UnitExperienceReward;
                     }
                 }
             }
@@ -2603,18 +2603,18 @@ public class PartyPanel : MonoBehaviour {
     void IncrementUnitMaxStats(PartyUnit unit)
     {
         // this is done on lvl up
-        unit.SetExperienceReward(unit.GetExperienceReward() + unit.GetExperienceRewardIncrementOnLevelUp());
-        unit.SetHealthMax(unit.GetHealthMax() + unit.GetHealthMaxIncrementOnLevelUp());
-        unit.SetPower(unit.GetPower() + unit.GetPowerIncrementOnLevelUp());
+        unit.UnitExperienceReward = (unit.UnitExperienceReward + unit.UnitExperienceRewardIncrementOnLevelUp);
+        unit.UnitHealthMax = (unit.UnitHealthMax + unit.UnitHealthMaxIncrementOnLevelUp);
+        unit.UnitPower = (unit.UnitPower + unit.UnitPowerIncrementOnLevelUp);
     }
 
     void ResetUnitStatsToMax(PartyUnit unit)
     {
         // this is done on lvl up
-        unit.SetHealthCurr(unit.GetHealthMax());
+        unit.UnitHealthCurr = (unit.UnitHealthMax);
         // update panel
-        unit.GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.GetHealthMax().ToString();
-        unit.GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = unit.GetHealthMax().ToString();
+        unit.GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+        unit.GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
     }
 
     void UpgradeUnitClass(PartyUnit unit)
@@ -2628,13 +2628,13 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("UpgradeUnit");
         // unit has reached new level
         // verify if this is party leader
-        if (unit.GetIsLeader())
+        if (unit.IsLeader)
         {
             // this party leader
             // reset his experience to 0
-            unit.SetExperience(0);
+            unit.UnitExperience = (0);
             // and increment his level
-            unit.SetLevel(unit.GetLevel() + 1);
+            unit.UnitLevel = (unit.UnitLevel + 1);
             // offer party leader to learn new ability
             OfferPartyLeaderToLearnNewAbility();
         }
@@ -2654,15 +2654,15 @@ public class PartyPanel : MonoBehaviour {
                 // reset unit stats to maximum and reset experience counter
                 ResetUnitStatsToMax(unit);
                 // reset his experience to 0
-                unit.SetExperience(0);
+                unit.UnitExperience = (0);
                 // and increment his level
-                unit.SetLevel(unit.GetLevel() + 1);
+                unit.UnitLevel = (unit.UnitLevel + 1);
             }
             else
             {
                 // wait for upgrade condition to be fulfilled
                 // keep unit's experience at max
-                unit.SetExperience(unit.GetExperienceRequiredToReachNewLevel());
+                unit.UnitExperience = (unit.UnitExperienceRequiredToReachNewLevel);
             }
         }
     }
@@ -2687,15 +2687,15 @@ public class PartyPanel : MonoBehaviour {
                     if (unit)
                     {
                         // add experience to the unit
-                        int newUnitExperienceValue = unit.GetExperience() + experiencePerUnit;
+                        int newUnitExperienceValue = unit.UnitExperience + experiencePerUnit;
                         // verify if unit has not reached new level
                         Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
                         Text statusPanel = unit.GetUnitCell().Find("Status").GetComponent<Text>();
-                        if (newUnitExperienceValue < unit.GetExperienceRequiredToReachNewLevel())
+                        if (newUnitExperienceValue < unit.UnitExperienceRequiredToReachNewLevel)
                         {
                             // unit has not reached new level
                             // just update hist current experience value
-                            unit.SetExperience(newUnitExperienceValue);
+                            unit.UnitExperience = (newUnitExperienceValue);
                         }
                         else
                         {

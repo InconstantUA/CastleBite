@@ -38,63 +38,181 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Capital guard
-  unitType: 0
-  isLeader: 1
-  unitLeadership: 0
-  givenName: Lahabiel
-  unitLevel: 1
-  unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 9999
-  unitExperienceReward: 9999
-  unitExperienceRewardIncrementOnLevelUp: 0
-  healthCurr: 1100
-  healthMax: 1100
-  healthMaxIncrementOnLevelUp: 550
-  unitDefense: 0
-  resistances:
-  - source: 1
-    percent: 50
-  - source: 2
-    percent: 50
-  - source: 3
-    percent: 50
-  - source: 4
-    percent: 50
-  - source: 6
-    percent: 50
-  unitAbility: 5
-  unitPower: 300
-  unitPowerIncrementOnLevelUp: 0
-  unitPowerSource: 7
-  unitPowerDistance: 1
-  unitPowerScope: 1
-  unitInitiative: 10
-  unitRole: Protects Dominion Capital
-  unitBriefDescription: 
-  unitFullDescription: Archangel Lahabiel was sent by the Holy Father to protect Dominion
-    captial.
-  hasMoved: 0
-  cost: 0
-  unitSize: 0
-  isInterpartyMovable: 0
-  isDismissable: 0
-  unitStatus: 0
-  unitDebuffs: 
-  unitBuffs: 
-  unitUpgradePoints: 0
-  unitStatPoints: 0
-  classIsUpgradable: 0
-  unitClassPoints: 0
-  canLearnSkills: 0
-  unitSkillPoints: 0
-  requiresUnit: {fileID: 0}
-  unlocksUnits: []
-  upgradeCost: 0
-  movePointsCurrent: 0
-  movePointsMax: 0
-  scoutingRange: 0
-  healthRegenPercent: 15
+  partyUnitData:
+    unitName: Capital guard
+    unitType: 1
+    isLeader: 1
+    unitLeadership: 0
+    givenName: Lahabiel
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 9999
+    unitExperienceReward: 9999
+    unitExperienceRewardIncrementOnLevelUp: 0
+    unitHealthCurr: 1100
+    unitHealthMax: 1100
+    unitHealthMaxIncrementOnLevelUp: 550
+    unitHealthRegenPercent: 15
+    unitDefense: 0
+    unitResistances:
+    - source: 1
+      percent: 50
+    - source: 2
+      percent: 50
+    - source: 3
+      percent: 50
+    - source: 4
+      percent: 50
+    unitAbility: 5
+    unitPower: 300
+    unitPowerIncrementOnLevelUp: 0
+    unitPowerSource: 7
+    unitPowerDistance: 1
+    unitPowerScope: 1
+    unitInitiative: 55
+    unitRole: Protects Dominion Capital
+    unitBriefDescription: 
+    unitFullDescription: Archangel Lahabiel was sent by the Holy Father to protect
+      Dominion captial.
+    unitCost: 0
+    unitSize: 0
+    isInterpartyMovable: 0
+    isDismissable: 0
+    unitStatus: 0
+    unitDebuffs: 
+    unitBuffs: 
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 0
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 0
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitCellAddress: 
+  skills:
+  - mName: 0
+    mDisplayName: Leadership
+    mLevel:
+      mCurrent: 0
+      mMax: 3
+    mRequiredHeroLevel: 3
+    mLevelUpIncrementStep: 2
+    mDescription: "Allows hero to have 1 multiplied by skill level additional unit(s)
+      in his party.\r\nMaximum level: 3."
+  - mName: 1
+    mDisplayName: Offence
+    mLevel:
+      mCurrent: 0
+      mMax: 3
+    mRequiredHeroLevel: 2
+    mLevelUpIncrementStep: 2
+    mDescription: "Increase hero attack power by 15% multiplied by skill level.\r\nMaximum
+      level: 3."
+  - mName: 2
+    mDisplayName: Defense
+    mLevel:
+      mCurrent: 0
+      mMax: 3
+    mRequiredHeroLevel: 2
+    mLevelUpIncrementStep: 2
+    mDescription: "Increase hero defense from all sources by adding 10 defense points
+      multiplied by skill level to current hero defense value.\r\nMaximum level: 3."
+  - mName: 3
+    mDisplayName: Pathfinding
+    mLevel:
+      mCurrent: 0
+      mMax: 3
+    mRequiredHeroLevel: 2
+    mLevelUpIncrementStep: 1
+    mDescription: "Increase hero move points by 50% multiplied by skill level.\r\nMaximum
+      level: 3."
+  - mName: 4
+    mDisplayName: Scouting
+    mLevel:
+      mCurrent: 0
+      mMax: 3
+    mRequiredHeroLevel: 2
+    mLevelUpIncrementStep: 1
+    mDescription: "Increase hero scouting range in the fog of war by 1 tile multiplied
+      by skill level.\r\nMaximum level: 3."
+  - mName: 5
+    mDisplayName: Healing
+    mLevel:
+      mCurrent: 0
+      mMax: 2
+    mRequiredHeroLevel: 2
+    mLevelUpIncrementStep: 3
+    mDescription: "Increase hero and its party members daily healing rate by 15% from
+      total health multiplied by skill level.\r\nMaximum level: 2."
+  - mName: 8
+    mDisplayName: Water Resistance
+    mLevel:
+      mCurrent: 0
+      mMax: 2
+    mRequiredHeroLevel: 5
+    mLevelUpIncrementStep: 5
+    mDescription: "Increase hero change to resist Water-based attacks, for example
+      Chill.\r\nChance to resist on the first skill level is 50%. Grants complete
+      immunity on the 2nd level.\r\nMaximum level: 2."
+  - mName: 7
+    mDisplayName: Fire Resistance
+    mLevel:
+      mCurrent: 0
+      mMax: 2
+    mRequiredHeroLevel: 5
+    mLevelUpIncrementStep: 5
+    mDescription: "Increase hero change to resist Fire-based attacks, for example
+      Burning.\r\nChance to resist on the first skill level is 50%. Grants complete
+      immunity on the 2nd level.\r\nMaximum level: 2."
+  - mName: 6
+    mDisplayName: Death Resistance
+    mLevel:
+      mCurrent: 0
+      mMax: 2
+    mRequiredHeroLevel: 5
+    mLevelUpIncrementStep: 5
+    mDescription: "Increase hero change to resist Death-based attacks, for example
+      Poison.\r\nChance to resist on the first skill level is 50%. Grants complete
+      immunity on the 2nd level.\r\nMaximum level: 2."
+  - mName: 9
+    mDisplayName: Mind Resistance
+    mLevel:
+      mCurrent: 0
+      mMax: 2
+    mRequiredHeroLevel: 7
+    mLevelUpIncrementStep: 7
+    mDescription: "Increase hero change to resist Mind-based attacks, for example
+      paralyze.\r\nChance to resist on the first skill level is 50%. Grants complete
+      immunity on the 2nd level.\r\nMaximum level: 2."
+  - mName: 10
+    mDisplayName: Shard Aura
+    mLevel:
+      mCurrent: 0
+      mMax: 3
+    mRequiredHeroLevel: 8
+    mLevelUpIncrementStep: 5
+    mDescription: "Allow hero to use shards which emit different aura based on the
+      shard type.\r\nEarth shard - defence, Sun shard - offence, Lighting shard -
+      initiative.\r\nEach level increases shards aura bonus by 5.\r\nMaximum level:
+      3."
+  - mName: 11
+    mDisplayName: Lifeless Continuation
+    mLevel:
+      mCurrent: 0
+      mMax: 1
+    mRequiredHeroLevel: 9
+    mLevelUpIncrementStep: 0
+    mDescription: "Allow hero to continue battle after death.\r\nAfter death all debuffs
+      are removed and hero enters spirit form with half of the normal health and physical
+      damage immunity. Hero can be resurected by friendly party unit or by using blood
+      stone during the battle. If not resurected before the end of the battle hero
+      dies without gainig experience.\r\nMaximum level: 1."
 --- !u!224 &224611576928189082
 RectTransform:
   m_ObjectHideFlags: 1

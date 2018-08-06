@@ -131,7 +131,7 @@ public class BattleAI : MonoBehaviour {
         {
             if (battleMove.TargetUnitSlot != null)
             {
-                Debug.Log("Move: " + battleMove.Action.ToString() + " " + battleMove.TargetUnitSlot.GetUnit().GetUnitName());
+                Debug.Log("Move: " + battleMove.Action.ToString() + " " + battleMove.TargetUnitSlot.GetUnit().UnitName);
             }
             else
             {
@@ -142,7 +142,7 @@ public class BattleAI : MonoBehaviour {
         BattleMove bestMove = GetBestMove(battleMoves);
         if (bestMove.TargetUnitSlot != null)
         {
-            Debug.Log("Best move: " + bestMove.Action.ToString() + " " + bestMove.TargetUnitSlot.GetUnit().GetUnitName());
+            Debug.Log("Best move: " + bestMove.Action.ToString() + " " + bestMove.TargetUnitSlot.GetUnit().UnitName);
         }
         else
         {

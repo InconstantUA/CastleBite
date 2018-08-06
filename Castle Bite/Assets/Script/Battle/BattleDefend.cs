@@ -67,7 +67,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
         // set unit has moved flag
         PartyUnit activeUnit = battleScreen.ActiveUnit;
-        activeUnit.SetHasMoved(true);
+        activeUnit.HasMoved = true;
         // activate next unit
         battleScreen.ActivateNextUnit();
     }

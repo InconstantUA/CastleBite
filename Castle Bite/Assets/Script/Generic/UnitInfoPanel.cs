@@ -34,25 +34,25 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             gameObject.SetActive(true);
             // Fill in unit name
-            if (partyUnit.GetGivenName() != partyUnit.GetUnitName())
+            if (partyUnit.GivenName != partyUnit.UnitName)
             {
-                transform.Find("UnitName").GetComponent<Text>().text = partyUnit.GetGivenName();
+                transform.Find("UnitName").GetComponent<Text>().text = partyUnit.GivenName;
                 // activate unit class, because unit has his own name
                 transform.Find("NamedUnitClass").gameObject.SetActive(true);
-                transform.Find("NamedUnitClass").GetComponent<Text>().text = partyUnit.GetUnitName();
+                transform.Find("NamedUnitClass").GetComponent<Text>().text = partyUnit.UnitName;
             }
             else
             {
-                transform.Find("UnitName").GetComponent<Text>().text = partyUnit.GetUnitName();
+                transform.Find("UnitName").GetComponent<Text>().text = partyUnit.UnitName;
                 // deactivate unit class, because it is the same as name
                 transform.Find("NamedUnitClass").gameObject.SetActive(false);
             }
             // Fill in unit level
-            transform.Find("Panel/UnitLevel/Value").GetComponent<Text>().text = partyUnit.GetLevel().ToString();
+            transform.Find("Panel/UnitLevel/Value").GetComponent<Text>().text = partyUnit.UnitLevel.ToString();
             // Fill in unit current and experience required to reach next level
-            transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.GetExperience().ToString() + "/" + partyUnit.GetExperienceRequiredToReachNewLevel().ToString();
+            transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.UnitExperience.ToString() + "/" + partyUnit.UnitExperienceRequiredToReachNewLevel.ToString();
             // Verify if unit is leader
-            if (partyUnit.GetIsLeader())
+            if (partyUnit.IsLeader)
             {
                 // unit is leader
                 // Fill in leadership information
@@ -82,7 +82,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //{
             //    for (int i = 0; i < partyUnit.GetImmunities().Length; i++)
             //    {
-            //        //  PartyUnit.UnitPowerSource resistance in partyUnit.GetResistances())
+            //        //  UnitPowerSource resistance in partyUnit.GetResistances())
             //        // if this is first resistance then do not add "/" at the end
             //        if (0 == i)
             //        {
@@ -96,21 +96,21 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //}
             //transform.Find("Panel/UnitImmunities/Value").GetComponent<Text>().text = immunities;
             // Fill in unit initiative
-            transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.GetInitiative().ToString();
+            transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.UnitInitiative.ToString();
             // Fill in unit ability
-            transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.GetAbility().ToString();
+            transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.UnitAbility.ToString();
             // Fill in unit power
             SetUnitPowerInfo(partyUnit);
             // Fill in unit power source
-            transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.GetPowerSource().ToString();
+            transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.UnitPowerSource.ToString();
             // Fill in unit distance
-            transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.GetPowerDistance().ToString();
+            transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitPowerDistance.ToString();
             // Fill in unit power scope
-            transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.GetPowerScope().ToString();
+            transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.UnitPowerScope.ToString();
             // Fill in information about unique power modifiers
             FillInUniquePowerModifiersInformation(partyUnit);
             // Fill in description
-            transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.GetFullDescription().ToString();
+            transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.UnitFullDescription.ToString();
         }
     }
 
@@ -168,12 +168,12 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // set current and max leadership
         attributeText.text = GetCurrentNumberOfUnitsInParty(partyUnit).ToString() + "/" + partyUnit.GetEffectiveLeadership().ToString();
         // verify if base leadership does not equal to effective leadership
-        if (partyUnit.GetEffectiveLeadership() != partyUnit.GetLeadership())
+        if (partyUnit.GetEffectiveLeadership() != partyUnit.UnitLeadership)
         {
             // Display how leadership is calculated
             attributeText.text += "(";
             // set default unit power without bonuses (without just upgraded stats power bonus)
-            attributeText.text += baseStatPreviewStyleStart + partyUnit.GetLeadership().ToString() + baseStatPreviewStyleEnd;
+            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitLeadership.ToString() + baseStatPreviewStyleEnd;
             // get and add skill bonus to text if upgrade unit panel is active
             AddBonusInfoToText(attributeText, partyUnit.GetLeadershipSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
             // close brackets
@@ -200,7 +200,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             //  get stats upgrade count during current upgrade session
             int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
-            return partyUnit.GetPowerIncrementOnLevelUp() * statsUpgradeCount;
+            return partyUnit.UnitPowerIncrementOnLevelUp * statsUpgradeCount;
         }
         else
         {
@@ -217,8 +217,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             //  get stats upgrade count during current upgrade session
             int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
-            float baseRegenMultiplier = (float)partyUnit.HealthRegenPercent / 100f;
-            return (int)Math.Floor(partyUnit.GetHealthMaxIncrementOnLevelUp() * statsUpgradeCount * baseRegenMultiplier);
+            float baseRegenMultiplier = (float)partyUnit.UnitHealthRegenPercent / 100f;
+            return (int)Math.Floor(partyUnit.UnitHealthMaxIncrementOnLevelUp * statsUpgradeCount * baseRegenMultiplier);
         }
         else
         {
@@ -233,7 +233,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Display effective power
         powerText.text = partyUnit.GetUnitEffectivePower().ToString();
         // get base power
-        int basePower = partyUnit.GetPower() - GetStatsPowerBonus(partyUnit);
+        int basePower = partyUnit.UnitPower - GetStatsPowerBonus(partyUnit);
         // verify if effective power does not equal to base power
         if (partyUnit.GetUnitEffectivePower() != basePower)
         {
@@ -257,13 +257,13 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // display effective defense
         attributeText.text = partyUnit.GetEffectiveDefense().ToString();
         // verify if base unit defense does not equal to effective defense
-        if (partyUnit.GetEffectiveDefense() != partyUnit.GetDefense())
+        if (partyUnit.GetEffectiveDefense() != partyUnit.UnitDefense)
         {
             // Display how defense is calculated
             // open brackets
             attributeText.text += "(";
             // set base unit defense without bonuses
-            attributeText.text += baseStatPreviewStyleStart + partyUnit.GetDefense().ToString() + baseStatPreviewStyleEnd;
+            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitDefense.ToString() + baseStatPreviewStyleEnd;
             // get and add city bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetCityDefenseBonus(), cityBonusPreviewStyleStart, cityBonusPreviewStyleEnd);
             // get and add offence skill bonus to text
@@ -327,7 +327,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             //  get stats upgrade count during current upgrade session
             int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
-            return partyUnit.GetHealthMaxIncrementOnLevelUp() * statsUpgradeCount;
+            return partyUnit.UnitHealthMaxIncrementOnLevelUp * statsUpgradeCount;
         }
         else
         {
@@ -365,11 +365,11 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Get health value text
         Text attributeText = transform.Find("Panel/UnitHealth/Value").GetComponent<Text>();
         // Display effective current and max health
-        attributeText.text = partyUnit.GetHealthCurr().ToString() + "/" + partyUnit.GetHealthMax().ToString();
+        attributeText.text = partyUnit.UnitHealthCurr.ToString() + "/" + partyUnit.UnitHealthMax.ToString();
         // get base max health
-        int baseMaxHealth = partyUnit.GetHealthMax() - GetStatsHealthBonus(partyUnit);
+        int baseMaxHealth = partyUnit.UnitHealthMax - GetStatsHealthBonus(partyUnit);
         // verify if effective resistance does not equal base resistance
-        if (baseMaxHealth != partyUnit.GetHealthMax())
+        if (baseMaxHealth != partyUnit.UnitHealthMax)
         {
             // Display how max health is calculated
             // open brackets
@@ -410,12 +410,12 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // initialise resistances string
         string resistances = "";
         string resistance = "";
-        PartyUnit.UnitPowerSource source; // source = resistance
+        UnitPowerSource source; // source = resistance
         bool firstResistanceInAString = true;
         // loop throug all power sources and find if unit has resistances
-        for (int i = 0; i < (int)PartyUnit.UnitPowerSource.None; i++) // None is the last element
+        for (int i = 0; i < (int)UnitPowerSource.None; i++) // None is the last element
         {
-            source = (PartyUnit.UnitPowerSource)i;
+            source = (UnitPowerSource)i;
             // get effective resistance
             int effectiveResistance = partyUnit.GetUnitEffectiveResistance(source);
             // verify if effective resistance is higher than 0 and it is not equal to base resistance 
@@ -486,42 +486,42 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         transform.Find("Panel/UnitResistances/Value").GetComponent<Text>().text = resistances;
     }
 
-    public void SetLearnedSkillsBonusPreview(PartyUnit.UnitSkill learnedSkill, PartyUnit partyUnit)
+    public void SetLearnedSkillsBonusPreview(UnitSkill learnedSkill, PartyUnit partyUnit)
     {
-        switch (learnedSkill.Name)
+        switch (learnedSkill.mName)
         {
-            case PartyUnit.UnitSkill.SkillName.Leadership:
+            case UnitSkill.SkillName.Leadership:
                 // update normal values
                 SetUnitLeadershipInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.Offence:
+            case UnitSkill.SkillName.Offence:
                 //SetUnitPowerInfo(partyUnit, learnedSkill);
                 SetUnitPowerInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.Defense:
+            case UnitSkill.SkillName.Defense:
                 SetUnitDefenseInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.Pathfinding:
+            case UnitSkill.SkillName.Pathfinding:
                 SetUnitMovePointsInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.Scouting:
+            case UnitSkill.SkillName.Scouting:
                 SetUnitScoutingRangeInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.Healing:
+            case UnitSkill.SkillName.Healing:
                 SetUnitHealthInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.DeathResistance:
-            case PartyUnit.UnitSkill.SkillName.FireResistance:
-            case PartyUnit.UnitSkill.SkillName.WaterResistance:
-            case PartyUnit.UnitSkill.SkillName.MindResistance:
+            case UnitSkill.SkillName.DeathResistance:
+            case UnitSkill.SkillName.FireResistance:
+            case UnitSkill.SkillName.WaterResistance:
+            case UnitSkill.SkillName.MindResistance:
                 SetUnitResistancesInfo(partyUnit);
                 break;
-            case PartyUnit.UnitSkill.SkillName.ShardAura:
+            case UnitSkill.SkillName.ShardAura:
                 break;
-            case PartyUnit.UnitSkill.SkillName.LifelessContinuation:
+            case UnitSkill.SkillName.LifelessContinuation:
                 break;
             default:
-                Debug.LogError("Unknown skill: " + learnedSkill.Name);
+                Debug.LogError("Unknown skill: " + learnedSkill.mName);
                 break;
         }
     }

@@ -497,12 +497,12 @@ public class BattleScreen : MonoBehaviour {
         if (playerNextUnit && enemyNextUnit)
         {
             // both parties still have units to move
-            if (playerNextUnit.GetInitiative() > enemyNextUnit.GetInitiative())
+            if (playerNextUnit.UnitInitiative > enemyNextUnit.UnitInitiative)
             {
                 // player has higher initiative
                 return playerNextUnit;
             }
-            else if (playerNextUnit.GetInitiative() == enemyNextUnit.GetInitiative())
+            else if (playerNextUnit.UnitInitiative == enemyNextUnit.UnitInitiative)
             {
                 // player and enemy has equal initiative
                 // randomly choose between player and enemy units
@@ -573,19 +573,19 @@ public class BattleScreen : MonoBehaviour {
         enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
         // Highlight next unit
         // If unit had waiting status in the past, then reset it back to active
-        PartyUnit.UnitStatus unitStatus = ActiveUnit.GetUnitStatus();
+        UnitStatus unitStatus = ActiveUnit.UnitStatus;
         switch (unitStatus)
         {
-            case PartyUnit.UnitStatus.Active:
+            case UnitStatus.Active:
                 break;
-            case PartyUnit.UnitStatus.Waiting:
+            case UnitStatus.Waiting:
                 // Activate unit
-                ActiveUnit.SetUnitStatus(PartyUnit.UnitStatus.Active);
+                ActiveUnit.SetUnitStatus(UnitStatus.Active);
                 break;
-            case PartyUnit.UnitStatus.Escaping:
+            case UnitStatus.Escaping:
                 break;
-            case PartyUnit.UnitStatus.Dead:
-            case PartyUnit.UnitStatus.Escaped:
+            case UnitStatus.Dead:
+            case UnitStatus.Escaped:
                 Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
                 break;
             default:
@@ -607,8 +607,8 @@ public class BattleScreen : MonoBehaviour {
         // Set Queue is active flag
         //queueIsActive = true;
         // Next actions are applicably only to active or escaping unit
-        if (  (ActiveUnit.GetUnitStatus() == PartyUnit.UnitStatus.Active)
-           || (ActiveUnit.GetUnitStatus() == PartyUnit.UnitStatus.Escaping) )
+        if (  (ActiveUnit.UnitStatus == UnitStatus.Active)
+           || (ActiveUnit.UnitStatus == UnitStatus.Escaping) )
         {
             ActiveUnit.HighlightActiveUnitInBattle(true);
             // Trigger buffs and debuffs before applying highlights
@@ -625,8 +625,8 @@ public class BattleScreen : MonoBehaviour {
     IEnumerator EscapeUnit()
     {
         yield return new WaitForSeconds(0.25f);
-        ActiveUnit.SetHasMoved(true);
-        ActiveUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaped);
+        ActiveUnit.HasMoved = true;
+        ActiveUnit.SetUnitStatus(UnitStatus.Escaped);
         // This unit can't act any more
         // Skip post-move actions and Activate next unit
         canActivate = ActivateNextUnit();
@@ -644,10 +644,10 @@ public class BattleScreen : MonoBehaviour {
         //}
         //// Set Queue is active flag
         //queueIsActive = true;
-        PartyUnit.UnitStatus unitStatus = ActiveUnit.GetUnitStatus();
+        UnitStatus unitStatus = ActiveUnit.UnitStatus;
         switch (unitStatus)
         {
-            case PartyUnit.UnitStatus.Active:
+            case UnitStatus.Active:
                 // Activate highlights of which cells can or cannot be targeted
                 queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnit));
                 queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnit));
@@ -663,19 +663,19 @@ public class BattleScreen : MonoBehaviour {
                 }
                 canActivate = true;
                 break;
-            case PartyUnit.UnitStatus.Escaping:
+            case UnitStatus.Escaping:
                 // If there were debuffs applied and unit has survived,
                 // then unit may escape now
                 // Escape unit
                 queue.Run(EscapeUnit());
                 break;
-            case PartyUnit.UnitStatus.Dead:
+            case UnitStatus.Dead:
                 // This unit can't act any more
                 // Skip post-move actions and Activate next unit
                 canActivate = ActivateNextUnit();
                 break;
-            case PartyUnit.UnitStatus.Waiting:
-            case PartyUnit.UnitStatus.Escaped:
+            case UnitStatus.Waiting:
+            case UnitStatus.Escaped:
                 Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
                 break;
             default:

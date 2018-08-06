@@ -70,7 +70,7 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("FocusedName").GetComponent<Text>().text = city.GetCityName();
         transform.Find("FocusedDescription").GetComponent<Text>().text = city.GetCityDescription();
         transform.Find("CityFocus").Find("LevelValue").GetComponent<Text>().text = city.GetCityLevel().ToString();
-        transform.Find("CityFocus").Find("DefenseValue").GetComponent<Text>().text = city.GetDefense().ToString();
+        transform.Find("CityFocus").Find("DefenseValue").GetComponent<Text>().text = city.GetCityDefense().ToString();
         transform.Find("CityFocus").Find("HealPerDayValue").GetComponent<Text>().text = city.GetHealPerDay().ToString();
         partyPanel = focusedObject.transform.Find("CityGarnizon").Find("PartyPanel").GetComponent<PartyPanel>();
         // partyPanel = transform.parent.Find("CityGarnizon").Find("PartyPanel").GetComponent<PartyPanel>();
@@ -92,9 +92,9 @@ public class FocusPanel : MonoBehaviour {
         // get party leader
         partyLeader = focusedObject.GetComponent<PartyUnit>();
         // populate with info from hero
-        transform.Find("FocusedName").GetComponent<Text>().text = partyLeader.GetGivenName();
-        transform.Find("FocusedDescription").GetComponent<Text>().text = partyLeader.GetUnitName();
-        transform.Find("PartyFocus").Find("LevelValue").GetComponent<Text>().text = partyLeader.GetLevel().ToString();
+        transform.Find("FocusedName").GetComponent<Text>().text = partyLeader.GivenName;
+        transform.Find("FocusedDescription").GetComponent<Text>().text = partyLeader.UnitName;
+        transform.Find("PartyFocus").Find("LevelValue").GetComponent<Text>().text = partyLeader.UnitLevel.ToString();
         transform.Find("PartyFocus").Find("LeadershipValue").GetComponent<Text>().text = partyLeader.GetEffectiveLeadership().ToString();
     }
 

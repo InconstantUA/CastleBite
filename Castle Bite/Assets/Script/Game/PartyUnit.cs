@@ -5,162 +5,250 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
-public class PartyUnitData : System.Object
+public enum UnitType
 {
+    None,
+    CapitalGuard,
+    Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer,
+    Orc, Goblin, Ogre, Cyclop, Troll,
+    Chevalier, Gladiator, Templar, Lancer, Warlord, Paladin, Champion, // Warrior upgrades
+    Unknown
+};
 
+[Serializable]
+public enum UnitSize
+{
+    Single,
+    Double
+};
+
+[Serializable]
+public enum UnitAbility
+{
+    ThrowRock,          // Greenskin Cyclop
+    StompWithFoot,      // Greenskin Ogre
+    CutWithAxe,         // Greenskin Orc warrior
+    CutWithDagger,      // Greenskin Goblin
+    ThrowSpear,         // Greenskin Troll
+    HolyWord,           // Dominion Lahabiel capital guard
+    BlowWithGreatSword, // Dominion Knight leader
+    ShootWithCompoudBow,// Dominion Ranger leader
+    StabWithDagger,     // Dominion Thief leader
+    Resurect,           // Dominion Seraphim leader
+    CastLightningStorm, // Dominion Archmage leader
+    SlashWithSword,     // Dominion Swordsman
+    ShootWithBow,       // Dominion Archer
+    HealingWord,        // Dominion Priest
+    HealingSong,        // Dominion ?
+    BlowWithMaul,       // Dominion Colossus
+    CastChainLightning, // Dominion Mage
+    EarthShatteringLeap,// Greenskin Bombul captial guard
+    Malediction,        // Greenskin Orc shaman
+    None
+};
+
+[Serializable]
+public enum UnitPowerSource : int
+{
+    Physical,   // Attack with metal weapons
+    Water,
+    Fire,
+    Earth,
+    Wind,
+    Life,       // Heal
+    Death,      // Poison
+    Pure,       // Cannot be resisted
+    Mind,       // Paralyze
+    None        // last element
 }
 
-public class PartyUnit : MonoBehaviour {
-    // Custom types
-    public enum UnitType
-    {
-        CapitalGuard,
-        Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer,
-        Orc, Goblin, Ogre, Cyclop, Troll,
-        Chevalier, Gladiator, Templar, Lancer, Warlord, Paladin, Champion, // Warrior upgrades
-        Unknown
-    };
+[Serializable]
+public struct Resistance
+{
+    public UnitPowerSource source;
+    public int percent;
+}
 
-    public enum UnitSize {
-        Single,
-        Double
-    };
+[Serializable]
+public enum UnitPowerDistance
+{
+    Mele,
+    Ranged
+}
 
-    public enum UnitAbility
-    {
-        ThrowRock,          // Greenskin Cyclop
-        StompWithFoot,      // Greenskin Ogre
-        CutWithAxe,         // Greenskin Orc warrior
-        CutWithDagger,      // Greenskin Goblin
-        ThrowSpear,         // Greenskin Troll
-        HolyWord,           // Dominion Lahabiel capital guard
-        BlowWithGreatSword, // Dominion Knight leader
-        ShootWithCompoudBow,// Dominion Ranger leader
-        StabWithDagger,     // Dominion Thief leader
-        Resurect,           // Dominion Seraphim leader
-        CastLightningStorm, // Dominion Archmage leader
-        SlashWithSword,     // Dominion Swordsman
-        ShootWithBow,       // Dominion Archer
-        HealingWord,        // Dominion Priest
-        HealingSong,        // Dominion ?
-        BlowWithMaul,       // Dominion Colossus
-        CastChainLightning, // Dominion Mage
-        EarthShatteringLeap,// Greenskin Bombul captial guard
-        Malediction,        // Greenskin Orc shaman
-        None
-    };
+[Serializable]
+public enum UnitPowerScope
+{
+    OneUnit,
+    EntireParty
+}
 
-    public enum UnitPowerSource:int
-    {
-        Physical,   // Attack with metal weapons
-        Water,
-        Fire,
-        Earth,
-        Wind,
-        Life,       // Heal
-        Death,      // Poison
-        Pure,       // Cannot be resisted
-        Mind,       // Paralyze
-        None        // last element
-    }
+[Serializable]
+public enum UnitStatus
+{
+    Active, // not Dead and not Escaped = can fight
+    Waiting,
+    Escaping,
+    Escaped,
+    Dead
+}
 
+[Serializable]
+public enum UnitDebuff : int
+{
+    None,
+    Poisoned,
+    Burned,
+    Chilled,
+    Paralyzed,
+    ArrSize
+}
+
+[Serializable]
+public enum UnitBuff : int
+{
+    None,
+    DefenseStance,
+    ArrSize // for dynamic resizing of UnitBuffs array
+}
+
+
+[Serializable]
+public class UnitSkill
+{
     [Serializable]
-    public struct Resistance
-    {
-        public UnitPowerSource source;
-        public int percent;
+    public enum SkillName {
+        Leadership,
+        Offence,
+        Defense,
+        Pathfinding,
+        Scouting,
+        Healing,
+        DeathResistance,
+        FireResistance,
+        WaterResistance,
+        MindResistance,
+        ShardAura,
+        LifelessContinuation
     }
-
-    public enum UnitPowerDistance
+    public SkillName mName;
+    [NonSerialized]
+    public string mDisplayName;
+    [Serializable]
+    public class SkillLevel
     {
-        Mele,
-        Ranged
-    }
-
-    public enum UnitPowerScope
-    {
-        OneUnit,
-        EntireParty
-    }
-
-    public enum UnitStatus
-    {
-        Active, // not Dead and not Escaped = can fight
-        Waiting,
-        Escaping,
-        Escaped,
-        Dead
-    }
-
-    public enum UnitDebuff:int
-    {
-        None,
-        Poisoned,
-        Burned,
-        Chilled,
-        Paralyzed,
-        ArrSize
-    }
-
-    public enum UnitBuff:int
-    {
-        None,
-        DefenseStance,
-        ArrSize // for dynamic resizing of UnitBuffs array
-    }
-
-    public class UnitSkill
-    {
-        public enum SkillName { Leadership, Offence, Defense, Pathfinding, Scouting, Healing, DeathResistance, FireResistance, WaterResistance, MindResistance, ShardAura, LifelessContinuation }
-        public SkillName Name { get; set; }
-        public string DisplayName { get; set; }
-        public class SkillLevel
+        public int mCurrent;
+        [NonSerialized]
+        public int mMax;
+        public SkillLevel(int current, int max)
         {
-            public int Current { get; set; }
-            public int Max { get; set; }
-            public SkillLevel(int current, int max)
-            {
-                Current = current;
-                Max = max;
-            }
-        }
-        public SkillLevel Level { get; set; }
-        public int RequiredHeroLevel { get; set; }
-        public int LevelUpIncrementStep { get; set; } // skill can be learned only after this number of levels has passed
-        public string Description { get; set; }
-        public UnitSkill(SkillName name, string displayName, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
-        {
-            Name = name;
-            DisplayName = displayName;
-            Level = new SkillLevel(currentLevel, maxLevel);
-            RequiredHeroLevel = requiredHeroLevel;
-            LevelUpIncrementStep = levelUpIncrementStep;
-            Description = description;
-        }
-        public bool EqualTo(UnitSkill unitSkill)
-        {
-            
-            if (
-                // verify skill name
-                (unitSkill.Name == Name) &&
-                // verify skill current level
-                (unitSkill.Level.Current == Level.Current) &&
-                // verify skill max level
-                (unitSkill.Level.Max == Level.Max) &&
-                // verify skill required hero level level
-                (unitSkill.RequiredHeroLevel == RequiredHeroLevel) &&
-                // verify skill level up increment step level
-                (unitSkill.LevelUpIncrementStep == LevelUpIncrementStep)
-            )
-            {
-                return true;
-            }
-            return false;
+            mCurrent = current;
+            mMax = max;
         }
     }
-    
-    public UnitSkill[] skills = new UnitSkill[]
+    public SkillLevel mLevel;
+    [NonSerialized]
+    public int mRequiredHeroLevel;
+    [NonSerialized]
+    public int mLevelUpIncrementStep; // skill can be learned only after this number of levels has passed
+    [NonSerialized]
+    public string mDescription;
+    public UnitSkill(SkillName name, string displayName, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
     {
+        mName = name;
+        mDisplayName = displayName;
+        mLevel = new SkillLevel(currentLevel, maxLevel);
+        mRequiredHeroLevel = requiredHeroLevel;
+        mLevelUpIncrementStep = levelUpIncrementStep;
+        mDescription = description;
+    }
+    public bool EqualTo(UnitSkill unitSkill)
+    {
+
+        if (
+            // verify skill name
+            (unitSkill.mName == mName) &&
+            // verify skill current level
+            (unitSkill.mLevel.mCurrent == mLevel.mCurrent) &&
+            // verify skill max level
+            (unitSkill.mLevel.mMax == mLevel.mMax) &&
+            // verify skill required hero level level
+            (unitSkill.mRequiredHeroLevel == mRequiredHeroLevel) &&
+            // verify skill level up increment step level
+            (unitSkill.mLevelUpIncrementStep == mLevelUpIncrementStep)
+        )
+        {
+            return true;
+        }
+        return false;
+    }
+}
+
+[Serializable]
+public class PartyUnitData : System.Object
+{
+    // Misc attributes
+    public string unitName;
+    public UnitType unitType;
+    // Leader attributes
+    public bool isLeader;
+    public int unitLeadership;
+    public string givenName;
+    // Level and experience
+    public int unitLevel;
+    public  int unitExperience;
+    public  int unitExperienceRequiredToReachNewLevel;
+    public  int unitExperienceReward;
+    public  int unitExperienceRewardIncrementOnLevelUp;
+    // Defensive attributes
+    public  int unitHealthCurr;
+    public  int unitHealthMax;
+    public  int unitHealthMaxIncrementOnLevelUp;
+    public  int unitHealthRegenPercent;
+    public  int unitDefense;
+    public  Resistance[] unitResistances;
+    // Offensive attributes
+    public  UnitAbility unitAbility;
+    public  int unitPower;
+    public  int unitPowerIncrementOnLevelUp;
+    public  UnitPowerSource unitPowerSource;
+    public  UnitPowerDistance unitPowerDistance;
+    public  UnitPowerScope unitPowerScope;
+    public  int unitInitiative = 10;
+    // Misc Description
+    public  string unitRole;
+    public  string unitBriefDescription;
+    public  string unitFullDescription;
+    // Misc hire and edit unit attributes
+    public  int unitCost;
+    public  UnitSize unitSize;
+    public  bool isInterpartyMovable;
+    public  bool isDismissable;
+    // Unit statuses and [de]buffs
+    public  UnitStatus unitStatus;
+    public  UnitDebuff[] unitDebuffs;
+    public  UnitBuff[] unitBuffs;
+    // For Upgrade
+    public  int unitUpgradePoints;
+    public  int unitStatPoints;
+    public  bool classIsUpgradable;
+    public  int unitClassPoints;
+    public  bool canLearnSkills;
+    public  int unitSkillPoints;
+    // For class upgrade
+    public  UnitType requiresUnitType;
+    public  UnitType[] unlocksUnitTypes;
+    public  int upgradeCost;
+    public  int statsUpgradesCount;
+    // Misc attributes for map
+    public  int movePointsCurrent;
+    public  int movePointsMax;
+    public  int scoutingRange;
+    // UI attributes
+    public string unitCellAddress;  // used only during game save and load
+    // Skills
+    public UnitSkill[] unitSkills = new UnitSkill[]
+        {
         new UnitSkill(
             UnitSkill.SkillName.Leadership,
             "Leadership",
@@ -277,140 +365,158 @@ public class PartyUnit : MonoBehaviour {
             + "If not resurected before the end of the battle hero dies without gainig experience."
             + "\r\n" + "Maximum level: 1."
             //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-        ),
-    };
-    
-    // Misc attributes
-    [SerializeField]
-    string unitName;
-    [SerializeField]
-    UnitType unitType;
-    // Leader attributes
-    [SerializeField]
-    bool isLeader;
-    [SerializeField]
-    int unitLeadership;
-    [SerializeField]
-    string givenName;
-    // Level and experience
-    [SerializeField]
-    int unitLevel;
-    [SerializeField]
-    int unitExperience;
-    [SerializeField]
-    int unitExperienceRequiredToReachNewLevel;
-    [SerializeField]
-    int unitExperienceReward;
-    [SerializeField]
-    int unitExperienceRewardIncrementOnLevelUp;
-    // Defensive attributes
-    [SerializeField]
-    int healthCurr;
-    [SerializeField]
-    int healthMax;
-    [SerializeField]
-    int healthMaxIncrementOnLevelUp;
-    //[SerializeField]
-    //bool isAlive = true;
-    [SerializeField]
-    int unitDefense;
-    //[SerializeField]
-    //UnitPowerSource[] unitResistances;
-    [SerializeField]
-    Resistance[] resistances;
-    //[SerializeField]
-    //UnitPowerSource[] unitImmunities;
-    // Offensive attributes
-    [SerializeField]
-    UnitAbility unitAbility;
-    [SerializeField]
-    int unitPower;
-    [SerializeField]
-    int unitPowerIncrementOnLevelUp;
-    [SerializeField]
-    UnitPowerSource unitPowerSource;
-    [SerializeField]
-    UnitPowerDistance unitPowerDistance;
-    [SerializeField]
-    UnitPowerScope unitPowerScope;
-    [SerializeField]
-    int unitInitiative = 10;
-    // Unique power modifiers
-    //[SerializeField]
-    //UniquePowerModifier[] uniquePowerModifiers;
-    // Misc Description
-    [SerializeField]
-    string unitRole;
-    [SerializeField]
-    string unitBriefDescription;
-    [SerializeField]
-    string unitFullDescription;
-    // Misc Battle attributes
-    //[SerializeField]
-    //bool hasEscaped = false;
-    [SerializeField]
-    bool hasMoved = false;
-    // Misc hire and edit unit attributes
-    [SerializeField]
-    int cost;
-    [SerializeField]
-    UnitSize unitSize;
-    [SerializeField]
-    bool isInterpartyMovable;
-    [SerializeField]
-    bool isDismissable;
-    [SerializeField]
-    UnitStatus unitStatus;
-    [SerializeField]
-    UnitDebuff[] unitDebuffs;
-    [SerializeField]
-    UnitBuff[] unitBuffs;
-    // For Upgrade
-    [SerializeField]
-    int unitUpgradePoints;
-    [SerializeField]
-    int unitStatPoints;
-    [SerializeField]
-    bool classIsUpgradable;
-    [SerializeField]
-    int unitClassPoints;
-    [SerializeField]
-    bool canLearnSkills;
-    [SerializeField]
-    int unitSkillPoints;
-    // For class upgrade
-    [SerializeField]
-    PartyUnit requiresUnit;
-    [SerializeField]
-    PartyUnit[] unlocksUnits;
-    [SerializeField]
-    int upgradeCost;
-    public int StatsUpgradesCount { get; set; }
-    [SerializeField]
-    int movePointsCurrent;
-    [SerializeField]
-    int movePointsMax;
-    [SerializeField]
-    int scoutingRange;
-    [SerializeField]
-    int healthRegenPercent;
+        )
+        };
+}
 
+public class PartyUnit : MonoBehaviour {
+    // Data which will be saved later
+    [SerializeField]
+    PartyUnitData partyUnitData;
+
+    // Misc Battle attributes
+    private bool hasMoved = false;
+
+    //void Reset()
+    //{
+    //    Debug.Log("Reset to default values");
+    //    partyUnitData.unitSkills = new UnitSkill[]
+    //    {
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.Leadership,
+    //        "Leadership",
+    //        0, 3,
+    //        3, 2,
+    //        "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
+    //        + "\r\n" + "Maximum level: 3."
+    //        //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.Offence,
+    //        "Offence",
+    //        0, 3,
+    //        2, 2,
+    //        "Increase hero attack power by 15% multiplied by skill level."
+    //        + "\r\n" + "Maximum level: 3."
+    //        //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.Defense,
+    //        "Defense",
+    //        0, 3,
+    //        2, 2,
+    //        "Increase hero defense from all sources by adding 10 defense points multiplied by skill level to current hero defense value."
+    //        + "\r\n" + "Maximum level: 3."
+    //        //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.Pathfinding,
+    //        "Pathfinding",
+    //        0, 3,
+    //        2, 1,
+    //        "Increase hero move points by 50% multiplied by skill level."
+    //        + "\r\n" + "Maximum level: 3."
+    //        //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.Scouting,
+    //        "Scouting",
+    //        0, 3,
+    //        2, 1,
+    //        "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
+    //        + "\r\n" + "Maximum level: 3."
+    //        //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.Healing,
+    //        "Healing",
+    //        0, 2,
+    //        2, 3,
+    //        "Increase hero and its party members daily healing rate by 15% from total health multiplied by skill level."
+    //        + "\r\n" + "Maximum level: 2."
+    //        //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.WaterResistance,
+    //        "Water Resistance",
+    //        0, 2,
+    //        5, 5,
+    //        "Increase hero change to resist Water-based attacks, for example Chill."
+    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+    //        + "\r\n" + "Maximum level: 2."
+    //        //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.FireResistance,
+    //        "Fire Resistance",
+    //        0, 2,
+    //        5, 5,
+    //        "Increase hero change to resist Fire-based attacks, for example Burning."
+    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+    //        + "\r\n" + "Maximum level: 2."
+    //        //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.DeathResistance,
+    //        "Death Resistance",
+    //        0, 2,
+    //        5, 5,
+    //        "Increase hero change to resist Death-based attacks, for example Poison."
+    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+    //        + "\r\n" + "Maximum level: 2."
+    //        //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.MindResistance,
+    //        "Mind Resistance",
+    //        0, 2,
+    //        7, 7,
+    //        "Increase hero change to resist Mind-based attacks, for example paralyze."
+    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+    //        + "\r\n" + "Maximum level: 2."
+    //        //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.ShardAura,
+    //        "Shard Aura",
+    //        0, 3,
+    //        8, 5,
+    //        "Allow hero to use shards which emit different aura based on the shard type."
+    //        + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
+    //        + "\r\n" + "Each level increases shards aura bonus by 5."
+    //        + "\r\n" + "Maximum level: 3."
+    //        //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+    //    ),
+    //    new UnitSkill(
+    //        UnitSkill.SkillName.LifelessContinuation,
+    //        "Lifeless Continuation",
+    //        0, 1,
+    //        9, 0,
+    //        "Allow hero to continue battle after death."
+    //        + "\r\n" + "After death all debuffs are removed and hero enters spirit form with half of the normal health and physical damage immunity. "
+    //        + "Hero can be resurected by friendly party unit or by using blood stone during the battle. "
+    //        + "If not resurected before the end of the battle hero dies without gainig experience."
+    //        + "\r\n" + "Maximum level: 1."
+    //        //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+    //    )
+    //    };
+    //}
 
     void InitUnitBuffs()
     {
-        unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+        UnitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
         for (int i = 0; i < (int)UnitBuff.ArrSize; i++)
         {
-            unitBuffs[i] = UnitBuff.None;
+            UnitBuffs[i] = UnitBuff.None;
         }
     }
 
     void InitUnitDebuffs()
     {
-        unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
+        UnitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
         for (int i = 0; i < (int)UnitDebuff.ArrSize; i++)
         {
-            unitDebuffs[i] = UnitDebuff.None;
+            UnitDebuffs[i] = UnitDebuff.None;
         }
     }
 
@@ -418,14 +524,14 @@ public class PartyUnit : MonoBehaviour {
     {
         InitUnitBuffs();
         InitUnitDebuffs();
-        //Debug.Log("Awake " + GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+        //Debug.Log("Awake " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
     }
 
     private void Start()
     {
         //unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
-        //unitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
-        //Debug.Log("Start " + GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+        //UnitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+        //Debug.Log("Start " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
     }
 
     public Transform GetUnitCell()
@@ -505,7 +611,7 @@ public class PartyUnit : MonoBehaviour {
             HeroParty party = GetUnitParty();
             if (city.Faction == party.Faction)
             {
-                return city.GetDefense();
+                return city.GetCityDefense();
             }
         }
         return 0;
@@ -514,20 +620,20 @@ public class PartyUnit : MonoBehaviour {
     public int GetSkillDefenseBonus()
     {
         // get skill from partyUnit
-        UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Defense);
+        UnitSkill skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Defense);
         // get bonus based on fact that 1 skill level = 10 defense
-        return skill.Level.Current * 10;
+        return skill.mLevel.mCurrent * 10;
     }
 
     public float GetStatusDefenseBonus()
     {
         // Applied Multiplicatively
         // verify if buffs array is not null
-        if (unitBuffs != null)
+        if (UnitBuffs != null)
         {
-            Debug.Log(GetUnitName() + " " + GetGivenName() + " " + unitBuffs.Length.ToString());
+            Debug.Log(UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
             // verify if buffs array was initialized properly
-            if (unitBuffs.Length != (int)UnitBuff.ArrSize)
+            if (UnitBuffs.Length != (int)UnitBuff.ArrSize)
             {
                 // initialize buffs array
                 InitUnitBuffs();
@@ -538,7 +644,7 @@ public class PartyUnit : MonoBehaviour {
             Debug.LogError("Unit buffs array is null");
         }
         // verify if unit has defense stance buff
-        if (UnitBuff.DefenseStance == unitBuffs[(int)UnitBuff.DefenseStance])
+        if (UnitBuff.DefenseStance == UnitBuffs[(int)UnitBuff.DefenseStance])
         {
             // reduce damage by half
             return 0.5f;
@@ -551,7 +657,7 @@ public class PartyUnit : MonoBehaviour {
         // init with 0
         int totalDefense = 0;
         // Get base defense
-        int baseDefense = GetDefense();
+        int baseDefense = UnitDefense;
         // apply base defense
         totalDefense += baseDefense;
         // Verify if unit is in a friendly city and get city defense modifier
@@ -591,9 +697,9 @@ public class PartyUnit : MonoBehaviour {
     {
         //Debug.Log("RemoveAllBuffs");
         // in unit properties
-        for (int i = 0; i < unitBuffs.Length; i++)
+        for (int i = 0; i < UnitBuffs.Length; i++)
         {
-            unitBuffs[i] = UnitBuff.None;
+            UnitBuffs[i] = UnitBuff.None;
         }
         // in UI
         UnitBuffIndicator[] allBuffs = GetUnitCell().Find("Status/Buffs").GetComponentsInChildren<UnitBuffIndicator>();
@@ -606,9 +712,9 @@ public class PartyUnit : MonoBehaviour {
     public void RemoveAllDebuffs()
     {
         // in unit properties
-        for (int i = 0; i < unitDebuffs.Length; i++)
+        for (int i = 0; i < UnitDebuffs.Length; i++)
         {
-            unitDebuffs[i] = UnitDebuff.None;
+            UnitDebuffs[i] = UnitDebuff.None;
         }
         // in UI
         UnitDebuffIndicator[] allDebuffs = GetUnitCell().Find("Status/Debuffs").GetComponentsInChildren<UnitDebuffIndicator>();
@@ -628,7 +734,7 @@ public class PartyUnit : MonoBehaviour {
     public int GetAbilityDamageDealt(PartyUnit activeBattleUnit)
     {
         int damageDealt = 0;
-        int srcUnitDamage = activeBattleUnit.GetPower();
+        int srcUnitDamage = activeBattleUnit.UnitPower;
         int dstUnitDefense = GetEffectiveDefense();
         // calculate damage dealt
         damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefense)) / 100f));
@@ -637,13 +743,13 @@ public class PartyUnit : MonoBehaviour {
 
     public void ApplyDestructiveAbility(int damageDealt)
     {
-        int healthAfterDamage = GetHealthCurr() - damageDealt;
+        int healthAfterDamage = UnitHealthCurr - damageDealt;
         // make sure that we do not set health less then 0
         if (healthAfterDamage <= 0)
         {
             healthAfterDamage = 0;
         }
-        SetHealthCurr(healthAfterDamage);
+        UnitHealthCurr = (healthAfterDamage);
         // update current health in UI
         // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
         // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
@@ -692,7 +798,7 @@ public class PartyUnit : MonoBehaviour {
                 // deactivate it (it will be destroyed at the end of animation)
                 buffUI.SetActiveAdvance(false);
                 // deactivate it in unit properties too
-                unitBuffs[(int)buffUI.GetUnitBuff()] = UnitBuff.None;
+                UnitBuffs[(int)buffUI.GetUnitBuff()] = UnitBuff.None;
             }
         }
     }
@@ -795,8 +901,8 @@ public class PartyUnit : MonoBehaviour {
 
     public void SetUnitStatus(UnitStatus value)
     {
-        Debug.Log("Set unit " + unitName + " status " + value.ToString());
-        unitStatus = value;
+        Debug.Log("Set unit " + UnitName + " status " + value.ToString());
+        UnitStatus = value;
         // get new UI color according ot unit status
         Color32 newUIColor;
         // set dead in status
@@ -840,365 +946,29 @@ public class PartyUnit : MonoBehaviour {
         GetUnitStatusText().text = statusString;
     }
 
-
-    public int GetPower()
-    {
-        return unitPower;
-    }
-
     public int GetOffenceSkillPowerBonus(UnitSkill skill = null)
     {
         // verify if custom skill parameter was passed
         if (skill == null)
         {
             // get local party unit skill
-            skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Offence);
+            skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Offence);
         }
-        return (int)Math.Round(unitPower * skill.Level.Current * 0.15f);
+        return (int)Math.Round(UnitPower * skill.mLevel.mCurrent * 0.15f);
     }
 
     public int GetUnitEffectivePower()
     {
         // get unit power plus skill bonus
-        return unitPower + GetOffenceSkillPowerBonus();
-    }
-
-    public void SetPower(int value)
-    {
-        unitPower = value;
-    }
-
-    public int GetPowerIncrementOnLevelUp()
-    {
-        return unitPowerIncrementOnLevelUp;
-    }
-
-    public void SetPowerIncrementOnLevelUp(int value)
-    {
-        unitPowerIncrementOnLevelUp = value;
-    }
-
-    public int GetExperienceReward()
-    {
-        return unitExperienceReward;
-    }
-
-    public void SetExperienceReward(int value)
-    {
-        unitExperienceReward = value;
-    }
-
-    public int GetExperienceRewardIncrementOnLevelUp()
-    {
-        return unitExperienceRewardIncrementOnLevelUp;
-    }
-
-    public void SetExperienceRewardIncrementOnLevelUp(int value)
-    {
-        unitExperienceRewardIncrementOnLevelUp = value;
-    }
-
-    public int GetExperience()
-    {
-        return unitExperience;
-    }
-
-    public void SetExperience(int value)
-    {
-        unitExperience = value;
-    }
-
-    public int GetExperienceRequiredToReachNewLevel()
-    {
-        return unitExperienceRequiredToReachNewLevel;
-    }
-
-    public void SetExperienceRequiredToReachNewLevel(int value)
-    {
-        unitExperienceRequiredToReachNewLevel = value;
-    }
-
-    public int GetDefense()
-    {
-        return unitDefense;
-    }
-
-    public void SetDefense(int value)
-    {
-        unitDefense = value;
-    }
-
-    public UnitAbility GetAbility()
-    {
-        return unitAbility;
-    }
-
-    public void SetAbility(UnitAbility value)
-    {
-        unitAbility = value;
-    }
-
-    public UnitPowerDistance GetPowerDistance()
-    {
-        return unitPowerDistance;
-    }
-
-    public void SetPowerDistance(UnitPowerDistance value)
-    {
-        unitPowerDistance = value;
-    }
-
-    public UnitPowerScope GetPowerScope()
-    {
-        return unitPowerScope;
-    }
-
-    public void SetPowerScope(UnitPowerScope value)
-    {
-        unitPowerScope = value;
-    }
-
-    public UnitPowerSource GetPowerSource()
-    {
-        return unitPowerSource;
-    }
-
-    public void SetPowerSource(UnitPowerSource value)
-    {
-        unitPowerSource = value;
-    }
-
-    //public UnitPowerSource[] GetResistances()
-    //{
-    //    return unitResistances;
-    //}
-
-    //public void SetResistances(UnitPowerSource[] value)
-    //{
-    //    unitResistances = value;
-    //}
-
-    //public UnitPowerSource[] GetImmunities()
-    //{
-    //    return unitImmunities;
-    //}
-
-    //public void SetImmunities(UnitPowerSource[] value)
-    //{
-    //    unitImmunities = value;
-    //}
-
-    public void SetCost(int requiredCost)
-    {
-        cost = requiredCost;
-    }
-
-    public int GetCost()
-    {
-        return cost;
-    }
-
-    public void SetHealthCurr(int requiredHealth)
-    {
-        healthCurr = requiredHealth;
-    }
-
-    public int GetHealthCurr()
-    {
-        return healthCurr;
-    }
-
-    public void SetHealthMax(int requiredHealth)
-    {
-        healthMax = requiredHealth;
-    }
-
-    public int GetHealthMax()
-    {
-        return healthMax;
-    }
-
-    public void SetHealthMaxIncrementOnLevelUp(int value)
-    {
-        healthMaxIncrementOnLevelUp = value;
-    }
-
-    public int GetHealthMaxIncrementOnLevelUp()
-    {
-        return healthMaxIncrementOnLevelUp;
-    }
-
-    public void SetUnitName(string requiredName)
-    {
-        unitName = requiredName;
-    }
-
-    public string GetUnitName()
-    {
-        return unitName;
-    }
-
-    public void SetGivenName(string requiredGivenName)
-    {
-        givenName = requiredGivenName;
-    }
-
-    public string GetGivenName()
-    {
-        return givenName;
-    }
-
-    public void SetLevel(int requiredLevel)
-    {
-        unitLevel = requiredLevel;
-    }
-
-    public int GetLevel()
-    {
-        return unitLevel;
-    }
-
-    public void SetLeadership(int requiredLeadership)
-    {
-        unitLeadership = requiredLeadership;
-    }
-
-    public int GetLeadership()
-    {
-        return unitLeadership;
+        return UnitPower + GetOffenceSkillPowerBonus();
     }
 
     public int GetEffectiveLeadership()
     {
         // get current skill leadership bonus = skill level
-        UnitSkill skill = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Leadership);
-        int skillBonus = skill.Level.Current;
-        return unitLeadership + skillBonus;
-    }
-
-    public void SetRole(string requiredRole)
-    {
-        unitRole = requiredRole;
-    }
-
-    public string GetRole()
-    {
-        return unitRole;
-    }
-
-    public void SetBriefDescription(string requiredBriefDescription)
-    {
-        unitBriefDescription = requiredBriefDescription;
-    }
-
-    public string GetBriefDescription()
-    {
-        return unitBriefDescription;
-    }
-
-    public string GetFullDescription()
-    {
-        return unitFullDescription;
-    }
-
-    public void SetFullDescription(string requiredFullDescription)
-    {
-        unitFullDescription = requiredFullDescription;
-    }
-
-    public void SetUnitType(UnitType requiredUnitType)
-    {
-        unitType = requiredUnitType;
-    }
-
-    public UnitType GetUnitType()
-    {
-        return unitType;
-    }
-
-    public void SetUnitSize(UnitSize requiredUnitSize)
-    {
-        unitSize = requiredUnitSize;
-    }
-
-    public UnitSize GetUnitSize()
-    {
-        return unitSize;
-    }
-
-    public bool GetIsLeader()
-    {
-        return isLeader;
-    }
-
-    public void SetIsLeader(bool isLdr)
-    {
-        isLeader = isLdr;
-    }
-
-    public bool GetIsDismissable()
-    {
-        return isDismissable;
-    }
-
-    public void SetIsDismissable(bool isLdr)
-    {
-        isDismissable = isLdr;
-    }
-
-    public bool GetIsInterpartyMovable()
-    {
-        return isInterpartyMovable;
-    }
-
-    public void SetIsInterpartyMovable(bool isLdr)
-    {
-        isInterpartyMovable = isLdr;
-    }
-
-    //public bool GetIsAlive()
-    //{
-    //    return isAlive;
-    //}
-
-    //public void SetIsAlive(bool value)
-    //{
-    //    isAlive = value;
-    //}
-
-    //public bool GetHasEscaped()
-    //{
-    //    return hasEscaped;
-    //}
-
-    //public void SetHasEscaped(bool value)
-    //{
-    //    hasEscaped = value;
-    //}
-
-    public bool GetHasMoved()
-    {
-        return hasMoved;
-    }
-
-    public void SetHasMoved(bool value)
-    {
-        hasMoved = value;
-    }
-
-    public int GetInitiative()
-    {
-        return unitInitiative;
-    }
-
-    public void SetInitiative(int value)
-    {
-        unitInitiative = value;
-    }
-
-    public UnitStatus GetUnitStatus()
-    {
-        return unitStatus;
+        UnitSkill skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Leadership);
+        int skillBonus = skill.mLevel.mCurrent;
+        return UnitLeadership + skillBonus;
     }
 
     public Text GetUnitCurrentHealthText()
@@ -1216,137 +986,10 @@ public class PartyUnit : MonoBehaviour {
         return GetUnitCell().Find("Br").GetComponent<Text>();
     }
 
-    public UnitDebuff[] GetUnitDebuffs()
-    {
-        return unitDebuffs;
-    }
-
-    public UnitBuff[] GetUnitBuffs()
-    {
-        return unitBuffs;
-    }
-
-    public int UnitUpgradePoints
-    {
-        get
-        {
-            return unitUpgradePoints;
-        }
-
-        set
-        {
-            unitUpgradePoints = value;
-        }
-    }
-
-    public int UnitStatPoints
-    {
-        get
-        {
-            return unitStatPoints;
-        }
-
-        set
-        {
-            unitStatPoints = value;
-        }
-    }
-
-    public bool ClassIsUpgradable
-    {
-        get
-        {
-            return classIsUpgradable;
-        }
-
-        set
-        {
-            classIsUpgradable = value;
-        }
-    }
-
-    public int UnitClassPoints
-    {
-        get
-        {
-            return unitClassPoints;
-        }
-
-        set
-        {
-            unitClassPoints = value;
-        }
-    }
-
-    public bool CanLearnSkills
-    {
-        get
-        {
-            return canLearnSkills;
-        }
-
-        set
-        {
-            canLearnSkills = value;
-        }
-    }
-
-    public int UnitSkillPoints
-    {
-        get
-        {
-            return unitSkillPoints;
-        }
-
-        set
-        {
-            unitSkillPoints = value;
-        }
-    }
-
-    public PartyUnit RequiresUnit
-    {
-        get
-        {
-            return requiresUnit;
-        }
-
-        set
-        {
-            requiresUnit = value;
-        }
-    }
-
-    public PartyUnit[] UnlocksUnits
-    {
-        get
-        {
-            return unlocksUnits;
-        }
-
-        set
-        {
-            unlocksUnits = value;
-        }
-    }
-
-    public int UpgradeCost
-    {
-        get
-        {
-            return upgradeCost;
-        }
-
-        set
-        {
-            upgradeCost = value;
-        }
-    }
-
     public float GetPathfindingSkillMultiplier()
     {
         // get current skill level
-        int currentSkillLevel = Array.Find(skills, element => element.Name == UnitSkill.SkillName.Pathfinding).Level.Current;
+        int currentSkillLevel = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Pathfinding).mLevel.mCurrent;
         // get and return bonus multiplier
         return (float)currentSkillLevel * 0.5f;
     }
@@ -1355,7 +998,7 @@ public class PartyUnit : MonoBehaviour {
     {
         // get all move points which stack additively
         // get move points without bonuses
-        int totalMovePoints = movePointsMax;
+        int totalMovePoints = MovePointsMax;
         // get other move points
         // ..
         return totalMovePoints;
@@ -1370,13 +1013,13 @@ public class PartyUnit : MonoBehaviour {
     public int GetScoutingSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
-        return Array.Find(skills, element => element.Name == UnitSkill.SkillName.Scouting).Level.Current;
+        return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Scouting).mLevel.mCurrent;
     }
 
     public int GetLeadershipSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
-        return Array.Find(skills, element => element.Name == UnitSkill.SkillName.Leadership).Level.Current;
+        return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Leadership).mLevel.mCurrent;
     }
 
     public int GetEffectiveMaxMovePoints()
@@ -1393,96 +1036,31 @@ public class PartyUnit : MonoBehaviour {
         return ScoutingRange + GetScoutingSkillBonus();
     }
 
-    public int MovePointsMax
-    {
-        get
-        {
-            return movePointsMax;
-        }
-
-        set
-        {
-            movePointsMax = value;
-        }
-    }
-
-    public int MovePointsCurrent
-    {
-        get
-        {
-            return movePointsCurrent;
-        }
-
-        set
-        {
-            movePointsCurrent = value;
-        }
-    }
-
-    public int ScoutingRange
-    {
-        get
-        {
-            return scoutingRange;
-        }
-
-        set
-        {
-            scoutingRange = value;
-        }
-    }
-
-    public int HealthRegenPercent
-    {
-        get
-        {
-            return healthRegenPercent;
-        }
-
-        set
-        {
-            healthRegenPercent = value;
-        }
-    }
-
-    public Resistance[] Resistances
-    {
-        get
-        {
-            return resistances;
-        }
-
-        set
-        {
-            resistances = value;
-        }
-    }
-
     public int GetUnitHealthRegenPerDay()
     {
-        return (int)Math.Floor(((float)healthMax * (float)healthRegenPercent) / 100f);
+        return (int)Math.Floor(((float)UnitHealthMax * (float)UnitHealthRegenPercent) / 100f);
     }
 
     public float GetUnitHealSkillHealthRegenModifier()
     {
         // get and return skill current level multiplied by 0.15
-        return (float)Array.Find(skills, element => element.Name == UnitSkill.SkillName.Healing).Level.Current * 0.15f;
+        return (float)Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Healing).mLevel.mCurrent * 0.15f;
     }
 
     public int GetUnitHealSkillHealthRegenBonusPerDay()
     {
         // get and return skill current level multiplied by 0.15
-        return (int)Math.Floor(GetUnitHealSkillHealthRegenModifier() * (float)healthMax);
+        return (int)Math.Floor(GetUnitHealSkillHealthRegenModifier() * (float)UnitHealthMax);
     }
 
     public float GetUnitEffectiveHealthRegen()
     {
-        return ((float)healthRegenPercent / 100f + GetUnitHealSkillHealthRegenModifier());
+        return ((float)UnitHealthRegenPercent / 100f + GetUnitHealSkillHealthRegenModifier());
     }
 
     public int GetUnitEffectiveHealthRegenPerDay()
     {
-        return (int)Math.Floor((float)healthMax * GetUnitEffectiveHealthRegen());
+        return (int)Math.Floor((float)UnitHealthMax * GetUnitEffectiveHealthRegen());
     }
 
     public int GetUnitResistanceSkillBonus(UnitPowerSource source)
@@ -1490,13 +1068,13 @@ public class PartyUnit : MonoBehaviour {
         switch (source)
         {
             case UnitPowerSource.Death:
-                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.DeathResistance).Level.Current * 50;
+                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.DeathResistance).mLevel.mCurrent * 50;
             case UnitPowerSource.Fire:
-                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.FireResistance).Level.Current * 50;
+                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.FireResistance).mLevel.mCurrent * 50;
             case UnitPowerSource.Mind:
-                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.MindResistance).Level.Current * 50;
+                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.MindResistance).mLevel.mCurrent * 50;
             case UnitPowerSource.Water:
-                return Array.Find(skills, element => element.Name == UnitSkill.SkillName.WaterResistance).Level.Current * 50;
+                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.WaterResistance).mLevel.mCurrent * 50;
             case UnitPowerSource.Wind:
             case UnitPowerSource.Pure:
             case UnitPowerSource.Earth:
@@ -1512,7 +1090,7 @@ public class PartyUnit : MonoBehaviour {
     public int GetUnitBaseResistance(UnitPowerSource source)
     {
         // verify if unit has this base resistance
-        foreach (Resistance resistance in resistances)
+        foreach (Resistance resistance in UnitResistances)
         {
             // verify if there is resistance with the same name
             if (resistance.source == source)
@@ -1539,22 +1117,636 @@ public class PartyUnit : MonoBehaviour {
         // set Name
         GetUnitCell().Find("UnitSlot").GetChild(0).Find("Name").GetComponent<Text>().text = GetUnitPartyPanel().GetUnitDisplayName(GetComponent<PartyUnit>());
         // set Health
-        GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = healthCurr.ToString();
-        GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = healthMax.ToString();
+        GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = UnitHealthCurr.ToString();
+        GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = UnitHealthMax.ToString();
     }
-    //public UniquePowerModifier[] GetUniquePowerModifiers()
-    //{
-    //    return uniquePowerModifiers;
-    //}
 
-    //// Use this for initialization
-    //void Start () {
+    #region Attributes accessors
+    public string UnitName
+    {
+        get
+        {
+            return partyUnitData.unitName;
+        }
 
-    //}
+        set
+        {
+            partyUnitData.unitName = value;
+        }
+    }
 
-    //// Update is called once per frame
-    //void Update () {
+    public UnitType UnitType
+    {
+        get
+        {
+            return partyUnitData.unitType;
+        }
 
-    //}
+        set
+        {
+            partyUnitData.unitType = value;
+        }
+    }
+
+    public bool IsLeader
+    {
+        get
+        {
+            return partyUnitData.isLeader;
+        }
+
+        set
+        {
+            partyUnitData.isLeader = value;
+        }
+    }
+
+    public int UnitLeadership
+    {
+        get
+        {
+            return partyUnitData.unitLeadership;
+        }
+
+        set
+        {
+            partyUnitData.unitLeadership = value;
+        }
+    }
+
+    public string GivenName
+    {
+        get
+        {
+            return partyUnitData.givenName;
+        }
+
+        set
+        {
+            partyUnitData.givenName = value;
+        }
+    }
+
+    public int UnitLevel
+    {
+        get
+        {
+            return partyUnitData.unitLevel;
+        }
+
+        set
+        {
+            partyUnitData.unitLevel = value;
+        }
+    }
+
+    public int UnitExperience
+    {
+        get
+        {
+            return partyUnitData.unitExperience;
+        }
+
+        set
+        {
+            partyUnitData.unitExperience = value;
+        }
+    }
+
+    public int UnitExperienceRequiredToReachNewLevel
+    {
+        get
+        {
+            return partyUnitData.unitExperienceRequiredToReachNewLevel;
+        }
+
+        set
+        {
+            partyUnitData.unitExperienceRequiredToReachNewLevel = value;
+        }
+    }
+
+    public int UnitExperienceReward
+    {
+        get
+        {
+            return partyUnitData.unitExperienceReward;
+        }
+
+        set
+        {
+            partyUnitData.unitExperienceReward = value;
+        }
+    }
+
+    public int UnitExperienceRewardIncrementOnLevelUp
+    {
+        get
+        {
+            return partyUnitData.unitExperienceRewardIncrementOnLevelUp;
+        }
+
+        set
+        {
+            partyUnitData.unitExperienceRewardIncrementOnLevelUp = value;
+        }
+    }
+
+    public int UnitHealthCurr
+    {
+        get
+        {
+            return partyUnitData.unitHealthCurr;
+        }
+
+        set
+        {
+            partyUnitData.unitHealthCurr = value;
+        }
+    }
+
+    public int UnitHealthMax
+    {
+        get
+        {
+            return partyUnitData.unitHealthMax;
+        }
+
+        set
+        {
+            partyUnitData.unitHealthMax = value;
+        }
+    }
+
+    public int UnitHealthMaxIncrementOnLevelUp
+    {
+        get
+        {
+            return partyUnitData.unitHealthMaxIncrementOnLevelUp;
+        }
+
+        set
+        {
+            partyUnitData.unitHealthMaxIncrementOnLevelUp = value;
+        }
+    }
+
+    public int UnitHealthRegenPercent
+    {
+        get
+        {
+            return partyUnitData.unitHealthRegenPercent;
+        }
+
+        set
+        {
+            partyUnitData.unitHealthRegenPercent = value;
+        }
+    }
+
+    public int UnitDefense
+    {
+        get
+        {
+            return partyUnitData.unitDefense;
+        }
+
+        set
+        {
+            partyUnitData.unitDefense = value;
+        }
+    }
+
+    public Resistance[] UnitResistances
+    {
+        get
+        {
+            return partyUnitData.unitResistances;
+        }
+
+        set
+        {
+            partyUnitData.unitResistances = value;
+        }
+    }
+
+    public UnitAbility UnitAbility
+    {
+        get
+        {
+            return partyUnitData.unitAbility;
+        }
+
+        set
+        {
+            partyUnitData.unitAbility = value;
+        }
+    }
+
+    public int UnitPower
+    {
+        get
+        {
+            return partyUnitData.unitPower;
+        }
+
+        set
+        {
+            partyUnitData.unitPower = value;
+        }
+    }
+
+    public int UnitPowerIncrementOnLevelUp
+    {
+        get
+        {
+            return partyUnitData.unitPowerIncrementOnLevelUp;
+        }
+
+        set
+        {
+            partyUnitData.unitPowerIncrementOnLevelUp = value;
+        }
+    }
+
+    public UnitPowerSource UnitPowerSource
+    {
+        get
+        {
+            return partyUnitData.unitPowerSource;
+        }
+
+        set
+        {
+            partyUnitData.unitPowerSource = value;
+        }
+    }
+
+    public UnitPowerDistance UnitPowerDistance
+    {
+        get
+        {
+            return partyUnitData.unitPowerDistance;
+        }
+
+        set
+        {
+            partyUnitData.unitPowerDistance = value;
+        }
+    }
+
+    public UnitPowerScope UnitPowerScope
+    {
+        get
+        {
+            return partyUnitData.unitPowerScope;
+        }
+
+        set
+        {
+            partyUnitData.unitPowerScope = value;
+        }
+    }
+
+    public int UnitInitiative
+    {
+        get
+        {
+            return partyUnitData.unitInitiative;
+        }
+
+        set
+        {
+            partyUnitData.unitInitiative = value;
+        }
+    }
+
+    public string UnitRole
+    {
+        get
+        {
+            return partyUnitData.unitRole;
+        }
+
+        set
+        {
+            partyUnitData.unitRole = value;
+        }
+    }
+
+    public string UnitBriefDescription
+    {
+        get
+        {
+            return partyUnitData.unitBriefDescription;
+        }
+
+        set
+        {
+            partyUnitData.unitBriefDescription = value;
+        }
+    }
+
+    public string UnitFullDescription
+    {
+        get
+        {
+            return partyUnitData.unitFullDescription;
+        }
+
+        set
+        {
+            partyUnitData.unitFullDescription = value;
+        }
+    }
+
+    public int UnitCost
+    {
+        get
+        {
+            return partyUnitData.unitCost;
+        }
+
+        set
+        {
+            partyUnitData.unitCost = value;
+        }
+    }
+
+    public UnitSize UnitSize
+    {
+        get
+        {
+            return partyUnitData.unitSize;
+        }
+
+        set
+        {
+            partyUnitData.unitSize = value;
+        }
+    }
+
+    public bool IsInterpartyMovable
+    {
+        get
+        {
+            return partyUnitData.isInterpartyMovable;
+        }
+
+        set
+        {
+            partyUnitData.isInterpartyMovable = value;
+        }
+    }
+
+    public bool IsDismissable
+    {
+        get
+        {
+            return partyUnitData.isDismissable;
+        }
+
+        set
+        {
+            partyUnitData.isDismissable = value;
+        }
+    }
+
+    public UnitStatus UnitStatus
+    {
+        get
+        {
+            return partyUnitData.unitStatus;
+        }
+
+        set
+        {
+            partyUnitData.unitStatus = value;
+        }
+    }
+
+    public UnitDebuff[] UnitDebuffs
+    {
+        get
+        {
+            return partyUnitData.unitDebuffs;
+        }
+
+        set
+        {
+            partyUnitData.unitDebuffs = value;
+        }
+    }
+
+    public UnitBuff[] UnitBuffs
+    {
+        get
+        {
+            return partyUnitData.unitBuffs;
+        }
+
+        set
+        {
+            partyUnitData.unitBuffs = value;
+        }
+    }
+
+    public int UnitUpgradePoints
+    {
+        get
+        {
+            return partyUnitData.unitUpgradePoints;
+        }
+
+        set
+        {
+            partyUnitData.unitUpgradePoints = value;
+        }
+    }
+
+    public int UnitStatPoints
+    {
+        get
+        {
+            return partyUnitData.unitStatPoints;
+        }
+
+        set
+        {
+            partyUnitData.unitStatPoints = value;
+        }
+    }
+
+    public bool ClassIsUpgradable
+    {
+        get
+        {
+            return partyUnitData.classIsUpgradable;
+        }
+
+        set
+        {
+            partyUnitData.classIsUpgradable = value;
+        }
+    }
+
+    public int UnitClassPoints
+    {
+        get
+        {
+            return partyUnitData.unitClassPoints;
+        }
+
+        set
+        {
+            partyUnitData.unitClassPoints = value;
+        }
+    }
+
+    public bool CanLearnSkills
+    {
+        get
+        {
+            return partyUnitData.canLearnSkills;
+        }
+
+        set
+        {
+            partyUnitData.canLearnSkills = value;
+        }
+    }
+
+    public int UnitSkillPoints
+    {
+        get
+        {
+            return partyUnitData.unitSkillPoints;
+        }
+
+        set
+        {
+            partyUnitData.unitSkillPoints = value;
+        }
+    }
+
+    public UnitType RequiresUnitType
+    {
+        get
+        {
+            return partyUnitData.requiresUnitType;
+        }
+
+        set
+        {
+            partyUnitData.requiresUnitType = value;
+        }
+    }
+
+    public UnitType[] UnlocksUnitTypes
+    {
+        get
+        {
+            return partyUnitData.unlocksUnitTypes;
+        }
+
+        set
+        {
+            partyUnitData.unlocksUnitTypes = value;
+        }
+    }
+
+    public int UpgradeCost
+    {
+        get
+        {
+            return partyUnitData.upgradeCost;
+        }
+
+        set
+        {
+            partyUnitData.upgradeCost = value;
+        }
+    }
+
+    public int StatsUpgradesCount
+    {
+        get
+        {
+            return partyUnitData.statsUpgradesCount;
+        }
+
+        set
+        {
+            partyUnitData.statsUpgradesCount = value;
+        }
+    }
+
+    public int MovePointsCurrent
+    {
+        get
+        {
+            return partyUnitData.movePointsCurrent;
+        }
+
+        set
+        {
+            partyUnitData.movePointsCurrent = value;
+        }
+    }
+
+    public int MovePointsMax
+    {
+        get
+        {
+            return partyUnitData.movePointsMax;
+        }
+
+        set
+        {
+            partyUnitData.movePointsMax = value;
+        }
+    }
+
+    public int ScoutingRange
+    {
+        get
+        {
+            return partyUnitData.scoutingRange;
+        }
+
+        set
+        {
+            partyUnitData.scoutingRange = value;
+        }
+    }
+
+    public UnitSkill[] UnitSkills
+    {
+        get
+        {
+            return partyUnitData.unitSkills;
+        }
+
+        set
+        {
+            partyUnitData.unitSkills = value;
+        }
+    }
+    #endregion Attributes accessors
+
+    #region Battle attributes
+    public bool HasMoved
+    {
+        get
+        {
+            return hasMoved;
+        }
+
+        set
+        {
+            hasMoved = value;
+        }
+    }
+    #endregion Battle attributes
 
 }

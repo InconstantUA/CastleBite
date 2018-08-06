@@ -13,7 +13,7 @@ public class UniquePowerModifier : MonoBehaviour
     }
 
     [SerializeField]
-    PartyUnit.UnitDebuff appliedDebuff;
+    UnitDebuff appliedDebuff;
     [SerializeField]
     int power;
     [SerializeField]
@@ -25,11 +25,11 @@ public class UniquePowerModifier : MonoBehaviour
     [SerializeField]
     int chanceIncrementOnLevelUp;
     [SerializeField]
-    PartyUnit.UnitPowerSource source;
+    UnitPowerSource source;
     [SerializeField]
     PowerOrigin origin;
 
-    public PartyUnit.UnitDebuff AppliedDebuff
+    public UnitDebuff AppliedDebuff
     {
         get
         {
@@ -81,7 +81,7 @@ public class UniquePowerModifier : MonoBehaviour
         }
     }
 
-    public PartyUnit.UnitPowerSource Source
+    public UnitPowerSource Source
     {
         get
         {
@@ -137,13 +137,13 @@ public class UniquePowerModifier : MonoBehaviour
     {
         switch (appliedDebuff)
         {
-            case PartyUnit.UnitDebuff.Burned:
+            case UnitDebuff.Burned:
                 return "Burn";
-            case PartyUnit.UnitDebuff.Chilled:
+            case UnitDebuff.Chilled:
                 return "Chill";
-            case PartyUnit.UnitDebuff.Paralyzed:
+            case UnitDebuff.Paralyzed:
                 return "Paralyze";
-            case PartyUnit.UnitDebuff.Poisoned:
+            case UnitDebuff.Poisoned:
                 return "Poison";
             default:
                 Debug.LogError("Unknown debuf");

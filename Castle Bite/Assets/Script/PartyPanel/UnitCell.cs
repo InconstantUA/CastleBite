@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class UnitCell : MonoBehaviour {
     [SerializeField]
-    PartyUnit.UnitSize cellSize;
+    UnitSize cellSize;
 
-    public PartyUnit.UnitSize GetCellSize()
+    public UnitSize GetCellSize()
     {
         return cellSize;
     }

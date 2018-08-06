@@ -73,9 +73,9 @@ public class BattleRetreat : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
         // set unit is waiting status
         PartyUnit activeUnit = battleScreen.ActiveUnit;
-        activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Escaping);
+        activeUnit.SetUnitStatus(UnitStatus.Escaping);
         // set unit has moved flag
-        activeUnit.SetHasMoved(true);
+        activeUnit.HasMoved = true;
         // execute wait animation
         battleScreen.GetQueue().Run(StartRetreating());
         // activate next unit

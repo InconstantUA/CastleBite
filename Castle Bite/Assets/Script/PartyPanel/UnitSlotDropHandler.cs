@@ -114,8 +114,8 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             PartyUnit draggedUnit = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
             Transform srcCellTr = UnitDragHandler.unitBeingDragged.transform.parent.parent;
             Transform dstCellTr = transform.parent;
-            PartyUnit.UnitSize dstCellSize = transform.parent.GetComponent<UnitCell>().GetCellSize();
-            if (draggedUnit.GetUnitSize() == PartyUnit.UnitSize.Single)
+            UnitSize dstCellSize = transform.parent.GetComponent<UnitCell>().GetCellSize();
+            if (draggedUnit.UnitSize == UnitSize.Single)
             {
                 // single unit
                 // possible states
@@ -123,7 +123,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 // 1    free or occupied by single unit     swap single cells
                 // 1    occupied by double                  swap cells in horizontal panels
                 // act based on destination cell size
-                if (PartyUnit.UnitSize.Single == dstCellSize)
+                if (UnitSize.Single == dstCellSize)
                 {
                     // swap single cells
                     SwapTwoCellsContent(srcCellTr, dstCellTr);
@@ -137,7 +137,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             else
             {
                 // double unit
-                if (PartyUnit.UnitSize.Single == dstCellSize)
+                if (UnitSize.Single == dstCellSize)
                 {
                     // swap single with double cells
                     SwapSingleWithDouble(srcCellTr, dstCellTr, false);

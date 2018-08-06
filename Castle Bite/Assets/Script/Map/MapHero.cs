@@ -64,8 +64,8 @@ public class MapHero : MonoBehaviour
         //label = GetComponentInChildren<MapObjectLabel>();
         // set label text
         PartyUnit leaderUnit = linkedPartyTr.GetComponentInChildren<PartyPanel>().GetPartyLeader();
-        string givenName = leaderUnit.GetGivenName();
-        string unitName = leaderUnit.GetUnitName();
+        string givenName = leaderUnit.GivenName;
+        string unitName = leaderUnit.UnitName;
         GetComponentInChildren<MapObjectLabel>().LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
     }
 

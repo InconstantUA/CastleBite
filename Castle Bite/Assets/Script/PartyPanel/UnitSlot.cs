@@ -67,7 +67,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    Text GetUnitName()
+    Text GetUnitNameText()
     {
         // it in unit slot can change on unit move or hire or dismiss or other reasons
         // this function is used to always return the latest information about unit.
@@ -143,7 +143,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void SetHighlightedStatus()
     {
         // first verify that unit name is present (not null)
-        unitName = GetUnitName();
+        unitName = GetUnitNameText();
         if (unitName)
         {
             // avoid double job
@@ -167,7 +167,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void SetPressedStatus()
     {
-        unitName = GetUnitName();
+        unitName = GetUnitNameText();
         if (unitName)
         {
             if (unitSlot.interactable)
@@ -186,7 +186,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void SetNormalStatus()
     {
-        unitName = GetUnitName();
+        unitName = GetUnitNameText();
         if (unitName)
         {
             if (unitSlot.interactable)
@@ -273,7 +273,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnit>());
                 // set unit has moved flag
                 PartyUnit activeUnit = battleScreen.ActiveUnit;
-                activeUnit.SetHasMoved(true);
+                activeUnit.HasMoved = (true);
                 // activate next unit
                 battleScreen.ActivateNextUnit();
             }
@@ -312,18 +312,18 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // if unit does not exist, then nothing to do
         if (unit)
         {
-            if (unit.GetIsDismissable())
+            if (unit.IsDismissable)
             {
                 // as for confirmation
                 string confirmationMessage;
                 // verify if this is party leader
-                if (unit.GetIsLeader())
+                if (unit.IsLeader)
                 {
-                    confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + " and whole party?";
+                    confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GivenName + " " + unit.UnitName + " and whole party?";
                 }
                 else
                 {
-                    confirmationMessage = "Do you want to dismiss " + unit.GetUnitName() + "?";
+                    confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
                 }
                 // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
                 confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
@@ -332,7 +332,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 // display error message
                 NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
-                notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GetGivenName() + " " + unit.GetUnitName() + ".");
+                notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
             }
         }
     }

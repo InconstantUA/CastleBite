@@ -73,7 +73,7 @@ public class BattleWait : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
         // set unit is waiting status
         PartyUnit activeUnit = battleScreen.ActiveUnit;
-        activeUnit.SetUnitStatus(PartyUnit.UnitStatus.Waiting);
+        activeUnit.SetUnitStatus(UnitStatus.Waiting);
         // execute wait animation
         battleScreen.GetQueue().Run(Wait());
         // activate next unit
