@@ -297,15 +297,15 @@ public class UpgradeUnit : MonoBehaviour {
     #region Unique power modifiers
     void UpdateUniquePowerModifiersInfo()
     {
-        UniquePowerModifier[] uniquePowerModifiers = focusedPartyUnit.GetComponentsInChildren<UniquePowerModifier>();
-        for (int i = 1; i <= uniquePowerModifiers.Length; i++)
+        List<UniquePowerModifier> uniquePowerModifiers = focusedPartyUnit.UniquePowerModifiers;
+        for (int i = 1; i <= uniquePowerModifiers.Count; i++)
         {
             unitInfoPanel.SetUniquePowerModifiersPreview(
                 i,
-                uniquePowerModifiers[i - 1].Power,
-                uniquePowerModifiers[i - 1].PowerIncrementOnLevelUp * statsUpgradeCount,
-                uniquePowerModifiers[i - 1].Chance,
-                uniquePowerModifiers[i - 1].ChanceIncrementOnLevelUp * statsUpgradeCount
+                uniquePowerModifiers[i - 1].upmPower,
+                uniquePowerModifiers[i - 1].upmPowerIncrementOnLevelUp * statsUpgradeCount,
+                uniquePowerModifiers[i - 1].upmChance,
+                uniquePowerModifiers[i - 1].upmChanceIncrementOnLevelUp * statsUpgradeCount
             );
         }
     }
@@ -313,10 +313,10 @@ public class UpgradeUnit : MonoBehaviour {
     void UpgradeUniquePowerModifiers()
     {
         // upgrade Unique power modifier object
-        foreach (UniquePowerModifier upm in focusedPartyUnit.GetComponentsInChildren<UniquePowerModifier>())
+        foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
         {
-            upm.Power += upm.PowerIncrementOnLevelUp;
-            upm.Chance += upm.ChanceIncrementOnLevelUp;
+            upm.upmPower += upm.upmPowerIncrementOnLevelUp;
+            upm.upmChance += upm.upmChanceIncrementOnLevelUp;
         }
         // upgrade Unique power modifier Info UI
         UpdateUniquePowerModifiersInfo();
@@ -325,10 +325,10 @@ public class UpgradeUnit : MonoBehaviour {
     void DowngradeUniquePowerModifiers()
     {
         // downgrade Unique power modifier object
-        foreach (UniquePowerModifier upm in focusedPartyUnit.GetComponentsInChildren<UniquePowerModifier>())
+        foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
         {
-            upm.Power -= upm.PowerIncrementOnLevelUp;
-            upm.Chance -= upm.ChanceIncrementOnLevelUp;
+            upm.upmPower -= upm.upmPowerIncrementOnLevelUp;
+            upm.upmChance -= upm.upmChanceIncrementOnLevelUp;
         }
         // upgrade Unique power modifier Info UI
         UpdateUniquePowerModifiersInfo();

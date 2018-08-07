@@ -20,8 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224364017913245646}
   - component: {fileID: 114844794765295986}
-  - component: {fileID: 114979954818577572}
-  - component: {fileID: 114949980695238148}
   m_Layer: 5
   m_Name: Knight
   m_TagString: Untagged
@@ -40,91 +38,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Knight
-  unitType: 0
-  isLeader: 1
-  unitLeadership: 3
-  givenName: Ares
-  unitLevel: 1
-  unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 200
-  unitExperienceReward: 200
-  unitExperienceRewardIncrementOnLevelUp: 200
-  healthCurr: 180
-  healthMax: 180
-  healthMaxIncrementOnLevelUp: 30
-  unitDefense: 0
-  unitResistances: 
-  unitImmunities: 
-  unitAbility: 6
-  unitPower: 200
-  unitPowerIncrementOnLevelUp: 50
-  unitPowerSource: 0
-  unitPowerDistance: 0
-  unitPowerScope: 0
-  unitInitiative: 55
-  unitRole: Fighter Leader
-  unitBriefDescription: Strong and durable mele fighter.
-  unitFullDescription: Full description.
-  hasMoved: 0
-  cost: 550
-  unitSize: 0
-  isInterpartyMovable: 0
-  isDismissable: 1
-  unitStatus: 0
-  unitDebuffs: 
-  unitBuffs: 
-  unitUpgradePoints: 0
-  unitStatPoints: 0
-  classIsUpgradable: 0
-  unitClassPoints: 0
-  canLearnSkills: 1
-  unitSkillPoints: 0
-  requiresUnit: {fileID: 0}
-  unlocksUnits: []
-  upgradeCost: 0
-  movePointsCurrent: 19
-  movePointsMax: 20
-  scoutingRange: 4
-  healthRegenPercent: 15
---- !u!114 &114949980695238148
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1737202263520784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa93057f5663bca49a00d1d0f377a72b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedDebuff: 4
-  power: 0
-  powerIncrementOnLevelUp: 0
-  duration: 1
-  chance: 80
-  chanceIncrementOnLevelUp: 0
-  source: 6
-  origin: 1
---- !u!114 &114979954818577572
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1737202263520784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa93057f5663bca49a00d1d0f377a72b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedDebuff: 3
-  power: 20
-  powerIncrementOnLevelUp: 5
-  duration: 2
-  chance: 75
-  chanceIncrementOnLevelUp: 5
-  source: 1
-  origin: 0
+  partyUnitData:
+    unitName: Knight
+    unitType: 2
+    isLeader: 1
+    unitLeadership: 3
+    givenName: GivenName
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 100
+    unitHealthMax: 100
+    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 11
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 0
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers: []
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 0
+    isInterpartyMovable: 0
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 
+    unitBuffs: 
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 0
+    unitClassPoints: 0
+    canLearnSkills: 1
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: 
 --- !u!224 &224364017913245646
 RectTransform:
   m_ObjectHideFlags: 1

@@ -38,55 +38,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Chevalier
-  unitType: 16
-  isLeader: 0
-  unitLeadership: 0
-  givenName: Chevalier
-  unitLevel: 2
-  unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 300
-  unitExperienceReward: 100
-  unitExperienceRewardIncrementOnLevelUp: 100
-  healthCurr: 110
-  healthMax: 110
-  healthMaxIncrementOnLevelUp: 15
-  unitDefense: 0
-  unitResistances: 
-  unitImmunities: 
-  unitAbility: 11
-  unitPower: 30
-  unitPowerIncrementOnLevelUp: 15
-  unitPowerSource: 0
-  unitPowerDistance: 0
-  unitPowerScope: 0
-  unitInitiative: 55
-  unitRole: Mele fighter
-  unitBriefDescription: 
-  unitFullDescription: Full description.
-  hasMoved: 0
-  cost: 55
-  unitSize: 0
-  isInterpartyMovable: 1
-  isDismissable: 1
-  unitStatus: 0
-  unitDebuffs: 
-  unitBuffs: 0000000000000000
-  unitUpgradePoints: 0
-  unitStatPoints: 0
-  classIsUpgradable: 1
-  unitClassPoints: 0
-  canLearnSkills: 0
-  unitSkillPoints: 0
-  requiresUnit: {fileID: 114444176595269638, guid: 891cc91b60d937244ade1cf27d50f0a7,
-    type: 2}
-  unlocksUnits:
-  - {fileID: 114947958277756772, guid: e07a5bf91aff45c4c910a845b2315582, type: 2}
-  upgradeCost: 150
-  movePointsCurrent: 0
-  movePointsMax: 0
-  scoutingRange: 0
-  healthRegenPercent: 15
+  partyUnitData:
+    unitName: UnitName
+    unitType: 7
+    isLeader: 0
+    unitLeadership: 0
+    givenName: GivenName
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 100
+    unitHealthMax: 100
+    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 11
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 0
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers: []
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 0
+    isInterpartyMovable: 1
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 
+    unitBuffs: 
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 1
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: 
 --- !u!224 &224385724514051918
 RectTransform:
   m_ObjectHideFlags: 1

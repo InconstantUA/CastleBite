@@ -185,6 +185,45 @@ public class UnitSkill
 }
 
 [Serializable]
+public enum ModifierOrigin
+{
+    Talent,
+    Artifact
+}
+
+[Serializable]
+public class UniquePowerModifier
+{
+    // define possible origins (who is the source of unique power modifier)
+    public UnitDebuff upmAppliedDebuff;
+    public int upmPower;
+    public int upmPowerIncrementOnLevelUp;
+    public int upmDuration;
+    public int upmChance;
+    public int upmChanceIncrementOnLevelUp;
+    public UnitPowerSource upmSource;
+    public ModifierOrigin upmOrigin;
+
+    public string GetDisplayName()
+    {
+        switch (upmAppliedDebuff)
+        {
+            case UnitDebuff.Burned:
+                return "Burn";
+            case UnitDebuff.Chilled:
+                return "Chill";
+            case UnitDebuff.Paralyzed:
+                return "Paralyze";
+            case UnitDebuff.Poisoned:
+                return "Poison";
+            default:
+                Debug.LogError("Unknown debuf");
+                return "Error";
+        }
+    }
+}
+
+[Serializable]
 public class PartyUnitData : System.Object
 {
     // Misc attributes
@@ -196,59 +235,59 @@ public class PartyUnitData : System.Object
     public string givenName;
     // Level and experience
     public int unitLevel;
-    public  int unitExperience;
-    public  int unitExperienceRequiredToReachNewLevel;
-    public  int unitExperienceReward;
-    public  int unitExperienceRewardIncrementOnLevelUp;
+    public int unitExperience;
+    public int unitExperienceRequiredToReachNewLevel;
+    public int unitExperienceReward;
+    public int unitExperienceRewardIncrementOnLevelUp;
     // Defensive attributes
-    public  int unitHealthCurr;
-    public  int unitHealthMax;
-    public  int unitHealthMaxIncrementOnLevelUp;
-    public  int unitHealthRegenPercent;
-    public  int unitDefense;
-    public  Resistance[] unitResistances;
+    public int unitHealthCurr;
+    public int unitHealthMax;
+    public int unitHealthMaxIncrementOnLevelUp;
+    public int unitHealthRegenPercent;
+    public int unitDefense;
+    public Resistance[] unitResistances;
     // Offensive attributes
-    public  UnitAbility unitAbility;
-    public  int unitPower;
-    public  int unitPowerIncrementOnLevelUp;
-    public  UnitPowerSource unitPowerSource;
-    public  UnitPowerDistance unitPowerDistance;
-    public  UnitPowerScope unitPowerScope;
-    public  int unitInitiative = 10;
+    public UnitAbility unitAbility;
+    public int unitPower;
+    public int unitPowerIncrementOnLevelUp;
+    public UnitPowerSource unitPowerSource;
+    public UnitPowerDistance unitPowerDistance;
+    public UnitPowerScope unitPowerScope;
+    public int unitInitiative = 10;
+    // Unique power modifiers
+    public List<UniquePowerModifier> uniquePowerModifiers;
     // Misc Description
-    public  string unitRole;
-    public  string unitBriefDescription;
-    public  string unitFullDescription;
+    public string unitRole;
+    public string unitBriefDescription;
+    public string unitFullDescription;
     // Misc hire and edit unit attributes
-    public  int unitCost;
-    public  UnitSize unitSize;
-    public  bool isInterpartyMovable;
-    public  bool isDismissable;
+    public int unitCost;
+    public UnitSize unitSize;
+    public bool isInterpartyMovable;
+    public bool isDismissable;
     // Unit statuses and [de]buffs
-    public  UnitStatus unitStatus;
-    public  UnitDebuff[] unitDebuffs;
-    public  UnitBuff[] unitBuffs;
+    public UnitStatus unitStatus;
+    public UnitDebuff[] unitDebuffs;
+    public UnitBuff[] unitBuffs;
     // For Upgrade
-    public  int unitUpgradePoints;
-    public  int unitStatPoints;
-    public  bool classIsUpgradable;
-    public  int unitClassPoints;
-    public  bool canLearnSkills;
-    public  int unitSkillPoints;
+    public int unitUpgradePoints;
+    public int unitStatPoints;
+    public bool classIsUpgradable;
+    public int unitClassPoints;
+    public bool canLearnSkills;
+    public int unitSkillPoints;
     // For class upgrade
-    public  UnitType requiresUnitType;
-    public  UnitType[] unlocksUnitTypes;
-    public  int upgradeCost;
-    public  int statsUpgradesCount;
+    public UnitType requiresUnitType;
+    public UnitType[] unlocksUnitTypes;
+    public int upgradeCost;
+    public int statsUpgradesCount;
     // Misc attributes for map
-    public  int movePointsCurrent;
-    public  int movePointsMax;
-    public  int scoutingRange;
-    // UI attributes
-    public string unitCellAddress;  // used only during game save and load
+    public int movePointsCurrent;
+    public int movePointsMax;
+    public int scoutingRange;
     // Skills
     public UnitSkill[] unitSkills = new UnitSkill[]
-        {
+    {
         new UnitSkill(
             UnitSkill.SkillName.Leadership,
             "Leadership",
@@ -366,7 +405,9 @@ public class PartyUnitData : System.Object
             + "\r\n" + "Maximum level: 1."
             //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
         )
-        };
+    };
+    // UI attributes
+    public string unitCellAddress;  // used only during game save and load
 }
 
 public class PartyUnit : MonoBehaviour {
@@ -770,7 +811,7 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
     {
-        return appliedUniquePowerModifier.Power;
+        return appliedUniquePowerModifier.upmPower;
     }
 
     // Note: animation should be identical to the function with the same name in PartyPanel
@@ -1730,6 +1771,19 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.unitSkills = value;
+        }
+    }
+
+    public List<UniquePowerModifier> UniquePowerModifiers
+    {
+        get
+        {
+            return partyUnitData.uniquePowerModifiers;
+        }
+
+        set
+        {
+            partyUnitData.uniquePowerModifiers = value;
         }
     }
     #endregion Attributes accessors

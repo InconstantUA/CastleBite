@@ -2305,11 +2305,11 @@ public class PartyPanel : MonoBehaviour {
         if (doActivate)
         {
             // verify if unit already has this debuf
-            if (uniquePowerModifier.AppliedDebuff == partyUnit.UnitDebuffs[(int)uniquePowerModifier.AppliedDebuff])
+            if (uniquePowerModifier.upmAppliedDebuff == partyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff])
             {
                 // the same debuff is already applied
                 // reset its counter to max
-                UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.AppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
+                UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
                 if (unitDebuffIndicator)
                 {
                     unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
@@ -2325,23 +2325,23 @@ public class PartyPanel : MonoBehaviour {
                 // add debuff to unit
                 //Debug.Log(((int)UnitBuff.DefenseStance).ToString());
                 //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-                partyUnit.UnitDebuffs[(int)uniquePowerModifier.AppliedDebuff] = uniquePowerModifier.AppliedDebuff;
+                partyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = uniquePowerModifier.upmAppliedDebuff;
                 // create debuff by duplicating from template
                 // Note: debuff name in template should be the same as in AppliedDebuff
-                Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.AppliedDebuff.ToString());
-                Debug.Log("Applying " + uniquePowerModifier.AppliedDebuff.ToString() + " debuff");
+                Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.upmAppliedDebuff.ToString());
+                Debug.Log("Applying " + uniquePowerModifier.upmAppliedDebuff.ToString() + " debuff");
                 Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
                 // activate buff
                 newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier);
                 // rename it so it can be later found by name
-                newDebuff.name = uniquePowerModifier.AppliedDebuff.ToString();
+                newDebuff.name = uniquePowerModifier.upmAppliedDebuff.ToString();
             }
         }
         else
         {
             // remove buff
-            partyUnit.UnitDebuffs[(int)uniquePowerModifier.AppliedDebuff] = UnitDebuff.None;
-            Destroy(debuffsPanel.Find(uniquePowerModifier.AppliedDebuff.ToString()).gameObject);
+            partyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = UnitDebuff.None;
+            Destroy(debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).gameObject);
         }
     }
 
@@ -2354,8 +2354,7 @@ public class PartyPanel : MonoBehaviour {
 
     void ApplyUniquePowerModifiersToSingleUnit(PartyUnit dstUnit)
     {
-        UniquePowerModifier[] uniquePowerModifiers = activeBattleUnit.GetComponentsInChildren<UniquePowerModifier>();
-        foreach (UniquePowerModifier uniquePowerModifier in uniquePowerModifiers)
+        foreach (UniquePowerModifier uniquePowerModifier in activeBattleUnit.UniquePowerModifiers)
         {
             SetUnitDebuffActive(dstUnit, uniquePowerModifier, true);
             // ApplyUniquePowerModifierToSingleUnit(dstUnit, uniquePowerModifier);

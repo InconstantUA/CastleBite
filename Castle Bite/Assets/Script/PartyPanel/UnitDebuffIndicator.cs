@@ -174,19 +174,19 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         string[] infoLines = additionalInfo.GetLines();
         // line 1(0 index in array) already filled in in prefab
         // fill in next lines
-        infoLines[1] = "Damage type: " + uniquePowerModifier.Source.ToString();
-        infoLines[2] = "Damage dealt: " + uniquePowerModifier.Power.ToString();
-        if (uniquePowerModifier.Duration >= 2)
+        infoLines[1] = "Damage type: " + uniquePowerModifier.upmSource.ToString();
+        infoLines[2] = "Damage dealt: " + uniquePowerModifier.upmPower.ToString();
+        if (uniquePowerModifier.upmDuration >= 2)
         {
             // duration is 2 or more
             // add s in turns word
-            infoLines[3] = "Duration: " + uniquePowerModifier.Duration.ToString() + " turns";
+            infoLines[3] = "Duration: " + uniquePowerModifier.upmDuration.ToString() + " turns";
         }
         else
         {
             // when duration is 1 turn
             // do not add s in turn word
-            infoLines[3] = "Duration: " + uniquePowerModifier.Duration.ToString() + " turn";
+            infoLines[3] = "Duration: " + uniquePowerModifier.upmDuration.ToString() + " turn";
         }
     }
 

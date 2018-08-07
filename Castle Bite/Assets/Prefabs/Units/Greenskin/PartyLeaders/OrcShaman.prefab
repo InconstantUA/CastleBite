@@ -38,47 +38,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Orc shaman
-  unitType: 11
-  isLeader: 1
-  unitLeadership: 3
-  givenName: Orc shaman
-  unitLevel: 1
-  unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 800
-  unitExperienceReward: 400
-  unitExperienceRewardIncrementOnLevelUp: 200
-  healthCurr: 120
-  healthMax: 120
-  healthMaxIncrementOnLevelUp: 40
-  unitDefence: 0
-  unitResistances: 
-  unitImmunities: 
-  unitAbility: 18
-  unitPower: 30
-  unitPowerIncrementOnLevelUp: 10
-  unitPowerSource: 6
-  unitPowerDistance: 1
-  unitPowerScope: 1
-  unitInitiative: 35
-  unitRole: Attacks with magic
-  unitBriefDescription: Vicious voodoo magics caster
-  unitFullDescription: Orc shamans are a masters of voodoo curses. They can cast maledict
-    upon whole enemy party to suffer a slow, humiliating death.
-  hasMoved: 0
-  cost: 600
-  unitSize: 0
-  isInterpartyMovable: 1
-  isDismissable: 1
-  unitStatus: 0
-  unitDebuffs: 
-  unitBuffs: 
-  unitUpgradePoints: 0
-  unitStatPoints: 0
-  classIsUpgradable: 0
-  unitClassPoints: 0
-  canLearnSkills: 1
-  unitSkillPoints: 0
+  partyUnitData:
+    unitName: UnitName
+    unitType: 7
+    isLeader: 1
+    unitLeadership: 3
+    givenName: GivenName
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 100
+    unitHealthMax: 100
+    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 18
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 2
+    unitPowerDistance: 1
+    unitPowerScope: 1
+    unitInitiative: 50
+    uniquePowerModifiers: []
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 0
+    isInterpartyMovable: 1
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 
+    unitBuffs: 
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 0
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: 
 --- !u!224 &224439893588735864
 RectTransform:
   m_ObjectHideFlags: 1

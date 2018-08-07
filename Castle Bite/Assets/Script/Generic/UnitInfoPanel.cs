@@ -530,11 +530,11 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
         modifier.Find("Name").GetComponent<Text>().text = uniquePowerModifier.GetDisplayName();
-        modifier.Find("Power").GetComponent<Text>().text = uniquePowerModifier.Power.ToString();
-        modifier.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.Duration.ToString();
-        modifier.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.Chance.ToString();
-        modifier.Find("Source").GetComponent<Text>().text = uniquePowerModifier.Source.ToString();
-        modifier.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.Origin.ToString();
+        modifier.Find("Power").GetComponent<Text>().text = uniquePowerModifier.upmPower.ToString();
+        modifier.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.upmDuration.ToString();
+        modifier.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.upmChance.ToString();
+        modifier.Find("Source").GetComponent<Text>().text = uniquePowerModifier.upmSource.ToString();
+        modifier.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.upmOrigin.ToString();
     }
 
     void DeactivateModifier(string modifierUIName)
@@ -554,9 +554,9 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
     {
         // get Unique power modifiers
-        UniquePowerModifier[] uniquePowerModifiers = partyUnit.GetComponentsInChildren<UniquePowerModifier>();
+        List<UniquePowerModifier> uniquePowerModifiers = partyUnit.UniquePowerModifiers;
         Transform uniquePowerModifiersTable = transform.Find("Panel/UniquePowerModifiersTable");
-        if (uniquePowerModifiers.Length > 0)
+        if (uniquePowerModifiers.Count > 0)
         {
             // Activate unique power modifiers table
             uniquePowerModifiersTable.gameObject.SetActive(true);
@@ -564,7 +564,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             for (int i = 1; i <= maxModifiers; i++)
             {
                 // Activate first modifier
-                if (i <= uniquePowerModifiers.Length)
+                if (i <= uniquePowerModifiers.Count)
                 {
                     // activate first modifier
                     ActivateModifier(("Modifier" + i.ToString()), uniquePowerModifiers[i - 1]);

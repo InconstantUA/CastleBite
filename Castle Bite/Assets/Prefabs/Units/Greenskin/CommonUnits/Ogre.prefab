@@ -38,41 +38,92 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Ogre
-  unitType: 13
-  isLeader: 0
-  unitLeadership: 0
-  givenName: Ogre
-  unitLevel: 1
-  unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 2000
-  unitExperienceReward: 1000
-  unitExperienceRewardIncrementOnLevelUp: 500
-  healthCurr: 450
-  healthMax: 450
-  healthMaxIncrementOnLevelUp: 100
-  unitDefence: 0
-  unitResistances: 
-  unitImmunities: 
-  unitAbility: 1
-  unitPower: 150
-  unitPowerIncrementOnLevelUp: 40
-  unitPowerSource: 0
-  unitPowerDistance: 0
-  unitPowerScope: 0
-  unitInitiative: 10
-  unitRole: Large strong and durable mele fighter
-  unitBriefDescription: 
-  unitFullDescription: Ogres are large, hideous, man-like being that eats ordinary
-    human beings, especially infants and children
-  hasMoved: 0
-  cost: 1200
-  unitSize: 1
-  isInterpartyMovable: 1
-  isDismissable: 1
-  unitStatus: 0
-  unitDebuffs: 
-  unitBuffs: 
+  partyUnitData:
+    unitName: UnitName
+    unitType: 7
+    isLeader: 0
+    unitLeadership: 0
+    givenName: GivenName
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 100
+    unitHealthMax: 100
+    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 11
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 0
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers: []
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 1
+    isInterpartyMovable: 1
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 
+    unitBuffs: 
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 0
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: 
 --- !u!224 &224363976082756200
 RectTransform:
   m_ObjectHideFlags: 1

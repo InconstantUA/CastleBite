@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224086146622810032}
   - component: {fileID: 114967515040118940}
-  - component: {fileID: 114185329295694118}
   m_Layer: 5
   m_Name: Troll
   m_TagString: Untagged
@@ -28,22 +27,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &114185329295694118
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1199747042690498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa93057f5663bca49a00d1d0f377a72b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appliedDebuff: 1
-  power: 5
-  duration: 2
-  chance: 70
-  source: 6
 --- !u!114 &114967515040118940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -55,41 +38,100 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Troll
-  unitType: 15
-  isLeader: 0
-  unitLeadership: 0
-  givenName: Troll
-  unitLevel: 1
-  unitExperience: 0
-  unitExperienceRequiredToReachNewLevel: 80
-  unitExperienceReward: 80
-  unitExperienceRewardIncrementOnLevelUp: 40
-  healthCurr: 55
-  healthMax: 55
-  healthMaxIncrementOnLevelUp: 5
-  unitDefence: 0
-  unitResistances: 
-  unitImmunities: 
-  unitAbility: 4
-  unitPower: 15
-  unitPowerIncrementOnLevelUp: 7
-  unitPowerSource: 0
-  unitPowerDistance: 1
-  unitPowerScope: 0
-  unitInitiative: 10
-  unitRole: Weak ranged fighter
-  unitBriefDescription: 
-  unitFullDescription: Trolls are tall skinny humanoids with long noses and rubbery
-    skin. Use spear covered with poison to hit their enemies from the distance.
-  hasMoved: 0
-  cost: 500
-  unitSize: 0
-  isInterpartyMovable: 1
-  isDismissable: 1
-  unitStatus: 0
-  unitDebuffs: 
-  unitBuffs: 
+  partyUnitData:
+    unitName: UnitName
+    unitType: 7
+    isLeader: 0
+    unitLeadership: 0
+    givenName: GivenName
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 100
+    unitHealthMax: 100
+    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 11
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 1
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers:
+    - upmAppliedDebuff: 1
+      upmPower: 5
+      upmPowerIncrementOnLevelUp: 3
+      upmDuration: 2
+      upmChance: 70
+      upmChanceIncrementOnLevelUp: 5
+      upmSource: 6
+      upmOrigin: 0
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 0
+    isInterpartyMovable: 1
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 
+    unitBuffs: 
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 0
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: 
 --- !u!224 &224086146622810032
 RectTransform:
   m_ObjectHideFlags: 1
