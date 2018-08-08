@@ -83,9 +83,44 @@ public class SaveGame : MonoBehaviour {
         }
     }
 
-    void PrepareHeroPartiesForSave(HeroParty[] heroParties)
+    void PrepareHeroPartiesForSave(List<HeroParty> heroParties)
     {
         foreach (HeroParty heroParty in heroParties)
+        {
+            // get party UI address
+            string partyUIAddress = heroParty.GetPartyUIAddress();
+            // set party map address
+            heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
+            // set party UI address
+            heroParty.PartyData.partyUIAddress = partyUIAddress;
+            Debug.Log(heroParty.name + " party UI address is " + heroParty.PartyData.partyUIAddress);
+            // set party panel data
+            heroParty.PartyData.partyPanelData = heroParty.transform.GetComponentInChildren<PartyPanel>(true).PartyPanelData;
+            // get all units in party
+            PartyUnit[] partyUnits = heroParty.transform.GetComponentInChildren<PartyPanel>(true).GetComponentsInChildren<PartyUnit>(true);
+            // init party units data
+            heroParty.PartyData.partyPanelData.partyUnitsData = new PartyUnitData[partyUnits.Length];
+            // foreach party unit
+            for (int i = 0; i < partyUnits.Length; i++)
+            {
+                // set party unit cell address
+                partyUnits[i].PartyUnitData.unitCellAddress = partyUnits[i].GetUnitCellUIAddress();
+                // Debug.Log(partyUnits[i].PartyUnitData.unitName + " unit cell address is " + partyUnits[i].PartyUnitData.unitCellAddress);
+                // set party units data
+                heroParty.PartyData.partyPanelData.partyUnitsData[i] = partyUnits[i].PartyUnitData;
+            }
+        }
+    }
+
+    GameData GetGameData()
+    {
+        Debug.Log("Get game data");
+        // Get game players
+        GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
+        // Init hero parties list
+        List<HeroParty> heroParties = new List<HeroParty>();
+        // Get all parties except Templates
+        foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
         {
             // get party UI address
             string partyUIAddress = heroParty.GetPartyUIAddress();
@@ -97,43 +132,15 @@ public class SaveGame : MonoBehaviour {
             }
             else
             {
-                // set party map address
-                heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
-                // set party UI address
-                heroParty.PartyData.partyUIAddress = partyUIAddress;
-                Debug.Log(heroParty.name + " party UI address is " + heroParty.PartyData.partyUIAddress);
-                // set party panel data
-                heroParty.PartyData.partyPanelData = heroParty.transform.GetComponentInChildren<PartyPanel>(true).PartyPanelData;
-                // get all units in party
-                PartyUnit[] partyUnits = heroParty.transform.GetComponentInChildren<PartyPanel>(true).GetComponentsInChildren<PartyUnit>(true);
-                // init party units data
-                heroParty.PartyData.partyPanelData.partyUnitsData = new PartyUnitData[partyUnits.Length];
-                // foreach party unit
-                for (int i = 0; i < partyUnits.Length; i++)
-                {
-                    // set party unit cell address
-                    // structure: PartyPanel-4[Top/Middle/Bottom]-3[Front/Back/Wide]-2UnitSlot-1UnitCanvas-partyUnit
-                    partyUnits[i].PartyUnitData.unitCellAddress = partyUnits[i].GetUnitCellUIAddress();
-                    // Debug.Log(partyUnits[i].PartyUnitData.unitName + " unit cell address is " + partyUnits[i].PartyUnitData.unitCellAddress);
-                    // set party units data
-                    heroParty.PartyData.partyPanelData.partyUnitsData[i] = partyUnits[i].PartyUnitData;
-                }
+                // add party to the list
+                heroParties.Add(heroParty);
             }
         }
-    }
-
-    GameData GetGameData()
-    {
-        Debug.Log("Get game data");
-        // Get game players
-        GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
-        // Get all parties
-        HeroParty[] heroParties = transform.root.GetComponentsInChildren<HeroParty>(true);
         // init game data
         GameData gameData = new GameData
         {
             playersData = new PlayerData[players.Length],
-            partiesData = new PartyData[heroParties.Length]
+            partiesData = new PartyData[heroParties.Count]
         };
         // Get and write to gameData players data
         for (int i = 0; i < players.Length; i++)
@@ -143,7 +150,7 @@ public class SaveGame : MonoBehaviour {
         // Set parties data - there are some values which are initialized only during save
         PrepareHeroPartiesForSave(heroParties);
         // Get and write to gameData parties data;
-        for (int i = 0; i < heroParties.Length; i++)
+        for (int i = 0; i < heroParties.Count; i++)
         {
             gameData.partiesData[i] = heroParties[i].PartyData;
         }

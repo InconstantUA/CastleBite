@@ -585,6 +585,16 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         };
     }
 
+    public Vector3 GetPositionByTile(int tileX, int tileY)
+    {
+        return new Vector3
+        {
+            x = tileX * tileSize,
+            y = tileY * tileSize,
+            z = 0
+        };
+    }
+
     Vector2Int GetTilePosition(Transform tr)
     {
         return GetTileByPosition(tr.position);

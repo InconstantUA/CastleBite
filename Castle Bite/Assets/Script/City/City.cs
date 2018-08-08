@@ -426,7 +426,7 @@ public class City : MonoBehaviour {
         GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map);
         // set it to the same position as the parent city
         newPartyOnMapUI.transform.position = parentCityOnMap.position;
-        //  activate new party UI panel
+        // activate new party UI panel
         newPartyOnMapUI.SetActive(true);
         // Link hero to the hero on the map
         MapHero heroOnMap = newPartyOnMapUI.GetComponent<MapHero>();

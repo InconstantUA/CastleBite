@@ -13,8 +13,10 @@ public enum PartyMode
 [Serializable]
 public struct PartyMapPosition
 {
-    public int x;
-    public int y;
+    public float offsetMinX;
+    public float offsetMinY;
+    public float offsetMaxX;
+    public float offsetMaxY;
 }
 
 [Serializable]
@@ -61,8 +63,10 @@ public class HeroParty : MonoBehaviour {
         // initialize map position with default values
         PartyMapPosition partyMapPosition = new PartyMapPosition
         {
-            x = 0,
-            y = 0
+            offsetMinX = 0,
+            offsetMinY = 0,
+            offsetMaxX = 0,
+            offsetMaxY = 0
         };
         // get map manager
         MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
@@ -92,13 +96,19 @@ public class HeroParty : MonoBehaviour {
                 }
                 else
                 {
-                    // get position
-                    Vector2Int position = mapManager.GetTileByPosition(linkedPartyOnMap.transform.position);
-                    // return position in PartyMapPosition format, which can be serialized
+                    //// get position
+                    //Vector2Int position = mapManager.GetTileByPosition(linkedPartyOnMap.transform.position);
+                    //// return position in PartyMapPosition format, which can be serialized
+                    //Debug.Log(" offsetMin.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x.ToString());
+                    //Debug.Log(" offsetMin.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y.ToString());
+                    //Debug.Log(" offsetMax.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x.ToString());
+                    //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
                     return new PartyMapPosition
                     {
-                        x = position.x,
-                        y = position.y
+                        offsetMinX = linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x,
+                        offsetMinY = linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y,
+                        offsetMaxX = linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x,
+                        offsetMaxY = linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y
                     };
                 }
             }

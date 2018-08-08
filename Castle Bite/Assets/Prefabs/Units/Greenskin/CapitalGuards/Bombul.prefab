@@ -40,7 +40,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyUnitData:
     unitName: Capital Guard
-    unitType: 1
+    unitType: 24
     isLeader: 1
     unitLeadership: 5
     givenName: Bombul

@@ -11,6 +11,14 @@ public class LoadGame : MonoBehaviour
 {
     [SerializeField]
     string fileExtension;
+    [SerializeField]
+    GameObject gamePlayerTemplate;
+    [SerializeField]
+    GameObject heroPartyTemplate;
+    [SerializeField]
+    GameObject unitCanvasTemplate;
+    [SerializeField]
+    GameObject heroPartyOnMapTemplate;
     string fullFilePath;
     TextToggle selectedToggle;
 
@@ -91,7 +99,7 @@ public class LoadGame : MonoBehaviour
     public void CreateGamePlayers(PlayerData[] players)
     {
         // Get player object Template
-        GameObject gamePlayerTemplate = transform.root.Find("Templates/Obj/GamePlayer").gameObject;
+        // GameObject gamePlayerTemplate = transform.root.Find("Templates/Obj/GamePlayer").gameObject;
         // Get players root
         Transform gamePlayersRoot = transform.root.Find("GamePlayers");
         // Init new player
@@ -126,17 +134,95 @@ public class LoadGame : MonoBehaviour
     {
         foreach(HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
         {
+            // verify if there is linked party on map
+            if (heroParty.GetLinkedPartyOnMap() != null)
+            {
+                // destroy hero party on map
+                Destroy(heroParty.GetLinkedPartyOnMap().gameObject);
+            }
+            // destroy hero party
             Destroy(heroParty.gameObject);
         }
     }
 
+    GameObject GetPartyUnitTemplateByType(UnitType unitType)
+    {
+        // loop through all party units in Templates
+        foreach (PartyUnit partyUnit in transform.root.Find("Templates/Obj").GetComponentsInChildren<PartyUnit>(true))
+        {
+            // verify if party unit type is of required type
+            if (unitType == partyUnit.PartyUnitData.unitType)
+            {
+                return partyUnit.gameObject;
+            }
+        }
+        // if nothing found, then log error and return null
+        Debug.LogError("Cannot find Party Unit template matching [" + unitType.ToString() + "] UnitType");
+        return null;
+    }
+
     public void CreateParties(PartyData[] partiesData)
     {
-        // create party
-        // place it in required UI address
-        // create party panel
-        // create units
-        // create party on map
+        foreach (PartyData partyData in partiesData)
+        {
+            Debug.Log("Creating party");
+            HeroParty newHeroParty;
+            if (partyData.partyMode == PartyMode.Garnizon)
+            {
+                //// skip creating party and update CityGarnizon party, which is always there
+                //// get hero party
+                //newHeroParty = transform.root.Find(partyData.partyUIAddress + "/CityGarnizon").GetComponent<HeroParty>();
+                // create party anyway, because it was previously removed.
+                newHeroParty = Instantiate(heroPartyTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
+            }
+            else
+            {
+                // create hero party from tempalte in required UI address
+                newHeroParty = Instantiate(heroPartyTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
+            }
+            // set hero party data
+            newHeroParty.PartyData = partyData;
+            // get party panel
+            PartyPanel partyPanel = newHeroParty.GetComponentInChildren<PartyPanel>();
+            // set party panel data
+            partyPanel.PartyPanelData = partyData.partyPanelData;
+            // create units
+            foreach (PartyUnitData partyUnitData in partyData.partyPanelData.partyUnitsData)
+            {
+                // get unit template by unit type
+                GameObject unitTemplate = GetPartyUnitTemplateByType(partyUnitData.unitType);
+                if (unitTemplate != null)
+                {
+                    Debug.Log("Creating unit of [" + partyUnitData.unitType + "] type from " + unitTemplate.name + " template");
+                    // create unit canvas in unit slot
+                    GameObject unitCanvas = Instantiate(unitCanvasTemplate, partyPanel.transform.Find(partyUnitData.unitCellAddress + "/UnitSlot"));
+                    // create unit in canvas
+                    Instantiate(unitTemplate, unitCanvas.transform);
+                }
+            }
+            // activate hero party
+            newHeroParty.gameObject.SetActive(true);
+            // verify if party is in garnizon mode
+            if (partyData.partyMode == PartyMode.Garnizon)
+            {
+                // skip creating party and update CityGarnizon party, which is always there
+            }
+            else
+            {
+                Debug.Log("Creating party on map representation");
+                // create party on map
+                Transform map = transform.root.Find("MapScreen/Map");
+                MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, map).GetComponent<MapHero>();
+                // place party to original position on map
+                newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
+                newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
+                // create links between party on map and hero party
+                newPartyOnMap.LinkedPartyTr = newHeroParty.transform;
+                newHeroParty.SetLinkedPartyOnMap(newPartyOnMap);
+                // activate hero on map
+                newPartyOnMap.gameObject.SetActive(true);
+            }
+        }
     }
 
     void SetParties(GameData gameData)
@@ -153,7 +239,8 @@ public class LoadGame : MonoBehaviour
         // Remove old and create new players
         SetPlayers(gameData);
         // .. Set cities
-        // .. Set Parties
+        // Remove old and create new parties
+        SetParties(gameData);
     }
 
     void LoadGameData()

@@ -8,10 +8,11 @@ using UnityEngine.UI;
 public enum UnitType
 {
     None,
-    CapitalGuard,
+    Archangel,
     Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer,
     Orc, Goblin, Ogre, Cyclop, Troll,
     Chevalier, Gladiator, Templar, Lancer, Warlord, Paladin, Champion, // Warrior upgrades
+    GiantToad,
     Unknown
 };
 
@@ -1164,6 +1165,7 @@ public class PartyUnit : MonoBehaviour {
 
     public string GetUnitCellUIAddress()
     {
+        // structure: PartyPanel-4[Top/Middle/Bottom]-3[Front/Back/Wide]-2UnitSlot-1UnitCanvas-partyUnit
         return transform.parent.parent.parent.parent.name + "/" + transform.parent.parent.parent.name;
     }
 
