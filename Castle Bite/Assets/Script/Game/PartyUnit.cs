@@ -1162,6 +1162,11 @@ public class PartyUnit : MonoBehaviour {
         GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = UnitHealthMax.ToString();
     }
 
+    public string GetUnitCellUIAddress()
+    {
+        return transform.parent.parent.parent.parent.name + "/" + transform.parent.parent.parent.name;
+    }
+
     #region Attributes accessors
     public string UnitName
     {
@@ -1803,4 +1808,16 @@ public class PartyUnit : MonoBehaviour {
     }
     #endregion Battle attributes
 
+    public PartyUnitData PartyUnitData
+    {
+        get
+        {
+            return partyUnitData;
+        }
+
+        set
+        {
+            partyUnitData = value;
+        }
+    }
 }

@@ -39,11 +39,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Archer
+    unitType: 11
     isLeader: 0
     unitLeadership: 0
-    givenName: GivenName
+    givenName: 
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
@@ -55,7 +55,7 @@ MonoBehaviour:
     unitHealthRegenPercent: 10
     unitDefense: 0
     unitResistances: []
-    unitAbility: 11
+    unitAbility: 12
     unitPower: 50
     unitPowerIncrementOnLevelUp: 10
     unitPowerSource: 0

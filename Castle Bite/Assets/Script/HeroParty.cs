@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public enum PartyMode
 {
     Party,
@@ -10,10 +11,19 @@ public enum PartyMode
 }
 
 [Serializable]
+public struct PartyMapPosition
+{
+    public int x;
+    public int y;
+}
+
+[Serializable]
 public class PartyData : System.Object
 {
     public Faction faction;
     public PartyMode partyMode;
+    public PartyMapPosition partyMapPosition;
+    public string partyUIAddress;
     public PartyPanelData partyPanelData; // initialized and used only during game save and load
 }
 
@@ -46,6 +56,55 @@ public class HeroParty : MonoBehaviour {
         }
     }
 
+    public PartyMapPosition GetPartyMapPosition()
+    {
+        // initialize map position with default values
+        PartyMapPosition partyMapPosition = new PartyMapPosition
+        {
+            x = 0,
+            y = 0
+        };
+        // get map manager
+        MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+        // verify if map manager is present
+        if (mapManager == null)
+        {
+            Debug.LogError("cannot find map manager");
+            // return default position
+            return partyMapPosition;
+        }
+        else
+        {
+            // verify if this is city garnizon
+            if (PartyMode.Garnizon == PartyMode)
+            {
+                // return default values as those values are not relevan
+                return partyMapPosition;
+            }
+            else
+            {
+                // verify if linked party on map is defined
+                if (linkedPartyOnMap == null)
+                {
+                    Debug.LogError("Linked party on map is null");
+                    // return default position
+                    return partyMapPosition;
+                }
+                else
+                {
+                    // get position
+                    Vector2Int position = mapManager.GetTileByPosition(linkedPartyOnMap.transform.position);
+                    // return position in PartyMapPosition format, which can be serialized
+                    return new PartyMapPosition
+                    {
+                        x = position.x,
+                        y = position.y
+                    };
+                }
+            }
+        }
+    }
+
     public void SetLinkedPartyOnMap(MapHero value)
     {
         linkedPartyOnMap = value;
@@ -54,6 +113,21 @@ public class HeroParty : MonoBehaviour {
     public MapHero GetLinkedPartyOnMap()
     {
         return linkedPartyOnMap;
+    }
+
+    public string GetPartyUIAddress(string address = "")
+    {
+        // init parent transform
+        Transform parentTransform = transform.parent;
+        // init address with the parent's address
+        address = parentTransform.name;
+        // get address untill we reach root
+        while (parentTransform.parent != transform.root)
+        {
+            parentTransform = parentTransform.parent;
+            address = parentTransform.name + "/" + address;
+        }
+        return address;
     }
 
     public Faction Faction
@@ -82,44 +156,4 @@ public class HeroParty : MonoBehaviour {
         }
     }
 
-    //public Faction GetFaction()
-    //{
-    //    return faction;
-    //}
-
-    //public void SetFaction(Faction value)
-    //{
-    //    faction = value;
-    //}
-
-    //public PartyMode GetMode()
-    //{
-    //    return partyMode;
-    //}
-
-    //public void SetMode(PartyMode value)
-    //{
-    //    partyMode = value;
-    //}
-
-    //public PartyPlace GetPlace()
-    //{
-    //    return partyPlace;
-    //}
-
-    //public void SetPlace(PartyPlace value)
-    //{
-    //    partyPlace = value;
-    //}
-
-
-    // Use this for initialization
-    //   void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
 }

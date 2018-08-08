@@ -39,19 +39,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Thief
+    unitType: 6
     isLeader: 1
     unitLeadership: 1
-    givenName: GivenName
+    givenName: Vincenzo
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
     unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
-    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthCurr: 70
+    unitHealthMax: 70
+    unitHealthMaxIncrementOnLevelUp: 15
     unitHealthRegenPercent: 10
     unitDefense: 0
     unitResistances: []

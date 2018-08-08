@@ -39,18 +39,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Templar
+    unitType: 19
     isLeader: 0
     unitLeadership: 0
-    givenName: GivenName
+    givenName: 
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
     unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
+    unitHealthCurr: 240
+    unitHealthMax: 240
     unitHealthMaxIncrementOnLevelUp: 20
     unitHealthRegenPercent: 10
     unitDefense: 0
@@ -79,8 +79,8 @@ MonoBehaviour:
     unitClassPoints: 0
     canLearnSkills: 0
     unitSkillPoints: 0
-    requiresUnitType: 0
-    unlocksUnitTypes: 
+    requiresUnitType: 18
+    unlocksUnitTypes: 16000000
     upgradeCost: 200
     statsUpgradesCount: 0
     movePointsCurrent: 0

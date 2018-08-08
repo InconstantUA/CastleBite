@@ -10,11 +10,11 @@ public enum PartyPanelMode {
     Garnizon
 }
 
-
 [Serializable]
 public class PartyPanelData : System.Object
 {
     public PartyPanelMode partyPanelMode;
+    public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
 }
 
 // Controls all operations with child panels

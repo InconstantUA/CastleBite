@@ -39,29 +39,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Orc Warrior
+    unitType: 12
     isLeader: 1
     unitLeadership: 3
-    givenName: GivenName
+    givenName: Gruzub
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
     unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
+    unitHealthCurr: 300
+    unitHealthMax: 300
     unitHealthMaxIncrementOnLevelUp: 20
-    unitHealthRegenPercent: 10
+    unitHealthRegenPercent: 20
     unitDefense: 0
     unitResistances: []
-    unitAbility: 11
-    unitPower: 50
-    unitPowerIncrementOnLevelUp: 10
+    unitAbility: 2
+    unitPower: 80
+    unitPowerIncrementOnLevelUp: 25
     unitPowerSource: 0
     unitPowerDistance: 0
     unitPowerScope: 0
-    unitInitiative: 50
+    unitInitiative: 45
     uniquePowerModifiers: []
     unitRole: Role
     unitBriefDescription: Brief description
@@ -77,7 +77,7 @@ MonoBehaviour:
     unitStatPoints: 0
     classIsUpgradable: 0
     unitClassPoints: 0
-    canLearnSkills: 0
+    canLearnSkills: 1
     unitSkillPoints: 0
     requiresUnitType: 0
     unlocksUnitTypes: 

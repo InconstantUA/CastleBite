@@ -39,29 +39,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
-    isLeader: 0
-    unitLeadership: 0
-    givenName: GivenName
+    unitName: Capital Guard
+    unitType: 1
+    isLeader: 1
+    unitLeadership: 5
+    givenName: Bombul
     unitLevel: 1
     unitExperience: 0
-    unitExperienceRequiredToReachNewLevel: 200
-    unitExperienceReward: 100
-    unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
-    unitHealthMaxIncrementOnLevelUp: 20
-    unitHealthRegenPercent: 10
+    unitExperienceRequiredToReachNewLevel: 9999
+    unitExperienceReward: 9999
+    unitExperienceRewardIncrementOnLevelUp: 0
+    unitHealthCurr: 250
+    unitHealthMax: 2500
+    unitHealthMaxIncrementOnLevelUp: 1000
+    unitHealthRegenPercent: 15
     unitDefense: 0
     unitResistances: []
-    unitAbility: 11
-    unitPower: 50
+    unitAbility: 17
+    unitPower: 250
     unitPowerIncrementOnLevelUp: 10
     unitPowerSource: 0
-    unitPowerDistance: 0
-    unitPowerScope: 0
-    unitInitiative: 50
+    unitPowerDistance: 1
+    unitPowerScope: 1
+    unitInitiative: 15
     uniquePowerModifiers: []
     unitRole: Role
     unitBriefDescription: Brief description

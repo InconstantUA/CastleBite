@@ -39,10 +39,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: Lahabiel
+    unitName: Capital Guard
     unitType: 1
-    isLeader: 0
-    unitLeadership: 0
+    isLeader: 1
+    unitLeadership: 5
     givenName: Lahabiel
     unitLevel: 1
     unitExperience: 0

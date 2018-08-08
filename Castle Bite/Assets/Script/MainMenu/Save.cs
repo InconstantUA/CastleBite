@@ -64,12 +64,13 @@ public class Save : MonoBehaviour {
             saveData.turnNumber = 0;
             // init list of players
             saveData.playersData = gameData.playersData;
+            // close file
+            fileStream.Close();
         }
         else
         {
             Debug.LogError("Attemt to process file which does not exist");
         }
-
     }
 
     void OnEnable()

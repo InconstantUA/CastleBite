@@ -124,12 +124,19 @@ public class LoadGame : MonoBehaviour
 
     public void RemoveAllParties()
     {
-
+        foreach(HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
+        {
+            Destroy(heroParty.gameObject);
+        }
     }
 
     public void CreateParties(PartyData[] partiesData)
     {
-
+        // create party
+        // place it in required UI address
+        // create party panel
+        // create units
+        // create party on map
     }
 
     void SetParties(GameData gameData)

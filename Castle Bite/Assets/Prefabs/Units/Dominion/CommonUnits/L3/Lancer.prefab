@@ -39,18 +39,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Lancer
+    unitType: 20
     isLeader: 0
     unitLeadership: 0
-    givenName: GivenName
+    givenName: 
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
     unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
+    unitHealthCurr: 230
+    unitHealthMax: 230
     unitHealthMaxIncrementOnLevelUp: 20
     unitHealthRegenPercent: 10
     unitDefense: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
     unitPowerSource: 0
     unitPowerDistance: 0
     unitPowerScope: 0
-    unitInitiative: 50
+    unitInitiative: 75
     uniquePowerModifiers: []
     unitRole: Role
     unitBriefDescription: Brief description
@@ -79,7 +79,7 @@ MonoBehaviour:
     unitClassPoints: 0
     canLearnSkills: 0
     unitSkillPoints: 0
-    requiresUnitType: 0
+    requiresUnitType: 17
     unlocksUnitTypes: 
     upgradeCost: 200
     statsUpgradesCount: 0

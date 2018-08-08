@@ -39,11 +39,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Orc Shaman
+    unitType: 12
     isLeader: 1
     unitLeadership: 3
-    givenName: GivenName
+    givenName: Zuragzar
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
@@ -77,7 +77,7 @@ MonoBehaviour:
     unitStatPoints: 0
     classIsUpgradable: 0
     unitClassPoints: 0
-    canLearnSkills: 0
+    canLearnSkills: 1
     unitSkillPoints: 0
     requiresUnitType: 0
     unlocksUnitTypes: 

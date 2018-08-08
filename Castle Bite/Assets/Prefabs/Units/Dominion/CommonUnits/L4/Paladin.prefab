@@ -39,21 +39,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
-    unitType: 7
+    unitName: Paladin
+    unitType: 22
     isLeader: 0
     unitLeadership: 0
-    givenName: GivenName
+    givenName: 
     unitLevel: 1
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
     unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
+    unitHealthCurr: 320
+    unitHealthMax: 320
     unitHealthMaxIncrementOnLevelUp: 20
     unitHealthRegenPercent: 10
-    unitDefense: 0
+    unitDefense: 20
     unitResistances: []
     unitAbility: 11
     unitPower: 50
@@ -79,7 +79,7 @@ MonoBehaviour:
     unitClassPoints: 0
     canLearnSkills: 0
     unitSkillPoints: 0
-    requiresUnitType: 0
+    requiresUnitType: 19
     unlocksUnitTypes: 
     upgradeCost: 200
     statsUpgradesCount: 0

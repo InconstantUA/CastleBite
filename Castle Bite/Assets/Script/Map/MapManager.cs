@@ -576,7 +576,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    Vector2Int GetTileByPosition(Vector3 position)
+    public Vector2Int GetTileByPosition(Vector3 position)
     {
         return new Vector2Int
         {

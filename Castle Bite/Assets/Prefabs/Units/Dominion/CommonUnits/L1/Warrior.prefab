@@ -39,12 +39,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: UnitName
+    unitName: Warrior
     unitType: 7
     isLeader: 0
     unitLeadership: 0
-    givenName: GivenName
-    unitLevel: 1
+    givenName: 
+    unitLevel: 15
     unitExperience: 0
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
@@ -73,14 +73,14 @@ MonoBehaviour:
     unitStatus: 0
     unitDebuffs: 
     unitBuffs: 
-    unitUpgradePoints: 0
+    unitUpgradePoints: 15
     unitStatPoints: 0
     classIsUpgradable: 1
     unitClassPoints: 0
     canLearnSkills: 0
     unitSkillPoints: 0
     requiresUnitType: 0
-    unlocksUnitTypes: 
+    unlocksUnitTypes: 1100000012000000
     upgradeCost: 200
     statsUpgradesCount: 0
     movePointsCurrent: 0
