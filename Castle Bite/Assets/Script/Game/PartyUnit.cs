@@ -10,9 +10,9 @@ public enum UnitType
     None,
     Archangel,
     Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer,
-    Orc, Goblin, Ogre, Cyclop, Troll,
+    OrcWarrior, Goblin, Ogre, Cyclop, Troll,
     Chevalier, Gladiator, Templar, Lancer, Warlord, Paladin, Champion, // Warrior upgrades
-    GiantToad,
+    GiantToad, OrcShaman,
     Unknown
 };
 
@@ -673,7 +673,7 @@ public class PartyUnit : MonoBehaviour {
         // verify if buffs array is not null
         if (UnitBuffs != null)
         {
-            Debug.Log(UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
+            //Debug.Log(UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
             // verify if buffs array was initialized properly
             if (UnitBuffs.Length != (int)UnitBuff.ArrSize)
             {

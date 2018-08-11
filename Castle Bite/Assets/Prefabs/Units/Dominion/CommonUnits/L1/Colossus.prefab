@@ -49,10 +49,10 @@ MonoBehaviour:
     unitExperienceRequiredToReachNewLevel: 200
     unitExperienceReward: 100
     unitExperienceRewardIncrementOnLevelUp: 100
-    unitHealthCurr: 100
-    unitHealthMax: 100
-    unitHealthMaxIncrementOnLevelUp: 20
-    unitHealthRegenPercent: 10
+    unitHealthCurr: 300
+    unitHealthMax: 300
+    unitHealthMaxIncrementOnLevelUp: 60
+    unitHealthRegenPercent: 20
     unitDefense: 0
     unitResistances: []
     unitAbility: 15

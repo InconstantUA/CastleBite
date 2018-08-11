@@ -13,33 +13,36 @@ public class UnitHirePanel : MonoBehaviour
 
     // Use this for initialization
     void Start() {
-        // populate panel with information from attached unitToHire
-        transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.UnitName + "]";
-        // pupulate additional unit information
-        if (Mode.FirstUnit == mode)
+        if (unitToHire != null)
         {
-            // fill in first hero hire menu with hero's most important characteristics
-            transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                unitToHire.UnitRole + "\r\n" +
-                unitToHire.UnitBriefDescription;
-        }
-        else
-        {
-            // Normal mode
-            if (unitToHire.UnitSize == UnitSize.Double)
+            // populate panel with information from attached unitToHire
+            transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.UnitName + "]";
+            // pupulate additional unit information
+            if (Mode.FirstUnit == mode)
             {
-                // for double size units also indicate their size
+                // fill in first hero hire menu with hero's most important characteristics
                 transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                    unitToHire.UnitCost.ToString() + "\r\n" +
-                    unitToHire.UnitLeadership.ToString() + "\r\n" +
-                    unitToHire.UnitRole + "\r\n" + "Large";
+                    unitToHire.UnitRole + "\r\n" +
+                    unitToHire.UnitBriefDescription;
             }
             else
             {
-                transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                    unitToHire.UnitCost.ToString() + "\r\n" +
-                    unitToHire.UnitLeadership.ToString() + "\r\n" +
-                    unitToHire.UnitRole;
+                // Normal mode
+                if (unitToHire.UnitSize == UnitSize.Double)
+                {
+                    // for double size units also indicate their size
+                    transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                        unitToHire.UnitCost.ToString() + "\r\n" +
+                        unitToHire.UnitLeadership.ToString() + "\r\n" +
+                        unitToHire.UnitRole + "\r\n" + "Large";
+                }
+                else
+                {
+                    transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                        unitToHire.UnitCost.ToString() + "\r\n" +
+                        unitToHire.UnitLeadership.ToString() + "\r\n" +
+                        unitToHire.UnitRole;
+                }
             }
         }
     }

@@ -62,7 +62,23 @@ MonoBehaviour:
     unitPowerDistance: 0
     unitPowerScope: 0
     unitInitiative: 50
-    uniquePowerModifiers: []
+    uniquePowerModifiers:
+    - upmAppliedDebuff: 3
+      upmPower: 20
+      upmPowerIncrementOnLevelUp: 5
+      upmDuration: 2
+      upmChance: 80
+      upmChanceIncrementOnLevelUp: 3
+      upmSource: 1
+      upmOrigin: 0
+    - upmAppliedDebuff: 4
+      upmPower: 0
+      upmPowerIncrementOnLevelUp: 0
+      upmDuration: 1
+      upmChance: 70
+      upmChanceIncrementOnLevelUp: 0
+      upmSource: 8
+      upmOrigin: 1
     unitRole: Role
     unitBriefDescription: Brief description
     unitFullDescription: Full description

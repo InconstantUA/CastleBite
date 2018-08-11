@@ -73,7 +73,7 @@ public class MapCity : MonoBehaviour
         // set label
         label = GetComponentInChildren<MapObjectLabel>();
         // set label text
-        label.LabelTxt.text = "[" + linkedCity.GetCityName() + "]\n\r <size=12>" + linkedCity.GetCityDescription() + "</size>";
+        label.LabelTxt.text = "[" + linkedCity.CityName + "]\n\r <size=12>" + linkedCity.CityDescription + "</size>";
     }
 
     //void Update()

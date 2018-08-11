@@ -16,6 +16,8 @@ public class LoadGame : MonoBehaviour
     [SerializeField]
     GameObject heroPartyTemplate;
     [SerializeField]
+    GameObject cityGarnizonTemplate;
+    [SerializeField]
     GameObject unitCanvasTemplate;
     [SerializeField]
     GameObject heroPartyOnMapTemplate;
@@ -145,22 +147,6 @@ public class LoadGame : MonoBehaviour
         }
     }
 
-    GameObject GetPartyUnitTemplateByType(UnitType unitType)
-    {
-        // loop through all party units in Templates
-        foreach (PartyUnit partyUnit in transform.root.Find("Templates/Obj").GetComponentsInChildren<PartyUnit>(true))
-        {
-            // verify if party unit type is of required type
-            if (unitType == partyUnit.PartyUnitData.unitType)
-            {
-                return partyUnit.gameObject;
-            }
-        }
-        // if nothing found, then log error and return null
-        Debug.LogError("Cannot find Party Unit template matching [" + unitType.ToString() + "] UnitType");
-        return null;
-    }
-
     public void CreateParties(PartyData[] partiesData)
     {
         foreach (PartyData partyData in partiesData)
@@ -173,7 +159,10 @@ public class LoadGame : MonoBehaviour
                 //// get hero party
                 //newHeroParty = transform.root.Find(partyData.partyUIAddress + "/CityGarnizon").GetComponent<HeroParty>();
                 // create party anyway, because it was previously removed.
-                newHeroParty = Instantiate(heroPartyTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
+                //newHeroParty = Instantiate(heroPartyTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
+                // there should be higher unit button in city garnizon, that is why it has other template
+                // .. in future - move buttons to separate UI
+                newHeroParty = Instantiate(cityGarnizonTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
             }
             else
             {
@@ -190,7 +179,7 @@ public class LoadGame : MonoBehaviour
             foreach (PartyUnitData partyUnitData in partyData.partyPanelData.partyUnitsData)
             {
                 // get unit template by unit type
-                GameObject unitTemplate = GetPartyUnitTemplateByType(partyUnitData.unitType);
+                GameObject unitTemplate = transform.root.GetComponentInChildren<TemplatesManager>().GetPartyUnitTemplateByType(partyUnitData.unitType);
                 if (unitTemplate != null)
                 {
                     Debug.Log("Creating unit of [" + partyUnitData.unitType + "] type from " + unitTemplate.name + " template");

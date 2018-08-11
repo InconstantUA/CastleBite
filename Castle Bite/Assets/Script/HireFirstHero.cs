@@ -166,20 +166,19 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return selectedAbility;
     }
 
-    PartyUnit GetSelectedUnit()
+    UnitType GetSelectedUnitType()
     {
         //  Find selected toggle and get attached to it unit template
         //  Hierarchy HirePartyLeader-Panel-Controls-(this)HireBtn
         Toggle[] toggles = transform.parent.parent.GetComponentsInChildren<ToggleGroup>()[1].GetComponentsInChildren<Toggle>();
-        PartyUnit selectedUnit = null;
         foreach (Toggle toggle in toggles)
         {
             if (toggle.isOn)
             {
-                selectedUnit = toggle.GetComponent<UnitHirePanel>().GetUnitToHire();
+                return toggle.GetComponent<UnitHirePanel>().GetUnitToHire().UnitType;
             }
         }
-        return selectedUnit;
+        return UnitType.Unknown;
     }
 
     Transform GetCityTransform()
@@ -207,7 +206,7 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
         transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(players);
         // Ask City to Hire chosen unit
-        GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnit());
+        GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
         // Activate required object
         gameObjectToBeActivated.SetActive(true);
         // Deactivate required object

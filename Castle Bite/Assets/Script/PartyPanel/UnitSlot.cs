@@ -25,6 +25,11 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
 
+    void OnTransformChildrenChanged()
+    {
+        Debug.Log("The list of children has changed");
+    }
+
     public bool IsAllowedToApplyPowerToThisUnit
     {
         get

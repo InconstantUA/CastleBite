@@ -139,6 +139,26 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
+    string GetCellAddressString(Transform cellTransform)
+    {
+        Debug.Log("Cell address string is " + cellTransform.parent.name + "/" + cellTransform.name);
+        return cellTransform.parent.name + "/" + cellTransform.name;
+    }
+
+    void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
+    {
+        // get HireCommonUnitButtons
+        // structure:
+        // 2City-1CityGarnizon/HeroParty-this(PartyPanel)
+        // City-HireCommonUnitButtons-cellAddress-HirePartyUnitButton
+        Debug.Log("address " + cellAddress);
+        Debug.Log("City " + transform.parent.parent.name);
+        Debug.Log("HireCommonUnitButtons " + transform.parent.parent.Find("HireCommonUnitButtons").name);
+        Debug.Log("Cell " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).name);
+        Debug.Log("HirePartyUnitButton " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).name);
+        transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+    }
+
     void OnHireSingleUnit(Transform changedCell)
     {
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
@@ -150,7 +170,8 @@ public class PartyPanel : MonoBehaviour {
         changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
         changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
         // disable hire unit button
-        changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+        SetHireUnitButtonActiveByCell(false, GetCellAddressString(changedCell));
+        //changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
     }
 
     void OnHireDoubleUnit(Transform changedCell)
@@ -160,6 +181,9 @@ public class PartyPanel : MonoBehaviour {
         // And disable left and right panels
         changedCell.parent.Find("Front").gameObject.SetActive(false);
         changedCell.parent.Find("Back").gameObject.SetActive(false);
+        // Disable hire unit buttons
+        SetHireUnitButtonActiveByCell(false, changedCell.parent.name + "/Front");
+        SetHireUnitButtonActiveByCell(false, changedCell.parent.name + "/Back");
         // Update name and health information
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
@@ -194,7 +218,8 @@ public class PartyPanel : MonoBehaviour {
         if (PartyPanelMode.Garnizon == PartyPanelMode)
         {
             Debug.Log("Activate hire unit button");
-            changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+            SetHireUnitButtonActiveByCell(true, GetCellAddressString(changedCell));
+            //changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(true);
         }
     }
 
@@ -218,8 +243,10 @@ public class PartyPanel : MonoBehaviour {
         if (PartyPanelMode.Garnizon == PartyPanelMode)
         {
             Debug.Log("Activate hire unit button");
-            changedCell.parent.Find("Front/HireUnitPnlBtn").gameObject.SetActive(true);
-            changedCell.parent.Find("Back/HireUnitPnlBtn").gameObject.SetActive(true);
+            SetHireUnitButtonActiveByCell(true, changedCell.parent.name + "/Front");
+            SetHireUnitButtonActiveByCell(true, changedCell.parent.name + "/Back");
+            //changedCell.parent.Find("Front/HireUnitPnlBtn").gameObject.SetActive(true);
+            //changedCell.parent.Find("Back/HireUnitPnlBtn").gameObject.SetActive(true);
         }
     }
 
@@ -313,7 +340,14 @@ public class PartyPanel : MonoBehaviour {
                     // deactivate hire unit button if panel is in garnizon state and this left or right single panel
                     if ((PartyPanelMode.Garnizon == PartyPanelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
-                        unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
+                        //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+                    }
+                    // deactivate hire unit buttons for Front and Back cells, if wide cell is active
+                    else if ((PartyPanelMode.Garnizon == PartyPanelMode) && ("Wide" == cell))
+                    {
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Front");
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Back");
                     }
                 }
                 else
@@ -325,7 +359,12 @@ public class PartyPanel : MonoBehaviour {
                     // activate hire unit button if panel is in garnizon state and this left or right single panel
                     if ((PartyPanelMode.Garnizon == PartyPanelMode) && (("Front" == cell) || ("Back" == cell)))
                     {
-                        unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                        // verify if wide (double) cell is not occupied in the same row
+                        if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
+                        {
+                            SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
+                        }
+                        //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
                     }
                     // it is possible that double unit was dismissed
                     if ("Wide" == cell)
@@ -354,6 +393,7 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
+                    // Debug.Log("Slot address: " + unitSlot.parent.parent.parent.parent.parent.name + " " + unitSlot.parent.parent.parent.parent.name + " " + unitSlot.parent.parent.parent.name + " " + horisontalPanel + " " + cell);
                     // verify if unit has isLeader atrribute ON
                     PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
                     // Debug.Log(unit.UnitName);
@@ -430,7 +470,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetHireUnitPnlButtonActive(bool activate)
     {
-        GameObject hireUnitPnlBtn;
+        //GameObject hireUnitPnlBtn;
         // this is only needed in garnizon mode, only in this mode hire buttons are present
         if (PartyPanelMode == PartyPanelMode.Garnizon)
         {
@@ -444,30 +484,35 @@ public class PartyPanel : MonoBehaviour {
                         // do not activate it if drop slot has an unit in it
                         if (!transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
                         {
-                            // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsLastSibling();
-                            hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
-                            hireUnitPnlBtn.SetActive(true);
-                            // and bring it to the front
-                            hireUnitPnlBtn.transform.SetAsLastSibling();
+                            // verify if wide cell is not occupied in the same row
+                            if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
+                            {
+                                // verify if city capacity is enough
+                                if (GetCapacity() > GetNumberOfPresentUnits())
+                                {
+                                    SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
+                                }
+                            }
+                            //hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
+                            //hireUnitPnlBtn.SetActive(true);
+                            //// and bring it to the front
+                            //hireUnitPnlBtn.transform.SetAsLastSibling();
                         }
                         else
                         {
                             // Debug.Log("slot " + horisontalPanel + " " + cell + " has a unit");
-                            hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
-                            hireUnitPnlBtn.SetActive(false);
+                            SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
+                            //hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
+                            //hireUnitPnlBtn.SetActive(false);
                         }
+                        // And bring panel to the front
+                        transform.parent.parent.Find("HireCommonUnitButtons").SetAsLastSibling();
                     }
                     else
                     {
-                        //// deactivate - set behind drop slot
-                        //if (partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount == 0)
-                        //{
-                        // partyPanel.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").SetAsFirstSibling();
-                        hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
-                        hireUnitPnlBtn.SetActive(false);
-                        //}
-                        // and bring it to the front
-                        // hireUnitPnlBtn.transform.SetAsLastSibling();
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
+                        //hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
+                        //hireUnitPnlBtn.SetActive(false);
                     }
                 }
             }
@@ -519,11 +564,11 @@ public class PartyPanel : MonoBehaviour {
             // this depends if city has reached max level
             City city = GetCity();
             string errMsg;
-            if (city.GetCityLevel() == 1)
+            if (city.CityLevelCurrent == 1)
             {
                 errMsg = "Not enough city capacity, 2 free slots are required. Increase city level.";
             }
-            else if (city.HasCityReachedMaximumLevel())
+            else if (city.CityLevelCurrent >= city.CityLevelMax) // note city level for capital is 6, which is higher than for normal city
             {
                 errMsg = "Not enough city capacity, 2 free slots are required. Dismiss or move other units to Hero's party.";
             }

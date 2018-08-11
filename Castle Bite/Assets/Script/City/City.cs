@@ -1,42 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
+public enum CityType {
+    Normal,
+    Capital
+};
+
+[Serializable]
+public class CityData
+{
+    public Faction cityFaction;
+    public CityType cityType;
+    public string cityName;
+    public string cityDescription;
+    public int cityLevelCurrent = 1;
+    public int cityLevelMax = 5;
+    public UnitType[] hireablePartyLeaders;
+    public UnitType[] hireableCommonUnits;
+}
+
 public class City : MonoBehaviour {
     [SerializeField]
-    string cityName;
-    [SerializeField]
-    string cityDescription;
-    [SerializeField]
-    int cityLevel;
-    public enum CityType { Normal, Capital };
-    [SerializeField]
-    CityType cityType;
-    int maxCityLevel = 5;
-    public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
-    [SerializeField]
-    CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
-    public enum CityOccupationState { NoHeroIn, HeroIn };
-    [SerializeField]
-    CityOccupationState cityOccupationState;
-    [SerializeField]
-    Faction faction;
-    MapCity linkedMapCity;
+    CityData cityData;
 
-    public MapCity LinkedMapCity
-    {
-        get
-        {
-            return linkedMapCity;
-        }
+    public MapCity LinkedMapCity { get; set; }
 
-        set
-        {
-            linkedMapCity = value;
-        }
-    }
-
+    // to be moved to other class
     // City view state is required to effectively change between different states
     // and do not forget to enable or disable something
     // we need to correct transition to normal state after leaving city view
@@ -49,90 +42,38 @@ public class City : MonoBehaviour {
     // The same for city occupation state
     // If hero leaves city, the we should return city state o NoHeroIn
     // and activate hire hero button
+    public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
+    [SerializeField]
+    CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
 
-    public string GetCityName()
-    {
-        return cityName;
-    }
 
-    public string GetCityDescription()
-    {
-        return cityDescription;
-    }
-
-    public int GetCityLevel()
-    {
-        return cityLevel;
-    }
-
-    public CityType GetCityType()
-    {
-        return cityType;
-    }
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
+    //public enum CityOccupationState { NoHeroIn, HeroIn };
+    //[SerializeField]
+    //CityOccupationState cityOccupationState;
 
     public int GetCityDefense()
     {
         int bonus = 0;
-        if (cityType == CityType.Capital)
+        if (CityType == CityType.Capital)
         {
             bonus = 20;
         }
-        return (cityLevel * 5) + bonus;
+        return (CityLevelCurrent * 5) + bonus;
     }
 
     public int GetHealPerDay()
     {
         int bonus = 0;
-        if (cityType == CityType.Capital)
+        if (CityType == CityType.Capital)
         {
             bonus = 20;
         }
-        return (cityLevel * 5) + 5 + bonus;
+        return (CityLevelCurrent * 5) + 5 + bonus;
     }
 
     public int GetUnitsCapacity()
     {
-        return cityLevel;
-    }
-
-    public Faction Faction
-    {
-        get
-        {
-            return faction;
-        }
-
-        set
-        {
-            faction = value;
-        }
-    }
-
-    //public Faction GetFaction()
-    //{
-    //    return faction;
-    //}
-
-    //public void SetFaction(Faction value)
-    //{
-    //    faction = value;
-    //}
-
-    public bool HasCityReachedMaximumLevel()
-    {
-        bool result = false;
-        // note city level for capital is 6, which is higher than for normal city
-        if  (cityLevel >= maxCityLevel)
-        {
-            // city has reached its maximum level
-            result = true;
-        }
-        return result;
+        return CityLevelCurrent;
     }
 
     #region Active city states: dismiss, heal, resurect, hero equipment, unit drag
@@ -175,8 +116,7 @@ public class City : MonoBehaviour {
         }
         // Update 
         cityViewActiveState = requiredState;
-        // instruct party and garnizon panels to
-        // highlight differently cells with and without units
+        // instruct party and garnizon panels to highlight differently cells with and without units
         // and disable hire buttons
         // verfiy if there is a city garnizon == we are in city edit mode and not in hero party edit mode
         if (transform.Find("CityGarnizon"))
@@ -205,43 +145,33 @@ public class City : MonoBehaviour {
             }
         }
         // if hero party is present,
-        // then activate active state highligh
-        // if not - then disable hire hero button, if we are entering one of active states or enable it if we exit one of active states
-        // HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
+        // then activate active state highlight
+        // if not - then disable hire hero button, 
+        // also disable hire hero button if we are entering one of active states or enable it if we exit one of active states
         HeroParty heroParty = GetHeroPartyByMode(PartyMode.Party);
-        if (heroParty) { 
-        //if (heroParties.Length > 1)
-        //{
-        //    // Loop through hero parties untill we find the party in party not garnizon mode
-        //    foreach (HeroParty heroParty in heroParties)
-        //    {
-        //        // compare if hero party is in party (not in garnizon mode)
-        //        if (heroParty.PartyMode == PartyMode.Party)
-        //        {
-                    // Set active state (highligh)
-                    switch (cityViewActiveState)
-                    {
-                        case CityViewActiveState.ActiveDismiss:
-                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
-                            break;
-                        case CityViewActiveState.ActiveHeal:
-                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
-                            break;
-                        case CityViewActiveState.ActiveResurect:
-                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
-                            break;
-                        case CityViewActiveState.ActiveHeroEquipment:
-                            SetActiveHeroEquipment(doActivate);
-                            break;
-                        case CityViewActiveState.ActiveUnitDrag:
-                            heroParty.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
-                            break;
-                        default:
-                            Debug.LogError("Unknown condition");
-                            break;
-                    }
-            //    }
-            //}
+        if (heroParty) {
+            // Set active state (highligh)
+            switch (cityViewActiveState)
+            {
+                case CityViewActiveState.ActiveDismiss:
+                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
+                    break;
+                case CityViewActiveState.ActiveHeal:
+                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
+                    break;
+                case CityViewActiveState.ActiveResurect:
+                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
+                    break;
+                case CityViewActiveState.ActiveHeroEquipment:
+                    SetActiveHeroEquipment(doActivate);
+                    break;
+                case CityViewActiveState.ActiveUnitDrag:
+                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                    break;
+                default:
+                    Debug.LogError("Unknown condition");
+                    break;
+            }
         }
         else
         {
@@ -249,7 +179,7 @@ public class City : MonoBehaviour {
             if (transform.Find("CityGarnizon"))
             {
                 // there is no hero in city any more, activate or deactivate hire hero panel button
-                transform.Find("HireHeroPanel/HireHeroPanelBtn").gameObject.SetActive(!doActivate);
+                transform.Find("HireHeroPanel").gameObject.SetActive(!doActivate);
             }
         }
         // Update cursor
@@ -352,7 +282,7 @@ public class City : MonoBehaviour {
 
     #endregion
 
-    #region UnitHire
+    #region Hire Unit
 
     bool VerifyIfPlayerHasEnoughGoldToBuyUnit(PartyUnit hiredUnitTemplate)
     {
@@ -469,7 +399,7 @@ public class City : MonoBehaviour {
         SetHeroPartyRepresentationOnTheMap(newLeaderParty, newPartyUnit);
     }
 
-    #endregion
+    #endregion Hire Hero
 
     #region Hire Single Unit
 
@@ -500,7 +430,7 @@ public class City : MonoBehaviour {
             TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
         }
     }
-    #endregion
+    #endregion Hire Single Unit
 
     #region Hire Double unit
 
@@ -544,10 +474,12 @@ public class City : MonoBehaviour {
         }
     }
 
-    #endregion
+    #endregion Hire Double unit
 
-    public void HireUnit(Transform callerCell, PartyUnit hiredUnitTemplate)
+    public void HireUnit(Transform callerCell, UnitType hiredUnitType)
     {
+        // get template for selected unit type
+        PartyUnit hiredUnitTemplate = transform.root.Find("Templates").GetComponent<TemplatesManager>().GetPartyUnitTemplateByType(hiredUnitType).GetComponent<PartyUnit>();
         // 1 do basic verications, which are applicable to every hired unit
         if (VerifyIfPlayerHasEnoughGoldToBuyUnit(hiredUnitTemplate))
         {
@@ -571,7 +503,7 @@ public class City : MonoBehaviour {
         }
     }
 
-    #endregion
+    #endregion Hire Unit
 
     #region Dismiss unit
 
@@ -664,5 +596,112 @@ public class City : MonoBehaviour {
         // disable dismiss mode and return to normal mode
         ReturnToNomalState();
     }
-    #endregion
+    #endregion Dismiss unit
+
+    #region City Properties
+    public Faction Faction
+    {
+        get
+        {
+            return cityData.cityFaction;
+        }
+
+        set
+        {
+            cityData.cityFaction = value;
+        }
+    }
+
+    public CityType CityType
+    {
+        get
+        {
+            return cityData.cityType;
+        }
+
+        set
+        {
+            cityData.cityType = value;
+        }
+    }
+
+    public string CityName
+    {
+        get
+        {
+            return cityData.cityName;
+        }
+
+        set
+        {
+            cityData.cityName = value;
+        }
+    }
+
+    public string CityDescription
+    {
+        get
+        {
+            return cityData.cityDescription;
+        }
+
+        set
+        {
+            cityData.cityDescription = value;
+        }
+    }
+
+    public int CityLevelCurrent
+    {
+        get
+        {
+            return cityData.cityLevelCurrent;
+        }
+
+        set
+        {
+            cityData.cityLevelCurrent = value;
+        }
+    }
+
+    public int CityLevelMax
+    {
+        get
+        {
+            return cityData.cityLevelMax;
+        }
+
+        set
+        {
+            cityData.cityLevelMax = value;
+        }
+    }
+
+    public UnitType[] HireablePartyLeaders
+    {
+        get
+        {
+            return cityData.hireablePartyLeaders;
+        }
+
+        set
+        {
+            cityData.hireablePartyLeaders = value;
+        }
+    }
+
+    public UnitType[] HireableCommonUnits
+    {
+        get
+        {
+            return cityData.hireableCommonUnits;
+        }
+
+        set
+        {
+            cityData.hireableCommonUnits = value;
+        }
+    }
+    #endregion City Properties
+
 }

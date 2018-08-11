@@ -40,7 +40,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   partyUnitData:
     unitName: Orc Shaman
-    unitType: 12
+    unitType: 25
     isLeader: 1
     unitLeadership: 3
     givenName: Zuragzar
