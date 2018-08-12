@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 224206828903060132}
   - component: {fileID: 114481825981536902}
   m_Layer: 5
-  m_Name: CityGarnizon
+  m_Name: CityGarnizon Old
   m_TagString: CityGarnizon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

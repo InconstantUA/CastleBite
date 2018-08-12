@@ -13,7 +13,11 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         itemBeingDragged = gameObject;
         startPosition = transform.position;
         startParent = transform.parent;
+        // disable raycasts
         GetComponent<CanvasGroup>().blocksRaycasts = false;
+        // change parent outside of Mask, to PartyInventory, so that canvas is not affected by Mask UI component
+        // structure 4PartyInventory-3ItemsList(with Mask)-2Grid-1ItemSlot-Canvas(Item)
+        transform.SetParent(transform.parent.parent.parent.parent);
     }
     #endregion
     #region IDragHandler implementation

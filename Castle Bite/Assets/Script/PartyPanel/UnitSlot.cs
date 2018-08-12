@@ -25,9 +25,65 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
 
+    void UpdateUnitEquipmentControl()
+    {
+        // verify if party is in party mode, because only in this mode it has leader and should have equipment button visible
+        if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>().PartyMode == PartyMode.Party)
+        {
+            // verify if there is unit in slot
+            PartyUnit partyUnit = GetUnit();
+            if (partyUnit != null)
+            {
+                // verify if unit is leader
+                if (partyUnit.IsLeader)
+                {
+                    // activate equipment button
+                    //Debug.LogWarning("Enable equipment button");
+                    transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(true);
+                }
+                else
+                {
+                    // deactivate equipment button
+                    //Debug.LogWarning("Disable equipment button");
+                    transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                // deactivate equipment button
+                //Debug.LogWarning("Disable equipment button");
+                transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            // deactivate equipment button
+            //Debug.LogWarning("Disable equipment button");
+            transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateUpgradeUnitControl()
+    {
+        // verify if there is unit in slot
+        PartyUnit partyUnit = GetUnit();
+        if (partyUnit != null)
+        {
+            //Debug.LogWarning("Enable upgrade unit + button");
+            transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(true);
+        }
+        else
+        {
+            //Debug.LogWarning("Disable upgrade unit + button");
+            transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(false);
+        }
+    }
+
     void OnTransformChildrenChanged()
     {
         Debug.Log("The list of children has changed");
+        UpdateUnitEquipmentControl();
+        UpdateUpgradeUnitControl();
     }
 
     public bool IsAllowedToApplyPowerToThisUnit
@@ -43,7 +99,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // verify if slot has unit in it
         if (transform.childCount > 0)
         {
-            return unitSlot.GetComponentInChildren<PartyUnit>();
+            return transform.GetComponentInChildren<UnitDragHandler>(true).GetComponentInChildren<PartyUnit>(true);
         }
         return null;
     }
@@ -54,6 +110,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // define actions
         disableYesAction = new UnityAction(OnDismissYesConfirmation);
         disableNoAction = new UnityAction(OnDismissNoConfirmation);
+        // trigger changes
+        OnTransformChildrenChanged();
     }
 
     void Start()

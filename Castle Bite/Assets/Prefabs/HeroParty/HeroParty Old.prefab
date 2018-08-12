@@ -1851,7 +1851,7 @@ GameObject:
   - component: {fileID: 224738741238083950}
   - component: {fileID: 114119814347071210}
   m_Layer: 5
-  m_Name: HeroParty
+  m_Name: HeroParty Old
   m_TagString: HeroParty
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
