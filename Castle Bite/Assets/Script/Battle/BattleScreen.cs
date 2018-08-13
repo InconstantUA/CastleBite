@@ -113,8 +113,9 @@ public class BattleScreen : MonoBehaviour {
         enemyHeroParty.transform.SetParent(transform);
         // disable player party inventory and equipment
         playerHeroParty.transform.Find("PartyInventory").gameObject.SetActive(false);
-        playerHeroParty.transform.Find("HeroEquipment").gameObject.SetActive(false);
-        playerHeroParty.transform.Find("HeroEquipmentBtn").gameObject.SetActive(false);
+        playerHeroParty.transform.Find("PartyInventory").gameObject.SetActive(false);
+        //playerHeroParty.transform.Find("HeroEquipment").gameObject.SetActive(false);
+        //playerHeroParty.transform.Find("HeroEquipmentBtn").gameObject.SetActive(false);
         // Get parties panels
         playerPartyPanel = playerHeroParty.GetComponentInChildren<PartyPanel>();
         enemyPartyPanel = enemyHeroParty.GetComponentInChildren<PartyPanel>();

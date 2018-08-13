@@ -241,8 +241,8 @@ public class City : MonoBehaviour {
                     break;
                 case CityViewActiveState.ActiveHeroEquipment:
                     // SetActiveState(cityViewActiveState, false);
-                    GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
-                    GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
+                    //GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
+                    //GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
                     break;
             }
         }
@@ -330,14 +330,14 @@ public class City : MonoBehaviour {
         GameObject newPartyUIPanel = Instantiate(heroPartyPanelTemplate, transform);
         //  activate new party UI panel
         newPartyUIPanel.SetActive(true);
-        //  set hero's equipment button to be part of city control panel ToggleGroup
-        //  this should be unset on hero leaving city
-        ToggleGroup toggleGroup = transform.Find("CtrlPnlCity").GetComponent<ToggleGroup>();
-        Toggle heroEquipmentToggle = newPartyUIPanel.transform.Find("HeroEquipmentBtn").GetComponent<Toggle>();
-        heroEquipmentToggle.group = toggleGroup;
-        //  set HeroEquipmentBtn Toggle within CityControlPanel, so it can dimm or deselect it when other Toggles in group are activated
-        //  this should be set to null on hero leaving or accessed outside of the city.
-        toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
+        ////  set hero's equipment button to be part of city control panel ToggleGroup
+        ////  this should be unset on hero leaving city
+        //ToggleGroup toggleGroup = transform.Find("CtrlPnlCity").GetComponent<ToggleGroup>();
+        //Toggle heroEquipmentToggle = newPartyUIPanel.transform.Find("HeroEquipmentBtn").GetComponent<Toggle>();
+        //heroEquipmentToggle.group = toggleGroup;
+        ////  set HeroEquipmentBtn Toggle within CityControlPanel, so it can dimm or deselect it when other Toggles in group are activated
+        ////  this should be set to null on hero leaving or accessed outside of the city.
+        //toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(heroEquipmentToggle);
         // Set party mode
         newPartyUIPanel.GetComponent<HeroParty>().PartyMode = PartyMode.Party;
         // Set party place

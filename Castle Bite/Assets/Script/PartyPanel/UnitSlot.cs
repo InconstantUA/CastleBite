@@ -25,8 +25,10 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
 
-    void UpdateUnitEquipmentControl()
+    IEnumerator UpdateUnitEquipmentControl()
     {
+        // skip 1 frame untill child object is fully instantiated
+        yield return null;
         // verify if party is in party mode, because only in this mode it has leader and should have equipment button visible
         if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>().PartyMode == PartyMode.Party)
         {
@@ -63,18 +65,20 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    void UpdateUpgradeUnitControl()
+    IEnumerator UpdateUpgradeUnitControl()
     {
+        // skip 1 frame untill child object is fully instantiated
+        yield return null;
         // verify if there is unit in slot
         PartyUnit partyUnit = GetUnit();
         if (partyUnit != null)
         {
-            //Debug.LogWarning("Enable upgrade unit + button");
+            Debug.LogWarning("Enable upgrade unit + button");
             transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(true);
         }
         else
         {
-            //Debug.LogWarning("Disable upgrade unit + button");
+            Debug.LogWarning("Disable upgrade unit + button");
             transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(false);
         }
     }
@@ -82,8 +86,11 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void OnTransformChildrenChanged()
     {
         Debug.Log("The list of children has changed");
-        UpdateUnitEquipmentControl();
-        UpdateUpgradeUnitControl();
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(UpdateUnitEquipmentControl());
+            StartCoroutine(UpdateUpgradeUnitControl());
+        }
     }
 
     public bool IsAllowedToApplyPowerToThisUnit
@@ -99,7 +106,22 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // verify if slot has unit in it
         if (transform.childCount > 0)
         {
-            return transform.GetComponentInChildren<UnitDragHandler>(true).GetComponentInChildren<PartyUnit>(true);
+            Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " has childs");
+            // check whether we are in battle or in other mode
+            if (transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true))
+            {
+                // we are in battle mode
+                return transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true).GetComponentInChildren<PartyUnit>(true);
+            }
+            else
+            {
+                // we are in other mode
+                return transform.GetComponentInChildren<UnitDragHandler>(true).GetComponentInChildren<PartyUnit>(true);
+            }
+        }
+        else
+        {
+            Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " is empty");
         }
         return null;
     }
