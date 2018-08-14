@@ -153,10 +153,15 @@ public class PartyPanel : MonoBehaviour {
         // City-HireCommonUnitButtons-cellAddress-HirePartyUnitButton
         Debug.Log("address " + cellAddress);
         Debug.Log("City " + transform.parent.parent.name);
-        Debug.Log("HireCommonUnitButtons " + transform.parent.parent.Find("HireCommonUnitButtons").name);
-        Debug.Log("Cell " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).name);
-        Debug.Log("HirePartyUnitButton " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).name);
-        transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+        // verify if we are in city view and there is HireCommonUnitButtons panel present
+        // .. this logic should be changed in future
+        if (transform.parent.parent.Find("HireCommonUnitButtons"))
+        {
+            Debug.Log("HireCommonUnitButtons " + transform.parent.parent.Find("HireCommonUnitButtons").name);
+            Debug.Log("Cell " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).name);
+            Debug.Log("HirePartyUnitButton " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).name);
+            transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+        }
     }
 
     void OnHireSingleUnit(Transform changedCell)

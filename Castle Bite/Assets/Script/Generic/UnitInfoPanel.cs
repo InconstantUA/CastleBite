@@ -26,91 +26,99 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string statusBonusPreviewStyleStart = "<color=yellow>";
     string statusBonusPreviewStyleEnd = "</color>";
 
+    void ActivateUnitInfoPanel(PartyUnit partyUnit)
+    {
+        //// skip few miliseconds
+        //yield return new WaitForSeconds(0.3f);
+        // activate it
+        gameObject.SetActive(true);
+        // Fill in unit name
+        if (partyUnit.GivenName != partyUnit.UnitName)
+        {
+            transform.Find("UnitName").GetComponent<Text>().text = partyUnit.GivenName;
+            // activate unit class, because unit has his own name
+            transform.Find("NamedUnitClass").gameObject.SetActive(true);
+            transform.Find("NamedUnitClass").GetComponent<Text>().text = partyUnit.UnitName;
+        }
+        else
+        {
+            transform.Find("UnitName").GetComponent<Text>().text = partyUnit.UnitName;
+            // deactivate unit class, because it is the same as name
+            transform.Find("NamedUnitClass").gameObject.SetActive(false);
+        }
+        // Fill in unit level
+        transform.Find("Panel/UnitLevel/Value").GetComponent<Text>().text = partyUnit.UnitLevel.ToString();
+        // Fill in unit current and experience required to reach next level
+        transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.UnitExperience.ToString() + "/" + partyUnit.UnitExperienceRequiredToReachNewLevel.ToString();
+        // Verify if unit is leader
+        if (partyUnit.IsLeader)
+        {
+            // unit is leader
+            // Fill in leadership information
+            SetUnitLeadershipInfo(partyUnit);
+            // Set unit move points info
+            SetUnitMovePointsInfo(partyUnit);
+            // Set scouting range info
+            SetUnitScoutingRangeInfo(partyUnit);
+        }
+        else
+        {
+            // unit is common unit
+            // deactivate leadership info
+            transform.Find("Panel/LeaderAttributes").gameObject.SetActive(false);
+        }
+        // Fill in unit health current and max
+        SetUnitHealthInfo(partyUnit);
+        // Fill in unit effective defense including additional defense mondifiers:
+        SetUnitDefenseInfo(partyUnit);
+        // Fill in resistances
+        SetUnitResistancesInfo(partyUnit);
+        // Fill in immunities
+        // .. - replaced with resistance 100% = immune
+        //string immunities = "";
+        //// verify if there are any rezistances
+        //if (partyUnit.GetImmunities().Length > 0)
+        //{
+        //    for (int i = 0; i < partyUnit.GetImmunities().Length; i++)
+        //    {
+        //        //  UnitPowerSource resistance in partyUnit.GetResistances())
+        //        // if this is first resistance then do not add "/" at the end
+        //        if (0 == i)
+        //        {
+        //            immunities = partyUnit.GetImmunities()[i].ToString();
+        //        }
+        //        else
+        //        {
+        //            immunities = immunities + ", " + partyUnit.GetImmunities()[i].ToString();
+        //        }
+        //    }
+        //}
+        //transform.Find("Panel/UnitImmunities/Value").GetComponent<Text>().text = immunities;
+        // Fill in unit initiative
+        transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.UnitInitiative.ToString();
+        // Fill in unit ability
+        transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.UnitAbility.ToString();
+        // Fill in unit power
+        SetUnitPowerInfo(partyUnit);
+        // Fill in unit power source
+        transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.UnitPowerSource.ToString();
+        // Fill in unit distance
+        transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitPowerDistance.ToString();
+        // Fill in unit power scope
+        transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.UnitPowerScope.ToString();
+        // Fill in information about unique power modifiers
+        FillInUniquePowerModifiersInformation(partyUnit);
+        // Fill in description
+        transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.UnitFullDescription.ToString();
+    }
+
     public void ActivateAdvance(PartyUnit partyUnit)
     {
-        // verify party unit is not null, if it null,
+        // verify party unit is not null, if it is null,
         // then user right clicked on a cell without unit
-        if(partyUnit)
+        if (partyUnit)
         {
-            gameObject.SetActive(true);
-            // Fill in unit name
-            if (partyUnit.GivenName != partyUnit.UnitName)
-            {
-                transform.Find("UnitName").GetComponent<Text>().text = partyUnit.GivenName;
-                // activate unit class, because unit has his own name
-                transform.Find("NamedUnitClass").gameObject.SetActive(true);
-                transform.Find("NamedUnitClass").GetComponent<Text>().text = partyUnit.UnitName;
-            }
-            else
-            {
-                transform.Find("UnitName").GetComponent<Text>().text = partyUnit.UnitName;
-                // deactivate unit class, because it is the same as name
-                transform.Find("NamedUnitClass").gameObject.SetActive(false);
-            }
-            // Fill in unit level
-            transform.Find("Panel/UnitLevel/Value").GetComponent<Text>().text = partyUnit.UnitLevel.ToString();
-            // Fill in unit current and experience required to reach next level
-            transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.UnitExperience.ToString() + "/" + partyUnit.UnitExperienceRequiredToReachNewLevel.ToString();
-            // Verify if unit is leader
-            if (partyUnit.IsLeader)
-            {
-                // unit is leader
-                // Fill in leadership information
-                SetUnitLeadershipInfo(partyUnit);
-                // Set unit move points info
-                SetUnitMovePointsInfo(partyUnit);
-                // Set scouting range info
-                SetUnitScoutingRangeInfo(partyUnit);
-            }
-            else
-            {
-                // unit is common unit
-                // deactivate leadership info
-                transform.Find("Panel/LeaderAttributes").gameObject.SetActive(false);
-            }
-            // Fill in unit health current and max
-            SetUnitHealthInfo(partyUnit);
-            // Fill in unit effective defense including additional defense mondifiers:
-            SetUnitDefenseInfo(partyUnit);
-            // Fill in resistances
-            SetUnitResistancesInfo(partyUnit);
-            // Fill in immunities
-            // .. - replaced with resistance 100% = immune
-            //string immunities = "";
-            //// verify if there are any rezistances
-            //if (partyUnit.GetImmunities().Length > 0)
-            //{
-            //    for (int i = 0; i < partyUnit.GetImmunities().Length; i++)
-            //    {
-            //        //  UnitPowerSource resistance in partyUnit.GetResistances())
-            //        // if this is first resistance then do not add "/" at the end
-            //        if (0 == i)
-            //        {
-            //            immunities = partyUnit.GetImmunities()[i].ToString();
-            //        }
-            //        else
-            //        {
-            //            immunities = immunities + ", " + partyUnit.GetImmunities()[i].ToString();
-            //        }
-            //    }
-            //}
-            //transform.Find("Panel/UnitImmunities/Value").GetComponent<Text>().text = immunities;
-            // Fill in unit initiative
-            transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.UnitInitiative.ToString();
-            // Fill in unit ability
-            transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.UnitAbility.ToString();
-            // Fill in unit power
-            SetUnitPowerInfo(partyUnit);
-            // Fill in unit power source
-            transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.UnitPowerSource.ToString();
-            // Fill in unit distance
-            transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitPowerDistance.ToString();
-            // Fill in unit power scope
-            transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.UnitPowerScope.ToString();
-            // Fill in information about unique power modifiers
-            FillInUniquePowerModifiersInformation(partyUnit);
-            // Fill in description
-            transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.UnitFullDescription.ToString();
+            ActivateUnitInfoPanel(partyUnit);
         }
     }
 

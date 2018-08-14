@@ -10,14 +10,14 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
     #region IBeginDragHandler implementation
     public void OnBeginDrag(PointerEventData eventData)
     {
-        itemBeingDragged = gameObject;
-        startPosition = transform.position;
-        startParent = transform.parent;
-        // disable raycasts
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
         // change parent outside of Mask, to PartyInventory, so that canvas is not affected by Mask UI component
         // structure 4PartyInventory-3ItemsList(with Mask)-2Grid-1ItemSlot-Canvas(Item)
         transform.SetParent(transform.parent.parent.parent.parent);
+        itemBeingDragged = gameObject;
+        startPosition = transform.position;
+        startParent = transform.parent.transform;
+        // disable raycasts
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
     #endregion
     #region IDragHandler implementation
@@ -33,6 +33,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         GetComponent<CanvasGroup>().blocksRaycasts = true;
         if (transform.parent == startParent)
         {
+            Debug.Log("Return to original position");
             transform.position = startPosition;
         }
     }

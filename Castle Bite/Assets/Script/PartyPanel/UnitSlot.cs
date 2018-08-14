@@ -27,21 +27,32 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     IEnumerator UpdateUnitEquipmentControl()
     {
-        // skip 1 frame untill child object is fully instantiated
-        yield return null;
-        // verify if party is in party mode, because only in this mode it has leader and should have equipment button visible
-        if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>().PartyMode == PartyMode.Party)
+        // .. remake it without coroutine, because it is visible how equipment button controls disappear
+        // .. or add some delay before activation of other menus
+        // verify if we are in city view and there is HeroParty parent, because this is not the case when party panel is copied to PartiesInfoPanel
+        // .. adjust logic later
+        if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>())
         {
-            // verify if there is unit in slot
-            PartyUnit partyUnit = GetUnit();
-            if (partyUnit != null)
+            // verify if party is in party mode, because only in this mode it has leader and should have equipment button visible
+            if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>().PartyMode == PartyMode.Party)
             {
-                // verify if unit is leader
-                if (partyUnit.IsLeader)
+                // verify if there is unit in slot
+                PartyUnit partyUnit = GetUnit();
+                if (partyUnit != null)
                 {
-                    // activate equipment button
-                    //Debug.LogWarning("Enable equipment button");
-                    transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(true);
+                    // verify if unit is leader
+                    if (partyUnit.IsLeader)
+                    {
+                        // activate equipment button
+                        //Debug.LogWarning("Enable equipment button");
+                        transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        // deactivate equipment button
+                        //Debug.LogWarning("Disable equipment button");
+                        transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
+                    }
                 }
                 else
                 {
@@ -63,6 +74,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             //Debug.LogWarning("Disable equipment button");
             transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
         }
+        // skip 1 frame untill child object is fully instantiated
+        yield return null;
     }
 
     IEnumerator UpdateUpgradeUnitControl()

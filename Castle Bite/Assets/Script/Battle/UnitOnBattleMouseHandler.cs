@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class UnitOnBattleMouseHandler : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	// it is empty to prevent uneeded mouse interractions during battle
 
 }
