@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Text))]
 public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
 
@@ -27,6 +28,12 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void Start()
     {
+    }
+
+    void OnDisable()
+    {
+        // turn off toggle if it was active
+        TurnOff();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

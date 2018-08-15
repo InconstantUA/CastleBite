@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// rename to TargetedToggle
 public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     public enum ActToggleType { Heal, Resurect, Dismiss, HeroEquipment };
@@ -180,23 +181,23 @@ public class ActionToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     void ChangeCityActiveState(bool doActivate)
     {
         // change cursor to required state based on toggle type
-        City.CityViewActiveState cityViewActiveState = City.CityViewActiveState.Normal;
+        CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
         if (toggleType == ActToggleType.Dismiss)
         {
-            cityViewActiveState = City.CityViewActiveState.ActiveDismiss;
+            cityViewActiveState = CityViewActiveState.ActiveDismiss;
         }
         else if (toggleType == ActToggleType.Heal)
         {
-            cityViewActiveState = City.CityViewActiveState.ActiveHeal;
+            cityViewActiveState = CityViewActiveState.ActiveHeal;
 
         }
         else if (toggleType == ActToggleType.Resurect)
         {
-            cityViewActiveState = City.CityViewActiveState.ActiveResurect;
+            cityViewActiveState = CityViewActiveState.ActiveResurect;
         }
         else if (toggleType == ActToggleType.HeroEquipment)
         {
-            cityViewActiveState = City.CityViewActiveState.ActiveHeroEquipment;
+            cityViewActiveState = CityViewActiveState.ActiveHeroEquipment;
         }
         //  get city, structure: [City]-CtrlPnlCity-(this)Toggle, and activate state
         transform.parent.parent.GetComponent<City>().SetActiveState(cityViewActiveState, doActivate);

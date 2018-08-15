@@ -23,6 +23,9 @@ public class CityData
     public UnitType[] hireableCommonUnits;
 }
 
+[Serializable]
+public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
+
 public class City : MonoBehaviour {
     [SerializeField]
     CityData cityData;
@@ -42,7 +45,6 @@ public class City : MonoBehaviour {
     // The same for city occupation state
     // If hero leaves city, the we should return city state o NoHeroIn
     // and activate hire hero button
-    public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
     [SerializeField]
     CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
 
@@ -50,6 +52,26 @@ public class City : MonoBehaviour {
     //public enum CityOccupationState { NoHeroIn, HeroIn };
     //[SerializeField]
     //CityOccupationState cityOccupationState;
+
+    void SetRequiredComponentsActive(bool doActivate)
+    {
+        // Activate/Deactivate city controls
+        transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(doActivate);
+    }
+
+    void OnEnable()
+    {
+        SetRequiredComponentsActive(true);
+    }
+
+    void OnDisable()
+    {
+        SetRequiredComponentsActive(false);
+    }
 
     public int GetCityDefense()
     {
@@ -96,6 +118,21 @@ public class City : MonoBehaviour {
             }
         }
         return null;
+    }
+
+    public void SetActiveStateDismiss(bool doActivate)
+    {
+        SetActiveState(CityViewActiveState.ActiveDismiss, doActivate);
+    }
+
+    public void SetActiveStateHeal(bool doActivate)
+    {
+        SetActiveState(CityViewActiveState.ActiveHeal, doActivate);
+    }
+
+    public void SetActiveStateResurect(bool doActivate)
+    {
+        SetActiveState(CityViewActiveState.ActiveResurect, doActivate);
     }
 
     public void SetActiveState(CityViewActiveState requiredState, bool doActivate)
@@ -222,29 +259,32 @@ public class City : MonoBehaviour {
             // we should do it ourselves
             // we should do this before deactivating state,
             // because state is reset to normal by SetActiveState
-            switch (cityViewActiveState)
-            {
-                case CityViewActiveState.ActiveDismiss:
-                    // find and deactivate toggle
-                    // simulate user mouse click
-                    transform.Find("CtrlPnlCity/Dismiss").GetComponent<ActionToggle>().OnPointerDown(null);
-                    // also we need to manually deactivate Toggle
-                    transform.Find("CtrlPnlCity/Dismiss").GetComponent<Toggle>().isOn = false;
-                    break;
-                case CityViewActiveState.ActiveHeal:
-                    transform.Find("CtrlPnlCity/Heal").GetComponent<ActionToggle>().OnPointerDown(null);
-                    transform.Find("CtrlPnlCity/Heal").GetComponent<Toggle>().isOn = false;
-                    break;
-                case CityViewActiveState.ActiveResurect:
-                    transform.Find("CtrlPnlCity/Resurect").GetComponent<ActionToggle>().OnPointerDown(null);
-                    transform.Find("CtrlPnlCity/Resurect").GetComponent<Toggle>().isOn = false;
-                    break;
-                case CityViewActiveState.ActiveHeroEquipment:
-                    // SetActiveState(cityViewActiveState, false);
-                    //GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
-                    //GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
-                    break;
-            }
+            //switch (cityViewActiveState)
+            //{
+            //    case CityViewActiveState.ActiveDismiss:
+            //        // find and deactivate toggle
+            //        // simulate user mouse click
+            //        transform.Find("CtrlPnlCity/Dismiss").GetComponent<ActionToggle>().OnPointerDown(null);
+            //        // also we need to manually deactivate Toggle
+            //        transform.Find("CtrlPnlCity/Dismiss").GetComponent<Toggle>().isOn = false;
+            //        break;
+            //    case CityViewActiveState.ActiveHeal:
+            //        transform.Find("CtrlPnlCity/Heal").GetComponent<ActionToggle>().OnPointerDown(null);
+            //        transform.Find("CtrlPnlCity/Heal").GetComponent<Toggle>().isOn = false;
+            //        break;
+            //    case CityViewActiveState.ActiveResurect:
+            //        transform.Find("CtrlPnlCity/Resurect").GetComponent<ActionToggle>().OnPointerDown(null);
+            //        transform.Find("CtrlPnlCity/Resurect").GetComponent<Toggle>().isOn = false;
+            //        break;
+            //    case CityViewActiveState.ActiveHeroEquipment:
+            //        // SetActiveState(cityViewActiveState, false);
+            //        //GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<ActionToggle>().OnPointerDown(null);
+            //        //GetHeroPartyByMode(PartyMode.Party).transform.Find("HeroEquipmentBtn").GetComponent<Toggle>().isOn = false;
+            //        break;
+            //}
+            // Deactivate Toggle
+            transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().GetSelectedToggle().OnTurnOff.Invoke();
+            transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().DeselectToggle();
         }
         // If ther is no hero in the city or hero has left city, then display HireHeroPanel
         if (!GetHeroPartyByMode(PartyMode.Party))
@@ -269,7 +309,7 @@ public class City : MonoBehaviour {
     {
         // Instruct Focus panel to update info
         transform.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.Init);
-        // Enable Hire leader panel
+        // Disable Hire leader panel
         transform.Find("HireHeroPanel").gameObject.SetActive(false);
     }
 
@@ -515,10 +555,6 @@ public class City : MonoBehaviour {
 
     public void DismissPartyLeader()
     {
-        // Unset hero's equipment button to be part of city control panel ToggleGroup
-        // this should be set to null on hero dismiss, leaving or accessed outside of the city.
-        ToggleGroup toggleGroup = transform.Find("CtrlPnlCity").GetComponent<ToggleGroup>();
-        toggleGroup.GetComponent<CityControlPanel>().SetHeroEquipmentToggle(null);
         // Update Left focus panel;
         // activate required UIs and also fill in city's left focus panels
         // unlink party leader from the Left Focus panel

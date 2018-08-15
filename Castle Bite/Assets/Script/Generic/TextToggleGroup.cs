@@ -6,6 +6,16 @@ using UnityEngine.UI;
 public class TextToggleGroup : MonoBehaviour {
     TextToggle selectedToggle;
 
+    void OnDisable()
+    {
+        // deactivate active toggle if it is present
+        if (selectedToggle != null)
+        {
+            // deleselect prevoius toggle
+            DeselectToggle();
+        }
+    }
+
     void SelectToggle(TextToggle toggle)
     {
         // toggle selected toggle

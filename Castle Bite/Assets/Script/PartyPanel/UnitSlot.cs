@@ -325,30 +325,30 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Debug.Log("UnitSlot ActOnClick in City");
         // presave state, because we are going to reset it here
-        City.CityViewActiveState cityState = GetParentCity().GetActiveState();
+        CityViewActiveState cityState = GetParentCity().GetActiveState();
         // disable dismiss mode and return to normal mode
         // this looks naturally
         GetParentCity().ReturnToNomalState();
         // act based on the city (and cursor) state
         switch (cityState)
         {
-            case City.CityViewActiveState.Normal:
+            case CityViewActiveState.Normal:
                 // do nothing for now
                 break;
-            case City.CityViewActiveState.ActiveHeroEquipment:
+            case CityViewActiveState.ActiveHeroEquipment:
                 // do nothing for now
                 break;
-            case City.CityViewActiveState.ActiveDismiss:
+            case CityViewActiveState.ActiveDismiss:
                 // try to dismiss unit, if it is possible
                 TryToDismissUnit();
                 break;
-            case City.CityViewActiveState.ActiveHeal:
+            case CityViewActiveState.ActiveHeal:
                 // try to heal unit, if it is possible
                 break;
-            case City.CityViewActiveState.ActiveResurect:
+            case CityViewActiveState.ActiveResurect:
                 // try to resurect unit, if it is possible
                 break;
-            case City.CityViewActiveState.ActiveUnitDrag:
+            case CityViewActiveState.ActiveUnitDrag:
                 // ??
                 break;
             default:
@@ -432,6 +432,10 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
                 notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
             }
+        }
+        else
+        {
+            Debug.LogWarning("Unit no found");
         }
     }
 

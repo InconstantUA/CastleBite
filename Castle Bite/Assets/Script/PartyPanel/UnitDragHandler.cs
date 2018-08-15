@@ -23,10 +23,13 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.parent.parent.parent.parent.parent.SetAsLastSibling(); // CityGarnizon/HeroParty
     }
 
-    City GetParentCity()
+    CityScreen GetCityScreen()
     {
         // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-UnitSlot-(this)UnitCanvas
-        return transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
+        //return transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
+        // structure: 5MiscUI-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-UnitSlot-(this)UnitCanvas
+        //             MiscUI-CityScreen(link to City)
+        return transform.parent.parent.parent.parent.parent.parent.GetComponentInChildren<CityScreen>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -49,7 +52,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             BringUnitToFront();
             // enter city to drag state to highlight panels which can be drop targets
             // and do additional required gui adjustments
-            GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, true);
+            GetCityScreen().SetActiveState(CityViewActiveState.ActiveUnitDrag, true);
         }
         else if (Input.GetMouseButton(1))
         {
@@ -84,7 +87,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             // on left mouse up
             // disable drag state
-            GetParentCity().SetActiveState(City.CityViewActiveState.ActiveUnitDrag, false);
+            GetCityScreen().SetActiveState(CityViewActiveState.ActiveUnitDrag, false);
             // verify if user has activated unit info panel by right click and then moved mouse
             // which triggered drag function
             GameObject unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").gameObject;
@@ -110,12 +113,12 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     transform.position = startPosition;
                 }
                 // verify if we are in city edit mode and not in hero edit mode
-                if (GetParentCity().transform.Find("CityGarnizon"))
+                HeroParty cityGarnizon = transform.root.GetComponentInChildren<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon);
+                if (cityGarnizon != null)
                 {
                     // activate hire unit buttons again, after it was disabled
                     // this is should be done in City Garnizon panel
-                    PartyPanel garnizonPanel = GetParentCity().transform.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
-                    garnizonPanel.SetHireUnitPnlButtonActive(true);
+                    cityGarnizon.GetComponentInChildren<PartyPanel>().SetHireUnitPnlButtonActive(true);
                 }
             }
         }

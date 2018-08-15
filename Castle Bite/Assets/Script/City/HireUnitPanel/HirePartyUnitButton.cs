@@ -25,8 +25,11 @@ public class HirePartyUnitButton : MonoBehaviour {
         {
             case ButtonMode.HireCommonUnit:
                 // get city
-                // structure: 4City-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
-                destinationCity = transform.parent.parent.parent.parent.GetComponent<City>();
+                //// structure: 4City-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
+                //destinationCity = transform.parent.parent.parent.parent.GetComponent<City>();
+                // structure: 4MiscUI-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
+                //             MiscUI-CityScreen(link to City)
+                destinationCity = transform.parent.parent.parent.parent.GetComponentInChildren<CityScreen>().City;
                 // get unit types to hire
                 unitTypesToHire = destinationCity.HireableCommonUnits;
                 // get cell address (Row/Cell) of this party button

@@ -777,43 +777,20 @@ public class PartyPanel : MonoBehaviour {
 
     PartyPanel GetOtherPartyPanel(PartyPanel currentPartyPanel)
     {
-        // if other party is not present, then return null
-        // calling script should do null verification
-        PartyPanel otherPartyPanel = null;
-        // get city transform, this actually can be inter-hero exchange root transform
-        Transform cityTr = currentPartyPanel.transform.parent.parent;
-        if (PartyPanelMode.Garnizon == currentPartyPanel.PartyPanelMode)
+        // structure: 2MiscUI-1HeroParty-PartyPanel(this)
+        UIManager uiManager = currentPartyPanel.transform.parent.parent.GetComponent<UIManager>();
+        foreach (HeroParty heroParty in uiManager.GetComponentsInChildren<HeroParty>())
         {
-            // verify if there is a HeroParty in City
-            //if (cityTr.GetComponentInChildren<HeroParty>())
-            //{
-            //    otherPartyPanel = cityTr.GetComponentInChildren<HeroParty>().GetComponentInChildren<PartyPanel>();
-            //}
-            if (cityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party))
+            // find party panel of other party, if it is present there
+            // this will be the case if there are more then 1 hero party in the city
+            if (heroParty.GetComponentInChildren<PartyPanel>() != currentPartyPanel)
             {
-                otherPartyPanel = cityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party).GetComponentInChildren<PartyPanel>();
-            }
-        } else
-        {
-            // verify if there is a city garnizon
-            if (cityTr.Find("CityGarnizon"))
-            {
-                otherPartyPanel = cityTr.Find("CityGarnizon").GetComponentInChildren<PartyPanel>();
-            } else
-            {
-                // verify if we are exchanging with other hero party
-                foreach (HeroParty heroParty in cityTr.GetComponentsInChildren<HeroParty>())
-                {
-                    // find party panel of other party in city, if it is present there
-                    // this will be the case if there are more then 1 hero party in the city
-                    if (heroParty.GetComponentInChildren<PartyPanel>() != currentPartyPanel)
-                    {
-                        otherPartyPanel = heroParty.GetComponentInChildren<PartyPanel>();
-                    }
-                }
+                return heroParty.GetComponentInChildren<PartyPanel>();
             }
         }
-        return otherPartyPanel;
+        // if other party is not present, then return null
+        // calling script should do null verification
+        return null;
     }
 
     void SetCellIsDroppableStatus(bool isDroppable, Transform cellTr, string errorMessage = "")

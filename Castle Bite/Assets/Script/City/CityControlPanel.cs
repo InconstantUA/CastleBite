@@ -4,31 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class CityControlPanel : MonoBehaviour {
-    Toggle heroEquipmentToggle;
-
-    // Use this for initialization
-    void Start () {
-    }
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
-    public void SetHeroEquipmentToggle(Toggle heroEqTgl)
-    {
-        heroEquipmentToggle = heroEqTgl;
-    }
-
-    void VerifyAndDimmToggle(Toggle callingToggle, Toggle tmpTgl)
-    {
-        // do not dimm currently selected objects
-        // make sure that we do not deem ourselves and toggled (selected) unit
-        if ((!tmpTgl.isOn) && (callingToggle.name != tmpTgl.name))
-        {
-            tmpTgl.GetComponentInChildren<Text>().color = tmpTgl.colors.normalColor;
-        }
-    }
-
     public void DimmAllOtherMenusExceptToggled(Toggle callingToggle)
     {
         // get all toggles in Toggle group
@@ -37,24 +12,14 @@ public class CityControlPanel : MonoBehaviour {
         // 
         foreach (Toggle tmpTgl in allTogglesInGroup)
         {
-            VerifyAndDimmToggle(callingToggle, tmpTgl);
-        }
-        // if hero is in the city (heroEquipmentToggle not null), then verify his toggle too
-        if(heroEquipmentToggle)
-        {
-            VerifyAndDimmToggle(callingToggle, heroEquipmentToggle);
+            // do not dimm currently selected objects
+            // make sure that we do not deem ourselves and toggled (selected) unit
+            if ((!tmpTgl.isOn) && (callingToggle.name != tmpTgl.name))
+            {
+                tmpTgl.GetComponentInChildren<Text>().color = tmpTgl.colors.normalColor;
+            }
         }
         // Debug.Log("DimmAllOtherMenusExceptToggled");
-    }
-
-    void VerifyAndDeselectToggle(Toggle callingToggle, Toggle tmpTgl)
-    {
-        // do not dimm currently selected objects
-        // make sure that we do not deem ourselves
-        if ((tmpTgl.isOn) && (callingToggle.name != tmpTgl.name))
-        {
-            tmpTgl.GetComponentInChildren<Text>().color = tmpTgl.colors.normalColor;
-        }
     }
 
     public void DeselectAllOtherTogglesInGroup(Toggle callingToggle)
@@ -65,11 +30,12 @@ public class CityControlPanel : MonoBehaviour {
         // 
         foreach (Toggle tmpTgl in allTogglesInGroup)
         {
-            VerifyAndDeselectToggle(callingToggle, tmpTgl);
-        }
-        if (heroEquipmentToggle)
-        {
-            VerifyAndDeselectToggle(callingToggle, heroEquipmentToggle);
+            // do not dimm currently selected objects
+            // make sure that we do not deem ourselves
+            if ((tmpTgl.isOn) && (callingToggle.name != tmpTgl.name))
+            {
+                tmpTgl.GetComponentInChildren<Text>().color = tmpTgl.colors.normalColor;
+            }
         }
         // Debug.Log("DeselectAllOtherTogglesInGroup");
     }
