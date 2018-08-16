@@ -95,19 +95,19 @@ public class SaveGame : MonoBehaviour {
             heroParty.PartyData.partyUIAddress = partyUIAddress;
             Debug.Log(heroParty.name + " party UI address is " + heroParty.PartyData.partyUIAddress);
             // set party panel data
-            heroParty.PartyData.partyPanelData = heroParty.transform.GetComponentInChildren<PartyPanel>(true).PartyPanelData;
+            //heroParty.PartyData.partyPanelData = heroParty.transform.GetComponentInChildren<PartyPanel>(true).PartyPanelData;
             // get all units in party
             PartyUnit[] partyUnits = heroParty.transform.GetComponentInChildren<PartyPanel>(true).GetComponentsInChildren<PartyUnit>(true);
             // init party units data
-            heroParty.PartyData.partyPanelData.partyUnitsData = new PartyUnitData[partyUnits.Length];
+            heroParty.PartyData.partyUnitsData = new PartyUnitData[partyUnits.Length];
             // foreach party unit
             for (int i = 0; i < partyUnits.Length; i++)
             {
                 // set party unit cell address
-                partyUnits[i].PartyUnitData.unitCellAddress = partyUnits[i].GetUnitCellUIAddress();
+                //partyUnits[i].PartyUnitData.unitCellAddress = partyUnits[i].GetUnitCellUIAddress();
                 // Debug.Log(partyUnits[i].PartyUnitData.unitName + " unit cell address is " + partyUnits[i].PartyUnitData.unitCellAddress);
                 // set party units data
-                heroParty.PartyData.partyPanelData.partyUnitsData[i] = partyUnits[i].PartyUnitData;
+                heroParty.PartyData.partyUnitsData[i] = partyUnits[i].PartyUnitData;
             }
         }
     }

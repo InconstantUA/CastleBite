@@ -63,8 +63,8 @@ public class BattleScreen : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         // initialize internal "static" (non-changeable) resources
-        leftFocusPanel = transform.Find("LeftFocus").GetComponent<FocusPanel>();
-        rightFocusPanel = transform.Find("RightFocus").GetComponent<FocusPanel>();
+        leftFocusPanel = transform.parent.Find("LeftFocus").GetComponent<FocusPanel>();
+        rightFocusPanel = transform.parent.Find("RightFocus").GetComponent<FocusPanel>();
         // Create a coroutine queue that can run max 1 coroutine at once
         queue = new CoroutineQueue(1, StartCoroutine);
         battleAI = GetComponent<BattleAI>();
@@ -112,8 +112,8 @@ public class BattleScreen : MonoBehaviour {
         playerHeroParty.transform.SetParent(transform);
         enemyHeroParty.transform.SetParent(transform);
         // disable player party inventory and equipment
-        playerHeroParty.transform.Find("PartyInventory").gameObject.SetActive(false);
-        playerHeroParty.transform.Find("PartyInventory").gameObject.SetActive(false);
+        transform.parent.Find("LeftHeroParty/PartyInventory").gameObject.SetActive(false);
+        transform.parent.Find("RightHeroParty/PartyInventory").gameObject.SetActive(false);
         //playerHeroParty.transform.Find("HeroEquipment").gameObject.SetActive(false);
         //playerHeroParty.transform.Find("HeroEquipmentBtn").gameObject.SetActive(false);
         // Get parties panels
@@ -144,27 +144,54 @@ public class BattleScreen : MonoBehaviour {
         EnterBattleCommon(playerHeroParty, enemyHeroParty);
     }
 
-    public void EnterBattle(MapHero playerOnMap, MapCity enemyCityOnMap)
+    HeroParty GetPartyInCityWhichCanFight(MapCity enemyCityOnMap)
     {
-        // get hero's parties
-        HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
-        // Verify if city is protected by Hero's party
+        // Firt verify if city is protected by Hero's party
+        // Player cannot attack city untill there a party protecting it
         HeroParty enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party);
         if (enemyHeroParty)
         {
-            // set battle place on a city gates
+            // enemy hero is protecting city
+            // battle place is on a city gates
+            // verify if there are units which can fight, because it is possible that player left only dead units in party
+            if (enemyHeroParty.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
+            {
+                return enemyHeroParty;
+            }
+            else
+            {
+                Debug.LogWarning("Party was found, but there is no unit which can fight. Checking city Garnizon.");
+            }
+        }
+        // if we are here, then there is no enemy hero protecting city
+        // get garnizon party
+        // there should be garnizon in every city
+        enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Garnizon);
+        // verify if there are units in party protecting this city, which can fight
+        // it is possible that city is not protected, because all units are dead
+        if (enemyHeroParty.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
+        {
+            return enemyHeroParty;
         }
         else
         {
-            // no enemy hero protecting city
-            // get garnizon party
-            enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Garnizon);
+            Debug.LogWarning("There is no unit in city Garnizon which can fight");
         }
+        // if no party can fight, then return null
+        return null;
+    }
+
+    public void EnterBattle(MapHero playerOnMap, MapCity enemyCityOnMap)
+    {
+        // gen enemy party, which can fight
+        HeroParty enemyHeroParty = GetPartyInCityWhichCanFight(enemyCityOnMap);
         // verify if there are units in party protecting this city, which can fight
         // it is possible that city is not protected
-        if (enemyHeroParty.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main))
+        if (enemyHeroParty!= null)
         {
             // city is protected
+            // get hero's parties
+            HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
             // proceed with preparations for the battle
             EnterBattleCommon(playerHeroParty, enemyHeroParty);
         }
@@ -173,7 +200,7 @@ public class BattleScreen : MonoBehaviour {
             // city is not protected
             // no need to battle
             // move to and enter city
-            EnterCity();
+            CaptureAndEnterCity();
         }
     }
 
@@ -316,7 +343,7 @@ public class BattleScreen : MonoBehaviour {
         FleeXFromY(enemyPartyPanel, playerPartyPanel);
     }
 
-    public void EnterCity()
+    public void CaptureAndEnterCity()
     {
         Debug.Log("BattleScreen: EnterCity");
         DefaultOnBattleExit();

@@ -7,10 +7,8 @@ using UnityEngine.UI;
 public class FocusPanel : MonoBehaviour {
     public GameObject focusedObject;
     City city;
-    PartyUnit partyLeader;
-    PartyPanel partyPanel;
-    public enum FocusMode { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
-    FocusMode focusMode;
+    //public enum FocusMode { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
+    //FocusMode focusMode;
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader, HeroLeaveCity }
 
     // Use this for initialization
@@ -56,15 +54,22 @@ public class FocusPanel : MonoBehaviour {
             // when leader is not hired yet or not present in the city
             // set empty oject information
             // this is only relevan if focus panel is in city, not relevant for battle screen
-            if (transform.parent.GetComponent<City>())
+            // 
+            // verify if city screen is active
+            if (transform.parent.GetComponentInChildren<CityScreen>(false) != null)
             {
                 // verify if we are in city edit mode and not in hero edit mode
-                if (transform.parent.GetComponent<City>().transform.Find("CityGarnizon"))
+                if (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false))
                 {
                     SetNoPartyInfo();
                 }
             }
         }
+    }
+
+    void SetCurrentAndMaxUnitsUIValue()
+    {
+        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
     void SetCityInformation()
@@ -76,17 +81,14 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("CityFocus").Find("LevelValue").GetComponent<Text>().text = city.CityLevelCurrent.ToString();
         transform.Find("CityFocus").Find("DefenseValue").GetComponent<Text>().text = city.GetCityDefense().ToString();
         transform.Find("CityFocus").Find("HealPerDayValue").GetComponent<Text>().text = city.GetHealPerDay().ToString();
-        partyPanel = focusedObject.transform.Find("CityGarnizon").Find("PartyPanel").GetComponent<PartyPanel>();
-        // partyPanel = transform.parent.Find("CityGarnizon").Find("PartyPanel").GetComponent<PartyPanel>();
-        // PartyPanel partyPanel = GameObject.FindObjectOfType(typeof(PartyPanel)) as PartyPanel;
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        SetCurrentAndMaxUnitsUIValue();
     }
 
     void SetLeaderInformation()
     {
         //  first deactivate NoPartyInfo and activate FocusedName, FocusedDescription and PartyFocus
-        // this is relevant only for focus panel in city
-        if (transform.parent.GetComponent<City>())
+        // this is relevant only for focus panel in cityview
+        if (transform.parent.GetComponentInChildren<CityScreen>(false) != null)
         {
             transform.Find("NoPartyInfo").gameObject.SetActive(false);
             transform.Find("FocusedName").gameObject.SetActive(true);
@@ -94,7 +96,7 @@ public class FocusPanel : MonoBehaviour {
             transform.Find("PartyFocus").gameObject.SetActive(true);
         }
         // get party leader
-        partyLeader = focusedObject.GetComponent<PartyUnit>();
+        PartyUnit partyLeader = focusedObject.GetComponent<PartyUnit>();
         // populate with info from hero
         transform.Find("FocusedName").GetComponent<Text>().text = partyLeader.GivenName;
         transform.Find("FocusedDescription").GetComponent<Text>().text = partyLeader.UnitName;
@@ -107,6 +109,7 @@ public class FocusPanel : MonoBehaviour {
         //  first deactivate NoPartyInfo and activate FocusedName, FocusedDescription and PartyFocus
         transform.Find("NoPartyInfo").gameObject.SetActive(true);
         transform.Find("FocusedName").gameObject.SetActive(false);
+        transform.Find("FocusedDescription").gameObject.SetActive(false);
         transform.Find("PartyFocus").gameObject.SetActive(false);
     }
 
@@ -117,30 +120,25 @@ public class FocusPanel : MonoBehaviour {
     void OnHireSingleUnit()
     {
         // update number of units
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        SetCurrentAndMaxUnitsUIValue();
     }
 
     void OnHireDoubleUnit()
     {
         // update number of units
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        SetCurrentAndMaxUnitsUIValue();
     }
 
     void OnDismissSingleUnit()
     {
         // update number of units
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        SetCurrentAndMaxUnitsUIValue();
     }
 
     void OnDimissDoubleUnit()
     {
-        if (partyPanel)
-        {
-            partyPanel.GetNumberOfPresentUnits().ToString();
-            city.GetUnitsCapacity().ToString();
-            // update number of units
-            transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = partyPanel.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
-        }
+        // update number of units
+        SetCurrentAndMaxUnitsUIValue();
     }
 
     public void OnChange(ChangeType changeType)
@@ -162,7 +160,7 @@ public class FocusPanel : MonoBehaviour {
             case ChangeType.DismissPartyLeader:
             case ChangeType.HeroLeaveCity:
                 // verify if we are in city or edit hero mode
-                if (transform.parent.GetComponent<City>().transform.Find("CityGarnizon"))
+                if (transform.root.GetComponentInChildren<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon))
                 {
                     SetNoPartyInfo();
                 }

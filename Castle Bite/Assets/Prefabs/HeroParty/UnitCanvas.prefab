@@ -23,13 +23,14 @@ GameObject:
   - component: {fileID: 114004026091029694}
   - component: {fileID: 225344180618161350}
   - component: {fileID: 114429868997020942}
+  - component: {fileID: 114938818029723712}
   m_Layer: 5
   m_Name: UnitCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1941933591601678
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +119,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d12f6ce8bded5124482bc7102a5b67dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114938818029723712
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1157428645511222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeea64e3dfd300c468bf51db2a393b79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lPartyUnit: {fileID: 0}
 --- !u!222 &222041181743839570
 CanvasRenderer:
   m_ObjectHideFlags: 1

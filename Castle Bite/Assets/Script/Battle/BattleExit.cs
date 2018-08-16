@@ -82,7 +82,7 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 battleScreen.FleeEnemy();
                 break;
             case ExitOption.EnterCity:
-                battleScreen.EnterCity();
+                battleScreen.CaptureAndEnterCity();
                 break;
             default:
                 Debug.LogError("Unknown exit option.");

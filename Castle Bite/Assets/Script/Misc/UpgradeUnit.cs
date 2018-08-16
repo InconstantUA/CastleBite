@@ -1480,8 +1480,9 @@ public class UpgradeUnit : MonoBehaviour {
     public void Apply()
     {
         Debug.Log("Apply");
-        // Update party panel UI to represent changes
-        focusedPartyUnit.SetUnitCellInfoUI();
+        // this should be done automatically
+        //// Update party panel UI to represent changes
+        //focusedPartyUnit.SetUnitCellInfoUI();
         // remove backup
         CleanBackup();
         // execute common on exit actions

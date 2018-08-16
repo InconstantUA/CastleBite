@@ -206,7 +206,8 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
         transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(players);
         // Ask City to Hire chosen unit
-        GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
+        //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().HireUnit(null, GetSelectedUnitType());
         // Activate required object
         gameObjectToBeActivated.SetActive(true);
         // Deactivate required object

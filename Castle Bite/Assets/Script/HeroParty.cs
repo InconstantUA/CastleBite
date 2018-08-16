@@ -22,11 +22,14 @@ public struct PartyMapPosition
 [Serializable]
 public class PartyData : System.Object
 {
+    public int partyID = -1;
+    public int linkedCityID = -1;
     public Faction faction;
     public PartyMode partyMode;
     public PartyMapPosition partyMapPosition;
     public string partyUIAddress;
-    public PartyPanelData partyPanelData; // initialized and used only during game save and load
+    //public PartyPanelData partyPanelData; // initialized and used only during game save and load
+    public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
 }
 
 public class HeroParty : MonoBehaviour {
@@ -45,17 +48,17 @@ public class HeroParty : MonoBehaviour {
     public bool CanEscapeFromBattle { get; set; }
     public Transform PreBattleParentTr { get; set; }
 
-    public PartyData PartyData
+    public PartyUnit GetHeroPartyLeaderUnit()
     {
-        get
+        foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
         {
-            return partyData;
+            // verify if unit is leader
+            if (partyUnit.IsLeader)
+            {
+                return partyUnit;
+            }
         }
-
-        set
-        {
-            partyData = value;
-        }
+        return null;
     }
 
     public PartyMapPosition GetPartyMapPosition()
@@ -140,6 +143,19 @@ public class HeroParty : MonoBehaviour {
         return address;
     }
 
+    public PartyData PartyData
+    {
+        get
+        {
+            return partyData;
+        }
+
+        set
+        {
+            partyData = value;
+        }
+    }
+
     public Faction Faction
     {
         get
@@ -163,6 +179,32 @@ public class HeroParty : MonoBehaviour {
         set
         {
             partyData.partyMode = value;
+        }
+    }
+
+    public int PartyID
+    {
+        get
+        {
+            return partyData.partyID;
+        }
+
+        set
+        {
+            partyData.partyID = value;
+        }
+    }
+
+    public int LinkedCityID
+    {
+        get
+        {
+            return partyData.linkedCityID;
+        }
+
+        set
+        {
+            partyData.linkedCityID = value;
         }
     }
 

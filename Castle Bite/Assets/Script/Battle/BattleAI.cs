@@ -39,11 +39,7 @@ public class BattleAI : MonoBehaviour {
         List<BattleMove> battleMoves = new List<BattleMove> { new BattleMove(BattleMove.Option.Defend) };
         // verify if it is possible to flee
         // this only possible if hero party was on map
-        //  get active unit
-        PartyUnit activeUnit = battleScreen.ActiveUnit;
-        //  get party
-        HeroParty heroParty = activeUnit.GetUnitParty();
-        if (heroParty.CanEscapeFromBattle)
+        if (battleScreen.ActiveUnit.GetUnitParty().CanEscapeFromBattle)
         {
             // add flee option
             battleMoves.Add(new BattleMove(BattleMove.Option.Flee));

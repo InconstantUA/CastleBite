@@ -20,7 +20,7 @@ public class HeroEditScreen : MonoBehaviour {
         //// disable this screen
         //gameObject.SetActive(false);
         // activate exit city function to correctly exit city
-        GetComponent<City>().ExitCity();
+        transform.parent.GetComponent<CityScreen>().gameObject.SetActive(false);
     }
 
 }

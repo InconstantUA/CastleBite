@@ -25,6 +25,12 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
 
+    public string GetUnitCellAddress()
+    {
+        // structure: PartyPanel-2[Top/Middle/Bottom]-1[Front/Back/Wide]-UnitSlot(this)
+        return transform.parent.parent.name + "/" + transform.parent.name;
+    }
+
     IEnumerator UpdateUnitEquipmentControl()
     {
         // .. remake it without coroutine, because it is visible how equipment button controls disappear
@@ -86,12 +92,12 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         PartyUnit partyUnit = GetUnit();
         if (partyUnit != null)
         {
-            Debug.LogWarning("Enable upgrade unit + button");
+            //Debug.LogWarning("Enable upgrade unit + button");
             transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(true);
         }
         else
         {
-            Debug.LogWarning("Disable upgrade unit + button");
+            //Debug.LogWarning("Disable upgrade unit + button");
             transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(false);
         }
     }
@@ -119,7 +125,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // verify if slot has unit in it
         if (transform.childCount > 0)
         {
-            Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " has childs");
+            //Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " has childs");
             // check whether we are in battle or in other mode
             if (transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true))
             {
@@ -134,7 +140,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
         else
         {
-            Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " is empty");
+            //Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " is empty");
         }
         return null;
     }
@@ -324,18 +330,16 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void ActOnCityClick()
     {
         Debug.Log("UnitSlot ActOnClick in City");
+        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
         // presave state, because we are going to reset it here
-        CityViewActiveState cityState = GetParentCity().GetActiveState();
+        CityViewActiveState cityState = cityScreen.CityViewActiveState;
         // disable dismiss mode and return to normal mode
         // this looks naturally
-        GetParentCity().ReturnToNomalState();
+        cityScreen.ReturnToNomalState();
         // act based on the city (and cursor) state
         switch (cityState)
         {
             case CityViewActiveState.Normal:
-                // do nothing for now
-                break;
-            case CityViewActiveState.ActiveHeroEquipment:
                 // do nothing for now
                 break;
             case CityViewActiveState.ActiveDismiss:
@@ -344,9 +348,11 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 break;
             case CityViewActiveState.ActiveHeal:
                 // try to heal unit, if it is possible
+                Debug.Log("Show Heal Unit confirmation box");
                 break;
             case CityViewActiveState.ActiveResurect:
                 // try to resurect unit, if it is possible
+                Debug.Log("Show Resurect Unit confirmation box");
                 break;
             case CityViewActiveState.ActiveUnitDrag:
                 // ??
@@ -388,16 +394,27 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         // act based on where we are:
         //  - in city
+        //  - in hero edit screen
         //  - in battle
-        City city = GetParentCity();
-        BattleScreen battleScreen = GetParentBattleScreen();
-        if (city)
+        UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
+        // verify if CityScreen is active
+        if (uiManager.GetComponentInChildren<CityScreen>(false))
         {
             ActOnCityClick();
         }
-        if (battleScreen)
+        // verify if HeroEditScreen is active
+        else if (uiManager.GetComponentInChildren<HeroEditScreen>(false))
+        {
+            ActOnCityClick();
+        }
+        // verify if Battle screen is active
+        else if (GetParentBattleScreen() != null)
         {
             ActOnBattleScreenClick();
+        }
+        else
+        {
+            Debug.Log("No or unknown active screen");
         }
     }
 
@@ -443,7 +460,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Debug.Log("Yes");
         // Ask city to dismiss unit
-        GetParentCity().DimissUnit(unitSlot.GetComponent<UnitSlot>());
+        //GetParentCity().DimissUnit(unitSlot.GetComponent<UnitSlot>());
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DimissUnit(unitSlot.GetComponent<UnitSlot>());
     }
 
     void OnDismissNoConfirmation()

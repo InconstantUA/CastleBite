@@ -174,9 +174,9 @@ public class LoadGame : MonoBehaviour
             // get party panel
             PartyPanel partyPanel = newHeroParty.GetComponentInChildren<PartyPanel>();
             // set party panel data
-            partyPanel.PartyPanelData = partyData.partyPanelData;
+            //partyPanel.PartyPanelData = partyData.partyPanelData;
             // create units
-            foreach (PartyUnitData partyUnitData in partyData.partyPanelData.partyUnitsData)
+            foreach (PartyUnitData partyUnitData in partyData.partyUnitsData)
             {
                 // get unit template by unit type
                 GameObject unitTemplate = transform.root.GetComponentInChildren<TemplatesManager>().GetPartyUnitTemplateByType(partyUnitData.unitType);
