@@ -4,15 +4,37 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour {
 
-    public HeroParty GetHeroPartyByMode(PartyMode partyMode, bool includeInactive = true)
+    public HeroPartyUI GetHeroPartyUIByMode(PartyMode partyMode, bool includeInactive = false)
     {
         // Loop through hero parties untill we find the party in required mode
-        foreach (HeroParty heroParty in transform.GetComponentsInChildren<HeroParty>(includeInactive))
+        foreach (HeroPartyUI heroPartyUI in transform.GetComponentsInChildren<HeroPartyUI>(includeInactive))
         {
             // compare if hero party in in party (not in garnizon mode)
-            if (heroParty.PartyMode == partyMode)
+            if (heroPartyUI.LHeroParty.PartyMode == partyMode)
             {
-                return heroParty;
+                return heroPartyUI;
+            }
+        }
+        return null;
+    }
+
+    public HeroParty GetHeroPartyByMode(PartyMode partyMode, bool includeInactive = false)
+    {
+        return GetHeroPartyUIByMode(partyMode, includeInactive).LHeroParty;
+    }
+
+    public FocusPanel GetFocusPanelByHeroParty(HeroParty heroParty)
+    {
+        foreach(FocusPanel focusPanel in GetComponentsInChildren<FocusPanel>())
+        {
+            // verify if HeroParty Leader (PartyUnit type) is in focused game object
+            if (focusPanel.focusedObject.GetComponent<PartyUnit>())
+            {
+                // verify if HeroParty linked to focus panel is the same as we are searching for
+                if (focusPanel.focusedObject.GetComponent<PartyUnit>().GetComponentInParent<HeroParty>().gameObject.GetInstanceID() == heroParty.gameObject.GetInstanceID())
+                {
+                    return focusPanel;
+                }
             }
         }
         return null;

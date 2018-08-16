@@ -27,16 +27,28 @@ public class BattleScreen : MonoBehaviour {
     };
     TurnPhase turnPhase;
 
-    public PartyUnit ActiveUnit
+    //public PartyUnit ActiveUnit
+    //{
+    //    get
+    //    {
+    //        return activeUnitParent.GetComponentInChildren<PartyUnit>();
+    //    }
+
+    //    set
+    //    {
+    //        activeUnitParent = value.transform.parent;
+    //    }
+    //}
+    public PartyUnitUI ActiveUnitUI
     {
         get
         {
-            return activeUnitParent.GetComponentInChildren<PartyUnit>();
+            return activeUnitParent.GetComponent<PartyUnitUI>();
         }
 
         set
         {
-            activeUnitParent = value.transform.parent;
+            activeUnitParent = value.transform;
         }
     }
 
@@ -364,7 +376,7 @@ public class BattleScreen : MonoBehaviour {
         // set battle has ended
         battleHasEnded = true;
         // Remove highlight from active unit
-        ActiveUnit.HighlightActiveUnitInBattle(false);
+        ActiveUnitUI.HighlightActiveUnitInBattle(false);
         //// Clear units info and status information
         //enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatusText, enemyPartyPanel.levelUpStatus });
         // Set exit button variable
@@ -516,21 +528,21 @@ public class BattleScreen : MonoBehaviour {
         return canContinue;
     }
 
-    PartyUnit FindNextUnit()
+    PartyUnitUI FindNextUnit()
     {
         // Find unit with the highest initiative, which can still move during this turn in battle
-        PartyUnit playerNextUnit = playerPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
-        PartyUnit enemyNextUnit = enemyPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
+        PartyUnitUI playerNextUnitUI = playerPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
+        PartyUnitUI enemyNextUnitUI = enemyPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
         // verify if player and enemy has more units to move
-        if (playerNextUnit && enemyNextUnit)
+        if (playerNextUnitUI && enemyNextUnitUI)
         {
             // both parties still have units to move
-            if (playerNextUnit.UnitInitiative > enemyNextUnit.UnitInitiative)
+            if (playerNextUnitUI.LPartyUnit.UnitInitiative > enemyNextUnitUI.LPartyUnit.UnitInitiative)
             {
                 // player has higher initiative
-                return playerNextUnit;
+                return playerNextUnitUI;
             }
-            else if (playerNextUnit.UnitInitiative == enemyNextUnit.UnitInitiative)
+            else if (playerNextUnitUI.LPartyUnit.UnitInitiative == enemyNextUnitUI.LPartyUnit.UnitInitiative)
             {
                 // player and enemy has equal initiative
                 // randomly choose between player and enemy units
@@ -538,30 +550,30 @@ public class BattleScreen : MonoBehaviour {
                 // so by shifting 0.5 you could also modify the probability of the two numbers.
                 if (Random.value < 0.5f)
                 {
-                    return playerNextUnit;
+                    return playerNextUnitUI;
                 }
                 else
                 {
-                    return enemyNextUnit;
+                    return enemyNextUnitUI;
                 }
             }
             else
             {
                 // enemy has higher initiative
-                return enemyNextUnit;
+                return enemyNextUnitUI;
             }
         } else
         {
             // some parties do not have units to move
             // find which party has and which does not have
-            if (playerNextUnit)
+            if (playerNextUnitUI)
             {
                 // player has next unit, return it
-                return playerNextUnit;
-            } else if (enemyNextUnit)
+                return playerNextUnitUI;
+            } else if (enemyNextUnitUI)
             {
                 // player has next unit, return it
-                return enemyNextUnit;
+                return enemyNextUnitUI;
             } else
             {
                 // no any pary has units to move
@@ -601,14 +613,14 @@ public class BattleScreen : MonoBehaviour {
         enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
         // Highlight next unit
         // If unit had waiting status in the past, then reset it back to active
-        UnitStatus unitStatus = ActiveUnit.UnitStatus;
+        UnitStatus unitStatus = ActiveUnitUI.LPartyUnit.UnitStatus;
         switch (unitStatus)
         {
             case UnitStatus.Active:
                 break;
             case UnitStatus.Waiting:
                 // Activate unit
-                ActiveUnit.SetUnitStatus(UnitStatus.Active);
+                ActiveUnitUI.SetUnitStatus(UnitStatus.Active);
                 break;
             case UnitStatus.Escaping:
                 break;
@@ -635,17 +647,17 @@ public class BattleScreen : MonoBehaviour {
         // Set Queue is active flag
         //queueIsActive = true;
         // Next actions are applicably only to active or escaping unit
-        if (  (ActiveUnit.UnitStatus == UnitStatus.Active)
-           || (ActiveUnit.UnitStatus == UnitStatus.Escaping) )
+        if (  (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Active)
+           || (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Escaping) )
         {
-            ActiveUnit.HighlightActiveUnitInBattle(true);
+            ActiveUnitUI.HighlightActiveUnitInBattle(true);
             // Trigger buffs and debuffs before applying highlights
             // Verify if unit has buffs which should be removed, example: defense
-            ActiveUnit.DeactivateExpiredBuffs();
+            ActiveUnitUI.DeactivateExpiredBuffs();
             // Verify if unit has debuffs which should be applied, example: poison
             // Deactivate debuffs which has expired, example: poison duration may last 2 turns
             // This is checked and done after debuff trigger
-            ActiveUnit.TriggerAppliedDebuffs();
+            ActiveUnitUI.TriggerAppliedDebuffs();
         }
         //yield return null;
     }
@@ -653,8 +665,8 @@ public class BattleScreen : MonoBehaviour {
     IEnumerator EscapeUnit()
     {
         yield return new WaitForSeconds(0.25f);
-        ActiveUnit.HasMoved = true;
-        ActiveUnit.SetUnitStatus(UnitStatus.Escaped);
+        ActiveUnitUI.LPartyUnit.HasMoved = true;
+        ActiveUnitUI.SetUnitStatus(UnitStatus.Escaped);
         // This unit can't act any more
         // Skip post-move actions and Activate next unit
         canActivate = ActivateNextUnit();
@@ -672,15 +684,15 @@ public class BattleScreen : MonoBehaviour {
         //}
         //// Set Queue is active flag
         //queueIsActive = true;
-        UnitStatus unitStatus = ActiveUnit.UnitStatus;
+        UnitStatus unitStatus = ActiveUnitUI.LPartyUnit.UnitStatus;
         switch (unitStatus)
         {
             case UnitStatus.Active:
                 // Activate highlights of which cells can or cannot be targeted
-                queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnit));
-                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnit));
+                queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
                 // verify if active unit's party panel is AI controlled => faction not equal to player's faction
-                if (ActiveUnit.GetUnitPartyPanel().IsAIControlled)
+                if (ActiveUnitUI.GetUnitPartyPanel().IsAIControlled)
                 {
                     // give control to battle AI
                     queue.Run(battleAI.Act());
@@ -720,7 +732,7 @@ public class BattleScreen : MonoBehaviour {
     void UpdateBattleControlPanelAccordingToUnitPossibilities()
     {
         // verify if party can flee
-        if (ActiveUnit.GetUnitParty().CanEscapeFromBattle)
+        if (ActiveUnitUI.LPartyUnit.GetUnitParty().CanEscapeFromBattle)
         {
             // activate flee button
             transform.Find("CtrlPnlFight/Retreat").gameObject.SetActive(true);
@@ -748,13 +760,13 @@ public class BattleScreen : MonoBehaviour {
         if (CanContinueBattle())
         {
             // find next unit, which can act in the battle
-            PartyUnit nextUnit = FindNextUnit();
+            PartyUnitUI nextUnitUI = FindNextUnit();
             //Debug.Log("Next unit is " + nextUnit);
-            if (nextUnit)
+            if (nextUnitUI)
             {
                 // found next unit
                 // save it for later needs
-                ActiveUnit = nextUnit;
+                ActiveUnitUI = nextUnitUI;
                 // activate it
                 queue.Run(NextUnit());
                 canActivate = true;

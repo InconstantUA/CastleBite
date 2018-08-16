@@ -21,8 +21,10 @@ public class HeroPartyUI : MonoBehaviour {
 
     void LinkPartyUnitToUI(PartyUnit partyUnit)
     {
+        // Get PartyPanel
+        PartyPanel partyPanel = transform.GetComponentInChildren<PartyPanel>(true);
         // Get unit slot Transform by unit address
-        Transform unitSlotTransform = transform.GetComponentInChildren<PartyPanel>().transform.Find(partyUnit.UnitCellAddress).GetComponentInChildren<UnitSlot>().transform;
+        Transform unitSlotTransform = partyPanel.transform.Find(partyUnit.UnitCellAddress).GetComponentInChildren<UnitSlot>(true).transform;
         // Get unit canvas template
         GameObject unitCanvasTemplate = transform.root.Find("Templates/UI/UnitCanvas").gameObject;
         // Create new unit canvas in unit slot
@@ -31,6 +33,8 @@ public class HeroPartyUI : MonoBehaviour {
         newUnitCanvasGO.GetComponent<PartyUnitUI>().LPartyUnit = partyUnit;
         // enable new unit canvas
         newUnitCanvasGO.SetActive(true);
+        //// deactivate hire unit button
+        //partyPanel.SetHireUnitButtonActiveByCell()
     }
 
     void LinkPartyUnitsToUI()
@@ -44,5 +48,15 @@ public class HeroPartyUI : MonoBehaviour {
     void OnEnable()
     {
         LinkPartyUnitsToUI();
+        // Enable PartyPanel
+        GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        // reset hero party link to null
+        LHeroParty = null;
+        // Disable PartyPanel
+        GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(false);
     }
 }

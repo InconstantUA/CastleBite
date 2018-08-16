@@ -39,35 +39,57 @@ public class CityScreen : MonoBehaviour {
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(doActivate);
-        // Activate/Deactivate hero Parties menus
-        // get HeroParty
-        HeroParty heroParty = City.GetHeroPartyByMode(PartyMode.Party);
-        // verify if there is party in a city
-        if (heroParty)
+        // Activate/Deactivate hero Parties menus and Focus panels
+        if (doActivate)
         {
-            // assign party leader to left focus panel
-            transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = heroParty.GetHeroPartyLeaderUnit().gameObject;
-            // activate left Focus panel
-            transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
-            // assign HeroParty to left hero party UI
-            transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>().LHeroParty = heroParty;
-            // activate left hero party UI
-            transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
+            // get HeroParty
+            HeroParty heroParty = City.GetHeroPartyByMode(PartyMode.Party);
+            // verify if there is party in a city
+            if (heroParty != null)
+            {
+                // assign party leader to left focus panel
+                transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = heroParty.GetHeroPartyLeaderUnit().gameObject;
+                // activate left Focus panel
+                transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
+                // assign HeroParty to left hero party UI
+                transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>().LHeroParty = heroParty;
+                // activate left hero party UI
+                transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
+            }
+            else
+            {
+                // activate left Focus panel
+                // without linked hero it will trigger no-party info
+                transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
+                // activate hire hero panel
+                transform.root.Find("MiscUI/HireHeroPanel").gameObject.SetActive(doActivate);
+            }
+            // assign city to right focus panel
+            transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = City.gameObject;
+            // activate right Focus panel
+            transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
+            // assign City garnizon HeroParty to right hero party UI
+            transform.root.Find("MiscUI/RightHeroParty").GetComponent<HeroPartyUI>().LHeroParty = City.GetHeroPartyByMode(PartyMode.Garnizon);
+            // activate right hero party UI
+            transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);
+            // activate hire common units panel
+            transform.root.Find("MiscUI/HireCommonUnitButtons").gameObject.SetActive(doActivate);
         }
         else
         {
-            // activate left Focus panel
-            // without linked hero it will trigger no-party info
+            // deactivate left Focus panel
             transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
+            // deactivate left hero party UI
+            transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
+            // deactivate right Focus panel
+            transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
+            // deactivate right hero party UI
+            transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);
+            // deactivate hire hero panel
+            transform.root.Find("MiscUI/HireHeroPanel").gameObject.SetActive(doActivate);
+            // deactivate hire common units panel
+            transform.root.Find("MiscUI/HireCommonUnitButtons").gameObject.SetActive(doActivate);
         }
-        // assign city to right focus panel
-        transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = City.gameObject;
-        // activate right Focus panel
-        transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
-        // assign City garnizon HeroParty to right hero party UI
-        transform.root.Find("MiscUI/RightHeroParty").GetComponent<HeroPartyUI>().LHeroParty = City.GetHeroPartyByMode(PartyMode.Garnizon);
-        // activate right hero party UI
-        transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);
     }
 
     void OnEnable()
@@ -77,7 +99,7 @@ public class CityScreen : MonoBehaviour {
 
     void OnDisable()
     {
-        ReturnToNomalState();
+        DeactivateActiveToggle();
         SetRequiredComponentsActive(false);
     }
 
@@ -142,8 +164,8 @@ public class CityScreen : MonoBehaviour {
         }
         // verfiy if there is a city garnizon == we are in city edit mode and not in hero party edit mode
         // and verify if there is already party in city
-        if ( (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon) != null)
-            &&  (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Party) == null) )
+        if ( (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
+            &&  (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Party, false) == null) )
         {
             // activate hire hero panel
             transform.parent.Find("HireHeroPanel").gameObject.SetActive(true);
@@ -165,32 +187,11 @@ public class CityScreen : MonoBehaviour {
         }
     }
 
-    public void ReturnToNomalState()
+    public void DeactivateActiveToggle()
     {
-        // return states to normal
-        if (CityViewActiveState.Normal != cityViewActiveState)
-        {
-            // Deactivate Toggle
-            transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().GetSelectedToggle().OnTurnOff.Invoke();
-            transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().DeselectToggle();
-        }
-        // If there is no hero in the city or hero has left city, then display HireHeroPanel
-        if (!GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Party))
-        {
-            ActOnHeroLeavingCity();
-        }
-    }
-
-    public void ActOnHeroLeavingCity()
-    {
-        // Instruct Focus panel to update info
-        transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HeroLeaveCity);
-        // verify if we are in city and not in hero edit mode
-        if (GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon))
-        {
-            // Enable Hire leader panel
-            transform.parent.Find("HireHeroPanel").gameObject.SetActive(true);
-        }
+        // Deactivate Toggle
+        transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().GetSelectedToggle().OnTurnOff.Invoke();
+        transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().DeselectToggle();
     }
 
     public void ActOnHeroEnteringCity()
@@ -233,7 +234,7 @@ public class CityScreen : MonoBehaviour {
     {
         // Get city Garnizon
         // this can be only city Garnizon party
-        HeroParty cityGarnizon = GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon);
+        HeroParty cityGarnizon = GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false);
         // Create new unit and place it in parent transform
         PartyUnit newPartyUnit = Instantiate(hiredUnitTemplate, cityGarnizon.transform);
         // Set new unit cell address
@@ -348,7 +349,7 @@ public class CityScreen : MonoBehaviour {
             // PartyUnit newPartyUnit = CreateUnit(parentTransform, hiredUnitTemplate);
             CreateUnit(parentTransform, hiredUnitTemplate);
             // Update city garnizon panel to fill in required information and do required adjustments;
-            transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
+            transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
             // Instruct Right focus panel to update information
             transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
             // take gold from player
@@ -362,7 +363,7 @@ public class CityScreen : MonoBehaviour {
     bool VerifyDoubleUnitHire(Transform callerCell, PartyUnit selectedUnit)
     {
         bool result = false;
-        PartyPanel partyPanel = transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon).GetComponentInChildren<PartyPanel>(true);
+        PartyPanel partyPanel = transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true);
         // if all checks passed, then verify result is success
         // verify that we do not get more units, then city can keep
         bool cityCapacityOverflowCheckIsOK = partyPanel.VerifyCityCapacityOverflowOnDoubleUnitHire();
@@ -391,7 +392,7 @@ public class CityScreen : MonoBehaviour {
             // PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
             CreateUnit(newUnitParentSlot, hiredUnitTemplate);
             // update panel
-            transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
+            transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
             // Instruct Right focus panel to update information
             transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
             // take gold from player
@@ -438,25 +439,28 @@ public class CityScreen : MonoBehaviour {
         return unitCell.transform.parent.parent.GetComponent<PartyPanel>();
     }
 
+
+
     public void DismissPartyLeader(UnitSlot unitSlot)
     {
-        // Update Left focus panel;
-        // activate required UIs and also fill in city's left focus panels
-        // unlink party leader from the Left Focus panel
-        transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = null;
-        // fill in city's left focus with information from the hero
-        // Focus panel wil automatically detect changes and update info
-        transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissPartyLeader);
-        // Dismiss party with all units in it
-        Transform unitCell = unitSlot.transform.parent;
-        PartyPanel partyPanel = GetUnitsParentPartyPanel(unitCell);
-        HeroParty heroParty = partyPanel.GetComponentInParent<HeroParty>();
-        MapHero mapHero = heroParty.GetLinkedPartyOnMap();
+        // Get hero Party UI
+        // Structure: LeftHeroParty-3PartyPanel-2Top/Middle/Bottom(Row)-1Back/Front/Wide(Cell)-UnitSlot(this)
+        HeroPartyUI heroPartyUI = unitSlot.transform.parent.parent.parent.parent.GetComponent<HeroPartyUI>();
+        // Get Hero Party
+        HeroParty heroParty = heroPartyUI.LHeroParty;
+        // Get Focus Panel
+        FocusPanel focusPanel = GetComponentInParent<UIManager>().GetFocusPanelByHeroParty(heroParty);
+        // Get Map hero UI
+        MapHero mapHero = heroPartyUI.LHeroParty.GetLinkedPartyOnMap();
+        // Deactivate HeroParty UI
+        heroPartyUI.gameObject.SetActive(false);
+        // Deactivate Focus Panel
+        focusPanel.gameObject.SetActive(false);
         // Destroy hero's represetnation on map
         Destroy(mapHero.gameObject);
-        // Destroy(transform.GetComponentInChildren<HeroParty>().gameObject);
+        // Destroy hero's party
         Destroy(heroParty.gameObject);
-        // verify if we are in city and not in hero edit mode
+        // Verify if we are in city and not in hero edit mode
         if (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
         {
             // Enable Hire leader panel

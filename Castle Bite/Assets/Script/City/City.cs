@@ -83,15 +83,27 @@ public class City : MonoBehaviour {
 
     public int GetNumberOfPresentUnits()
     {
-        // querry current number of units and return array size
-        return GetHeroPartyByMode(PartyMode.Garnizon).GetComponentsInChildren<PartyUnit>().Length;
+        int value = 0;
+        // loop through all units in city garnizon
+        foreach (PartyUnit partyUnit in GetHeroPartyByMode(PartyMode.Garnizon).GetComponentsInChildren<PartyUnit>())
+        {
+            // verify unit size
+            if (partyUnit.UnitSize == UnitSize.Double)
+            {
+                value += 2;
+            }
+            else
+            {
+                value += 1;
+            }
+        }
+        return value;
     }
 
     public HeroParty GetHeroPartyByMode(PartyMode partyMode)
     {
-        HeroParty[] heroParties = transform.GetComponentsInChildren<HeroParty>();
         // Loop through hero parties untill we find the party in party not garnizon mode
-        foreach (HeroParty heroParty in heroParties)
+        foreach (HeroParty heroParty in transform.GetComponentsInChildren<HeroParty>())
         {
             // compare if hero party in in party (not in garnizon mode)
             if (heroParty.PartyMode == partyMode)
@@ -100,18 +112,6 @@ public class City : MonoBehaviour {
             }
         }
         return null;
-    }
-
-    public void ActOnHeroLeavingCity()
-    {
-        GetHeroPartyByMode(PartyMode.Party).LinkedCityID = -1;
-        cityData.linkedPartyID = -1;
-    }
-
-    public void ActOnHeroEnteringCity()
-    {
-        cityData.linkedPartyID = GetHeroPartyByMode(PartyMode.Party).gameObject.GetInstanceID();
-        GetHeroPartyByMode(PartyMode.Party).LinkedCityID = gameObject.GetInstanceID();
     }
 
     #region Active city states: dismiss, heal, resurect, hero equipment, unit drag

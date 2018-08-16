@@ -23,7 +23,7 @@ public class PartyPanel : MonoBehaviour {
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader}
 
     // for battle
-    PartyUnit activeBattleUnit;
+    PartyUnitUI activeBattleUnitUI;
     public string deadStatusText = "Dead";
     public string levelUpStatusText = "Level up";
     bool isAIControlled = false;
@@ -72,6 +72,11 @@ public class PartyPanel : MonoBehaviour {
     //{
     //    return panelMode;
     //}
+
+    void OnEnable()
+    {
+        OnChange(ChangeType.Init, null);
+    }
 
     #region On Change: hire or dismiss unit, for unit edit mode
 
@@ -139,17 +144,10 @@ public class PartyPanel : MonoBehaviour {
         return cellTransform.parent.name + "/" + cellTransform.name;
     }
 
-    void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
+    public void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
     {
-        // get HireCommonUnitButtons
-        // structure:
-        // 2City-1CityGarnizon/HeroParty-this(PartyPanel)
-        // City-HireCommonUnitButtons-cellAddress-HirePartyUnitButton
-        //Debug.Log("address " + cellAddress);
-        //Debug.Log("City " + transform.parent.parent.name);
-        // verify if we are in city view and there is HireCommonUnitButtons panel present
-        // .. this logic should be changed in future
-        if (transform.parent.parent.Find("HireCommonUnitButtons"))
+        // verify if we are in city view by checking if there is HireCommonUnitButtons panel active
+        if (transform.root.GetComponentInChildren<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon) != null)
         {
             //Debug.Log("HireCommonUnitButtons " + transform.parent.parent.Find("HireCommonUnitButtons").name);
             //Debug.Log("Cell " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).name);
@@ -255,7 +253,7 @@ public class PartyPanel : MonoBehaviour {
         switch (changeType)
         {
             case ChangeType.Init:
-                IntitPartyPanel();
+                //IntitPartyPanel();
                 break;
             case ChangeType.HirePartyLeader:
                 // we do not need to do anything here
@@ -293,11 +291,12 @@ public class PartyPanel : MonoBehaviour {
 
     #endregion
 
-    // Use this for initialization
-    void Start()
-    {
-        OnChange(ChangeType.Init, null);
-    }
+
+    //// Use this for initialization
+    //void Start()
+    //{
+    //    OnChange(ChangeType.Init, null);
+    //}
 
     //public string GetUnitDisplayName(PartyUnit unit)
     //{
@@ -315,69 +314,69 @@ public class PartyPanel : MonoBehaviour {
     //    return unitName;
     //}
 
-    void IntitPartyPanel()
-    {
-        Transform unitPanel;
-        Transform unitSlot;
-        PartyUnit unit;
-        foreach (string horisontalPanel in horisontalPanels)
-        {
-            foreach (string cell in cells)
-            {
-                // verify if slot has an unit in it
-                unitPanel = transform.Find(horisontalPanel+"/"+cell);
-                unitSlot = unitPanel.Find("UnitSlot");
-                // if (unitSlot.childCount > 0)
-                if (unitSlot.GetComponentInChildren<UnitDragHandler>())
-                {
-                    // verify if unit has isLeader atrribute ON
-                    unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                    // fill in highered object UI panel
-                    unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
-                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
-                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
-                    // deactivate hire unit button if panel is in garnizon state and this left or right single panel
-                    if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
-                    {
-                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
-                        //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
-                    }
-                    // deactivate hire unit buttons for Front and Back cells, if wide cell is active
-                    else if ((PartyMode.Garnizon == PartyMode) && ("Wide" == cell))
-                    {
-                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Front");
-                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Back");
-                    }
-                }
-                else
-                {
-                    // it is possile that unit was dismissed
-                    // clean health information
-                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
-                    // activate hire unit button if panel is in garnizon state and this left or right single panel
-                    if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
-                    {
-                        // verify if wide (double) cell is not occupied in the same row
-                        if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
-                        {
-                            SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
-                        }
-                        //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
-                    }
-                    // it is possible that double unit was dismissed
-                    if ("Wide" == cell)
-                    {
-                        // we need to disable Wide panel, because it is still enabled and placed on top of single panels
-                        unitPanel.parent.Find("Wide").gameObject.SetActive(false);
-                        // and enable left and right panels
-                        unitPanel.parent.Find("Front").gameObject.SetActive(true);
-                        unitPanel.parent.Find("Back").gameObject.SetActive(true);
-                    }
-                }
-            }
-        }
-    }
+    //void IntitPartyPanel()
+    //{
+    //    Transform unitPanel;
+    //    Transform unitSlot;
+    //    PartyUnit unit;
+    //    foreach (string horisontalPanel in horisontalPanels)
+    //    {
+    //        foreach (string cell in cells)
+    //        {
+    //            // verify if slot has an unit in it
+    //            unitPanel = transform.Find(horisontalPanel+"/"+cell);
+    //            unitSlot = unitPanel.Find("UnitSlot");
+    //            // if (unitSlot.childCount > 0)
+    //            if (unitSlot.GetComponentInChildren<UnitDragHandler>())
+    //            {
+    //                // verify if unit has isLeader atrribute ON
+    //                unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+    //                // fill in highered object UI panel
+    //                unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
+    //                unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
+    //                unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+    //                // deactivate hire unit button if panel is in garnizon state and this left or right single panel
+    //                if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
+    //                {
+    //                    SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
+    //                    //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+    //                }
+    //                // deactivate hire unit buttons for Front and Back cells, if wide cell is active
+    //                else if ((PartyMode.Garnizon == PartyMode) && ("Wide" == cell))
+    //                {
+    //                    SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Front");
+    //                    SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Back");
+    //                }
+    //            }
+    //            else
+    //            {
+    //                // it is possile that unit was dismissed
+    //                // clean health information
+    //                unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+    //                unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+    //                // activate hire unit button if panel is in garnizon state and this left or right single panel
+    //                if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
+    //                {
+    //                    // verify if wide (double) cell is not occupied in the same row
+    //                    if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
+    //                    {
+    //                        SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
+    //                    }
+    //                    //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+    //                }
+    //                // it is possible that double unit was dismissed
+    //                if ("Wide" == cell)
+    //                {
+    //                    // we need to disable Wide panel, because it is still enabled and placed on top of single panels
+    //                    unitPanel.parent.Find("Wide").gameObject.SetActive(false);
+    //                    // and enable left and right panels
+    //                    unitPanel.parent.Find("Front").gameObject.SetActive(true);
+    //                    unitPanel.parent.Find("Back").gameObject.SetActive(true);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     #region Verify capacity
 
@@ -473,6 +472,7 @@ public class PartyPanel : MonoBehaviour {
         // this is only needed in garnizon mode, only in this mode hire buttons are present
         if (PartyMode == PartyMode.Garnizon)
         {
+            Debug.Log("Activate or Deactivate Hire Unit Buttons in City Garnizon");
             foreach (string horisontalPanel in horisontalPanels)
             {
                 foreach (string cell in singleUnitCells)
@@ -489,29 +489,23 @@ public class PartyPanel : MonoBehaviour {
                                 // verify if city capacity is enough
                                 if (GetCapacity() > GetNumberOfPresentUnits())
                                 {
+                                    Debug.Log("Activate + button in " + horisontalPanel + "/" + cell + " cell");
                                     SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
                                 }
                             }
-                            //hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
-                            //hireUnitPnlBtn.SetActive(true);
-                            //// and bring it to the front
-                            //hireUnitPnlBtn.transform.SetAsLastSibling();
                         }
                         else
                         {
-                            // Debug.Log("slot " + horisontalPanel + " " + cell + " has a unit");
+                            Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
                             SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
-                            //hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
-                            //hireUnitPnlBtn.SetActive(false);
                         }
                         // And bring panel to the front
                         transform.parent.parent.Find("HireCommonUnitButtons").SetAsLastSibling();
                     }
                     else
                     {
+                        Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
                         SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
-                        //hireUnitPnlBtn = transform.Find(horisontalPanel).Find(cell).Find("HireUnitPnlBtn").gameObject;
-                        //hireUnitPnlBtn.SetActive(false);
                     }
                 }
             }
@@ -1212,9 +1206,9 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    public PartyUnit GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
+    public PartyUnitUI GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
     {
-        PartyUnit unitWithHighestInitiative = null;
+        PartyUnitUI unitWithHighestInitiative = null;
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
@@ -1227,19 +1221,19 @@ public class PartyPanel : MonoBehaviour {
                     //  - unit has moved or not
                     //  - unit is alive
                     //  - unit has not escaped from the battle
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                    if (!unit.HasMoved)
+                    PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+                    if (!unitUI.LPartyUnit.HasMoved)
                     {
                         // during main phase check for Active units
                         bool doProceed = false;
                         if ( (BattleScreen.TurnPhase.Main == turnPhase)
-                            && ( (unit.UnitStatus == UnitStatus.Active) 
-                                || (unit.UnitStatus == UnitStatus.Escaping) ) )
+                            && ( (unitUI.LPartyUnit.UnitStatus == UnitStatus.Active) 
+                               || (unitUI.LPartyUnit.UnitStatus == UnitStatus.Escaping) ) )
                         {
                             doProceed = true;
                         }
                         // during post wait phase check for units which are in Waiting status
-                        if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (unit.UnitStatus == UnitStatus.Waiting))
+                        if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (unitUI.LPartyUnit.UnitStatus == UnitStatus.Waiting))
                         {
                             doProceed = true;
                         }
@@ -1248,16 +1242,16 @@ public class PartyPanel : MonoBehaviour {
                             // compare initiative with other unit, if it was found
                             if (unitWithHighestInitiative)
                             {
-                                if (unit.UnitInitiative > unitWithHighestInitiative.UnitInitiative)
+                                if (unitUI.LPartyUnit.UnitInitiative > unitWithHighestInitiative.LPartyUnit.UnitInitiative)
                                 {
                                     // found unit with highest initiative, update unitWithHighestInitiative variable
-                                    unitWithHighestInitiative = unit;
+                                    unitWithHighestInitiative = unitUI;
                                 }
                             }
                             else
                             {
                                 // no other unit found yet, assume that this unit has the highest initiative
-                                unitWithHighestInitiative = unit;
+                                unitWithHighestInitiative = unitUI;
                             }
                         }
                     }
@@ -1286,11 +1280,12 @@ public class PartyPanel : MonoBehaviour {
     }
 
 
-    bool GetIsUnitFriendly(PartyUnit unitToActivate)
+    bool GetIsUnitFriendly(PartyUnitUI unitToActivateUI)
     {
         // method 1
         // structure: 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanel-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(This)PartyUnit
-        GameObject unitToActivatePartyPanel = unitToActivate.transform.parent.parent.parent.parent.parent.gameObject;
+        GameObject unitToActivatePartyPanel = unitToActivateUI.transform.parent.parent.parent.parent.parent.gameObject;
+        // compare this game object of party panel to the unit's party panel game object
         if (gameObject == unitToActivatePartyPanel)
         {
             return true;
@@ -1484,7 +1479,7 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    PartyUnit GetUnitWhichCanFight(string horisontalPanel, string cell)
+    PartyUnitUI GetUnitWhichCanFight(string horisontalPanel, string cell)
     {
         // verify if slot has an unit in it
         Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
@@ -1492,12 +1487,12 @@ public class PartyPanel : MonoBehaviour {
         {
             // cell has a unit in it
             // verify if unit can act: alive and did not escape (flee from) the battle
-            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-            if (  (unit.UnitStatus == UnitStatus.Active) 
-               || (unit.UnitStatus == UnitStatus.Waiting)
-               || (unit.UnitStatus == UnitStatus.Escaping) )
+            PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+            if (  (unitUI.LPartyUnit.UnitStatus == UnitStatus.Active) 
+               || (unitUI.LPartyUnit.UnitStatus == UnitStatus.Waiting)
+               || (unitUI.LPartyUnit.UnitStatus == UnitStatus.Escaping) )
             {
-                return unit;
+                return unitUI;
             }
         }
         return null;
@@ -1564,8 +1559,8 @@ public class PartyPanel : MonoBehaviour {
 
     bool IsActiveMeleUnitBlockedByItsPartyMembers()
     {
-        string activeMeleUnitFrontBackWideRowPosition = activeBattleUnit.transform.parent.parent.parent.name;
-        PartyPanel activeUnitPartyPanel = activeBattleUnit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        string activeMeleUnitFrontBackWideRowPosition = activeBattleUnitUI.transform.parent.parent.parent.name;
+        PartyPanel activeUnitPartyPanel = activeBattleUnitUI.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
         bool isBlocked = true;
         bool frontRowHasUnitsWhichCanFight = activeUnitPartyPanel.FrontRowHasUnitsWhichCanFight();
         if ("Back" == activeMeleUnitFrontBackWideRowPosition)
@@ -1615,7 +1610,7 @@ public class PartyPanel : MonoBehaviour {
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "";
         bool activeMeleUnitIsBlocked = IsActiveMeleUnitBlockedByItsPartyMembers();
-        string activeMeleUnitTopMiddleBottomPosition = activeBattleUnit.transform.parent.parent.parent.parent.name;
+        string activeMeleUnitTopMiddleBottomPosition = activeBattleUnitUI.transform.parent.parent.parent.parent.name;
         bool enemyUnitIsPotentialTarget = false;
         foreach (string horisontalPanel in horisontalPanels)
         {
@@ -1661,7 +1656,7 @@ public class PartyPanel : MonoBehaviour {
                                         {
                                             // this is actions for enemy party
                                             isAllowedToApplyPwrToThisUnit = false;
-                                            errorMessage = activeBattleUnit.UnitName + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
+                                            errorMessage = activeBattleUnitUI.LPartyUnit.UnitName + " is mele unit and can attack only adjacent units. At this moment it is blocked by front row party members and cannot attack this enemy unit.";
                                         }
                                     }
                                     else
@@ -1940,16 +1935,16 @@ public class PartyPanel : MonoBehaviour {
     //    canvasText.color = highlightColor;
     //}
 
-    public IEnumerator SetActiveUnitInBattle(PartyUnit unitToActivate)
+    public IEnumerator SetActiveUnitInBattle(PartyUnitUI unitToActivateUI)
     {
         //Debug.Log("SetActiveUnitInBattle " + unitToActivate.UnitName);
         // save it locally for later use
-        activeBattleUnit = unitToActivate;
+        activeBattleUnitUI = unitToActivateUI;
         // new unit became active in battle
         // highlight differently cells which this unit can or cannot interract and in which way
         // act based on activated unit relationships with this panel
         // verify if this is enemy unit or unit from this party
-        bool activeUnitIsFromThisParty = GetIsUnitFriendly(unitToActivate);
+        bool activeUnitIsFromThisParty = GetIsUnitFriendly(unitToActivateUI);
         // If active unit is from this party
         //// Then trigger buffs and debuffs before applying highlights
         //if (activeUnitIsFromThisParty)
@@ -1964,7 +1959,7 @@ public class PartyPanel : MonoBehaviour {
         //}
         // defined below how actions applied to the friendly and enemy units
         // based on the active unit powers
-        switch (unitToActivate.UnitAbility)
+        switch (unitToActivateUI.LPartyUnit.UnitAbility)
         {
             // Helping or buf powers
             case UnitAbility.HealingWord:
@@ -2009,7 +2004,7 @@ public class PartyPanel : MonoBehaviour {
         {
             // This unit belongs to this party highlight it here
             // without adding to a queue
-            unitToActivate.HighlightActiveUnitInBattle(true);
+            unitToActivateUI.HighlightActiveUnitInBattle(true);
         }
         yield return null;
     }
@@ -2083,23 +2078,23 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    void ApplyHealPowerToSingleUnit(PartyUnit dstUnit)
+    void ApplyHealPowerToSingleUnit(PartyUnitUI dstUnitUI)
     {
         Debug.Log("ApplyHealPowerToSingleUnit");
         // heal destination unit
-        int healthAfterHeal = dstUnit.UnitHealthCurr + activeBattleUnit.UnitPower;
+        int healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthCurr + activeBattleUnitUI.LPartyUnit.UnitPower;
         // make sure that we do not heal to more than maximum health
-        if (healthAfterHeal > dstUnit.UnitHealthMax)
+        if (healthAfterHeal > dstUnitUI.LPartyUnit.UnitHealthMax)
         {
-            healthAfterHeal = dstUnit.UnitHealthMax;
+            healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthMax;
         }
-        dstUnit.UnitHealthCurr = (healthAfterHeal);
+        dstUnitUI.LPartyUnit.UnitHealthCurr = (healthAfterHeal);
         // update current health in UI
-        Text currentHealth = dstUnit.GetUnitCurrentHealthText();
+        Text currentHealth = dstUnitUI.GetUnitCurrentHealthText();
         currentHealth.text = healthAfterHeal.ToString();
         // update info panel
-        Text unitInfoText = dstUnit.GetUnitInfoPanelText();
-        unitInfoText.text = "+" + activeBattleUnit.UnitPower.ToString();
+        Text unitInfoText = dstUnitUI.GetUnitInfoPanelText();
+        unitInfoText.text = "+" + activeBattleUnitUI.LPartyUnit.UnitPower.ToString();
         unitInfoText.color = Color.green;
     }
 
@@ -2108,7 +2103,7 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("ApplyHealPowerToMultipleUnits");
     }
 
-    void ApplyResurectPower(PartyUnit dstUnit)
+    void ApplyResurectPower(PartyUnitUI dstUnitUI)
     {
         Debug.Log("ApplyResurectPower");
     }
@@ -2306,23 +2301,23 @@ public class PartyPanel : MonoBehaviour {
     //    infoPanel.color = Color.red;
     //}
 
-    void ApplyDestructivePowerToSingleUnit(PartyUnit dstUnit)
+    void ApplyDestructivePowerToSingleUnit(PartyUnitUI dstUnitUI)
     {
         //Debug.Log("ApplyDestructivePowerToSingleUnit");
         // ApplyDestructiveAbility(dstUnit);
-        dstUnit.ApplyDestructiveAbility(dstUnit.GetAbilityDamageDealt(activeBattleUnit));
-        ApplyUniquePowerModifiersToSingleUnit(dstUnit);
+        dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetAbilityDamageDealt(activeBattleUnitUI.LPartyUnit));
+        ApplyUniquePowerModifiersToSingleUnit(dstUnitUI);
     }
 
 
-    public void SetUnitDebuffActive(PartyUnit partyUnit, UniquePowerModifier uniquePowerModifier, bool doActivate)
+    public void SetUnitDebuffActive(PartyUnitUI partyUnitUI, UniquePowerModifier uniquePowerModifier, bool doActivate)
     {
         // get unit debuffs panel
-        Transform debuffsPanel = partyUnit.GetUnitDebuffsPanel();
+        Transform debuffsPanel = partyUnitUI.GetUnitDebuffsPanel();
         if (doActivate)
         {
             // verify if unit already has this debuf
-            if (uniquePowerModifier.upmAppliedDebuff == partyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff])
+            if (uniquePowerModifier.upmAppliedDebuff == partyUnitUI.LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff])
             {
                 // the same debuff is already applied
                 // reset its counter to max
@@ -2342,7 +2337,7 @@ public class PartyPanel : MonoBehaviour {
                 // add debuff to unit
                 //Debug.Log(((int)UnitBuff.DefenseStance).ToString());
                 //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-                partyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = uniquePowerModifier.upmAppliedDebuff;
+                partyUnitUI.LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = uniquePowerModifier.upmAppliedDebuff;
                 // create debuff by duplicating from template
                 // Note: debuff name in template should be the same as in AppliedDebuff
                 Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.upmAppliedDebuff.ToString());
@@ -2357,7 +2352,7 @@ public class PartyPanel : MonoBehaviour {
         else
         {
             // remove buff
-            partyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = UnitDebuff.None;
+            partyUnitUI.LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = UnitDebuff.None;
             Destroy(debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).gameObject);
         }
     }
@@ -2369,11 +2364,11 @@ public class PartyPanel : MonoBehaviour {
     //    dstUnit.AddDebuff(uniquePowerModifier);
     //}
 
-    void ApplyUniquePowerModifiersToSingleUnit(PartyUnit dstUnit)
+    void ApplyUniquePowerModifiersToSingleUnit(PartyUnitUI dstUnitUI)
     {
-        foreach (UniquePowerModifier uniquePowerModifier in activeBattleUnit.UniquePowerModifiers)
+        foreach (UniquePowerModifier uniquePowerModifier in activeBattleUnitUI.LPartyUnit.UniquePowerModifiers)
         {
-            SetUnitDebuffActive(dstUnit, uniquePowerModifier, true);
+            SetUnitDebuffActive(dstUnitUI, uniquePowerModifier, true);
             // ApplyUniquePowerModifierToSingleUnit(dstUnit, uniquePowerModifier);
         }
     }
@@ -2384,7 +2379,7 @@ public class PartyPanel : MonoBehaviour {
         // get all alive units in enemy party and apply damage to them
         // find enemy party based on activeBattleUnit
         // structure: 7BattleScreen-6Party-5PartyPanel-4[Top/Middle/Bottom]-3[Front/Back/Wide]cell-2UnitSlot-1UnitCanvas-activeBattleUnit
-        Transform activeBattleUnitPartyTr = activeBattleUnit.transform.parent.parent.parent.parent.parent.parent;
+        Transform activeBattleUnitPartyTr = activeBattleUnitUI.transform.parent.parent.parent.parent.parent.parent;
         Transform battleScreenTr = activeBattleUnitPartyTr.parent;
         HeroParty[] allHeroesParties = battleScreenTr.GetComponentsInChildren<HeroParty>();
         // find party which does not match activeBattleUnit Party
@@ -2398,10 +2393,10 @@ public class PartyPanel : MonoBehaviour {
                 {
                     foreach (string cell in cells)
                     {
-                        PartyUnit unit = GetUnitWhichCanFight(horisontalPanel, cell);
-                        if (unit)
+                        PartyUnitUI unitUI = GetUnitWhichCanFight(horisontalPanel, cell);
+                        if (unitUI)
                         {
-                            ApplyDestructivePowerToSingleUnit(unit);
+                            ApplyDestructivePowerToSingleUnit(unitUI);
                         }
                         //// verify if slot has an unit in it
                         //Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
@@ -2423,27 +2418,27 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    public void ApplyPowersToUnit(PartyUnit dstUnit)
+    public void ApplyPowersToUnit(PartyUnitUI dstUnitUI)
     {
         // reset cell info panel beforehand, for both parties, to clean up previous information
         ResetUnitCellInfoPanel(transform);
-        ResetUnitCellInfoPanel(activeBattleUnit.GetUnitPartyPanel().transform);
+        ResetUnitCellInfoPanel(activeBattleUnitUI.GetUnitPartyPanel().transform);
         // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
         // but still the power should be applied
-        if (dstUnit)
+        if (dstUnitUI)
         {
             //Debug.Log(activeBattleUnit.UnitName + " acting upon " + dstUnit.UnitName + " or whole party");
-            switch (activeBattleUnit.UnitAbility)
+            switch (activeBattleUnitUI.LPartyUnit.UnitAbility)
             {
                 // Helping or buf powers
                 case UnitAbility.HealingWord:
-                    ApplyHealPowerToSingleUnit(dstUnit);
+                    ApplyHealPowerToSingleUnit(dstUnitUI);
                     break;
                 case UnitAbility.HealingSong:
                     ApplyHealPowerToMultipleUnits();
                     break;
                 case UnitAbility.Resurect:
-                    ApplyResurectPower(dstUnit);
+                    ApplyResurectPower(dstUnitUI);
                     break;
                 // Mele attack powers
                 case UnitAbility.BlowWithGreatSword:
@@ -2458,7 +2453,7 @@ public class PartyPanel : MonoBehaviour {
                 case UnitAbility.ShootWithCompoudBow:
                 case UnitAbility.ThrowSpear:
                 case UnitAbility.ThrowRock:
-                    ApplyDestructivePowerToSingleUnit(dstUnit);
+                    ApplyDestructivePowerToSingleUnit(dstUnitUI);
                     break;
                 // Magic (including pure or whole-party) attack powers
                 case UnitAbility.CastChainLightning:
@@ -2476,8 +2471,8 @@ public class PartyPanel : MonoBehaviour {
         else
         {
             // in case of magic power - apply it to all units in enemy party
-            Debug.Log(activeBattleUnit.UnitName + " acting upon whole party");
-            switch (activeBattleUnit.UnitAbility)
+            Debug.Log(activeBattleUnitUI.LPartyUnit.UnitName + " acting upon whole party");
+            switch (activeBattleUnitUI.LPartyUnit.UnitAbility)
             {
                 // Helping or buf powers
                 case UnitAbility.HealingSong:
@@ -2502,16 +2497,16 @@ public class PartyPanel : MonoBehaviour {
         // StartCoroutine("FadeUnitCellInfo");
     }
 
-    public void SetUnitDefenseBuffActive(PartyUnit partyUnit, bool doActivate)
+    public void SetUnitDefenseBuffActive(PartyUnitUI partyUnitUI, bool doActivate)
     {
         // get unit buffs panel
-        Transform buffsPanel = partyUnit.GetUnitBuffsPanel();
+        Transform buffsPanel = partyUnitUI.GetUnitBuffsPanel();
         if (doActivate)
         {
             // add buff to unit
             // Debug.Log(((int)UnitBuff.DefenseStance).ToString());
             // Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-            partyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.DefenseStance;
+            partyUnitUI.LPartyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.DefenseStance;
             // create buff by duplicating from template
             Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defense");
             Transform defenseBuff = Instantiate(buffTemplate, buffsPanel);
@@ -2522,7 +2517,7 @@ public class PartyPanel : MonoBehaviour {
         } else
         {
             // remove buff
-            partyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.None;
+            partyUnitUI.LPartyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.None;
             Destroy(buffsPanel.Find("Defense").gameObject);
         }
     }
@@ -2601,86 +2596,94 @@ public class PartyPanel : MonoBehaviour {
         return unitsLeft;
     }
 
-    bool UnitCanBeUpgraded()
-    {
-        return false;
-    }
+    //bool UnitCanBeUpgraded()
+    //{
+    //    return false;
+    //}
 
-    bool UnitHasReachedUpgradeLimit()
-    {
-        return true;
-    }
+    //bool UnitHasReachedUpgradeLimit()
+    //{
+    //    return true;
+    //}
 
-    void OfferPartyLeaderToLearnNewAbility()
-    {
+    //void OfferPartyLeaderToLearnNewAbility()
+    //{
 
-    }
+    //}
 
-    void IncrementUnitMaxStats(PartyUnit unit)
+    //void IncrementUnitMaxStats(PartyUnit unit)
+    //{
+    //    // this is done on lvl up
+    //    unit.UnitExperienceReward = (unit.UnitExperienceReward + unit.UnitExperienceRewardIncrementOnLevelUp);
+    //    unit.UnitHealthMax = (unit.UnitHealthMax + unit.UnitHealthMaxIncrementOnLevelUp);
+    //    unit.UnitPower = (unit.UnitPower + unit.UnitPowerIncrementOnLevelUp);
+    //}
+
+    void ResetUnitStatsToMax(PartyUnitUI unitUI)
     {
         // this is done on lvl up
-        unit.UnitExperienceReward = (unit.UnitExperienceReward + unit.UnitExperienceRewardIncrementOnLevelUp);
-        unit.UnitHealthMax = (unit.UnitHealthMax + unit.UnitHealthMaxIncrementOnLevelUp);
-        unit.UnitPower = (unit.UnitPower + unit.UnitPowerIncrementOnLevelUp);
-    }
-
-    void ResetUnitStatsToMax(PartyUnit unit)
-    {
-        // this is done on lvl up
-        unit.UnitHealthCurr = (unit.UnitHealthMax);
+        unitUI.LPartyUnit.UnitHealthCurr = (unitUI.LPartyUnit.UnitHealthMax);
         // update panel
-        unit.GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
-        unit.GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+        unitUI.GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
+        unitUI.GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
     }
 
-    void UpgradeUnitClass(PartyUnit unit)
-    {
-        // this is done on lvl up
+    //void UpgradeUnitClass(PartyUnit unit)
+    //{
+    //    // this is done on lvl up
 
-    }
+    //}
 
-    void UpgradeUnit(PartyUnit unit)
+    void UpgradeUnit(PartyUnitUI unitUI)
     {
         Debug.Log("UpgradeUnit");
         // unit has reached new level
-        // verify if this is party leader
-        if (unit.IsLeader)
-        {
-            // this party leader
-            // reset his experience to 0
-            unit.UnitExperience = (0);
-            // and increment his level
-            unit.UnitLevel = (unit.UnitLevel + 1);
-            // offer party leader to learn new ability
-            OfferPartyLeaderToLearnNewAbility();
-        }
-        else
-        {
-            // this common unit
-            // verify if conditions which allow unit to upgrade are met
-            if (UnitCanBeUpgraded())
-            {
-                // and upgrade unit to the next class 
-                UpgradeUnitClass(unit);
-            }
-            else if (UnitHasReachedUpgradeLimit())
-            {
-                // increment max unit stats
-                IncrementUnitMaxStats(unit);
-                // reset unit stats to maximum and reset experience counter
-                ResetUnitStatsToMax(unit);
-                // reset his experience to 0
-                unit.UnitExperience = (0);
-                // and increment his level
-                unit.UnitLevel = (unit.UnitLevel + 1);
-            }
-            else
-            {
-                // wait for upgrade condition to be fulfilled
-                // keep unit's experience at max
-                unit.UnitExperience = (unit.UnitExperienceRequiredToReachNewLevel);
-            }
-        }
+        // add upgrade point to the unit
+        unitUI.LPartyUnit.UnitUpgradePoints += 1;
+        // reset unit stats to maximum and reset experience counter
+        ResetUnitStatsToMax(unitUI);
+        // reset his experience to 0
+        unitUI.LPartyUnit.UnitExperience = 0;
+        // and increment his level
+        unitUI.LPartyUnit.UnitLevel += 1;
+        //// verify if this is party leader
+        //if (unit.IsLeader)
+        //{
+        //    // this party leader
+        //    // reset his experience to 0
+        //    unit.UnitExperience = (0);
+        //    // and increment his level
+        //    unit.UnitLevel = (unit.UnitLevel + 1);
+        //    // offer party leader to learn new ability
+        //    OfferPartyLeaderToLearnNewAbility();
+        //}
+        //else
+        //{
+        //    // this common unit
+        //    // verify if conditions which allow unit to upgrade are met
+        //    if (UnitCanBeUpgraded())
+        //    {
+        //        // and upgrade unit to the next class 
+        //        UpgradeUnitClass(unit);
+        //    }
+        //    else if (UnitHasReachedUpgradeLimit())
+        //    {
+        //        // increment max unit stats
+        //        IncrementUnitMaxStats(unit);
+        //        // reset unit stats to maximum and reset experience counter
+        //        ResetUnitStatsToMax(unit);
+        //        // reset his experience to 0
+        //        unit.UnitExperience = (0);
+        //        // and increment his level
+        //        unit.UnitLevel = (unit.UnitLevel + 1);
+        //    }
+        //    else
+        //    {
+        //        // wait for upgrade condition to be fulfilled
+        //        // keep unit's experience at max
+        //        unit.UnitExperience = (unit.UnitExperienceRequiredToReachNewLevel);
+        //    }
+        //}
     }
 
     public void GrantAndShowExperienceGained(PartyPanel enemyPartyPanel)
@@ -2699,23 +2702,23 @@ public class PartyPanel : MonoBehaviour {
                 Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
-                    PartyUnit unit = GetUnitWhichCanFight(horisontalPanel, cell);
-                    if (unit)
+                    PartyUnitUI unitUI = GetUnitWhichCanFight(horisontalPanel, cell);
+                    if (unitUI)
                     {
                         // add experience to the unit
-                        int newUnitExperienceValue = unit.UnitExperience + experiencePerUnit;
+                        int newUnitExperienceValue = unitUI.LPartyUnit.UnitExperience + experiencePerUnit;
                         // verify if unit has not reached new level
-                        Text infoPanel = unit.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
-                        Text statusPanel = unit.GetUnitCell().Find("Status").GetComponent<Text>();
-                        if (newUnitExperienceValue < unit.UnitExperienceRequiredToReachNewLevel)
+                        Text infoPanel = unitUI.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+                        Text statusPanel = unitUI.GetUnitCell().Find("Status").GetComponent<Text>();
+                        if (newUnitExperienceValue < unitUI.LPartyUnit.UnitExperienceRequiredToReachNewLevel)
                         {
                             // unit has not reached new level
                             // just update hist current experience value
-                            unit.UnitExperience = (newUnitExperienceValue);
+                            unitUI.LPartyUnit.UnitExperience = (newUnitExperienceValue);
                         }
                         else
                         {
-                            UpgradeUnit(unit);
+                            UpgradeUnit(unitUI);
                             // update status panel to indicate level up
                             statusPanel.text = levelUpStatusText;
                             statusPanel.color = Color.green;

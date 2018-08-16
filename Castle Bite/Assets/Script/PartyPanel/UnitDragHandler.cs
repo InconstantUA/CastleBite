@@ -113,12 +113,12 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     transform.position = startPosition;
                 }
                 // verify if we are in city edit mode and not in hero edit mode
-                HeroParty cityGarnizon = transform.root.GetComponentInChildren<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon);
-                if (cityGarnizon != null)
+                HeroPartyUI cityGarnizonUI = transform.root.GetComponentInChildren<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon, false);
+                if (cityGarnizonUI != null)
                 {
                     // activate hire unit buttons again, after it was disabled
                     // this is should be done in City Garnizon panel
-                    cityGarnizon.GetComponentInChildren<PartyPanel>().SetHireUnitPnlButtonActive(true);
+                    cityGarnizonUI.GetComponentInChildren<PartyPanel>().SetHireUnitPnlButtonActive(true);
                 }
             }
         }

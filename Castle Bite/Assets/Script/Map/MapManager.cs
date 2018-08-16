@@ -1226,7 +1226,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Enter city edit mode
         queue.Run(mapCity.EnterCityEditMode());
         // Trigger on hero entering city
-        mapCity.LinkedCityTr.GetComponent<City>().ActOnHeroEnteringCity();
+        // ..
         // reset map state and selections, because hero can be removed while in city
         SetSelection(Selection.None);
     }
@@ -1426,10 +1426,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             selectedHero.linkedCityOnMapTr = null;
             // Get current party city
             HeroParty heroParty = selectedHero.LinkedPartyTr.GetComponent<HeroParty>();
-            City currentCity = heroParty.transform.parent.GetComponent<City>();
-            // Enable hire hero panel in city
-            transform.root.Find("MiscUI").GetComponentInChildren<CityScreen>().ReturnToNomalState();
-            currentCity.ActOnHeroLeavingCity();
+            // Trigger on hero leaving city
+            // ..
             // Move party from city to PartiesOnMap container
             Transform partiesOnMap = transform.root.Find("PartiesOnMap");
             heroParty.transform.SetParent(partiesOnMap);

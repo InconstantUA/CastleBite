@@ -30,6 +30,11 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
+    void OnTransformChildrenChanged()
+    {
+        SetUnitCellInfoUI();
+    }
+
     public Transform GetUnitCell()
     {
         // structure: 2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(this with link to Unit)
@@ -54,6 +59,16 @@ public class PartyUnitUI : MonoBehaviour {
     public Transform GetUnitDebuffsPanel()
     {
         return GetUnitCell().Find("Status/Debuffs");
+    }
+
+    public PartyPanel GetUnitPartyPanel()
+    {
+        // structure: 4PartyPanel-3Row-2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(Unit)
+        // verify if unit is member of party
+        if (transform.parent.parent)
+            if (transform.parent.parent.parent)
+                return transform.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        return null;
     }
 
     public void SetUnitCellInfoUI()
@@ -260,7 +275,7 @@ public class PartyUnitUI : MonoBehaviour {
             //{
             //    Debug.LogError("No debuffIndicator");
             //}
-            IEnumerator coroutine = debuffIndicator.TriggerDebuff(GetComponent<PartyUnit>());
+            IEnumerator coroutine = debuffIndicator.TriggerDebuff(this);
             //if (coroutine == null)
             //{
             //    Debug.LogError("No coroutine");

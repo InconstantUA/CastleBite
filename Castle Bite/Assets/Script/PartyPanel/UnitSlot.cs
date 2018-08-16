@@ -104,7 +104,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void OnTransformChildrenChanged()
     {
-        Debug.Log("The list of children has changed");
+        // Debug.Log("The list of children has changed");
         if (gameObject.activeInHierarchy)
         {
             StartCoroutine(UpdateUnitEquipmentControl());
@@ -206,7 +206,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             // on right mouse click
             // show unit info
-            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitSlot.GetComponentInChildren<PartyUnit>());
+            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit);
         }
     }
 
@@ -330,36 +330,55 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void ActOnCityClick()
     {
         Debug.Log("UnitSlot ActOnClick in City");
+        // Get city screen
         CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
-        // presave state, because we are going to reset it here
+        // Get city state
         CityViewActiveState cityState = cityScreen.CityViewActiveState;
-        // disable dismiss mode and return to normal mode
-        // this looks naturally
-        cityScreen.ReturnToNomalState();
-        // act based on the city (and cursor) state
-        switch (cityState)
+        // Verify if city state is not normal
+        if (CityViewActiveState.Normal != cityState)
         {
-            case CityViewActiveState.Normal:
-                // do nothing for now
-                break;
-            case CityViewActiveState.ActiveDismiss:
-                // try to dismiss unit, if it is possible
-                TryToDismissUnit();
-                break;
-            case CityViewActiveState.ActiveHeal:
-                // try to heal unit, if it is possible
-                Debug.Log("Show Heal Unit confirmation box");
-                break;
-            case CityViewActiveState.ActiveResurect:
-                // try to resurect unit, if it is possible
-                Debug.Log("Show Resurect Unit confirmation box");
-                break;
-            case CityViewActiveState.ActiveUnitDrag:
-                // ??
-                break;
-            default:
-                Debug.LogError("Unknown state");
-                break;
+            cityScreen.DeactivateActiveToggle();
+        }
+        // Get party unit UI in this slot
+        PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+        // Verify if unit is found
+        if (unitUI)
+        {
+            // act based on the city (and cursor) state
+            switch (cityState)
+            {
+                case CityViewActiveState.Normal:
+                    // do nothing for now
+                    break;
+                case CityViewActiveState.ActiveDismiss:
+                    // try to dismiss unit, if it is possible
+                    TryToDismissUnit(unitUI.LPartyUnit);
+                    break;
+                case CityViewActiveState.ActiveHeal:
+                    // try to heal unit, if it is possible
+                    Debug.Log("Show Heal Unit confirmation box");
+                    break;
+                case CityViewActiveState.ActiveResurect:
+                    // try to resurect unit, if it is possible
+                    Debug.Log("Show Resurect Unit confirmation box");
+                    break;
+                case CityViewActiveState.ActiveUnitDrag:
+                    // ??
+                    break;
+                default:
+                    Debug.LogError("Unknown state");
+                    break;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Unit no found");
+        }
+        // Verify if city state is not normal
+        if (CityViewActiveState.Normal != cityState)
+        {
+            // disable previous city state
+            cityScreen.SetActiveState(cityState, false);
         }
     }
 
@@ -374,10 +393,9 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (isAllowedToApplyPowerToThisUnit)
             {
                 // it is allowed to apply powers to the unit in this cell
-                GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnit>());
+                GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
                 // set unit has moved flag
-                PartyUnit activeUnit = battleScreen.ActiveUnit;
-                activeUnit.HasMoved = (true);
+                battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = (true);
                 // activate next unit
                 battleScreen.ActivateNextUnit();
             }
@@ -418,41 +436,32 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    void TryToDismissUnit()
+    void TryToDismissUnit(PartyUnit unit)
     {
         // this depends on the fact if unit is dismissable
         // for example Capital guard is not dimissable
         // all other units normally are dismissable
-        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnit>();
-        // if unit does not exist, then nothing to do
-        if (unit)
+        if (unit.IsDismissable)
         {
-            if (unit.IsDismissable)
+            // as for confirmation
+            string confirmationMessage;
+            // verify if this is party leader
+            if (unit.IsLeader)
             {
-                // as for confirmation
-                string confirmationMessage;
-                // verify if this is party leader
-                if (unit.IsLeader)
-                {
-                    confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GivenName + " " + unit.UnitName + " and whole party?";
-                }
-                else
-                {
-                    confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
-                }
-                // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
-                confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
+                confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GivenName + " " + unit.UnitName + " and whole party?";
             }
             else
             {
-                // display error message
-                NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
-                notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
+                confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
             }
+            // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+            confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
         }
         else
         {
-            Debug.LogWarning("Unit no found");
+            // display error message
+            NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
+            notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
         }
     }
 

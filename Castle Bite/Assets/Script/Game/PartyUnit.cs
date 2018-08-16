@@ -632,19 +632,19 @@ public class PartyUnit : MonoBehaviour {
         //                    return transform.parent.parent.parent.parent.parent.parent.GetComponent<HeroParty>();
     }
 
-    public PartyPanel GetUnitPartyPanel()
-    {
-        // structure: 5PartyPanel-4Row-3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
-        // verify if unit is member of party
-        if (transform.parent.parent.parent)
-        {
-            if (transform.parent.parent.parent.parent)
-            {
-                return transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
-            }
-        }
-        return null;
-    }
+    //public PartyPanel GetUnitPartyPanel()
+    //{
+    //    // structure: 5PartyPanel-4Row-3UnitCell[Front/Back/Wide]-2UnitSlot-1UnitCanvas-Unit
+    //    // verify if unit is member of party
+    //    if (transform.parent.parent.parent)
+    //    {
+    //        if (transform.parent.parent.parent.parent)
+    //        {
+    //            return transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+    //        }
+    //    }
+    //    return null;
+    //}
 
     //public City GetUnitCity()
     //{
