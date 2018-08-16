@@ -6,26 +6,26 @@ using UnityEngine.EventSystems;
 
 public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
 {
-    public GameObject unit
-    {
-        get
-        {
-            if (transform.childCount > 0)
-            {
-                return transform.GetChild(0).gameObject;
-            }
-            return null;
-        }
-    }
+    //public GameObject unit
+    //{
+    //    get
+    //    {
+    //        if (transform.childCount > 0)
+    //        {
+    //            return transform.GetChild(0).gameObject;
+    //        }
+    //        return null;
+    //    }
+    //}
 
     bool isDropAllowed;
     string errorMessage;
 
-    City GetParentCity()
-    {
-        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
-        return transform.parent.parent.parent.parent.parent.GetComponent<City>();
-    }
+    //City GetParentCity()
+    //{
+    //    // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
+    //    return transform.parent.parent.parent.parent.parent.GetComponent<City>();
+    //}
 
     public void SetOnDropAction(bool isDrpAlwd, string errMsg = "")
     {
@@ -110,9 +110,9 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         {
             // drop is allowed
             // act based on then draggable unit size
-            // get actual unit, structure Cell-UnitCanvas(dragged)->Unit
-            PartyUnit draggedUnit = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
-            Transform srcCellTr = UnitDragHandler.unitBeingDragged.transform.parent.parent;
+            // get actual unit, structure Cell-UnitCanvas(dragged->Unit link)
+            PartyUnit draggedUnit = UnitDragHandler.unitBeingDraggedUI.GetComponent<PartyUnitUI>().LPartyUnit;
+            Transform srcCellTr = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent;
             Transform dstCellTr = transform.parent;
             UnitSize dstCellSize = transform.parent.GetComponent<UnitCell>().GetCellSize();
             if (draggedUnit.UnitSize == UnitSize.Single)

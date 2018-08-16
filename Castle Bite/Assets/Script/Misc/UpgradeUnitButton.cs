@@ -14,12 +14,12 @@ public class UpgradeUnitButton : MonoBehaviour {
         if (transform.parent.parent.GetComponentInChildren<UnitSlot>().GetComponentInChildren<UnitOnBattleMouseHandler>())
         {
             // we are in battle mode
-            partyUnit = transform.parent.parent.GetComponentInChildren<UnitSlot>().GetComponentInChildren<UnitOnBattleMouseHandler>().GetComponentInChildren<PartyUnit>();
+            partyUnit = transform.parent.parent.GetComponentInChildren<UnitSlot>().GetComponentInChildren<UnitOnBattleMouseHandler>().GetComponent<PartyUnitUI>().LPartyUnit;
         }
         else
         {
             // we are in other mode
-            partyUnit = transform.parent.parent.GetComponentInChildren<UnitSlot>().GetComponentInChildren<UnitDragHandler>().GetComponentInChildren<PartyUnit>();
+            partyUnit = transform.parent.parent.GetComponentInChildren<UnitSlot>().GetComponentInChildren<UnitDragHandler>().GetComponent<PartyUnitUI>().LPartyUnit;
         }
         Debug.Log("ShowUpgradeUnitMenu for " + partyUnit.name + " unit");
         transform.root.Find("MiscUI/UpgradeUnit").GetComponent<UpgradeUnit>().ActivateAdvance(partyUnit);

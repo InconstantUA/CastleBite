@@ -64,9 +64,10 @@ public class PartyPanel : MonoBehaviour {
     {
         get
         {
-            return transform.parent.GetComponent<HeroPartyUI>().LHeroParty.PartyMode;
+            return GetComponentInParent<HeroPartyUI>().LHeroParty.PartyMode;
         }
     }
+
 
     //public PartyPanelMode GetPanelMode()
     //{
@@ -76,6 +77,16 @@ public class PartyPanel : MonoBehaviour {
     void OnEnable()
     {
         OnChange(ChangeType.Init, null);
+    }
+
+    public HeroParty GetHeroParty()
+    {
+        return GetComponentInParent<HeroPartyUI>().LHeroParty;
+    }
+
+    public City GetCity()
+    {
+        return GetHeroParty().GetComponentInParent<City>();
     }
 
     #region On Change: hire or dismiss unit, for unit edit mode
@@ -160,12 +171,12 @@ public class PartyPanel : MonoBehaviour {
     {
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
-        Transform unitCanvas = changedCell.Find("UnitSlot").GetChild(0);
-        PartyUnit unit = unitCanvas.GetComponentInChildren<PartyUnit>();
+        //Transform unitCanvas = changedCell.Find("UnitSlot").GetChild(0);
+        PartyUnitUI unitUI = changedCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
         // fill in highered object UI panel
-        unitCanvas.Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
-        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
-        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+        unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
+        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
+        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
         // disable hire unit button
         SetHireUnitButtonActiveByCell(false, GetCellAddressString(changedCell));
         //changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
@@ -185,12 +196,11 @@ public class PartyPanel : MonoBehaviour {
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
         Transform parentCell = changedCell.parent.Find("Wide");
-        Transform unitCanvas = parentCell.Find("UnitSlot").GetChild(0);
-        PartyUnit unit = unitCanvas.GetComponentInChildren<PartyUnit>();
+        PartyUnitUI unitUI = parentCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
         // fill in highered object UI panel
-        unitCanvas.Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
-        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
-        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+        unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
+        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
+        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
     }
 
     void CleanHealthUI(Transform targetCell)
@@ -253,7 +263,7 @@ public class PartyPanel : MonoBehaviour {
         switch (changeType)
         {
             case ChangeType.Init:
-                //IntitPartyPanel();
+                IntitPartyPanel();
                 break;
             case ChangeType.HirePartyLeader:
                 // we do not need to do anything here
@@ -285,7 +295,16 @@ public class PartyPanel : MonoBehaviour {
         {
             // this is needed to disable or enable hire units button
             // hero party does not have this functionality
-            VerifyCityCapacity();
+            if (GetCapacity() <= GetNumberOfPresentUnits())
+            {
+                // disable hire buttons
+                SetHireUnitPnlButtonActive(false);
+            }
+            else
+            {
+                // enable hire buttons
+                SetHireUnitPnlButtonActive(true);
+            }
         }
     }
 
@@ -314,69 +333,69 @@ public class PartyPanel : MonoBehaviour {
     //    return unitName;
     //}
 
-    //void IntitPartyPanel()
-    //{
-    //    Transform unitPanel;
-    //    Transform unitSlot;
-    //    PartyUnit unit;
-    //    foreach (string horisontalPanel in horisontalPanels)
-    //    {
-    //        foreach (string cell in cells)
-    //        {
-    //            // verify if slot has an unit in it
-    //            unitPanel = transform.Find(horisontalPanel+"/"+cell);
-    //            unitSlot = unitPanel.Find("UnitSlot");
-    //            // if (unitSlot.childCount > 0)
-    //            if (unitSlot.GetComponentInChildren<UnitDragHandler>())
-    //            {
-    //                // verify if unit has isLeader atrribute ON
-    //                unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-    //                // fill in highered object UI panel
-    //                unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
-    //                unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
-    //                unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
-    //                // deactivate hire unit button if panel is in garnizon state and this left or right single panel
-    //                if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
-    //                {
-    //                    SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
-    //                    //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
-    //                }
-    //                // deactivate hire unit buttons for Front and Back cells, if wide cell is active
-    //                else if ((PartyMode.Garnizon == PartyMode) && ("Wide" == cell))
-    //                {
-    //                    SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Front");
-    //                    SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Back");
-    //                }
-    //            }
-    //            else
-    //            {
-    //                // it is possile that unit was dismissed
-    //                // clean health information
-    //                unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-    //                unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
-    //                // activate hire unit button if panel is in garnizon state and this left or right single panel
-    //                if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
-    //                {
-    //                    // verify if wide (double) cell is not occupied in the same row
-    //                    if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
-    //                    {
-    //                        SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
-    //                    }
-    //                    //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
-    //                }
-    //                // it is possible that double unit was dismissed
-    //                if ("Wide" == cell)
-    //                {
-    //                    // we need to disable Wide panel, because it is still enabled and placed on top of single panels
-    //                    unitPanel.parent.Find("Wide").gameObject.SetActive(false);
-    //                    // and enable left and right panels
-    //                    unitPanel.parent.Find("Front").gameObject.SetActive(true);
-    //                    unitPanel.parent.Find("Back").gameObject.SetActive(true);
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
+    void IntitPartyPanel()
+    {
+        Transform unitPanel;
+        Transform unitSlot;
+        PartyUnit unit;
+        foreach (string horisontalPanel in horisontalPanels)
+        {
+            foreach (string cell in cells)
+            {
+                // verify if slot has an unit in it
+                unitPanel = transform.Find(horisontalPanel + "/" + cell);
+                unitSlot = unitPanel.Find("UnitSlot");
+                // if (unitSlot.childCount > 0)
+                if (unitSlot.GetComponentInChildren<UnitDragHandler>())
+                {
+                    // verify if unit has isLeader atrribute ON
+                    unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+                    // fill in highered object UI panel
+                    unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
+                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
+                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+                    // deactivate hire unit button if panel is in garnizon state and this left or right single panel
+                    if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
+                    {
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
+                        //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(false);
+                    }
+                    // deactivate hire unit buttons for Front and Back cells, if wide cell is active
+                    else if ((PartyMode.Garnizon == PartyMode) && ("Wide" == cell))
+                    {
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Front");
+                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Back");
+                    }
+                }
+                else
+                {
+                    // it is possile that unit was dismissed
+                    // clean health information
+                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+                    // activate hire unit button if panel is in garnizon state and this left or right single panel
+                    if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
+                    {
+                        // verify if wide (double) cell is not occupied in the same row
+                        if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
+                        {
+                            SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
+                        }
+                        //unitPanel.Find("HireUnitPnlBtn").gameObject.SetActive(true);
+                    }
+                    // it is possible that double unit was dismissed
+                    if ("Wide" == cell)
+                    {
+                        // we need to disable Wide panel, because it is still enabled and placed on top of single panels
+                        unitPanel.parent.Find("Wide").gameObject.SetActive(false);
+                        // and enable left and right panels
+                        unitPanel.parent.Find("Front").gameObject.SetActive(true);
+                        unitPanel.parent.Find("Back").gameObject.SetActive(true);
+                    }
+                }
+            }
+        }
+    }
 
     #region Verify capacity
 
@@ -406,16 +425,6 @@ public class PartyPanel : MonoBehaviour {
         return null;
     }
 
-    public HeroParty GetHeroParty()
-    {
-        return transform.parent.GetComponent<HeroParty>();
-    }
-
-    public City GetCity()
-    {
-        return transform.parent.parent.GetComponent<City>();
-    }
-
     int GetCapacity()
     {
         int capacity = 0;
@@ -432,6 +441,10 @@ public class PartyPanel : MonoBehaviour {
             if (city)
             {
                 capacity = city.GetUnitsCapacity();
+            }
+            else
+            {
+                Debug.LogError("City not found");
             }
         } else
         {
@@ -500,7 +513,7 @@ public class PartyPanel : MonoBehaviour {
                             SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
                         }
                         // And bring panel to the front
-                        transform.parent.parent.Find("HireCommonUnitButtons").SetAsLastSibling();
+                        transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").SetAsLastSibling();
                     }
                     else
                     {
@@ -529,19 +542,6 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         return unitSlots;
-    }
-
-    void VerifyCityCapacity()
-    {
-        if (GetCapacity() <= GetNumberOfPresentUnits())
-        {
-            // disable hire buttons
-            SetHireUnitPnlButtonActive(false);
-        } else
-        {
-            // enable hire buttons
-            SetHireUnitPnlButtonActive(true);
-        }
     }
 
     #endregion Verify capacity
@@ -705,8 +705,11 @@ public class PartyPanel : MonoBehaviour {
                 }
             }
         }
-        // and disable hire buttons
-        SetHireUnitPnlButtonActive(!activate);
+        if (activate)
+        {
+            // and disable hire unit buttons panel
+            SetHireUnitPnlButtonActive(false);
+        }
     }
 
 
@@ -766,14 +769,14 @@ public class PartyPanel : MonoBehaviour {
     PartyPanel GetOtherPartyPanel(PartyPanel currentPartyPanel)
     {
         // structure: 2MiscUI-1HeroParty-PartyPanel(this)
-        UIManager uiManager = currentPartyPanel.transform.parent.parent.GetComponent<UIManager>();
-        foreach (HeroParty heroParty in uiManager.GetComponentsInChildren<HeroParty>())
+        UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
+        foreach (HeroPartyUI heroPartyUI in uiManager.GetComponentsInChildren<HeroPartyUI>())
         {
             // find party panel of other party, if it is present there
             // this will be the case if there are more then 1 hero party in the city
-            if (heroParty.GetComponentInChildren<PartyPanel>() != currentPartyPanel)
+            if (heroPartyUI.GetComponentInChildren<PartyPanel>() != currentPartyPanel)
             {
-                return heroParty.GetComponentInChildren<PartyPanel>();
+                return heroPartyUI.GetComponentInChildren<PartyPanel>();
             }
         }
         // if other party is not present, then return null
@@ -824,12 +827,12 @@ public class PartyPanel : MonoBehaviour {
     {
         // unit being dragged is static, so we do not need to assign it here
         // or send as and argument
-        // structure: 6[City]-5[HeroParty/CityGarnizon]Party-4PartyPanel-3[Top/Middle/Bottom]HorizontalPanelGroup-2[Front/Back/Wide]Cell-1UnitSlot-(this)UnitCanvas
-        PartyUnit unitBeingDragged = UnitDragHandler.unitBeingDragged.GetComponentInChildren<PartyUnit>();
-        Transform unitCell = UnitDragHandler.unitBeingDragged.transform.parent.parent;
-        Transform horizontalPanelGroup = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent;
-        Transform sourcePartyPanel = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent;
-        Transform party = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.parent;
+        // structure: 6[MiscUI]-5[HeroPartyUI/CityGarnizonUI]Party-4PartyPanel-3[Top/Middle/Bottom]HorizontalPanelGroup-2[Front/Back/Wide]Cell-1UnitSlot-UnitCanvas(unitBeingDraggedUI)
+        PartyUnit unitBeingDragged = UnitDragHandler.unitBeingDraggedUI.GetComponent<PartyUnitUI>().LPartyUnit;
+        Transform unitCell = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent;
+        Transform horizontalPanelGroup = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent.parent;
+        Transform sourcePartyPanel = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent.parent.parent;
+        //Transform party = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.parent;
         Transform cellTr;
         Color normalColor = new Color(0.5f, 0.5f, 0.5f);
         string errorMessage = "";
@@ -915,7 +918,7 @@ public class PartyPanel : MonoBehaviour {
                                         if (unitCanvas)
                                         {
                                             // occupied
-                                            cellUnit = unitCanvas.GetComponentInChildren<PartyUnit>();
+                                            cellUnit = unitCanvas.GetComponent<PartyUnitUI>().LPartyUnit;
                                             isUnitInterPartyDraggable = cellUnit.IsInterpartyMovable;
                                             if (isUnitInterPartyDraggable)
                                             {
@@ -949,7 +952,7 @@ public class PartyPanel : MonoBehaviour {
                                                         // nearby cell is occupied
                                                         // check if it is occupied by non-inter-party-movable unit, 
                                                         // because we cannot swap those units
-                                                        PartyUnit nearbySrcUnit = nearbySrcCellUnitCanvas.GetComponentInChildren<PartyUnit>();
+                                                        PartyUnit nearbySrcUnit = nearbySrcCellUnitCanvas.GetComponent<PartyUnitUI>().LPartyUnit;
                                                         if (nearbySrcUnit.IsInterpartyMovable)
                                                         {
                                                             // it is inter-party movable unit
@@ -1065,7 +1068,7 @@ public class PartyPanel : MonoBehaviour {
                                     if (isFrontCellOccupied)
                                     {
                                         // occupied
-                                        cellUnit = isFrontCellOccupied.GetComponentInChildren<PartyUnit>();
+                                        cellUnit = isFrontCellOccupied.GetComponent<PartyUnitUI>().LPartyUnit;
                                         isUnitInterPartyDraggable = cellUnit.IsInterpartyMovable;
                                         if (isUnitInterPartyDraggable)
                                         {
@@ -1079,7 +1082,7 @@ public class PartyPanel : MonoBehaviour {
                                     if (isBackCellOccupied)
                                     {
                                         // occupied
-                                        cellUnit = isBackCellOccupied.GetComponentInChildren<PartyUnit>();
+                                        cellUnit = isBackCellOccupied.GetComponent<PartyUnitUI>().LPartyUnit;
                                         isUnitInterPartyDraggable = cellUnit.IsInterpartyMovable;
                                         if (isUnitInterPartyDraggable)
                                         {
@@ -2158,7 +2161,7 @@ public class PartyPanel : MonoBehaviour {
 
     public void RemoveDeadUnits()
     {
-        City city = GetCity();
+        //City city = GetCity();
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)

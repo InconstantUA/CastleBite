@@ -13,11 +13,13 @@ public class FocusPanel : MonoBehaviour {
 
     void OnEnable()
     {
+        Debug.Log("Focus Panel Trigger On enable");
         InitFocusPanel();
     }
 
     void OnDisable()
     {
+        Debug.Log("Focus Panel Trigger On disable");
         // reset focusedObject to null
         focusedObject = null;
         // reset City link to null
@@ -25,7 +27,7 @@ public class FocusPanel : MonoBehaviour {
         // deactivate all submenus
         foreach(Transform childTransform in transform)
         {
-            gameObject.SetActive(false);
+            childTransform.gameObject.SetActive(false);
         }
     }
 
@@ -85,6 +87,7 @@ public class FocusPanel : MonoBehaviour {
 
     void SetCurrentAndMaxUnitsInCityUIValue()
     {
+        Debug.Log("Update current and maximum city units capacity");
         transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
@@ -145,12 +148,14 @@ public class FocusPanel : MonoBehaviour {
     {
         // update number of units
         SetCurrentAndMaxUnitsInCityUIValue();
+        //transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (city.GetNumberOfPresentUnits()-1).ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
     void OnDimissDoubleUnit()
     {
         // update number of units
         SetCurrentAndMaxUnitsInCityUIValue();
+        //transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (city.GetNumberOfPresentUnits()-2).ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
     public void OnChange(ChangeType changeType)

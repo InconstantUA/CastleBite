@@ -99,7 +99,7 @@ public class CityScreen : MonoBehaviour {
 
     void OnDisable()
     {
-        DeactivateActiveToggle();
+        //DeactivateActiveToggle();
         SetRequiredComponentsActive(false);
     }
 
@@ -140,22 +140,22 @@ public class CityScreen : MonoBehaviour {
         cityViewActiveState = requiredState;
         // instruct party and garnizon panels to highlight differently cells with and without units
         // loop through all active hero parties
-        foreach (HeroParty heroParty in transform.parent.GetComponentsInChildren<HeroParty>())
+        foreach (HeroPartyUI heroPartyUI in transform.parent.GetComponentsInChildren<HeroPartyUI>())
         {
             // Set active state (highlight)
             switch (cityViewActiveState)
             {
                 case CityViewActiveState.ActiveDismiss:
-                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
+                    heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
                     break;
                 case CityViewActiveState.ActiveHeal:
-                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
+                    heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
                     break;
                 case CityViewActiveState.ActiveResurect:
-                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
+                    heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
                     break;
                 case CityViewActiveState.ActiveUnitDrag:
-                    heroParty.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                    heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
                     break;
                 default:
                     Debug.LogError("Unknown condition");
@@ -164,16 +164,19 @@ public class CityScreen : MonoBehaviour {
         }
         // verfiy if there is a city garnizon == we are in city edit mode and not in hero party edit mode
         // and verify if there is already party in city
-        if ( (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
-            &&  (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Party, false) == null) )
+        if (transform.GetComponentInParent<UIManager>())
         {
-            // activate hire hero panel
-            transform.parent.Find("HireHeroPanel").gameObject.SetActive(true);
-        }
-        else
-        {
-            // deactivate hire hero panel
-            transform.parent.Find("HireHeroPanel").gameObject.SetActive(false);
+            if ((transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
+                && (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Party, false) == null))
+            {
+                // activate hire hero panel
+                transform.parent.Find("HireHeroPanel").gameObject.SetActive(true);
+            }
+            else
+            {
+                // deactivate hire hero panel
+                transform.parent.Find("HireHeroPanel").gameObject.SetActive(false);
+            }
         }
         // Update cursor
         CursorController.Instance.SetCityActiveViewStateCursor(cityViewActiveState, doActivate);
@@ -439,8 +442,6 @@ public class CityScreen : MonoBehaviour {
         return unitCell.transform.parent.parent.GetComponent<PartyPanel>();
     }
 
-
-
     public void DismissPartyLeader(UnitSlot unitSlot)
     {
         // Get hero Party UI
@@ -461,28 +462,38 @@ public class CityScreen : MonoBehaviour {
         // Destroy hero's party
         Destroy(heroParty.gameObject);
         // Verify if we are in city and not in hero edit mode
-        if (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
+        if (GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
         {
             // Enable Hire leader panel
             transform.parent.Find("HireHeroPanel").gameObject.SetActive(true);
         }
+        // Activate focus panel again to display NoPartyInfo
+        focusPanel.gameObject.SetActive(true);
     }
 
     public void DismissGenericUnit(UnitSlot unitSlot)
     {
-        PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-        // todo just manually update all fields
-        // or create special onDismiss functions
+        // get PartyUnit UI
+        PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+        // get PartyUnit
+        PartyUnit partyUnit = unitUI.LPartyUnit;
+        // Get Unit size
+        UnitSize unitSize = partyUnit.UnitSize;
+        // Get Party Unit HeroParty
+        //HeroParty heroParty = partyUnit.GetComponentInParent<HeroParty>();
         // 1 get all required variables, before removing unit
         Transform unitCell = unitSlot.transform.parent;
         PartyPanel partyPanel = GetUnitsParentPartyPanel(unitCell);
-        GameObject unitCanvas = unit.transform.parent.gameObject;
-        // 2 dismiss unit with its parent canvas
-        Destroy(unitCanvas);
-        unitSlot.transform.DetachChildren(); // this is needed otherwise child count will remain the same, because object is destroyed after Update()
+        // 2 destory unit canvas, where it is linked to
+        Destroy(unitUI.gameObject);
+        //unitSlot.transform.DetachChildren(); // this is needed otherwise child count will remain the same, because object is destroyed after Update()
+        // 3 and put it to recycle bin, because otherwise city.GetNumberOfPresentUnits() will return wrong number of units, because because object is actually destroyed after Update()
+        partyUnit.transform.SetParent(transform.root.GetComponentInChildren<RecycleBin>().transform);
+        // and destory party unit itself
+        Destroy(partyUnit.gameObject);
         // Update party panel
         // act based on the unit size
-        if (unit.UnitSize == UnitSize.Single)
+        if (unitSize == UnitSize.Single)
         {
             partyPanel.OnChange(PartyPanel.ChangeType.DismissSingleUnit, unitCell);
         }
@@ -490,20 +501,21 @@ public class CityScreen : MonoBehaviour {
         {
             partyPanel.OnChange(PartyPanel.ChangeType.DismissDoubleUnit, unitCell);
         }
-        // if parent Party panel is in Garnizon state, then update right focus
-        // no need to update left focus, because it is only updated on leader dismiss
+        // if parent Party panel is in Garnizon state, then update focus panel
         if (PartyMode.Garnizon == partyPanel.PartyMode)
         {
-            // Instruct Right focus panel to update information
+            // Instruct focus panel linked to a city to update information
             // act based on the unit size
-            if (unit.UnitSize == UnitSize.Single)
+            if (unitSize == UnitSize.Single)
             {
-                transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissSingleUnit);
+                GetComponentInParent<UIManager>().GetFocusPanelByCity(City).OnChange(FocusPanel.ChangeType.DismissSingleUnit);
             }
             else
             {
-                transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.DismissDoubleUnit);
+                GetComponentInParent<UIManager>().GetFocusPanelByCity(City).OnChange(FocusPanel.ChangeType.DismissDoubleUnit);
             }
+            // Activate hire unit buttons again
+            GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon).GetComponentInChildren<PartyPanel>().SetHireUnitPnlButtonActive(true);
         }
     }
 

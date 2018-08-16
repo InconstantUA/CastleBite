@@ -20,7 +20,15 @@ public class UIManager : MonoBehaviour {
 
     public HeroParty GetHeroPartyByMode(PartyMode partyMode, bool includeInactive = false)
     {
-        return GetHeroPartyUIByMode(partyMode, includeInactive).LHeroParty;
+        HeroPartyUI heroPartyUI = GetHeroPartyUIByMode(partyMode, includeInactive);
+        if (heroPartyUI != null)
+        {
+            return heroPartyUI.LHeroParty;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public FocusPanel GetFocusPanelByHeroParty(HeroParty heroParty)
@@ -36,6 +44,25 @@ public class UIManager : MonoBehaviour {
                     return focusPanel;
                 }
             }
+            // verify if city is 
+        }
+        return null;
+    }
+
+    public FocusPanel GetFocusPanelByCity(City city)
+    {
+        foreach (FocusPanel focusPanel in GetComponentsInChildren<FocusPanel>())
+        {
+            // verify if City is in focused game object
+            if (focusPanel.focusedObject.GetComponent<City>())
+            {
+                // verify if City linked to focus panel is the same as we are searching for
+                if (focusPanel.focusedObject.GetComponent<City>().gameObject.GetInstanceID() == city.gameObject.GetInstanceID())
+                {
+                    return focusPanel;
+                }
+            }
+            // verify if city is 
         }
         return null;
     }

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public static GameObject unitBeingDragged;
+    public static GameObject unitBeingDraggedUI;
     public static Transform unitBeingDraggedParentTr;
     Vector3 startPosition;
     Transform startParent;
@@ -40,7 +40,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // Debug.Log("OnBeginDrag: left mouse");
             // on left mouse drag
             // initialize required variables
-            unitBeingDragged = gameObject;
+            unitBeingDraggedUI = gameObject;
             unitBeingDraggedParentTr = transform.parent;
             startPosition = transform.position;
             startParent = transform.parent;
@@ -104,7 +104,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 //Debug.LogWarning("OnEndDrag left mouse");
                 // on left mouse drag
                 // clean up unit being dragged
-                unitBeingDragged = null;
+                unitBeingDraggedUI = null;
                 // enable blocksRaycasts
                 GetComponent<CanvasGroup>().blocksRaycasts = true;
                 // reset position to original if parent has not changed

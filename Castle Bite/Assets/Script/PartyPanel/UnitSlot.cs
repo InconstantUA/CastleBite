@@ -470,13 +470,21 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Debug.Log("Yes");
         // Ask city to dismiss unit
         //GetParentCity().DimissUnit(unitSlot.GetComponent<UnitSlot>());
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DimissUnit(unitSlot.GetComponent<UnitSlot>());
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DimissUnit(this);
+        // do not do it here, because party already destroyed at this stage
+        //// get party panel from slot
+        //// and activate hire unit pannel button again
+        //// structure: 3partypanel-2row-1cell-this(UnitSlot)
+        //transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
     }
 
     void OnDismissNoConfirmation()
     {
         Debug.Log("No");
-        // nothing to do here
+        // get party panel from slot
+        // and activate hire unit pannel button again
+        // structure: 3partypanel-2row-1cell-this(UnitSlot)
+        transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
     }
 
     public void SetOnClickAction(bool isAllowedToApplyPwrToThisUnit, string errMsg = "")
