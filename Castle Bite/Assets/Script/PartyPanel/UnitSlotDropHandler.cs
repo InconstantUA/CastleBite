@@ -59,16 +59,27 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         UnitDragHandler srcUnitCanvas = srcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
         UnitDragHandler dstUnitCanvas = dstCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
         // verify is src unit canvas exist, it may not exist on double unit swap
-        if (srcUnitCanvas)
+        if (srcUnitCanvas != null)
         {
+            // Swap UI
             srcUnitCanvas.transform.SetParent(dstCellTr.Find("UnitSlot"));
             ResetPositionToZero(srcUnitCanvas.transform);
+            // Get destination party
+            // structure: 3HeroPartyUI-2PartyPanel-1Row-cell(dstCellTr)
+            HeroParty dstHeroParty = dstCellTr.parent.GetComponentInParent<PartyPanel>().GetComponentInParent<HeroPartyUI>().LHeroParty;
+            // Swap Unit between parties
+            srcUnitCanvas.GetComponent<PartyUnitUI>().LPartyUnit.transform.SetParent(dstHeroParty.transform);
         }
         //  verfy that unit canvas is present, dst cell may be free
-        if (dstUnitCanvas)
+        if (dstUnitCanvas != null)
         {
             dstUnitCanvas.transform.SetParent(srcCellTr.Find("UnitSlot"));
             ResetPositionToZero(dstUnitCanvas.transform);
+            // Get source party
+            // structure: 3HeroPartyUI-2PartyPanel-1Row-cell(dstCellTr)
+            HeroParty srcHeroParty = srcCellTr.parent.GetComponentInParent<PartyPanel>().GetComponentInParent<HeroPartyUI>().LHeroParty;
+            // Swap Unit between parties
+            dstUnitCanvas.GetComponent<PartyUnitUI>().LPartyUnit.transform.SetParent(srcHeroParty.transform);
         }
         //// swap HireUnitPnlBtn state
         //bool srcHireUnitPnlBtn = srcCellTr.Find("HireUnitPnlBtn").gameObject.activeSelf;
@@ -147,6 +158,11 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                     // swap 2 double cells
                     SwapTwoCellsContent(srcCellTr, dstCellTr);
                 }
+            }
+            // Instruct focus panels to be updated
+            foreach(FocusPanel focusPanel in transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<FocusPanel>())
+            {
+                focusPanel.OnChange(FocusPanel.ChangeType.UnitsPositionChange);
             }
             //// drop unit if there is no other unit already present
             //if (!unit)

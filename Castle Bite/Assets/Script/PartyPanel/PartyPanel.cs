@@ -502,14 +502,14 @@ public class PartyPanel : MonoBehaviour {
                                 // verify if city capacity is enough
                                 if (GetCapacity() > GetNumberOfPresentUnits())
                                 {
-                                    Debug.Log("Activate + button in " + horisontalPanel + "/" + cell + " cell");
+                                    //Debug.Log("Activate + button in " + horisontalPanel + "/" + cell + " cell");
                                     SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
                                 }
                             }
                         }
                         else
                         {
-                            Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
+                            //Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
                             SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
                         }
                         // And bring panel to the front
@@ -517,7 +517,7 @@ public class PartyPanel : MonoBehaviour {
                     }
                     else
                     {
-                        Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
+                        //Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
                         SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
                     }
                 }

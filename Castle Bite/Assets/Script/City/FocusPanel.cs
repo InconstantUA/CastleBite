@@ -9,7 +9,17 @@ public class FocusPanel : MonoBehaviour {
     City city;
     //public enum FocusMode { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
     //FocusMode focusMode;
-    public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader, HeroLeaveCity }
+    public enum ChangeType {
+        Init,
+        HireSingleUnit,
+        HireDoubleUnit,
+        HirePartyLeader,
+        DismissSingleUnit,
+        DismissDoubleUnit,
+        DismissPartyLeader,
+        HeroLeaveCity,
+        UnitsPositionChange
+    }
 
     void OnEnable()
     {
@@ -88,7 +98,12 @@ public class FocusPanel : MonoBehaviour {
     void SetCurrentAndMaxUnitsInCityUIValue()
     {
         Debug.Log("Update current and maximum city units capacity");
-        transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        // verify if focus panel has city linked
+        if (city != null)
+        {
+            //Debug.Log("City is not null");
+            transform.Find("CityFocus/UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        }
     }
 
     void SetCityInformation()
@@ -158,6 +173,12 @@ public class FocusPanel : MonoBehaviour {
         //transform.Find("CityFocus").Find("UnitsValue").GetComponent<Text>().text = (city.GetNumberOfPresentUnits()-2).ToString() + "/" + city.GetUnitsCapacity().ToString();
     }
 
+    void OnUnitsPositionChange()
+    {
+        Debug.Log("OnUnitsPositionChange");
+        SetCurrentAndMaxUnitsInCityUIValue();
+    }
+
     public void OnChange(ChangeType changeType)
     {
         switch (changeType)
@@ -187,6 +208,9 @@ public class FocusPanel : MonoBehaviour {
                 break;
             case ChangeType.DismissDoubleUnit:
                 OnDimissDoubleUnit();
+                break;
+            case ChangeType.UnitsPositionChange:
+                OnUnitsPositionChange();
                 break;
             default:
                 Debug.LogError("Unknown condition");
