@@ -6,6 +6,10 @@ using UnityEngine.EventSystems;
 
 public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
 {
+    [SerializeField]
+    UnitSize cellSize;
+    bool isDropAllowed;
+    string errorMessage;
     //public GameObject unit
     //{
     //    get
@@ -18,8 +22,6 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
     //    }
     //}
 
-    bool isDropAllowed;
-    string errorMessage;
 
     //City GetParentCity()
     //{
@@ -125,7 +127,6 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             PartyUnit draggedUnit = UnitDragHandler.unitBeingDraggedUI.GetComponent<PartyUnitUI>().LPartyUnit;
             Transform srcCellTr = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent;
             Transform dstCellTr = transform.parent;
-            UnitSize dstCellSize = transform.parent.GetComponent<UnitCell>().GetCellSize();
             if (draggedUnit.UnitSize == UnitSize.Single)
             {
                 // single unit
@@ -134,7 +135,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 // 1    free or occupied by single unit     swap single cells
                 // 1    occupied by double                  swap cells in horizontal panels
                 // act based on destination cell size
-                if (UnitSize.Single == dstCellSize)
+                if (UnitSize.Single == cellSize)
                 {
                     // swap single cells
                     SwapTwoCellsContent(srcCellTr, dstCellTr);
@@ -148,7 +149,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             else
             {
                 // double unit
-                if (UnitSize.Single == dstCellSize)
+                if (UnitSize.Single == cellSize)
                 {
                     // swap single with double cells
                     SwapSingleWithDouble(srcCellTr, dstCellTr, false);

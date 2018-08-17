@@ -18,12 +18,160 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     // reference to the Confirmation pop-up window
     private ConfirmationPopUp confirmationPopUp;
     // actions for Confrimation pop-up
-    private UnityAction disableYesAction;
-    private UnityAction disableNoAction;
+    private UnityAction dismissYesAction;
+    private UnityAction dismissNoAction;
 
     // For battle screen
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
+
+
+    private void Awake()
+    {
+        confirmationPopUp = ConfirmationPopUp.Instance();
+        // define actions
+        dismissYesAction = new UnityAction(OnDismissYesConfirmation);
+        dismissNoAction = new UnityAction(OnDismissNoConfirmation);
+        // trigger changes
+        OnTransformChildrenChanged();
+    }
+
+    void Start()
+    {
+        unitSlot = gameObject.GetComponent<Button>();
+    }
+
+    void Update()
+    {
+        // enable mouse on its move, if it was disabled before by keyboard activity
+        if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
+        {
+            Cursor.visible = true;
+            // Highlight button, if needed by triggering on point enter
+            OnPointerEnter(null);
+        }
+    }
+
+    #region Button controls
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // Debug.Log("OnPointerEnter");
+        // highlight this menu
+        SetHighlightedStatus();
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // Debug.Log("OnPointerDown");
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Debug.LogWarning("OnPointerDown");
+            // on left mouse click
+            SetPressedStatus();
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            // on right mouse click
+            // show unit info
+            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit);
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        // Debug.Log("OnPointerUp");
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            // Debug.LogWarning("OnPointerUp");
+            SetHighlightedStatus();
+            ActOnClick();
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+            // deactivate unit info
+            transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // return to previous toggle state
+        SetNormalStatus();
+    }
+
+    //bool CompareColors(Color a, Color b)
+    //{
+    //    bool result = false;
+    //    if (((int)(a.r * 1000) == (int)(b.r * 1000)) || ((int)(a.g * 1000) == (int)(b.g * 1000)) || ((int)(a.b * 1000) == (int)(b.b * 1000)))
+    //    {
+    //        result = true;
+    //    }
+    //    return result;
+    //}
+
+    void SetHighlightedStatus()
+    {
+        // first verify that unit name is present (not null)
+        unitName = GetUnitNameText();
+        if (unitName)
+        {
+            // change to highlighted color
+            if (unitSlot.interactable)
+            {
+                tmpColor = unitSlot.colors.highlightedColor;
+            }
+            else
+            {
+                tmpColor = unitSlot.colors.disabledColor;
+            }
+            tmpColor.a = 1;
+            unitName.color = tmpColor;
+            // Debug.Log("SetHighlightedStatus " + unitSlot.name + " button");
+        }
+    }
+
+    void SetPressedStatus()
+    {
+        unitName = GetUnitNameText();
+        if (unitName)
+        {
+            if (unitSlot.interactable)
+            {
+                tmpColor = unitSlot.colors.pressedColor;
+            }
+            else
+            {
+                tmpColor = unitSlot.colors.disabledColor;
+            }
+            tmpColor.a = 1;
+            unitName.color = tmpColor;
+        }
+        // Debug.Log("SetPressedStatus " + unitSlot.name + " button");
+    }
+
+    void SetNormalStatus()
+    {
+        unitName = GetUnitNameText();
+        if (unitName)
+        {
+            if (unitSlot.interactable)
+            {
+                tmpColor = unitSlot.colors.normalColor;
+            }
+            else
+            {
+                tmpColor = unitSlot.colors.disabledColor;
+            }
+            tmpColor.a = 1;
+            unitName.color = tmpColor;
+        }
+        // Debug.Log("SetNormalStatus " + unitSlot.name + " button");
+    }
+
+    #endregion Button controls
 
     public string GetUnitCellAddress()
     {
@@ -145,32 +293,6 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return null;
     }
 
-    private void Awake()
-    {
-        confirmationPopUp = ConfirmationPopUp.Instance();
-        // define actions
-        disableYesAction = new UnityAction(OnDismissYesConfirmation);
-        disableNoAction = new UnityAction(OnDismissNoConfirmation);
-        // trigger changes
-        OnTransformChildrenChanged();
-    }
-
-    void Start()
-    {
-        unitSlot = gameObject.GetComponent<Button>();
-    }
-
-    void Update()
-    {
-        // enable mouse on its move, if it was disabled before by keyboard activity
-        if (((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0)) & (!Cursor.visible))
-        {
-            Cursor.visible = true;
-            // Highlight button, if needed by triggering on point enter
-            OnPointerEnter(null);
-        }
-    }
-
     Text GetUnitNameText()
     {
         // it in unit slot can change on unit move or hire or dismiss or other reasons
@@ -184,127 +306,6 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             resultNameTxtComp = unitSlot.transform.GetChild(0).Find("Name").GetComponent<Text>();
         }
         return resultNameTxtComp;
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        // Debug.Log("OnPointerEnter");
-        // highlight this menu
-        SetHighlightedStatus();
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        // Debug.Log("OnPointerDown");
-        if (Input.GetMouseButtonDown(0))
-        {
-            // Debug.LogWarning("OnPointerDown");
-            // on left mouse click
-            SetPressedStatus();
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            // on right mouse click
-            // show unit info
-            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit);
-        }
-    }
-
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        // Debug.Log("OnPointerUp");
-        if (Input.GetMouseButtonUp(0))
-        {
-            // on left mouse click
-            // Debug.LogWarning("OnPointerUp");
-            SetHighlightedStatus();
-            ActOnClick();
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            // on right mouse click
-            // deactivate unit info
-            transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
-        }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        // return to previous toggle state
-        SetNormalStatus();
-    }
-
-    bool CompareColors(Color a, Color b)
-    {
-        bool result = false;
-        if (((int)(a.r * 1000) == (int)(b.r * 1000)) || ((int)(a.g * 1000) == (int)(b.g * 1000)) || ((int)(a.b * 1000) == (int)(b.b * 1000)))
-        {
-            result = true;
-        }
-        return result;
-    }
-
-    void SetHighlightedStatus()
-    {
-        // first verify that unit name is present (not null)
-        unitName = GetUnitNameText();
-        if (unitName)
-        {
-            // avoid double job
-            if (!CompareColors(unitSlot.colors.highlightedColor, unitName.color))
-            {
-                // change to highlighted color
-                if (unitSlot.interactable)
-                {
-                    tmpColor = unitSlot.colors.highlightedColor;
-                }
-                else
-                {
-                    tmpColor = unitSlot.colors.disabledColor;
-                }
-                tmpColor.a = 1;
-                unitName.color = tmpColor;
-                // Debug.Log("SetHighlightedStatus " + unitSlot.name + " button");
-            }
-        }
-    }
-
-    void SetPressedStatus()
-    {
-        unitName = GetUnitNameText();
-        if (unitName)
-        {
-            if (unitSlot.interactable)
-            {
-                tmpColor = unitSlot.colors.pressedColor;
-            }
-            else
-            {
-                tmpColor = unitSlot.colors.disabledColor;
-            }
-            tmpColor.a = 1;
-            unitName.color = tmpColor;
-        }
-        // Debug.Log("SetPressedStatus " + unitSlot.name + " button");
-    }
-
-    void SetNormalStatus()
-    {
-        unitName = GetUnitNameText();
-        if (unitName)
-        {
-            if (unitSlot.interactable)
-            {
-                tmpColor = unitSlot.colors.normalColor;
-            }
-            else
-            {
-                tmpColor = unitSlot.colors.disabledColor;
-            }
-            tmpColor.a = 1;
-            unitName.color = tmpColor;
-        }
-        // Debug.Log("SetNormalStatus " + unitSlot.name + " button");
     }
 
     #region OnClick
@@ -455,7 +456,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
             }
             // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
-            confirmationPopUp.Choice(confirmationMessage, disableYesAction, disableNoAction);
+            confirmationPopUp.Choice(confirmationMessage, dismissYesAction, dismissNoAction);
         }
         else
         {
