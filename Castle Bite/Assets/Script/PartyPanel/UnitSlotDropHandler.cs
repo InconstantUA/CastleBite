@@ -10,6 +10,20 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
     UnitSize cellSize;
     bool isDropAllowed;
     string errorMessage;
+
+    public UnitSize CellSize
+    {
+        get
+        {
+            return cellSize;
+        }
+
+        set
+        {
+            cellSize = value;
+        }
+    }
+
     //public GameObject unit
     //{
     //    get
@@ -118,6 +132,14 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
+        // verify if we are in city edit mode and not in hero edit mode
+        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        if (cityScreen != null)
+        {
+            // activate hire unit buttons again, after it was disabled
+            cityScreen.SetHireUnitPnlButtonActive(true);
+        }
+
         // act based on the previously set by OnDrag condition
         if (isDropAllowed)
         {

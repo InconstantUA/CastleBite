@@ -319,7 +319,7 @@ public class PartyUnitUI : MonoBehaviour {
             // as long as we cannot initiate all debuffs at the same time
             // we add debuffs to the queue and they will be triggered one after another
             // CoroutineQueue queue = unitDebuffsUI.GetQueue();
-            CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
+            CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
             //if (queue == null)
             //{
             //    Debug.LogError("No queue");

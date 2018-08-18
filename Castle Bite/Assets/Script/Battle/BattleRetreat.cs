@@ -70,7 +70,7 @@ public class BattleRetreat : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     {
         Debug.Log("Retreat");
         // get battle screen, structure: BattleScreen-CtrlPnlFight-This
-        BattleScreen battleScreen = transform.parent.parent.GetComponent<BattleScreen>();
+        BattleScreen battleScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>();
         // set unit is waiting status
         battleScreen.ActiveUnitUI.SetUnitStatus(UnitStatus.Escaping);
         // set unit has moved flag

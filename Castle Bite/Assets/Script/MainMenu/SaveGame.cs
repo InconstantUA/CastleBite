@@ -97,7 +97,7 @@ public class SaveGame : MonoBehaviour {
             // set party panel data
             //heroParty.PartyData.partyPanelData = heroParty.transform.GetComponentInChildren<PartyPanel>(true).PartyPanelData;
             // get all units in party
-            PartyUnit[] partyUnits = heroParty.transform.GetComponentInChildren<PartyPanel>(true).GetComponentsInChildren<PartyUnit>(true);
+            PartyUnit[] partyUnits = heroParty.GetComponentsInChildren<PartyUnit>(true);
             // init party units data
             heroParty.PartyData.partyUnitsData = new PartyUnitData[partyUnits.Length];
             // foreach party unit

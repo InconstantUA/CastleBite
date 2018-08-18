@@ -475,26 +475,37 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
+    void ActivateHireUnitButtonsIfNeeded()
+    {
+        // get city screen
+        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        // verify if we are in city view mode
+        if (cityScreen != null)
+        {
+            // activate hire unit pnl button
+            cityScreen.SetHireUnitPnlButtonActive(true);
+        }
+    }
+
     void OnDismissYesConfirmation()
     {
         Debug.Log("Yes");
+        // Check and activate hire units buttons if we are in city view
+        ActivateHireUnitButtonsIfNeeded();
         // Ask city to dismiss unit
-        //GetParentCity().DimissUnit(unitSlot.GetComponent<UnitSlot>());
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DimissUnit(this);
-        // do not do it here, because party already destroyed at this stage
-        //// get party panel from slot
-        //// and activate hire unit pannel button again
-        //// structure: 3partypanel-2row-1cell-this(UnitSlot)
-        //transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
+        // do not place code below, because this unit slot is destroyed
     }
 
     void OnDismissNoConfirmation()
     {
         Debug.Log("No");
-        // get party panel from slot
-        // and activate hire unit pannel button again
-        // structure: 3partypanel-2row-1cell-this(UnitSlot)
-        transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
+        // Check and activate hire units buttons if we are in city view
+        ActivateHireUnitButtonsIfNeeded();
+        //// get party panel from slot
+        //// and activate hire unit pannel button again
+        //// structure: 3partypanel-2row-1cell-this(UnitSlot)
+        //transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
     }
 
     public void SetOnClickAction(bool isAllowedToApplyPwrToThisUnit, string errMsg = "")

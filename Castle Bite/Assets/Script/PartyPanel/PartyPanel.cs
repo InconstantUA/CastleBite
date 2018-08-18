@@ -64,7 +64,8 @@ public class PartyPanel : MonoBehaviour {
     {
         get
         {
-            return GetComponentInParent<HeroPartyUI>().LHeroParty.PartyMode;
+            //return GetComponentInParent<HeroPartyUI>().LHeroParty.PartyMode;
+            return transform.parent.GetComponent<HeroPartyUI>().LHeroParty.PartyMode;
         }
     }
 
@@ -155,14 +156,13 @@ public class PartyPanel : MonoBehaviour {
         return cellTransform.parent.name + "/" + cellTransform.name;
     }
 
+    // todo: fix duplicate function in cityscreen
     public void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
     {
         // verify if we are in city view by checking if there is HireCommonUnitButtons panel active
         if (transform.root.GetComponentInChildren<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon) != null)
         {
-            //Debug.Log("HireCommonUnitButtons " + transform.parent.parent.Find("HireCommonUnitButtons").name);
-            //Debug.Log("Cell " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).name);
-            //Debug.Log("HirePartyUnitButton " + transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).name);
+            Debug.Log("Set hire unit button at " + cellAddress + " " + doActivate.ToString());
             transform.parent.parent.Find("HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
         }
     }
@@ -300,12 +300,12 @@ public class PartyPanel : MonoBehaviour {
             if (GetCapacity() <= GetNumberOfPresentUnits())
             {
                 // disable hire buttons
-                SetHireUnitPnlButtonActive(false);
+                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(false);
             }
             else
             {
                 // enable hire buttons
-                SetHireUnitPnlButtonActive(true);
+                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(true);
             }
         }
     }
@@ -456,52 +456,6 @@ public class PartyPanel : MonoBehaviour {
         return unitsNumber;
     }
 
-    public void SetHireUnitPnlButtonActive(bool activate)
-    {
-        //GameObject hireUnitPnlBtn;
-        // this is only needed in garnizon mode, only in this mode hire buttons are present
-        if (PartyMode == PartyMode.Garnizon)
-        {
-            Debug.Log("Activate or Deactivate Hire Unit Buttons in City Garnizon");
-            foreach (string horisontalPanel in horisontalPanels)
-            {
-                foreach (string cell in singleUnitCells)
-                {
-                    if (activate)
-                    {
-                        // activate - set in front of drop slot
-                        // do not activate it if drop slot has an unit in it
-                        if (!transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
-                        {
-                            // verify if wide cell is not occupied in the same row
-                            if (!transform.Find(horisontalPanel).Find("Wide").Find("UnitSlot").GetComponentInChildren<UnitDragHandler>())
-                            {
-                                // verify if city capacity is enough
-                                if (GetCapacity() > GetNumberOfPresentUnits())
-                                {
-                                    //Debug.Log("Activate + button in " + horisontalPanel + "/" + cell + " cell");
-                                    SetHireUnitButtonActiveByCell(true, horisontalPanel + "/" + cell);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            //Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
-                            SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
-                        }
-                        // And bring panel to the front
-                        transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").SetAsLastSibling();
-                    }
-                    else
-                    {
-                        //Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
-                        SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
-                    }
-                }
-            }
-        }
-    }
-
     public List<UnitSlot> GetAllPowerTargetableUnitSlots()
     {
         List<UnitSlot> unitSlots = new List<UnitSlot> { };
@@ -628,7 +582,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        SetHireUnitPnlButtonActive(!activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(activate);
     }
 
 
@@ -685,7 +639,7 @@ public class PartyPanel : MonoBehaviour {
         if (activate)
         {
             // and disable hire unit buttons panel
-            SetHireUnitPnlButtonActive(false);
+            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(false);
         }
     }
 
@@ -740,7 +694,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        SetHireUnitPnlButtonActive(!activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
     PartyPanel GetOtherPartyPanel(PartyPanel currentPartyPanel)
@@ -1159,7 +1113,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        SetHireUnitPnlButtonActive(!activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
     #region For Battle Screen
@@ -2019,7 +1973,7 @@ public class PartyPanel : MonoBehaviour {
     //        // as long as we cannot initiate all debuffs at the same time
     //        // we add debuffs to the queue and they will be triggered one after another
     //        // CoroutineQueue queue = unitDebuffsUI.GetQueue();
-    //        CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
+    //        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
     //        if (queue == null)
     //        {
     //            Debug.LogError("No queue");
@@ -2451,7 +2405,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // Gradually fade away unit cell information
-        CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
+        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
         queue.Run(FadeUnitCellInfo());
         // StartCoroutine("FadeUnitCellInfo");
     }

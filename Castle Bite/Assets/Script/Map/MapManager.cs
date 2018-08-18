@@ -1315,7 +1315,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     //    // initialize battle
     //    if (enemyOnMap)
     //    {
-    //        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, enemyOnMap);
+    //        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, enemyOnMap);
     //        // Remove hero Selection
     //        SetSelection(Selection.None);
     //    }
@@ -1388,14 +1388,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     IEnumerator EnterBattleStep(MapHero mapHero)
     {
         Debug.Log("EnterBattleStep");
-        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapHero);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, mapHero);
         yield return null;
     }
 
     IEnumerator EnterBattleStep(MapCity mapCity)
     {
         Debug.Log("EnterBattleStep");
-        transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, mapCity);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, mapCity);
         yield return null;
     }
 
@@ -1595,7 +1595,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 //{
                 //    // enter battle
                 //    //EnterBattleOnMove(pathPoint);
-                //    transform.root.Find("BattleScreen").GetComponent<BattleScreen>().EnterBattle(selectedHero, enemyOnMap);
+                //    transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, enemyOnMap);
                 //    // Remove hero Selection
                 //    SetSelection(Selection.None);
                 //    // break move

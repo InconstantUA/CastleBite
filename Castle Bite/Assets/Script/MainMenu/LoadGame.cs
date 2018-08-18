@@ -171,10 +171,6 @@ public class LoadGame : MonoBehaviour
             }
             // set hero party data
             newHeroParty.PartyData = partyData;
-            // get party panel
-            //PartyPanel partyPanel = newHeroParty.GetComponentInChildren<PartyPanel>();
-            // set party panel data
-            //partyPanel.PartyPanelData = partyData.partyPanelData;
             // create units
             foreach (PartyUnitData partyUnitData in partyData.partyUnitsData)
             {

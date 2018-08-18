@@ -193,7 +193,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     // uniquePowerModifier parameter is optional on deactivation
     public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier = null)
     {
-        CoroutineQueue queue = transform.root.Find("BattleScreen").GetComponent<BattleScreen>().GetQueue();
+        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
         if (doActivate)
         {
             // Activate object

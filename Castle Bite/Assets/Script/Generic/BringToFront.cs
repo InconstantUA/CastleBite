@@ -12,14 +12,4 @@ public class BringToFront : MonoBehaviour
         transform.SetAsLastSibling();
     }
 
-    //public void OnPointerEnter(PointerEventData eventData)
-    //{
-    //    Debug.Log("OnPointerEnter");
-    //}
-
-    //public void OnPointerExit(PointerEventData eventData)
-    //{
-    //    Debug.Log("OnPointerExit");
-    //}
-
 }

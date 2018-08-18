@@ -22,8 +22,6 @@ public class HirePartyUnitButton : MonoBehaviour {
         Transform destinationCellTr;
         UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
         City destinationCity = uiManager.GetComponentInChildren<CityScreen>().City;
-        // get unit types to hire
-        unitTypesToHire = destinationCity.HireableCommonUnits;
         switch (buttonMode)
         {
             case ButtonMode.HireCommonUnit:
@@ -36,16 +34,21 @@ public class HirePartyUnitButton : MonoBehaviour {
                 string address = transform.parent.parent.name + "/" + transform.parent.name;
                 // get destination cell transform in city garnizon party panel
                 Debug.Log("City " + destinationCity.name);
-                Debug.Log("Party " + uiManager.GetHeroPartyByMode(PartyMode.Garnizon, false).name);
-                Debug.Log("PartyPanel " + uiManager.GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>().name);
-                destinationCellTr = uiManager.GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>().transform.Find(address);
+                Debug.Log("Party " + uiManager.GetHeroPartyUIByMode(PartyMode.Garnizon, false).name);
+                Debug.Log("PartyPanel " + uiManager.GetHeroPartyUIByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>().name);
+                destinationCellTr = uiManager.GetHeroPartyUIByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>().transform.Find(address);
                 Debug.Log("Hire common unit for " + destinationCellTr.parent.name + "/" + destinationCellTr.name + " cell with " + address + " address");
+                // get unit types to hire
+                unitTypesToHire = destinationCity.HireableCommonUnits;
                 break;
             case ButtonMode.HirePartyLeader:
                 destinationCellTr = null; // it will be set later based on the type of leader selected and it is not needed here because party is not created yet
+                // get unit types to hire
+                unitTypesToHire = destinationCity.HireablePartyLeaders;
                 break;
             default:
                 destinationCellTr = null;
+                unitTypesToHire = null;
                 Debug.LogError("Unknown HirePartyUnitButton mode ");
                 break;
         }

@@ -29,7 +29,10 @@ public class CityScreen : MonoBehaviour {
 
     public void SetCityScreenActive(City city)
     {
+        // save link to the city
         mCity = city;
+        // activate this city screen
+        gameObject.SetActive(true);
     }
 
     void SetRequiredComponentsActive(bool doActivate)
@@ -335,8 +338,8 @@ public class CityScreen : MonoBehaviour {
         HeroPartyUI newLeaderPartyUI = CreateNewPartyInCity();
         // Get unit's slot transform
         Transform newUnitParentSlot = newLeaderPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr("Middle", GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
-        // Hire unit
-        PartyUnit newPartyUnit = HireGenericUnit(hiredUnitTemplate, newLeaderPartyUI.LHeroParty, newUnitParentSlot, doCreateUI);
+        // Hire unit, but do not create canvas, because it will be done automatically by HeroParty on enable
+        PartyUnit newPartyUnit = HireGenericUnit(hiredUnitTemplate, newLeaderPartyUI.LHeroParty, newUnitParentSlot, false);
         // Create hero's representation on the map
         // prerequisites: party leader should be created beforehand
         SetHeroPartyRepresentationOnTheMap(newLeaderPartyUI.LHeroParty);
@@ -380,7 +383,7 @@ public class CityScreen : MonoBehaviour {
             if (doCreateUI)
             {
                 // Update city garnizon panel to fill in required information and do required adjustments;
-                transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
+                transform.GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
                 // Instruct Right focus panel to update information
                 transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
             }
@@ -422,7 +425,7 @@ public class CityScreen : MonoBehaviour {
             if (doCreateUI)
             {
                 // update panel
-                transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
+                transform.GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
                 // Instruct Right focus panel to update information
                 transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
             }
@@ -541,7 +544,7 @@ public class CityScreen : MonoBehaviour {
                 GetComponentInParent<UIManager>().GetFocusPanelByCity(City).OnChange(FocusPanel.ChangeType.DismissDoubleUnit);
             }
             // Activate hire unit buttons again
-            GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon).GetComponentInChildren<PartyPanel>().SetHireUnitPnlButtonActive(true);
+            SetHireUnitPnlButtonActive(true);
         }
     }
 
@@ -563,4 +566,60 @@ public class CityScreen : MonoBehaviour {
     }
     #endregion Dismiss unit
 
+    // todo: fix duplicate function in PartyPanel
+    public void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
+    {
+        Debug.Log("Set hire unit button at " + cellAddress + " " + doActivate.ToString());
+        transform.root.Find("MiscUI/HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+    }
+
+    void BringHireUnitPnlButtonToTheFront()
+    {
+        transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").SetAsLastSibling();
+        // verify if notification pop-up window is active NotificationPopUp
+        if (transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<NotificationPopUp>())
+        {
+            // set nofiction pop-up as last sibling
+            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<NotificationPopUp>().transform.SetAsLastSibling();
+        }
+    }
+
+    public void SetHireUnitPnlButtonActive(bool activate)
+    {
+        // get garnizon UI
+        HeroPartyUI garnizonUI = GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon);
+        // this is only needed in garnizon mode, only in this mode hire buttons are present
+        // verify if garnizon is present
+        if (garnizonUI)
+        {
+            Debug.Log("Activate or Deactivate Hire Unit Buttons in City Garnizon");
+            foreach (UnitSlot unitSlot in garnizonUI.GetComponentsInChildren<UnitSlot>(true))
+            {
+                // verify if we are not checking wide cell, because there is no + button in wide cells
+                if (unitSlot.GetComponent<UnitSlotDropHandler>().CellSize != UnitSize.Double)
+                {
+                    // verify if we need to activate
+                    if (activate
+                        // Verify if city capacity is enough
+                        && (City.GetUnitsCapacity() > garnizonUI.LHeroParty.GetNumberOfPresentUnits())
+                        // verify if drop slot doesn't have an !active! unit in it
+                        && (!unitSlot.GetComponentInChildren<PartyUnitUI>(false))
+                        // verify if wide cell is not active = occupied in the same row
+                        && (!unitSlot.transform.parent.parent.Find("Wide").gameObject.activeSelf)
+                        )
+                    {
+                        //Debug.Log("Activate + button in " + horisontalPanel + "/" + cell + " cell");
+                        SetHireUnitButtonActiveByCell(true, unitSlot.GetUnitCellAddress());
+                        // And bring panel to the front
+                        BringHireUnitPnlButtonToTheFront();
+                    }
+                    else
+                    {
+                        //Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
+                        SetHireUnitButtonActiveByCell(false, unitSlot.GetUnitCellAddress());
+                    }
+                }
+            }
+        }
+    }
 }

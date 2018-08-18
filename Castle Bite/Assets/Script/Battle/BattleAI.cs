@@ -97,15 +97,15 @@ public class BattleAI : MonoBehaviour {
                 break;
             case BattleMove.Option.Defend:
                 // simulate button click
-                transform.Find("CtrlPnlFight/Defend").GetComponent<BattleDefend>().ActOnClick();
+                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleDefend>().ActOnClick();
                 break;
             case BattleMove.Option.Flee:
                 // simulate button click
-                transform.Find("CtrlPnlFight/Retreat").GetComponent<BattleRetreat>().ActOnClick();
+                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleRetreat>().ActOnClick();
                 break;
             case BattleMove.Option.Wait:
                 // simulate button click
-                transform.Find("CtrlPnlFight/Wait").GetComponent<BattleWait>().ActOnClick();
+                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleWait>().ActOnClick();
                 break;
             default:
                 Debug.LogError("Unknown battle move option");

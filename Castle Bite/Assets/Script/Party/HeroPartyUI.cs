@@ -22,7 +22,7 @@ public class HeroPartyUI : MonoBehaviour {
     void LinkPartyUnitToUI(PartyUnit partyUnit)
     {
         // Get PartyPanel
-        PartyPanel partyPanel = transform.GetComponentInChildren<PartyPanel>(true);
+        PartyPanel partyPanel = GetComponentInChildren<PartyPanel>(true);
         // Get unit slot Transform by unit address
         Transform unitSlotTransform = partyPanel.transform.Find(partyUnit.UnitCellAddress).GetComponentInChildren<UnitSlot>(true).transform;
         // Get unit canvas template
@@ -58,6 +58,11 @@ public class HeroPartyUI : MonoBehaviour {
     {
         // reset hero party link to null
         LHeroParty = null;
+        // Remove all PartyUnitUIs
+        foreach (PartyUnitUI partyUnitUI in GetComponentsInChildren<PartyUnitUI>(true))
+        {
+            Destroy(partyUnitUI.gameObject);
+        }
         // Disable PartyPanel
         GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(false);
         // Disable Party Inventory

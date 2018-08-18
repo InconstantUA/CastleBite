@@ -133,6 +133,26 @@ public class HeroParty : MonoBehaviour {
         return address;
     }
 
+    public int GetNumberOfPresentUnits()
+    {
+        int unitsNumber = 0;
+        foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
+        {
+            // if this is double unit, then count is as +2
+            if (partyUnit.UnitSize == UnitSize.Double)
+            {
+                // double unit
+                unitsNumber += 2;
+            }
+            else
+            {
+                // single unit
+                unitsNumber += 1;
+            }
+        }
+        return unitsNumber;
+    }
+
     public PartyUnit GetPartyLeader()
     {
         // find leader unit
