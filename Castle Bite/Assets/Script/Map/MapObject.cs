@@ -49,7 +49,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         {
             // on right mouse click
             // show unit info
-            transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(gameObject);
+            transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(this);
         }
     }
 
@@ -74,11 +74,10 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (GetComponent<MapCity>())
         {
             // verify if there is linked party = hero inside of this city
-            Transform linkedMapHeroTr = GetComponent<MapCity>().LinkedPartyOnMapTr;
-            if (linkedMapHeroTr)
+            if (GetComponent<MapCity>().LMapHero)
             {
                 // return map object of linked hero
-                return linkedMapHeroTr.GetComponent<MapObject>();
+                return GetComponent<MapCity>().LMapHero.GetComponent<MapObject>();
             }
         }
         return null;

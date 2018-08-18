@@ -136,8 +136,8 @@ public class BattleScreen : MonoBehaviour {
         playerPartyPanel.IsAIControlled = false;
         enemyPartyPanel.IsAIControlled = false;
         // Get parties leaders
-        PartyUnit playerPartyLeader = playerPartyPanel.GetPartyLeader();
-        PartyUnit enemyPartyLeader = enemyPartyPanel.GetPartyLeader();
+        PartyUnit playerPartyLeader = playerHeroParty.GetPartyLeader();
+        PartyUnit enemyPartyLeader = enemyHeroParty.GetPartyLeader();
         // Link parties leaders to the focus panels
         leftFocusPanel.focusedObject = playerPartyLeader.gameObject;
         rightFocusPanel.focusedObject = enemyPartyLeader.gameObject;
@@ -151,8 +151,8 @@ public class BattleScreen : MonoBehaviour {
     public void EnterBattle(MapHero playerOnMap, MapHero enemyOnMap)
     {
         // get hero's parties
-        HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
-        HeroParty enemyHeroParty = enemyOnMap.LinkedPartyTr.GetComponent<HeroParty>();
+        HeroParty playerHeroParty = playerOnMap.LHeroParty;
+        HeroParty enemyHeroParty = enemyOnMap.LHeroParty;
         EnterBattleCommon(playerHeroParty, enemyHeroParty);
     }
 
@@ -160,7 +160,7 @@ public class BattleScreen : MonoBehaviour {
     {
         // Firt verify if city is protected by Hero's party
         // Player cannot attack city untill there a party protecting it
-        HeroParty enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Party);
+        HeroParty enemyHeroParty = enemyCityOnMap.LCity.GetHeroPartyByMode(PartyMode.Party);
         if (enemyHeroParty)
         {
             // enemy hero is protecting city
@@ -178,7 +178,7 @@ public class BattleScreen : MonoBehaviour {
         // if we are here, then there is no enemy hero protecting city
         // get garnizon party
         // there should be garnizon in every city
-        enemyHeroParty = enemyCityOnMap.LinkedCityTr.GetComponent<City>().GetHeroPartyByMode(PartyMode.Garnizon);
+        enemyHeroParty = enemyCityOnMap.LCity.GetHeroPartyByMode(PartyMode.Garnizon);
         // verify if there are units in party protecting this city, which can fight
         // it is possible that city is not protected, because all units are dead
         if (enemyHeroParty.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
@@ -203,7 +203,7 @@ public class BattleScreen : MonoBehaviour {
         {
             // city is protected
             // get hero's parties
-            HeroParty playerHeroParty = playerOnMap.LinkedPartyTr.GetComponent<HeroParty>();
+            HeroParty playerHeroParty = playerOnMap.LHeroParty;
             // proceed with preparations for the battle
             EnterBattleCommon(playerHeroParty, enemyHeroParty);
         }
@@ -279,14 +279,14 @@ public class BattleScreen : MonoBehaviour {
         // Verify if player party is not destroyed
         if (playerPartyPanel)
         {
-            playerPartyPanel.ResetUnitCellInfoPanel(playerPartyPanel.transform);
+            playerPartyPanel.ResetUnitCellInfoPanel();
             playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatusText });
             playerPartyPanel.ResetUnitCellHighlight();
         }
         // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
         {
-            enemyPartyPanel.ResetUnitCellInfoPanel(enemyPartyPanel.transform);
+            enemyPartyPanel.ResetUnitCellInfoPanel();
             enemyPartyPanel.ResetUnitCellStatus(new string[] { enemyPartyPanel.deadStatusText });
             enemyPartyPanel.ResetUnitCellHighlight();
         }
@@ -299,7 +299,7 @@ public class BattleScreen : MonoBehaviour {
         Debug.Log("Destroy party");
         // set variables
         HeroParty heroParty = partyPanel.GetHeroParty();
-        MapHero heroOnMapRepresentation = heroParty.GetLinkedPartyOnMap();
+        MapHero heroOnMapRepresentation = heroParty.LMapHero;
         // destroy on map party representation
         Destroy(heroOnMapRepresentation.gameObject);
         // destroy party
@@ -323,7 +323,7 @@ public class BattleScreen : MonoBehaviour {
         Debug.Log("Flee");
         // get fleeing party transform on map
         // it is not possible to flee if your party is not on map, that is why there is no additional checks here
-        Transform fleeingPartyTransform = fleeingPartyPanel.GetHeroParty().GetLinkedPartyOnMap().transform;
+        Transform fleeingPartyTransform = fleeingPartyPanel.GetHeroParty().LMapHero.transform;
         // get other party or city transform on map
         Transform oppositeTransform;
         // verify if prebattle parent was city
@@ -331,13 +331,13 @@ public class BattleScreen : MonoBehaviour {
         {
             // player was in city or it was city garnizon
             // get city on map transform
-            oppositeTransform = otherPartyPanel.GetHeroParty().PreBattleParentTr.GetComponent<City>().LinkedMapCity.transform;
+            oppositeTransform = otherPartyPanel.GetHeroParty().PreBattleParentTr.GetComponent<City>().LMapCity.transform;
         }
         else
         {
             // player was on map
             // get linked party on map transform
-            oppositeTransform = otherPartyPanel.GetHeroParty().GetLinkedPartyOnMap().transform;
+            oppositeTransform = otherPartyPanel.GetHeroParty().LMapHero.transform;
         }
         // give control to map manager to flee
         GetMapManager().EscapeBattle(fleeingPartyTransform, oppositeTransform);
@@ -364,8 +364,8 @@ public class BattleScreen : MonoBehaviour {
         // Change city faction to player's faction
         enemyPartyPanel.GetCity().Faction = playerPartyPanel.GetHeroParty().Faction;
         // Trigger map hero move to and enter city
-        MapHero mapHero = playerPartyPanel.GetHeroParty().GetLinkedPartyOnMap();
-        MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LinkedMapCity;
+        MapHero mapHero = playerPartyPanel.GetHeroParty().LMapHero;
+        MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LMapCity;
         MapManager mapManager = GetMapManager();
         mapManager.MapHeroMoveToAndEnterCity(mapHero, destinationCityOnMap);
     }

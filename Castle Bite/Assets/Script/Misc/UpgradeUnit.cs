@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UpgradeUnit : MonoBehaviour {
 
     GameObject unitBackupGameObject;
+    PartyUnitUI focusedPartyUnitUI;
     PartyUnit focusedPartyUnit;
     UnitInfoPanel unitInfoPanel;
     int statsUpgradeCount;
@@ -28,21 +29,6 @@ public class UpgradeUnit : MonoBehaviour {
             statsUpgradeCount = value;
         }
     }
-
-    //[SerializeField]
-    //int classUIPosition = -89;  // starting position + current position for iteration
-    //[SerializeField]
-    //int classUIStep = -16;      // next class will be displayed in UI after this pixels
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     void ActivateUnitInfoPanel(PartyUnit partyUnit)
     {
@@ -1417,6 +1403,8 @@ public class UpgradeUnit : MonoBehaviour {
         Transform parentGameObjectTr = focusedPartyUnit.transform.parent;
         // change parent of backuped object
         unitBackupGameObject.transform.SetParent(parentGameObjectTr);
+        // change link in PartyUnit UI to backuped object
+        focusedPartyUnitUI.LPartyUnit = unitBackupGameObject.GetComponent<PartyUnit>();
     }
 
     void CleanBackup()
@@ -1425,7 +1413,7 @@ public class UpgradeUnit : MonoBehaviour {
         Destroy(unitBackupGameObject);
     }
 
-    public void ActivateAdvance(PartyUnit partyUnit)
+    public void ActivateAdvance(PartyUnitUI partyUnitUI)
     {
         // Activate this object
         gameObject.SetActive(true);
@@ -1434,11 +1422,12 @@ public class UpgradeUnit : MonoBehaviour {
         upgradedToClasses = new List<UnitType>();
         learnedSkills = new List<UnitSkill>();
         // Save link to Party unit for later use
-        focusedPartyUnit = partyUnit;
+        focusedPartyUnitUI = partyUnitUI;
+        focusedPartyUnit = partyUnitUI.LPartyUnit;
         // Save backup of party unit component
         Backup();
         // Activate unit info panel
-        ActivateUnitInfoPanel(partyUnit);
+        ActivateUnitInfoPanel(focusedPartyUnit);
         // Fill in generic information
         InitGenericInfo();
         // Fill in stats

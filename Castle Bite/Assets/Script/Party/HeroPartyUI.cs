@@ -50,6 +50,8 @@ public class HeroPartyUI : MonoBehaviour {
         LinkPartyUnitsToUI();
         // Enable PartyPanel
         GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(true);
+        // Enable Party Inventory
+        GetComponentInChildren<PartyInventoryUI>(true).gameObject.SetActive(true);
     }
 
     void OnDisable()
@@ -58,5 +60,7 @@ public class HeroPartyUI : MonoBehaviour {
         LHeroParty = null;
         // Disable PartyPanel
         GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(false);
+        // Disable Party Inventory
+        GetComponentInChildren<PartyInventoryUI>(true).gameObject.SetActive(false);
     }
 }

@@ -584,7 +584,7 @@ public class PartyUnit : MonoBehaviour {
 
     //public Text GetUnitStatusText()
     //{
-    //    return GetUnitCell().Find("Status").GetComponent<Text>();
+    //    return GetUnitCell().Find("UnitStatus").GetComponent<Text>();
     //}
 
     //public Text GetUnitInfoPanelText()
@@ -594,12 +594,12 @@ public class PartyUnit : MonoBehaviour {
 
     //public Transform GetUnitBuffsPanel()
     //{
-    //    return GetUnitCell().Find("Status/Buffs");
+    //    return GetUnitCell().Find("UnitStatus/Buffs");
     //}
 
     //public Transform GetUnitDebuffsPanel()
     //{
-    //    return GetUnitCell().Find("Status/Debuffs");
+    //    return GetUnitCell().Find("UnitStatus/Debuffs");
     //}
 
     public string GetUnitDisplayName()
@@ -763,7 +763,7 @@ public class PartyUnit : MonoBehaviour {
     //        UnitBuffs[i] = UnitBuff.None;
     //    }
     //    // in UI
-    //    UnitBuffIndicator[] allBuffs = GetUnitCell().Find("Status/Buffs").GetComponentsInChildren<UnitBuffIndicator>();
+    //    UnitBuffIndicator[] allBuffs = GetUnitCell().Find("UnitStatus/Buffs").GetComponentsInChildren<UnitBuffIndicator>();
     //    foreach (UnitBuffIndicator buff in allBuffs)
     //    {
     //        Destroy(buff.gameObject);
@@ -778,7 +778,7 @@ public class PartyUnit : MonoBehaviour {
     //        UnitDebuffs[i] = UnitDebuff.None;
     //    }
     //    // in UI
-    //    UnitDebuffIndicator[] allDebuffs = GetUnitCell().Find("Status/Debuffs").GetComponentsInChildren<UnitDebuffIndicator>();
+    //    UnitDebuffIndicator[] allDebuffs = GetUnitCell().Find("UnitStatus/Debuffs").GetComponentsInChildren<UnitDebuffIndicator>();
     //    foreach (UnitDebuffIndicator buff in allDebuffs)
     //    {
     //        Destroy(buff.gameObject);
@@ -801,35 +801,8 @@ public class PartyUnit : MonoBehaviour {
         damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefense)) / 100f));
         return damageDealt;
     }
-
-    //public void ApplyDestructiveAbility(int damageDealt)
-    //{
-    //    int healthAfterDamage = UnitHealthCurr - damageDealt;
-    //    // make sure that we do not set health less then 0
-    //    if (healthAfterDamage <= 0)
-    //    {
-    //        healthAfterDamage = 0;
-    //    }
-    //    UnitHealthCurr = (healthAfterDamage);
-    //    // update current health in UI
-    //    // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
-    //    // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
-    //    // Transform cell = dstUnit.GetUnitCell();
-    //    Text currentHealth = GetUnitCurrentHealthText();
-    //    currentHealth.text = healthAfterDamage.ToString();
-    //    // verify if unit is dead
-    //    if (0 == healthAfterDamage)
-    //    {
-    //        // set unit is dead attribute
-    //        SetUnitStatus(UnitStatus.Dead);
-    //    }
-    //    // display damage dealt in info panel
-    //    Text infoPanel = GetUnitInfoPanelText();
-    //    infoPanel.text = "-" + damageDealt + " health";
-    //    infoPanel.color = Color.red;
-    //}
-
-    public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
+    
+        public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
     {
         return appliedUniquePowerModifier.upmPower;
     }
@@ -1032,21 +1005,6 @@ public class PartyUnit : MonoBehaviour {
         return UnitLeadership + skillBonus;
     }
 
-    //public Text GetUnitCurrentHealthText()
-    //{
-    //    return GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>();
-    //}
-
-    //public Text GetUnitMaxHealthText()
-    //{
-    //    return GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>();
-    //}
-
-    //public Text GetUnitCanvasText()
-    //{
-    //    return GetUnitCell().Find("Br").GetComponent<Text>();
-    //}
-
     public float GetPathfindingSkillMultiplier()
     {
         // get current skill level
@@ -1172,22 +1130,7 @@ public class PartyUnit : MonoBehaviour {
         // get and return effective resistance
         return baseResistance + skillResistance;
     }
-
-    //public void SetUnitCellInfoUI()
-    //{
-    //    // set Name
-    //    GetUnitCell().Find("UnitSlot").GetChild(0).Find("Name").GetComponent<Text>().text = GetUnitPartyPanel().GetUnitDisplayName(GetComponent<PartyUnit>());
-    //    // set Health
-    //    GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = UnitHealthCurr.ToString();
-    //    GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = UnitHealthMax.ToString();
-    //}
-
-    //public string GetUnitCellUIAddress()
-    //{
-    //    // structure: PartyPanel-4[Top/Middle/Bottom]-3[Front/Back/Wide]-2UnitSlot-1UnitCanvas-partyUnit
-    //    return transform.parent.parent.parent.parent.name + "/" + transform.parent.parent.parent.name;
-    //}
-
+    
     #region Attributes accessors
     public string UnitName
     {

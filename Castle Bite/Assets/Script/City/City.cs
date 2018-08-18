@@ -32,8 +32,10 @@ public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDism
 public class City : MonoBehaviour {
     [SerializeField]
     CityData cityData;
+    [SerializeField]
+    MapCity lMapCity;
 
-    public MapCity LinkedMapCity { get; set; }
+    //public MapCity LMapCity { get; set; }
 
     // to be moved to other class
     // City view state is required to effectively change between different states
@@ -105,7 +107,7 @@ public class City : MonoBehaviour {
         // Loop through hero parties untill we find the party in party not garnizon mode
         foreach (HeroParty heroParty in transform.GetComponentsInChildren<HeroParty>())
         {
-            // compare if hero party in in party (not in garnizon mode)
+            // compare if hero party is in required mode
             if (heroParty.PartyMode == partyMode)
             {
                 return heroParty;
@@ -360,7 +362,7 @@ public class City : MonoBehaviour {
     //    MapHero heroOnMap = newPartyOnMapUI.GetComponent<MapHero>();
     //    heroOnMap.LinkedPartyTr = newLeaderParty.transform;
     //    // Link hero on the map to hero
-    //    newLeaderParty.GetComponent<HeroParty>().SetLinkedPartyOnMap(heroOnMap);
+    //    newLeaderParty.GetComponent<HeroParty>().LMapHero = (heroOnMap);
     //    // Link hero on the map to city on the map
     //    parentCityOnMap.GetComponent<MapCity>().LinkedPartyOnMapTr = newPartyOnMapUI.transform;
     //    // And do the opposite 
@@ -733,6 +735,19 @@ public class City : MonoBehaviour {
         set
         {
             cityData.linkedGarnizonID = value;
+        }
+    }
+
+    public MapCity LMapCity
+    {
+        get
+        {
+            return lMapCity;
+        }
+
+        set
+        {
+            lMapCity = value;
         }
     }
     #endregion City Properties

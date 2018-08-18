@@ -7,6 +7,9 @@ public class CityScreen : MonoBehaviour {
     City mCity;
     [SerializeField]
     CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
+    [SerializeField]
+    GameObject unitCanvasTemplate;
+
 
     public City City
     {
@@ -233,99 +236,125 @@ public class CityScreen : MonoBehaviour {
         return result;
     }
 
-    PartyUnit CreateUnit(Transform newUnitParentSlot, PartyUnit hiredUnitTemplate)
-    {
-        // Get city Garnizon
-        // this can be only city Garnizon party
-        HeroParty cityGarnizon = GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false);
-        // Create new unit and place it in parent transform
-        PartyUnit newPartyUnit = Instantiate(hiredUnitTemplate, cityGarnizon.transform);
-        // Set new unit cell address
-        newPartyUnit.PartyUnitData.unitCellAddress = newUnitParentSlot.GetComponent<UnitSlot>().GetUnitCellAddress();
-        // Create new instance of unity draggable canvas and set it as unit's parent
-        GameObject unitCanvasTemplate = transform.root.Find("Templates/UI/UnitCanvas").gameObject;
-        Transform newUnitCanvasTr = Instantiate(unitCanvasTemplate, newUnitParentSlot).transform;
-        // enable it
-        newUnitCanvasTr.gameObject.SetActive(true);
-        // Create new unit link to party unit in UI
-        newUnitCanvasTr.GetComponent<PartyUnitUI>().LPartyUnit = newPartyUnit;
-        // return new unit link
-        return newPartyUnit;
-    }
-
     #region Hire Hero
 
-    GameObject CreateNewPartyInCity()
+    HeroPartyUI CreateNewPartyInCity()
     {
         // create and update Hero Party panel in UI, parent it to city UI
         GameObject heroPartyPanelTemplate = transform.root.Find("Templates/Obj/HeroParty").gameObject;
         // create new party instance in city
-        GameObject newParty = Instantiate(heroPartyPanelTemplate, City.transform);
+        HeroParty newHeroParty = Instantiate(heroPartyPanelTemplate, City.transform).GetComponent<HeroParty>();
         // Set party mode
-        newParty.GetComponent<HeroParty>().PartyMode = PartyMode.Party;
+        newHeroParty.PartyMode = PartyMode.Party;
         // Activate new party
-        newParty.SetActive(true);
+        newHeroParty.gameObject.SetActive(true);
         // Get LeftHeroParty UI
         HeroPartyUI leftHeroPartyUI = transform.parent.Find("LeftHeroParty").GetComponent<HeroPartyUI>();
         // Set link to HeroParty
-        leftHeroPartyUI.LHeroParty = newParty.GetComponent<HeroParty>();
-        // Activate it
-        leftHeroPartyUI.gameObject.SetActive(true);
+        leftHeroPartyUI.LHeroParty = newHeroParty;
         // return new party UI as result
-        return leftHeroPartyUI.gameObject;
+        return leftHeroPartyUI;
     }
 
     void SetHeroPartyRepresentationOnTheMap(HeroParty newLeaderParty)
     {
         // Create Hero's object on the map
+        // create and update Hero Party panel in UI, (no - parent it to city UI)
+        //Transform parentCityOnMap = map.Find(transform.name);
+        // Get map transform
         Transform map = transform.root.Find("MapScreen/Map");
-        //  create and update Hero Party panel in UI, (no - parent it to city UI)
+        // Get hero party on map UI template
         GameObject heroPartyOnMapUITemplate = transform.root.Find("Templates/UI/HeroOnMap").gameObject;
-        Transform parentCityOnMap = map.Find(transform.name);
-        GameObject newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map);
+        // Create new hero party on map ui
+        MapHero newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map).GetComponent<MapHero>();
         // set it to the same position as the parent city
-        newPartyOnMapUI.transform.position = parentCityOnMap.position;
-        // activate new party UI panel
-        newPartyOnMapUI.SetActive(true);
-        // Link hero to the hero on the map
-        MapHero heroOnMap = newPartyOnMapUI.GetComponent<MapHero>();
-        heroOnMap.LinkedPartyTr = newLeaderParty.transform;
-        // Link hero on the map to hero
-        newLeaderParty.SetLinkedPartyOnMap(heroOnMap);
+        newPartyOnMapUI.transform.position = City.LMapCity.transform.position;
+        // activate new party on map UI
+        newPartyOnMapUI.gameObject.SetActive(true);
+        // Link HeroParty to the hero party on the map
+        newPartyOnMapUI.LHeroParty = newLeaderParty;
+        // Link hero on the map to HeroParty
+        newLeaderParty.LMapHero = (newPartyOnMapUI);
         // Link hero on the map to city on the map
-        parentCityOnMap.GetComponent<MapCity>().LinkedPartyOnMapTr = newPartyOnMapUI.transform;
-        // And do the opposite 
+        City.LMapCity.GetComponent<MapCity>().LMapHero = newPartyOnMapUI.GetComponent<MapHero>();
         // Link city on the map to hero on the map
-        newPartyOnMapUI.GetComponent<MapHero>().linkedCityOnMapTr = parentCityOnMap;
-        // bring city to the front
-        // . - this does not work as expected, if hero is highered in other city and move to other city, then we have a problem that hero is on top
-        //parentCityOnMap.SetAsLastSibling();
-        // move hero party to the back instead
-        heroOnMap.transform.SetAsFirstSibling();
+        newPartyOnMapUI.GetComponent<MapHero>().lMapCity = City.LMapCity;
+        // move hero party to the back, so its UI label is not covering city's UI label
+        newPartyOnMapUI.transform.SetAsFirstSibling();
     }
 
-    void HirePartyLeader(PartyUnit hiredUnitTemplate)
+    string GetHiredLeaderDestinationSlotName(PartyUnit hiredUnitTemplate)
     {
-        // create new party
-        GameObject newLeaderPartyUI = CreateNewPartyInCity();
-        // set middle right panel as hero's parent transform. Place it to the canvas, which later will be dragg and droppable
-        Transform newUnitParentSlot = newLeaderPartyUI.GetComponentInChildren<PartyPanel>().GetUnitSlotTr("Middle", "Back");
-        // create new unit
-        PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
-        // Update Left focus with information from new unit;
-        // activate required UIs and also fill in city's left focus panels
-        // link party leader to the Left Focus panel
-        // so it can use it to fill in information
-        transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnit.gameObject;
-        // fill in city's left focus with information from the hero
-        // Instruct Focus panel to update info
-        transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HirePartyLeader);
-        // Disable Hire leader panel
-        transform.parent.Find("HireHeroPanel").gameObject.SetActive(false);
+        // verify if hired unit size is single or double
+        if (hiredUnitTemplate.UnitSize == UnitSize.Double)
+        {
+            // Double unit size
+            return "Wide";
+        }
+        else
+        {
+            // Single unit size
+            // verify if hired unit is mele or ranged
+            if (hiredUnitTemplate.UnitPowerDistance == UnitPowerDistance.Mele)
+            {
+                // Place mele units in front row
+                return "Front";
+            }
+            else
+            {
+                // Place ranged unit into back row
+                return "Back";
+            }
+        }
+    }
+
+    PartyUnit HireGenericUnit(PartyUnit hiredUnitTemplate, HeroParty heroParty, Transform destinationUnitSlotTransform, bool doCreateUI = true)
+    {
+        // create unit in HeroParty
+        PartyUnit newPartyUnit = Instantiate(hiredUnitTemplate, heroParty.transform).GetComponent<PartyUnit>();
+        // Set new unit cell address
+        newPartyUnit.PartyUnitData.unitCellAddress = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitCellAddress();
         // take gold from player
         TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
+        if (doCreateUI)
+        {
+            // create unit canvas in unit slot
+            PartyUnitUI partyUnitUI = Instantiate(unitCanvasTemplate, destinationUnitSlotTransform).GetComponent<PartyUnitUI>();
+            // link unit to unit canvas
+            partyUnitUI.LPartyUnit = newPartyUnit;
+            // Activate PartyUnitUI (canvas)
+            partyUnitUI.gameObject.SetActive(true);
+        }
+        // return result
+        return newPartyUnit;
+    }
+
+    void HirePartyLeader(PartyUnit hiredUnitTemplate, bool doCreateUI = true)
+    {
+        // create new party
+        HeroPartyUI newLeaderPartyUI = CreateNewPartyInCity();
+        // Get unit's slot transform
+        Transform newUnitParentSlot = newLeaderPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr("Middle", GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
+        // Hire unit
+        PartyUnit newPartyUnit = HireGenericUnit(hiredUnitTemplate, newLeaderPartyUI.LHeroParty, newUnitParentSlot, doCreateUI);
         // Create hero's representation on the map
-        SetHeroPartyRepresentationOnTheMap(newLeaderPartyUI.GetComponent<HeroPartyUI>().LHeroParty);
+        // prerequisites: party leader should be created beforehand
+        SetHeroPartyRepresentationOnTheMap(newLeaderPartyUI.LHeroParty);
+        if (doCreateUI)
+        {
+            // Activate HeroPartyUI
+            newLeaderPartyUI.gameObject.SetActive(true);
+            // trigger onDisable focus panel function so it reset its state
+            transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().OnDisable();
+            // link party leader to the Left Focus panel so it can use it to fill in information
+            transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = newPartyUnit.gameObject;
+            // trigger onEnable focus panel so it get linked unit data and update its information
+            transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().OnEnable();
+            //// Instruct Focus panel to update info
+            //transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HirePartyLeader);
+            // Disable Hire leader panel
+            transform.parent.Find("HireHeroPanel").gameObject.SetActive(false);
+        }
     }
 
     #endregion Hire Hero
@@ -342,21 +371,19 @@ public class CityScreen : MonoBehaviour {
         return result;
     }
 
-    void HireSingleUnit(Transform callerCell, PartyUnit hiredUnitTemplate)
+    void HireSingleUnit(Transform callerCell, PartyUnit hiredUnitTemplate, bool doCreateUI = true)
     {
         if (VerifySingleUnitHire(hiredUnitTemplate))
         {
-            // get parent for new cell
-            Transform parentTransform = callerCell.Find("UnitSlot");
             // create unit
-            // PartyUnit newPartyUnit = CreateUnit(parentTransform, hiredUnitTemplate);
-            CreateUnit(parentTransform, hiredUnitTemplate);
-            // Update city garnizon panel to fill in required information and do required adjustments;
-            transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
-            // Instruct Right focus panel to update information
-            transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
-            // take gold from player
-            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
+            HireGenericUnit(hiredUnitTemplate, City.GetHeroPartyByMode(PartyMode.Garnizon), callerCell.Find("UnitSlot"), doCreateUI);
+            if (doCreateUI)
+            {
+                // Update city garnizon panel to fill in required information and do required adjustments;
+                transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireSingleUnit, callerCell);
+                // Instruct Right focus panel to update information
+                transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireSingleUnit);
+            }
         }
     }
     #endregion Hire Single Unit
@@ -382,7 +409,7 @@ public class CityScreen : MonoBehaviour {
         return result;
     }
 
-    void HireDoubleUnit(Transform callerCell, PartyUnit hiredUnitTemplate)
+    void HireDoubleUnit(Transform callerCell, PartyUnit hiredUnitTemplate, bool doCreateUI = true)
     {
         if (VerifyDoubleUnitHire(callerCell, hiredUnitTemplate))
         {
@@ -390,22 +417,21 @@ public class CityScreen : MonoBehaviour {
             // if it is double size, then place it in the wide cell
             // if hired unit is double unit, then we actually need to change its parent to the wide
             // hierarchy: [Top/Middle/Bottom panel]-[Front/Back/Wide]-callerCell
-            Transform newUnitParentSlot = callerCell.parent.Find("Wide/UnitSlot");
             // create unit
-            // PartyUnit newPartyUnit = CreateUnit(newUnitParentSlot, hiredUnitTemplate);
-            CreateUnit(newUnitParentSlot, hiredUnitTemplate);
-            // update panel
-            transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
-            // Instruct Right focus panel to update information
-            transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
-            // take gold from player
-            TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
+            HireGenericUnit(hiredUnitTemplate, City.GetHeroPartyByMode(PartyMode.Garnizon), callerCell.parent.Find("Wide/UnitSlot"), doCreateUI);
+            if (doCreateUI)
+            {
+                // update panel
+                transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true).OnChange(PartyPanel.ChangeType.HireDoubleUnit, callerCell);
+                // Instruct Right focus panel to update information
+                transform.parent.Find("RightFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.HireDoubleUnit);
+            }
         }
     }
 
     #endregion Hire Double unit
 
-    public void HireUnit(Transform callerCell, UnitType hiredUnitType)
+    public void HireUnit(Transform callerCell, UnitType hiredUnitType, bool doCreateUI = true)
     {
         // get template for selected unit type
         PartyUnit hiredUnitTemplate = transform.root.Find("Templates").GetComponent<TemplatesManager>().GetPartyUnitTemplateByType(hiredUnitType).GetComponent<PartyUnit>();
@@ -415,18 +441,18 @@ public class CityScreen : MonoBehaviour {
             // 2 act based on the unit type: leader or normal unit
             if (hiredUnitTemplate.IsLeader)
             {
-                HirePartyLeader(hiredUnitTemplate);
+                HirePartyLeader(hiredUnitTemplate, doCreateUI);
             }
             else
             {
                 // act based on the unit type
                 if (UnitSize.Single == hiredUnitTemplate.UnitSize)
                 {
-                    HireSingleUnit(callerCell, hiredUnitTemplate);
+                    HireSingleUnit(callerCell, hiredUnitTemplate, doCreateUI);
                 }
                 else
                 {
-                    HireDoubleUnit(callerCell, hiredUnitTemplate);
+                    HireDoubleUnit(callerCell, hiredUnitTemplate, doCreateUI);
                 }
             }
         }
@@ -452,7 +478,7 @@ public class CityScreen : MonoBehaviour {
         // Get Focus Panel
         FocusPanel focusPanel = GetComponentInParent<UIManager>().GetFocusPanelByHeroParty(heroParty);
         // Get Map hero UI
-        MapHero mapHero = heroPartyUI.LHeroParty.GetLinkedPartyOnMap();
+        MapHero mapHero = heroPartyUI.LHeroParty.LMapHero;
         // Deactivate HeroParty UI
         heroPartyUI.gameObject.SetActive(false);
         // Deactivate Focus Panel

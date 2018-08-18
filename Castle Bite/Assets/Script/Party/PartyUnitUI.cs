@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class PartyUnitUI : MonoBehaviour {
     [SerializeField]
     PartyUnit lPartyUnit;
+    [SerializeField]
+    Color defaultUnitStatusColor;
+    [SerializeField]
+    Color defaultUnitInfoColor;
 
     public PartyUnit LPartyUnit
     {
@@ -23,16 +27,17 @@ public class PartyUnitUI : MonoBehaviour {
     void OnEnable()
     {
         // verify if party unit is set
-        if (LPartyUnit)
-        {
-            // set unit info in UI
-            SetUnitCellInfoUI();
-        }
+        UpdateUnitCellInfo();
+        // Verify and enable Unit Equipment button
+        UpdateUnitEquipmentControl();
+        // Update Unit Upgrade button
+        UpdateUpgradeUnitControl();
     }
 
     void OnTransformChildrenChanged()
     {
-        SetUnitCellInfoUI();
+        Debug.Log("PartyUnitUI OnTransformChildrenChanged");
+        UpdateUnitCellInfo();
     }
 
     public Transform GetUnitCell()
@@ -41,58 +46,55 @@ public class PartyUnitUI : MonoBehaviour {
         return transform.parent.parent;
     }
 
-    public Text GetUnitStatusText()
-    {
-        return GetUnitCell().Find("Status").GetComponent<Text>();
-    }
+    #region Unit Info Panel
 
     public Text GetUnitInfoPanelText()
     {
-        return GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+        return transform.Find("InfoPanel").GetComponent<Text>();
+    }
+
+    // Note: animation should be identical to the function with the same name in PartyPanel
+    public void FadeUnitCellInfo(float alpha)
+    {
+        Text infoPanel = GetUnitInfoPanelText();
+        Color c = infoPanel.color;
+        c.a = alpha;
+        infoPanel.color = c;
+    }
+
+    public void ClearUnitInfoPanel()
+    {
+        //Color32 defaultColor = new Color32(180, 180, 180, 255);
+        Text infoPanelTxt = GetUnitInfoPanelText();
+        infoPanelTxt.text = "";
+        infoPanelTxt.color = defaultUnitInfoColor;
+    }
+
+    #endregion Unit Info Panel
+
+    #region Unit Status and (De)Buffs
+
+    public Text GetUnitStatusText()
+    {
+        return transform.Find("UnitStatus").GetComponent<Text>();
     }
 
     public Transform GetUnitBuffsPanel()
     {
-        return GetUnitCell().Find("Status/Buffs");
+        return transform.Find("UnitStatus/Buffs");
     }
 
     public Transform GetUnitDebuffsPanel()
     {
-        return GetUnitCell().Find("Status/Debuffs");
+        return transform.Find("UnitStatus/Debuffs");
     }
 
-    public PartyPanel GetUnitPartyPanel()
+    public void ClearPartyUnitStatusUI()
     {
-        // structure: 4PartyPanel-3Row-2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(Unit)
-        // verify if unit is member of party
-        if (transform.parent.parent)
-            if (transform.parent.parent.parent)
-                return transform.parent.parent.parent.parent.GetComponent<PartyPanel>();
-        return null;
-    }
-
-    public void SetUnitCellInfoUI()
-    {
-        // set Name
-        transform.Find("Name").GetComponent<Text>().text = LPartyUnit.GetUnitDisplayName();
-        // set Health
-        GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = LPartyUnit.UnitHealthCurr.ToString();
-        GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = LPartyUnit.UnitHealthMax.ToString();
-    }
-
-    public Text GetUnitCurrentHealthText()
-    {
-        return GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>();
-    }
-
-    public Text GetUnitMaxHealthText()
-    {
-        return GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>();
-    }
-
-    public Text GetUnitCanvasText()
-    {
-        return GetUnitCell().Find("Br").GetComponent<Text>();
+        //Color32 defaultColor = new Color32(180, 180, 180, 255);
+        Text infoPanelTxt = GetUnitStatusText();
+        infoPanelTxt.text = "";
+        infoPanelTxt.color = defaultUnitStatusColor;
     }
 
     public void SetUnitStatus(UnitStatus value)
@@ -142,6 +144,67 @@ public class PartyUnitUI : MonoBehaviour {
         GetUnitStatusText().text = statusString;
     }
 
+    #endregion Unit Status and (De)Buffs
+
+    public PartyPanel GetUnitPartyPanel()
+    {
+        // structure: 4PartyPanel-3Row-2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(Unit)
+        // verify if unit is member of party
+        if (transform.parent.parent)
+            if (transform.parent.parent.parent)
+                return transform.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        return null;
+    }
+
+    void SetUnitNameUI()
+    {
+        // set Name
+        transform.Find("Name").GetComponent<Text>().text = LPartyUnit.GetUnitDisplayName();
+    }
+
+    #region Unit Health
+
+    void SetUnitHealthUI()
+    {
+        // set Health
+        transform.Find("HPPanel/HPcurr").GetComponent<Text>().text = LPartyUnit.UnitHealthCurr.ToString();
+        transform.Find("HPPanel/HPmax").GetComponent<Text>().text = LPartyUnit.UnitHealthMax.ToString();
+    }
+
+    public Text GetUnitCurrentHealthText()
+    {
+        return transform.Find("HPPanel/HPcurr").GetComponent<Text>();
+    }
+
+    public Text GetUnitMaxHealthText()
+    {
+        return transform.Find("HPPanel/HPmax").GetComponent<Text>();
+    }
+
+    public void ResetUnitHealthToMax()
+    {
+        // this is done on lvl up
+        LPartyUnit.UnitHealthCurr = LPartyUnit.UnitHealthMax;
+        // update Health panel
+        SetUnitHealthUI();
+    }
+
+    #endregion Unit Health
+
+    public void SetUnitCellInfoUI()
+    {
+        // Set unit name
+        SetUnitNameUI();
+        // Set unit health
+        SetUnitHealthUI();
+    }
+
+    #region Unit Br Canvas
+    public Text GetUnitCanvasText()
+    {
+        return GetUnitCell().Find("Br").GetComponent<Text>();
+    }
+
     public void HighlightActiveUnitInBattle(bool doHighlight)
     {
         // Highlight
@@ -160,15 +223,8 @@ public class PartyUnitUI : MonoBehaviour {
         Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
         canvasText.color = highlightColor;
     }
+    #endregion Unit Br Canvas
 
-    // Note: animation should be identical to the function with the same name in PartyPanel
-    public void FadeUnitCellInfo(float alpha)
-    {
-        Text infoPanel = GetUnitCell().Find("InfoPanel").GetComponent<Text>();
-        Color c = infoPanel.color;
-        c.a = alpha;
-        infoPanel.color = c;
-    }
 
     public void ApplyDestructiveAbility(int damageDealt)
     {
@@ -178,11 +234,8 @@ public class PartyUnitUI : MonoBehaviour {
         {
             healthAfterDamage = 0;
         }
-        LPartyUnit.UnitHealthCurr = (healthAfterDamage);
+        LPartyUnit.UnitHealthCurr = healthAfterDamage;
         // update current health in UI
-        // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
-        // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
-        // Transform cell = dstUnit.GetUnitCell();
         Text currentHealth = GetUnitCurrentHealthText();
         currentHealth.text = healthAfterDamage.ToString();
         // verify if unit is dead
@@ -206,7 +259,7 @@ public class PartyUnitUI : MonoBehaviour {
             LPartyUnit.UnitBuffs[i] = UnitBuff.None;
         }
         // in UI
-        UnitBuffIndicator[] allBuffs = GetUnitCell().Find("Status/Buffs").GetComponentsInChildren<UnitBuffIndicator>();
+        UnitBuffIndicator[] allBuffs = GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
         foreach (UnitBuffIndicator buff in allBuffs)
         {
             Destroy(buff.gameObject);
@@ -221,7 +274,7 @@ public class PartyUnitUI : MonoBehaviour {
             LPartyUnit.UnitDebuffs[i] = UnitDebuff.None;
         }
         // in UI
-        UnitDebuffIndicator[] allDebuffs = GetUnitCell().Find("Status/Debuffs").GetComponentsInChildren<UnitDebuffIndicator>();
+        UnitDebuffIndicator[] allDebuffs = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
         foreach (UnitDebuffIndicator buff in allDebuffs)
         {
             Destroy(buff.gameObject);
@@ -286,4 +339,60 @@ public class PartyUnitUI : MonoBehaviour {
             debuffIndicator.DecrementCurrentDuration();
         }
     }
+
+    void UpdateUnitCellInfo()
+    {
+        if (LPartyUnit != null)
+        {
+            // set unit info in UI
+            SetUnitCellInfoUI();
+        }
+    }
+
+    Transform GetUnitEquipmentControl()
+    {
+        return transform.Find("UnitEquipmentControl");
+    }
+
+    void UpdateUnitEquipmentControl()
+    {
+        if (lPartyUnit != null)
+        {
+            // verify if unit is leader
+            if (LPartyUnit.IsLeader)
+            {
+                // activate equipment button
+                //Debug.LogWarning("Enable equipment button");
+                GetUnitEquipmentControl().gameObject.SetActive(true);
+            }
+            else
+            {
+                // deactivate equipment button
+                //Debug.LogWarning("Disable equipment button");
+                GetUnitEquipmentControl().gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            // deactivate equipment button
+            //Debug.LogWarning("Disable equipment button");
+            GetUnitEquipmentControl().gameObject.SetActive(false);
+        }
+    }
+
+    void UpdateUpgradeUnitControl()
+    {
+        // verify if there is unit in slot
+        if (LPartyUnit != null)
+        {
+            //Debug.LogWarning("Enable upgrade unit + button");
+            transform.Find("UpgradeUnitControl").gameObject.SetActive(true);
+        }
+        else
+        {
+            //Debug.LogWarning("Disable upgrade unit + button");
+            transform.Find("UpgradeUnitControl").gameObject.SetActive(false);
+        }
+    }
+
 }

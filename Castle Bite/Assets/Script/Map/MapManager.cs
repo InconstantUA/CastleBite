@@ -380,7 +380,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapHero)
                                 {
                                     // change cursor to different based on the relationships between factions
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                                     switch (relationships)
                                     {
                                         case Relationships.State.SameFaction:
@@ -403,7 +403,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapCity)
                                 {
                                     // check relationships with active player
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
+                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.Faction);
                                     switch (relationships)
                                     {
                                         case Relationships.State.SameFaction:
@@ -431,7 +431,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapHero)
                                 {
                                     // change cursor to different based on the relationships between factions
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                                     switch (relationships)
                                     {
                                         case Relationships.State.SameFaction:
@@ -463,7 +463,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapCity)
                                 {
                                     // check relationships with active player
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
+                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.Faction);
                                     switch (relationships)
                                     {
                                         case Relationships.State.SameFaction:
@@ -801,7 +801,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (mapHero)
             {
                 // check relationships with active player
-                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                 switch (relationships)
                 {
                     case Relationships.State.SameFaction:
@@ -819,7 +819,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             } else if (mapCity)
             {
                 // check relationships with active player
-                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
+                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.Faction);
                 switch (relationships)
                 {
                     case Relationships.State.SameFaction:
@@ -916,7 +916,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHero)
                         {
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -969,7 +969,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (mapHero)
             {
                 // check relationships with active player
-                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                 switch (relationships)
                 {
                     case Relationships.State.SameFaction:
@@ -1217,12 +1217,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //// Get City
         //MapCity mapCity = GetCityByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
         // Link hero on the map to city on the map
-        mapCity.LinkedPartyOnMapTr = selectedHero.transform;
+        mapCity.LMapHero = selectedHero;
         // And do the opposite 
         // Link city on the map to hero on the map
-        selectedHero.linkedCityOnMapTr = mapCity.transform;
+        selectedHero.lMapCity = mapCity;
         // Move hero UI to City
-        selectedHero.LinkedPartyTr.SetParent(mapCity.LinkedCityTr);
+        selectedHero.LHeroParty.transform.SetParent(mapCity.LCity.transform);
         // Enter city edit mode
         queue.Run(mapCity.EnterCityEditMode());
         // Trigger on hero entering city
@@ -1418,14 +1418,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         Debug.Log("MapManager: Move");
         // Verify if hero was in city
-        if (selectedHero.linkedCityOnMapTr)
+        if (selectedHero.lMapCity)
         {
             // Unlink city from hero and hero from city if they were linked before
-            MapCity linkedCity = selectedHero.linkedCityOnMapTr.GetComponent<MapCity>();
-            linkedCity.LinkedPartyOnMapTr = null;
-            selectedHero.linkedCityOnMapTr = null;
+            MapCity linkedCity = selectedHero.lMapCity;
+            linkedCity.LMapHero = null;
+            selectedHero.lMapCity = null;
             // Get current party city
-            HeroParty heroParty = selectedHero.LinkedPartyTr.GetComponent<HeroParty>();
+            HeroParty heroParty = selectedHero.LHeroParty;
             // Trigger on hero leaving city
             // ..
             // Move party from city to PartiesOnMap container
@@ -1450,7 +1450,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             bool breakMove = false;
             MapCity enterCity = null;
             MapHero protectedTileEnemy = null;
-            Faction selectedHeroFaction = selectedHero.LinkedPartyTr.GetComponent<HeroParty>().Faction;
+            Faction selectedHeroFaction = selectedHero.LHeroParty.Faction;
             // loop through path points
             Debug.Log("Move path count: " + movePath.Count.ToString());
             for (int i = 0; i < movePath.Count; i++)
@@ -1467,7 +1467,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     {
                         // check relationships with moving party faction
                         //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
-                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LHeroParty.Faction);
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
@@ -1490,7 +1490,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         Debug.Log("Move(): it is map city");
                         // check relationships with moving party faction
                         //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
-                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapCity.LCity.Faction);
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
@@ -1532,7 +1532,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             // check relationships with moving party faction
                             //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LHeroParty.Faction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1708,7 +1708,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHero)
                         {
                             // verify if this is player's hero
-                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LHeroParty;
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
                             {
                                 // highlighted hero belongs to player
@@ -1726,7 +1726,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapCity)
                         {
                             // verify if this is player's city
-                            City city = mapCity.LinkedCityTr.GetComponent<City>();
+                            City city = mapCity.LCity;
                             if (TurnsManager.Instance.GetActivePlayer().Faction == city.Faction)
                             {
                                 // highlighted city belongs to player
@@ -1749,7 +1749,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHero && !label)
                         {
                             // change cursor to different based on the relationships between factions
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1758,7 +1758,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
                                     {
                                         // verify if hero is in city
-                                        if (mapHero.linkedCityOnMapTr)
+                                        if (mapHero.lMapCity)
                                         {
                                             //Debug.Log("hero in city");
                                             // hero is in city
@@ -1795,7 +1795,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHeroViaLabel)
                         {
                             // change cursor to different based on the relationships between factions
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1805,7 +1805,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     {
                                         Debug.Log("Same hero");
                                         // verify if hero is in city
-                                        if (mapHero.linkedCityOnMapTr)
+                                        if (mapHero.lMapCity)
                                         {
                                             Debug.Log("hero in city");
                                             // hero is in city
@@ -1844,7 +1844,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //Debug.Log("Enter city box " + mapCity.name);
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.Faction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1868,7 +1868,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             Debug.Log("Enter city lable box " + mapCity.name);
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.Faction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -1896,7 +1896,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHero)
                         {
                             // verify if this is player's hero
-                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LHeroParty;
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
                             {
                                 // highlighted hero belongs to player
@@ -1913,7 +1913,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapCity)
                         {
                             // verify if this is player's city
-                            City city = mapCity.LinkedCityTr.GetComponent<City>();
+                            City city = mapCity.LCity;
                             if (TurnsManager.Instance.GetActivePlayer().Faction == city.Faction)
                             {
                                 // highlighted city belongs to player
@@ -2111,7 +2111,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 SetSelectedHero(mH);
                 mH.SetSelectedState(true);
                 // verify if hero is in city
-                if (mH.linkedCityOnMapTr)
+                if (mH.lMapCity)
                 {
                     //Debug.Log("SetSelection hero in city");
                     // hero is in city
@@ -2201,7 +2201,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
                             }
-                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
                             {
@@ -2223,7 +2223,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
                             }
-                            City city = mapCity.LinkedCityTr.GetComponent<City>();
+                            City city = mapCity.LCity;
                             // verify if this is player's city
                             if (TurnsManager.Instance.GetActivePlayer().Faction == city.Faction)
                             {
@@ -2243,9 +2243,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //Debug.Log("Clicked on city on map");
                             // verify if hero is already in the same city
-                            if (selectedHero.linkedCityOnMapTr)
+                            if (selectedHero.lMapCity)
                             {
-                                if (selectedHero.linkedCityOnMapTr.GetComponent<MapCity>().GetInstanceID() == mapCity.GetInstanceID())
+                                if (selectedHero.lMapCity.GetInstanceID() == mapCity.GetInstanceID())
                                 {
                                     // Hero is in the same city
                                     // Enter city edit mode
@@ -2272,7 +2272,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             //Debug.Log("Clicked on city label on map");
                             // get Hero City
                             mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
-                            City city = mapCity.LinkedCityTr.GetComponent<City>();
+                            City city = mapCity.LCity;
                             // verify if this is player's city
                             if (TurnsManager.Instance.GetActivePlayer().Faction == city.Faction)
                             {
@@ -2289,7 +2289,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapHero)
                         {
                             //Debug.Log("Clicked on hero's partie's marker on map");
-                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
                             {
@@ -2324,7 +2324,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             //Debug.Log("Clicked on hero's partie's lable on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
                             mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
-                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
                             {
@@ -2340,11 +2340,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     // enter animation mode to disable all input
                                     SetMode(Mode.Animation);
                                     // verify if hero is in city
-                                    if (mapHero.linkedCityOnMapTr)
+                                    if (mapHero.lMapCity)
                                     {
                                         // hero is in city
                                         // enter city edit mode
-                                        MapCity _mapCity = mapHero.linkedCityOnMapTr.GetComponent<MapCity>();
+                                        MapCity _mapCity = mapHero.lMapCity;
                                         queue.Run(_mapCity.EnterCityEditMode());
                                     }
                                     else
@@ -2382,7 +2382,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
                             }
-                            HeroParty heroParty = mapHero.LinkedPartyTr.GetComponent<HeroParty>();
+                            HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
                             {
@@ -2405,7 +2405,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
                             }
-                            City city = mapCity.LinkedCityTr.GetComponent<City>();
+                            City city = mapCity.LCity;
                             // verify if this is player's city
                             if (TurnsManager.Instance.GetActivePlayer().Faction == city.Faction)
                             {

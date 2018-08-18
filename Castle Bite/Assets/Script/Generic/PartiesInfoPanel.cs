@@ -7,92 +7,126 @@ using UnityEngine.EventSystems;
 
 public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
-    Dictionary<Transform, Transform> originalParent;
-    Dictionary<Transform, Vector3> originalPosition;
+    bool positionHasBeenChanged = false;
 
-    void OnEnable()
-    {
-        originalParent = new Dictionary<Transform, Transform>();
-        originalPosition = new Dictionary<Transform, Vector3>();
-    }
 
     void OnDisable()
     {
-        //// destroy clonned panels
-        //foreach (PartyPanel partyPanel in transform.GetComponentsInChildren<PartyPanel>())
-        //{
-        //    Destroy(partyPanel.gameObject);
-        //}
-        // return to original parent
-        foreach (KeyValuePair<Transform, Transform> original in originalParent)
-        {
-            original.Key.SetParent(original.Value);
-        }
-        // return to original position
-        foreach (KeyValuePair<Transform, Vector3> original in originalPosition)
-        {
-            original.Key.position = original.Value;
-        }
-        // deactivate all child panels
-        transform.Find("SinglePartyPlaceholder").gameObject.SetActive(false);
-        transform.Find("LeftPartyInfoPlaceHolder").gameObject.SetActive(false);
-        transform.Find("RightPartyInfoPlaceHolder").gameObject.SetActive(false);
-    }
 
-    public void ActivateAdvance(GameObject gameObject)
-    {
-        if (gameObject.GetComponent<MapHero>())
+        // deactivate all child panels (placeholders)
+        foreach (Transform childTransform in transform)
         {
-            ActivateAdvance(gameObject.GetComponent<MapHero>());
-            return;
+            childTransform.gameObject.SetActive(false);
         }
-        if (gameObject.GetComponent<MapCity>())
+        // Deactivate what was activated
+        // Deactivate left hero party UI
+        transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(false);
+        // Deactivate right hero party UI
+        transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(false);
+        // Get Party Panel
+        PartyPanel partyPanel = transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>().GetComponentInChildren<PartyPanel>(true);
+        // verify if party panel position has changed
+        if (positionHasBeenChanged)
         {
-            ActivateAdvance(gameObject.GetComponent<MapCity>());
-            return;
+            // Change PartyPanel Position back to original
+            SetPartyPanelPosition(partyPanel, transform.Find("LeftPartyInfoPlaceHolder").GetComponent<RectTransform>());
+            // Reset flag to false
+            positionHasBeenChanged = false;
         }
     }
 
-    void CloneAndPlacePartyPanel(Transform sourcePartyPanelTr, Transform partyPanelPlaceholder)
+    public void ActivateAdvance(MapObject mapObject)
     {
-        // activate placeholder
-        partyPanelPlaceholder.gameObject.SetActive(true);
-        // Activate PartiesInfoPanel
+        // Activate this (it has transparent background image attached, which blocks raycasts)
         gameObject.SetActive(true);
-        // create duplicate of the party panel and place it into placeholder
-        //Transform destinationPartyPanelTr = Instantiate(sourcePartyPanelTr.gameObject, partyPanelPlaceholder).transform;
-        // save orignal parent
-        originalParent.Add(sourcePartyPanelTr, sourcePartyPanelTr.parent);
-        // save original position
-        originalPosition.Add(sourcePartyPanelTr, sourcePartyPanelTr.position);
-        // change parent
-        sourcePartyPanelTr.SetParent(partyPanelPlaceholder);
-        // stretch heroPartyPanelClone transform
-        RectTransform rectTransform = sourcePartyPanelTr.GetComponent<RectTransform>();
-        rectTransform.anchorMin = new Vector2(0, 0);
-        rectTransform.anchorMax = new Vector2(1f, 1f);
-        // Reset to 0, 0, 0, 0 position
-        rectTransform.offsetMin = new Vector2(0, 0); // left, bottom
-        rectTransform.offsetMax = new Vector2(0, 0); // -right, -top
+        // And set it as background
+        transform.SetAsFirstSibling();
+        // Activate required party panels
+        if (mapObject.GetComponent<MapHero>())
+        {
+            ActivateAdvance(mapObject.GetComponent<MapHero>());
+            return;
+        }
+        if (mapObject.GetComponent<MapCity>())
+        {
+            ActivateAdvance(mapObject.GetComponent<MapCity>());
+            return;
+        }
+    }
+
+    void SetRectTransform(RectTransform src, RectTransform dst)
+    {
+        dst.anchorMin = new Vector2
+        {
+            x = src.anchorMin.x,
+            y = src.anchorMin.y
+        };
+        dst.anchorMax = new Vector2
+        {
+            x = src.anchorMax.x,
+            y = src.anchorMax.y
+        };
+        dst.offsetMin = new Vector2
+        {
+            x = src.offsetMin.x,
+            y = src.offsetMin.y
+        };
+        dst.offsetMax = new Vector2
+        {
+            x = src.offsetMax.x,
+            y = src.offsetMax.y
+        };
+    }
+
+    void SetPartyPanelPosition(PartyPanel partyPanel, RectTransform newPosition)
+    {
+        // get current position
+        RectTransform currentPosition = partyPanel.GetComponent<RectTransform>();
+        // set position has been changed flag
+        positionHasBeenChanged = true;
+        // Change to the new position
+        SetRectTransform(newPosition, currentPosition);
     }
 
     public void ActivateAdvance(MapHero mapHero)
     {
         Debug.Log("Show Party Info");
-        // clone hero panel and place it into the middle placeholder
-        CloneAndPlacePartyPanel(mapHero.LinkedPartyTr.Find("PartyPanel"), transform.Find("SinglePartyPlaceholder"));
+        //// clone hero panel and place it into the middle placeholder
+        //SetPartyPanelPosition(mapHero.LHeroParty.Find("PartyPanel"), transform.Find("SinglePartyPlaceholder"));
+        // Get Lefto Hero Party UI
+        HeroPartyUI leftHeroPartyUI = transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>();
+        // assign HeroParty to left hero party UI
+        leftHeroPartyUI.LHeroParty = mapHero.LHeroParty;
+        // Get Party Panel
+        PartyPanel partyPanel = leftHeroPartyUI.GetComponentInChildren<PartyPanel>(true);
+        // Get new position
+        RectTransform newPosition = transform.Find("SinglePartyPlaceholder").GetComponent<RectTransform>();
+        // Change Party Panel position to new
+        SetPartyPanelPosition(partyPanel, newPosition);
+        // activate left hero party UI
+        leftHeroPartyUI.gameObject.SetActive(true);
+        // deactivate inventory
+        leftHeroPartyUI.GetComponentInChildren<PartyInventoryUI>(true).gameObject.SetActive(false);
+        //// Activate placeholder to be used as background
+        //transform.Find("SinglePartyPlaceholder").gameObject.SetActive(true);
     }
 
     public void ActivateAdvance(MapCity mapCity)
     {
         Debug.Log("Show City info");
         // verify if there is a hero in the city
-        if (mapCity.LinkedPartyOnMapTr)
+        if (mapCity.LMapHero != null)
         {
-            // clone hero in city panel and place it into the left placeholder
-            MapHero mapHero = mapCity.LinkedPartyOnMapTr.GetComponent<MapHero>();
-            CloneAndPlacePartyPanel(mapHero.LinkedPartyTr.Find("PartyPanel"), transform.Find("LeftPartyInfoPlaceHolder"));
-            Debug.Log("Show linked party panel");
+            // Get Lefto Hero Party UI
+            HeroPartyUI leftHeroPartyUI = transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>();
+            // assign HeroParty to left hero party UI
+            leftHeroPartyUI.LHeroParty = mapCity.LCity.GetHeroPartyByMode(PartyMode.Party);
+            // activate left hero party UI
+            leftHeroPartyUI.gameObject.SetActive(true);
+            // deactivate inventory
+            leftHeroPartyUI.GetComponentInChildren<PartyInventoryUI>(true).gameObject.SetActive(false);
+            //// Activate placeholder to be used as background
+            //transform.Find("LeftPartyInfoPlaceHolder").gameObject.SetActive(true);
         }
         else
         {
@@ -100,9 +134,16 @@ public class PartiesInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHa
             // Display black box
             transform.Find("LeftPartyInfoPlaceHolder").gameObject.SetActive(true);
         }
-        // clone city panel and place it into the right placeholder
-        CloneAndPlacePartyPanel(mapCity.LinkedCityTr.Find("CityGarnizon/PartyPanel"), transform.Find("RightPartyInfoPlaceHolder"));
-        Debug.Log("Show city garnizon party panel " + mapCity.LinkedCityTr.name);
+        // Get Right Hero Party UI
+        HeroPartyUI rightHeroPartyUI = transform.root.Find("MiscUI/RightHeroParty").GetComponent<HeroPartyUI>();
+        // assign City garnizon HeroParty to right hero party UI
+        rightHeroPartyUI.LHeroParty = mapCity.LCity.GetHeroPartyByMode(PartyMode.Garnizon);
+        // activate right hero party UI
+        rightHeroPartyUI.gameObject.SetActive(true);
+        // deactivate inventory
+        rightHeroPartyUI.GetComponentInChildren<PartyInventoryUI>(true).gameObject.SetActive(false);
+        //// Activate placeholder to be used as background
+        //transform.Find("RightPartyInfoPlaceHolder").gameObject.SetActive(true);
     }
 
     public void OnPointerDown(PointerEventData eventData)

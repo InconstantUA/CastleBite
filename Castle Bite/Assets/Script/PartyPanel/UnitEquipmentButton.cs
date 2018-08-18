@@ -6,7 +6,7 @@ public class UnitEquipmentButton : MonoBehaviour {
 
     class OriginalState
     {
-        public bool[] FocusPanels = new bool[2] { false, false };
+        public GameObject[] FocusPanelsLinkedObject = new GameObject[2];
         public bool HireHeroPanel;
         public bool HireCommonUnitButtons;
     }
@@ -17,57 +17,73 @@ public class UnitEquipmentButton : MonoBehaviour {
     {
         // Get city transform
         // structure: 6City-5HeroParty-4PartyPanel-3Row-2Cell-1UnitEquipmentControl-EquipmentButton(this)
-        City city = transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
-        // verify if we are in a city
-        if (city)
+        //City city = transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
+        // Get city screen
+        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>(true);
+        // verify if City screen is active = we are in a city
+        if (cityScreen)
         {
+            //City city = cityScreen.City;
             // do actions for each HeroParty
-            foreach (HeroParty heroParty in city.GetComponentsInChildren<HeroParty>(true))
+            foreach (HeroPartyUI heroPartyUI in transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<HeroPartyUI>(true))
             {
-                // activate/deactivate party panel
-                heroParty.GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(doActivate);
+                // verify if heroPartyUI has linked Party
+                if (heroPartyUI.LHeroParty != null)
+                {
+                    // activate/deactivate party panel
+                    heroPartyUI.GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(doActivate);
+                }
             }
-            // activate/deactivate city control panel
-            city.GetComponentInChildren<CityControlPanel>(true).gameObject.SetActive(doActivate);
+            // activate/deactivate city control butons
+            //transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityControlPanel>(true)[0].gameObject.SetActive(doActivate);
+            transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityHealButton>(true)[0].gameObject.SetActive(doActivate);
+            transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityResurectButton>(true)[0].gameObject.SetActive(doActivate);
+            transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityDismissButton>(true)[0].gameObject.SetActive(doActivate);
             // activate/deactivate ReturnBtn
-            city.transform.Find("ReturnBtn").gameObject.SetActive(doActivate);
+            transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityBackButton>(true)[0].gameObject.SetActive(doActivate);
+            //cityScreen.transform.Find("CityBackButton").gameObject.SetActive(doActivate);
             // activate/deactivate focus panels
-            FocusPanel[] focusPanels = city.GetComponentsInChildren<FocusPanel>(true);
+            FocusPanel[] focusPanels = transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<FocusPanel>(true);
             for (int i = 0; i < focusPanels.Length; i++)
             {
                 // verify if focus panel is about to be disabled
-                if (!doActivate)
+                if (false == doActivate)
                 {
-                    // save original state of each focus panel
-                    originalState.FocusPanels[i] = focusPanels[i].gameObject.activeSelf;
+                    // save original linked object of each focus panel
+                    originalState.FocusPanelsLinkedObject[i] = focusPanels[i].focusedObject;
                     // disable focus panel
                     focusPanels[i].gameObject.SetActive(doActivate);
                 }
                 else
                 {
-                    // restore original state of the focus panel (before disable)
-                    focusPanels[i].gameObject.SetActive(originalState.FocusPanels[i]);
+                    // verify if there was linked game object to focus panel
+                    if (originalState.FocusPanelsLinkedObject[i] != null)
+                    {
+                        // restore original state of the focus panel (before disable)
+                        focusPanels[i].focusedObject = originalState.FocusPanelsLinkedObject[i];
+                        focusPanels[i].gameObject.SetActive(true);
+                    }
                 }
             }
             // activate/deactivate HireHeroPanel
-            if (!doActivate)
+            if (false == doActivate)
             {
-                originalState.HireHeroPanel = city.transform.Find("HireHeroPanel").gameObject.activeSelf;
-                city.transform.Find("HireHeroPanel").gameObject.SetActive(doActivate);
+                originalState.HireHeroPanel = transform.root.GetComponentInChildren<UIManager>().transform.Find("HireHeroPanel").gameObject.activeSelf;
+                transform.root.GetComponentInChildren<UIManager>().transform.Find("HireHeroPanel").gameObject.SetActive(doActivate);
             }
             else
             {
-                city.transform.Find("HireHeroPanel").gameObject.SetActive(originalState.HireHeroPanel);
+                transform.root.GetComponentInChildren<UIManager>().transform.Find("HireHeroPanel").gameObject.SetActive(originalState.HireHeroPanel);
             }
             // activate/deactivate HireCommonUnitButtons
-            if (!doActivate)
+            if (false == doActivate)
             {
-                originalState.HireCommonUnitButtons = city.transform.Find("HireCommonUnitButtons").gameObject.activeSelf;
-                city.transform.Find("HireCommonUnitButtons").gameObject.SetActive(doActivate);
+                originalState.HireCommonUnitButtons = transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").gameObject.activeSelf;
+                transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").gameObject.SetActive(doActivate);
             }
             else
             {
-                city.transform.Find("HireCommonUnitButtons").gameObject.SetActive(originalState.HireCommonUnitButtons);
+                transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").gameObject.SetActive(originalState.HireCommonUnitButtons);
             }
         }
     }

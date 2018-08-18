@@ -53,16 +53,19 @@ public class UIManager : MonoBehaviour {
     {
         foreach (FocusPanel focusPanel in GetComponentsInChildren<FocusPanel>())
         {
-            // verify if City is in focused game object
-            if (focusPanel.focusedObject.GetComponent<City>())
+            // verify if there is a link to focused object
+            if (focusPanel.focusedObject)
             {
-                // verify if City linked to focus panel is the same as we are searching for
-                if (focusPanel.focusedObject.GetComponent<City>().gameObject.GetInstanceID() == city.gameObject.GetInstanceID())
+                // verify if City is in focused game object
+                if (focusPanel.focusedObject.GetComponent<City>())
                 {
-                    return focusPanel;
+                    // verify if City linked to focus panel is the same as we are searching for
+                    if (focusPanel.focusedObject.GetComponent<City>().gameObject.GetInstanceID() == city.gameObject.GetInstanceID())
+                    {
+                        return focusPanel;
+                    }
                 }
             }
-            // verify if city is 
         }
         return null;
     }

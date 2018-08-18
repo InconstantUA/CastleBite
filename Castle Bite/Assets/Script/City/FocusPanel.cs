@@ -21,13 +21,13 @@ public class FocusPanel : MonoBehaviour {
         UnitsPositionChange
     }
 
-    void OnEnable()
+    public void OnEnable()
     {
         Debug.Log("Focus Panel Trigger On enable");
         InitFocusPanel();
     }
 
-    void OnDisable()
+    public void OnDisable()
     {
         Debug.Log("Focus Panel Trigger On disable");
         // reset focusedObject to null

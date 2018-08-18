@@ -179,84 +179,84 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         return transform.parent.parent.name + "/" + transform.parent.name;
     }
 
-    IEnumerator UpdateUnitEquipmentControl()
-    {
-        // .. remake it without coroutine, because it is visible how equipment button controls disappear
-        // .. or add some delay before activation of other menus
-        // verify if we are in city view and there is HeroParty parent, because this is not the case when party panel is copied to PartiesInfoPanel
-        // .. adjust logic later
-        if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>())
-        {
-            // verify if party is in party mode, because only in this mode it has leader and should have equipment button visible
-            if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>().PartyMode == PartyMode.Party)
-            {
-                // verify if there is unit in slot
-                PartyUnit partyUnit = GetUnit();
-                if (partyUnit != null)
-                {
-                    // verify if unit is leader
-                    if (partyUnit.IsLeader)
-                    {
-                        // activate equipment button
-                        //Debug.LogWarning("Enable equipment button");
-                        transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        // deactivate equipment button
-                        //Debug.LogWarning("Disable equipment button");
-                        transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
-                    }
-                }
-                else
-                {
-                    // deactivate equipment button
-                    //Debug.LogWarning("Disable equipment button");
-                    transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
-                }
-            }
-            else
-            {
-                // deactivate equipment button
-                //Debug.LogWarning("Disable equipment button");
-                transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
-            }
-        }
-        else
-        {
-            // deactivate equipment button
-            //Debug.LogWarning("Disable equipment button");
-            transform.parent.Find("UnitEquipmentControl").gameObject.SetActive(false);
-        }
-        // skip 1 frame untill child object is fully instantiated
-        yield return null;
-    }
+    //IEnumerator UpdateUnitEquipmentControl()
+    //{
+    //    // .. remake it without coroutine, because it is visible how equipment button controls disappear
+    //    // .. or add some delay before activation of other menus
+    //    // verify if we are in city view and there is HeroParty parent, because this is not the case when party panel is copied to PartiesInfoPanel
+    //    // .. adjust logic later
+    //    if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>())
+    //    {
+    //        // verify if party is in party mode, because only in this mode it has leader and should have equipment button visible
+    //        if (GetParentPartyPanel().transform.parent.GetComponent<HeroParty>().PartyMode == PartyMode.Party)
+    //        {
+    //            // verify if there is unit in slot
+    //            PartyUnitUI partyUnitUI = GetPartyUnitUI();
+    //            if (partyUnitUI != null)
+    //            {
+    //                // verify if unit is leader
+    //                if (partyUnitUI.LPartyUnit.IsLeader)
+    //                {
+    //                    // activate equipment button
+    //                    //Debug.LogWarning("Enable equipment button");
+    //                    partyUnitUI.transform.Find("UnitEquipmentControl").gameObject.SetActive(true);
+    //                }
+    //                else
+    //                {
+    //                    // deactivate equipment button
+    //                    //Debug.LogWarning("Disable equipment button");
+    //                    partyUnitUI.transform.Find("UnitEquipmentControl").gameObject.SetActive(false);
+    //                }
+    //            }
+    //            //else
+    //            //{
+    //            //    // deactivate equipment button
+    //            //    //Debug.LogWarning("Disable equipment button");
+    //            //    transform.Find("UnitEquipmentControl").gameObject.SetActive(false);
+    //            //}
+    //        }
+    //        else
+    //        {
+    //            //// deactivate equipment button
+    //            ////Debug.LogWarning("Disable equipment button");
+    //            //transform.Find("UnitEquipmentControl").gameObject.SetActive(false);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        //// deactivate equipment button
+    //        ////Debug.LogWarning("Disable equipment button");
+    //        //transform.Find("UnitEquipmentControl").gameObject.SetActive(false);
+    //    }
+    //    // skip 1 frame untill child object is fully instantiated
+    //    yield return null;
+    //}
 
-    IEnumerator UpdateUpgradeUnitControl()
-    {
-        // skip 1 frame untill child object is fully instantiated
-        yield return null;
-        // verify if there is unit in slot
-        PartyUnit partyUnit = GetUnit();
-        if (partyUnit != null)
-        {
-            //Debug.LogWarning("Enable upgrade unit + button");
-            transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(true);
-        }
-        else
-        {
-            //Debug.LogWarning("Disable upgrade unit + button");
-            transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(false);
-        }
-    }
+    //IEnumerator UpdateUpgradeUnitControl()
+    //{
+    //    // skip 1 frame untill child object is fully instantiated
+    //    yield return null;
+    //    // verify if there is unit in slot
+    //    PartyUnit partyUnit = GetUnit();
+    //    if (partyUnit != null)
+    //    {
+    //        //Debug.LogWarning("Enable upgrade unit + button");
+    //        transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(true);
+    //    }
+    //    else
+    //    {
+    //        //Debug.LogWarning("Disable upgrade unit + button");
+    //        transform.parent.Find("UpgradeUnitControl").gameObject.SetActive(false);
+    //    }
+    //}
 
     void OnTransformChildrenChanged()
     {
-        // Debug.Log("The list of children has changed");
+        Debug.Log("Unit Slot: The list of children has changed");
         if (gameObject.activeInHierarchy)
         {
-            StartCoroutine(UpdateUnitEquipmentControl());
-            StartCoroutine(UpdateUpgradeUnitControl());
+            //StartCoroutine(UpdateUnitEquipmentControl());
+            //StartCoroutine(UpdateUpgradeUnitControl());
         }
     }
 
@@ -268,27 +268,36 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
+    public PartyUnitUI GetPartyUnitUI()
+    {
+        return GetComponentInChildren<PartyUnitUI>();
+    }
+
     public PartyUnit GetUnit()
     {
-        // verify if slot has unit in it
-        if (transform.childCount > 0)
+        //// verify if slot has unit in it
+        //if (transform.childCount > 0)
+        //{
+        //    //Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " has childs");
+        //    // check whether we are in battle or in other mode
+        //    if (transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true))
+        //    {
+        //        // we are in battle mode
+        //        return transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true).GetComponentInChildren<PartyUnit>(true);
+        //    }
+        //    else
+        //    {
+        //        // we are in other mode
+        //        return transform.GetComponentInChildren<UnitDragHandler>(true).GetComponentInChildren<PartyUnit>(true);
+        //    }
+        //}
+        //else
+        //{
+        //    //Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " is empty");
+        //}
+        if (GetPartyUnitUI())
         {
-            //Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " has childs");
-            // check whether we are in battle or in other mode
-            if (transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true))
-            {
-                // we are in battle mode
-                return transform.GetComponentInChildren<UnitOnBattleMouseHandler>(true).GetComponentInChildren<PartyUnit>(true);
-            }
-            else
-            {
-                // we are in other mode
-                return transform.GetComponentInChildren<UnitDragHandler>(true).GetComponentInChildren<PartyUnit>(true);
-            }
-        }
-        else
-        {
-            //Debug.Log(transform.parent.parent.name + " " + transform.parent.name + " is empty");
+            return GetPartyUnitUI().LPartyUnit;
         }
         return null;
     }

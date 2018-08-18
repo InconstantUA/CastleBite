@@ -172,11 +172,12 @@ public class PartyPanel : MonoBehaviour {
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         // it is more reliable to use GetChild(0), because it is only one child there
         //Transform unitCanvas = changedCell.Find("UnitSlot").GetChild(0);
-        PartyUnitUI unitUI = changedCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
-        // fill in highered object UI panel
-        unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
-        changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
-        changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
+        //PartyUnitUI unitUI = changedCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
+        //// fill in highered object UI panel
+        //unitUI.SetUnitCellInfoUI();
+        //unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
+        //changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
+        //changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
         // disable hire unit button
         SetHireUnitButtonActiveByCell(false, GetCellAddressString(changedCell));
         //changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
@@ -194,33 +195,34 @@ public class PartyPanel : MonoBehaviour {
         SetHireUnitButtonActiveByCell(false, changedCell.parent.name + "/Back");
         // Update name and health information
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
-        // it is more reliable to use GetChild(0), because it is only one child there
-        Transform parentCell = changedCell.parent.Find("Wide");
-        PartyUnitUI unitUI = parentCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
+        //// it is more reliable to use GetChild(0), because it is only one child there
+        //Transform parentCell = changedCell.parent.Find("Wide");
+        //PartyUnitUI unitUI = parentCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
         // fill in highered object UI panel
-        unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
-        parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
-        parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
+        //unitUI.SetUnitCellInfoUI();
+        //unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
+        //parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
+        //parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
     }
 
-    void CleanHealthUI(Transform targetCell)
-    {
-        Color defaultColor = new Color32(128, 128, 128, 255);
-        targetCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-        targetCell.Find("HPPanel/HPcurr").GetComponent<Text>().color = defaultColor;
-        targetCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
-        targetCell.Find("HPPanel/HPmax").GetComponent<Text>().color = defaultColor;
-    }
+    //void CleanHealthUI(Transform targetCell)
+    //{
+    //    Color defaultColor = new Color32(128, 128, 128, 255);
+    //    targetCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+    //    targetCell.Find("HPPanel/HPcurr").GetComponent<Text>().color = defaultColor;
+    //    targetCell.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+    //    targetCell.Find("HPPanel/HPmax").GetComponent<Text>().color = defaultColor;
+    //}
 
     void OnDismissSingleUnit(Transform changedCell)
     {
         // it is possile that unit was dismissed
-        // Clean health information
-        CleanHealthUI(changedCell);
-        // Clean info
-        ClearInfoPanel(changedCell);
-        // Clean status
-        ClearUnitCellStatus(changedCell);
+        //// Clean health information
+        //CleanHealthUI(changedCell);
+        //// Clean info
+        //ClearInfoPanel(changedCell);
+        //// Clean status
+        //ClearUnitCellStatus(changedCell);
         // activate hire unit button if panel is in garnizon state
         if (PartyMode.Garnizon == PartyMode)
         {
@@ -232,20 +234,20 @@ public class PartyPanel : MonoBehaviour {
 
     void OnDimissDoubleUnit(Transform changedCell)
     {
-        // Clean info
-        ClearInfoPanel(changedCell);
-        // Clean status
-        ClearUnitCellStatus(changedCell);
+        //// Clean info
+        //ClearInfoPanel(changedCell);
+        //// Clean status
+        //ClearUnitCellStatus(changedCell);
         // Disable Wide panel
         changedCell.parent.Find("Wide").gameObject.SetActive(false);
         // And enable left and right panels
         changedCell.parent.Find("Front").gameObject.SetActive(true);
         changedCell.parent.Find("Back").gameObject.SetActive(true);
-        // Update name and health information
-        // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
-        // it is more reliable to use GetChild(0), because it is only one child there
-        Transform parentCell = changedCell.parent.Find("Wide");
-        CleanHealthUI(parentCell);
+        //// Update name and health information
+        //// UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
+        //// it is more reliable to use GetChild(0), because it is only one child there
+        //Transform parentCell = changedCell.parent.Find("Wide");
+        //CleanHealthUI(parentCell);
         // activate hire unit buttons on left and right cells if panel is in garnizon state
         if (PartyMode.Garnizon == PartyMode)
         {
@@ -337,7 +339,8 @@ public class PartyPanel : MonoBehaviour {
     {
         Transform unitPanel;
         Transform unitSlot;
-        PartyUnit unit;
+        //PartyUnitUI unitUI;
+        //PartyUnit unit;
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
@@ -348,12 +351,12 @@ public class PartyPanel : MonoBehaviour {
                 // if (unitSlot.childCount > 0)
                 if (unitSlot.GetComponentInChildren<UnitDragHandler>())
                 {
-                    // verify if unit has isLeader atrribute ON
-                    unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                    // fill in highered object UI panel
-                    unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
-                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
-                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
+                    unitSlot.GetComponentInChildren<PartyUnitUI>().SetUnitCellInfoUI();
+                    //unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+                    //// fill in highered object UI panel
+                    //unitSlot.GetChild(0).Find("Name").GetComponent<Text>().text = unit.GetUnitDisplayName();
+                    //unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = unit.UnitHealthCurr.ToString();
+                    //unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = unit.UnitHealthMax.ToString();
                     // deactivate hire unit button if panel is in garnizon state and this left or right single panel
                     if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
                     {
@@ -370,9 +373,9 @@ public class PartyPanel : MonoBehaviour {
                 else
                 {
                     // it is possile that unit was dismissed
-                    // clean health information
-                    unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
-                    unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
+                    //// clean health information
+                    //unitPanel.Find("HPPanel/HPcurr").GetComponent<Text>().text = "";
+                    //unitPanel.Find("HPPanel/HPmax").GetComponent<Text>().text = "";
                     // activate hire unit button if panel is in garnizon state and this left or right single panel
                     if ((PartyMode.Garnizon == PartyMode) && (("Front" == cell) || ("Back" == cell)))
                     {
@@ -388,7 +391,7 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // we need to disable Wide panel, because it is still enabled and placed on top of single panels
                         unitPanel.parent.Find("Wide").gameObject.SetActive(false);
-                        // and enable left and right panels
+                        // and enable Front and Back panels
                         unitPanel.parent.Find("Front").gameObject.SetActive(true);
                         unitPanel.parent.Find("Back").gameObject.SetActive(true);
                     }
@@ -398,32 +401,6 @@ public class PartyPanel : MonoBehaviour {
     }
 
     #region Verify capacity
-
-    public PartyUnit GetPartyLeader()
-    {
-        // find leader unit
-        foreach (string horisontalPanel in horisontalPanels)
-        {
-            foreach (string cell in cells)
-            {
-                // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
-                {
-                    // Debug.Log("Slot address: " + unitSlot.parent.parent.parent.parent.parent.name + " " + unitSlot.parent.parent.parent.parent.name + " " + unitSlot.parent.parent.parent.name + " " + horisontalPanel + " " + cell);
-                    // verify if unit has isLeader atrribute ON
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                    // Debug.Log(unit.UnitName);
-                    if (unit.IsLeader)
-                    {
-                        return unit;
-                    }
-                }
-            }
-        }
-        Debug.LogError("No Leader in party.");
-        return null;
-    }
 
     int GetCapacity()
     {
@@ -448,7 +425,7 @@ public class PartyPanel : MonoBehaviour {
             }
         } else
         {
-            capacity = GetPartyLeader().GetEffectiveLeadership() + 1; // +1 because we do not count leader
+            capacity = GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().GetEffectiveLeadership() + 1; // +1 because we do not count leader
         }
         return capacity;
     }
@@ -2111,44 +2088,48 @@ public class PartyPanel : MonoBehaviour {
         Debug.Log("ApplyResurectPower");
     }
 
-    void ClearInfoPanel(Transform changedCell)
-    {
-        Color32 defaultColor = new Color32(180, 180, 180, 255);
-        Text infoPanelTxt = changedCell.Find("InfoPanel").GetComponent<Text>();
-        infoPanelTxt.text = "";
-        infoPanelTxt.color = defaultColor;
-    }
+    //void ClearInfoPanel(Transform changedCell)
+    //{
+    //    Color32 defaultColor = new Color32(180, 180, 180, 255);
+    //    Text infoPanelTxt = changedCell.Find("InfoPanel").GetComponent<Text>();
+    //    infoPanelTxt.text = "";
+    //    infoPanelTxt.color = defaultColor;
+    //}
 
-    void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
-    {
-        ClearInfoPanel(partyPanelTr.Find(horisontalPanel).Find(cell));
-    }
+    //void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
+    //{
+    //    ClearInfoPanel(partyPanelTr.Find(horisontalPanel).Find(cell));
+    //}
 
-    public void ResetUnitCellInfoPanel(Transform partyPanel)
+    public void ResetUnitCellInfoPanel()
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (PartyUnitUI partyUnitUI in GetComponentsInChildren<PartyUnitUI>())
         {
-            foreach (string cell in cells)
-            {
-                // Unit canvas (and unit) is present
-                // verify if slot has an unit in it
-                Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
-                {
-                    //// get unit for later checks
-                    //PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                    //// verify if unit is alive and did not flee from battle
-                    //if (unit.GetIsAlive() && !unit.GetHasEscaped())
-                    //{
-                        // clear both info panels
-                        ClearInfoPanel(partyPanel, horisontalPanel, cell);
-                    //}
-                }
-            }
+            partyUnitUI.ClearUnitInfoPanel();
         }
-    }
+            //foreach (string horisontalPanel in horisontalPanels)
+            //{
+            //    foreach (string cell in cells)
+            //    {
+            //        // Unit canvas (and unit) is present
+            //        // verify if slot has an unit in it
+            //        Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+            //        if (unitSlot.childCount > 0)
+            //        {
+            //            //// get unit for later checks
+            //            //PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+            //            //// verify if unit is alive and did not flee from battle
+            //            //if (unit.GetIsAlive() && !unit.GetHasEscaped())
+            //            //{
+            //                // clear both info panels
+            //                //ClearInfoPanel(partyPanel, horisontalPanel, cell);
+            //            //}
+            //        }
+            //    }
+            //}
+        }
 
-    public void ResetUnitCellHighlight()
+        public void ResetUnitCellHighlight()
     {
         foreach (string horisontalPanel in horisontalPanels)
         {
@@ -2185,56 +2166,77 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    void ClearUnitCellStatus(Transform targetCell)
-    {
-        Color32 defaultColor = new Color32(180, 180, 180, 255);
-        Text infoPanelTxt = targetCell.Find("Status").GetComponent<Text>();
-        infoPanelTxt.text = "";
-        infoPanelTxt.color = defaultColor;
-    }
+    //void ClearUnitCellStatus(Transform targetCell)
+    //{
+    //    Color32 defaultColor = new Color32(180, 180, 180, 255);
+    //    Text infoPanelTxt = targetCell.Find("UnitStatus").GetComponent<Text>();
+    //    infoPanelTxt.text = "";
+    //    infoPanelTxt.color = defaultColor;
+    //}
 
-    void ClearUnitCellStatus(Transform partyPanelTr, string horisontalPanel, string cell)
-    {
-        ClearUnitCellStatus(partyPanelTr.Find(horisontalPanel).Find(cell));
-    }
+    //void ClearUnitCellStatus(Transform partyPanelTr, string horisontalPanel, string cell)
+    //{
+    //    ClearUnitCellStatus(partyPanelTr.Find(horisontalPanel).Find(cell));
+    //}
 
     public void ResetUnitCellStatus(string[] exceptions)
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (PartyUnitUI partyUnitUI in GetComponentsInChildren<PartyUnitUI>())
         {
-            foreach (string cell in cells)
+            // Do not remove some statuses, because they should persist
+            // Verify if it is in exceptions
+            bool itIsException = false;
+            string partyUnitStatusText = partyUnitUI.GetUnitStatusText().text;
+            foreach (string exception in exceptions)
             {
-                // Unit canvas (and unit) is present
-                // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
+                if (exception == partyUnitStatusText)
                 {
-                    // Do not remove some statuses, because they should persist
-                    // Verify if it is in exceptions
-                    Text unitStatus = unitSlot.parent.Find("Status").GetComponent<Text>();
-                    bool itIsException = false;
-                    foreach (string exception in exceptions)
-                    {
-                        if (exception == unitStatus.text)
-                        {
-                            itIsException = true;
-                        }
-                    }
-                    if (!itIsException)
-                    {
-                        // Clear status in UI, because it is not in exceptions list
-                        ClearUnitCellStatus(transform, horisontalPanel, cell);
-                        // Reset status in unit
-                        unitSlot.GetComponentInChildren<PartyUnitUI>().SetUnitStatus(UnitStatus.Active);
-                    }
+                    itIsException = true;
                 }
             }
+            if (!itIsException)
+            {
+                // Clear status in UI, because it is not in exceptions list
+                partyUnitUI.ClearPartyUnitStatusUI();
+                // Reset status in unit
+                partyUnitUI.SetUnitStatus(UnitStatus.Active);
+            }
         }
+        //foreach (string horisontalPanel in horisontalPanels)
+        //{
+        //    foreach (string cell in cells)
+        //    {
+        //        // Unit canvas (and unit) is present
+        //        // verify if slot has an unit in it
+        //        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+        //        if (unitSlot.childCount > 0)
+        //        {
+        //            // Do not remove some statuses, because they should persist
+        //            // Verify if it is in exceptions
+        //            Text unitStatus = unitSlot.parent.Find("UnitStatus").GetComponent<Text>();
+        //            bool itIsException = false;
+        //            foreach (string exception in exceptions)
+        //            {
+        //                if (exception == unitStatus.text)
+        //                {
+        //                    itIsException = true;
+        //                }
+        //            }
+        //            if (!itIsException)
+        //            {
+        //                // Clear status in UI, because it is not in exceptions list
+        //                ClearUnitCellStatus(transform, horisontalPanel, cell);
+        //                // Reset status in unit
+        //                unitSlot.GetComponentInChildren<PartyUnitUI>().SetUnitStatus(UnitStatus.Active);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     //void ClearUnitCellBuffsOrDebuffs(Transform partyPanelTr, string horisontalPanel, string cell, string whatToRemove)
     //{
-    //    UnitBuffIndicator[] allBuffs = partyPanelTr.Find(horisontalPanel + "/" + cell + "/" + "Status/" + whatToRemove).GetComponentsInChildren<UnitBuffIndicator>();
+    //    UnitBuffIndicator[] allBuffs = partyPanelTr.Find(horisontalPanel + "/" + cell + "/" + "UnitStatus/" + whatToRemove).GetComponentsInChildren<UnitBuffIndicator>();
     //    foreach (UnitBuffIndicator buff in allBuffs)
     //    {
     //        Destroy(buff.gameObject);
@@ -2259,55 +2261,10 @@ public class PartyPanel : MonoBehaviour {
         }
         //yield return null;
     }
-
-
-    //void ApplyDestructiveAbility(PartyUnit dstUnit)
-    //{
-    //    // damage destination unit
-    //    int damageDealt = GetDamageDealt(dstUnit);
-    //    int healthAfterDamage = dstUnit.UnitHealthCurr - damageDealt;
-    //    // make sure that we do not set health less then 0
-    //    if (healthAfterDamage <= 0)
-    //    {
-    //        healthAfterDamage = 0;
-    //    }
-    //    dstUnit.UnitHealthCurr = (healthAfterDamage);
-    //    // update current health in UI
-    //    // structure: 3[Front/Back/Wide]cell-2UnitSlot/HPPanel-1UnitCanvas-dstUnit
-    //    // structure: [Front/Back/Wide]cell-UnitSlot/HPPanel-HPcurr
-    //    // Transform cell = dstUnit.GetUnitCell();
-    //    Text currentHealth = dstUnit.GetUnitCurrentHealthText();
-    //    currentHealth.text = healthAfterDamage.ToString();
-    //    // verify if unit is dead
-    //    if (0 == healthAfterDamage)
-    //    {
-    //        // set unit is dead attribute
-    //        dstUnit.SetUnitStatus(UnitStatus.Dead);
-    //        // set color ui more darker
-    //        Color32 newUIColor = dstUnit.GetUnitStatusColor();
-    //        currentHealth.color = newUIColor;
-    //        Text maxHealth = dstUnit.GetUnitMaxHealthText();
-    //        maxHealth.color = newUIColor;
-    //        // set cell canvas to be more darker
-    //        Text cellCanvas = dstUnit.GetUnitCanvasText();
-    //        cellCanvas.color = newUIColor;
-    //        // set dead in status
-    //        Text statusPanel = dstUnit.GetUnitStatusText();
-    //        statusPanel.text = dstUnit.GetUnitStatusString();
-    //        statusPanel.color = newUIColor;
-    //        // clear unit buffs and debuffs
-    //        dstUnit.RemoveAllBuffsAndDebuffs();
-    //    }
-    //    // display damage dealt in info panel
-    //    Text infoPanel = dstUnit.GetUnitInfoPanelText();
-    //    infoPanel.text = "-" + damageDealt + " health";
-    //    infoPanel.color = Color.red;
-    //}
-
-    void ApplyDestructivePowerToSingleUnit(PartyUnitUI dstUnitUI)
+    
+        void ApplyDestructivePowerToSingleUnit(PartyUnitUI dstUnitUI)
     {
         //Debug.Log("ApplyDestructivePowerToSingleUnit");
-        // ApplyDestructiveAbility(dstUnit);
         dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetAbilityDamageDealt(activeBattleUnitUI.LPartyUnit));
         ApplyUniquePowerModifiersToSingleUnit(dstUnitUI);
     }
@@ -2416,7 +2373,6 @@ public class PartyPanel : MonoBehaviour {
                         //}
                     }
                 }
-
             }
         }
     }
@@ -2424,8 +2380,8 @@ public class PartyPanel : MonoBehaviour {
     public void ApplyPowersToUnit(PartyUnitUI dstUnitUI)
     {
         // reset cell info panel beforehand, for both parties, to clean up previous information
-        ResetUnitCellInfoPanel(transform);
-        ResetUnitCellInfoPanel(activeBattleUnitUI.GetUnitPartyPanel().transform);
+        ResetUnitCellInfoPanel();
+        activeBattleUnitUI.GetUnitPartyPanel().ResetUnitCellInfoPanel();
         // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
         // but still the power should be applied
         if (dstUnitUI)
@@ -2622,15 +2578,6 @@ public class PartyPanel : MonoBehaviour {
     //    unit.UnitPower = (unit.UnitPower + unit.UnitPowerIncrementOnLevelUp);
     //}
 
-    void ResetUnitStatsToMax(PartyUnitUI unitUI)
-    {
-        // this is done on lvl up
-        unitUI.LPartyUnit.UnitHealthCurr = (unitUI.LPartyUnit.UnitHealthMax);
-        // update panel
-        unitUI.GetUnitCell().Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
-        unitUI.GetUnitCell().Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
-    }
-
     //void UpgradeUnitClass(PartyUnit unit)
     //{
     //    // this is done on lvl up
@@ -2644,7 +2591,7 @@ public class PartyPanel : MonoBehaviour {
         // add upgrade point to the unit
         unitUI.LPartyUnit.UnitUpgradePoints += 1;
         // reset unit stats to maximum and reset experience counter
-        ResetUnitStatsToMax(unitUI);
+        unitUI.ResetUnitHealthToMax();
         // reset his experience to 0
         unitUI.LPartyUnit.UnitExperience = 0;
         // and increment his level
@@ -2711,8 +2658,8 @@ public class PartyPanel : MonoBehaviour {
                         // add experience to the unit
                         int newUnitExperienceValue = unitUI.LPartyUnit.UnitExperience + experiencePerUnit;
                         // verify if unit has not reached new level
-                        Text infoPanel = unitUI.GetUnitCell().Find("InfoPanel").GetComponent<Text>();
-                        Text statusPanel = unitUI.GetUnitCell().Find("Status").GetComponent<Text>();
+                        Text infoPanel = unitUI.GetUnitInfoPanelText();
+                        Text statusPanel = unitUI.GetUnitStatusText();
                         if (newUnitExperienceValue < unitUI.LPartyUnit.UnitExperienceRequiredToReachNewLevel)
                         {
                             // unit has not reached new level
@@ -2755,7 +2702,7 @@ public class PartyPanel : MonoBehaviour {
                     if (unitSlot.childCount > 0)
                     {
                         // change infoPanel transparancy
-                        Text infoPanel = unitSlot.GetComponentInChildren<PartyUnitUI>().GetUnitCell().Find("InfoPanel").GetComponent<Text>();
+                        Text infoPanel = unitSlot.GetComponentInChildren<PartyUnitUI>().GetUnitInfoPanelText();
                         Color c = infoPanel.color;
                         c.a = f;
                         infoPanel.color = c;

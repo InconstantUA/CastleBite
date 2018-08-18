@@ -48,15 +48,15 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
     {
         // Debug.Log("Swap 2 cells: " + srcCellTr.name + " > " + dstCellTr.name);
         // swap all relevan cells content and states
-        // swap HPPanel values
-        string srcHPcurr = srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
-        string dstHPcurr = dstCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
-        srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text = dstHPcurr;
-        dstCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text = srcHPcurr;
-        string srcHPmax = srcCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text;
-        string dstHPmax = dstCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text;
-        srcCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text = dstHPmax;
-        dstCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text = srcHPmax;
+        //// swap HPPanel values
+        //string srcHPcurr = srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
+        //string dstHPcurr = dstCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
+        //srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text = dstHPcurr;
+        //dstCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text = srcHPcurr;
+        //string srcHPmax = srcCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text;
+        //string dstHPmax = dstCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text;
+        //srcCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text = dstHPmax;
+        //dstCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text = srcHPmax;
         // swap UnitCanvas
         UnitDragHandler srcUnitCanvas = srcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
         UnitDragHandler dstUnitCanvas = dstCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();

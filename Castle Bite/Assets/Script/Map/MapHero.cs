@@ -10,8 +10,8 @@ public class MapHero : MonoBehaviour
     State state;
 
     [SerializeField]
-    private Transform linkedPartyTr;
-    public Transform linkedCityOnMapTr;
+    private HeroParty lHeroParty;
+    public MapCity lMapCity;
     [SerializeField]
     public float labelDimTimeout;
     // for animation
@@ -31,16 +31,16 @@ public class MapHero : MonoBehaviour
     // for path finding
     //Vector2 heroTilePosition;
 
-    public Transform LinkedPartyTr
+    public HeroParty LHeroParty
     {
         get
         {
-            return linkedPartyTr;
+            return lHeroParty;
         }
 
         set
         {
-            linkedPartyTr = value;
+            lHeroParty = value;
             UpdateLabelText();
         }
     }
@@ -52,7 +52,7 @@ public class MapHero : MonoBehaviour
         // update linked party transform if it is already predefined
         // - this is predefined of object alreayd created on the map
         // - this is set autmoatically when new party leader is highered
-        if (linkedPartyTr)
+        if (lHeroParty)
         {
             UpdateLabelText();
         }
@@ -63,7 +63,7 @@ public class MapHero : MonoBehaviour
         // set label
         //label = GetComponentInChildren<MapObjectLabel>();
         // set label text
-        PartyUnit leaderUnit = linkedPartyTr.GetComponentInChildren<PartyPanel>().GetPartyLeader();
+        PartyUnit leaderUnit = lHeroParty.GetPartyLeader();
         string givenName = leaderUnit.GivenName;
         string unitName = leaderUnit.UnitName;
         GetComponentInChildren<MapObjectLabel>().LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
@@ -278,7 +278,8 @@ public class MapHero : MonoBehaviour
         inputBlocker.SetActive(false);
         // Move edited hero to HeroEditScreen
         Transform heroEditScreenTr = transform.root.Find("MiscUI/HeroEditScreen");
-        linkedPartyTr.SetParent(heroEditScreenTr);
+        Debug.LogError("Line below will lead to error fix it. We should not place hero party to hero edit screen.");
+        lHeroParty.transform.SetParent(heroEditScreenTr);
         // map manager change to browse mode back
         // . - this is done by OnDisable() automatically in MapManager
         //MapManager mapManager = transform.parent.GetComponent<MapManager>();

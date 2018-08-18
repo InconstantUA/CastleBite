@@ -40,7 +40,7 @@ public class HeroParty : MonoBehaviour {
     //[SerializeField]
     //PartyMode partyMode;
     [SerializeField]
-    MapHero linkedPartyOnMap;
+    MapHero lMapHero;
     //public enum PartyPlace { Map, City };
     //[SerializeField]
     //PartyPlace partyPlace;
@@ -91,7 +91,7 @@ public class HeroParty : MonoBehaviour {
             else
             {
                 // verify if linked party on map is defined
-                if (linkedPartyOnMap == null)
+                if (lMapHero == null)
                 {
                     Debug.LogError("Linked party on map is null");
                     // return default position
@@ -108,24 +108,14 @@ public class HeroParty : MonoBehaviour {
                     //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
                     return new PartyMapPosition
                     {
-                        offsetMinX = linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x,
-                        offsetMinY = linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y,
-                        offsetMaxX = linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x,
-                        offsetMaxY = linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y
+                        offsetMinX = lMapHero.GetComponent<RectTransform>().offsetMin.x,
+                        offsetMinY = lMapHero.GetComponent<RectTransform>().offsetMin.y,
+                        offsetMaxX = lMapHero.GetComponent<RectTransform>().offsetMax.x,
+                        offsetMaxY = lMapHero.GetComponent<RectTransform>().offsetMax.y
                     };
                 }
             }
         }
-    }
-
-    public void SetLinkedPartyOnMap(MapHero value)
-    {
-        linkedPartyOnMap = value;
-    }
-
-    public MapHero GetLinkedPartyOnMap()
-    {
-        return linkedPartyOnMap;
     }
 
     public string GetPartyUIAddress(string address = "")
@@ -141,6 +131,20 @@ public class HeroParty : MonoBehaviour {
             address = parentTransform.name + "/" + address;
         }
         return address;
+    }
+
+    public PartyUnit GetPartyLeader()
+    {
+        // find leader unit
+        foreach(PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
+        {
+            if (partyUnit.IsLeader)
+            {
+                return partyUnit;
+            }
+        }
+        Debug.LogError("No Leader in party.");
+        return null;
     }
 
     public PartyData PartyData
@@ -208,4 +212,16 @@ public class HeroParty : MonoBehaviour {
         }
     }
 
+    public MapHero LMapHero
+    {
+        get
+        {
+            return lMapHero;
+        }
+
+        set
+        {
+            lMapHero = value;
+        }
+    }
 }

@@ -17,8 +17,8 @@ public class LoadGame : MonoBehaviour
     GameObject heroPartyTemplate;
     [SerializeField]
     GameObject cityGarnizonTemplate;
-    [SerializeField]
-    GameObject unitCanvasTemplate;
+    //[SerializeField]
+    //GameObject unitCanvasTemplate;
     [SerializeField]
     GameObject heroPartyOnMapTemplate;
     string fullFilePath;
@@ -137,10 +137,10 @@ public class LoadGame : MonoBehaviour
         foreach(HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
         {
             // verify if there is linked party on map
-            if (heroParty.GetLinkedPartyOnMap() != null)
+            if (heroParty.LMapHero != null)
             {
                 // destroy hero party on map
-                Destroy(heroParty.GetLinkedPartyOnMap().gameObject);
+                Destroy(heroParty.LMapHero.gameObject);
             }
             // destroy hero party
             Destroy(heroParty.gameObject);
@@ -172,7 +172,7 @@ public class LoadGame : MonoBehaviour
             // set hero party data
             newHeroParty.PartyData = partyData;
             // get party panel
-            PartyPanel partyPanel = newHeroParty.GetComponentInChildren<PartyPanel>();
+            //PartyPanel partyPanel = newHeroParty.GetComponentInChildren<PartyPanel>();
             // set party panel data
             //partyPanel.PartyPanelData = partyData.partyPanelData;
             // create units
@@ -183,10 +183,12 @@ public class LoadGame : MonoBehaviour
                 if (unitTemplate != null)
                 {
                     Debug.Log("Creating unit of [" + partyUnitData.unitType + "] type from " + unitTemplate.name + " template");
-                    // create unit canvas in unit slot
-                    GameObject unitCanvas = Instantiate(unitCanvasTemplate, partyPanel.transform.Find(partyUnitData.unitCellAddress + "/UnitSlot"));
-                    // create unit in canvas
-                    Instantiate(unitTemplate, unitCanvas.transform);
+                    // create unit in HeroParty
+                    Instantiate(unitTemplate, newHeroParty.transform).GetComponent<PartyUnit>();
+                    //// create unit canvas in unit slot
+                    //PartyUnitUI partyUnitUI = Instantiate(unitCanvasTemplate, partyPanel.transform.Find(partyUnitData.unitCellAddress + "/UnitSlot")).GetComponent<PartyUnitUI>();
+                    //// link unit to unit canvas
+                    //partyUnitUI.LPartyUnit = partyUnit;
                 }
             }
             // activate hero party
@@ -206,8 +208,8 @@ public class LoadGame : MonoBehaviour
                 newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
                 newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
                 // create links between party on map and hero party
-                newPartyOnMap.LinkedPartyTr = newHeroParty.transform;
-                newHeroParty.SetLinkedPartyOnMap(newPartyOnMap);
+                newPartyOnMap.LHeroParty = newHeroParty;
+                newHeroParty.LMapHero = (newPartyOnMap);
                 // activate hero on map
                 newPartyOnMap.gameObject.SetActive(true);
             }
