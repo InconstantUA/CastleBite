@@ -169,13 +169,6 @@ public class BattleScreen : MonoBehaviour {
         // set if party can escape based on its original position
         playerHeroParty.CanEscapeFromBattle = CanEscape(playerHeroParty.PreBattleParentTr);
         enemyHeroParty.CanEscapeFromBattle = CanEscape(enemyHeroParty.PreBattleParentTr);
-        // Get parties panels
-        playerPartyPanel = playerHeroPartyUI.GetComponentInChildren<PartyPanel>();
-        enemyPartyPanel = enemyHeroPartyUI.GetComponentInChildren<PartyPanel>();
-        // Set if parties panels are AI or player controllable
-        // .. do it automatically in future, based on ...
-        playerPartyPanel.IsAIControlled = false;
-        enemyPartyPanel.IsAIControlled = false;
         // Get parties leaders
         PartyUnit playerPartyLeader = playerHeroParty.GetPartyLeader();
         PartyUnit enemyPartyLeader = enemyHeroParty.GetPartyLeader();
@@ -185,6 +178,13 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyPartyLeader.gameObject;
         // Activate all needed UI at once
         SetCommonBattleUIActive(true);
+        // Get parties panels
+        playerPartyPanel = playerHeroPartyUI.GetComponentInChildren<PartyPanel>();
+        enemyPartyPanel = enemyHeroPartyUI.GetComponentInChildren<PartyPanel>();
+        // Set if parties panels are AI or player controllable
+        // .. do it automatically in future, based on ...
+        playerPartyPanel.IsAIControlled = false;
+        enemyPartyPanel.IsAIControlled = false;
         // activate this battle sreen
         gameObject.SetActive(true);
         // Set turn phase to main phase
