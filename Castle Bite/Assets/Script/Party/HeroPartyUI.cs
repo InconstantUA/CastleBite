@@ -33,8 +33,6 @@ public class HeroPartyUI : MonoBehaviour {
         newUnitCanvasGO.GetComponent<PartyUnitUI>().LPartyUnit = partyUnit;
         // enable new unit canvas
         newUnitCanvasGO.SetActive(true);
-        //// deactivate hire unit button
-        //partyPanel.SetHireUnitButtonActiveByCell()
     }
 
     void LinkPartyUnitsToUI()

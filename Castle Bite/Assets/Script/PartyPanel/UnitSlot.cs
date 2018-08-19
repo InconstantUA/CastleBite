@@ -74,7 +74,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             // on right mouse click
             // show unit info
-            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit);
+            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInChildren<PartyUnitUI>().LPartyUnit);
         }
     }
 
@@ -319,23 +319,23 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     #region OnClick
 
-    City GetParentCity()
-    {
-        // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
-        return transform.parent.parent.parent.parent.parent.GetComponent<City>();
-    }
+    //City GetParentCity()
+    //{
+    //    // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
+    //    return transform.parent.parent.parent.parent.parent.GetComponent<City>();
+    //}
 
-    BattleScreen GetParentBattleScreen()
-    {
-        // structure: 5[BattleScreen]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
-        return transform.parent.parent.parent.parent.parent.GetComponent<BattleScreen>();
-    }
+    //BattleScreen GetParentBattleScreen()
+    //{
+    //    // structure: 5[BattleScreen]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
+    //    return transform.parent.parent.parent.parent.parent.GetComponent<BattleScreen>();
+    //}
 
-    PartyPanel GetParentPartyPanel()
-    {
-        // structure: 3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
-        return transform.parent.parent.parent.GetComponent<PartyPanel>();
-    }
+    //PartyPanel GetParentPartyPanel()
+    //{
+    //    // structure: 3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
+    //    return transform.parent.parent.parent.GetComponent<PartyPanel>();
+    //}
 
     void ActOnCityClick()
     {
@@ -394,7 +394,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void ActOnBattleScreenClick()
     {
-        BattleScreen battleScreen = GetParentBattleScreen();
+        BattleScreen battleScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>();
         // Verify if battle has not ended
         if (!battleScreen.GetBattleHasEnded())
         {
@@ -403,7 +403,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (isAllowedToApplyPowerToThisUnit)
             {
                 // it is allowed to apply powers to the unit in this cell
-                GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+                // GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+                GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
                 // set unit has moved flag
                 battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = (true);
                 // activate next unit
@@ -426,23 +427,28 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //  - in battle
         UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
         // verify if CityScreen is active
-        if (uiManager.GetComponentInChildren<CityScreen>(false))
+        if (uiManager.GetComponentInChildren<CityScreen>(false) != null)
         {
             ActOnCityClick();
         }
         // verify if HeroEditScreen is active
-        else if (uiManager.GetComponentInChildren<HeroEditScreen>(false))
+        else if (uiManager.GetComponentInChildren<HeroEditScreen>(false) != null)
         {
             ActOnCityClick();
         }
         // verify if Battle screen is active
-        else if (GetParentBattleScreen() != null)
+        else if (uiManager.GetComponentInChildren<BattleScreen>(false) != null)
         {
             ActOnBattleScreenClick();
         }
+        // verify if PartiesInfoPanel is active
+        else if (uiManager.GetComponentInChildren<PartiesInfoPanel>(false) != null)
+        {
+            Debug.Log("Act on PartiesInfoPanel active");
+        }
         else
         {
-            Debug.Log("No or unknown active screen");
+            Debug.LogError("No or unknown active screen");
         }
     }
 

@@ -66,7 +66,7 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         // activate map view
         Debug.Log("Exit");
-        BattleScreen battleScreen = transform.parent.GetComponent<BattleScreen>();
+        BattleScreen battleScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>();
         switch (exitOption)
         {
             case ExitOption.DestroyPlayer:
@@ -88,8 +88,6 @@ public class BattleExit : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 Debug.LogError("Unknown exit option.");
                 break;
         }
-        //// Activate map screen
-        //transform.root.Find("MapScreen").gameObject.SetActive(true);
     }
 
 }

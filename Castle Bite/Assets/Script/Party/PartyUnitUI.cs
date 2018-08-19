@@ -32,6 +32,14 @@ public class PartyUnitUI : MonoBehaviour {
         UpdateUnitEquipmentControl();
         // Update Unit Upgrade button
         UpdateUpgradeUnitControl();
+        // Set required PartyUnit handlers
+        SetPartyUnitHandlersActive(true);
+    }
+
+    void OnDisable()
+    {
+        // Remove required PartyUnit handlers
+        SetPartyUnitHandlersActive(false);
     }
 
     void OnTransformChildrenChanged()
@@ -40,10 +48,57 @@ public class PartyUnitUI : MonoBehaviour {
         UpdateUnitCellInfo();
     }
 
+    void SetPartyUnitCityScreenHandlersActive(bool doActivate)
+    {
+        if (doActivate)
+        {
+            // add UnitOnBattleMouseHandler Component
+            gameObject.AddComponent<UnitDragHandler>();
+        }
+        else
+        {
+            // remove UnitOnBattleMouseHandler Component
+            Destroy(GetComponent<UnitDragHandler>());
+        }
+    }
+
+    void SetPartyUnitBattleScreenHandlersActive(bool doActivate)
+    {
+        if (doActivate)
+        {
+            // add UnitOnBattleMouseHandler Component
+            gameObject.AddComponent<UnitOnBattleMouseHandler>();
+        }
+        else
+        {
+            // remove UnitOnBattleMouseHandler Component
+            Destroy(GetComponent<UnitOnBattleMouseHandler>());
+        }
+    }
+
+    void SetPartyUnitHandlersActive(bool doActivate)
+    {
+        // verify if we are in city screen view
+        if (GetComponentInParent<UIManager>().GetComponentInChildren<CityScreen>())
+        {
+            SetPartyUnitCityScreenHandlersActive(doActivate);
+        }
+        else if (GetComponentInParent<UIManager>().GetComponentInChildren<BattleScreen>())
+        {
+            SetPartyUnitBattleScreenHandlersActive(doActivate);
+        }
+    }
+
     public Transform GetUnitCell()
     {
         // structure: 2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(this with link to Unit)
         return transform.parent.parent;
+    }
+
+    public Transform GetUnitRow()
+    {
+        // structure: 3[Top/Middle/Bottom]Row-2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(this with link to Unit)
+        return transform.parent.parent.parent;
     }
 
     #region Unit Info Panel
@@ -87,6 +142,12 @@ public class PartyUnitUI : MonoBehaviour {
     public Transform GetUnitDebuffsPanel()
     {
         return transform.Find("UnitStatus/Debuffs");
+    }
+
+    public string GetUnitCellAddress()
+    {
+        // structure: PartyPanel-3[Top/Middle/Bottom]-2[Front/Back/Wide]-1UnitSlot-PartyUnitUI(this)
+        return transform.parent.parent.parent.name + "/" + transform.parent.parent.name;
     }
 
     public void ClearPartyUnitStatusUI()

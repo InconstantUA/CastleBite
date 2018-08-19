@@ -396,7 +396,7 @@ public class CityScreen : MonoBehaviour {
     bool VerifyDoubleUnitHire(Transform callerCell, PartyUnit selectedUnit)
     {
         bool result = false;
-        PartyPanel partyPanel = transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true);
+        PartyPanel partyPanel = transform.GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon, false).GetComponentInChildren<PartyPanel>(true);
         // if all checks passed, then verify result is success
         // verify that we do not get more units, then city can keep
         bool cityCapacityOverflowCheckIsOK = partyPanel.VerifyCityCapacityOverflowOnDoubleUnitHire();

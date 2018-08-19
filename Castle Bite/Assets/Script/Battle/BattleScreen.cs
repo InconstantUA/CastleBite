@@ -267,11 +267,11 @@ public class BattleScreen : MonoBehaviour {
         // set battle has started
         battleHasEnded = false;
         // deactivate hero edit click and drag handler
-        playerPartyPanel.SetOnEditClickHandler(false);
-        enemyPartyPanel.SetOnEditClickHandler(false);
+        //playerPartyPanel.SetOnEditClickHandler(false);
+        //enemyPartyPanel.SetOnEditClickHandler(false);
         // activate battle click handler, which will react on clicks
-        playerPartyPanel.SetOnBattleClickHandler(true);
-        enemyPartyPanel.SetOnBattleClickHandler(true);
+        //playerPartyPanel.SetOnBattleClickHandler(true);
+        //enemyPartyPanel.SetOnBattleClickHandler(true);
         // do battle until some party wins or other party flee
         if (!StartTurn())
         {
@@ -287,14 +287,14 @@ public class BattleScreen : MonoBehaviour {
 
     void DefaultOnBattleExit()
     {
-        // if hero is still alive, then set click handler to edit mode
-        if (GetBattleExitButton().GetExitOption() != BattleExit.ExitOption.DestroyPlayer)
-        {
-            // activate hero edit click and drag handler
-            playerPartyPanel.SetOnEditClickHandler(true);
-            // deactivate battle click handler, which will react on clicks
-            playerPartyPanel.SetOnBattleClickHandler(false);
-        }
+        //// if hero is still alive, then set click handler to edit mode
+        //if (GetBattleExitButton().GetExitOption() != BattleExit.ExitOption.DestroyPlayer)
+        //{
+        //    // activate hero edit click and drag handler
+        //    playerPartyPanel.SetOnEditClickHandler(true);
+        //    // deactivate battle click handler, which will react on clicks
+        //    playerPartyPanel.SetOnBattleClickHandler(false);
+        //}
         // Activate other required screen based on the original parties location
         // Always start with map screen, no matter where battle took place
         // Enable map screen

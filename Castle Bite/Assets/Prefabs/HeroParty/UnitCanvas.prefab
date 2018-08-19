@@ -56,7 +56,6 @@ GameObject:
   - component: {fileID: 222041181743839570}
   - component: {fileID: 114004026091029694}
   - component: {fileID: 225344180618161350}
-  - component: {fileID: 114429868997020942}
   - component: {fileID: 114938818029723712}
   m_Layer: 5
   m_Name: UnitCanvas
@@ -609,17 +608,6 @@ MonoBehaviour:
   m_Spacing: {x: 24, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &114429868997020942
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1157428645511222}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d12f6ce8bded5124482bc7102a5b67dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114490367702203152
 MonoBehaviour:
   m_ObjectHideFlags: 1

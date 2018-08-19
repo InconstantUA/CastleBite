@@ -37,12 +37,6 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
     //}
 
 
-    //City GetParentCity()
-    //{
-    //    // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-(this)UnitSlot
-    //    return transform.parent.parent.parent.parent.parent.GetComponent<City>();
-    //}
-
     public void SetOnDropAction(bool isDrpAlwd, string errMsg = "")
     {
         isDropAllowed = isDrpAlwd;
@@ -62,44 +56,43 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
     {
         // Debug.Log("Swap 2 cells: " + srcCellTr.name + " > " + dstCellTr.name);
         // swap all relevan cells content and states
-        //// swap HPPanel values
-        //string srcHPcurr = srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
-        //string dstHPcurr = dstCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text;
-        //srcCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text = dstHPcurr;
-        //dstCellTr.Find("HPPanel/HPcurr").GetComponent<Text>().text = srcHPcurr;
-        //string srcHPmax = srcCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text;
-        //string dstHPmax = dstCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text;
-        //srcCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text = dstHPmax;
-        //dstCellTr.Find("HPPanel/HPmax").GetComponent<Text>().text = srcHPmax;
         // swap UnitCanvas
-        UnitDragHandler srcUnitCanvas = srcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
-        UnitDragHandler dstUnitCanvas = dstCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
+        PartyUnitUI srcPartyUnitUI = srcCellTr.Find("UnitSlot").GetComponentInChildren<PartyUnitUI>();
+        PartyUnitUI dstPartyUnitUI = dstCellTr.Find("UnitSlot").GetComponentInChildren<PartyUnitUI>();
+        // Get source party
+        // structure: 3HeroPartyUI-2PartyPanel-1Row-cell(dstCellTr)
+        HeroParty srcHeroParty = srcCellTr.parent.GetComponentInParent<PartyPanel>().GetComponentInParent<HeroPartyUI>().LHeroParty;
+        // Get destination party
+        HeroParty dstHeroParty = dstCellTr.parent.GetComponentInParent<PartyPanel>().GetComponentInParent<HeroPartyUI>().LHeroParty;
         // verify is src unit canvas exist, it may not exist on double unit swap
-        if (srcUnitCanvas != null)
+        if (srcPartyUnitUI != null)
         {
             // Swap UI
-            srcUnitCanvas.transform.SetParent(dstCellTr.Find("UnitSlot"));
-            ResetPositionToZero(srcUnitCanvas.transform);
-            // Get destination party
-            // structure: 3HeroPartyUI-2PartyPanel-1Row-cell(dstCellTr)
-            HeroParty dstHeroParty = dstCellTr.parent.GetComponentInParent<PartyPanel>().GetComponentInParent<HeroPartyUI>().LHeroParty;
-            // Swap Unit between parties
-            srcUnitCanvas.GetComponent<PartyUnitUI>().LPartyUnit.transform.SetParent(dstHeroParty.transform);
+            srcPartyUnitUI.transform.SetParent(dstCellTr.Find("UnitSlot"));
+            ResetPositionToZero(srcPartyUnitUI.transform);
+            // verify unit's party is about to change
+            if (srcHeroParty.gameObject.GetInstanceID() != dstHeroParty.gameObject.GetInstanceID())
+            {
+                // Swap Unit between parties
+                srcPartyUnitUI.LPartyUnit.transform.SetParent(dstHeroParty.transform);
+            }
+            // Change unit's address
+            srcPartyUnitUI.LPartyUnit.UnitCellAddress = srcPartyUnitUI.GetUnitCellAddress();
         }
         //  verfy that unit canvas is present, dst cell may be free
-        if (dstUnitCanvas != null)
+        if (dstPartyUnitUI != null)
         {
-            dstUnitCanvas.transform.SetParent(srcCellTr.Find("UnitSlot"));
-            ResetPositionToZero(dstUnitCanvas.transform);
-            // Get source party
-            // structure: 3HeroPartyUI-2PartyPanel-1Row-cell(dstCellTr)
-            HeroParty srcHeroParty = srcCellTr.parent.GetComponentInParent<PartyPanel>().GetComponentInParent<HeroPartyUI>().LHeroParty;
-            // Swap Unit between parties
-            dstUnitCanvas.GetComponent<PartyUnitUI>().LPartyUnit.transform.SetParent(srcHeroParty.transform);
+            dstPartyUnitUI.transform.SetParent(srcCellTr.Find("UnitSlot"));
+            ResetPositionToZero(dstPartyUnitUI.transform);
+            // verify unit's party is about to change
+            if (srcHeroParty.gameObject.GetInstanceID() != dstHeroParty.gameObject.GetInstanceID())
+            {
+                // Swap Unit between parties
+                dstPartyUnitUI.LPartyUnit.transform.SetParent(srcHeroParty.transform);
+            }
+            // Change unit's address
+            dstPartyUnitUI.LPartyUnit.UnitCellAddress = dstPartyUnitUI.GetUnitCellAddress();
         }
-        //// swap HireUnitPnlBtn state
-        //bool srcHireUnitPnlBtn = srcCellTr.Find("HireUnitPnlBtn").gameObject.activeSelf;
-        //bool dstHireUnitPnlBtn = dstCellTr.Find("HireUnitPnlBtn").gameObject.activeSelf;
     }
 
     void SwapSingleWithDouble(Transform srcCellTr, Transform dstCellTr, bool direction)
