@@ -16,7 +16,7 @@ public class PartyPanel : MonoBehaviour {
     //[SerializeField]
     //PartyPanelData partyPanelData;
     string[] horisontalPanels = { "Top", "Middle", "Bottom" };
-    string[] singleUnitCells = { "Front", "Back" };
+    //string[] singleUnitCells = { "Front", "Back" };
     string[] cells = { "Front", "Back", "Wide" };
     string[] cellsFront = { "Front", "Wide" };
     string[] cellsBack = { "Back", "Wide" };
@@ -421,14 +421,14 @@ public class PartyPanel : MonoBehaviour {
     void InitPartyPanelCells()
     {
         Transform unitCell;
-        Transform unitSlot;
+        //Transform unitSlot;
         PartyUnitUI partyUnitUI;
         foreach (string horisontalPanel in horisontalPanels)
         {
             foreach (string cell in cells)
             {
                 unitCell = transform.Find(horisontalPanel + "/" + cell);
-                unitSlot = unitCell.Find("UnitSlot");
+                //unitSlot = unitCell.Find("UnitSlot");
                 // Get party unit UI
                 partyUnitUI = transform.Find(horisontalPanel + "/" + cell).GetComponentInChildren<PartyUnitUI>(true);
                 // verify if this is single- or double-unit cell
@@ -1218,6 +1218,7 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
+    // todo: fix duplicate function in HeroParty
     public PartyUnitUI GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
     {
         PartyUnitUI unitWithHighestInitiative = null;
@@ -2173,31 +2174,31 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    public void RemoveDeadUnits()
-    {
-        //City city = GetCity();
-        foreach (string horisontalPanel in horisontalPanels)
-        {
-            foreach (string cell in cells)
-            {
-                // Unit canvas (and unit) is present
-                // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
-                {
-                    PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                    if (unit.UnitStatus == UnitStatus.Dead)
-                    {
-                        // destroy unit canvas
-                        Debug.Log("Verify: destroy dead unit " + unit.name);
-                        //city.DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
-                        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
-                        // Destroy(unitSlot.GetChild(0).gameObject);
-                    }
-                }
-            }
-        }
-    }
+    //public void RemoveDeadUnits()
+    //{
+    //    //City city = GetCity();
+    //    foreach (string horisontalPanel in horisontalPanels)
+    //    {
+    //        foreach (string cell in cells)
+    //        {
+    //            // Unit canvas (and unit) is present
+    //            // verify if slot has an unit in it
+    //            Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+    //            if (unitSlot.childCount > 0)
+    //            {
+    //                PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+    //                if (unit.UnitStatus == UnitStatus.Dead)
+    //                {
+    //                    // destroy unit canvas
+    //                    Debug.Log("Verify: destroy dead unit " + unit.name);
+    //                    //city.DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
+    //                    transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
+    //                    // Destroy(unitSlot.GetChild(0).gameObject);
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
 
     //void ClearUnitCellStatus(Transform targetCell)
     //{

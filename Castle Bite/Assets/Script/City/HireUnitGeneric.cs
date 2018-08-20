@@ -7,7 +7,7 @@ using UnityEngine.UI;
 // This is later will be used by other sub-scripts
 public class HireUnitGeneric : MonoBehaviour {
     Transform callerCell;
-    City callerCity;
+    //City callerCity;
     GameObject unitsPanel;
 
     //public Transform GetCallerCell()
@@ -38,7 +38,7 @@ public class HireUnitGeneric : MonoBehaviour {
         // save destination cell for later use
         callerCell = destinationCellTr;
         // save destination city for later use
-        callerCity = destinationCity;
+        //callerCity = destinationCity;
         // get templates manager
         TemplatesManager templatesManager = transform.root.Find("Templates").GetComponent<TemplatesManager>();
         // get unit UI toggles list parent

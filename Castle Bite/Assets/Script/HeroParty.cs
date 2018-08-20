@@ -118,6 +118,66 @@ public class HeroParty : MonoBehaviour {
         }
     }
 
+    // todo: fix duplicate function in PartyPanel
+    public PartyUnit GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
+    {
+        PartyUnit unitWithHighestInitiative = null;
+        foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
+        {
+            // verify if 
+            //  - unit has moved or not
+            //  - unit is alive
+            //  - unit has not escaped from the battle
+            if (!partyUnit.HasMoved)
+            {
+                // during main phase check for Active units
+                bool doProceed = false;
+                if ((BattleScreen.TurnPhase.Main == turnPhase)
+                    && ((partyUnit.UnitStatus == UnitStatus.Active)
+                       || (partyUnit.UnitStatus == UnitStatus.Escaping)))
+                {
+                    doProceed = true;
+                }
+                // during post wait phase check for units which are in Waiting status
+                if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (partyUnit.UnitStatus == UnitStatus.Waiting))
+                {
+                    doProceed = true;
+                }
+                if (doProceed)
+                {
+                    // compare initiative with other unit, if it was found
+                    if (unitWithHighestInitiative != null)
+                    {
+                        if (partyUnit.UnitInitiative > unitWithHighestInitiative.UnitInitiative)
+                        {
+                            // found unit with highest initiative, update unitWithHighestInitiative variable
+                            unitWithHighestInitiative = partyUnit;
+                        }
+                    }
+                    else
+                    {
+                        // no other unit found yet, assume that this unit has the highest initiative
+                        unitWithHighestInitiative = partyUnit;
+                    }
+                }
+            }
+        }
+        return unitWithHighestInitiative;
+    }
+
+    public void RemoveDeadPartyUnits()
+    {
+        foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
+        {
+            if (partyUnit.UnitStatus == UnitStatus.Dead)
+            {
+                // destroy unit canvas
+                Debug.Log("Verify: destroy dead unit " + partyUnit.name);
+                Destroy(partyUnit.gameObject);
+            }
+        }
+    }
+
     public string GetPartyUIAddress(string address = "")
     {
         // init parent transform

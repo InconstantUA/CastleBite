@@ -205,15 +205,15 @@ public class BattleScreen : MonoBehaviour {
     {
         // Firt verify if city is protected by Hero's party
         // Player cannot attack city untill there a party protecting it
-        HeroPartyUI enemyHeroPartyUI = GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Party);
-        if (enemyHeroPartyUI)
+        HeroParty enemyHeroParty = enemyCityOnMap.LCity.GetHeroPartyByMode(PartyMode.Party);
+        if (enemyHeroParty)
         {
             // enemy hero is protecting city
             // battle place is on a city gates
             // verify if there are units which can fight, because it is possible that player left only dead units in party
-            if (enemyHeroPartyUI.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
+            if (enemyHeroParty.GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
             {
-                return enemyHeroPartyUI.LHeroParty;
+                return enemyHeroParty;
             }
             else
             {
@@ -223,12 +223,12 @@ public class BattleScreen : MonoBehaviour {
         // if we are here, then there is no enemy hero protecting city
         // get garnizon party
         // there should be garnizon in every city
-        enemyHeroPartyUI = GetComponentInParent<UIManager>().GetHeroPartyUIByMode(PartyMode.Garnizon);
+        enemyHeroParty = enemyCityOnMap.LCity.GetHeroPartyByMode(PartyMode.Garnizon);
         // verify if there are units in party protecting this city, which can fight
         // it is possible that city is not protected, because all units are dead
-        if (enemyHeroPartyUI.GetComponentInChildren<PartyPanel>().GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
+        if (enemyHeroParty.GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
         {
-            return enemyHeroPartyUI.LHeroParty;
+            return enemyHeroParty;
         }
         else
         {
@@ -398,15 +398,17 @@ public class BattleScreen : MonoBehaviour {
     public void CaptureAndEnterCity()
     {
         Debug.Log("BattleScreen: EnterCity");
-        DefaultOnBattleExit();
-        // remove dead units from city garnizon's party panel
-        enemyPartyPanel.GetHeroParty().GetComponentInChildren<PartyPanel>().RemoveDeadUnits();
+        // remove dead units from city garnizon's heroParty
+        enemyPartyPanel.transform.parent.GetComponent<HeroPartyUI>().LHeroParty.RemoveDeadPartyUnits();
         // Change city faction to player's faction
         enemyPartyPanel.GetCity().Faction = playerPartyPanel.GetHeroParty().Faction;
-        // Trigger map hero move to and enter city
+        // Prepare variables to be used later
         MapHero mapHero = playerPartyPanel.GetHeroParty().LMapHero;
         MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LMapCity;
         MapManager mapManager = GetMapManager();
+        // execute default on battle exit function
+        DefaultOnBattleExit();
+        // Trigger map hero move to and enter city
         mapManager.MapHeroMoveToAndEnterCity(mapHero, destinationCityOnMap);
     }
 

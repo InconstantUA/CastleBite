@@ -56,7 +56,7 @@ MonoBehaviour:
     unitDefense: 0
     unitResistances: []
     unitAbility: 10
-    unitPower: 50
+    unitPower: 1000
     unitPowerIncrementOnLevelUp: 10
     unitPowerSource: 4
     unitPowerDistance: 1

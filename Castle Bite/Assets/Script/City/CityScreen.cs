@@ -203,13 +203,13 @@ public class CityScreen : MonoBehaviour {
         transform.root.Find("MiscUI/BottomControlPanel/ToggleGroup").GetComponent<TextToggleGroup>().DeselectToggle();
     }
 
-    public void ActOnHeroEnteringCity()
-    {
-        // Instruct Focus panel to update info
-        transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.Init);
-        // Disable Hire leader panel
-        transform.parent.Find("HireHeroPanel").gameObject.SetActive(false);
-    }
+    //public void ActOnHeroEnteringCity()
+    //{
+    //    // Instruct Focus panel to update info
+    //    transform.parent.Find("LeftFocus").GetComponent<FocusPanel>().OnChange(FocusPanel.ChangeType.Init);
+    //    // Disable Hire leader panel
+    //    transform.parent.Find("HireHeroPanel").gameObject.SetActive(false);
+    //}
     #endregion States
 
     #region Hire Unit

@@ -80,11 +80,17 @@ public class ChapterManager : MonoBehaviour {
     {
         Debug.Log("Show credits");
         // I assume that we were at map before game end
-        // Get vars
+        // Disable city screen if it was active
+        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        if (cityScreen)
+        {
+            cityScreen.gameObject.SetActive(false);
+        }
+        // Disable map
         GameObject map = transform.root.Find("MapScreen").gameObject;
-        GameObject credits = transform.root.Find("MiscUI/Credits").gameObject;
-        // Disable map and enable main menu
         map.SetActive(false);
+        // Enable credits
+        GameObject credits = transform.root.Find("MiscUI/Credits").gameObject;
         credits.SetActive(true);
     }
 
