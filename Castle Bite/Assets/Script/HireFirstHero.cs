@@ -200,14 +200,29 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return name;
     }
 
+    City GetActivePlayerCapital()
+    {
+        foreach (City city in transform.root.Find("Cities").GetComponentsInChildren<City>())
+        {
+            // verify if city faction match players faction and that it is capital city
+            if ((city.Faction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
+                && (city.CityType == CityType.Capital))
+            {
+                return city;
+            }
+        }
+        return null;
+    }
+
     void ActOnClick()
     {
         // Create game players
         transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
         transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(players);
+        // Get Chosen race captial city link
         // Ask City to Hire chosen unit
         //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>(true).HireUnit(null, GetSelectedUnitType(), false);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerCapital());
         // Activate required object
         gameObjectToBeActivated.SetActive(true);
         // Deactivate required object

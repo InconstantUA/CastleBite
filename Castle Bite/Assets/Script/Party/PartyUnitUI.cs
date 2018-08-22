@@ -81,7 +81,7 @@ public class PartyUnitUI : MonoBehaviour {
         if (GetComponentInParent<UIManager>())
         {
             // verify if we are in city screen view
-            if (GetComponentInParent<UIManager>().GetComponentInChildren<CityScreen>())
+            if (GetComponentInParent<UIManager>().GetComponentInChildren<EditPartyScreen>())
             {
                 SetPartyUnitCityScreenHandlersActive(doActivate);
             }

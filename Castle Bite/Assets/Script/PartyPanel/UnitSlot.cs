@@ -341,7 +341,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Debug.Log("UnitSlot ActOnClick in City");
         // Get city screen
-        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
         // Get city state
         CityViewActiveState cityState = cityScreen.CityViewActiveState;
         // Verify if city state is not normal
@@ -426,8 +426,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //  - in hero edit screen
         //  - in battle
         UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
-        // verify if CityScreen is active
-        if (uiManager.GetComponentInChildren<CityScreen>(false) != null)
+        // verify if EditPartyScreen is active
+        if (uiManager.GetComponentInChildren<EditPartyScreen>(false) != null)
         {
             ActOnCityClick();
         }
@@ -484,7 +484,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     void ActivateHireUnitButtonsIfNeeded()
     {
         // get city screen
-        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
         // verify if we are in city view mode
         if (cityScreen != null)
         {
@@ -499,7 +499,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // Check and activate hire units buttons if we are in city view
         ActivateHireUnitButtonsIfNeeded();
         // Ask city to dismiss unit
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DimissUnit(this);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().DimissUnit(this);
         // do not place code below, because this unit slot is destroyed
     }
 

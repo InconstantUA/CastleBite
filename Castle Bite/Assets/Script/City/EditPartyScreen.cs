@@ -2,20 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CityScreen : MonoBehaviour {
+public class EditPartyScreen : MonoBehaviour {
     [SerializeField]
-    City mCity;
+    City lCity;
+    [SerializeField]
+    HeroParty[] lHeroParties;
     [SerializeField]
     CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
     [SerializeField]
     GameObject unitCanvasTemplate;
 
 
-    public City City
+    public City LCity
     {
         get
         {
-            return mCity;
+            return lCity;
+        }
+    }
+
+    public HeroParty[] LHeroParties
+    {
+        get
+        {
+            return lHeroParties;
         }
     }
 
@@ -27,59 +37,131 @@ public class CityScreen : MonoBehaviour {
         }
     }
 
-    public void SetCityScreenActive(City city)
+    public void SetEditPartyScreenActive(City city)
     {
         // save link to the city
-        mCity = city;
+        lCity = city;
         // activate this city screen
         gameObject.SetActive(true);
+    }
+
+    public void SetEditPartyScreenActive(HeroParty heroParty)
+    {
+        // save link to the city
+        lHeroParties = new HeroParty[] { heroParty };
+        // activate this city screen
+        gameObject.SetActive(true);
+    }
+
+    public void SetEditPartyScreenActive(HeroParty heroParty1, HeroParty heroParty2)
+    {
+        // save link to the city
+        lHeroParties = new HeroParty[] { heroParty1, heroParty2 };
+        // activate this city screen
+        gameObject.SetActive(true);
+    }
+
+    void ActivateCityView()
+    {
+        // get hero party in city, if it is present
+        HeroParty heroParty = LCity.GetHeroPartyByMode(PartyMode.Party);
+        // verify if there is party in a city
+        if (heroParty != null)
+        {
+            // assign party leader to left focus panel
+            transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = heroParty.GetHeroPartyLeaderUnit().gameObject;
+            // activate left Focus panel
+            transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(true);
+            // assign HeroParty to left hero party UI
+            transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>().LHeroParty = heroParty;
+            // activate left hero party UI
+            transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(true);
+        }
+        else
+        {
+            // activate left Focus panel
+            // without linked hero it will trigger no-party info
+            transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(true);
+            // activate hire hero panel
+            transform.root.Find("MiscUI/HireHeroPanel").gameObject.SetActive(true);
+        }
+        // assign city to right focus panel
+        transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = LCity.gameObject;
+        // activate right Focus panel
+        transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(true);
+        // assign City garnizon HeroParty to right hero party UI
+        transform.root.Find("MiscUI/RightHeroParty").GetComponent<HeroPartyUI>().LHeroParty = LCity.GetHeroPartyByMode(PartyMode.Garnizon);
+        // activate right hero party UI
+        transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(true);
+        // activate hire common units panel
+        transform.root.Find("MiscUI/HireCommonUnitButtons").gameObject.SetActive(true);
+    }
+
+    void ActivateHeroPartiesView()
+    {
+        // check check if we have one party
+        if (LHeroParties.Length <= 1)
+        {
+            // We have at least one party
+            // Activate left view with this party
+            // Get hero party
+            HeroParty heroParty = LHeroParties[0];
+            // we have only one party
+            // assign party leader to the left focus panel
+            transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = heroParty.GetHeroPartyLeaderUnit().gameObject;
+            // activate left Focus panel
+            transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(true);
+            // assign HeroParty to the left hero party UI
+            transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>().LHeroParty = heroParty;
+            // activate left hero party UI
+            transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(true);
+        }
+        // Check if we have 2 parties
+        if (LHeroParties.Length == 2)
+        {
+            // we have 2 parties
+            // Activate right view with this party
+            // Get hero party
+            HeroParty heroParty = LHeroParties[1];
+            // assign party leader to the right focus panel
+            transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = heroParty.GetHeroPartyLeaderUnit().gameObject;
+            // activate right Focus panel
+            transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(true);
+            // assign HeroParty to the right hero party UI
+            transform.root.Find("MiscUI/RightHeroParty").GetComponent<HeroPartyUI>().LHeroParty = heroParty;
+            // activate right hero party UI
+            transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(true);
+        }
     }
 
     void SetRequiredComponentsActive(bool doActivate)
     {
         // Activate/Deactivate background
         transform.root.Find("MiscUI/Background").gameObject.SetActive(doActivate);
-        // Activate/Deactivate city controls
+        // Activate/Deactivate common controls
         transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(doActivate);
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(doActivate);
+        if (LCity != null)
+        {
+            // Activate/Deactivate city controls
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(doActivate);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(doActivate);
+        }
         // Activate/Deactivate hero Parties menus and Focus panels
         if (doActivate)
         {
-            // get HeroParty
-            HeroParty heroParty = City.GetHeroPartyByMode(PartyMode.Party);
-            // verify if there is party in a city
-            if (heroParty != null)
+            // check if we are in city edit mode
+            if (LCity != null)
             {
-                // assign party leader to left focus panel
-                transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = heroParty.GetHeroPartyLeaderUnit().gameObject;
-                // activate left Focus panel
-                transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
-                // assign HeroParty to left hero party UI
-                transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>().LHeroParty = heroParty;
-                // activate left hero party UI
-                transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
+                // Activate components needed for city view
+                ActivateCityView();
             }
-            else
+            else if (LHeroParties != null)
             {
-                // activate left Focus panel
-                // without linked hero it will trigger no-party info
-                transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
-                // activate hire hero panel
-                transform.root.Find("MiscUI/HireHeroPanel").gameObject.SetActive(doActivate);
+                // Activate components needed for hero view
+                ActivateHeroPartiesView();
             }
-            // assign city to right focus panel
-            transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = City.gameObject;
-            // activate right Focus panel
-            transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
-            // assign City garnizon HeroParty to right hero party UI
-            transform.root.Find("MiscUI/RightHeroParty").GetComponent<HeroPartyUI>().LHeroParty = City.GetHeroPartyByMode(PartyMode.Garnizon);
-            // activate right hero party UI
-            transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);
-            // activate hire common units panel
-            transform.root.Find("MiscUI/HireCommonUnitButtons").gameObject.SetActive(doActivate);
         }
         else
         {
@@ -107,6 +189,15 @@ public class CityScreen : MonoBehaviour {
     {
         //DeactivateActiveToggle();
         SetRequiredComponentsActive(false);
+        // Unlink linked objects
+        if (LCity != null)
+        {
+            lCity = null;
+        }
+        if (LHeroParties != null)
+        {
+            lHeroParties = null;
+        }
     }
 
     #region States
@@ -241,12 +332,18 @@ public class CityScreen : MonoBehaviour {
 
     #region Hire Hero
 
-    HeroPartyUI CreateNewPartyInCity()
+    HeroPartyUI CreateNewPartyInCity(City city = null)
     {
         // create and update Hero Party panel in UI, parent it to city UI
         GameObject heroPartyPanelTemplate = transform.root.Find("Templates/Obj/HeroParty").gameObject;
+        // Set target city
+        City targetCity = LCity;
+        if (city != null)
+        {
+            targetCity = city;
+        }
         // create new party instance in city
-        HeroParty newHeroParty = Instantiate(heroPartyPanelTemplate, City.transform).GetComponent<HeroParty>();
+        HeroParty newHeroParty = Instantiate(heroPartyPanelTemplate, targetCity.transform).GetComponent<HeroParty>();
         // Set party mode
         newHeroParty.PartyMode = PartyMode.Party;
         // Activate new party
@@ -259,7 +356,7 @@ public class CityScreen : MonoBehaviour {
         return leftHeroPartyUI;
     }
 
-    void SetHeroPartyRepresentationOnTheMap(HeroParty newLeaderParty)
+    void SetHeroPartyRepresentationOnTheMap(HeroParty newLeaderParty, City city = null)
     {
         // Create Hero's object on the map
         // create and update Hero Party panel in UI, (no - parent it to city UI)
@@ -270,8 +367,14 @@ public class CityScreen : MonoBehaviour {
         GameObject heroPartyOnMapUITemplate = transform.root.Find("Templates/UI/HeroOnMap").gameObject;
         // Create new hero party on map ui
         MapHero newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map).GetComponent<MapHero>();
+        // Get city
+        City targetCity = LCity;
+        if (city != null)
+        {
+            targetCity = city;
+        }
         // set it to the same position as the parent city
-        newPartyOnMapUI.transform.position = City.LMapCity.transform.position;
+        newPartyOnMapUI.transform.position = targetCity.LMapCity.transform.position;
         // activate new party on map UI
         newPartyOnMapUI.gameObject.SetActive(true);
         // Link HeroParty to the hero party on the map
@@ -279,9 +382,9 @@ public class CityScreen : MonoBehaviour {
         // Link hero on the map to HeroParty
         newLeaderParty.LMapHero = (newPartyOnMapUI);
         // Link hero on the map to city on the map
-        City.LMapCity.GetComponent<MapCity>().LMapHero = newPartyOnMapUI.GetComponent<MapHero>();
+        targetCity.LMapCity.GetComponent<MapCity>().LMapHero = newPartyOnMapUI.GetComponent<MapHero>();
         // Link city on the map to hero on the map
-        newPartyOnMapUI.GetComponent<MapHero>().lMapCity = City.LMapCity;
+        newPartyOnMapUI.GetComponent<MapHero>().lMapCity = targetCity.LMapCity;
         // move hero party to the back, so its UI label is not covering city's UI label
         newPartyOnMapUI.transform.SetAsFirstSibling();
     }
@@ -332,17 +435,17 @@ public class CityScreen : MonoBehaviour {
         return newPartyUnit;
     }
 
-    void HirePartyLeader(PartyUnit hiredUnitTemplate, bool doCreateUI = true)
+    void HirePartyLeader(PartyUnit hiredUnitTemplate, bool doCreateUI = true, City city = null)
     {
         // create new party
-        HeroPartyUI newLeaderPartyUI = CreateNewPartyInCity();
+        HeroPartyUI newLeaderPartyUI = CreateNewPartyInCity(city);
         // Get unit's slot transform
         Transform newUnitParentSlot = newLeaderPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr("Middle", GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
         // Hire unit, but do not create canvas, because it will be done automatically by HeroParty on enable
         PartyUnit newPartyUnit = HireGenericUnit(hiredUnitTemplate, newLeaderPartyUI.LHeroParty, newUnitParentSlot, false);
         // Create hero's representation on the map
         // prerequisites: party leader should be created beforehand
-        SetHeroPartyRepresentationOnTheMap(newLeaderPartyUI.LHeroParty);
+        SetHeroPartyRepresentationOnTheMap(newLeaderPartyUI.LHeroParty, city);
         if (doCreateUI)
         {
             // Activate HeroPartyUI
@@ -379,7 +482,7 @@ public class CityScreen : MonoBehaviour {
         if (VerifySingleUnitHire(hiredUnitTemplate))
         {
             // create unit
-            HireGenericUnit(hiredUnitTemplate, City.GetHeroPartyByMode(PartyMode.Garnizon), callerCell.Find("UnitSlot"), doCreateUI);
+            HireGenericUnit(hiredUnitTemplate, LCity.GetHeroPartyByMode(PartyMode.Garnizon), callerCell.Find("UnitSlot"), doCreateUI);
             if (doCreateUI)
             {
                 // Update city garnizon panel to fill in required information and do required adjustments;
@@ -421,7 +524,7 @@ public class CityScreen : MonoBehaviour {
             // if hired unit is double unit, then we actually need to change its parent to the wide
             // hierarchy: [Top/Middle/Bottom panel]-[Front/Back/Wide]-callerCell
             // create unit
-            HireGenericUnit(hiredUnitTemplate, City.GetHeroPartyByMode(PartyMode.Garnizon), callerCell.parent.Find("Wide/UnitSlot"), doCreateUI);
+            HireGenericUnit(hiredUnitTemplate, LCity.GetHeroPartyByMode(PartyMode.Garnizon), callerCell.parent.Find("Wide/UnitSlot"), doCreateUI);
             if (doCreateUI)
             {
                 // update panel
@@ -434,7 +537,7 @@ public class CityScreen : MonoBehaviour {
 
     #endregion Hire Double unit
 
-    public void HireUnit(Transform callerCell, UnitType hiredUnitType, bool doCreateUI = true)
+    public void HireUnit(Transform callerCell, UnitType hiredUnitType, bool doCreateUI = true, City city = null)
     {
         // get template for selected unit type
         PartyUnit hiredUnitTemplate = transform.root.Find("Templates").GetComponent<TemplatesManager>().GetPartyUnitTemplateByType(hiredUnitType).GetComponent<PartyUnit>();
@@ -444,7 +547,7 @@ public class CityScreen : MonoBehaviour {
             // 2 act based on the unit type: leader or normal unit
             if (hiredUnitTemplate.IsLeader)
             {
-                HirePartyLeader(hiredUnitTemplate, doCreateUI);
+                HirePartyLeader(hiredUnitTemplate, doCreateUI, city);
             }
             else
             {
@@ -471,6 +574,22 @@ public class CityScreen : MonoBehaviour {
         return unitCell.transform.parent.parent.GetComponent<PartyPanel>();
     }
 
+    IEnumerator ReturnToTheMapScreenWithAnimation()
+    {
+        // Block mouse input
+        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        inputBlocker.SetActive(true);
+        // Wait for all animations to finish
+        yield return new WaitForSeconds(+0.51f);
+        // Unblock mouse input
+        inputBlocker.SetActive(false);
+        // Deactivate this screen
+        gameObject.SetActive(false);
+        // activate map screen
+        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
+        mapScreen.SetActive(true);
+    }
+
     public void DismissPartyLeader(UnitSlot unitSlot)
     {
         // Get hero Party UI
@@ -495,9 +614,18 @@ public class CityScreen : MonoBehaviour {
         {
             // Enable Hire leader panel
             transform.parent.Find("HireHeroPanel").gameObject.SetActive(true);
+            // Activate focus panel again to display NoPartyInfo
+            focusPanel.gameObject.SetActive(true);
         }
-        // Activate focus panel again to display NoPartyInfo
-        focusPanel.gameObject.SetActive(true);
+        else
+        {
+            // check if there was only one hero in this screen
+            if (LHeroParties.Length == 1)
+            {
+                // return to the map view with animation
+                StartCoroutine(ReturnToTheMapScreenWithAnimation());
+            }
+        }
     }
 
     public void DismissGenericUnit(UnitSlot unitSlot)
@@ -537,11 +665,11 @@ public class CityScreen : MonoBehaviour {
             // act based on the unit size
             if (unitSize == UnitSize.Single)
             {
-                GetComponentInParent<UIManager>().GetFocusPanelByCity(City).OnChange(FocusPanel.ChangeType.DismissSingleUnit);
+                GetComponentInParent<UIManager>().GetFocusPanelByCity(LCity).OnChange(FocusPanel.ChangeType.DismissSingleUnit);
             }
             else
             {
-                GetComponentInParent<UIManager>().GetFocusPanelByCity(City).OnChange(FocusPanel.ChangeType.DismissDoubleUnit);
+                GetComponentInParent<UIManager>().GetFocusPanelByCity(LCity).OnChange(FocusPanel.ChangeType.DismissDoubleUnit);
             }
             // Activate hire unit buttons again
             SetHireUnitPnlButtonActive(true);
@@ -601,7 +729,7 @@ public class CityScreen : MonoBehaviour {
                     // verify if we need to activate
                     if (activate
                         // Verify if city capacity is enough
-                        && (City.GetUnitsCapacity() > garnizonUI.LHeroParty.GetNumberOfPresentUnits())
+                        && (LCity.GetUnitsCapacity() > garnizonUI.LHeroParty.GetNumberOfPresentUnits())
                         // verify if drop slot doesn't have an !active! unit in it
                         && (!unitSlot.GetComponentInChildren<PartyUnitUI>(false))
                         // verify if wide cell is not active = occupied in the same row

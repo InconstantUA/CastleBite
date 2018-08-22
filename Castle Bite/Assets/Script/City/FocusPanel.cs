@@ -87,7 +87,7 @@ public class FocusPanel : MonoBehaviour {
             // this is only relevan if focus panel is in city, not relevant for battle screen
             // 
             // verify if city screen is active
-            if (transform.parent.GetComponentInChildren<CityScreen>(false) != null)
+            if (transform.parent.GetComponentInChildren<EditPartyScreen>(false) != null)
             {
                 Debug.Log("City screen is active");
                 SetNoPartyInfo();

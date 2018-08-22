@@ -18,7 +18,7 @@ public class HeroEditScreen : MonoBehaviour {
         //    heroParty.transform.SetParent(partiesOnMapTr);
         //}
         // activate exit city function to correctly exit city
-        transform.parent.GetComponent<CityScreen>().gameObject.SetActive(false);
+        transform.parent.GetComponent<EditPartyScreen>().gameObject.SetActive(false);
         // disable this screen
         gameObject.SetActive(false);
     }

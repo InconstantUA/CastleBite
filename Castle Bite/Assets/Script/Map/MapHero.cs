@@ -277,9 +277,9 @@ public class MapHero : MonoBehaviour
         // Unblock mouse input
         inputBlocker.SetActive(false);
         // Move edited hero to HeroEditScreen
-        Transform heroEditScreenTr = transform.root.Find("MiscUI/HeroEditScreen");
-        Debug.LogError("Line below will lead to error fix it. We should not place hero party to hero edit screen.");
-        lHeroParty.transform.SetParent(heroEditScreenTr);
+        // Transform heroEditScreenTr = transform.root.Find("MiscUI/HeroEditScreen");
+        // Debug.LogError("Line below will lead to error fix it. We should not place hero party to hero edit screen.");
+        // lHeroParty.transform.SetParent(heroEditScreenTr);
         // map manager change to browse mode back
         // . - this is done by OnDisable() automatically in MapManager
         //MapManager mapManager = transform.parent.GetComponent<MapManager>();
@@ -290,7 +290,8 @@ public class MapHero : MonoBehaviour
         // everything below related to mapManager or mapScreen will not be processed
         // because map manager is disabled
         // Activate hero edit menu
-        heroEditScreenTr.gameObject.SetActive(true);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(lHeroParty);
+        // heroEditScreenTr.gameObject.SetActive(true);
     }
 
     void Blink()

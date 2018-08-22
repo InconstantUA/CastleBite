@@ -81,7 +81,7 @@ public class ChapterManager : MonoBehaviour {
         Debug.Log("Show credits");
         // I assume that we were at map before game end
         // Disable city screen if it was active
-        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
         if (cityScreen)
         {
             cityScreen.gameObject.SetActive(false);

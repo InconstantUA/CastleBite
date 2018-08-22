@@ -103,7 +103,7 @@ public class HireUnitGeneric : MonoBehaviour {
     {
         // Ask City to Hire unit
         //callerCity.HireUnit(callerCell, GetSelectedUnitType());
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().HireUnit(callerCell, GetSelectedUnitType());
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().HireUnit(callerCell, GetSelectedUnitType());
         // Deactivate hire unit panel
         DeactivateAdv();
     }

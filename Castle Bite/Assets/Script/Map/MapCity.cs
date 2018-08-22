@@ -91,7 +91,7 @@ public class MapCity : MonoBehaviour
         // everything below related to mapManager or mapScreen will not be processed
         // because map manager is disabled
         // Activate city view = go to city edit mode
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>(true).SetCityScreenActive(linkedCity);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(linkedCity);
     }
 
     public void SetSelectedState(bool doActivate)

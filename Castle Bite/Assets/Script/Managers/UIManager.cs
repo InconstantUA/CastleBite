@@ -72,10 +72,10 @@ public class UIManager : MonoBehaviour {
 
     public GameObject GetActiveScreen()
     {
-        // verify if CityScreen is active 
-        if (GetComponentInChildren<CityScreen>(false))
+        // verify if EditPartyScreen is active 
+        if (GetComponentInChildren<EditPartyScreen>(false))
         {
-            return GetComponentInChildren<CityScreen>(false).gameObject;
+            return GetComponentInChildren<EditPartyScreen>(false).gameObject;
         }
         else if (GetComponentInChildren<HeroEditScreen>(false))
         {

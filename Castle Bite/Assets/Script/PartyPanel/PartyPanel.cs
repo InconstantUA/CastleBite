@@ -310,7 +310,7 @@ public class PartyPanel : MonoBehaviour {
         if (PartyMode == PartyMode.Garnizon)
         {
             // Get city screen
-            CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+            EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
             // verify if we are in City Screen view
             if (cityScreen != null)
             {
@@ -659,7 +659,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(activate);
     }
 
 
@@ -716,7 +716,7 @@ public class PartyPanel : MonoBehaviour {
         if (activate)
         {
             // and disable hire unit buttons panel
-            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(false);
+            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(false);
         }
     }
 
@@ -771,7 +771,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(!activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
     PartyPanel GetOtherPartyPanel(PartyPanel currentPartyPanel)
@@ -1191,7 +1191,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().SetHireUnitPnlButtonActive(!activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
     #region For Battle Screen
@@ -2192,7 +2192,7 @@ public class PartyPanel : MonoBehaviour {
     //                    // destroy unit canvas
     //                    Debug.Log("Verify: destroy dead unit " + unit.name);
     //                    //city.DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
-    //                    transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>().DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
+    //                    transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().DismissGenericUnit(unitSlot.GetComponent<UnitSlot>());
     //                    // Destroy(unitSlot.GetChild(0).gameObject);
     //                }
     //            }

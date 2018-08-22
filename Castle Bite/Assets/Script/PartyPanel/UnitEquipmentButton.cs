@@ -19,7 +19,7 @@ public class UnitEquipmentButton : MonoBehaviour {
         // structure: 6City-5HeroParty-4PartyPanel-3Row-2Cell-1UnitEquipmentControl-EquipmentButton(this)
         //City city = transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
         // Get city screen
-        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>(true);
+        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true);
         // verify if City screen is active = we are in a city
         if (cityScreen)
         {

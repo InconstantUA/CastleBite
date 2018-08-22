@@ -21,7 +21,7 @@ public class HirePartyUnitButton : MonoBehaviour {
         UnitType[] unitTypesToHire;
         Transform destinationCellTr;
         UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
-        City destinationCity = uiManager.GetComponentInChildren<CityScreen>().City;
+        City destinationCity = uiManager.GetComponentInChildren<EditPartyScreen>().LCity;
         switch (buttonMode)
         {
             case ButtonMode.HireCommonUnit:
@@ -29,7 +29,7 @@ public class HirePartyUnitButton : MonoBehaviour {
                 //// structure: 4City-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
                 //destinationCity = transform.parent.parent.parent.parent.GetComponent<City>();
                 // structure: 4MiscUI-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
-                //             MiscUI-CityScreen(link to City)
+                //             MiscUI-EditPartyScreen(link to City)
                 // get cell address (Row/Cell) of this party button
                 string address = transform.parent.parent.name + "/" + transform.parent.name;
                 // get destination cell transform in city garnizon party panel

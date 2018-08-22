@@ -126,7 +126,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         // verify if we are in city edit mode and not in hero edit mode
-        CityScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<CityScreen>();
+        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
         if (cityScreen != null)
         {
             // activate hire unit buttons again, after it was disabled

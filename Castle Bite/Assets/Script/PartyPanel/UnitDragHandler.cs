@@ -23,13 +23,13 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.parent.parent.parent.parent.parent.SetAsLastSibling(); // CityGarnizon/HeroParty
     }
 
-    CityScreen GetCityScreen()
+    EditPartyScreen GetCityScreen()
     {
         // structure: 5[City]-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-UnitSlot-(this)UnitCanvas
         //return transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
         // structure: 5MiscUI-4[HeroParty/CityGarnizon]-3PartyPanel-2[Top/Middle/Bottom]Panel-1[Front/Back/Wide]Panel-UnitSlot-(this)UnitCanvas
-        //             MiscUI-CityScreen(link to City)
-        return transform.parent.parent.parent.parent.parent.parent.GetComponentInChildren<CityScreen>();
+        //             MiscUI-EditPartyScreen(link to City)
+        return transform.parent.parent.parent.parent.parent.parent.GetComponentInChildren<EditPartyScreen>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
