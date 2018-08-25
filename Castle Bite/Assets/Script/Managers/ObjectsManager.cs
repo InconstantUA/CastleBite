@@ -81,7 +81,7 @@ public class ObjectsManager : MonoBehaviour {
 
     public void CreateCity(CityData cityData)
     {
-        Debug.Log("Creating city");
+        Debug.Log("Creating " + cityData.cityName + " city");
         // get parent Transform
         Transform citiesParentTransform = transform.root.Find("Cities");
         // create city from tempalte
@@ -98,7 +98,7 @@ public class ObjectsManager : MonoBehaviour {
 
     public void RemoveCity(City city)
     {
-        Debug.Log("Removing city");
+        Debug.Log("Removing " + city.CityName + " city");
         // verify if there is linked party on map
         if (city.LMapCity != null)
         {
@@ -167,7 +167,7 @@ public class ObjectsManager : MonoBehaviour {
 
     public void CreateHeroParty(PartyData partyData)
     {
-        Debug.Log("Creating party");
+        Debug.Log("Creating " + partyData.partyUnitsData[0].unitName + " party");
         // define new hero party variable
         HeroParty newHeroParty;
         // define new hero party parent transform variable
@@ -231,6 +231,7 @@ public class ObjectsManager : MonoBehaviour {
             Destroy(heroParty.LMapHero.gameObject);
         }
         // destroy hero party
+        Debug.Log("Removing " + heroParty.GetPartyLeader().GivenName + " party");
         Destroy(heroParty.gameObject);
     }
 }

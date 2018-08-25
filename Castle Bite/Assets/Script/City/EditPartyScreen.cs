@@ -577,7 +577,7 @@ public class EditPartyScreen : MonoBehaviour {
         InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
         inputBlocker.SetActive(true);
         // Wait for all animations to finish
-        yield return new WaitForSeconds(+0.51f);
+        yield return new WaitForSeconds(0.51f);
         // Unblock mouse input
         inputBlocker.SetActive(false);
         // Deactivate this screen

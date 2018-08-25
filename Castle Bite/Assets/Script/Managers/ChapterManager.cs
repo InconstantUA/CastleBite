@@ -19,6 +19,7 @@ public class ChapterManager : MonoBehaviour {
     bool lastChapter;
     [SerializeField]
     string targetCityName; // we do not use direct link to the city, because it may be destroyed and recreated during save/load process
+    CoroutineQueue coroutineQueue;
     // define chapter goals
     bool goalTargetCityCaptured = false;
     bool goalTargetHeroDestroyed = true;
@@ -27,8 +28,22 @@ public class ChapterManager : MonoBehaviour {
     bool failed = false;
     string failureReason = "";
 
+    public CoroutineQueue CoroutineQueue
+    {
+        get
+        {
+            return coroutineQueue;
+        }
+
+        set
+        {
+            coroutineQueue = value;
+        }
+    }
+
     void Awake () {
-        //Instance = this;
+        // Create a coroutine queue that can run max 1 coroutine at once
+        coroutineQueue = new CoroutineQueue(1, StartCoroutine);
     }
 
     public void OnGoalCityCapture(City city)

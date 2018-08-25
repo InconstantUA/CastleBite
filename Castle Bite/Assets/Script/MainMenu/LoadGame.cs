@@ -129,6 +129,8 @@ public class LoadGame : MonoBehaviour
         {
             objectsManager.RemoveCity(city);
         }
+        Debug.LogWarning("All cities removed");
+        //Debug.Break();
     }
 
     public void CreateCities(CityData[] citiesData)
@@ -151,6 +153,8 @@ public class LoadGame : MonoBehaviour
         {
             objectsManager.RemoveHeroParty(heroParty);
         }
+        Debug.LogWarning("All parties removed");
+        //Debug.Break();
     }
 
     public void CreateParties(PartyData[] partiesData)
@@ -164,15 +168,22 @@ public class LoadGame : MonoBehaviour
         }
     }
 
-    void SetGameData(GameData gameData)
+    IEnumerator CleanGameBeforeLoad()
     {
-        // .. Set map
-        // remove old data
+        // Block mouse input
+        transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(true);
         // Note order is imporant, because some parties are children of cities
         RemoveAllParties();
         RemoveAllCities();
         RemoveAllPlayers();
-        // create new objects from saved data
+        // wait for guaranteed next updated, in case of performance issues
+        yield return new WaitForFixedUpdate();
+        // Wait for all animations to finish
+        yield return new WaitForSeconds(0.25f);
+    }
+
+    IEnumerator CreateGameObjects(GameData gameData)
+    {
         // Note order is important, if some party was child of a city, then city should be created first
         // Update game with data from save
         CreateGamePlayers(gameData.playersData);
@@ -180,6 +191,26 @@ public class LoadGame : MonoBehaviour
         CreateCities(gameData.citiesData);
         // Update game with data from save
         CreateParties(gameData.partiesData);
+        // wait for guaranteed next updated, in case of performance issues
+        yield return new WaitForFixedUpdate();
+        // Wait for all animations to finish
+        yield return new WaitForSeconds(0.25f);
+        // Unblock mouse input
+        transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(false);
+        // Deactivate Loading screen
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
+    }
+
+    void SetGameData(GameData gameData)
+    {
+        // Activate Loading screen
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
+        // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
+        // .. Set map
+        // remove old data
+        transform.root.GetComponentInChildren<ChapterManager>().CoroutineQueue.Run(CleanGameBeforeLoad());
+        // create new objects from saved data
+        transform.root.GetComponentInChildren<ChapterManager>().CoroutineQueue.Run(CreateGameObjects(gameData));
     }
 
     void LoadGameData()
@@ -345,15 +376,27 @@ public class LoadGame : MonoBehaviour
                 if (File.Exists(fullFilePath))
                 {
                     // file exists
-                    // Ask user whether he wants to load new game
-                    ConfirmationPopUp confirmationPopUp = ConfirmationPopUp.Instance();
-                    // set actions
-                    UnityAction YesAction = new UnityAction(OnLoadSaveYesConfirmation);
-                    UnityAction NoAction = new UnityAction(OnLoadSaveNoConfirmation);
-                    // set message
-                    string confirmationMessage = "Do you want to terminate current game and load saved game? Not saved progress will be lost.";
-                    // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
-                    confirmationPopUp.Choice(confirmationMessage, YesAction, NoAction);
+                    // verify if game is already running
+                    // check if there are players objects
+                    if (transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>().Length > 0)
+                    {
+                        // game is already running
+                        // Ask user whether he wants to load new game
+                        ConfirmationPopUp confirmationPopUp = ConfirmationPopUp.Instance();
+                        // set actions
+                        UnityAction YesAction = new UnityAction(OnLoadSaveYesConfirmation);
+                        UnityAction NoAction = new UnityAction(OnLoadSaveNoConfirmation);
+                        // set message
+                        string confirmationMessage = "Do you want to terminate current game and load saved game? Not saved progress will be lost.";
+                        // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+                        confirmationPopUp.Choice(confirmationMessage, YesAction, NoAction);
+                    }
+                    else
+                    {
+                        // game is not running yet
+                        // Load game data
+                        LoadGameData();
+                    }
                 }
                 else
                 {
