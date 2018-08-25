@@ -82,7 +82,7 @@ MonoBehaviour:
     unitRole: Role
     unitBriefDescription: Brief description
     unitFullDescription: Full description
-    unitCost: 100
+    unitCost: 600
     unitSize: 0
     isInterpartyMovable: 0
     isDismissable: 1

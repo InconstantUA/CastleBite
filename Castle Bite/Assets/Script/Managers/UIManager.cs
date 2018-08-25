@@ -35,16 +35,17 @@ public class UIManager : MonoBehaviour {
     {
         foreach(FocusPanel focusPanel in GetComponentsInChildren<FocusPanel>())
         {
-            // verify if HeroParty Leader (PartyUnit type) is in focused game object
-            if (focusPanel.focusedObject.GetComponent<PartyUnit>())
-            {
-                // verify if HeroParty linked to focus panel is the same as we are searching for
-                if (focusPanel.focusedObject.GetComponent<PartyUnit>().GetComponentInParent<HeroParty>().gameObject.GetInstanceID() == heroParty.gameObject.GetInstanceID())
-                {
-                    return focusPanel;
-                }
-            }
-            // verify if city is 
+            // verify if there is focused object
+            if (focusPanel.focusedObject)
+                // verify if there is link party unit UI
+                if (focusPanel.focusedObject.GetComponent<PartyUnitUI>())
+                    // verify if party unit UI has linked party Unit
+                    if (focusPanel.focusedObject.GetComponent<PartyUnitUI>().LPartyUnit)
+                        // verify if HeroParty linked to focus panel is the same as we are searching for
+                        if (focusPanel.focusedObject.GetComponent<PartyUnitUI>().LPartyUnit.GetComponentInParent<HeroParty>().gameObject.GetInstanceID() == heroParty.gameObject.GetInstanceID())
+                        {
+                            return focusPanel;
+                        }
         }
         return null;
     }

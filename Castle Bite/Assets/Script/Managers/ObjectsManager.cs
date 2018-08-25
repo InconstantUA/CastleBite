@@ -54,6 +54,8 @@ public class ObjectsManager : MonoBehaviour {
         GameObject newGamePlayer = Instantiate(gamePlayerTemplate, gamePlayersRoot);
         // Set player data
         newGamePlayer.GetComponent<GamePlayer>().PlayerData = playerData;
+        // rename it
+        newGamePlayer.gameObject.name = playerData.givenName + " " + playerData.faction;
     }
 
     public void RemovePlayer(GamePlayer gamePlayer)

@@ -66,4 +66,17 @@ public class HeroPartyUI : MonoBehaviour {
         // Disable Party Inventory
         GetComponentInChildren<PartyInventoryUI>(true).gameObject.SetActive(false);
     }
+
+    public PartyUnitUI GetPartyLeaderUI()
+    {
+        foreach (PartyUnitUI partyUnitUI in GetComponentsInChildren<PartyUnitUI>())
+        {
+            // verify if this is leader
+            if (partyUnitUI.LPartyUnit.IsLeader)
+            {
+                return partyUnitUI;
+            }
+        }
+        return null;
+    }
 }

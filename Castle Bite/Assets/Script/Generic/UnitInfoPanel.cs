@@ -26,6 +26,16 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string statusBonusPreviewStyleStart = "<color=yellow>";
     string statusBonusPreviewStyleEnd = "</color>";
 
+    public enum Align { Left, Middle, Right }
+
+    void OnDisable()
+    {
+        // reset align to the middle
+        SetAlign(Align.Middle);
+        // Allow Unit info panel to react on right clicks and close
+        interactable = true;
+    }
+
     void ActivateUnitInfoPanel(PartyUnit partyUnit)
     {
         //// skip few miliseconds
@@ -112,15 +122,43 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         transform.Find("Panel/UnitDescription/Value").GetComponent<Text>().text = partyUnit.UnitFullDescription.ToString();
     }
 
-    public void ActivateAdvance(PartyUnit partyUnit)
+    public void SetAlign(Align align)
+    {
+        // get Rect transform
+        RectTransform unitInfoPanelRT = GetComponent<RectTransform>();
+        // set location
+        switch (align)
+        {
+            case Align.Left:
+                Debug.LogError("Left location is not implemented yet");
+                break;
+            case Align.Middle:
+                unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
+                unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+                break;
+            case Align.Right:
+                unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
+                unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+                break;
+            default:
+                Debug.LogError("Unknown location: " + align.ToString());
+                break;
+        }
+    }
+
+    public void ActivateAdvance(PartyUnit partyUnit, Align align = Align.Middle, bool isInterractible = true)
     {
         // verify party unit is not null, if it is null,
         // then user right clicked on a cell without unit
         if (partyUnit)
         {
             ActivateUnitInfoPanel(partyUnit);
+            SetAlign(align);
+            interactable = isInterractible;
         }
     }
+
+
 
     public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus, int chance, int chanceBonus)
     {

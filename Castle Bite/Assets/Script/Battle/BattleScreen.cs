@@ -169,13 +169,16 @@ public class BattleScreen : MonoBehaviour {
         // set if party can escape based on its original position
         playerHeroParty.CanEscapeFromBattle = CanEscape(playerHeroParty.PreBattleParentTr);
         enemyHeroParty.CanEscapeFromBattle = CanEscape(enemyHeroParty.PreBattleParentTr);
-        // Get parties leaders
-        PartyUnit playerPartyLeader = playerHeroParty.GetPartyLeader();
-        PartyUnit enemyPartyLeader = enemyHeroParty.GetPartyLeader();
+        //// Get parties leaders
+        //PartyUnit playerPartyLeader = playerHeroParty.GetPartyLeader();
+        //PartyUnit enemyPartyLeader = enemyHeroParty.GetPartyLeader();
+        // Activate Hero parties UIs upfront so that PartyLeaders UIs are created
+        transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(true);
+        transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(true);
         // assign party leader to left focus panel
-        transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerPartyLeader.gameObject; ;
+        transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerHeroPartyUI.GetPartyLeaderUI().gameObject;
         // activate left Focus panel
-        transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyPartyLeader.gameObject;
+        transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyHeroPartyUI.GetPartyLeaderUI().gameObject;
         // Activate all needed UI at once
         SetCommonBattleUIActive(true);
         // Get parties panels

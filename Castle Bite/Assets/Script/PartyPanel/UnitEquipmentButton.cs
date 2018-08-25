@@ -19,9 +19,9 @@ public class UnitEquipmentButton : MonoBehaviour {
         // structure: 6City-5HeroParty-4PartyPanel-3Row-2Cell-1UnitEquipmentControl-EquipmentButton(this)
         //City city = transform.parent.parent.parent.parent.parent.parent.GetComponent<City>();
         // Get city screen
-        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true);
+        EditPartyScreen editPartyScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true);
         // verify if City screen is active = we are in a city
-        if (cityScreen)
+        if (editPartyScreen)
         {
             //City city = cityScreen.City;
             // do actions for each HeroParty
@@ -85,6 +85,23 @@ public class UnitEquipmentButton : MonoBehaviour {
             {
                 transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").gameObject.SetActive(originalState.HireCommonUnitButtons);
             }
+            // Activate/deactivate unit info panel
+            UnitInfoPanel unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>();
+            if (!doActivate)
+            {
+                // activate unit info panel
+                // get party unit, structure: 2UnitCanvas(Clone)-1UnitEquipmentControl-EquipmentButton(this)
+                PartyUnit partyUnit = transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit;
+                // activate unit info panel
+                unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false);
+            }
+            else
+            {
+                // deactivate unit info panel
+                unitInfoPanel.gameObject.SetActive(false);
+            }
+            // Disable/Enable unit info panel background
+            unitInfoPanel.transform.Find("Background").gameObject.SetActive(doActivate);
         }
     }
 

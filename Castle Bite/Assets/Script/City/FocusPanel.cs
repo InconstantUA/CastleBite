@@ -67,7 +67,7 @@ public class FocusPanel : MonoBehaviour {
                     SetCityInformation();
                 }
             }
-            else if (focusedObject.GetComponent<PartyUnit>())
+            else if (focusedObject.GetComponent<PartyUnitUI>())
             {
                 SetLeaderInformation();
             }
@@ -129,7 +129,7 @@ public class FocusPanel : MonoBehaviour {
         transform.Find("FocusedDescription").gameObject.SetActive(true);
         transform.Find("PartyFocus").gameObject.SetActive(true);
         // get party leader
-        PartyUnit partyLeader = focusedObject.GetComponent<PartyUnit>();
+        PartyUnit partyLeader = focusedObject.GetComponent<PartyUnitUI>().LPartyUnit;
         // populate with info from hero
         transform.Find("FocusedName").GetComponent<Text>().text = partyLeader.GivenName;
         transform.Find("FocusedDescription").GetComponent<Text>().text = partyLeader.UnitName;

@@ -32,32 +32,31 @@ public class UpgradeUnit : MonoBehaviour {
 
     void ActivateUnitInfoPanel(PartyUnit partyUnit)
     {
-        Transform unitInfoPanelTr = transform.root.Find("MiscUI/UnitInfoPanel");
-        unitInfoPanel = unitInfoPanelTr.GetComponent<UnitInfoPanel>();
-        unitInfoPanel.ActivateAdvance(partyUnit);
-        // Adjust position of unit info panel, so it appears on the right side
-        RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
-        unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
-        unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+        unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>();
+        unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false);
+        //// Adjust position of unit info panel, so it appears on the right side
+        //RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
+        //unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
+        //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
         // Disable unit info panel background
-        unitInfoPanelTr.Find("Background").gameObject.SetActive(false);
-        // Prevent Unit info panel from reacting on right clicks and closing
-        unitInfoPanelTr.GetComponent<UnitInfoPanel>().interactable = false;
+        unitInfoPanel.transform.Find("Background").gameObject.SetActive(false);
+        //// Prevent Unit info panel from reacting on right clicks and closing
+        //unitInfoPanel.interactable = false;
     }
 
     void DeactivateUnitInfoPanel()
     {
         // Deactivate unit info panel
-        Transform unitInfoPanelTr = transform.root.Find("MiscUI/UnitInfoPanel");
-        unitInfoPanelTr.gameObject.SetActive(false);
-        // Adjust position of unit info panel, so it appears on the middle of the screen
-        RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
-        unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
-        unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+        unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>();
+        unitInfoPanel.gameObject.SetActive(false);
+        //// Adjust position of unit info panel, so it appears on the middle of the screen
+        //RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
+        //unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
+        //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
         // Enable unit info panel background
-        unitInfoPanelTr.Find("Background").gameObject.SetActive(true);
-        // Allow Unit info panel to react on right clicks and close
-        unitInfoPanelTr.GetComponent<UnitInfoPanel>().interactable = true;
+        unitInfoPanel.transform.Find("Background").gameObject.SetActive(true);
+        //// Allow Unit info panel to react on right clicks and close
+        //unitInfoPanel.interactable = true;
     }
 
     void ShowInfo(string info)
@@ -770,7 +769,7 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // Show unit info
         Debug.Log("Show " + unitClass.UnitName + " unit info.");
-        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(unitClass, UnitInfoPanel.Align.Right, false);
     }
 
     void ShowUnitInfoWithPreview(PartyUnit unitClass)
