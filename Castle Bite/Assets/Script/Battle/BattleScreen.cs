@@ -401,7 +401,7 @@ public class BattleScreen : MonoBehaviour {
         // remove dead units from city garnizon's heroParty
         enemyPartyPanel.transform.parent.GetComponent<HeroPartyUI>().LHeroParty.RemoveDeadPartyUnits();
         // Change city faction to player's faction
-        enemyPartyPanel.GetCity().Faction = playerPartyPanel.GetHeroParty().Faction;
+        enemyPartyPanel.GetCity().CityFaction = playerPartyPanel.GetHeroParty().Faction;
         // Prepare variables to be used later
         MapHero mapHero = playerPartyPanel.GetHeroParty().LMapHero;
         MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LMapCity;

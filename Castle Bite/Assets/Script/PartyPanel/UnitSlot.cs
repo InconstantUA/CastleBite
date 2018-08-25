@@ -28,7 +28,6 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Awake()
     {
-        confirmationPopUp = ConfirmationPopUp.Instance();
         // define actions
         dismissYesAction = new UnityAction(OnDismissYesConfirmation);
         dismissNoAction = new UnityAction(OnDismissNoConfirmation);
@@ -431,11 +430,6 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             ActOnCityClick();
         }
-        // verify if HeroEditScreen is active
-        else if (uiManager.GetComponentInChildren<HeroEditScreen>(false) != null)
-        {
-            ActOnCityClick();
-        }
         // verify if Battle screen is active
         else if (uiManager.GetComponentInChildren<BattleScreen>(false) != null)
         {
@@ -471,12 +465,12 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
             }
             // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
-            confirmationPopUp.Choice(confirmationMessage, dismissYesAction, dismissNoAction);
+            ConfirmationPopUp.Instance().Choice(confirmationMessage, dismissYesAction, dismissNoAction);
         }
         else
         {
             // display error message
-            NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
+            NotificationPopUp notificationPopup = transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>();
             notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
         }
     }

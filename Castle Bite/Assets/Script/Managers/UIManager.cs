@@ -70,21 +70,4 @@ public class UIManager : MonoBehaviour {
         return null;
     }
 
-    public GameObject GetActiveScreen()
-    {
-        // verify if EditPartyScreen is active 
-        if (GetComponentInChildren<EditPartyScreen>(false))
-        {
-            return GetComponentInChildren<EditPartyScreen>(false).gameObject;
-        }
-        else if (GetComponentInChildren<HeroEditScreen>(false))
-        {
-            return GetComponentInChildren<HeroEditScreen>(false).gameObject;
-        }
-        else
-        {
-            Debug.Log("No active screen");
-            return null;
-        }
-    }
 }

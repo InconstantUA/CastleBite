@@ -11,24 +11,14 @@ public enum PartyMode
 }
 
 [Serializable]
-public struct PartyMapPosition
-{
-    public float offsetMinX;
-    public float offsetMinY;
-    public float offsetMaxX;
-    public float offsetMaxY;
-}
-
-[Serializable]
 public class PartyData : System.Object
 {
     public int partyID = -1;
     public int linkedCityID = -1;
     public Faction faction;
     public PartyMode partyMode;
-    public PartyMapPosition partyMapPosition;
-    public string partyUIAddress;
-    //public PartyPanelData partyPanelData; // initialized and used only during game save and load
+    public PositionOnMap partyMapPosition;
+    public string partyUIAddress = null;
     public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
 }
 
@@ -61,10 +51,10 @@ public class HeroParty : MonoBehaviour {
         return null;
     }
 
-    public PartyMapPosition GetPartyMapPosition()
+    public PositionOnMap GetPartyMapPosition()
     {
         // initialize map position with default values
-        PartyMapPosition partyMapPosition = new PartyMapPosition
+        PositionOnMap partyMapPosition = new PositionOnMap
         {
             offsetMinX = 0,
             offsetMinY = 0,
@@ -106,7 +96,7 @@ public class HeroParty : MonoBehaviour {
                     //Debug.Log(" offsetMin.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y.ToString());
                     //Debug.Log(" offsetMax.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x.ToString());
                     //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
-                    return new PartyMapPosition
+                    return new PositionOnMap
                     {
                         offsetMinX = lMapHero.GetComponent<RectTransform>().offsetMin.x,
                         offsetMinY = lMapHero.GetComponent<RectTransform>().offsetMin.y,

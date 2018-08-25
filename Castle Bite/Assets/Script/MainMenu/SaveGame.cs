@@ -7,19 +7,6 @@ using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-[Serializable]
-class GameData : System.Object
-{
-    // Map (Scene)
-    // ..
-    // Players
-    public PlayerData[] playersData;
-    // Cities
-    // ..
-    // Parties with units
-    public PartyData[] partiesData;
-}
-
 public class SaveGame : MonoBehaviour {
     [SerializeField]
     string fileExtension;
@@ -83,19 +70,43 @@ public class SaveGame : MonoBehaviour {
         }
     }
 
-    void PrepareHeroPartiesForSave(List<HeroParty> heroParties)
+    void PrepareCitiesForSave(City[] cities)
+    {
+        foreach (City city in cities)
+        {
+            // save city ID
+            city.CityID = city.gameObject.GetInstanceID();
+            // save city position
+            city.CityData.cityMapPosition = city.GetCityMapPosition();
+        }
+    }
+
+    void PrepareHeroPartiesForSave(HeroParty[] heroParties)
     {
         foreach (HeroParty heroParty in heroParties)
         {
-            // get party UI address
-            string partyUIAddress = heroParty.GetPartyUIAddress();
+            // set party ID
+            heroParty.PartyData.partyID = heroParty.gameObject.GetInstanceID();
+            // verify if party is linked to the city
+            if (heroParty.transform.parent.GetComponent<City>() != null)
+            {
+                // party is linked to a city
+                // set linked city ID
+                heroParty.PartyData.linkedCityID = heroParty.transform.parent.GetComponent<City>().gameObject.GetInstanceID();
+                // set UI address to null, because it is not needed any more, if party is linked to the city
+                heroParty.PartyData.partyUIAddress = null;
+            }
+            else
+            {
+                // party is not linked to a city
+                // get party UI address
+                string partyUIAddress = heroParty.GetPartyUIAddress();
+                // set party UI address
+                heroParty.PartyData.partyUIAddress = partyUIAddress;
+                Debug.Log(heroParty.name + " party UI address is " + heroParty.PartyData.partyUIAddress);
+            }
             // set party map address
             heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
-            // set party UI address
-            heroParty.PartyData.partyUIAddress = partyUIAddress;
-            Debug.Log(heroParty.name + " party UI address is " + heroParty.PartyData.partyUIAddress);
-            // set party panel data
-            //heroParty.PartyData.partyPanelData = heroParty.transform.GetComponentInChildren<PartyPanel>(true).PartyPanelData;
             // get all units in party
             PartyUnit[] partyUnits = heroParty.GetComponentsInChildren<PartyUnit>(true);
             // init party units data
@@ -103,9 +114,6 @@ public class SaveGame : MonoBehaviour {
             // foreach party unit
             for (int i = 0; i < partyUnits.Length; i++)
             {
-                // set party unit cell address
-                //partyUnits[i].PartyUnitData.unitCellAddress = partyUnits[i].GetUnitCellUIAddress();
-                // Debug.Log(partyUnits[i].PartyUnitData.unitName + " unit cell address is " + partyUnits[i].PartyUnitData.unitCellAddress);
                 // set party units data
                 heroParty.PartyData.partyUnitsData[i] = partyUnits[i].PartyUnitData;
             }
@@ -117,40 +125,52 @@ public class SaveGame : MonoBehaviour {
         Debug.Log("Get game data");
         // Get game players
         GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
-        // Init hero parties list
-        List<HeroParty> heroParties = new List<HeroParty>();
-        // Get all parties except Templates
-        foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
-        {
-            // get party UI address
-            string partyUIAddress = heroParty.GetPartyUIAddress();
-            // verify if this is tempalte
-            if (partyUIAddress.Contains("Templates"))
-            {
-                // skip it
-                Debug.Log("Skipping " + heroParty.name + " because party UI address [" + partyUIAddress + "] match Templates");
-            }
-            else
-            {
-                // add party to the list
-                heroParties.Add(heroParty);
-            }
-        }
+        // Get cities
+        City[] cities = transform.root.Find("Cities").GetComponentsInChildren<City>();
+        // Get hero parties
+        HeroParty[] heroParties = transform.root.GetComponentsInChildren<HeroParty>();
+        //// Init hero parties list
+        //List<HeroParty> heroParties = new List<HeroParty>();
+        //// Get all parties except Templates
+        //foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
+        //{
+        //    // get party UI address
+        //    string partyUIAddress = heroParty.GetPartyUIAddress();
+        //    // verify if this is tempalte
+        //    if (partyUIAddress.Contains("Templates"))
+        //    {
+        //        // skip it
+        //        Debug.Log("Skipping " + heroParty.name + " because party UI address [" + partyUIAddress + "] match Templates");
+        //    }
+        //    else
+        //    {
+        //        add party to the list
+        //        heroParties.Add(heroParty);
+        //    }
+        //}
         // init game data
         GameData gameData = new GameData
         {
             playersData = new PlayerData[players.Length],
-            partiesData = new PartyData[heroParties.Count]
+            citiesData = new CityData[cities.Length],
+            partiesData = new PartyData[heroParties.Length]
         };
         // Get and write to gameData players data
         for (int i = 0; i < players.Length; i++)
         {
             gameData.playersData[i] = players[i].PlayerData;
         }
+        // Prepare city data from the save
+        PrepareCitiesForSave(cities);
+        // Get and write to gameData cities data
+        for (int i = 0; i < cities.Length; i++)
+        {
+            gameData.citiesData[i] = cities[i].CityData;
+        }
         // Set parties data - there are some values which are initialized only during save
         PrepareHeroPartiesForSave(heroParties);
         // Get and write to gameData parties data;
-        for (int i = 0; i < heroParties.Count; i++)
+        for (int i = 0; i < heroParties.Length; i++)
         {
             gameData.partiesData[i] = heroParties[i].PartyData;
         }

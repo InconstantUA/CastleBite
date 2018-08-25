@@ -335,7 +335,6 @@ public class EditPartyScreen : MonoBehaviour {
     HeroPartyUI CreateNewPartyInCity(City city = null)
     {
         // create and update Hero Party panel in UI, parent it to city UI
-        GameObject heroPartyPanelTemplate = transform.root.Find("Templates/Obj/HeroParty").gameObject;
         // Set target city
         City targetCity = LCity;
         if (city != null)
@@ -343,7 +342,7 @@ public class EditPartyScreen : MonoBehaviour {
             targetCity = city;
         }
         // create new party instance in city
-        HeroParty newHeroParty = Instantiate(heroPartyPanelTemplate, targetCity.transform).GetComponent<HeroParty>();
+        HeroParty newHeroParty = Instantiate(transform.root.GetComponentInChildren<ObjectsManager>().HeroPartyTemplate, targetCity.transform).GetComponent<HeroParty>();
         // Set party mode
         newHeroParty.PartyMode = PartyMode.Party;
         // Activate new party
@@ -363,10 +362,8 @@ public class EditPartyScreen : MonoBehaviour {
         //Transform parentCityOnMap = map.Find(transform.name);
         // Get map transform
         Transform map = transform.root.Find("MapScreen/Map");
-        // Get hero party on map UI template
-        GameObject heroPartyOnMapUITemplate = transform.root.Find("Templates/UI/HeroOnMap").gameObject;
         // Create new hero party on map ui
-        MapHero newPartyOnMapUI = Instantiate(heroPartyOnMapUITemplate, map).GetComponent<MapHero>();
+        MapHero newPartyOnMapUI = Instantiate(transform.root.GetComponentInChildren<ObjectsManager>().HeroPartyOnMapTemplate, map).GetComponent<MapHero>();
         // Get city
         City targetCity = LCity;
         if (city != null)

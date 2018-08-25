@@ -670,7 +670,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // verify if city is friendly
             HeroParty party = GetUnitParty();
-            if (city.Faction == party.Faction)
+            if (city.CityFaction == party.Faction)
             {
                 return city.GetCityDefense();
             }

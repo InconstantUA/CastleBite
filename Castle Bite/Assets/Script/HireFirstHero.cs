@@ -205,7 +205,7 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         foreach (City city in transform.root.Find("Cities").GetComponentsInChildren<City>())
         {
             // verify if city faction match players faction and that it is capital city
-            if ((city.Faction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
+            if ((city.CityFaction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
                 && (city.CityType == CityType.Capital))
             {
                 return city;

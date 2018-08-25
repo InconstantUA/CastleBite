@@ -14,8 +14,8 @@ public enum CityType {
 public class CityData
 {
     public int cityID = -1;
-    public int linkedPartyID = -1;
-    public int linkedGarnizonID = -1;
+    //public int linkedPartyID = -1;
+    //public int linkedGarnizonID = -1;
     public Faction cityFaction;
     public CityType cityType;
     public string cityName;
@@ -24,6 +24,7 @@ public class CityData
     public int cityLevelMax = 5;
     public UnitType[] hireablePartyLeaders;
     public UnitType[] hireableCommonUnits;
+    public PositionOnMap cityMapPosition;   // used only during load and save
 }
 
 [Serializable]
@@ -49,7 +50,7 @@ public class City : MonoBehaviour {
     // If hero leaves city, the we should return city state o NoHeroIn
     // and activate hire hero button
 
-
+    
     public int GetCityDefense()
     {
         int bonus = 0;
@@ -108,8 +109,54 @@ public class City : MonoBehaviour {
         return null;
     }
 
+    public PositionOnMap GetCityMapPosition()
+    {
+        // initialize map position with default values
+        PositionOnMap cityMapPosition = new PositionOnMap
+        {
+            offsetMinX = 0,
+            offsetMinY = 0,
+            offsetMaxX = 0,
+            offsetMaxY = 0
+        };
+        // get map manager
+        MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+        // verify if map manager is present
+        if (mapManager == null)
+        {
+            Debug.LogError("cannot find map manager");
+            // return default position
+            return cityMapPosition;
+        }
+        else
+        {
+            // verify if linked party on map is defined
+            if (lMapCity == null)
+            {
+                Debug.LogError("Linked party on map is null");
+                // return default position
+                return cityMapPosition;
+            }
+            else
+            {
+                // return position in PartyMapPosition format, which can be serialized
+                //Debug.Log(" offsetMin.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x.ToString());
+                //Debug.Log(" offsetMin.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y.ToString());
+                //Debug.Log(" offsetMax.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x.ToString());
+                //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
+                return new PositionOnMap
+                {
+                    offsetMinX = lMapCity.GetComponent<RectTransform>().offsetMin.x,
+                    offsetMinY = lMapCity.GetComponent<RectTransform>().offsetMin.y,
+                    offsetMaxX = lMapCity.GetComponent<RectTransform>().offsetMax.x,
+                    offsetMaxY = lMapCity.GetComponent<RectTransform>().offsetMax.y
+                };
+            }
+        }
+    }
+
     #region City Properties
-    public Faction Faction
+    public Faction CityFaction
     {
         get
         {
@@ -118,7 +165,13 @@ public class City : MonoBehaviour {
 
         set
         {
-            cityData.cityFaction = value;
+            if (cityData.cityFaction != value)
+            {
+                Faction oldValue = cityData.cityFaction;
+                cityData.cityFaction = value;
+                // trigger event
+                transform.root.GetComponentInChildren<EventsAdmin>().IHasChanged(this, oldValue);
+            }
         }
     }
 
@@ -226,31 +279,31 @@ public class City : MonoBehaviour {
         }
     }
 
-    public int LinkedPartyID
-    {
-        get
-        {
-            return cityData.linkedPartyID;
-        }
+    //public int LinkedPartyID
+    //{
+    //    get
+    //    {
+    //        return cityData.linkedPartyID;
+    //    }
 
-        set
-        {
-            cityData.linkedPartyID = value;
-        }
-    }
+    //    set
+    //    {
+    //        cityData.linkedPartyID = value;
+    //    }
+    //}
 
-    public int LinkedGarnizonID
-    {
-        get
-        {
-            return cityData.linkedGarnizonID;
-        }
+    //public int LinkedGarnizonID
+    //{
+    //    get
+    //    {
+    //        return cityData.linkedGarnizonID;
+    //    }
 
-        set
-        {
-            cityData.linkedGarnizonID = value;
-        }
-    }
+    //    set
+    //    {
+    //        cityData.linkedGarnizonID = value;
+    //    }
+    //}
 
     public MapCity LMapCity
     {
@@ -262,6 +315,19 @@ public class City : MonoBehaviour {
         set
         {
             lMapCity = value;
+        }
+    }
+
+    public CityData CityData
+    {
+        get
+        {
+            return cityData;
+        }
+
+        set
+        {
+            cityData = value;
         }
     }
     #endregion City Properties

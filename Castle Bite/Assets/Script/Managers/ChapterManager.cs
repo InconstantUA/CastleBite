@@ -17,6 +17,8 @@ public class ChapterManager : MonoBehaviour {
 
     [SerializeField]
     bool lastChapter;
+    [SerializeField]
+    string targetCityName; // we do not use direct link to the city, because it may be destroyed and recreated during save/load process
     // define chapter goals
     bool goalTargetCityCaptured = false;
     bool goalTargetHeroDestroyed = true;
@@ -31,19 +33,22 @@ public class ChapterManager : MonoBehaviour {
 
     public void OnGoalCityCapture(City city)
     {
-        GamePlayer player = TurnsManager.Instance.GetActivePlayer();
-        // verify if city has been captured by human player
-        // .. I assume that game is in single player game mode, where there is only one human player and all others are AI players
-        if ( (city.Faction == player.Faction) && (PlayerType.Human == player.PlayerType) )
+        if (city.name == targetCityName)
         {
-            goalTargetCityCaptured = true;
-            Debug.Log("Target city has been captured by player");
-        }
-        else
-        {
-            failed = true;
-            failureReason = city.name + " city has been captured by other player.";
-            Debug.Log("Target city has been captured by other player.");
+            GamePlayer player = TurnsManager.Instance.GetActivePlayer();
+            // verify if city has been captured by human player
+            // .. I assume that game is in single player game mode, where there is only one human player and all others are AI players
+            if ((city.CityFaction == player.Faction) && (PlayerType.Human == player.PlayerType))
+            {
+                goalTargetCityCaptured = true;
+                Debug.Log("Target city has been captured by player");
+            }
+            else
+            {
+                failed = true;
+                failureReason = city.name + " city has been captured by other player.";
+                Debug.Log("Target city has been captured by other player.");
+            }
         }
     }
 

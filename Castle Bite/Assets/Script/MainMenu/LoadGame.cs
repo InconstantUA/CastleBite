@@ -98,136 +98,88 @@ public class LoadGame : MonoBehaviour
                 }
     }
 
-    public void CreateGamePlayers(PlayerData[] players)
+    public void CreateGamePlayers(PlayerData[] playersData)
     {
-        // Get player object Template
-        // GameObject gamePlayerTemplate = transform.root.Find("Templates/Obj/GamePlayer").gameObject;
-        // Get players root
-        Transform gamePlayersRoot = transform.root.Find("GamePlayers");
-        // Init new player
-        GameObject newGamePlayer;
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create players
-        foreach (PlayerData player in players)
+        foreach (PlayerData playerData in playersData)
         {
-            // instantiate new player
-            newGamePlayer = Instantiate(gamePlayerTemplate, gamePlayersRoot);
-            // Set player data
-            newGamePlayer.GetComponent<GamePlayer>().PlayerData = player;
+            objectsManager.CreatePlayer(playerData);
         }
     }
 
     public void RemoveAllPlayers()
     {
-        foreach (Transform child in transform.root.Find("GamePlayers"))
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // remove players
+        foreach (GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
         {
-            Destroy(child.gameObject);
+            objectsManager.RemovePlayer(gamePlayer);
         }
     }
 
-    void SetPlayers(GameData gameData)
+    public void RemoveAllCities()
     {
-        // Remove old data
-        RemoveAllPlayers();
-        // Update game with data from save
-        CreateGamePlayers(gameData.playersData);
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Remove cities
+        foreach (City city in transform.root.Find("Cities").GetComponentsInChildren<City>(true))
+        {
+            objectsManager.RemoveCity(city);
+        }
+    }
+
+    public void CreateCities(CityData[] citiesData)
+    {
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Create cities
+        foreach (CityData cityData in citiesData)
+        {
+            objectsManager.CreateCity(cityData);
+        }
     }
 
     public void RemoveAllParties()
     {
-        foreach(HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Remove all parties
+        foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
         {
-            // verify if there is linked party on map
-            if (heroParty.LMapHero != null)
-            {
-                // destroy hero party on map
-                Destroy(heroParty.LMapHero.gameObject);
-            }
-            // destroy hero party
-            Destroy(heroParty.gameObject);
+            objectsManager.RemoveHeroParty(heroParty);
         }
     }
 
     public void CreateParties(PartyData[] partiesData)
     {
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Create parties
         foreach (PartyData partyData in partiesData)
         {
-            Debug.Log("Creating party");
-            HeroParty newHeroParty;
-            if (partyData.partyMode == PartyMode.Garnizon)
-            {
-                //// skip creating party and update CityGarnizon party, which is always there
-                //// get hero party
-                //newHeroParty = transform.root.Find(partyData.partyUIAddress + "/CityGarnizon").GetComponent<HeroParty>();
-                // create party anyway, because it was previously removed.
-                //newHeroParty = Instantiate(heroPartyTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
-                // there should be higher unit button in city garnizon, that is why it has other template
-                // .. in future - move buttons to separate UI
-                newHeroParty = Instantiate(cityGarnizonTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
-            }
-            else
-            {
-                // create hero party from tempalte in required UI address
-                newHeroParty = Instantiate(heroPartyTemplate, transform.root.Find(partyData.partyUIAddress)).GetComponent<HeroParty>();
-            }
-            // set hero party data
-            newHeroParty.PartyData = partyData;
-            // create units
-            foreach (PartyUnitData partyUnitData in partyData.partyUnitsData)
-            {
-                // get unit template by unit type
-                GameObject unitTemplate = transform.root.GetComponentInChildren<TemplatesManager>().GetPartyUnitTemplateByType(partyUnitData.unitType);
-                if (unitTemplate != null)
-                {
-                    Debug.Log("Creating unit of [" + partyUnitData.unitType + "] type from " + unitTemplate.name + " template");
-                    // create unit in HeroParty
-                    Instantiate(unitTemplate, newHeroParty.transform).GetComponent<PartyUnit>();
-                    //// create unit canvas in unit slot
-                    //PartyUnitUI partyUnitUI = Instantiate(unitCanvasTemplate, partyPanel.transform.Find(partyUnitData.unitCellAddress + "/UnitSlot")).GetComponent<PartyUnitUI>();
-                    //// link unit to unit canvas
-                    //partyUnitUI.LPartyUnit = partyUnit;
-                }
-            }
-            // activate hero party
-            newHeroParty.gameObject.SetActive(true);
-            // verify if party is in garnizon mode
-            if (partyData.partyMode == PartyMode.Garnizon)
-            {
-                // skip creating party and update CityGarnizon party, which is always there
-            }
-            else
-            {
-                Debug.Log("Creating party on map representation");
-                // create party on map
-                Transform map = transform.root.Find("MapScreen/Map");
-                MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, map).GetComponent<MapHero>();
-                // place party to original position on map
-                newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
-                newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
-                // create links between party on map and hero party
-                newPartyOnMap.LHeroParty = newHeroParty;
-                newHeroParty.LMapHero = (newPartyOnMap);
-                // activate hero on map
-                newPartyOnMap.gameObject.SetActive(true);
-            }
+            objectsManager.CreateHeroParty(partyData);
         }
-    }
-
-    void SetParties(GameData gameData)
-    {
-        // remove old data
-        RemoveAllParties();
-        // Update game with data from save
-        CreateParties(gameData.partiesData);
     }
 
     void SetGameData(GameData gameData)
     {
         // .. Set map
-        // Remove old and create new players
-        SetPlayers(gameData);
-        // .. Set cities
-        // Remove old and create new parties
-        SetParties(gameData);
+        // remove old data
+        // Note order is imporant, because some parties are children of cities
+        RemoveAllParties();
+        RemoveAllCities();
+        RemoveAllPlayers();
+        // create new objects from saved data
+        // Note order is important, if some party was child of a city, then city should be created first
+        // Update game with data from save
+        CreateGamePlayers(gameData.playersData);
+        // Update game with data from save
+        CreateCities(gameData.citiesData);
+        // Update game with data from save
+        CreateParties(gameData.partiesData);
     }
 
     void LoadGameData()
