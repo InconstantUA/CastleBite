@@ -34,14 +34,18 @@ public class UnitEquipmentButton : MonoBehaviour {
                     heroPartyUI.GetComponentInChildren<PartyPanel>(true).gameObject.SetActive(doActivate);
                 }
             }
-            // activate/deactivate city control butons
-            //transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityControlPanel>(true)[0].gameObject.SetActive(doActivate);
-            transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityHealButton>(true)[0].gameObject.SetActive(doActivate);
-            transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityResurectButton>(true)[0].gameObject.SetActive(doActivate);
+            // verify if we are in city or hero party edit mode
+            if (editPartyScreen.LCity != null)
+            {
+                // activate/deactivate city control butons
+                transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityHealButton>(true)[0].gameObject.SetActive(doActivate);
+                transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityResurectButton>(true)[0].gameObject.SetActive(doActivate);
+            }
             transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityDismissButton>(true)[0].gameObject.SetActive(doActivate);
             // activate/deactivate ReturnBtn
             transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<CityBackButton>(true)[0].gameObject.SetActive(doActivate);
-            //cityScreen.transform.Find("CityBackButton").gameObject.SetActive(doActivate);
+            // activate/deactivate Unit Equipment back button
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/HeroEquipmentBackButton").gameObject.SetActive(!doActivate);
             // activate/deactivate focus panels
             FocusPanel[] focusPanels = transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<FocusPanel>(true);
             for (int i = 0; i < focusPanels.Length; i++)
@@ -93,7 +97,7 @@ public class UnitEquipmentButton : MonoBehaviour {
                 // get party unit, structure: 2UnitCanvas(Clone)-1UnitEquipmentControl-EquipmentButton(this)
                 PartyUnit partyUnit = transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit;
                 // activate unit info panel
-                unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false);
+                unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
             }
             else
             {

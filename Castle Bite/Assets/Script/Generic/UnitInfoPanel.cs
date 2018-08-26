@@ -27,6 +27,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string statusBonusPreviewStyleEnd = "</color>";
 
     public enum Align { Left, Middle, Right }
+    public enum Mode { Full, Short }
 
     void OnDisable()
     {
@@ -34,12 +35,22 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         SetAlign(Align.Middle);
         // Allow Unit info panel to react on right clicks and close
         interactable = true;
+        // Deactivate intermediate background
+        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
     }
 
     void ActivateUnitInfoPanel(PartyUnit partyUnit)
     {
         //// skip few miliseconds
         //yield return new WaitForSeconds(0.3f);
+        // get intermediate background game object
+        GameObject intermediateBackgroundGO = transform.root.Find("MiscUI/BackgroundIntermediate").gameObject;
+        // verify if intermediate background is not active yet
+        if (!intermediateBackgroundGO.activeSelf)
+        {
+            // activate it
+            intermediateBackgroundGO.SetActive(true);
+        }
         // activate it
         gameObject.SetActive(true);
         // Fill in unit name
@@ -147,7 +158,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    public void ActivateAdvance(PartyUnit partyUnit, Align align = Align.Middle, bool isInterractible = true)
+    public void ActivateAdvance(PartyUnit partyUnit, Align align = Align.Middle, bool isInterractible = true, Mode mode = Mode.Full)
     {
         // verify party unit is not null, if it is null,
         // then user right clicked on a cell without unit
@@ -156,6 +167,28 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             ActivateUnitInfoPanel(partyUnit);
             SetAlign(align);
             interactable = isInterractible;
+            if (mode == Mode.Full)
+            {
+                // activate full mode Br
+                transform.Find("BrFull").gameObject.SetActive(true);
+                // deactivate short mode Br
+                transform.Find("BrShort").gameObject.SetActive(false);
+                // activate unit description
+                transform.Find("Panel/UnitDescription").gameObject.SetActive(true);
+            }
+            else if (mode == Mode.Short)
+            {
+                // deactivate full mode Br
+                transform.Find("BrFull").gameObject.SetActive(false);
+                // activate short mode Br
+                transform.Find("BrShort").gameObject.SetActive(true);
+                // deactivate unit description
+                transform.Find("Panel/UnitDescription").gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("Unknown mode: " + mode.ToString());
+            }
         }
     }
 

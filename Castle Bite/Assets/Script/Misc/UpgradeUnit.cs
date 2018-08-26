@@ -9,7 +9,7 @@ public class UpgradeUnit : MonoBehaviour {
     GameObject unitBackupGameObject;
     PartyUnitUI focusedPartyUnitUI;
     PartyUnit focusedPartyUnit;
-    UnitInfoPanel unitInfoPanel;
+    //UnitInfoPanel unitInfoPanel;
     int statsUpgradeCount;
     List<UnitType> upgradedToClasses;
     List<UnitSkill> learnedSkills;
@@ -30,34 +30,32 @@ public class UpgradeUnit : MonoBehaviour {
         }
     }
 
-    void ActivateUnitInfoPanel(PartyUnit partyUnit)
-    {
-        unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>();
-        unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false);
-        //// Adjust position of unit info panel, so it appears on the right side
-        //RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
-        //unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
-        //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
-        // Disable unit info panel background
-        //unitInfoPanel.transform.Find("Background").gameObject.SetActive(false);
-        //// Prevent Unit info panel from reacting on right clicks and closing
-        //unitInfoPanel.interactable = false;
-    }
+    //void ActivateUnitInfoPanel(PartyUnit partyUnit)
+    //{
+    //    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false);
+    //    //// Adjust position of unit info panel, so it appears on the right side
+    //    //RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
+    //    //unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
+    //    //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+    //    // Disable unit info panel background
+    //    //unitInfoPanel.transform.Find("Background").gameObject.SetActive(false);
+    //    //// Prevent Unit info panel from reacting on right clicks and closing
+    //    //unitInfoPanel.interactable = false;
+    //}
 
-    void DeactivateUnitInfoPanel()
-    {
-        // Deactivate unit info panel
-        unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>();
-        unitInfoPanel.gameObject.SetActive(false);
-        //// Adjust position of unit info panel, so it appears on the middle of the screen
-        //RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
-        //unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
-        //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
-        // Enable unit info panel background
-        //unitInfoPanel.transform.Find("Background").gameObject.SetActive(true);
-        //// Allow Unit info panel to react on right clicks and close
-        //unitInfoPanel.interactable = true;
-    }
+    //void DeactivateUnitInfoPanel()
+    //{
+    //    // Deactivate unit info panel
+    //    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().gameObject.SetActive(false);
+    //    //// Adjust position of unit info panel, so it appears on the middle of the screen
+    //    //RectTransform unitInfoPanelRT = unitInfoPanelTr.GetComponent<RectTransform>();
+    //    //unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
+    //    //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+    //    // Enable unit info panel background
+    //    //unitInfoPanel.transform.Find("Background").gameObject.SetActive(true);
+    //    //// Allow Unit info panel to react on right clicks and close
+    //    //unitInfoPanel.interactable = true;
+    //}
 
     void ShowInfo(string info)
     {
@@ -234,7 +232,7 @@ public class UpgradeUnit : MonoBehaviour {
         focusedPartyUnit.UnitHealthCurr = (focusedPartyUnit.UnitHealthCurr + focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
         focusedPartyUnit.UnitHealthMax = (focusedPartyUnit.UnitHealthMax + focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
         // upgrade health in unit Info UI
-        unitInfoPanel.SetUnitHealthInfo(focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitHealthInfo(focusedPartyUnit);
         //UpdateHealthInfo();
     }
 
@@ -244,7 +242,7 @@ public class UpgradeUnit : MonoBehaviour {
         focusedPartyUnit.UnitHealthCurr = (focusedPartyUnit.UnitHealthCurr - focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
         focusedPartyUnit.UnitHealthMax = (focusedPartyUnit.UnitHealthMax - focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
         // upgrade health in unit Info UI
-        unitInfoPanel.SetUnitHealthInfo(focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitHealthInfo(focusedPartyUnit);
         //UpdateHealthInfo();
     }
     #endregion Health
@@ -265,7 +263,7 @@ public class UpgradeUnit : MonoBehaviour {
         // upgrade Ability Power in unit object
         focusedPartyUnit.UnitPower = (focusedPartyUnit.UnitPower + focusedPartyUnit.UnitPowerIncrementOnLevelUp);
         // upgrade Ability Power in unit Info UI
-        unitInfoPanel.SetUnitPowerInfo(focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitPowerInfo(focusedPartyUnit);
         //UpdateAbilityPowerInfo();
     }
 
@@ -274,7 +272,7 @@ public class UpgradeUnit : MonoBehaviour {
         // downgrade Ability Power in unit object
         focusedPartyUnit.UnitPower = (focusedPartyUnit.UnitPower - focusedPartyUnit.UnitPowerIncrementOnLevelUp);
         // upgrade Ability Power in unit Info UI
-        unitInfoPanel.SetUnitPowerInfo(focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitPowerInfo(focusedPartyUnit);
         //UpdateAbilityPowerInfo();
     }
     #endregion Ability Power
@@ -285,7 +283,7 @@ public class UpgradeUnit : MonoBehaviour {
         List<UniquePowerModifier> uniquePowerModifiers = focusedPartyUnit.UniquePowerModifiers;
         for (int i = 1; i <= uniquePowerModifiers.Count; i++)
         {
-            unitInfoPanel.SetUniquePowerModifiersPreview(
+            transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUniquePowerModifiersPreview(
                 i,
                 uniquePowerModifiers[i - 1].upmPower,
                 uniquePowerModifiers[i - 1].upmPowerIncrementOnLevelUp * statsUpgradeCount,
@@ -735,8 +733,15 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // get preview transform
         Transform previewTr = transform.root.Find("MiscUI/UnitInfoPanel/Preview");
-        // first change color to normal
-        previewTr.Find("ExitPreview").GetComponent<TextButton>().SetNormalStatus();
+        // Get exit preview button
+        TextButton exitPreviewBtn = transform.root.Find("MiscUI/BottomControlPanel/RightControls/ExitPreview").GetComponent<TextButton>();
+        // change exit preview button color to normal
+        exitPreviewBtn.SetNormalStatus();
+        // deactivate exit preview button
+        exitPreviewBtn.gameObject.SetActive(false);
+        // Activate upgrade controls back
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/UpgradeUnitApply").gameObject.SetActive(true);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/UpgradeUnitCancel").gameObject.SetActive(true);
         // hide preview text and button
         previewTr.gameObject.SetActive(false);
         // disable preview input blocker
@@ -753,7 +758,12 @@ public class UpgradeUnit : MonoBehaviour {
             // show preview text and button
             previewTr.gameObject.SetActive(true);
             // Get exit preview button
-            TextButton exitPreviewBtn = previewTr.Find("ExitPreview").GetComponent<TextButton>();
+            TextButton exitPreviewBtn = transform.root.Find("MiscUI/BottomControlPanel/RightControls/ExitPreview").GetComponent<TextButton>();
+            // Activate exit preview button
+            exitPreviewBtn.gameObject.SetActive(true);
+            // Deactivate upgrade controls
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/UpgradeUnitApply").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/UpgradeUnitCancel").gameObject.SetActive(false);
             // remove all previously set via script listeners
             exitPreviewBtn.OnClick.RemoveAllListeners();
             // add new listener to show back info of focused unit info
@@ -1110,7 +1120,7 @@ public class UpgradeUnit : MonoBehaviour {
         // consume skill upgrade points - this will also trigger all skills info regeneration
         WithdrawSkillPoint();
         // Set skill preview in unit info UI (+green bonus)
-        unitInfoPanel.SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
     }
 
     void SetSkillPlusUIActions(Transform skillUI, UnitSkill unitSkill)
@@ -1132,7 +1142,7 @@ public class UpgradeUnit : MonoBehaviour {
         // return back skill upgrade point to the pool - this will also trigger all skills info regeneration
         AddSkillPoint();
         // Set skill preview in unit info UI (+green bonus)
-        unitInfoPanel.SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
     }
 
     void SetSkillMinusUIActions(Transform skillUI, UnitSkill unitSkill)
@@ -1414,8 +1424,22 @@ public class UpgradeUnit : MonoBehaviour {
 
     public void ActivateAdvance(PartyUnitUI partyUnitUI)
     {
+        // Activate intermediate background 
+        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
         // Activate this object
         gameObject.SetActive(true);
+        // Activate upgrade unit controls
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/UpgradeUnitApply").gameObject.SetActive(true);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/UpgradeUnitCancel").gameObject.SetActive(true);
+        // Verify if city view is active
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>() != null)
+        {
+            // Deactivate city controls
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(false);
+        }
         // Reset counters
         statsUpgradeCount = 0;
         upgradedToClasses = new List<UnitType>();
@@ -1426,7 +1450,7 @@ public class UpgradeUnit : MonoBehaviour {
         // Save backup of party unit component
         Backup();
         // Activate unit info panel
-        ActivateUnitInfoPanel(focusedPartyUnit);
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(focusedPartyUnit, UnitInfoPanel.Align.Right, false);
         // Fill in generic information
         InitGenericInfo();
         // Fill in stats
@@ -1444,13 +1468,33 @@ public class UpgradeUnit : MonoBehaviour {
 
     void OnDisable()
     {
-        DeactivateUnitInfoPanel();
-    }
-
-    void CommonOnExit()
-    {
-        // close upgrade unit window
-        gameObject.SetActive(false);
+        // Deactivate intermediate background 
+        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
+        // Deactivate unit info panel
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().gameObject.SetActive(false);
+        // Deactivate controls
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/UpgradeUnitApply").gameObject.SetActive(false);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/UpgradeUnitCancel").gameObject.SetActive(false);
+        // Get EditPartyScreen
+        EditPartyScreen editPartyScreen = transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false);
+        // verify if edit party screen is active
+        if (editPartyScreen != null)
+        {
+            // verify if there is a linked city
+            if (editPartyScreen.LCity != null)
+            {
+                // Activate city controls
+                transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(true);
+                transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(true);
+                transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(true);
+                transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(true);
+            } else
+            {
+                // Activate only dismiss and city back button
+                transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(true);
+                transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(true);
+            }
+        }
     }
 
     public void Cancel()
@@ -1461,8 +1505,8 @@ public class UpgradeUnit : MonoBehaviour {
         RestoreBackup();
         // destroy current PartyUnit component
         Destroy(focusedPartyUnit.gameObject);
-        // execute common on exit actions
-        CommonOnExit();
+        // close upgrade unit window
+        gameObject.SetActive(false);
     }
 
     public void Apply()
@@ -1473,7 +1517,7 @@ public class UpgradeUnit : MonoBehaviour {
         //focusedPartyUnit.SetUnitCellInfoUI();
         // remove backup
         CleanBackup();
-        // execute common on exit actions
-        CommonOnExit();
+        // close upgrade unit window
+        gameObject.SetActive(false);
     }
 }
