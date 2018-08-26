@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 // Toggles should be organized under same toggle group as parent object
 // Toggles should have child Name Text UI object
 [RequireComponent(typeof(Toggle))]
-public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     Text unitName;
     Toggle tgl;
     Toggle[] allTogglesInGroup;
     Color tmpColor;
-    
+    public UnityEvent OnLeftMouseButtonClick;
+    public UnityEvent OnRightMouseButtonClick;
+
     void Start()
     {
         // init lable object
@@ -47,6 +50,21 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         SetHighlightedStatus();
     }
 
+    public void UpdateUnitInfoPanel()
+    {
+        // verify if this is unit hire menu and display unit info
+        if (gameObject.GetComponent<UnitHirePanel>())
+        {
+            // show unit info
+            PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().GetUnitToHire();
+            // verify if this is partyUnit
+            if (partyUnit)
+            {
+                transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false);
+            }
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         // Debug.Log("OnPointerDown");
@@ -64,17 +82,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         else if (Input.GetMouseButtonDown(1))
         {
             // on right mouse click
-            // verify if this is unit hire menu and display unit info
-            if (gameObject.GetComponent<UnitHirePanel>())
-            {
-                // show unit info
-                PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().GetUnitToHire();
-                // verify if this is partyUnit
-                if (partyUnit)
-                {
-                    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(partyUnit);
-                }
-            }
+            UpdateUnitInfoPanel();
         }
     }
 
@@ -96,7 +104,22 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             // on right mouse click
             // deactivate unit info
-            transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+            //transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        // trigger registered via Unity editor functions
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            OnLeftMouseButtonClick.Invoke();
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
+            OnRightMouseButtonClick.Invoke();
         }
     }
 

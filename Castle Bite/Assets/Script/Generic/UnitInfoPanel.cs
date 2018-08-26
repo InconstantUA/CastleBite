@@ -126,6 +126,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         // get Rect transform
         RectTransform unitInfoPanelRT = GetComponent<RectTransform>();
+        //Debug.LogError(unitInfoPanelRT.offsetMin.x + ":" + unitInfoPanelRT.offsetMin.y + " " + unitInfoPanelRT.offsetMax.x + ":" + unitInfoPanelRT.offsetMax.y);
         // set location
         switch (align)
         {
@@ -133,12 +134,12 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 Debug.LogError("Left location is not implemented yet");
                 break;
             case Align.Middle:
-                unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
-                unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+                unitInfoPanelRT.offsetMin = new Vector2(-200, 32); // left, bottom
+                unitInfoPanelRT.offsetMax = new Vector2(200, -16); // -right, -top
                 break;
             case Align.Right:
-                unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
-                unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
+                unitInfoPanelRT.offsetMin = new Vector2(0, 32); // left, bottom
+                unitInfoPanelRT.offsetMax = new Vector2(400, -16); // -right, -top
                 break;
             default:
                 Debug.LogError("Unknown location: " + align.ToString());

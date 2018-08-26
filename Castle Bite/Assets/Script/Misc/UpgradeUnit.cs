@@ -39,7 +39,7 @@ public class UpgradeUnit : MonoBehaviour {
         //unitInfoPanelRT.offsetMin = new Vector2(370, 0); // left, bottom
         //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
         // Disable unit info panel background
-        unitInfoPanel.transform.Find("Background").gameObject.SetActive(false);
+        //unitInfoPanel.transform.Find("Background").gameObject.SetActive(false);
         //// Prevent Unit info panel from reacting on right clicks and closing
         //unitInfoPanel.interactable = false;
     }
@@ -54,7 +54,7 @@ public class UpgradeUnit : MonoBehaviour {
         //unitInfoPanelRT.offsetMin = new Vector2(0, 0); // left, bottom
         //unitInfoPanelRT.offsetMax = new Vector2(0, 0); // -right, -top
         // Enable unit info panel background
-        unitInfoPanel.transform.Find("Background").gameObject.SetActive(true);
+        //unitInfoPanel.transform.Find("Background").gameObject.SetActive(true);
         //// Allow Unit info panel to react on right clicks and close
         //unitInfoPanel.interactable = true;
     }

@@ -6,11 +6,23 @@ using UnityEngine.UI;
 
 public class Prolog : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
+    public void SetActive(bool doActivate)
+    {
+        // activate button
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/PrologBeginGameButton").gameObject.SetActive(doActivate);
+        // activate background
+        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>().SetActive(doActivate);
+        // activate this menu
+        gameObject.SetActive(doActivate);
+    }
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    public void BeginGame()
+    {
+        // deactivate prolog and game screen
+        SetActive(false);
+        // activate map
+        transform.root.Find("MapScreen").gameObject.SetActive(true);
+    }
 
     public void OnPointerDown(PointerEventData eventData)
     {

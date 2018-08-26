@@ -101,7 +101,7 @@ public class UnitEquipmentButton : MonoBehaviour {
                 unitInfoPanel.gameObject.SetActive(false);
             }
             // Disable/Enable unit info panel background
-            unitInfoPanel.transform.Find("Background").gameObject.SetActive(doActivate);
+            //unitInfoPanel.transform.Find("Background").gameObject.SetActive(doActivate);
         }
     }
 

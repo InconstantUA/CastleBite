@@ -25,12 +25,8 @@ public class HirePartyUnitButton : MonoBehaviour {
         switch (buttonMode)
         {
             case ButtonMode.HireCommonUnit:
-                // get city
-                //// structure: 4City-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
-                //destinationCity = transform.parent.parent.parent.parent.GetComponent<City>();
-                // structure: 4MiscUI-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
-                //             MiscUI-EditPartyScreen(link to City)
                 // get cell address (Row/Cell) of this party button
+                // structure: 4MiscUI-3HireCommonUnitButtons-2[Top/Middle/Bottom]Row-1[Front/Back]Cell-HireUnitButton
                 string address = transform.parent.parent.name + "/" + transform.parent.name;
                 // get destination cell transform in city garnizon party panel
                 Debug.Log("City " + destinationCity.name);
@@ -53,6 +49,6 @@ public class HirePartyUnitButton : MonoBehaviour {
                 break;
         }
         // activate hire unit menu
-        transform.root.Find("MiscUI/HireUnit").GetComponent<HireUnitGeneric>().ActivateHireUnitMenu(unitTypesToHire, destinationCellTr, destinationCity); // verfy if it will find disabled menus
+        transform.root.Find("MiscUI/HireUnit").GetComponent<HireUnitGeneric>().SetActive(unitTypesToHire, destinationCellTr, destinationCity); // verfy if it will find disabled menus
     }
 }

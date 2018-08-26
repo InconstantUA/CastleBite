@@ -12,20 +12,17 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public Transform city;
     Text txt;
     Button btn;
     Color tmpColor;
-    public GameObject gameObjectToBeActivated;
-    public GameObject gameObjectToBeDeactivated;
     [SerializeField]
-    PlayerData[] players;
+    PlayerData[] playersData;
 
     void OnEnable()
     {
         // reset player name placeholder text to default hero name
         // use first defined in Editor player name as default name
-        transform.root.Find("ChooseYourFirstHero/HireUnit/Panel/InputField/Placeholder").GetComponent<Text>().text = players[0].givenName;
+        transform.root.Find("MiscUI/ChooseYourFirstHero/InputField/Placeholder").GetComponent<Text>().text = playersData[0].givenName;
     }
 
     void Start()
@@ -181,20 +178,15 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return UnitType.Unknown;
     }
 
-    Transform GetCityTransform()
-    {
-        return city;
-    }
-
     string GetPlayerName()
     {
         // get name from input
-        string name = transform.root.Find("ChooseYourFirstHero/HireUnit/Panel/InputField").GetComponent<InputField>().text;
+        string name = transform.root.Find("MiscUI/ChooseYourFirstHero/InputField").GetComponent<InputField>().text;
         // verify if name is not empty
         if ("" == name)
         {
             // reset name to default
-            name = players[0].givenName;
+            name = playersData[0].givenName;
         }
         // return name
         return name;
@@ -217,16 +209,23 @@ public class HireFirstHero : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     void ActOnClick()
     {
         // Create game players
-        transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
-        transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(players);
+        //transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
+        //transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(playersData);
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Create players
+        foreach (PlayerData playerData in playersData)
+        {
+            objectsManager.CreatePlayer(playerData);
+        }
         // Get Chosen race captial city link
         // Ask City to Hire chosen unit
         //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerCapital());
-        // Activate required object
-        gameObjectToBeActivated.SetActive(true);
-        // Deactivate required object
-        gameObjectToBeDeactivated.SetActive(false);
+        // Activate Prolog
+        transform.root.Find("MiscUI").GetComponentInChildren<Prolog>(true).gameObject.SetActive(true);
+        // Deactivate Choose your first hero menu
+        transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(true);
     }
 
     #endregion OnClick

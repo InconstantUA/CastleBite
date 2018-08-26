@@ -4,16 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TextBoxDisplayCurrentGoldValue : MonoBehaviour {
-    Text txt;
 
-    // Use this for initialization
-    void Start () {
-        txt = gameObject.GetComponent<Text>();
-        txt.text = TurnsManager.Instance.GetActivePlayer().PlayerGold.ToString();
+    void OnEnable ()
+    {
+        UpdateGoldValue();
     }
 	
-	// Update is called once per frame
-	void Update () {
-        txt.text = TurnsManager.Instance.GetActivePlayer().PlayerGold.ToString();
+	// this called by event admin
+	public void UpdateGoldValue ()
+    {
+        // verify if there is active player present
+        if (TurnsManager.Instance.GetActivePlayer())
+            // update gold value in UI
+            GetComponent<Text>().text = TurnsManager.Instance.GetActivePlayer().PlayerGold.ToString();
     }
 }

@@ -246,7 +246,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Also activate Save and Load buttons for future use
         mainMenuPanel.Find("Save").gameObject.SetActive(false);
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
-        // Activate ChooseYourFirstHero
+        // Remove all objects, except needed to start game
+        Debug.LogError("Todo: Remove all objects, except needed to start game");
+        // .. ideas:
+        // - mark some objects and non-removable
+        // - on game start preload other scene with all needed objects
+        // Deactivate map screen
         transform.root.Find("MapScreen").gameObject.SetActive(false);
     }
 
@@ -267,7 +272,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         mainMenuPanel.Find("Save").gameObject.SetActive(true);
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
         // Activate ChooseYourFirstHero menu
-        transform.root.Find("ChooseYourFirstHero").gameObject.SetActive(true);
+        transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(true);
     }
 
     void ContinueGame()

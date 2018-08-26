@@ -9,8 +9,11 @@ public class CityCaptureEvent : UnityEvent<City>
 }
 
 public class EventsAdmin : MonoBehaviour {
-    // create event, which later can be handled in Unity Editor
+    // create events, which later can be handled in Unity Editor
+    // Create on city has been captured event
     public CityCaptureEvent OnCityHasBeenCaptured;
+    // create on player gold changed event
+    public UnityEvent OnPlayerGoldHasChanged;
 
     // For city faction changes
     public void IHasChanged(City city, Faction oldFaction)
@@ -19,5 +22,11 @@ public class EventsAdmin : MonoBehaviour {
         // Object, can register its functions to be called on event
         // For this object should have public function and developer should point to it in Unity Editor
         OnCityHasBeenCaptured.Invoke(city);
+    }
+
+    // For player gold changed
+    public void IHasChanged(GamePlayer gamePlayer, Gold gold)
+    {
+        OnPlayerGoldHasChanged.Invoke();
     }
 }

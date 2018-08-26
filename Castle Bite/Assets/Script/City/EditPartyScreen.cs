@@ -146,7 +146,7 @@ public class EditPartyScreen : MonoBehaviour {
     void SetRequiredComponentsActive(bool doActivate)
     {
         // Activate/Deactivate background
-        transform.root.Find("MiscUI/Background").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
         // Activate/Deactivate common controls
         transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(doActivate);
@@ -448,7 +448,7 @@ public class EditPartyScreen : MonoBehaviour {
         // Get unit's slot transform
         Transform newUnitParentSlot = newHeroPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr("Middle", GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
         // Hire unit, but do not create canvas, because it will be done automatically by HeroParty on enable
-        PartyUnit newPartyUnit = HireGenericUnit(hiredUnitTemplate, newHeroPartyUI.LHeroParty, newUnitParentSlot, false);
+        HireGenericUnit(hiredUnitTemplate, newHeroPartyUI.LHeroParty, newUnitParentSlot, false);
         // Create hero's representation on the map
         // prerequisites: party leader should be created beforehand
         SetHeroPartyRepresentationOnTheMap(newHeroPartyUI.LHeroParty, city);

@@ -7,44 +7,49 @@ using UnityEngine.UI;
 // This is later will be used by other sub-scripts
 public class HireUnitGeneric : MonoBehaviour {
     Transform callerCell;
-    //City callerCity;
     GameObject unitsPanel;
 
-    //public Transform GetCallerCell()
-    //{
-    //    return callerCell;
-    //}
-
-    //public City GetCallerCity()
-    //{
-    //    return callerCity;
-    //}
-
-    public void DeactivateAdv()
+    void OnDisable()
     {
         // remove all toggles for units created from template
-        foreach (Transform tr in transform.Find("Panel/UnitsToHire").transform)
+        foreach (Transform tr in transform.Find("UnitsToHire").transform)
         {
             Destroy(tr.gameObject);
         }
-        // delete units panel, because later it may change to other
-        // for example: from hire party leader to hire unit
-        //Destroy(unitsPanel);
-        gameObject.SetActive(false);
+        // Deactivate controls
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
+        // Deactivate top gold info panel
+        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
+        // Deactivate unit info panel
+        transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).gameObject.SetActive(false);
+        // Deactivate intermediate background
+        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
+        // Activate city controls if city view is active
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>() != null)
+        {
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(true);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(true);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(true);
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(true);
+        }
     }
 
-    public void ActivateHireUnitMenu(UnitType[] unitTypesToHire, Transform destinationCellTr, City destinationCity)
+    public void SetActive(UnitType[] unitTypesToHire, Transform destinationCellTr, City destinationCity)
     {
+        // Note: order is important, because of bring to front control
+        // Activate intermediate background (bring to front is triggered automatically)
+        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
+        // activate this object
+        gameObject.SetActive(true);
         // save destination cell for later use
         callerCell = destinationCellTr;
-        // save destination city for later use
-        //callerCity = destinationCity;
         // get templates manager
         TemplatesManager templatesManager = transform.root.Find("Templates").GetComponent<TemplatesManager>();
         // get unit UI toggles list parent
-        Transform togglesListTransform = transform.Find("Panel/UnitsToHire");
+        Transform togglesListTransform = transform.Find("UnitsToHire");
         // get unit toggle UI template
-        GameObject unitUIToggle = transform.Find("Panel/UnitTemplate").gameObject;
+        GameObject unitUIToggle = transform.Find("UnitTemplate").gameObject;
         // reset flag for first toggle activation
         bool firstToggleIsActivated = false;
         // create menu entry for each unit which needs to be hired
@@ -63,10 +68,23 @@ public class HireUnitGeneric : MonoBehaviour {
                 newUnitToggle.GetComponent<Toggle>().isOn = true;
                 // set flag to true, so it does not trigger anymore
                 firstToggleIsActivated = true;
+                // Activate Unit info panel with the first unit info
+                transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).ActivateAdvance(newUnitToggle.unitToHire, UnitInfoPanel.Align.Right, false);
             }
         }
-        // activate this object
-        gameObject.SetActive(true);
+        // Activate controls
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(true);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(true);
+        // Activate top gold info panel
+        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(true);
+        // Deactivate city controls if city view is active
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>() != null)
+        {
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(false);
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(false);
+        }
     }
 
     public void ActivateAdv(Transform cCell, GameObject unitsPanelTemplate)
@@ -87,7 +105,7 @@ public class HireUnitGeneric : MonoBehaviour {
     {
         //  Find selected toggle and get attached to it unit template
         // get unit UI toggles list parent
-        foreach (Toggle toggle in transform.Find("Panel/UnitsToHire").GetComponentsInChildren<Toggle>())
+        foreach (Toggle toggle in transform.Find("UnitsToHire").GetComponentsInChildren<Toggle>())
         {
             if (toggle.isOn)
             {
@@ -104,17 +122,8 @@ public class HireUnitGeneric : MonoBehaviour {
         // Ask City to Hire unit
         //callerCity.HireUnit(callerCell, GetSelectedUnitType());
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().HireUnit(callerCell, GetSelectedUnitType());
-        // Deactivate hire unit panel
-        DeactivateAdv();
+        // Deactivate this hire unit panel
+        gameObject.SetActive(false);
     }
 
-    //// Use this for initialization
-    //void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
 }

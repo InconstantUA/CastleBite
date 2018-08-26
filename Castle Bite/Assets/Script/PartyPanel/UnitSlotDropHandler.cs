@@ -189,8 +189,6 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             //        // enable hire unit button in the original parent cell and bring it to the front
             //        // and it is not wide
             //        // todo: add not wide condition check
-            //        UnitDragHandler.unitBeingDragged.transform.parent.parent.Find("HireUnitPnlBtn").gameObject.SetActive(true);
-            //        UnitDragHandler.unitBeingDragged.transform.parent.parent.Find("HireUnitPnlBtn").SetAsLastSibling();
             //    }
             //    // change parent of the dragged unit
             //    Debug.Log("Drop unit from " + UnitDragHandler.unitBeingDraggedParentTr.parent.gameObject.name);
@@ -201,7 +199,6 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             //    if (PartyPanelMode.Garnizon == panelMode)
             //    {
             //        // todo: add not wide condition check
-            //        transform.parent.Find("HireUnitPnlBtn").gameObject.SetActive(false);
             //    }
             //    // trigger event
             //    // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());

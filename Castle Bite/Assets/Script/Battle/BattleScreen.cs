@@ -132,7 +132,7 @@ public class BattleScreen : MonoBehaviour {
     void SetCommonBattleUIActive(bool doActivate)
     {
         // Activate/Deactivate background
-        transform.root.Find("MiscUI/Background").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
         // Activate/Deactivate Hero parties UIs
         transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);

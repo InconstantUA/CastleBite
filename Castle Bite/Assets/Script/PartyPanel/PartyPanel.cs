@@ -194,7 +194,6 @@ public class PartyPanel : MonoBehaviour {
         //changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
         // disable hire unit button
         SetHireUnitButtonActiveByCell(false, GetCellAddressStringByTransform(changedCell));
-        //changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(false);
     }
 
     void OnHireDoubleUnit(Transform changedCell)
@@ -242,7 +241,6 @@ public class PartyPanel : MonoBehaviour {
         {
             Debug.Log("Activate hire unit button");
             SetHireUnitButtonActiveByCell(true, GetCellAddressStringByTransform(changedCell));
-            //changedCell.Find("HireUnitPnlBtn").gameObject.SetActive(true);
         }
     }
 
@@ -268,8 +266,6 @@ public class PartyPanel : MonoBehaviour {
             Debug.Log("Activate hire unit button");
             SetHireUnitButtonActiveByCell(true, changedCell.parent.name + "/Front");
             SetHireUnitButtonActiveByCell(true, changedCell.parent.name + "/Back");
-            //changedCell.parent.Find("Front/HireUnitPnlBtn").gameObject.SetActive(true);
-            //changedCell.parent.Find("Back/HireUnitPnlBtn").gameObject.SetActive(true);
         }
     }
 

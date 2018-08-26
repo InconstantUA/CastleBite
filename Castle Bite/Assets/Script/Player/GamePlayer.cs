@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [Serializable]
 public enum PlayerType
@@ -28,6 +29,12 @@ public class PlayerData : System.Object
     public Faction faction;
 }
 
+[Serializable]
+public class Gold : System.Object
+{
+
+}
+
 public class GamePlayer : MonoBehaviour {
     [SerializeField]
     PlayerData playerData;
@@ -35,7 +42,6 @@ public class GamePlayer : MonoBehaviour {
     //int totalGold;
     //[SerializeField]
     //Faction faction;
-
     public PlayerUniqueAbility PlayerUniqueAbility
     {
         get
@@ -111,6 +117,8 @@ public class GamePlayer : MonoBehaviour {
         set
         {
             playerData.totalGold = value;
+            // trigger event
+
         }
     }
 

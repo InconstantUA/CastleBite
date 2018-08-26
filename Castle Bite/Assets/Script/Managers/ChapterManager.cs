@@ -19,6 +19,8 @@ public class ChapterManager : MonoBehaviour {
     bool lastChapter;
     [SerializeField]
     string targetCityName; // we do not use direct link to the city, because it may be destroyed and recreated during save/load process
+    [SerializeField]
+    PlayerData[] playersData;
     CoroutineQueue coroutineQueue;
     // define chapter goals
     bool goalTargetCityCaptured = false;
@@ -38,6 +40,14 @@ public class ChapterManager : MonoBehaviour {
         set
         {
             coroutineQueue = value;
+        }
+    }
+
+    public PlayerData[] PlayersData
+    {
+        get
+        {
+            return playersData;
         }
     }
 

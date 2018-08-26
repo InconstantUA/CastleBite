@@ -208,9 +208,9 @@ public class LoadGame : MonoBehaviour
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
         // .. Set map
         // remove old data
-        transform.root.GetComponentInChildren<ChapterManager>().CoroutineQueue.Run(CleanGameBeforeLoad());
+        transform.root.Find("Managers").GetComponent<ChapterManager>().CoroutineQueue.Run(CleanGameBeforeLoad());
         // create new objects from saved data
-        transform.root.GetComponentInChildren<ChapterManager>().CoroutineQueue.Run(CreateGameObjects(gameData));
+        transform.root.Find("Managers").GetComponent<ChapterManager>().CoroutineQueue.Run(CreateGameObjects(gameData));
     }
 
     void LoadGameData()
