@@ -157,13 +157,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Create game players
         //transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
         //transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(playersData);
-        // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
-        // Create players, get players data from Chapter manager
-        foreach (PlayerData playerData in transform.root.Find("Managers").GetComponent<ChapterManager>().PlayersData)
-        {
-            objectsManager.CreatePlayer(playerData);
-        }
         // Get Chosen race captial city link
         // Ask City to Hire chosen unit
         //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());

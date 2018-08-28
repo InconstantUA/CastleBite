@@ -27,6 +27,14 @@ public class TurnsManager : MonoBehaviour {
     public GamePlayer GetActivePlayer()
     {
         // .. Fix
-        return transform.root.Find("GamePlayers").GetComponentInChildren<GamePlayer>();
+        foreach (GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
+        {
+            if (PlayerTurnState.Active == gamePlayer.PlayerTurnState)
+            {
+                return gamePlayer;
+            }
+        }
+        Debug.LogError("No active player");
+        return null;
     }
 }

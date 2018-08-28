@@ -367,7 +367,18 @@ public class MenuKeyboardControl : MonoBehaviour {
         // Also activate Save and Load buttons for future use
         mainMenuPanel.Find("Save").gameObject.SetActive(true);
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
-        // Activate ChooseYourFirstHero
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Create game players, get players data from Chapter manager
+        foreach (PlayerData playerData in transform.root.Find("Managers").GetComponent<ChapterManager>().PlayersData)
+        {
+            objectsManager.CreatePlayer(playerData);
+        }
+        // Set human player as active player
+        transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.Human).PlayerData.playerTurnState = PlayerTurnState.Active;
+        // Set AI player as waiting for its turn
+        transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.AI).PlayerData.playerTurnState = PlayerTurnState.Waiting;
+        // Activate ChooseYourFirstHero menu
         transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(true);
     }
 

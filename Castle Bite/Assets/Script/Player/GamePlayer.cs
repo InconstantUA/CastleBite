@@ -20,6 +20,14 @@ public enum PlayerUniqueAbility {
 };
 
 [Serializable]
+public enum PlayerTurnState
+{
+    Active,
+    Waiting,
+    HasMoved
+}
+
+[Serializable]
 public class PlayerData : System.Object
 {
     public PlayerUniqueAbility playerUniqueAbility;
@@ -27,6 +35,7 @@ public class PlayerData : System.Object
     public string givenName;
     public int totalGold;
     public Faction faction;
+    public PlayerTurnState playerTurnState;
 }
 
 [Serializable]
@@ -119,6 +128,19 @@ public class GamePlayer : MonoBehaviour {
             playerData.totalGold = value;
             // trigger event
 
+        }
+    }
+
+    public PlayerTurnState PlayerTurnState
+    {
+        get
+        {
+            return playerData.playerTurnState;
+        }
+
+        set
+        {
+            playerData.playerTurnState = value;
         }
     }
 
