@@ -2297,7 +2297,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void SetSelection(Selection s)
+    public void SetSelection(Selection s)
     {
         // set selection
         selection = s;
@@ -2318,7 +2318,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void SetSelection(Selection s, MapHero mH)
+    public void SetSelection(Selection s, MapHero mH)
     {
         // set selection
         selection = s;
@@ -2354,7 +2354,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void SetSelection(Selection s, MapCity mC)
+    public void SetSelection(Selection s, MapCity mC)
     {
         // set selection
         selection = s;
