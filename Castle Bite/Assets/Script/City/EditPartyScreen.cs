@@ -148,7 +148,7 @@ public class EditPartyScreen : MonoBehaviour {
         // Activate/Deactivate background
         transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
         // Activate/Deactivate common controls
-        transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
+        //transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(doActivate);
         if (LCity != null)

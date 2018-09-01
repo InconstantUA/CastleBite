@@ -165,8 +165,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         InitializePathHighligters();
     }
 
+    // called via Unity Editor
     public void SetCitiesNamesVisible(bool doShow)
     {
+        Debug.Log("Show all cities names: " + doShow.ToString());
         // Init map object
         MapObject mapObject;
         foreach (MapCity mapCity in transform.GetComponentsInChildren<MapCity>(true))
@@ -178,13 +180,44 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // verify if we need to show or hide all labels
             if (doShow)
             {
-                mapObject.GetComponentInChildren<MapObjectLabel>().SetAlwaysOnLabelColor();
+                mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
             }
             else
             {
-                mapObject.GetComponentInChildren<MapObjectLabel>().HideLabel();
+                mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
             }
         }
+    }
+
+    // called via Unity Editor
+    public void SetHeroesNamesVisible(bool doShow)
+    {
+        Debug.Log("Show all heroes names: " + doShow.ToString());
+        // Init map object
+        MapObject mapObject;
+        foreach (MapHero mapHero in transform.GetComponentsInChildren<MapHero>(true))
+        {
+            // get map object
+            mapObject = mapHero.GetComponent<MapObject>();
+            // turn on label always on flag
+            mapObject.LabelAlwaysOn = doShow;
+            // verify if we need to show or hide all labels
+            if (doShow)
+            {
+                mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
+            }
+            else
+            {
+                mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
+            }
+        }
+    }
+
+    // called via Unity Editor
+    public void SetPlayerIncomeVisible(bool doShow)
+    {
+        Debug.Log("Show player income: " + doShow.ToString());
+        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
     }
 
     bool PositionIsWithinTilesMap(Vector2Int pos)
@@ -1205,54 +1238,155 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void SaveMapUIOptions()
+    void SaveCitiesNamesToggleOptions()
     {
-        Debug.Log("Save Map UI Options");
         // Always show city names toggle options 0 - disable, 1 - enable
         // verify if toggle is currently selected
         if (transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>().selected)
         {
             // set option
-            GameOptions.options.mapUIOpt.toggleCityNames = 1;
+            GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
         }
         else
         {
             // set option
-            GameOptions.options.mapUIOpt.toggleCityNames = 0;
+            GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
         }
         // save option
-        PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCityNames); // 0 - disable, 1 - enable
+        PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
     }
 
-    void LoadMapUIOptions()
+    void SaveHeroesNamesToggleOptions()
     {
-        Debug.Log("Load Map UI Options");
+        // Always show city names toggle options 0 - disable, 1 - enable
+        // verify if toggle is currently selected
+        if (transform.parent.Find("MapMenu/Options/ToggleHeroesNames").GetComponent<TextToggle>().selected)
+        {
+            // set option
+            GameOptions.options.mapUIOpt.toggleHeroesNames = 1;
+        }
+        else
+        {
+            // set option
+            GameOptions.options.mapUIOpt.toggleHeroesNames = 0;
+        }
+        // save option
+        PlayerPrefs.SetInt("MapUIShowHeroesNames", GameOptions.options.mapUIOpt.toggleHeroesNames); // 0 - disable, 1 - enable
+    }
+
+    void SavePlayerIncomeToggleOptions()
+    {
+        // Always show city names toggle options 0 - disable, 1 - enable
+        // verify if toggle is currently selected
+        if (transform.parent.Find("MapMenu/Options/TogglePlayerIncome").GetComponent<TextToggle>().selected)
+        {
+            // set option
+            GameOptions.options.mapUIOpt.togglePlayerIncome = 1;
+        }
+        else
+        {
+            // set option
+            GameOptions.options.mapUIOpt.togglePlayerIncome = 0;
+        }
+        // save option
+        PlayerPrefs.SetInt("MapUIShowPlayerIncome", GameOptions.options.mapUIOpt.togglePlayerIncome); // 0 - disable, 1 - enable
+    }
+
+    void SaveMapUIOptions()
+    {
+        Debug.Log("Save Map UI Options");
+        SaveCitiesNamesToggleOptions();
+        SaveHeroesNamesToggleOptions();
+        SavePlayerIncomeToggleOptions();
+    }
+
+    void LoadCitiesNamesToggleOptions()
+    {
         // Get map UI options
-        GameOptions.options.mapUIOpt.toggleCityNames = PlayerPrefs.GetInt("MapUIShowCityNames", 0); // default 0 - disable "always show city names" toggle
+        GameOptions.options.mapUIOpt.toggleCitiesNames = PlayerPrefs.GetInt("MapUIShowCityNames", 0); // default 0 - disable "always show city names" toggle
         // Get City names toggle
-        TextToggle cityNamesToggle = transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>();
+        TextToggle textToggle = transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>();
         // verify if it was enabled before
-        if (GameOptions.options.mapUIOpt.toggleCityNames == 0)
+        if (GameOptions.options.mapUIOpt.toggleCitiesNames == 0)
         {
             // disable toggle
-            cityNamesToggle.selected = false;
-            cityNamesToggle.SetNormalStatus();
+            textToggle.selected = false;
+            textToggle.SetNormalStatus();
             // hide cities names
             SetCitiesNamesVisible(false);
         }
         else
         {
             // enable toggle
-            cityNamesToggle.selected = true;
-            cityNamesToggle.SetPressedStatus();
+            textToggle.selected = true;
+            textToggle.SetPressedStatus();
             // always show city names
             SetCitiesNamesVisible(true);
         }
     }
 
+    void LoadHeroesNamesToggleOptions()
+    {
+        // Get map UI options
+        GameOptions.options.mapUIOpt.toggleHeroesNames = PlayerPrefs.GetInt("MapUIShowHeroesNames", 0); // default 0 - disable "always show heroes names" toggle
+        // Get toggle
+        TextToggle textToggle = transform.parent.Find("MapMenu/Options/ToggleHeroesNames").GetComponent<TextToggle>();
+        // verify if it was enabled before
+        if (GameOptions.options.mapUIOpt.toggleHeroesNames == 0)
+        {
+            // disable toggle
+            textToggle.selected = false;
+            textToggle.SetNormalStatus();
+            // hide cities names
+            SetHeroesNamesVisible(false);
+        }
+        else
+        {
+            // enable toggle
+            textToggle.selected = true;
+            textToggle.SetPressedStatus();
+            // always show city names
+            SetHeroesNamesVisible(true);
+        }
+    }
+
+    void LoadPlayerIncomeToggleOptions()
+    {
+        // Get map UI options
+        GameOptions.options.mapUIOpt.togglePlayerIncome = PlayerPrefs.GetInt("MapUIShowPlayerIncome", 0); // default 0 - disable "always show heroes names" toggle
+        // Get toggle
+        TextToggle textToggle = transform.parent.Find("MapMenu/Options/TogglePlayerIncome").GetComponent<TextToggle>();
+        // verify if it was enabled before
+        if (GameOptions.options.mapUIOpt.togglePlayerIncome == 0)
+        {
+            // disable toggle
+            textToggle.selected = false;
+            textToggle.SetNormalStatus();
+            // hide cities names
+            SetPlayerIncomeVisible(false);
+        }
+        else
+        {
+            // enable toggle
+            textToggle.selected = true;
+            textToggle.SetPressedStatus();
+            // always show city names
+            SetPlayerIncomeVisible(true);
+        }
+    }
+
+    void LoadMapUIOptions()
+    {
+        Debug.Log("Load Map UI Options");
+        LoadCitiesNamesToggleOptions();
+        LoadHeroesNamesToggleOptions();
+        LoadPlayerIncomeToggleOptions();
+    }
+
     void OnEnable()
     {
         LoadMapUIOptions();
+        GetComponentInChildren<TileHighlighter>(true).gameObject.SetActive(true);
     }
 
     void OnDisable()

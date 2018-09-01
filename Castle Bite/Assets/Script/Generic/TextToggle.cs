@@ -24,6 +24,8 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public UnityEvent OnTurnOn;
     public UnityEvent OnTurnOff;
     public UnityEvent OnRightMouseButtonDown;
+    public UnityEvent OnMouseEnter;
+    public UnityEvent OnMouseExit;
     bool mouseIsOver = false;
 
     void Start()
@@ -44,6 +46,8 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             SetHighlightedStatus();
             mouseIsOver = true;
+            // Trigger events defined in Unity Editor
+            OnMouseEnter.Invoke();
         }
     }
 
@@ -97,6 +101,8 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 SetNormalStatus();
             }
             mouseIsOver = false;
+            // Trigger events defined in Unity Editor
+            OnMouseExit.Invoke();
         }
     }
 

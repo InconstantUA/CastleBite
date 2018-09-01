@@ -63,11 +63,19 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void SetAlwaysOnLabelColor()
     {
+        if (labelTxt == null)
+            labelTxt = GetComponent<Text>();
+        if (mapObject == null)
+            mapObject = transform.parent.GetComponent<MapObject>();
         labelTxt.color = mapObject.AlwaysOnLabelColor;
     }
 
     public void HideLabel()
     {
+        if (labelTxt == null)
+            labelTxt = GetComponent<Text>();
+        if (mapObject == null)
+            mapObject = transform.parent.GetComponent<MapObject>();
         labelTxt.color = mapObject.HiddenLabelColor;
         labelTxt.raycastTarget = false;
     }

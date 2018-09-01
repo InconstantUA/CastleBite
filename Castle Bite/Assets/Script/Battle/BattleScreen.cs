@@ -143,7 +143,7 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
         // Activate/Deactivate city controls
-        transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
+        //transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
         SetBattleControlButtonActive("Defend", doActivate);
         SetBattleControlButtonActive("Wait", doActivate);
         SetBattleControlButtonActive("Retreat", doActivate);

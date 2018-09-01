@@ -20,6 +20,8 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // create event, which later can be configured in Unity Editor
     public UnityEvent OnClick;
     public UnityEvent OnRightMouseButtonDown;
+    public UnityEvent OnMouseEnter;
+    public UnityEvent OnMouseExit;
 
     void Start()
     {
@@ -32,6 +34,8 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (interactable)
         {
             SetHighlightedStatus();
+            // Trigger events defined in Unity Editor
+            OnMouseEnter.Invoke();
         }
     }
 
@@ -75,6 +79,8 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             // return to previous toggle state
             SetNormalStatus();
+            // Trigger events defined in Unity Editor
+            OnMouseExit.Invoke();
         }
     }
 

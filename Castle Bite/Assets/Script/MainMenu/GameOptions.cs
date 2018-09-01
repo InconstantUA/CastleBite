@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameOptions : MonoBehaviour {
 
@@ -34,8 +32,9 @@ public class GameOptions : MonoBehaviour {
 
     public struct MapUIOpt
     {
-        public int toggleCityNames;
-        public int toggleHeroNames;
+        public int toggleCitiesNames;
+        public int toggleHeroesNames;
+        public int togglePlayerIncome;
     }
     public MapUIOpt mapUIOpt;
 
