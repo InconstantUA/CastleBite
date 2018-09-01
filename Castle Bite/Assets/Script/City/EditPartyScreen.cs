@@ -393,6 +393,8 @@ public class EditPartyScreen : MonoBehaviour {
         newPartyOnMapUI.GetComponent<MapHero>().lMapCity = targetCity.LMapCity;
         // move hero party to the back, so its UI label is not covering city's UI label
         newPartyOnMapUI.transform.SetAsFirstSibling();
+        // rename it
+        newPartyOnMapUI.gameObject.name = newLeaderParty.GetPartyLeader().GivenName + " " + newLeaderParty.GetPartyLeader().UnitName + " Party";
     }
 
     string GetHiredLeaderDestinationSlotName(PartyUnit hiredUnitTemplate)
@@ -448,7 +450,9 @@ public class EditPartyScreen : MonoBehaviour {
         // Get unit's slot transform
         Transform newUnitParentSlot = newHeroPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr("Middle", GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
         // Hire unit, but do not create canvas, because it will be done automatically by HeroParty on enable
-        HireGenericUnit(hiredUnitTemplate, newHeroPartyUI.LHeroParty, newUnitParentSlot, false);
+        PartyUnit newPartyLeader = HireGenericUnit(hiredUnitTemplate, newHeroPartyUI.LHeroParty, newUnitParentSlot, false);
+        // Rename hero party, when we know the leader
+        newHeroPartyUI.LHeroParty.gameObject.name = newPartyLeader.GivenName + " " + newPartyLeader.UnitName + " Party";
         // Create hero's representation on the map
         // prerequisites: party leader should be created beforehand
         SetHeroPartyRepresentationOnTheMap(newHeroPartyUI.LHeroParty, city);

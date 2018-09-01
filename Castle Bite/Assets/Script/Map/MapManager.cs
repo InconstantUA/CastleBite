@@ -2309,6 +2309,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 DeselectPreviouslySelectedObjectsOnMap();
                 // change cursor to normal
                 transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                // update focus panel
+                transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().ReleaseFocus();
                 break;
             default:
                 Debug.LogError("Unknown or incompatible selection " + selection);
@@ -2326,6 +2328,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             case Selection.PlayerHero:
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedHero(mH);
+                // Update map focus panel
+                transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().SetActive(mH);
                 mH.SetSelectedState(true);
                 // verify if hero is in city
                 if (mH.lMapCity)
@@ -2360,6 +2364,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             case Selection.PlayerCity:
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedCity(mC);
+                // Update map focus panel
+                transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().SetActive(mC);
                 mC.SetSelectedState(true);
                 // change cursor to open doors cursor
                 transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
