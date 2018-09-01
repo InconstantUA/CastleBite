@@ -165,6 +165,28 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         InitializePathHighligters();
     }
 
+    public void SetCitiesNamesVisible(bool doShow)
+    {
+        // Init map object
+        MapObject mapObject;
+        foreach (MapCity mapCity in transform.GetComponentsInChildren<MapCity>(true))
+        {
+            // get map object
+            mapObject = mapCity.GetComponent<MapObject>();
+            // turn on label always on flag
+            mapObject.LabelAlwaysOn = doShow;
+            // verify if we need to show or hide all labels
+            if (doShow)
+            {
+                mapObject.GetComponentInChildren<MapObjectLabel>().SetAlwaysOnLabelColor();
+            }
+            else
+            {
+                mapObject.GetComponentInChildren<MapObjectLabel>().HideLabel();
+            }
+        }
+    }
+
     bool PositionIsWithinTilesMap(Vector2Int pos)
     {
         if (
@@ -1183,8 +1205,59 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    void SaveMapUIOptions()
+    {
+        Debug.Log("Save Map UI Options");
+        // Always show city names toggle options 0 - disable, 1 - enable
+        // verify if toggle is currently selected
+        if (transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>().selected)
+        {
+            // set option
+            GameOptions.options.mapUIOpt.toggleCityNames = 1;
+        }
+        else
+        {
+            // set option
+            GameOptions.options.mapUIOpt.toggleCityNames = 0;
+        }
+        // save option
+        PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCityNames); // 0 - disable, 1 - enable
+    }
+
+    void LoadMapUIOptions()
+    {
+        Debug.Log("Load Map UI Options");
+        // Get map UI options
+        GameOptions.options.mapUIOpt.toggleCityNames = PlayerPrefs.GetInt("MapUIShowCityNames", 0); // default 0 - disable "always show city names" toggle
+        // Get City names toggle
+        TextToggle cityNamesToggle = transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>();
+        // verify if it was enabled before
+        if (GameOptions.options.mapUIOpt.toggleCityNames == 0)
+        {
+            // disable toggle
+            cityNamesToggle.selected = false;
+            cityNamesToggle.SetNormalStatus();
+            // hide cities names
+            SetCitiesNamesVisible(false);
+        }
+        else
+        {
+            // enable toggle
+            cityNamesToggle.selected = true;
+            cityNamesToggle.SetPressedStatus();
+            // always show city names
+            SetCitiesNamesVisible(true);
+        }
+    }
+
+    void OnEnable()
+    {
+        LoadMapUIOptions();
+    }
+
     void OnDisable()
     {
+        SaveMapUIOptions();
         SetMode(MapManager.Mode.Browse);
     }
 

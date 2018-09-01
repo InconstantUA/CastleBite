@@ -153,7 +153,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         }
     }
 
-    void SetHighlightedStatus()
+    public void SetHighlightedStatus()
     {
         // change to highlighted color
         labelTxt.color = highlightedLabelColor;

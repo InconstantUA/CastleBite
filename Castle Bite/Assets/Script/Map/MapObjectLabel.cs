@@ -47,7 +47,7 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             }
             else
             {
-                labelTxt.color = mapObject.AlwaysOnLabelColor;
+                SetAlwaysOnLabelColor();
             }
             // give control on actions to map manager
             MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
@@ -59,6 +59,11 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             // because it will not trigger, because it does not know that mouse left it, because mosue was over child object
             mapObject.OnPointerEnter(eventData);
         }
+    }
+
+    public void SetAlwaysOnLabelColor()
+    {
+        labelTxt.color = mapObject.AlwaysOnLabelColor;
     }
 
     public void HideLabel()

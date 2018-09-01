@@ -32,6 +32,13 @@ public class GameOptions : MonoBehaviour {
     }
     public KeyboardAndMouseOpt keyboardAndMouseOpt;
 
+    public struct MapUIOpt
+    {
+        public int toggleCityNames;
+        public int toggleHeroNames;
+    }
+    public MapUIOpt mapUIOpt;
+
 	void Awake() {
         // verify if game options already initialized
 		if (options == null)
