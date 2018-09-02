@@ -19,6 +19,7 @@ public class PartyData : System.Object
     public PartyMode partyMode;
     public PositionOnMap partyMapPosition;
     public string partyUIAddress = null;
+    public bool holdPosition = false;
     public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
 }
 
@@ -294,4 +295,18 @@ public class HeroParty : MonoBehaviour {
             lMapHero = value;
         }
     }
+
+    public bool HoldPosition
+    {
+        get
+        {
+            return partyData.holdPosition;
+        }
+
+        set
+        {
+            partyData.holdPosition = value;
+        }
+    }
+
 }

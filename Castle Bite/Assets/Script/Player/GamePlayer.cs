@@ -36,6 +36,7 @@ public class PlayerData : System.Object
     public int totalGold;
     public Faction faction;
     public PlayerTurnState playerTurnState;
+    public int focusedObjectID = 0;
 }
 
 [Serializable]
@@ -141,6 +142,19 @@ public class GamePlayer : MonoBehaviour {
         set
         {
             playerData.playerTurnState = value;
+        }
+    }
+
+    public int FocusedObjectID
+    {
+        get
+        {
+            return playerData.focusedObjectID;
+        }
+
+        set
+        {
+            playerData.focusedObjectID = value;
         }
     }
 

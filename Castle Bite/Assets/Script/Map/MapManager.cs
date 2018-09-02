@@ -37,6 +37,34 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // Transform startParent;
     [SerializeField]
     int tileSize = 16;
+    [SerializeField]
+    Color defaultTileHighlighterColor;
+    [SerializeField]
+    Color defaultTileHighlighterNotEnoughMovePoints;
+    [SerializeField]
+    Color enemyOnWayColor;
+    [SerializeField]
+    Color enemyOnWayColorNotEnoughMovePoints;
+    [SerializeField]
+    Color sameFactionRelationColor;
+    [SerializeField]
+    Color sameFactionRelationColorNotEnoughMovePoints;
+    [SerializeField]
+    Color alliedFactionRelationColor;
+    [SerializeField]
+    Color alliedFactionRelationColorNotEnoughMovePoints;
+    [SerializeField]
+    Color neutralFactionRelationColor;
+    [SerializeField]
+    Color neutralFactionRelationColorNotEnoughMovePoints;
+    [SerializeField]
+    Color atWarFactionRelationColor;
+    [SerializeField]
+    Color atWarFactionRelationColorNotEnoughMovePoints;
+    [SerializeField]
+    Color unknownRelationshipsUnitColor;
+    [SerializeField]
+    Color unknownRelationshipsUnitColorNotEnoughMovePoints;
     Transform tileHighlighterTr;
     Color tileHighlighterColor;
     TileHighlighter tileHighlighter;
@@ -44,7 +72,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     bool[,] tilesmap;
     int tileMapWidth = 60;
     int tileMapHeight = 60;
-    MapHero selectedHero;
+    MapHero selectedMapHero;
     MapCity selectedCity;
     NesScripts.Controls.PathFind.Point selectedTargetPathPoint;
     NesScripts.Controls.PathFind.Grid grid;
@@ -117,12 +145,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void SetSelectedHero(MapHero sltdHero)
     {
-        selectedHero = sltdHero;
+        selectedMapHero = sltdHero;
     }
 
     public MapHero GetSelectedHero()
     {
-        return selectedHero;
+        return selectedMapHero;
     }
 
     public void SetSelectedCity(MapCity sltCity)
@@ -502,7 +530,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                         case Relationships.State.SameFaction:
                                             // highlighted hero belongs to player
                                             // check if this is the same hero as selected
-                                            if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
+                                            if (mapHero.GetInstanceID() == selectedMapHero.GetInstanceID())
                                             {
                                                 tileHighlighterColor = Color.blue;
                                             }
@@ -677,7 +705,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //    x = Mathf.FloorToInt(selectedHero.transform.position.x / tileSize),
         //    y = Mathf.FloorToInt(selectedHero.transform.position.y / tileSize)
         //};
-        return GetTilePosition(selectedHero.transform);
+        return GetTilePosition(selectedMapHero.transform);
     }
 
     Vector2Int GetTileHighlighterPosition()
@@ -854,7 +882,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return GetObjectOnTile(tilePosition);
     }
 
-    Color GetTileHighlightColor(GameObject gameObjectOnTile)
+    Color GetTileHighlightColor(GameObject gameObjectOnTile, bool notEnoughMovePoints)
     {
         // highligh the last tile depending on what is under cursor
         // the might be another hero or enemy party or treasure chest or ally party
@@ -863,52 +891,54 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
             MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
+            Relationships.State relationships;
             if (mapHero)
             {
                 // check relationships with active player
-                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
-                switch (relationships)
-                {
-                    case Relationships.State.SameFaction:
-                        return Color.blue;
-                    case Relationships.State.Allies:
-                        return Color.cyan;
-                    case Relationships.State.Neutral:
-                        return Color.yellow;
-                    case Relationships.State.AtWar:
-                        return Color.red;
-                    default:
-                        Debug.LogError("Unknown relationships " + relationships.ToString());
-                        return Color.magenta;
-                }
+                relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
             } else if (mapCity)
             {
                 // check relationships with active player
-                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
-                switch (relationships)
-                {
-                    case Relationships.State.SameFaction:
-                        return Color.blue;
-                    case Relationships.State.Allies:
-                        return Color.cyan;
-                    case Relationships.State.Neutral:
-                        return Color.yellow;
-                    case Relationships.State.AtWar:
-                        return Color.red;
-                    default:
-                        Debug.LogError("Unknown relationships " + relationships.ToString());
-                        return Color.magenta;
-                }
+                relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
             } else
             {
                 Debug.LogError("Unknown object on map " + gameObject.name);
                 return Color.magenta;
             }
+            switch (relationships)
+            {
+                case Relationships.State.SameFaction:
+                    if (notEnoughMovePoints)
+                        return sameFactionRelationColorNotEnoughMovePoints;
+                    else
+                        return sameFactionRelationColor;
+                case Relationships.State.Allies:
+                    if (notEnoughMovePoints)
+                        return alliedFactionRelationColorNotEnoughMovePoints;
+                    else
+                        return alliedFactionRelationColor; // Color.cyan;
+                case Relationships.State.Neutral:
+                    if (notEnoughMovePoints)
+                        return neutralFactionRelationColorNotEnoughMovePoints;
+                    else
+                        return neutralFactionRelationColor;
+                case Relationships.State.AtWar:
+                    if (notEnoughMovePoints)
+                        return atWarFactionRelationColorNotEnoughMovePoints;
+                    else
+                        return atWarFactionRelationColor;
+                default:
+                    Debug.LogError("Unknown relationships " + relationships.ToString());
+                    return unknownRelationshipsUnitColor; // Color.magenta;
+            }
         }
         else
         {
             // no object on tile, just terrain
-            return Color.green;
+            if (notEnoughMovePoints)
+                return defaultTileHighlighterNotEnoughMovePoints;
+            else
+                return defaultTileHighlighterColor;
         }
         //switch (tileState)
         //{
@@ -955,25 +985,35 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // Initialize enemy of a way as false, like we do not encounter enemy on our move path
             bool enemyOnWay = false;
             Color tileHighlighColor;
+            // init variable for move path highligh
+            PartyUnit partyLeader = null;
+            int movePointsLeft = 0;
+            // verify if selectedMapHero is not null
+            if (selectedMapHero != null)
+            {
+                // Get party leader
+                partyLeader = selectedMapHero.LHeroParty.GetPartyLeader();
+                // Init move points left counter
+                movePointsLeft = partyLeader.MovePointsCurrent;
+            }
+            // Init variables
+            GameObject gameObjectOnTile = null;
             foreach (NesScripts.Controls.PathFind.Point pathPoint in movePath)
             {
                 // output path to debug
                 // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                 tileHighlighters[pathPoint.x, pathPoint.y].SetActive(doHighlight);
-                // Verify if enemy on way was triggered
-                if (enemyOnWay)
-                {
-                    // set tile highlight color as if there was an enemy
-                    tileHighlighColor = Color.red;
-                }
-                else
+                // clear turn info text (because is not reset automatically and may be still present)
+                tileHighlighters[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = "";
+                // Verify if enemy on way was not triggered on previous pathPoints
+                if (!enemyOnWay)
                 {
                     // get tile highlight color based on a tile state (what is in or near tile)
                     // reset collor to correct highlight color
                     // because it might be changed by previous highlight operations to something else
                     // if for example in the past there was enemy standing and we were highliting is with red color
                     // Check if there is enemy on way or tile is protected by enemy
-                    GameObject gameObjectOnTile = GetObjectOnTile(pathPoint);
+                    gameObjectOnTile = GetObjectOnTile(pathPoint);
                     if (gameObjectOnTile)
                     {
                         MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
@@ -1010,18 +1050,43 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         // Verify if tile is not protected by enemy
                         enemyOnWay = IsTileProtected(pathPoint);
                     }
-                    if (enemyOnWay)
+                }
+                // init not enough move points modifier
+                bool notEnoughMovePoints = false;
+                // verify if selectedMapHero is not null and if we has reached one day move points limit
+                if ((selectedMapHero != null) && (movePointsLeft <= 0))
+                {
+                    // Activate not enough move points modifier
+                    notEnoughMovePoints = true;
+                    // get the rest of division
+                    float restOfDivision = movePointsLeft % partyLeader.MovePointsMax;
+                    Debug.Log("Rest of division is " + restOfDivision);
+                    // verify if we has reached next day limit
+                    if (restOfDivision == 0)
                     {
-                        // set tile highlight color as if there was an enemy
-                        tileHighlighColor = Color.red;
+                        // Get number of days needed to reach this path point
+                        int numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.MovePointsMax) + 1;
+                        Debug.Log("numberOfDaysToReachThisPathPoint = " + numberOfDaysToReachThisPathPoint);
+                        // add day indicator to the move path highter
+                        tileHighlighters[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();
                     }
-                    else
-                    {
-                        tileHighlighColor = GetTileHighlightColor(gameObjectOnTile);
-                    }
+                }
+                // verify if enemy on way
+                if (enemyOnWay)
+                {
+                    // set tile highlight color as if there was an enemy
+                    tileHighlighColor = enemyOnWayColor; // Color.red;
+                    if (notEnoughMovePoints)
+                        tileHighlighColor = enemyOnWayColorNotEnoughMovePoints;
+                }
+                else
+                {
+                    tileHighlighColor = GetTileHighlightColor(gameObjectOnTile, notEnoughMovePoints);
                 }
                 // Highlight tile
                 tileHighlighters[pathPoint.x, pathPoint.y].GetComponentInChildren<Text>().color = tileHighlighColor;
+                // reduce number of move points left
+                movePointsLeft -= 1;
             }
         }
     }
@@ -1399,7 +1464,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         float result = 0;
         Vector2 dst = GetDestination(pathPoint);
-        Vector2 src = selectedHero.transform.position;
+        Vector2 src = selectedMapHero.transform.position;
         result = Vector2.Distance(src, dst);
         // Debug.Log("Remaining distance is [" + result.ToString() + "]");
         return result;
@@ -1418,7 +1483,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void MapHeroMoveToAndEnterCity(MapHero mapHero, MapCity mapCity)
     {
         // set selectedHero - it will be later used by EnterCityAfterMove function
-        selectedHero = mapHero;
+        selectedMapHero = mapHero;
         // set move path
         SetMovePath(mapHero.transform.position, mapCity.transform.position);
         Debug.Log("StartCoroutine(Move())");
@@ -1434,12 +1499,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //// Get City
         //MapCity mapCity = GetCityByTile(new Vector2Int(lastPathTile.x, lastPathTile.y));
         // Link hero on the map to city on the map
-        mapCity.LMapHero = selectedHero;
+        mapCity.LMapHero = selectedMapHero;
         // And do the opposite 
         // Link city on the map to hero on the map
-        selectedHero.lMapCity = mapCity;
+        selectedMapHero.lMapCity = mapCity;
         // Move hero UI to City
-        selectedHero.LHeroParty.transform.SetParent(mapCity.LCity.transform);
+        selectedMapHero.LHeroParty.transform.SetParent(mapCity.LCity.transform);
         // Enter city edit mode
         queue.Run(mapCity.EnterCityEditMode());
         // Trigger on hero entering city
@@ -1605,14 +1670,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     IEnumerator EnterBattleStep(MapHero mapHero)
     {
         Debug.Log("EnterBattleStep");
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, mapHero);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapHero);
         yield return null;
     }
 
     IEnumerator EnterBattleStep(MapCity mapCity)
     {
         Debug.Log("EnterBattleStep");
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, mapCity);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapCity);
         yield return null;
     }
 
@@ -1635,14 +1700,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         Debug.Log("MapManager: Move");
         // Verify if hero was in city
-        if (selectedHero.lMapCity)
+        if (selectedMapHero.lMapCity)
         {
             // Unlink city from hero and hero from city if they were linked before
-            MapCity linkedCity = selectedHero.lMapCity;
+            MapCity linkedCity = selectedMapHero.lMapCity;
             linkedCity.LMapHero = null;
-            selectedHero.lMapCity = null;
+            selectedMapHero.lMapCity = null;
             // Get current party city
-            HeroParty heroParty = selectedHero.LHeroParty;
+            HeroParty heroParty = selectedMapHero.LHeroParty;
             // Trigger on hero leaving city
             // ..
             // Move party from city to PartiesOnMap container
@@ -1651,11 +1716,19 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // Update hero party place
             //heroParty.SetPlace(HeroParty.PartyPlace.Map);
         }
+        // Verify if hero party was on hold
+        if (selectedMapHero.LHeroParty.HoldPosition == true)
+        {
+            // trigger break hold event
+            transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().BreakHoldPosition(selectedMapHero);
+        }
         // Move
         float deltaTime;
         float previousTime = Time.time;
-        // verify if move path is not null and has at least one move point
-        if ((movePath != null) && (movePath.Count >= 1))
+        // Get party leader
+        PartyUnit partyLeader = selectedMapHero.LHeroParty.GetPartyLeader();
+        // verify if move path is not null and has at least one move point and hero has move points
+        if ((movePath != null) && (movePath.Count >= 1) && (partyLeader.MovePointsCurrent >= 1))
         {
             Debug.Log("Move path is not null");
             // exit exit browse mode and enter animation mode
@@ -1667,17 +1740,25 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             bool breakMove = false;
             MapCity enterCity = null;
             MapHero protectedTileEnemy = null;
-            Faction selectedHeroFaction = selectedHero.LHeroParty.Faction;
+            Faction selectedHeroFaction = selectedMapHero.LHeroParty.Faction;
+            // Get map focus panel
+            MapFocusPanel mapFocusPanel = transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>();
             // loop through path points
             Debug.Log("Move path count: " + movePath.Count.ToString());
-            for (int i = 0; i < movePath.Count; i++)
+            for (int i = 0; i < (movePath.Count) && (partyLeader.MovePointsCurrent >= 1) ; i++)
             {
+                // consume move points from hero
+                partyLeader.MovePointsCurrent -= 1;
+                // update focus panel info
+                mapFocusPanel.UpdateMovePointsInfo();
+                // .. change highlight for move points where user do not have enough move points
+                // get path point
                 var pathPoint = movePath[i];
                 // act based on what is located on this (next) tile before we actually move into it
                 GameObject nextGameObjectOnPath = GetObjectOnTile(pathPoint);
                 if (nextGameObjectOnPath)
                 {
-                    Debug.Log("04");
+                    //Debug.Log("04");
                     MapHero mapHero = nextGameObjectOnPath.GetComponent<MapHero>();
                     MapCity mapCity = nextGameObjectOnPath.GetComponent<MapCity>();
                     if (mapHero)
@@ -1791,7 +1872,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                     // move hero
                     deltaTime = Time.time - previousTime;
-                    selectedHero.transform.position = Vector2.MoveTowards(selectedHero.transform.position, dst, deltaTime * heroMoveSpeed);
+                    selectedMapHero.transform.position = Vector2.MoveTowards(selectedMapHero.transform.position, dst, deltaTime * heroMoveSpeed);
                     // wait until next move
                     previousTime = Time.time;
                     yield return new WaitForSeconds(heroMoveSpeedDelay);
@@ -1841,9 +1922,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // Unblock mouse input
                 inputBlocker.SetActive(false);
             }
-            // Remove path highlight
-            HighlightMovePath(false);
         }
+        // Remove path highlight
+        HighlightMovePath(false);
     }
 
     public void SetMode(Mode value)
@@ -1972,7 +2053,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 case Relationships.State.SameFaction:
                                     // highlighted hero belongs to player
                                     // check if this is the same hero as selected
-                                    if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
+                                    if (mapHero.GetInstanceID() == selectedMapHero.GetInstanceID())
                                     {
                                         // verify if hero is in city
                                         if (mapHero.lMapCity)
@@ -1994,7 +2075,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     else
                                     {
                                         // change cursor to selection hand
-                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
+                                        //transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
+                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
                                     }
                                     break;
                                 case Relationships.State.Allies:
@@ -2018,7 +2100,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 case Relationships.State.SameFaction:
                                     // highlighted hero belongs to player
                                     // check if this is the same hero as selected
-                                    if (mapHero.GetInstanceID() == selectedHero.GetInstanceID())
+                                    if (mapHero.GetInstanceID() == selectedMapHero.GetInstanceID())
                                     {
                                         Debug.Log("Same hero");
                                         // verify if hero is in city
@@ -2209,10 +2291,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void DeselectPreviouslySelectedObjectsOnMap()
     {
         // deselect previous hero if it was present
-        if (selectedHero)
+        if (selectedMapHero)
         {
-            selectedHero.SetSelectedState(false);
-            selectedHero = null;
+            selectedMapHero.SetSelectedState(false);
+            selectedMapHero = null;
         }
         // deselect previous city if it was selected
         if (selectedCity)
@@ -2475,9 +2557,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //Debug.Log("Clicked on city on map");
                             // verify if hero is already in the same city
-                            if (selectedHero.lMapCity)
+                            if (selectedMapHero.lMapCity)
                             {
-                                if (selectedHero.lMapCity.GetInstanceID() == mapCity.GetInstanceID())
+                                if (selectedMapHero.lMapCity.GetInstanceID() == mapCity.GetInstanceID())
                                 {
                                     // Hero is in the same city
                                     // Enter city edit mode
@@ -2528,7 +2610,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // Debug.LogWarning("1");
                                 // highlighted hero belongs to player
                                 // verify it it is the same hero as already selected
-                                if (selectedHero.GetInstanceID() == mapHero.GetInstanceID())
+                                if (selectedMapHero.GetInstanceID() == mapHero.GetInstanceID())
                                 {
                                     // Debug.LogWarning("2");
                                     // same hero as selected
@@ -2541,8 +2623,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 else
                                 {
                                     // Debug.LogWarning("3");
-                                    // other hero
-                                    VerifyMovePathAndMoveIfNeeded(pointerEventData);
+                                    // other hero from the same faction
+                                    // select other hero
+                                    //VerifyMovePathAndMoveIfNeeded(pointerEventData);
+                                    SetSelection(Selection.PlayerHero, mapHero);
                                 }
                             }
                             else
@@ -2563,7 +2647,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // Debug.LogWarning("1");
                                 // highlighted hero belongs to player
                                 // verify it it is the same hero as already selected
-                                if (selectedHero.GetInstanceID() == mapHero.GetInstanceID())
+                                if (selectedMapHero.GetInstanceID() == mapHero.GetInstanceID())
                                 {
                                     // Debug.LogWarning("2");
                                     // same hero as selected
@@ -2720,7 +2804,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // get destination
         Vector2Int destination = GetEscapeDestination(fleeingPartyPositionOnMap, direction);
         // set selectedHero - it will be later used by EnterCityAfterMove function
-        selectedHero = fleeingPartyTransform.GetComponent<MapHero>();
+        selectedMapHero = fleeingPartyTransform.GetComponent<MapHero>();
         // set move path
         SetMovePath(fleeingPartyPositionOnMap, destination);
         // start move 

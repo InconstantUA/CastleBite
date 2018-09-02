@@ -99,8 +99,8 @@ MonoBehaviour:
     unlocksUnitTypes: 
     upgradeCost: 200
     statsUpgradesCount: 0
-    movePointsCurrent: 0
-    movePointsMax: 0
+    movePointsCurrent: 5
+    movePointsMax: 5
     scoutingRange: 0
     unitSkills:
     - mName: 0

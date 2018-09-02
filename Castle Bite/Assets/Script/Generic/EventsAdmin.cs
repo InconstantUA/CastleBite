@@ -29,4 +29,5 @@ public class EventsAdmin : MonoBehaviour {
     {
         OnPlayerGoldHasChanged.Invoke();
     }
+
 }
