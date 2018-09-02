@@ -184,7 +184,10 @@ public class MapFocusPanel : MonoBehaviour {
         // verify cityType
         if (mapCity.LCity.CityType == CityType.Capital)
         {
-            additionalInfo = "Captial";
+            additionalInfo = mapCity.LCity.CityFaction.ToString() +  " Captial";
+        } else
+        {
+            additionalInfo = additionalInfo + " " + mapCity.LCity.CityLevelCurrent + " level";
         }
         transform.Find("Name").GetComponent<Text>().text = mapCity.LCity.CityName + "\r\n<size=12>" + additionalInfo + "</size>";
     }
@@ -218,6 +221,14 @@ public class MapFocusPanel : MonoBehaviour {
             transform.Find("Previous").GetComponent<TextButton>().SetInteractable(true);
             transform.Find("Next").GetComponent<TextButton>().SetInteractable(true);
         }
+        // Activate enter city control
+        transform.Find("FocusedObjectControl/EnterCity").gameObject.SetActive(true);
+    }
+
+    public void EnterCityOnMap()
+    {
+        Debug.Log("Enter city on map");
+        transform.root.Find("MapScreen/Map").GetComponent<MapManager>().EnterCityOnMap(focusedObject.GetComponent<MapCity>());
     }
 
     public void ReleaseFocus()

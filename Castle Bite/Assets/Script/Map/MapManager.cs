@@ -2376,6 +2376,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    public void EnterCityOnMap(MapCity mapCity)
+    {
+        // remove selection
+        SetSelection(Selection.None);
+        // Enter city edit mode
+        SetMode(Mode.Animation);
+        queue.Run(mapCity.EnterCityEditMode());
+    }
+
     public void ActOnClick(GameObject childGameObject, PointerEventData pointerEventData)
     {
         // predefine variables
@@ -2639,11 +2648,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 {
                                     // Debug.LogWarning("2");
                                     // same city as selected
-                                    // remove selection
-                                    SetSelection(Selection.None);
-                                    // Enter city edit mode
-                                    SetMode(Mode.Animation);
-                                    queue.Run(mapCity.EnterCityEditMode());
+                                    EnterCityOnMap(mapCity);
                                 }
                                 else
                                 {
