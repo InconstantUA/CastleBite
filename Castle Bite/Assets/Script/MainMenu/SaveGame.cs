@@ -151,13 +151,17 @@ public class SaveGame : MonoBehaviour {
         // init game data
         GameData gameData = new GameData
         {
+            turnsData = new TurnsData(),
             playersData = new PlayerData[players.Length],
             citiesData = new CityData[cities.Length],
             partiesData = new PartyData[heroParties.Length]
         };
+        // Get and write turns data
+        gameData.turnsData = transform.root.Find("Managers").GetComponent<TurnsManager>().TurnsData;
         // Get and write to gameData players data
         for (int i = 0; i < players.Length; i++)
         {
+            // copy player data
             gameData.playersData[i] = players[i].PlayerData;
         }
         // Prepare city data from the save

@@ -278,10 +278,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             objectsManager.CreatePlayer(playerData);
         }
-        // Set human player as active player
-        transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.Human).PlayerData.playerTurnState = PlayerTurnState.Active;
-        // Set AI player as waiting for its turn
-        transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.AI).PlayerData.playerTurnState = PlayerTurnState.Waiting;
+        // Activate and reset turns manager, set Dominion as active player
+        transform.root.Find("Managers").GetComponent<TurnsManager>().Reset(Faction.Dominion);
+        //// Set human player as active player
+        //transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.Human).PlayerData.playerTurnState = PlayerTurnState.Active;
+        //// Set AI player as waiting for its turn
+        //transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.AI).PlayerData.playerTurnState = PlayerTurnState.Waiting;
         // Activate ChooseYourFirstHero menu
         transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(true);
     }

@@ -8,6 +8,8 @@ class GameData : System.Object
 {
     // Map (Scene)
     // ..
+    // Turns: active player, turn number
+    public TurnsData turnsData;
     // Players
     public PlayerData[] playersData;
     // Cities
@@ -51,9 +53,9 @@ public class ObjectsManager : MonoBehaviour {
         // Get players root
         Transform gamePlayersRoot = transform.root.Find("GamePlayers");
         // instantiate new player
-        GameObject newGamePlayer = Instantiate(gamePlayerTemplate, gamePlayersRoot);
+        GamePlayer newGamePlayer = Instantiate(gamePlayerTemplate, gamePlayersRoot).GetComponent<GamePlayer>();
         // Set player data
-        newGamePlayer.GetComponent<GamePlayer>().PlayerData = playerData;
+        newGamePlayer.PlayerData = playerData;
         // rename it
         newGamePlayer.gameObject.name = playerData.givenName + " " + playerData.faction;
     }
@@ -169,7 +171,15 @@ public class ObjectsManager : MonoBehaviour {
 
     public void CreateHeroParty(PartyData partyData)
     {
-        Debug.Log("Creating " + partyData.partyUnitsData[0].unitName + " party");
+        // verify if there are units in party
+        if (partyData.partyUnitsData.Length >= 1)
+        {
+            Debug.Log("Creating " + partyData.partyUnitsData[0].unitName + " party");
+        } else
+        {
+            // empty can be only garnizon in non-capital city
+            Debug.Log("Creating garnizon");
+        }
         // define new hero party variable
         HeroParty newHeroParty;
         // define new hero party parent transform variable
@@ -219,7 +229,16 @@ public class ObjectsManager : MonoBehaviour {
             }
         }
         // rename hero party
-        newHeroParty.gameObject.name = newHeroParty.GetPartyLeader().GivenName + " " + newHeroParty.GetPartyLeader().UnitName + " Party";
+        if (partyData.partyUnitsData.Length >= 1 && newHeroParty.PartyMode != PartyMode.Garnizon)
+        {
+            // Name party by the leader name
+            newHeroParty.gameObject.name = newHeroParty.GetPartyLeader().GivenName + " " + newHeroParty.GetPartyLeader().UnitName + " Party";
+        }
+        else
+        {
+            // Name party "Garnizon"
+            newHeroParty.gameObject.name = "Garnizon";
+        }
         // activate hero party
         newHeroParty.gameObject.SetActive(true);
     }
@@ -233,7 +252,8 @@ public class ObjectsManager : MonoBehaviour {
             Destroy(heroParty.LMapHero.gameObject);
         }
         // destroy hero party
-        Debug.Log("Removing " + heroParty.GetPartyLeader().GivenName + " party");
+        // .. garnizon does not have leader, do check for this before enabling debug log
+        // Debug.Log("Removing " + heroParty.GetPartyLeader().GivenName + " party");
         Destroy(heroParty.gameObject);
     }
 }

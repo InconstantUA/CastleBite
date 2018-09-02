@@ -1,9 +1,48 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+[Serializable]
+public class TurnsData
+{
+    public int turnNumber;
+}
 
 public class TurnsManager : MonoBehaviour {
     public static TurnsManager Instance { get; private set; }
+    [SerializeField]
+    TurnsData turnsData;
+    [SerializeField]
+    Text turnNumberTextUI;
+
+    public void Reset(Faction playerFaction = Faction.Unknown)
+    {
+        // verify if activePlayerID is set
+        if (playerFaction != Faction.Unknown)
+        {
+            // loop through list of all players
+            foreach(GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
+            {
+                // verify if there is a player that matches activePlayerID
+                if (gamePlayer.Faction == playerFaction)
+                {
+                    // set required player active
+                    gamePlayer.PlayerTurnState = PlayerTurnState.Active;
+                }
+                else
+                {
+                    // set all other players to the waiting state
+                    gamePlayer.PlayerTurnState = PlayerTurnState.Waiting;
+                }
+            }
+        }
+        // reset turn number
+        TurnNumber = 1;
+        // update turn number UI
+        UpdateTurnNumberText();
+    }
 
     void Awake()
     {
@@ -38,6 +77,12 @@ public class TurnsManager : MonoBehaviour {
         return null;
     }
 
+    public void UpdateTurnNumberText()
+    {
+        Debug.Log("Set turn number text UI to " + TurnNumber.ToString());
+        turnNumberTextUI.text = TurnNumber.ToString();
+    }
+
     GamePlayer GetNextPlayer()
     {
         // get all players
@@ -51,6 +96,10 @@ public class TurnsManager : MonoBehaviour {
                 // verify if next player index is not higher than number of players
                 if (nextPlayerIndex >= allPlayers.Length)
                 {
+                    // increment turn number
+                    TurnNumber += 1;
+                    // update turn number UI
+                    UpdateTurnNumberText();
                     // start from beginning of array and return first player in array
                     return allPlayers[0];
                 }
@@ -172,5 +221,31 @@ public class TurnsManager : MonoBehaviour {
         }
         // Update top player income info panel
         transform.root.Find("MiscUI/TopInfoPanel").GetComponentInChildren<TextBoxDisplayCurrentGoldValue>().UpdateGoldValue();
+    }
+
+    public int TurnNumber
+    {
+        get
+        {
+            return turnsData.turnNumber;
+        }
+
+        set
+        {
+            turnsData.turnNumber = value;
+        }
+    }
+
+    public TurnsData TurnsData
+    {
+        get
+        {
+            return turnsData;
+        }
+
+        set
+        {
+            turnsData = value;
+        }
     }
 }

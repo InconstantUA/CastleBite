@@ -168,6 +168,16 @@ public class LoadGame : MonoBehaviour
         }
     }
 
+    void SetTurnsManager(GameData gameData)
+    {
+        // Get turns manager
+        TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
+        // Set data
+        turnsManager.TurnsData = gameData.turnsData;
+        // Update turns number in UI
+        turnsManager.UpdateTurnNumberText();
+    }
+
     IEnumerator CleanGameBeforeLoad()
     {
         // Block mouse input
@@ -187,6 +197,8 @@ public class LoadGame : MonoBehaviour
         // Note order is important, if some party was child of a city, then city should be created first
         // Update game with data from save
         CreateGamePlayers(gameData.playersData);
+        // Set Turns manager data
+        SetTurnsManager(gameData);
         // Update game with data from save
         CreateCities(gameData.citiesData);
         // Update game with data from save
@@ -199,6 +211,19 @@ public class LoadGame : MonoBehaviour
         transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(false);
         // Deactivate Loading screen
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
+    }
+
+    IEnumerator ActivateScreens()
+    {
+        yield return null;
+        // Activate map screen
+        transform.root.Find("MapScreen").gameObject.SetActive(true);
+        // Deactivate this screen
+        gameObject.SetActive(false);
+        // Activate main menu panel, so it is visible next time main menu is activated
+        transform.parent.Find("MainMenuPanel").gameObject.SetActive(true);
+        // Deactivate main menu
+        transform.root.Find("MainMenu").gameObject.SetActive(false);
     }
 
     void SetGameData(GameData gameData)
@@ -226,14 +251,8 @@ public class LoadGame : MonoBehaviour
         file.Close();
         // Set game data
         SetGameData(gameData);
-        // Activate map screen
-        transform.root.Find("MapScreen").gameObject.SetActive(true);
-        // Deactivate this screen
-        gameObject.SetActive(false);
-        // Activate main menu panel, so it is visible next time main menu is activated
-        transform.parent.Find("MainMenuPanel").gameObject.SetActive(true);
-        // Deactivate main menu
-        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        // activate screens
+        transform.root.Find("Managers").GetComponent<ChapterManager>().CoroutineQueue.Run(ActivateScreens());
     }
 
     void OnLoadSaveYesConfirmation()

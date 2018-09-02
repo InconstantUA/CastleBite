@@ -7,7 +7,8 @@ using UnityEngine;
 public enum Faction
 {
     Dominion,
-    Greenskin
+    Greenskin,
+    Unknown
 };
 
 public class Relationships : MonoBehaviour {

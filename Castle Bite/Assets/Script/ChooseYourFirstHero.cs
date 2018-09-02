@@ -58,7 +58,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
             transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
             // Deactivate activated by default top gold info panel
             transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
-            // Get 
         }
         else
         {
@@ -154,9 +153,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
 
     public void HireFirstHero()
     {
-        // Create game players
-        //transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().RemoveAllPlayers();
-        //transform.root.Find("MainMenu/LoadGame").GetComponent<LoadGame>().CreateGamePlayers(playersData);
         // Get Chosen race captial city link
         // Ask City to Hire chosen unit
         //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());

@@ -35,7 +35,7 @@ public class PlayerData : System.Object
     public string givenName;
     public int totalGold;
     public Faction faction;
-    public PlayerTurnState playerTurnState;
+    public PlayerTurnState playerTurnState = PlayerTurnState.Waiting;
     public int focusedObjectID = 0;
 }
 
