@@ -193,9 +193,18 @@ public enum ModifierOrigin
 }
 
 [Serializable]
+public enum Target
+{
+    Self,
+    AttackTarget
+}
+
+[Serializable]
 public class UniquePowerModifier
 {
     // define possible origins (who is the source of unique power modifier)
+    public Target target;
+    public UnitBuff upmAppliedBuff;
     public UnitDebuff upmAppliedDebuff;
     public int upmPower;
     public int upmPowerIncrementOnLevelUp;

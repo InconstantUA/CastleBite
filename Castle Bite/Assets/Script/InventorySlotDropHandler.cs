@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
-    public GameObject item
+    public GameObject Item
     {
         get
         {
@@ -18,16 +18,19 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (!item)
+        if (!Item)
         {
-            InventoryItemDragHandler.itemBeingDragged.transform.SetParent(transform);
-            // reset position to 0/0/0/0
-            // [ left - bottom ]
-            InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
-            // [ right - top ]
-            InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
-            // trigger event
-            ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
+            if (InventoryItemDragHandler.itemBeingDragged != null)
+            {
+                InventoryItemDragHandler.itemBeingDragged.transform.SetParent(transform);
+                // reset position to 0/0/0/0
+                // [ left - bottom ]
+                InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
+                // [ right - top ]
+                InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
+                // trigger event
+                // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
+            }
         }
     }
     //public void OnDrop(PointerEventData eventData)

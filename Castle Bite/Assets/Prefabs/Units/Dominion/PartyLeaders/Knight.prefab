@@ -63,7 +63,9 @@ MonoBehaviour:
     unitPowerScope: 0
     unitInitiative: 50
     uniquePowerModifiers:
-    - upmAppliedDebuff: 3
+    - target: 1
+      upmAppliedBuff: 0
+      upmAppliedDebuff: 3
       upmPower: 20
       upmPowerIncrementOnLevelUp: 5
       upmDuration: 2
@@ -71,7 +73,9 @@ MonoBehaviour:
       upmChanceIncrementOnLevelUp: 3
       upmSource: 1
       upmOrigin: 0
-    - upmAppliedDebuff: 4
+    - target: 1
+      upmAppliedBuff: 0
+      upmAppliedDebuff: 4
       upmPower: 0
       upmPowerIncrementOnLevelUp: 0
       upmDuration: 1
