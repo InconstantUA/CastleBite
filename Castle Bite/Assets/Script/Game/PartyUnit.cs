@@ -193,6 +193,13 @@ public enum ModifierOrigin
 }
 
 [Serializable]
+public enum ModifierScope
+{
+    Self,
+    EntireParty
+}
+
+[Serializable]
 public enum Target
 {
     Self,
@@ -231,6 +238,43 @@ public class UniquePowerModifier
                 return "Error";
         }
     }
+}
+
+[Serializable]
+public enum UnitStat
+{
+    Leadership,
+    Health,
+    Defence,
+    Power,
+    Initiative,
+    MovePoints,
+    ScoutingRange,
+    HitChance,
+    DeathResistance,
+    FireResistance,
+    WaterResistance,
+    MindResistance,
+    IsAlive
+}
+
+[Serializable]
+public enum ModifierAppliedHow
+{
+    Additively,
+    Multiplicatively,
+    Percent,
+    Toggle
+}
+
+[Serializable]
+public class UnitStatModifier : System.Object
+{
+    public UnitStat unitStat;
+    public ModifierScope modifierScope;
+    public int duration;
+    public int modifierPower;
+    public ModifierAppliedHow modifierAppliedHow;
 }
 
 [Serializable]
@@ -417,7 +461,9 @@ public class PartyUnitData : System.Object
         )
     };
     // UI attributes
-    public string unitCellAddress;  // used only during game save and load
+    public string unitCellAddress;  // used during game save and load and when party UI is displayed
+    // Unit Equipment
+    public InventoryItemData[] unitEquipment;
 }
 
 public class PartyUnit : MonoBehaviour {

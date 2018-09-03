@@ -5,36 +5,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-[Serializable]
-public enum HeroEquipmentSlot
-{
-    Shard,
-    Head,
-    Neck,
-    RightHand,
-    LeftHand,
-    Chest,
-    BeltSlot1,
-    BeltSlot2,
-    Boots
-}
-
-[Serializable]
-public class InventoryItem : System.Object
-{
-    public string itemName;
-    public int itemValue;
-    public HeroEquipmentSlot[] compatibleEquipmentSlots;
-    public bool isConsumableItem;
-    public UniquePowerModifier[] uniquePowerModifiers;
-}
-
-[Serializable]
-public class InventoryData : System.Object
-{
-    public InventoryItem[] inventoryItems;
-}
-
 public class Inventory : MonoBehaviour
 {
 

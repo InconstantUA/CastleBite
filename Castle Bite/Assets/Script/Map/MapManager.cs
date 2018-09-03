@@ -14,6 +14,13 @@ public struct PositionOnMap
     public float offsetMaxY;
 }
 
+[Serializable]
+public class MapData
+{
+    public InventoryItemData[] itemsOnMap; // used only during game save and load
+    public PositionOnMap[] itemsPositionOnMap; // used only during game save and load, linked to itemsOnMap
+}
+
 public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public enum Mode {
@@ -29,6 +36,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         PlayerCity
     }
 
+    [SerializeField]
+    MapData mapData;
     [SerializeField]
     Mode mode;
     [SerializeField]
@@ -135,6 +144,19 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         set
         {
             queue = value;
+        }
+    }
+
+    public MapData MapData
+    {
+        get
+        {
+            return mapData;
+        }
+
+        set
+        {
+            mapData = value;
         }
     }
 

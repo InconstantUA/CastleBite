@@ -21,6 +21,7 @@ public class PartyData : System.Object
     public string partyUIAddress = null;
     public bool holdPosition = false;
     public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
+    public InventoryItemData[] partyInventory;
 }
 
 public class HeroParty : MonoBehaviour {
