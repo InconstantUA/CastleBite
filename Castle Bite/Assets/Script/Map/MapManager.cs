@@ -270,6 +270,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
     }
 
+    // called via Unity Editor
+    public void SetManaSourcesVisible(bool doShow)
+    {
+        Debug.Log("Show All Mana sources names visible: " + doShow.ToString());
+    }
+
+    // called via Unity Editor
+    public void SetTreasureChestsVisible(bool doShow)
+    {
+        Debug.Log("Show All Treasure chests names visible: " + doShow.ToString());
+    }
+
     bool PositionIsWithinTilesMap(Vector2Int pos)
     {
         if (
