@@ -87,7 +87,7 @@ public class ObjectsManager : MonoBehaviour {
     {
         Debug.Log("Creating " + cityData.cityName + " city");
         // get parent Transform
-        Transform citiesParentTransform = transform.root.Find("Cities");
+        Transform citiesParentTransform = transform.root.Find("Map/Cities");
         // create city from tempalte
         City newCity = Instantiate(cityTemplate, citiesParentTransform).GetComponent<City>();
         // set city data
@@ -157,7 +157,7 @@ public class ObjectsManager : MonoBehaviour {
     City GetCityByID(int cityID)
     {
         // loop through all cites
-        foreach(City city in transform.root.Find("Cities").GetComponentsInChildren<City>())
+        foreach(City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>())
         {
             // compare city id to searchable id
             if (cityID == city.CityID)

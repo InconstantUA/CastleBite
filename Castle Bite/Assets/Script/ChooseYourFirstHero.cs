@@ -13,7 +13,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
     {
-        foreach (City city in transform.root.Find("Cities").GetComponentsInChildren<City>())
+        foreach (City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>())
         {
             if (city.CityType == cityType && city.CityFaction == faction)
             {
@@ -139,7 +139,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
 
     City GetActivePlayerCapital()
     {
-        foreach (City city in transform.root.Find("Cities").GetComponentsInChildren<City>())
+        foreach (City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>())
         {
             // verify if city faction match players faction and that it is capital city
             if ((city.CityFaction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)

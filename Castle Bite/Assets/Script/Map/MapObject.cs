@@ -48,8 +48,23 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         else if (Input.GetMouseButtonDown(1))
         {
             // on right mouse click
-            // show unit info
-            transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(this);
+            // verify which component is being linked
+            // verify if it is MapCit or MapHero
+            if (GetComponent<MapCity>() != null || GetComponent<MapHero>() != null)
+            {
+                // show unit info
+                transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(this);
+            }
+            // verify if it is MapChest
+            else if (GetComponent<MapItem>() != null)
+            {
+                // show treasure chest info
+                transform.root.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(true, "<b>Treasure chest</b>.\r\n\r\nWho knows what is hidden inside...");
+            }
+            else
+            {
+                Debug.LogWarning("Unknown linked component");
+            }
         }
     }
 
@@ -62,8 +77,23 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         else if (Input.GetMouseButtonUp(1))
         {
             // on right mouse click
-            // deactivate unit info
-            transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
+            // verify which component is being linked
+            // verify if it is MapCit or MapHero
+            if (GetComponent<MapCity>() != null || GetComponent<MapHero>() != null)
+            {
+                // deactivate unit info
+                transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
+            }
+            // verify if it is MapChest
+            else if (GetComponent<MapItem>() != null)
+            {
+                // disable treasure chest info
+                transform.root.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(false);
+            }
+            else
+            {
+                Debug.LogWarning("Unknown linked component");
+            }
         }
     }
 
@@ -88,7 +118,8 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         // highlight this menu
         SetHighlightedStatus();
         isMouseOver = true;
-        labelTxt.raycastTarget = true;
+        if (label.Interactable)
+            labelTxt.raycastTarget = true;
         // give control on actions to map manager
         MapManager mapManager = transform.parent.GetComponent<MapManager>();
         mapManager.OnPointerEnterChildObject(gameObject, eventData);

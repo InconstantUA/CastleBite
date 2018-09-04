@@ -220,7 +220,9 @@ public class TurnsManager : MonoBehaviour {
             }
         }
         // Update top player income info panel
-        transform.root.Find("MiscUI/TopInfoPanel").GetComponentInChildren<TextBoxDisplayCurrentGoldValue>().UpdateGoldValue();
+        transform.root.Find("MiscUI/TopInfoPanel").GetComponentInChildren<TextBoxDisplayCurrentGoldValue>(true).UpdateGoldValue();
+        // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
+        transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
     }
 
     public int TurnNumber

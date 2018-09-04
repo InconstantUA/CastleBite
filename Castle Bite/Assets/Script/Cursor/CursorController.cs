@@ -20,6 +20,8 @@ public class CursorController : MonoBehaviour {
     [SerializeField]
     private Texture2D selectionHandCursor;
     [SerializeField]
+    private Texture2D grabHandCursor;
+    [SerializeField]
     private Texture2D openDoorsCursor;
     [SerializeField]
     private Texture2D editHeroCursor;
@@ -56,6 +58,11 @@ public class CursorController : MonoBehaviour {
     public void SetSelectionHandCursor()
     {
         Cursor.SetCursor(selectionHandCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetGrabHandCursor()
+    {
+        Cursor.SetCursor(grabHandCursor, Vector2.zero, CursorMode.Auto);
     }
 
     public void SetOpenDoorsCursor()

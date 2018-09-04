@@ -125,7 +125,7 @@ public class LoadGame : MonoBehaviour
         // Get objects manager
         ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Remove cities
-        foreach (City city in transform.root.Find("Cities").GetComponentsInChildren<City>(true))
+        foreach (City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>(true))
         {
             objectsManager.RemoveCity(city);
         }

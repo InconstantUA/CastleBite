@@ -7,13 +7,13 @@ using UnityEngine.UI;
 //public class MapCity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 public class MapCity : MonoBehaviour
 {
-    enum State { NotSelected, Selected };
+    //enum State { NotSelected, Selected };
 
     [SerializeField]
     private City lCity;
     private MapHero lMapHero;
     //public float labelDimTimeout;
-    City linkedCity;
+    //City linkedCity;
     MapObjectLabel label;
     //Text labelTxt;
     Image markerImage;
@@ -52,15 +52,15 @@ public class MapCity : MonoBehaviour
     void Start()
     {
         // init linkedCity object
-        linkedCity = lCity.GetComponent<City>();
+        //linkedCity = lCity.GetComponent<City>();
         // update link in opposite direction
-        linkedCity.LMapCity = GetComponent<MapCity>();
+        lCity.GetComponent<City>().LMapCity = GetComponent<MapCity>();
         // set markerImage
         markerImage = GetComponent<Image>();
         // set label
         label = GetComponentInChildren<MapObjectLabel>();
         // set label text
-        label.LabelTxt.text = "[" + linkedCity.CityName + "]\n\r <size=12>" + linkedCity.CityDescription + "</size>";
+        label.LabelTxt.text = "[" + lCity.CityName + "]\n\r <size=12>" + lCity.CityDescription + "</size>";
     }
 
     public IEnumerator EnterCityEditMode()
@@ -91,7 +91,7 @@ public class MapCity : MonoBehaviour
         // everything below related to mapManager or mapScreen will not be processed
         // because map manager is disabled
         // Activate city view = go to city edit mode
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(linkedCity);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(lCity);
     }
 
     public void SetSelectedState(bool doActivate)

@@ -47,7 +47,9 @@ public class Relationships : MonoBehaviour {
         } else
         {
             // Dominion and Greenskin are at war
-            if ( (Faction.Dominion == faction1) && (Faction.Greenskin == faction2) ) {
+            if (   ((Faction.Dominion == faction1) && (Faction.Greenskin == faction2))
+                || ((Faction.Dominion == faction2) && (Faction.Greenskin == faction1)) )
+            {
                 return State.AtWar;
             }
         }

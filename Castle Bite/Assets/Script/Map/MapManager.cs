@@ -14,13 +14,6 @@ public struct PositionOnMap
     public float offsetMaxY;
 }
 
-[Serializable]
-public class MapData
-{
-    public InventoryItemData[] itemsOnMap; // used only during game save and load
-    public PositionOnMap[] itemsPositionOnMap; // used only during game save and load, linked to itemsOnMap
-}
-
 public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public enum Mode {
@@ -37,7 +30,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
     [SerializeField]
-    MapData mapData;
+    GameMap lMap;
     [SerializeField]
     Mode mode;
     [SerializeField]
@@ -144,19 +137,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         set
         {
             queue = value;
-        }
-    }
-
-    public MapData MapData
-    {
-        get
-        {
-            return mapData;
-        }
-
-        set
-        {
-            mapData = value;
         }
     }
 
@@ -338,6 +318,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
+        foreach (MapItem mapItem in transform.GetComponentsInChildren<MapItem>())
+        {
+            // verify if not null
+            if (mapItem)
+            {
+                Vector2Int pos = GetTilePosition(mapItem.transform);
+                if (PositionIsWithinTilesMap(pos))
+                {
+                    tilesmap[pos.x, pos.y] = false;
+                }
+            }
+        }
     }
 
     void InitPathFinder()
@@ -486,6 +478,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     GameObject childGameObject = GetObjectOnTile(highlightedPoint); // return map's objects: hero, city, other..
                     MapHero mapHero = null;
                     MapCity mapCity = null;
+                    MapItem mapItem = null;
                     bool label = false;
                     if (GetActiveLabels().Count > 0)
                     {
@@ -498,6 +491,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         // predefine variables
                         mapHero = childGameObject.GetComponent<MapHero>();
                         mapCity = childGameObject.GetComponent<MapCity>();
+                        mapItem = childGameObject.GetComponent<MapItem>();
                         // act based on current selection and object under mouse cursor
                         switch (selection)
                         {
@@ -549,6 +543,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                             Debug.LogError("Unknown relationships " + relationships.ToString());
                                             break;
                                     }
+                                }
+                                if (mapItem)
+                                {
+                                    tileHighlighterColor = darkYellow;
                                 }
                                 // at this stage we assume that pointer is over map terrain
                                 // nothing to do, just keep normal pointer, which was set after exit highlighting other objects
@@ -610,6 +608,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                             Debug.LogError("Unknown relationships " + relationships.ToString());
                                             break;
                                     }
+                                }
+                                if (mapItem)
+                                {
+                                    tileHighlighterColor = darkYellow;
                                 }
                                 // at this stage we assume that pointer is over map terrain
                                 // controls here are handled by Update() function
@@ -903,6 +905,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 //}
             }
         }
+        foreach (MapItem mapItem in transform.GetComponentsInChildren<MapItem>())
+        {
+            // verify if not null
+            if (mapItem)
+            {
+                Vector2Int itemTilePosition = GetTilePosition(mapItem.transform);
+                if (itemTilePosition == tilePosition)
+                {
+                    return mapItem.gameObject;
+                }
+            }
+        }
         // Everything else is just terrain without hero, city or treasure on it.
         return null;
     }
@@ -925,16 +939,24 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
             MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
+            MapItem mapItem = gameObjectOnTile.GetComponent<MapItem>();
             Relationships.State relationships;
             if (mapHero)
             {
                 // check relationships with active player
                 relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
-            } else if (mapCity)
+            }
+            else if (mapCity)
             {
                 // check relationships with active player
                 relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
-            } else
+            }
+            else if (mapItem)
+            {
+                // check relationships with active player
+                relationships = Relationships.State.Neutral;
+            }
+            else
             {
                 Debug.LogError("Unknown object on map " + gameObject.name);
                 return Color.magenta;
@@ -1052,6 +1074,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     {
                         MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
                         MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
+                        MapItem mapItem = gameObjectOnTile.GetComponent<MapItem>();
                         if (mapHero)
                         {
                             // check relationships with active player
@@ -1072,6 +1095,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         else if (mapCity)
                         {
+                        }
+                        else if (mapItem)
+                        {
+
                         }
                         else
                         {
@@ -1730,6 +1757,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         queue.Run(EnterBattleCommonEnd());
     }
 
+    void PickUpItem()
+    {
+        Debug.Log("Pick up item");
+    }
+
     IEnumerator Move()
     {
         Debug.Log("MapManager: Move");
@@ -1744,9 +1776,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             HeroParty heroParty = selectedMapHero.LHeroParty;
             // Trigger on hero leaving city
             // ..
-            // Move party from city to PartiesOnMap container
-            Transform partiesOnMap = transform.root.Find("PartiesOnMap");
-            heroParty.transform.SetParent(partiesOnMap);
+            // Move party from city to map
+            // Transform partiesOnMap = transform.root.Find("PartiesOnMap");
+            heroParty.transform.SetParent(lMap.transform);
             // Update hero party place
             //heroParty.SetPlace(HeroParty.PartyPlace.Map);
         }
@@ -1795,6 +1827,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     //Debug.Log("04");
                     MapHero mapHero = nextGameObjectOnPath.GetComponent<MapHero>();
                     MapCity mapCity = nextGameObjectOnPath.GetComponent<MapCity>();
+                    MapItem mapItem = nextGameObjectOnPath.GetComponent<MapItem>();
                     if (mapHero)
                     {
                         // check relationships with moving party faction
@@ -1842,6 +1875,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 Debug.LogError("Unknown relationships " + relationships.ToString());
                                 break;
                         }
+                    }
+                    else if (mapItem)
+                    {
+                        PickUpItem();
                     }
                     else
                     {
@@ -2010,6 +2047,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // predefine variables
         MapHero mapHero = childGameObject.GetComponent<MapHero>();
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
+        MapItem mapItem = childGameObject.GetComponent<MapItem>();
         MapObjectLabel mapHeroViaLabel = null;
         MapObjectLabel mapCityViaLabel = null;
         MapObjectLabel label = childGameObject.GetComponent<MapObjectLabel>();
@@ -2072,6 +2110,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // do nothing
                                 // user cannot select and control units or cities which he does not own
                             }
+                        }
+                        if (mapItem)
+                        {
+                            // nothing to do here
                         }
                         // at this stage we assume that pointer is over map terrain
                         // nothing to do, just keep normal pointer, which was set after exit highlighting other objects
@@ -2199,7 +2241,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                         if (mapCityViaLabel)
                         {
-                            Debug.Log("Enter city lable box " + mapCity.name);
+                            Debug.Log("Enter city label box " + mapCity.name);
                             // check relationships with active player
                             Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
                             switch (relationships)
@@ -2220,6 +2262,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     Debug.LogError("Unknown relationships " + relationships.ToString());
                                     break;
                             }
+                        }
+                        if (mapItem)
+                        {
+                            // change cursor to grab hand
+                            transform.root.Find("CursorController").GetComponent<CursorController>().SetGrabHandCursor();
                         }
                         // at this stage we assume that pointer is over map terrain
                         // controls here are handled by Update() function
@@ -2268,6 +2315,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // do nothing
                                 // user cannot select and control units or cities which he does not own
                             }
+                        }
+                        if (mapItem)
+                        {
+                            // nothing to do here
                         }
                         // at this stage we assume that pointer is over map terrain
                         // nothing to do, just keep normal pointer, which was set after exit highlighting other objects
@@ -2506,6 +2557,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // predefine variables
         MapHero mapHero = childGameObject.GetComponent<MapHero>();
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
+        MapItem mapItem = childGameObject.GetComponent<MapItem>();
         MapObjectLabel mapHeroViaLabel = null;
         MapObjectLabel mapCityViaLabel = null;
         MapObjectLabel label = childGameObject.GetComponent<MapObjectLabel>();
@@ -2584,6 +2636,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // highlighted city is from other faction
                                 // do nothing
                             }
+                        }
+                        if (mapItem)
+                        {
+                            // nothing to do here
                         }
                         break;
                     case Selection.PlayerHero:
@@ -2718,6 +2774,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 SetSelection(Selection.None);
                             }
                         }
+                        if (mapItem)
+                        {
+                            // Move to the item on map
+                            VerifyMovePathAndMoveIfNeeded(pointerEventData);
+                        }
                         if (mapMgr)
                         {
                             VerifyMovePathAndMoveIfNeeded(pointerEventData);
@@ -2782,6 +2843,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 // remove selection
                                 SetSelection(Selection.None);
                             }
+                        }
+                        if (mapItem)
+                        {
+                            // nothing to do here
                         }
                         if (mapMgr)
                         {

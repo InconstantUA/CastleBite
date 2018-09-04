@@ -10,6 +10,8 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     MapObject mapObject;
     [SerializeField]
     bool isMouseOver = false;
+    [SerializeField]
+    bool interactable = true;
 
     void Awake()
     {
@@ -21,43 +23,47 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // Debug.Log("MapObjectLabel OnPointerEnter");
-        // dimm all other menus
-        // DimmAllOtherMenus();
-        // highlight this menu
-        isMouseOver = true;
-        labelTxt.color = mapObject.HighlightedLabelColor;
-        // give control on actions to map manager
-        MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-        mapManager.OnPointerEnterChildObject(gameObject, eventData);
+        if (interactable)
+        {
+            // Debug.Log("MapObjectLabel OnPointerEnter");
+            // highlight this menu
+            isMouseOver = true;
+            labelTxt.color = mapObject.HighlightedLabelColor;
+            // give control on actions to map manager
+            MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+            mapManager.OnPointerEnterChildObject(gameObject, eventData);
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        // Debug.Log("MapObjectLabel OnPointerExit");
-        isMouseOver = false;
-        // SetHiddenStatus();
-        // Verify if mouse is not over MapObject, because in this case we do not need to hide label
-        // otherwise it will first trigger enter on map object and then exit on map object label, which will cause troubles
-        if (!mapObject.IsMouseOver)
+        if (interactable)
         {
-            if (mapObject.LabelAlwaysOn)
+            // Debug.Log("MapObjectLabel OnPointerExit");
+            isMouseOver = false;
+            // SetHiddenStatus();
+            // Verify if mouse is not over MapObject, because in this case we do not need to hide label
+            // otherwise it will first trigger enter on map object and then exit on map object label, which will cause troubles
+            if (!mapObject.IsMouseOver)
             {
-                HideLabel();
+                if (mapObject.LabelAlwaysOn)
+                {
+                    HideLabel();
+                }
+                else
+                {
+                    SetAlwaysOnLabelColor();
+                }
+                // give control on actions to map manager
+                MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+                mapManager.OnPointerExitChildObject(gameObject, eventData);
             }
             else
             {
-                SetAlwaysOnLabelColor();
+                // trigger eneter on the parent object, like we entered it again
+                // because it will not trigger, because it does not know that mouse left it, because mosue was over child object
+                mapObject.OnPointerEnter(eventData);
             }
-            // give control on actions to map manager
-            MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-            mapManager.OnPointerExitChildObject(gameObject, eventData);
-        }
-        else
-        {
-            // trigger eneter on the parent object, like we entered it again
-            // because it will not trigger, because it does not know that mouse left it, because mosue was over child object
-            mapObject.OnPointerEnter(eventData);
         }
     }
 
@@ -94,23 +100,32 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Debug.Log("MapObjectLabel OnPointerDown");
-        labelTxt.color = mapObject.PressedLabelColor;
+        if (interactable)
+        {
+            // Debug.Log("MapObjectLabel OnPointerDown");
+            labelTxt.color = mapObject.PressedLabelColor;
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        // Debug.Log("MapObjectLabel OnPointerUp");
-        // keep state On
+        if (interactable)
+        {
+            // Debug.Log("MapObjectLabel OnPointerUp");
+            // keep state On
+        }
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // Debug.Log("MapObjectLabel OnPointerClick");
-        labelTxt.color = mapObject.HighlightedLabelColor;
-        // give control on actions to map manager
-        MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-        mapManager.ActOnClick(gameObject, eventData);
+        if (interactable)
+        {
+            // Debug.Log("MapObjectLabel OnPointerClick");
+            labelTxt.color = mapObject.HighlightedLabelColor;
+            // give control on actions to map manager
+            MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+            mapManager.ActOnClick(gameObject, eventData);
+        }
     }
 
     public bool IsMouseOver
@@ -137,6 +152,19 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         set
         {
             labelTxt = value;
+        }
+    }
+
+    public bool Interactable
+    {
+        get
+        {
+            return interactable;
+        }
+
+        set
+        {
+            interactable = value;
         }
     }
 }
