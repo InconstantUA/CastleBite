@@ -4,9 +4,25 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+    [SerializeField]
+    InventoryItem lInventoryItem;
     public static GameObject itemBeingDragged;
     Vector3 startPosition;
     Transform startParent;
+
+    public InventoryItem LInventoryItem
+    {
+        get
+        {
+            return lInventoryItem;
+        }
+
+        set
+        {
+            lInventoryItem = value;
+        }
+    }
+
     #region IBeginDragHandler implementation
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -20,12 +36,14 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         GetComponent<CanvasGroup>().blocksRaycasts = false;
     }
     #endregion
+
     #region IDragHandler implementation
     public void OnDrag(PointerEventData eventData)
     {
         transform.position = Input.mousePosition;
     }
     #endregion
+
     #region IEndDragHandler implementation
     public void OnEndDrag(PointerEventData eventData)
     {

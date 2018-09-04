@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class MapItem : MonoBehaviour {
     [SerializeField]
-    InventoryItem lInventoryItem;
+    InventoryItem[] lInventoryItems;
 
-    public InventoryItem LInventoryItem
+    public InventoryItem[] LInventoryItem
     {
         get
         {
-            return lInventoryItem;
+            return lInventoryItems;
         }
 
         set
         {
-            lInventoryItem = value;
+            lInventoryItems = value;
         }
     }
 }

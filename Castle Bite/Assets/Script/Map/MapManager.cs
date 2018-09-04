@@ -920,6 +920,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Everything else is just terrain without hero, city or treasure on it.
         return null;
     }
+
     GameObject GetObjectOnTile(NesScripts.Controls.PathFind.Point pathPoint)
     {
         Vector2Int tilePosition = new Vector2Int
@@ -1757,9 +1758,31 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         queue.Run(EnterBattleCommonEnd());
     }
 
-    void PickUpItem()
+
+    IEnumerator PickupItem(MapItem mapItem)
     {
         Debug.Log("Pick up item");
+        // init string for the message box
+        string message = "<b>You have found</b>:\r\n";
+        // Loop through each item in the chest
+        foreach (InventoryItem inventoryItem in mapItem.LInventoryItem)
+        {
+            // change parent to hero party
+            inventoryItem.transform.SetParent(selectedMapHero.LHeroParty.transform);
+            // get name for the message box
+            message += "\r\n" + inventoryItem.ItemName;
+        }
+        // Destroy chest
+        Destroy(mapItem.gameObject);
+        // exit animation mode and enter browse mode
+        SetMode(Mode.Browse);
+        yield return new WaitForSeconds(0.5f);
+        // Unblock mouse input
+        transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(false);
+        // Display message about what item(s) were found
+        transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(message);
+        // Exit coroutine
+        yield return null;
     }
 
     IEnumerator Move()
@@ -1878,7 +1901,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     }
                     else if (mapItem)
                     {
-                        PickUpItem();
+                        queue.Run(PickupItem(mapItem));
+                        breakMove = true;
                     }
                     else
                     {
