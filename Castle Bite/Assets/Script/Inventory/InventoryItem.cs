@@ -14,7 +14,8 @@ public enum HeroEquipmentSlot
     Chest,
     BeltSlot1,
     BeltSlot2,
-    Boots
+    Boots,
+    None
 }
 
 [Serializable]

@@ -11,14 +11,26 @@ public class PartyInventoryUI : MonoBehaviour {
     [SerializeField]
     Transform inventoryItemsGrid;
 
+    public void FillInEmptySlots()
+    {
+        // there should be at least 3 item slots present in UI
+        // .. Change this to list and get only first-level items, non-recursive
+        InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
+        // get number of empty item slots
+        int emptySlots = 3 - inventoryItems.Length;
+        // create an empty slot for each empty slot
+        for (int i = 0; i < emptySlots; i++)
+        {
+            // create slot in items list
+            Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid);
+        }
+    }
+
     void OnEnable()
     {
         // all items in a party
         // structure: LeftHeroParty-PartyInventory
         InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
-        // there should be at least 3 item slots present in UI
-        // get number of empty item slots
-        int emptySlots = 3 - inventoryItems.Length;
         // create inventory slot and drag handler for each item
         foreach(InventoryItem inventoryItem in inventoryItems)
         {
@@ -31,12 +43,8 @@ public class PartyInventoryUI : MonoBehaviour {
             // set item name in UI
             dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
         }
-        // create an empty slot for each empty slot
-        for (int i = 0; i < emptySlots; i++)
-        {
-            // create slot in items list
-            Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid);
-        }
+        // fill in empty slots
+        FillInEmptySlots();
     }
 
     void OnDisable()

@@ -5,6 +5,14 @@ using UnityEngine;
 public class HeroEquipment : MonoBehaviour {
     UnitEquipmentButton callingUnitEquipmentButton;
 
+    public UnitEquipmentButton CallingUnitEquipmentButton
+    {
+        get
+        {
+            return callingUnitEquipmentButton;
+        }
+    }
+
     public void ActivateAdvance(UnitEquipmentButton unitEquipmentButton)
     {
         callingUnitEquipmentButton = unitEquipmentButton;
