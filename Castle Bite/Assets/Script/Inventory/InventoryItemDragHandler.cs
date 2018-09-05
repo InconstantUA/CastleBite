@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
     [SerializeField]
     InventoryItem lInventoryItem;
-    public static GameObject itemBeingDragged;
+    public static InventoryItemDragHandler itemBeingDragged;
     //Vector3 startPosition;
-    Transform startParentTransform;
+    InventorySlotDropHandler itemBeingDraggedSlot;
     Transform outOfMaskParentTransform;
 
     public InventoryItem LInventoryItem
@@ -24,11 +24,11 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         }
     }
 
-    public Transform StartParentTransform
+    public InventorySlotDropHandler ItemBeindDraggedSlot
     {
         get
         {
-            return startParentTransform;
+            return itemBeingDraggedSlot;
         }
     }
 
@@ -46,9 +46,9 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
     public void OnBeginDrag(PointerEventData eventData)
     {
         BringItemToFront();
-        itemBeingDragged = gameObject;
+        itemBeingDragged = this;
         //startPosition = transform.position;
-        startParentTransform = transform.parent.transform;
+        itemBeingDraggedSlot = GetComponentInParent<InventorySlotDropHandler>();
         // change parent outside of Mask, to PartyInventory, so that canvas is not affected by Mask UI component
         // structure 4PartyInventory-3ItemsList-2Grid-1ItemSlot(Drop)-Item(Drag)
         transform.SetParent(transform.parent.parent.parent.parent);
@@ -71,9 +71,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         {
             Debug.Log("Return to original position");
             // change parent back to original
-            transform.SetParent(startParentTransform);
-            //// change position
-            //transform.position = startPosition;
+            transform.SetParent(itemBeingDraggedSlot.transform);
             // reset position to 0/0/0/0
             // [ left - bottom ]
             GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);

@@ -11,37 +11,59 @@ public class PartyInventoryUI : MonoBehaviour {
     [SerializeField]
     Transform inventoryItemsGrid;
 
+    public InventorySlotDropHandler AddSlot()
+    {
+        return Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<InventorySlotDropHandler>();
+    }
+
+    public InventoryItemDragHandler AddItemDragHandler(InventorySlotDropHandler slot)
+    {
+        return Instantiate(inventoryItemDragHandlerTemplate, slot.transform).GetComponent<InventoryItemDragHandler>();
+    }
+
     public void FillInEmptySlots()
     {
         // there should be at least 3 item slots present in UI
         // .. Change this to list and get only first-level items, non-recursive
-        InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
+        int numberOfItems = 0;
+        foreach(Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
+        {
+            // verify if this is InventoryItem
+            if (childTransform.GetComponent<InventoryItem>() != null)
+                // increment items count
+                numberOfItems += 1;
+        }
         // get number of empty item slots
-        int emptySlots = 3 - inventoryItems.Length;
+        int emptySlots = 3 - numberOfItems;
         // create an empty slot for each empty slot
         for (int i = 0; i < emptySlots; i++)
         {
             // create slot in items list
-            Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid);
+            AddSlot();
         }
     }
+
+
 
     void OnEnable()
     {
         // all items in a party
         // structure: LeftHeroParty-PartyInventory
-        InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
+        // InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
         // create inventory slot and drag handler for each item
-        foreach(InventoryItem inventoryItem in inventoryItems)
+        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
         {
-            // create slot in items list
-            Transform slotTransform = Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).transform;
-            // create drag handler in slotTransform
-            InventoryItemDragHandler dragHandler = Instantiate(inventoryItemDragHandlerTemplate, slotTransform).GetComponent<InventoryItemDragHandler>();
-            // link item to drag handler
-            dragHandler.LInventoryItem = inventoryItem;
-            // set item name in UI
-            dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
+            InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+            // verify if this is InventoryItem
+            if (inventoryItem != null)
+            {
+                // create drag handler and slotTransform
+                InventoryItemDragHandler dragHandler = AddItemDragHandler(AddSlot());
+                // link item to drag handler
+                dragHandler.LInventoryItem = inventoryItem;
+                // set item name in UI
+                dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
+            }
         }
         // fill in empty slots
         FillInEmptySlots();

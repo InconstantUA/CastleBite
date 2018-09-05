@@ -55,83 +55,64 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
         }
     }
 
+    public void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
+    {
+        // move item being dragged UI into this slot
+        itemBeingDragged.transform.SetParent(transform);
+        // reset UI position to 0/0/0/0
+        itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
+        itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
+        // move InventoryItem to the new parent
+        itemBeingDragged.LInventoryItem.transform.SetParent(GetParentObjectTransform());
+    }
+
+    public void MoveItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
+    {
+        // Get source item slot transform
+        InventorySlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
+        // init exchange flag
+        bool thisIsExachnge = false;
+        // verify if there is no item already in this slot
+        if (transform.childCount > 1)
+        {
+            thisIsExachnge = true;
+            // Put item from this slot to the slot of the item beind dragged
+            srcItemSlot.PutItemIntoSlot(GetComponentInChildren<InventoryItemDragHandler>());
+            // trigger event
+            // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
+        }
+        // Put dragged item into slot
+        PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+        // verify if it was not just simple exchange
+        if (!thisIsExachnge)
+        {
+            // verify if source slot is in party inventory mode
+            if (srcItemSlot.SlotMode == Mode.PartyInventory)
+            {
+                // .. Optimize
+                // Get parent slots grid
+                Transform srcSlotsGrid = srcItemSlot.transform.parent;
+                // loop through all slots in source inventory
+                foreach (InventorySlotDropHandler slot in srcSlotsGrid.GetComponentsInChildren<InventorySlotDropHandler>())
+                {
+                    // verify if slot is empty
+                    if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
+                    {
+                        // Remove slot
+                        Destroy(slot.gameObject);
+                    }
+                }
+                // fill in empty slots in inventory
+                srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
+            }
+        }
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
         if (InventoryItemDragHandler.itemBeingDragged != null)
         {
-            // Get source item slot transform
-            Transform srcItemParentTransform = InventoryItemDragHandler.itemBeingDragged.GetComponent<InventoryItemDragHandler>().StartParentTransform;
-            // init exchange flag
-            bool thisIsExachnge = false;
-            // verify if there is no item already in this slot
-            if (transform.childCount > 1)
-            {
-                thisIsExachnge = true;
-                // there is already item in the slot
-                // exchange 2 items between each other
-                // Get InventoryItemDragHandler in this slot
-                InventoryItemDragHandler dstItemDragHandler = GetComponentInChildren<InventoryItemDragHandler>();
-                // Get destination item
-                InventoryItem dstInventoryItem = dstItemDragHandler.LInventoryItem;
-                // Get slot of the item being dragged
-                InventorySlotDropHandler inventorySlotOfTheItemBeingDragged = srcItemParentTransform.GetComponent<InventorySlotDropHandler>();
-                // move item from this slot to the parent of slot of the item being dragged
-                dstInventoryItem.transform.SetParent(inventorySlotOfTheItemBeingDragged.GetParentObjectTransform());
-                // move item in this slot to the src item parent
-                dstItemDragHandler.transform.SetParent(srcItemParentTransform);
-                // reset its position to 0/0/0/0
-                dstItemDragHandler.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
-                dstItemDragHandler.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
-                // trigger event
-                // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
-            }
-            else
-            {
-                // ..
-            }
-            // move item being dragged UI into this slot
-            InventoryItemDragHandler.itemBeingDragged.transform.SetParent(transform);
-            // reset UI position to 0/0/0/0
-            InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
-            InventoryItemDragHandler.itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
-            // Get InventoryItem
-            InventoryItem inventoryItem = InventoryItemDragHandler.itemBeingDragged.GetComponent<InventoryItemDragHandler>().LInventoryItem;
-            // move item to new parent
-            inventoryItem.transform.SetParent(GetParentObjectTransform());
-            // verify if it was not just simple exchange
-            if (!thisIsExachnge)
-            {
-                // verify if source slot is in party inventory mode
-                if (srcItemParentTransform.GetComponent<InventorySlotDropHandler>().SlotMode == Mode.PartyInventory)
-                {
-                    // .. Optimize
-                    // there might be empty slot appear
-                    // possible options
-                    // 000  - ok
-                    // x00  - ok
-                    // xx0  - ok
-                    // 0xx  - not ok
-                    // x0x  - not ok
-                    // xxx0 - not ok
-                    // we need to remove them
-                    // Get parent slots grid
-                    Transform srcSlotsGrid = srcItemParentTransform.parent;
-                    // get all slots
-                    InventorySlotDropHandler[] srcSlots = srcSlotsGrid.GetComponentsInChildren<InventorySlotDropHandler>();
-                    // loop through all slots in source inventory
-                    foreach (InventorySlotDropHandler slot in srcSlots)
-                    {
-                        // verify if slot is empty
-                        if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
-                        {
-                            // Remove slot
-                            Destroy(slot.gameObject);
-                        }
-                    }
-                    // fill in empty slots in inventory
-                    srcItemParentTransform.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
-                }
-            }
+            MoveItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
         }
     }
 
