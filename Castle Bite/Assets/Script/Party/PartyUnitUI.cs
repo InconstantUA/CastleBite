@@ -459,4 +459,37 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
+    public void TryToConsumeItem(InventoryItemDragHandler inventoryItemDragHandler)
+    {
+        Debug.Log("Try to consume item");
+        // get item
+        InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
+        // verify if item is consumable
+        if (inventoryItem.IsConsumableItem)
+        {
+            // consume item
+            // ..
+            Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
+            // destroy item before destroying slot
+            Destroy(inventoryItem.gameObject);
+            // Get source item slot transform
+            InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
+            // verify if source slot is in party inventory mode
+            if (srcItemSlot.SlotMode == InventorySlotDropHandler.Mode.PartyInventory)
+            {
+                // Get PartyInventoryUI (before slot is destroyed)
+                PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+                // remove source item slot
+                Destroy(srcItemSlot.gameObject);
+                // fill in empty slots in invenotory if needed;
+                partyInventoryUI.FillInEmptySlots();
+            }
+        }
+        else
+        {
+            // item is not consumable
+            // nothing to do here
+            // item will return to its original position
+        }
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HeroEquipment : MonoBehaviour {
     UnitEquipmentButton callingUnitEquipmentButton;
@@ -35,5 +36,60 @@ public class HeroEquipment : MonoBehaviour {
         gameObject.SetActive(false);
         // activate other menus back
         callingUnitEquipmentButton.SetRequiredMenusActive(true);
+    }
+
+    public void SetActiveItemDrag(bool activate)
+    {
+        Color greenHighlight = Color.green;
+        Color redHighlight = Color.red;
+        Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+        Color hightlightColor;
+        bool isCompatible = false;
+        bool isDroppable = false;
+        // loop through all slots in hero equipment
+        foreach (InventorySlotDropHandler slot in GetComponentsInChildren<InventorySlotDropHandler>())
+        {
+            // reset highlight color to normal
+            hightlightColor = normalColor;
+            // verify if we need to activate or deactivate state
+            if (activate)
+            {
+                // reset is compatible flag
+                isCompatible = false;
+                // reset is droppable flag
+                isDroppable = false;
+                // loop through all compatible slots types
+                foreach (HeroEquipmentSlot slotType in InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots)
+                {
+                    // verify if equipment slot is compatible
+                    if (slot.EquipmentSlot == slotType)
+                    {
+                        // set compatible flag
+                        isCompatible = true;
+                        // exit loop
+                        break;
+                    }
+                }
+                // verify if slot is compatible
+                if (isCompatible)
+                {
+                    // set highlight color to green
+                    hightlightColor = greenHighlight;
+                    // set droppable flag
+                    isDroppable = true;
+                }
+                else
+                {
+                    // set highlight color to green
+                    hightlightColor = redHighlight;
+                }
+            }
+            // set color in UI
+            slot.GetComponentInChildren<Text>().color = hightlightColor;
+            // set slot is droppable or not status
+            slot.IsDroppable = isDroppable;
+        }
+        // and disable/enable hire buttons
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 }

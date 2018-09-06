@@ -13,12 +13,29 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     Mode slotMode;
     [SerializeField]
     HeroEquipmentSlot equipmentSlot;
+    bool isDroppable = true;
 
     public Mode SlotMode
     {
         get
         {
             return slotMode;
+        }
+    }
+
+    public HeroEquipmentSlot EquipmentSlot
+    {
+        get
+        {
+            return equipmentSlot;
+        }
+    }
+
+    public bool IsDroppable
+    {
+        set
+        {
+            isDroppable = value;
         }
     }
 
@@ -90,6 +107,12 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
             if (srcItemSlot.SlotMode == Mode.PartyInventory)
             {
                 // .. Optimize
+                //// Get PartyInventoryUI (before slot is destroyed)
+                //PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+                //// remove source item slot
+                //Destroy(srcItemSlot.gameObject);
+                //// fill in empty slots in invenotory if needed;
+                //partyInventoryUI.FillInEmptySlots();
                 // Get parent slots grid
                 Transform srcSlotsGrid = srcItemSlot.transform.parent;
                 // loop through all slots in source inventory
@@ -110,9 +133,14 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
 
     public void OnDrop(PointerEventData eventData)
     {
+        // verify if it is item being dragged and not other object
         if (InventoryItemDragHandler.itemBeingDragged != null)
         {
-            MoveItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+            // verify if slot is droppable for this item (this is being set during drag initiation)
+            if (isDroppable)
+            {
+                MoveItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+            }
         }
     }
 

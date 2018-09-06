@@ -87,40 +87,29 @@ public class CursorController : MonoBehaviour {
         Cursor.SetCursor(moveArrowCursor, Vector2.zero, CursorMode.Auto);
     }
 
-    public void SetCityActiveViewStateCursor(CityViewActiveState requiredState, bool doActivate)
+    public void SetDismissUnitCursor()
     {
-        if(doActivate)
-        {
-            switch (requiredState)
-            {
-                case CityViewActiveState.ActiveDismiss:
-                    Cursor.SetCursor(dismissUnitCursor, new Vector2(16, 16), CursorMode.Auto);
-                    break;
-                case CityViewActiveState.ActiveHeal:
-                    Cursor.SetCursor(healUnitCursor, new Vector2(16, 16), CursorMode.Auto);
-                    break;
-                case CityViewActiveState.ActiveResurect:
-                    Cursor.SetCursor(resurectUnitCursor, new Vector2(16, 16), CursorMode.Auto);
-                    break;
-                case CityViewActiveState.ActiveHeroEquipment:
-                    Cursor.SetCursor(invenotryUnitCursor, Vector2.zero, CursorMode.Auto);
-                    break;
-                case CityViewActiveState.ActiveUnitDrag:
-                    Cursor.SetCursor(dragUnitCursor, Vector2.zero, CursorMode.Auto);
-                    break;
-                default:
-                    Debug.LogError("Unknown condition");
-                    break;
-            }
-        }
-        else
-        {
-            SetNormalCursor();
-        }
+        Cursor.SetCursor(dismissUnitCursor, new Vector2(16, 16), CursorMode.Auto);
     }
 
-    //// Update is called once per frame
-    //void Update () {
+    public void SetHealUnitCursor()
+    {
+        Cursor.SetCursor(healUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+    }
 
-    //}
+    public void SetResurectUnitCursor()
+    {
+        Cursor.SetCursor(resurectUnitCursor, new Vector2(16, 16), CursorMode.Auto);
+    }
+
+    public void SetInvenotryUnitCursor()
+    {
+        Cursor.SetCursor(invenotryUnitCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetDragUnitCursor()
+    {
+        Cursor.SetCursor(dragUnitCursor, Vector2.zero, CursorMode.Auto);
+    }
+
 }

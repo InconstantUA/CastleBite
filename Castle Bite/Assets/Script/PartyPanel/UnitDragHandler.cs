@@ -52,7 +52,7 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             BringUnitToFront();
             // enter city to drag state to highlight panels which can be drop targets
             // and do additional required gui adjustments
-            GetCityScreen().SetActiveState(CityViewActiveState.ActiveUnitDrag, true);
+            GetCityScreen().SetActiveState(EditPartyScreenActiveState.ActiveUnitDrag, true);
         }
         else if (Input.GetMouseButton(1))
         {
@@ -87,10 +87,11 @@ public class UnitDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             // on left mouse up
             // disable drag state
-            GetCityScreen().SetActiveState(CityViewActiveState.ActiveUnitDrag, false);
-            // verify if user has activated unit info panel by right click and then moved mouse
-            // which triggered drag function
+            GetCityScreen().SetActiveState(EditPartyScreenActiveState.ActiveUnitDrag, false);
+            // verify if user has activated unit info panel by right click and then moved mouse, which has triggered drag function
+            // Get unit info panel
             GameObject unitInfoPanel = transform.root.Find("MiscUI/UnitInfoPanel").gameObject;
+            // verify if unit infor panel is active
             if (unitInfoPanel.activeSelf)
             {
                 // unit info panel was active

@@ -27,9 +27,6 @@ public class CityData
     public PositionOnMap cityMapPosition;   // used only during load and save
 }
 
-[Serializable]
-public enum CityViewActiveState { Normal, ActiveHeal, ActiveResurect, ActiveDismiss, ActiveHeroEquipment, ActiveUnitDrag };
-
 public class City : MonoBehaviour {
     [SerializeField]
     CityData cityData;

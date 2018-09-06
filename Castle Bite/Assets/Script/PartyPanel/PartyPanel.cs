@@ -1190,6 +1190,62 @@ public class PartyPanel : MonoBehaviour {
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
+
+    public void SetActiveItemDrag(bool activate)
+    {
+        // verify if item is consumable
+        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.IsConsumableItem)
+        {
+            Transform unitCell;
+            Transform unitSlot;
+            PartyUnit unit;
+            Color greenHighlight = Color.green;
+            Color redHighlight = Color.red;
+            Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+            Color hightlightColor;
+            // highlight differently cells with and without units
+            foreach (string horisontalPanel in horisontalPanels)
+            {
+                foreach (string cell in cells)
+                {
+                    // verify if slot has an unit in it
+                    unitCell = transform.Find(horisontalPanel).Find(cell);
+                    unitSlot = unitCell.Find("UnitSlot");
+                    if (unitSlot.childCount > 0)
+                    {
+                        // verify if we need to activate or deactivate highlight
+                        unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+                        if (activate)
+                        {
+                            // activate highlight
+                            // .. verify if unit already has the same buff applied (buffs from the same item type are not stackable)
+                            bool unitHasTheSameBuffApplied = false;
+                            if (unitHasTheSameBuffApplied)
+                            {
+                                // highlight with red
+                                hightlightColor = redHighlight;
+                            }
+                            else
+                            {
+                                // highlight it with green
+                                hightlightColor = greenHighlight;
+                            }
+                        }
+                        else
+                        {
+                            // deactivate highlight
+                            hightlightColor = normalColor;
+                        }
+                        // Change text box color
+                        unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    }
+                }
+            }
+        }
+        // and disable/enable hire buttons
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
+    }
+
     #region For Battle Screen
 
     public bool CanFight()

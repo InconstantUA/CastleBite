@@ -344,9 +344,9 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // Get city screen
         EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
         // Get city state
-        CityViewActiveState cityState = cityScreen.CityViewActiveState;
+        EditPartyScreenActiveState cityState = cityScreen.EditPartyScreenActiveState;
         // Verify if city state is not normal
-        if (CityViewActiveState.Normal != cityState)
+        if (EditPartyScreenActiveState.Normal != cityState)
         {
             cityScreen.DeactivateActiveToggle();
         }
@@ -358,23 +358,27 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // act based on the city (and cursor) state
             switch (cityState)
             {
-                case CityViewActiveState.Normal:
+                case EditPartyScreenActiveState.Normal:
                     // do nothing for now
                     break;
-                case CityViewActiveState.ActiveDismiss:
+                case EditPartyScreenActiveState.ActiveDismiss:
                     // try to dismiss unit, if it is possible
                     TryToDismissUnit(unitUI.LPartyUnit);
                     break;
-                case CityViewActiveState.ActiveHeal:
+                case EditPartyScreenActiveState.ActiveHeal:
                     // try to heal unit, if it is possible
                     Debug.Log("Show Heal Unit confirmation box");
                     break;
-                case CityViewActiveState.ActiveResurect:
+                case EditPartyScreenActiveState.ActiveResurect:
                     // try to resurect unit, if it is possible
                     Debug.Log("Show Resurect Unit confirmation box");
                     break;
-                case CityViewActiveState.ActiveUnitDrag:
+                case EditPartyScreenActiveState.ActiveUnitDrag:
                     // ??
+                    break;
+                case EditPartyScreenActiveState.ActiveItemDrag:
+                    // this should not be triggered here, because it should be triggered in the unit slot drop handler when item is being dropped in it
+                    Debug.LogWarning("Unpredicted condition");
                     break;
                 default:
                     Debug.LogError("Unknown state");
@@ -386,7 +390,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             Debug.LogWarning("Unit no found");
         }
         // Verify if city state is not normal
-        if (CityViewActiveState.Normal != cityState)
+        if (EditPartyScreenActiveState.Normal != cityState)
         {
             // disable previous city state
             cityScreen.SetActiveState(cityState, false);

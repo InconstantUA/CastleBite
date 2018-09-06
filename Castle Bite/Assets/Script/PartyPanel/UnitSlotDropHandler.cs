@@ -132,83 +132,98 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             // activate hire unit buttons again, after it was disabled
             cityScreen.SetHireUnitPnlButtonActive(true);
         }
-
-        // act based on the previously set by OnDrag condition
-        if (isDropAllowed)
+        // verify if it is item being dragged
+        if (InventoryItemDragHandler.itemBeingDragged != null)
         {
-            // drop is allowed
-            // act based on then draggable unit size
-            // get actual unit, structure Cell-UnitCanvas(dragged->Unit link)
-            PartyUnit draggedUnit = UnitDragHandler.unitBeingDraggedUI.GetComponent<PartyUnitUI>().LPartyUnit;
-            Transform srcCellTr = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent;
-            Transform dstCellTr = transform.parent;
-            if (draggedUnit.UnitSize == UnitSize.Single)
+            // verify if there is a unit in the slot
+            if (GetComponentInChildren<PartyUnitUI>() != null)
+                // try to apply item to the unit
+                GetComponentInChildren<PartyUnitUI>().TryToConsumeItem(InventoryItemDragHandler.itemBeingDragged);
+        }
+        // verify if it is party unit being dragged
+        else if (UnitDragHandler.unitBeingDraggedUI != null)
+        {
+            // act based on the previously set by OnDrag condition
+            if (isDropAllowed)
             {
-                // single unit
-                // possible states
-                // src  dst                                 result
-                // 1    free or occupied by single unit     swap single cells
-                // 1    occupied by double                  swap cells in horizontal panels
-                // act based on destination cell size
-                if (UnitSize.Single == cellSize)
+                // drop is allowed
+                // act based on then draggable unit size
+                // get actual unit, structure Cell-UnitCanvas(dragged->Unit link)
+                PartyUnit draggedUnit = UnitDragHandler.unitBeingDraggedUI.GetComponent<PartyUnitUI>().LPartyUnit;
+                Transform srcCellTr = UnitDragHandler.unitBeingDraggedUI.transform.parent.parent;
+                Transform dstCellTr = transform.parent;
+                if (draggedUnit.UnitSize == UnitSize.Single)
                 {
-                    // swap single cells
-                    SwapTwoCellsContent(srcCellTr, dstCellTr);
+                    // single unit
+                    // possible states
+                    // src  dst                                 result
+                    // 1    free or occupied by single unit     swap single cells
+                    // 1    occupied by double                  swap cells in horizontal panels
+                    // act based on destination cell size
+                    if (UnitSize.Single == cellSize)
+                    {
+                        // swap single cells
+                        SwapTwoCellsContent(srcCellTr, dstCellTr);
+                    }
+                    else
+                    {
+                        // swap 2 single cells in src panel with double cell in dest panel
+                        SwapSingleWithDouble(srcCellTr, dstCellTr, true);
+                    }
                 }
                 else
                 {
-                    // swap 2 single cells in src panel with double cell in dest panel
-                    SwapSingleWithDouble(srcCellTr, dstCellTr, true);
+                    // double unit
+                    if (UnitSize.Single == cellSize)
+                    {
+                        // swap single with double cells
+                        SwapSingleWithDouble(srcCellTr, dstCellTr, false);
+                    }
+                    else
+                    {
+                        // swap 2 double cells
+                        SwapTwoCellsContent(srcCellTr, dstCellTr);
+                    }
                 }
+                // Instruct focus panels to be updated
+                foreach (FocusPanel focusPanel in transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<FocusPanel>())
+                {
+                    focusPanel.OnChange(FocusPanel.ChangeType.UnitsPositionChange);
+                }
+                //// drop unit if there is no other unit already present
+                //if (!unit)
+                //{
+                //    PartyPanelMode panelMode = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
+                //    if (PartyPanelMode.Garnizon == panelMode)
+                //    {
+                //        // enable hire unit button in the original parent cell and bring it to the front
+                //        // and it is not wide
+                //        // todo: add not wide condition check
+                //    }
+                //    // change parent of the dragged unit
+                //    Debug.Log("Drop unit from " + UnitDragHandler.unitBeingDraggedParentTr.parent.gameObject.name);
+                //    UnitDragHandler.unitBeingDragged.transform.SetParent(transform);
+                //    // disable hire unit button in the destination (this) cell, if it is garnizon panel
+                //    // structure 3PartyPanel-2Top/Middle/Bottom-1Front/Back/Wide-(this)UnitSlot
+                //    panelMode = transform.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
+                //    if (PartyPanelMode.Garnizon == panelMode)
+                //    {
+                //        // todo: add not wide condition check
+                //    }
+                //    // trigger event
+                //    // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
+                //}
             }
             else
             {
-                // double unit
-                if (UnitSize.Single == cellSize)
-                {
-                    // swap single with double cells
-                    SwapSingleWithDouble(srcCellTr, dstCellTr, false);
-                }
-                else
-                {
-                    // swap 2 double cells
-                    SwapTwoCellsContent(srcCellTr, dstCellTr);
-                }
+                // drop is not allowed
+                // display error message
+                transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
             }
-            // Instruct focus panels to be updated
-            foreach(FocusPanel focusPanel in transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<FocusPanel>())
-            {
-                focusPanel.OnChange(FocusPanel.ChangeType.UnitsPositionChange);
-            }
-            //// drop unit if there is no other unit already present
-            //if (!unit)
-            //{
-            //    PartyPanelMode panelMode = UnitDragHandler.unitBeingDragged.transform.parent.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
-            //    if (PartyPanelMode.Garnizon == panelMode)
-            //    {
-            //        // enable hire unit button in the original parent cell and bring it to the front
-            //        // and it is not wide
-            //        // todo: add not wide condition check
-            //    }
-            //    // change parent of the dragged unit
-            //    Debug.Log("Drop unit from " + UnitDragHandler.unitBeingDraggedParentTr.parent.gameObject.name);
-            //    UnitDragHandler.unitBeingDragged.transform.SetParent(transform);
-            //    // disable hire unit button in the destination (this) cell, if it is garnizon panel
-            //    // structure 3PartyPanel-2Top/Middle/Bottom-1Front/Back/Wide-(this)UnitSlot
-            //    panelMode = transform.parent.parent.parent.GetComponent<PartyPanel>().GetPanelMode();
-            //    if (PartyPanelMode.Garnizon == panelMode)
-            //    {
-            //        // todo: add not wide condition check
-            //    }
-            //    // trigger event
-            //    // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
-            //}
         }
         else
         {
-            // drop is not allowed
-            // display error message
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
+            Debug.LogWarning("Unknown object is being dragged");
         }
     }
 }

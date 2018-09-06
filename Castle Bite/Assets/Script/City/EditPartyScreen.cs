@@ -1,6 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public enum EditPartyScreenActiveState
+{
+    Normal,
+    ActiveHeal,
+    ActiveResurect,
+    ActiveDismiss,
+    ActiveHeroEquipment,
+    ActiveUnitDrag,
+    ActiveItemDrag
+};
 
 public class EditPartyScreen : MonoBehaviour {
     [SerializeField]
@@ -8,7 +21,7 @@ public class EditPartyScreen : MonoBehaviour {
     [SerializeField]
     HeroParty[] lHeroParties;
     [SerializeField]
-    CityViewActiveState cityViewActiveState = CityViewActiveState.Normal;
+    EditPartyScreenActiveState editPartyScreenActiveState = EditPartyScreenActiveState.Normal;
     [SerializeField]
     GameObject unitCanvasTemplate;
 
@@ -29,11 +42,11 @@ public class EditPartyScreen : MonoBehaviour {
         }
     }
 
-    public CityViewActiveState CityViewActiveState
+    public EditPartyScreenActiveState EditPartyScreenActiveState
     {
         get
         {
-            return cityViewActiveState;
+            return editPartyScreenActiveState;
         }
     }
 
@@ -213,55 +226,64 @@ public class EditPartyScreen : MonoBehaviour {
 
     public void SetActiveStateDismiss(bool doActivate)
     {
-        SetActiveState(CityViewActiveState.ActiveDismiss, doActivate);
+        SetActiveState(EditPartyScreenActiveState.ActiveDismiss, doActivate);
     }
 
     public void SetActiveStateHeal(bool doActivate)
     {
-        SetActiveState(CityViewActiveState.ActiveHeal, doActivate);
+        SetActiveState(EditPartyScreenActiveState.ActiveHeal, doActivate);
     }
 
     public void SetActiveStateResurect(bool doActivate)
     {
-        SetActiveState(CityViewActiveState.ActiveResurect, doActivate);
+        SetActiveState(EditPartyScreenActiveState.ActiveResurect, doActivate);
     }
 
-    public void SetActiveState(CityViewActiveState requiredState, bool doActivate)
+    public void SetActiveState(EditPartyScreenActiveState requiredState, bool doActivate)
     {
         // if doActivate is true,
         // then we are really swiching to this new state
         // otherwise it means that we are deactivating old state and returning to Normal state
         // this should not happen for Normal state, so here is check, for this
-        if (requiredState == CityViewActiveState.Normal)
+        if (requiredState == EditPartyScreenActiveState.Normal)
         {
             Debug.LogError("Unexpected condition");
         }
         // 1st return previous state to Normal, if it is already not Normal
         // this only needed if we are activating new state, while previous state was not normal
-        if ((cityViewActiveState != CityViewActiveState.Normal) && (requiredState != cityViewActiveState) && (doActivate == true))
+        if ((editPartyScreenActiveState != EditPartyScreenActiveState.Normal) && (requiredState != editPartyScreenActiveState) && (doActivate == true))
         {
-            SetActiveState(cityViewActiveState, false);
+            SetActiveState(editPartyScreenActiveState, false);
         }
         // Update 
-        cityViewActiveState = requiredState;
+        editPartyScreenActiveState = requiredState;
         // instruct party and garnizon panels to highlight differently cells with and without units
         // loop through all active hero parties
         foreach (HeroPartyUI heroPartyUI in transform.parent.GetComponentsInChildren<HeroPartyUI>())
         {
             // Set active state (highlight)
-            switch (cityViewActiveState)
+            switch (editPartyScreenActiveState)
             {
-                case CityViewActiveState.ActiveDismiss:
+                case EditPartyScreenActiveState.ActiveDismiss:
                     heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveDismiss(doActivate);
                     break;
-                case CityViewActiveState.ActiveHeal:
+                case EditPartyScreenActiveState.ActiveHeal:
                     heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveHeal(doActivate);
                     break;
-                case CityViewActiveState.ActiveResurect:
+                case EditPartyScreenActiveState.ActiveResurect:
                     heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveResurect(doActivate);
                     break;
-                case CityViewActiveState.ActiveUnitDrag:
+                case EditPartyScreenActiveState.ActiveUnitDrag:
                     heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
+                    break;
+                case EditPartyScreenActiveState.ActiveItemDrag:
+                    // verify if we are not in equipment view mode, when party panel is disabled
+                    if (heroPartyUI.GetComponentInChildren<PartyPanel>())
+                        heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveItemDrag(doActivate);
+                    else if (transform.root.Find("MiscUI").GetComponentInChildren<HeroEquipment>())
+                        transform.root.Find("MiscUI").GetComponentInChildren<HeroEquipment>().SetActiveItemDrag(doActivate);
+                    else
+                        Debug.LogWarning("Unknown condition");
                     break;
                 default:
                     Debug.LogError("Unknown condition");
@@ -285,14 +307,41 @@ public class EditPartyScreen : MonoBehaviour {
             }
         }
         // Update cursor
-        CursorController.Instance.SetCityActiveViewStateCursor(cityViewActiveState, doActivate);
-        // if doActivate was false
-        // this means that we need to return to normal state.
-        // that what we did by passing doActivate variable to other functions
-        // so we only need to set here state to normal
-        if (false == doActivate)
+        if (doActivate)
         {
-            cityViewActiveState = CityViewActiveState.Normal;
+            switch (requiredState)
+            {
+                case EditPartyScreenActiveState.ActiveDismiss:
+                    CursorController.Instance.SetDismissUnitCursor();
+                    break;
+                case EditPartyScreenActiveState.ActiveHeal:
+                    CursorController.Instance.SetHealUnitCursor();
+                    break;
+                case EditPartyScreenActiveState.ActiveResurect:
+                    CursorController.Instance.SetResurectUnitCursor();
+                    break;
+                case EditPartyScreenActiveState.ActiveHeroEquipment:
+                    CursorController.Instance.SetInvenotryUnitCursor();
+                    break;
+                case EditPartyScreenActiveState.ActiveUnitDrag:
+                    CursorController.Instance.SetDragUnitCursor();
+                    break;
+                case EditPartyScreenActiveState.ActiveItemDrag:
+                    CursorController.Instance.SetGrabHandCursor();
+                    break;
+                default:
+                    Debug.LogError("Unknown condition");
+                    break;
+            }
+        }
+        else
+        {
+            CursorController.Instance.SetNormalCursor();
+            // if doActivate was false
+            // this means that we need to return to normal state.
+            // that what we did by passing doActivate variable to other functions
+            // so we only need to set here state to normal
+            editPartyScreenActiveState = EditPartyScreenActiveState.Normal;
         }
     }
 
@@ -710,7 +759,7 @@ public class EditPartyScreen : MonoBehaviour {
     // todo: fix duplicate function in PartyPanel
     public void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
     {
-        Debug.Log("Set hire unit button at " + cellAddress + " " + doActivate.ToString());
+        // Debug.Log("Set hire unit button at " + cellAddress + " " + doActivate.ToString());
         transform.root.Find("MiscUI/HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
     }
 
