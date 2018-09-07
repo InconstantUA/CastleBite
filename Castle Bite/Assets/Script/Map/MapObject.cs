@@ -190,6 +190,21 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         labelTxt.color = highlightedLabelColor;
     }
 
+    public void SetAlwaysOn(bool doActivate)
+    {
+        // turn on label always on flag
+        LabelAlwaysOn = doActivate;
+        // verify if we need to show or hide all labels
+        if (doActivate)
+        {
+            GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
+        }
+        else
+        {
+            GetComponentInChildren<MapObjectLabel>(true).HideLabel();
+        }
+    }
+
     public bool IsMouseOver
     {
         get

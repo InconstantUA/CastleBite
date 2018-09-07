@@ -46311,7 +46311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lCity: {fileID: 0}
   lHeroParties: []
-  cityViewActiveState: 0
+  editPartyScreenActiveState: 0
   unitCanvasTemplate: {fileID: 719685449}
 --- !u!1 &1548455789
 GameObject:

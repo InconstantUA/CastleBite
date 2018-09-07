@@ -24,10 +24,10 @@ public class InventoryItemData : System.Object
     public string itemName;
     public int itemValue;
     public HeroEquipmentSlot[] compatibleEquipmentSlots;
-    public bool isConsumableItem;
-    public UniquePowerModifier[] uniquePowerModifiers;
-    public UnitStatModifier[] unitStatModifiers;
-
+    public int maxUsagesCount;
+    public List<UniquePowerModifier> uniquePowerModifiers;
+    public List<UnitStatModifier> unitStatModifiers;
+    public int leftUsagesCount;
     // item location is determined by the parent object ID and it is saved and loaded together with parent object data, that is why no need to save it here
     // possible locations: equipped on the hero, in party inventory, lying on the map
 }
@@ -88,20 +88,20 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
-    public bool IsConsumableItem
+    public int MaxUsagesCount
     {
         get
         {
-            return inventoryItemData.isConsumableItem;
+            return inventoryItemData.maxUsagesCount;
         }
 
         set
         {
-            inventoryItemData.isConsumableItem = value;
+            inventoryItemData.maxUsagesCount = value;
         }
     }
 
-    public UniquePowerModifier[] UniquePowerModifiers
+    public List<UniquePowerModifier> UniquePowerModifiers
     {
         get
         {
@@ -114,7 +114,7 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
-    public UnitStatModifier[] UnitStatModifiers
+    public List<UnitStatModifier> UnitStatModifiers
     {
         get
         {
@@ -124,6 +124,19 @@ public class InventoryItem : MonoBehaviour {
         set
         {
             inventoryItemData.unitStatModifiers = value;
+        }
+    }
+
+    public int LeftUsagesCount
+    {
+        get
+        {
+            return inventoryItemData.leftUsagesCount;
+        }
+
+        set
+        {
+            inventoryItemData.leftUsagesCount = value;
         }
     }
 

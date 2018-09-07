@@ -26,6 +26,9 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string statusBonusPreviewStyleStart = "<color=yellow>";
     string statusBonusPreviewStyleEnd = "</color>";
 
+    string itemBonusPreviewStyleStart = "<color=#A52A2A>"; // brown
+    string itemBonusPreviewStyleEnd = "</color>";
+
     public enum Align { Left, Middle, Right }
     public enum Mode { Full, Short }
 

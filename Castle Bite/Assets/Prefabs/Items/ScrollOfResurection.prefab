@@ -42,7 +42,7 @@ MonoBehaviour:
     itemName: Scroll of Resurection
     itemValue: 50
     compatibleEquipmentSlots: 0600000007000000
-    isConsumableItem: 1
+    maxUsagesCount: 1
     uniquePowerModifiers: []
     unitStatModifiers:
     - unitStat: 12
@@ -50,11 +50,14 @@ MonoBehaviour:
       duration: 0
       modifierPower: 0
       modifierAppliedHow: 3
+      durationLeft: 0
     - unitStat: 1
       modifierScope: 0
       duration: 0
       modifierPower: 50
       modifierAppliedHow: 2
+      durationLeft: 0
+    leftUsagesCount: 1
 --- !u!224 &224189941288101632
 RectTransform:
   m_ObjectHideFlags: 1

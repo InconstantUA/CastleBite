@@ -1194,7 +1194,7 @@ public class PartyPanel : MonoBehaviour {
     public void SetActiveItemDrag(bool activate)
     {
         // verify if item is consumable
-        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.IsConsumableItem)
+        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.MaxUsagesCount >= 1)
         {
             Transform unitCell;
             Transform unitSlot;
@@ -1241,6 +1241,10 @@ public class PartyPanel : MonoBehaviour {
                     }
                 }
             }
+        }
+        else
+        {
+            // item is not consumable, do not highlight anything
         }
         // and disable/enable hire buttons
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);

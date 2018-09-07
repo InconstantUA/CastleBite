@@ -220,6 +220,7 @@ public class UniquePowerModifier
     public int upmChanceIncrementOnLevelUp;
     public UnitPowerSource upmSource;
     public ModifierOrigin upmOrigin;
+    public int upmDurationLeft;
 
     public string GetDisplayName()
     {
@@ -275,6 +276,7 @@ public class UnitStatModifier : System.Object
     public int duration;
     public int modifierPower;
     public ModifierAppliedHow modifierAppliedHow;
+    public int durationLeft;
 }
 
 [Serializable]
@@ -463,7 +465,7 @@ public class PartyUnitData : System.Object
     // UI attributes
     public string unitCellAddress;  // used during game save and load and when party UI is displayed
     // Unit Equipment
-    public InventoryItemData[] unitEquipment;
+    public InventoryItemData[] unitEquipment; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
 }
 
 public class PartyUnit : MonoBehaviour {
@@ -856,8 +858,8 @@ public class PartyUnit : MonoBehaviour {
         damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefense)) / 100f));
         return damageDealt;
     }
-    
-        public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
+
+    public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
     {
         return appliedUniquePowerModifier.upmPower;
     }
@@ -1185,7 +1187,114 @@ public class PartyUnit : MonoBehaviour {
         // get and return effective resistance
         return baseResistance + skillResistance;
     }
-    
+
+    void ApplyUPM(UniquePowerModifier uniquePowerModifier)
+    {
+        Debug.LogWarning("Apply unique power modifier with instant duration to the enemy");
+    }
+
+    void ApplyUSM(UnitStatModifier unitStatModifier)
+    {
+        Debug.LogWarning("Apply unit stat modifier");
+    }
+
+    public void ConsumeItem(InventoryItem inventoryItem)
+    {
+        // consumable items can have different duration, for example
+        // healing poition - instant usm (0)
+        // apply scroll with harmful spell on the enemy - instant upm (0)
+        // potion of agility - duration 1 day (>=1), increases unit's inititative by x
+        // potion of Titan might - duration is permanent (<0), increases unit's strength by 10%
+        // voodoo doll - instant upm, with 3 usages
+        // resurection stone - instant usm, with 3 usages
+        // to be more generic we assume that somebody may create item with different UPMs and USMs with differnet durations
+        // init list of UPMs and USMs ids which are one-time and should be removed from the list of UPMs and USMs after being used
+        List<int> upmIDsTobeRemoved = new List<int>();
+        List<int> usmIDsTobeRemoved = new List<int>();
+        // consume unique power modifiers
+        for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
+        {
+            // verify duration of unique power modifiers
+            if (inventoryItem.UniquePowerModifiers[i].upmDuration == 0)
+            {
+                // upm has instant one-time effect
+                // upm is normally applied only during the battle and to the enemy
+                // if we are in this situation, then it means that enemy has applied item with upm on this hero
+                // apply upm
+                ApplyUPM(inventoryItem.UniquePowerModifiers[i]);
+                upmIDsTobeRemoved.Add(i);
+            }
+            // verify if duration is negative
+            else if (inventoryItem.UniquePowerModifiers[i].upmDuration < 0)
+            {
+                // upm has permanent effect
+                // it is applied automatically during calculations (for example damage or defence calculations)
+            }
+            // duration is more than 0
+            else
+            {
+                // upm has temporary effect defined by the Duration in number of game turns (days)
+                // it is destroyed before start of the next turn if duration reaches
+                // it is applied automatically during calculations (for example damage or defence calculations)
+            }
+        }
+        for (int i = 0; i < inventoryItem.UnitStatModifiers.Count; i++)
+        {
+            // verify duration of unit stat modifiers
+            if (inventoryItem.UnitStatModifiers[i].duration == 0)
+            {
+                // usm has instant one-time effect
+                // apply usm
+                ApplyUSM(inventoryItem.UnitStatModifiers[i]);
+                usmIDsTobeRemoved.Add(i);
+            }
+            // verify if duration is negative
+            else if (inventoryItem.UnitStatModifiers[i].duration < 0)
+            {
+                // usm has permanent effect
+                // it is applied automatically during calculations (for example damage or defence calculations)
+            }
+            // duration is more than 0
+            else
+            {
+                // usm has temporary effect defined by the Duration in number of game turns (days)
+                // it is destroyed before start of the next turn if duration reaches
+                // it is applied automatically during calculations (for example damage or defence calculations)
+            }
+        }
+        // destroy one-time instant USMs and UPMs
+        foreach (int upmIDTobeRemoved in upmIDsTobeRemoved)
+        {
+            inventoryItem.UniquePowerModifiers.RemoveAt(upmIDTobeRemoved);
+        }
+        foreach (int usmIDTobeRemoved in usmIDsTobeRemoved)
+        {
+            inventoryItem.UnitStatModifiers.RemoveAt(usmIDTobeRemoved);
+        }
+        // decrement usages left counter
+        inventoryItem.LeftUsagesCount -= 1;
+        // verify if item can be destroyed
+        // verify if number of usages reached 0 and this is item with instant one-time effect
+        if (inventoryItem.LeftUsagesCount == 0)
+        {
+            // verify if there is no more UPMs and USMs left
+            if ((inventoryItem.UniquePowerModifiers.Count == 0) && (inventoryItem.UnitStatModifiers.Count == 0))
+            {
+                // destroy item
+                Destroy(inventoryItem.gameObject);
+            } else
+            {
+                // no more usages, but some non-instant UPMs or USMs are still present
+            }
+        }
+        else
+        {
+            // there are still usages left
+            // move item to the unit
+            inventoryItem.transform.SetParent(this.transform);
+        }
+    }
+
     #region Attributes accessors
     public string UnitName
     {

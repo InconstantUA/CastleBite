@@ -465,13 +465,11 @@ public class PartyUnitUI : MonoBehaviour {
         // get item
         InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
         // verify if item is consumable
-        if (inventoryItem.IsConsumableItem)
+        if (inventoryItem.MaxUsagesCount >= 1)
         {
-            // consume item
-            // ..
             Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
-            // destroy item before destroying slot
-            Destroy(inventoryItem.gameObject);
+            // consume item
+            lPartyUnit.ConsumeItem(inventoryItem);
             // Get source item slot transform
             InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
             // verify if source slot is in party inventory mode

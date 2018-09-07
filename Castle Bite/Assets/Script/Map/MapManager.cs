@@ -199,23 +199,25 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetCitiesNamesVisible(bool doShow)
     {
         Debug.Log("Show all cities names: " + doShow.ToString());
-        // Init map object
-        MapObject mapObject;
+        //// Init map object
+        //MapObject mapObject;
         foreach (MapCity mapCity in transform.GetComponentsInChildren<MapCity>(true))
         {
-            // get map object
-            mapObject = mapCity.GetComponent<MapObject>();
-            // turn on label always on flag
-            mapObject.LabelAlwaysOn = doShow;
-            // verify if we need to show or hide all labels
-            if (doShow)
-            {
-                mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
-            }
-            else
-            {
-                mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
-            }
+            // Set always on
+            mapCity.GetComponent<MapObject>().SetAlwaysOn(doShow);
+            //// get map object
+            //mapObject = mapCity.GetComponent<MapObject>();
+            //// turn on label always on flag
+            //mapObject.LabelAlwaysOn = doShow;
+            //// verify if we need to show or hide all labels
+            //if (doShow)
+            //{
+            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
+            //}
+            //else
+            //{
+            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
+            //}
         }
     }
 
@@ -223,23 +225,25 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetHeroesNamesVisible(bool doShow)
     {
         Debug.Log("Show all heroes names: " + doShow.ToString());
-        // Init map object
-        MapObject mapObject;
+        //// Init map object
+        //MapObject mapObject;
         foreach (MapHero mapHero in transform.GetComponentsInChildren<MapHero>(true))
         {
-            // get map object
-            mapObject = mapHero.GetComponent<MapObject>();
-            // turn on label always on flag
-            mapObject.LabelAlwaysOn = doShow;
-            // verify if we need to show or hide all labels
-            if (doShow)
-            {
-                mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
-            }
-            else
-            {
-                mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
-            }
+            // Set always on
+            mapHero.GetComponent<MapObject>().SetAlwaysOn(doShow);
+            //// get map object
+            //mapObject = mapHero.GetComponent<MapObject>();
+            //// turn on label always on flag
+            //mapObject.LabelAlwaysOn = doShow;
+            //// verify if we need to show or hide all labels
+            //if (doShow)
+            //{
+            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
+            //}
+            //else
+            //{
+            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
+            //}
         }
     }
 
@@ -260,6 +264,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetTreasureChestsVisible(bool doShow)
     {
         Debug.Log("Show All Treasure chests names visible: " + doShow.ToString());
+        foreach (MapItem mapItem in transform.GetComponentsInChildren<MapItem>(true))
+        {
+            // Set always on
+            mapItem.GetComponent<MapObject>().SetAlwaysOn(doShow);
+        }
     }
 
     bool PositionIsWithinTilesMap(Vector2Int pos)
