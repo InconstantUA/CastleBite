@@ -191,7 +191,7 @@ public class PartyPanel : MonoBehaviour {
         //unitUI.SetUnitCellInfoUI();
         //unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
         //changedCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
-        //changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
+        //changedCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitEffectiveMaxHealth().ToString();
         // disable hire unit button
         SetHireUnitButtonActiveByCell(false, GetCellAddressStringByTransform(changedCell));
     }
@@ -215,7 +215,7 @@ public class PartyPanel : MonoBehaviour {
         //unitUI.SetUnitCellInfoUI();
         //unitUI.transform.Find("Name").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitDisplayName();
         //parentCell.Find("HPPanel/HPcurr").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthCurr.ToString();
-        //parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.UnitHealthMax.ToString();
+        //parentCell.Find("HPPanel/HPmax").GetComponent<Text>().text = unitUI.LPartyUnit.GetUnitEffectiveMaxHealth().ToString();
     }
 
     //void CleanHealthUI(Transform targetCell)
@@ -630,7 +630,7 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // activate highlight
                         // make sure that unit is alive (health > 0) and that he is damaged (health < maxhealth)
-                        if ( (unit.UnitHealthCurr>0) && (unit.UnitHealthCurr < unit.UnitHealthMax) )
+                        if ( (unit.UnitHealthCurr>0) && (unit.UnitHealthCurr < unit.GetUnitEffectiveMaxHealth()) )
                         {
                             // unit can be healed
                             // highlight it with green
@@ -1459,13 +1459,13 @@ public class PartyPanel : MonoBehaviour {
                             case UnitStatus.Active:
                             case UnitStatus.Waiting:
                             case UnitStatus.Escaping:
-                                if (unit.UnitHealthCurr < unit.UnitHealthMax)
+                                if (unit.UnitHealthCurr < unit.GetUnitEffectiveMaxHealth())
                                 {
                                     // unit can be healed
                                     isAllowedToApplyPwrToThisUnit = true;
                                     errorMessage = "";
                                 }
-                                else if (unit.UnitHealthCurr == unit.UnitHealthMax)
+                                else if (unit.UnitHealthCurr == unit.GetUnitEffectiveMaxHealth())
                                 {
                                     // unit cannot be healed
                                     isAllowedToApplyPwrToThisUnit = false;
@@ -2161,9 +2161,9 @@ public class PartyPanel : MonoBehaviour {
         // heal destination unit
         int healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthCurr + activeBattleUnitUI.LPartyUnit.UnitPower;
         // make sure that we do not heal to more than maximum health
-        if (healthAfterHeal > dstUnitUI.LPartyUnit.UnitHealthMax)
+        if (healthAfterHeal > dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth())
         {
-            healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthMax;
+            healthAfterHeal = dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth();
         }
         dstUnitUI.LPartyUnit.UnitHealthCurr = (healthAfterHeal);
         // update current health in UI
@@ -2669,7 +2669,7 @@ public class PartyPanel : MonoBehaviour {
     //{
     //    // this is done on lvl up
     //    unit.UnitExperienceReward = (unit.UnitExperienceReward + unit.UnitExperienceRewardIncrementOnLevelUp);
-    //    unit.UnitHealthMax = (unit.UnitHealthMax + unit.UnitHealthMaxIncrementOnLevelUp);
+    //    unit.GetUnitEffectiveMaxHealth() = (unit.GetUnitEffectiveMaxHealth() + unit.UnitHealthMaxIncrementOnLevelUp);
     //    unit.UnitPower = (unit.UnitPower + unit.UnitPowerIncrementOnLevelUp);
     //}
 

@@ -159,16 +159,16 @@ public class TurnsManager : MonoBehaviour {
                 {
                     // apply daily heal to all party members
                     // verify if health is not max already
-                    if (partyUnit.UnitHealthCurr != partyUnit.UnitHealthMax)
+                    if (partyUnit.UnitHealthCurr != partyUnit.GetUnitEffectiveMaxHealth())
                     {
                         // apply daily health regen
                         // Note: this should be done before taking control
                         partyUnit.UnitHealthCurr += partyUnit.GetUnitEffectiveHealthRegenPerDay();
                         // verify if health is not higher than max
-                        if (partyUnit.UnitHealthCurr > partyUnit.UnitHealthMax)
+                        if (partyUnit.UnitHealthCurr > partyUnit.GetUnitEffectiveMaxHealth())
                         {
                             // reset current health to max
-                            partyUnit.UnitHealthCurr = partyUnit.UnitHealthMax;
+                            partyUnit.UnitHealthCurr = partyUnit.GetUnitEffectiveMaxHealth();
                         }
                     }
                     // .. decrement daily buffs

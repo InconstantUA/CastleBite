@@ -49,8 +49,8 @@ MonoBehaviour:
     unitExperienceRequiredToReachNewLevel: 9999
     unitExperienceReward: 9999
     unitExperienceRewardIncrementOnLevelUp: 0
-    unitHealthCurr: 300
-    unitHealthMax: 300
+    unitHealthCurr: 800
+    unitHealthMax: 1100
     unitHealthMaxIncrementOnLevelUp: 100
     unitHealthRegenPercent: 15
     unitDefense: 0
@@ -132,6 +132,7 @@ MonoBehaviour:
       mLevel:
         mCurrent: 0
     unitCellAddress: 
+    unitEquipment: []
 --- !u!224 &224611576928189082
 RectTransform:
   m_ObjectHideFlags: 1

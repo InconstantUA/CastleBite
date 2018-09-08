@@ -1061,17 +1061,22 @@ public class PartyUnit : MonoBehaviour {
         // loop through all items for this unit
         foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
         {
-            // verify if item gives required stat bonus
-            // loop through item stat modifiers
-            foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+            // verify if item is not in belt
+            if (   (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
+                && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
             {
-                // verify if usm applies to the required stat stat
-                if (usm.unitStat == unitStat)
+                // verify if item gives required stat bonus
+                // loop through item stat modifiers
+                foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                 {
-                    //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
-                    //Debug.Log("Verify non-stackable USMs from the same item");
-                    // add modifier to the list
-                    usmsList.Add(usm);
+                    // verify if usm applies to the required stat stat
+                    if (usm.unitStat == unitStat)
+                    {
+                        //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
+                        //Debug.Log("Verify non-stackable USMs from the same item");
+                        // add modifier to the list
+                        usmsList.Add(usm);
+                    }
                 }
             }
         }
@@ -1083,17 +1088,22 @@ public class PartyUnit : MonoBehaviour {
             // loop through all items for this unit
             foreach (InventoryItem inventoryItem in GetComponentInParent<HeroParty>().GetPartyLeader().GetComponentsInChildren<InventoryItem>())
             {
-                // verify if item gives leadership bonus
-                // loop through item stat modifiers
-                foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+                // verify if item is not for belt
+                if (   (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
+                    && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
                 {
-                    // verify if usm applies to the leadership stat and that it has global scope
-                    if ((usm.unitStat == UnitStat.Leadership) && (usm.modifierScope == ModifierScope.EntireParty))
+                    // verify if item gives stat bonus
+                    // loop through item stat modifiers
+                    foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                     {
-                        //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
-                        //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
-                        // add modifier to the list
-                        usmsList.Add(usm);
+                        // verify if usm applies to the stat and that it has global scope
+                        if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.EntireParty))
+                        {
+                            //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
+                            //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
+                            // add modifier to the list
+                            usmsList.Add(usm);
+                        }
                     }
                 }
             }
@@ -1184,6 +1194,11 @@ public class PartyUnit : MonoBehaviour {
         return GetGenericStatItemBonus(UnitStat.ScoutingRange, ScoutingRange);
     }
 
+    public int GetItemsHealthBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.Health, UnitHealthMax);
+    }
+
     public int GetEffectiveScoutingRange()
     {
         // get and return sum of default scouting range plus skill bonus
@@ -1207,6 +1222,12 @@ public class PartyUnit : MonoBehaviour {
         return (int)Math.Floor(GetUnitHealSkillHealthRegenModifier() * (float)UnitHealthMax);
     }
 
+    public int GetUnitHealItemsHealthRegenBonusPerDay()
+    {
+        // get and return skill current level multiplied by 0.15
+        return (int)Math.Floor(((float)GetItemsHealthBonus() * (float)UnitHealthRegenPercent) / 100f);
+    }
+
     public float GetUnitEffectiveHealthRegen()
     {
         return ((float)UnitHealthRegenPercent / 100f + GetUnitHealSkillHealthRegenModifier());
@@ -1214,7 +1235,7 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetUnitEffectiveHealthRegenPerDay()
     {
-        return (int)Math.Floor((float)UnitHealthMax * GetUnitEffectiveHealthRegen());
+        return (int)Math.Floor((float)GetUnitEffectiveMaxHealth() * GetUnitEffectiveHealthRegen());
     }
 
     public int GetUnitResistanceSkillBonus(UnitPowerSource source)
@@ -1320,13 +1341,13 @@ public class PartyUnit : MonoBehaviour {
                 return false;
             case UnitStat.Health:
                 // verify if unit health is not max already and if unit is not dead
-                if ((UnitHealthCurr != UnitHealthMax) && (UnitStatus != UnitStatus.Dead))
+                if ((UnitHealthCurr != GetUnitEffectiveMaxHealth()) && (UnitStatus != UnitStatus.Dead))
                 {
                     // verify if it is not preview
                     if (!doPreview)
                     {
                         // apply usm power to this unit
-                        UnitHealthCurr = ApplyUSMPower(unitStatModifier, UnitHealthCurr, UnitHealthMax, false);
+                        UnitHealthCurr = ApplyUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
                     }
                     // item is applicable to this unit
                     return true;
@@ -1563,6 +1584,11 @@ public class PartyUnit : MonoBehaviour {
             // return item is not consumable
             return false;
         }
+    }
+
+    public int GetUnitEffectiveMaxHealth()
+    {
+        return UnitHealthMax + GetItemsHealthBonus();
     }
 
     #region Attributes accessors

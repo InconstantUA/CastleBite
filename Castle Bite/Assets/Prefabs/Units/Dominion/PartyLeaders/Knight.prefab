@@ -73,6 +73,7 @@ MonoBehaviour:
       upmChanceIncrementOnLevelUp: 3
       upmSource: 1
       upmOrigin: 0
+      upmDurationLeft: 0
     - target: 1
       upmAppliedBuff: 0
       upmAppliedDebuff: 4
@@ -83,6 +84,7 @@ MonoBehaviour:
       upmChanceIncrementOnLevelUp: 0
       upmSource: 8
       upmOrigin: 1
+      upmDurationLeft: 0
     unitRole: Role
     unitBriefDescription: Brief description
     unitFullDescription: Full description
@@ -105,7 +107,7 @@ MonoBehaviour:
     statsUpgradesCount: 0
     movePointsCurrent: 5
     movePointsMax: 5
-    scoutingRange: 0
+    scoutingRange: 4
     unitSkills:
     - mName: 0
       mLevel:
@@ -144,6 +146,7 @@ MonoBehaviour:
       mLevel:
         mCurrent: 0
     unitCellAddress: 
+    unitEquipment: []
 --- !u!224 &224364017913245646
 RectTransform:
   m_ObjectHideFlags: 1

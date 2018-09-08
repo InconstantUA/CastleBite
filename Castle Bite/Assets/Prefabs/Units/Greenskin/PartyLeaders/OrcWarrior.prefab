@@ -85,7 +85,7 @@ MonoBehaviour:
     statsUpgradesCount: 0
     movePointsCurrent: 5
     movePointsMax: 5
-    scoutingRange: 0
+    scoutingRange: 5
     unitSkills:
     - mName: 0
       mLevel:
@@ -124,6 +124,7 @@ MonoBehaviour:
       mLevel:
         mCurrent: 0
     unitCellAddress: 
+    unitEquipment: []
 --- !u!224 &224037969209454766
 RectTransform:
   m_ObjectHideFlags: 1

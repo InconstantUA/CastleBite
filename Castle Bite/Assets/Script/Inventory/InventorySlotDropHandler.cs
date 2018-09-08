@@ -167,8 +167,15 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
                 // verify if this is hero eqiupment slot
                 if (Mode.HeroEquipment == slotMode)
                 {
+                    // change item position parameter
+                    InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot = equipmentSlot;
                     // update unit info UI
                     transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().PartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
+                }
+                else
+                {
+                    // change item position parameter
+                    InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot = HeroEquipmentSlot.None;
                 }
             }
         }

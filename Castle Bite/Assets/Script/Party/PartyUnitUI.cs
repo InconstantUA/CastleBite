@@ -232,7 +232,7 @@ public class PartyUnitUI : MonoBehaviour {
     {
         // set Health
         transform.Find("HPPanel/HPcurr").GetComponent<Text>().text = LPartyUnit.UnitHealthCurr.ToString();
-        transform.Find("HPPanel/HPmax").GetComponent<Text>().text = LPartyUnit.UnitHealthMax.ToString();
+        transform.Find("HPPanel/HPmax").GetComponent<Text>().text = LPartyUnit.GetUnitEffectiveMaxHealth().ToString();
     }
 
     public Text GetUnitCurrentHealthText()
@@ -248,7 +248,7 @@ public class PartyUnitUI : MonoBehaviour {
     public void ResetUnitHealthToMax()
     {
         // this is done on lvl up
-        LPartyUnit.UnitHealthCurr = LPartyUnit.UnitHealthMax;
+        LPartyUnit.UnitHealthCurr = LPartyUnit.GetUnitEffectiveMaxHealth();
         // update Health panel
         SetUnitHealthUI();
     }

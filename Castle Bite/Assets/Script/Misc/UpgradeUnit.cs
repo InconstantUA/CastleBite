@@ -221,7 +221,7 @@ public class UpgradeUnit : MonoBehaviour {
     //    // upgrade health in unit Info UI
     //    unitInfoPanel.SetHealthPreview(
     //        focusedPartyUnit.UnitHealthCurr,
-    //        focusedPartyUnit.UnitHealthMax,
+    //        focusedPartyUnit.GetUnitEffectiveMaxHealth(),
     //        focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp * statsUpgradeCount
     //    );
     //}

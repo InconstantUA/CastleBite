@@ -28,6 +28,7 @@ public class InventoryItemData : System.Object
     public List<UniquePowerModifier> uniquePowerModifiers;
     public List<UnitStatModifier> unitStatModifiers;
     public int leftUsagesCount;
+    public HeroEquipmentSlot heroEquipmentSlot = HeroEquipmentSlot.None;
     // item location is determined by the parent object ID and it is saved and loaded together with parent object data, that is why no need to save it here
     // possible locations: equipped on the hero, in party inventory, lying on the map
 }
@@ -137,6 +138,19 @@ public class InventoryItem : MonoBehaviour {
         set
         {
             inventoryItemData.leftUsagesCount = value;
+        }
+    }
+
+    public HeroEquipmentSlot HeroEquipmentSlot
+    {
+        get
+        {
+            return inventoryItemData.heroEquipmentSlot;
+        }
+
+        set
+        {
+            inventoryItemData.heroEquipmentSlot = value;
         }
     }
 

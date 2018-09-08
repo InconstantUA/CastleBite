@@ -454,19 +454,21 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Get health value text
         Text attributeText = transform.Find("Panel/UnitHealth/Value").GetComponent<Text>();
         // Display effective current and max health
-        attributeText.text = partyUnit.UnitHealthCurr.ToString() + "/" + partyUnit.UnitHealthMax.ToString();
-        // get base max health
+        attributeText.text = partyUnit.UnitHealthCurr.ToString() + "/" + partyUnit.GetUnitEffectiveMaxHealth().ToString();
+        // get base max health without stat upgrades
         int baseMaxHealth = partyUnit.UnitHealthMax - GetStatsHealthBonus(partyUnit);
         // verify if effective resistance does not equal base resistance
-        if (baseMaxHealth != partyUnit.UnitHealthMax)
+        if (baseMaxHealth != partyUnit.GetUnitEffectiveMaxHealth())
         {
             // Display how max health is calculated
             // open brackets
             attributeText.text += "(";
             // set default unit health without bonuses
-            attributeText.text += baseStatPreviewStyleStart + (baseMaxHealth).ToString() + baseStatPreviewStyleEnd;
+            attributeText.text += baseStatPreviewStyleStart + baseMaxHealth.ToString() + baseStatPreviewStyleEnd;
             // get and add stats bonus to text
             AddBonusInfoToText(attributeText, GetStatsHealthBonus(partyUnit), statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
+            // get and add items bonus to text
+            AddBonusInfoToText(attributeText, partyUnit.GetItemsHealthBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             attributeText.text += ")";
         }
@@ -489,6 +491,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             AddBonusInfoToText(attributeText, GetUnitStatsBonusHealthRegenPerDay(partyUnit), statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
             // get and add skill bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetUnitHealSkillHealthRegenBonusPerDay(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add item bonus to text
+            AddBonusInfoToText(attributeText, partyUnit.GetUnitHealItemsHealthRegenBonusPerDay(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             attributeText.text += ")";
         }
