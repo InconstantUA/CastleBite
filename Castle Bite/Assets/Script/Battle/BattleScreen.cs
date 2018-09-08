@@ -325,6 +325,8 @@ public class BattleScreen : MonoBehaviour {
             playerPartyPanel.ResetUnitCellInfoPanel();
             playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatusText });
             playerPartyPanel.ResetUnitCellHighlight();
+            // set map focus
+            transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().SetActive(playerPartyPanel.GetHeroParty().LMapHero);
         }
         // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
@@ -361,26 +363,28 @@ public class BattleScreen : MonoBehaviour {
         DefaultOnBattleExit();
     }
 
-    void FleeXFromY(PartyPanel fleeingPartyPanel, PartyPanel otherPartyPanel)
+    void FleeXFromY(HeroParty fleeingHeroParty, HeroParty otherHeroParty)
     {
         Debug.Log("Flee");
+        // Grant fleeing hero party leader 1 bonus move point
+        fleeingHeroParty.GetPartyLeader().MovePointsCurrent += 1;
         // get fleeing party transform on map
         // it is not possible to flee if your party is not on map, that is why there is no additional checks here
-        Transform fleeingPartyTransform = fleeingPartyPanel.GetHeroParty().LMapHero.transform;
+        Transform fleeingPartyTransform = fleeingHeroParty.LMapHero.transform;
         // get other party or city transform on map
         Transform oppositeTransform;
         // verify if prebattle parent was city
-        if (otherPartyPanel.GetHeroParty().PreBattleParentTr.GetComponent<City>())
+        if (otherHeroParty.PreBattleParentTr.GetComponent<City>())
         {
             // player was in city or it was city garnizon
             // get city on map transform
-            oppositeTransform = otherPartyPanel.GetHeroParty().PreBattleParentTr.GetComponent<City>().LMapCity.transform;
+            oppositeTransform = otherHeroParty.PreBattleParentTr.GetComponent<City>().LMapCity.transform;
         }
         else
         {
             // player was on map
             // get linked party on map transform
-            oppositeTransform = otherPartyPanel.GetHeroParty().LMapHero.transform;
+            oppositeTransform = otherHeroParty.LMapHero.transform;
         }
         // give control to map manager to flee
         GetMapManager().EscapeBattle(fleeingPartyTransform, oppositeTransform);
@@ -388,14 +392,24 @@ public class BattleScreen : MonoBehaviour {
 
     public void FleePlayer()
     {
+        // get parties before UI is destoyed
+        HeroParty playerHeroParty = playerPartyPanel.GetHeroParty();
+        HeroParty enemyHeroParty = enemyPartyPanel.GetHeroParty();
+        // exit battle
         DefaultOnBattleExit();
-        FleeXFromY(playerPartyPanel, enemyPartyPanel);
+        // start flee animation
+        FleeXFromY(playerHeroParty, enemyHeroParty);
     }
 
     public void FleeEnemy()
     {
+        // get parties before UI is destoyed
+        HeroParty playerHeroParty = playerPartyPanel.GetHeroParty();
+        HeroParty enemyHeroParty = enemyPartyPanel.GetHeroParty();
+        // exit battle
         DefaultOnBattleExit();
-        FleeXFromY(enemyPartyPanel, playerPartyPanel);
+        // start flee animation
+        FleeXFromY(enemyHeroParty, playerHeroParty);
     }
 
     public void CaptureAndEnterCity()
