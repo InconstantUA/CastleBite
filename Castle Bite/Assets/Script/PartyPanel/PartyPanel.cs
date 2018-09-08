@@ -1218,18 +1218,25 @@ public class PartyPanel : MonoBehaviour {
                         if (activate)
                         {
                             // activate highlight
-                            // .. verify if unit already has the same buff applied (buffs from the same item type are not stackable)
-                            bool unitHasTheSameBuffApplied = false;
-                            if (unitHasTheSameBuffApplied)
-                            {
-                                // highlight with red
-                                hightlightColor = redHighlight;
-                            }
-                            else
+                            // try to consume item in preview mode without actually doing anything
+                            if (unit.ConsumeItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
                             {
                                 // highlight it with green
                                 hightlightColor = greenHighlight;
                             }
+                            else
+                            {
+                                // highlight with red
+                                hightlightColor = redHighlight;
+                            }
+                            //// .. verify if unit already has the same buff applied (buffs from the same item type are not stackable)
+                            //bool unitHasTheSameBuffApplied = false;
+                            //if (unitHasTheSameBuffApplied)
+                            //{
+                            //}
+                            //else
+                            //{
+                            //}
                         }
                         else
                         {

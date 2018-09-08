@@ -246,7 +246,7 @@ public enum UnitStat
 {
     Leadership,
     Health,
-    Defence,
+    Defense,
     Power,
     Initiative,
     MovePoints,
@@ -1188,17 +1188,145 @@ public class PartyUnit : MonoBehaviour {
         return baseResistance + skillResistance;
     }
 
-    void ApplyUPM(UniquePowerModifier uniquePowerModifier)
+    bool ApplyInstantUPM(UniquePowerModifier uniquePowerModifier, bool doPreview = false)
     {
         Debug.LogWarning("Apply unique power modifier with instant duration to the enemy");
+        return false;
     }
 
-    void ApplyUSM(UnitStatModifier unitStatModifier)
+    int ApplyUSMPower(UnitStatModifier unitStatModifier, int baseStatCurrentValue, int baseStatMaxValue)
+    {
+        Debug.Log("Apply unit state modifier power " + unitStatModifier.modifierAppliedHow.ToString());
+        switch (unitStatModifier.modifierAppliedHow)
+        {
+            case ModifierAppliedHow.Additively:
+                // increase current value by amout unit stat modifier by power
+                baseStatCurrentValue += unitStatModifier.modifierPower;
+                break;
+            case ModifierAppliedHow.Multiplicatively:
+                // increase current value by amout of base value multiplied by power
+                baseStatCurrentValue += baseStatMaxValue * unitStatModifier.modifierPower;
+                break;
+            case ModifierAppliedHow.Percent:
+                // increase current value by amout of percent from base value
+                baseStatCurrentValue += baseStatMaxValue * 100 / unitStatModifier.modifierPower;
+                break;
+            case ModifierAppliedHow.Toggle:
+                // not applicable for most stats
+                break;
+            default:
+                Debug.LogError("Do not know how to apply modifier " + unitStatModifier.modifierAppliedHow.ToString());
+                break;
+        }
+        // verify if current value is not higher than max value
+        if (baseStatCurrentValue > baseStatMaxValue)
+        {
+            // reset current value to max
+            baseStatCurrentValue = baseStatMaxValue;
+        }
+        // return new value of current stat
+        return baseStatCurrentValue;
+    }
+
+    bool ApplyInstantUSM(UnitStatModifier unitStatModifier, bool doPreview = false)
     {
         Debug.LogWarning("Apply unit stat modifier");
+        switch (unitStatModifier.unitStat)
+        {
+            case UnitStat.Leadership:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.Health:
+                // verify if unit health is not max already and if unit is not dead
+                if ((UnitHealthCurr != UnitHealthMax) && (UnitStatus != UnitStatus.Dead))
+                {
+                    // verify if it is not preview
+                    if (!doPreview)
+                    {
+                        // apply usm power to this unit
+                        UnitHealthCurr = ApplyUSMPower(unitStatModifier, UnitHealthCurr, UnitHealthMax);
+                    }
+                    // item is applicable to this unit
+                    return true;
+                }
+                // by default item is not applicable
+                return false;
+            case UnitStat.Defense:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.Power:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.Initiative:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.MovePoints:
+                // verify if unit is a party leader 
+                if (IsLeader)
+                {
+                    // verify if current move points are not max already
+                    if (MovePointsCurrent != MovePointsMax)
+                    {
+                        // verify if it is not preview
+                        if (!doPreview)
+                        {
+                            // apply usm power to this unit
+                            MovePointsCurrent = ApplyUSMPower(unitStatModifier, MovePointsCurrent, MovePointsMax);
+                        }
+                        // item is applicable to this unit
+                        return true;
+                    }
+                }
+                // by default item is not applicable
+                return false;
+            case UnitStat.ScoutingRange:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.DeathResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.FireResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.WaterResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.MindResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.IsAlive:
+                // verify if unit is dead
+                if (UnitStatus == UnitStatus.Dead)
+                {
+                    // verify if it is not preview
+                    if (!doPreview)
+                    {
+                        // Set unit active again
+                        UnitStatus = UnitStatus.Active;
+                    }
+                    // item is applicable to this unit
+                    return true;
+                }
+                // by default item is not applicable
+                return false;
+            default:
+                Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
+                // by default item is not applicable
+                return false;
+        }
     }
 
-    public void ConsumeItem(InventoryItem inventoryItem)
+    // doPreview - consume item without consumit it, just verify if item can be consumed by this unit
+    public bool ConsumeItem(InventoryItem inventoryItem, bool doPreview = false)
     {
         // consumable items can have different duration, for example
         // healing poition - instant usm (0)
@@ -1211,6 +1339,8 @@ public class PartyUnit : MonoBehaviour {
         // init list of UPMs and USMs ids which are one-time and should be removed from the list of UPMs and USMs after being used
         List<int> upmIDsTobeRemoved = new List<int>();
         List<int> usmIDsTobeRemoved = new List<int>();
+        // init is applicable by default with true, because normally it is applicable and this will be set to false by later checks if not applicable
+        bool isApplicable = true;
         // consume unique power modifiers
         for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
         {
@@ -1221,8 +1351,9 @@ public class PartyUnit : MonoBehaviour {
                 // upm is normally applied only during the battle and to the enemy
                 // if we are in this situation, then it means that enemy has applied item with upm on this hero
                 // apply upm
-                ApplyUPM(inventoryItem.UniquePowerModifiers[i]);
-                upmIDsTobeRemoved.Add(i);
+                isApplicable = ApplyInstantUPM(inventoryItem.UniquePowerModifiers[i]);
+                if (isApplicable)
+                    upmIDsTobeRemoved.Add(i);
             }
             // verify if duration is negative
             else if (inventoryItem.UniquePowerModifiers[i].upmDuration < 0)
@@ -1245,8 +1376,9 @@ public class PartyUnit : MonoBehaviour {
             {
                 // usm has instant one-time effect
                 // apply usm
-                ApplyUSM(inventoryItem.UnitStatModifiers[i]);
-                usmIDsTobeRemoved.Add(i);
+                isApplicable = ApplyInstantUSM(inventoryItem.UnitStatModifiers[i]);
+                if (isApplicable)
+                    usmIDsTobeRemoved.Add(i);
             }
             // verify if duration is negative
             else if (inventoryItem.UnitStatModifiers[i].duration < 0)
@@ -1262,36 +1394,63 @@ public class PartyUnit : MonoBehaviour {
                 // it is applied automatically during calculations (for example damage or defence calculations)
             }
         }
-        // destroy one-time instant USMs and UPMs
-        foreach (int upmIDTobeRemoved in upmIDsTobeRemoved)
+        // verify if at leats one UPM or USM has been applied
+        if (isApplicable)
         {
-            inventoryItem.UniquePowerModifiers.RemoveAt(upmIDTobeRemoved);
-        }
-        foreach (int usmIDTobeRemoved in usmIDsTobeRemoved)
-        {
-            inventoryItem.UnitStatModifiers.RemoveAt(usmIDTobeRemoved);
-        }
-        // decrement usages left counter
-        inventoryItem.LeftUsagesCount -= 1;
-        // verify if item can be destroyed
-        // verify if number of usages reached 0 and this is item with instant one-time effect
-        if (inventoryItem.LeftUsagesCount == 0)
-        {
-            // verify if there is no more UPMs and USMs left
-            if ((inventoryItem.UniquePowerModifiers.Count == 0) && (inventoryItem.UnitStatModifiers.Count == 0))
+            // verify if this is not preview
+            if (!doPreview)
             {
-                // destroy item
-                Destroy(inventoryItem.gameObject);
-            } else
-            {
-                // no more usages, but some non-instant UPMs or USMs are still present
+                // destroy one-time instant USMs and UPMs
+                foreach (int upmIDTobeRemoved in upmIDsTobeRemoved)
+                {
+                    inventoryItem.UniquePowerModifiers.RemoveAt(upmIDTobeRemoved);
+                }
+                foreach (int usmIDTobeRemoved in usmIDsTobeRemoved)
+                {
+                    inventoryItem.UnitStatModifiers.RemoveAt(usmIDTobeRemoved);
+                }
+                // decrement usages left counter
+                inventoryItem.LeftUsagesCount -= 1;
+                // verify if item can be destroyed
+                // verify if number of usages reached 0 and this is item with instant one-time effect
+                // and if there is no more UPMs and USMs left
+                if ((inventoryItem.LeftUsagesCount == 0) && (inventoryItem.UniquePowerModifiers.Count == 0) && (inventoryItem.UnitStatModifiers.Count == 0))
+                {
+                    // destroy item, because there is no more use of it
+                    Debug.Log("Destoroy item");
+                    Destroy(inventoryItem.gameObject);
+                }
+                else
+                {
+                    // verify number of usages left
+                    if (inventoryItem.LeftUsagesCount == 0)
+                    {
+                        // there are still usages left
+                        Debug.Log("Move item to the unit");
+                        // move item to the unit
+                        inventoryItem.transform.SetParent(this.transform);
+                    }
+                    else if (inventoryItem.LeftUsagesCount >= 1)
+                    {
+                        // more usages are left
+                        Debug.Log("Clone item to the unit");
+                        // clone item and place it into the unit
+                        Instantiate(inventoryItem, this.transform);
+                        Debug.LogWarning("Verify item before and after clone.");
+                        Debug.Break();
+                    }
+                }
             }
+            // return item is consumable
+            return true;
         }
         else
         {
-            // there are still usages left
-            // move item to the unit
-            inventoryItem.transform.SetParent(this.transform);
+            Debug.LogWarning("Item is not applicable to this unit");
+            // this item could not be applied to that unit
+            // item will return back automatically
+            // return item is not consumable
+            return false;
         }
     }
 

@@ -261,6 +261,8 @@ public class PartyUnitUI : MonoBehaviour {
         SetUnitNameUI();
         // Set unit health
         SetUnitHealthUI();
+        // Set unit status
+        SetUnitStatus(LPartyUnit.UnitStatus);
     }
 
     #region Unit Br Canvas
@@ -470,6 +472,8 @@ public class PartyUnitUI : MonoBehaviour {
             Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
             // consume item
             lPartyUnit.ConsumeItem(inventoryItem);
+            // update UI based on changed party unit data
+            UpdateUnitCellInfo();
             // Get source item slot transform
             InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
             // verify if source slot is in party inventory mode
