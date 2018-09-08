@@ -13,12 +13,27 @@ public class PartyInventoryUI : MonoBehaviour {
 
     public InventorySlotDropHandler AddSlot()
     {
+        Debug.Log("Add slot");
         return Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<InventorySlotDropHandler>();
     }
 
     public InventoryItemDragHandler AddItemDragHandler(InventorySlotDropHandler slot)
     {
         return Instantiate(inventoryItemDragHandlerTemplate, slot.transform).GetComponent<InventoryItemDragHandler>();
+    }
+
+    public void RemoveAllEmptySlots()
+    {
+        // loop through all slots in this inventory
+        foreach (InventorySlotDropHandler slot in GetComponentsInChildren<InventorySlotDropHandler>())
+        {
+            // verify if slot is empty
+            if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
+            {
+                // Remove slot
+                Destroy(slot.gameObject);
+            }
+        }
     }
 
     public void FillInEmptySlots()
@@ -43,8 +58,6 @@ public class PartyInventoryUI : MonoBehaviour {
         }
     }
 
-
-
     void OnEnable()
     {
         // all items in a party
@@ -63,6 +76,11 @@ public class PartyInventoryUI : MonoBehaviour {
                 dragHandler.LInventoryItem = inventoryItem;
                 // set item name in UI
                 dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
+                // verify if item has usages
+                if (inventoryItem.MaxUsagesCount >= 1)
+                {
+                    dragHandler.GetComponentInChildren<Text>().text += " <size=12>(" + inventoryItem.LeftUsagesCount + "/" + inventoryItem.MaxUsagesCount + ")</size>";
+                }
             }
         }
         // fill in empty slots

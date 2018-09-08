@@ -1054,12 +1054,82 @@ public class PartyUnit : MonoBehaviour {
         return UnitPower + GetOffenceSkillPowerBonus();
     }
 
+    List<UnitStatModifier> GetItemUnitStatModifierByStat(UnitStat unitStat)
+    {
+        // init list of UnitStatModifier from items, there can be more than one
+        List<UnitStatModifier> usmsList = new List<UnitStatModifier>();
+        // loop through all items for this unit
+        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        {
+            // verify if item gives required stat bonus
+            // loop through item stat modifiers
+            foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+            {
+                // verify if usm applies to the required stat stat
+                if (usm.unitStat == unitStat)
+                {
+                    //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
+                    //Debug.Log("Verify non-stackable USMs from the same item");
+                    // add modifier to the list
+                    usmsList.Add(usm);
+                }
+            }
+        }
+        // get leader items, which has global scope
+        // verify if this is not leader unit, to not apply the same item 2 times
+        // we assume that only leader can have items with global scope
+        if (!IsLeader)
+        {
+            // loop through all items for this unit
+            foreach (InventoryItem inventoryItem in GetComponentInParent<HeroParty>().GetPartyLeader().GetComponentsInChildren<InventoryItem>())
+            {
+                // verify if item gives leadership bonus
+                // loop through item stat modifiers
+                foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+                {
+                    // verify if usm applies to the leadership stat and that it has global scope
+                    if ((usm.unitStat == UnitStat.Leadership) && (usm.modifierScope == ModifierScope.EntireParty))
+                    {
+                        //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
+                        //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
+                        // add modifier to the list
+                        usmsList.Add(usm);
+                    }
+                }
+            }
+        }
+        return usmsList;
+    }
+
+    int GetGenericStatItemBonus(UnitStat unitStat, int statBaseValue)
+    {
+        // init bonus value
+        int bonus = 0;
+        // get list of uni unit stat modifiers from unit's items
+        List<UnitStatModifier> usmsList = GetItemUnitStatModifierByStat(unitStat);
+        // apply usms
+        foreach (UnitStatModifier usm in usmsList)
+        {
+            bonus += GetUSMStatBonus(usm, statBaseValue);
+        }
+        // return result
+        return bonus;
+    }
+
+    public int GetLeadershipItemsBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.Leadership, UnitLeadership);
+    }
+
     public int GetEffectiveLeadership()
     {
         // get current skill leadership bonus = skill level
         UnitSkill skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Leadership);
         int skillBonus = skill.mLevel.mCurrent;
-        return UnitLeadership + skillBonus;
+        // get items bonus
+        int itemsBonus = GetLeadershipItemsBonus();
+        // return result
+        return UnitLeadership + skillBonus + itemsBonus;
     }
 
     public float GetPathfindingSkillMultiplier()
@@ -1086,6 +1156,11 @@ public class PartyUnit : MonoBehaviour {
         return (int)Math.Round(GetPathfindingSkillMultiplier() * GetAdditiveMovePoints());
     }
 
+    public int GetMovePointsItemsBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.MovePoints, MovePointsMax);
+    }
+
     public int GetScoutingSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
@@ -1100,16 +1175,19 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetEffectiveMaxMovePoints()
     {
-        // get total move points
-        int totalMovePoints = GetAdditiveMovePoints() + GetPathfindingSkillBonus();
         // return result
-        return totalMovePoints;
+        return GetAdditiveMovePoints() + GetPathfindingSkillBonus() + GetMovePointsItemsBonus();
+    }
+
+    public int GetScoutingPointsItemsBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.ScoutingRange, ScoutingRange);
     }
 
     public int GetEffectiveScoutingRange()
     {
         // get and return sum of default scouting range plus skill bonus
-        return ScoutingRange + GetScoutingSkillBonus();
+        return ScoutingRange + GetScoutingSkillBonus() + GetScoutingPointsItemsBonus();
     }
 
     public int GetUnitHealthRegenPerDay()
@@ -1194,32 +1272,35 @@ public class PartyUnit : MonoBehaviour {
         return false;
     }
 
-    int ApplyUSMPower(UnitStatModifier unitStatModifier, int baseStatCurrentValue, int baseStatMaxValue)
+    public int GetUSMStatBonus(UnitStatModifier unitStatModifier, int baseStatMaxValue)
     {
-        Debug.Log("Apply unit state modifier power " + unitStatModifier.modifierAppliedHow.ToString());
         switch (unitStatModifier.modifierAppliedHow)
         {
             case ModifierAppliedHow.Additively:
                 // increase current value by amout unit stat modifier by power
-                baseStatCurrentValue += unitStatModifier.modifierPower;
-                break;
+                return unitStatModifier.modifierPower;
             case ModifierAppliedHow.Multiplicatively:
                 // increase current value by amout of base value multiplied by power
-                baseStatCurrentValue += baseStatMaxValue * unitStatModifier.modifierPower;
-                break;
+                return baseStatMaxValue * unitStatModifier.modifierPower;
             case ModifierAppliedHow.Percent:
                 // increase current value by amout of percent from base value
-                baseStatCurrentValue += baseStatMaxValue * 100 / unitStatModifier.modifierPower;
-                break;
+                return Mathf.CeilToInt( ((float)baseStatMaxValue * (float)unitStatModifier.modifierPower) / 100f );
             case ModifierAppliedHow.Toggle:
-                // not applicable for most stats
-                break;
+                // not applicable for this function
+                return 0;
             default:
                 Debug.LogError("Do not know how to apply modifier " + unitStatModifier.modifierAppliedHow.ToString());
-                break;
+                return 0;
         }
+    }
+
+    int ApplyUSMPower(UnitStatModifier unitStatModifier, int baseStatCurrentValue, int baseStatMaxValue, bool allowMaxOverflow = true)
+    {
+        Debug.Log("Apply unit state modifier power " + unitStatModifier.modifierAppliedHow.ToString());
+        // get new stat current value
+        baseStatCurrentValue += GetUSMStatBonus(unitStatModifier, baseStatMaxValue);
         // verify if current value is not higher than max value
-        if (baseStatCurrentValue > baseStatMaxValue)
+        if ((baseStatCurrentValue > baseStatMaxValue) && !allowMaxOverflow)
         {
             // reset current value to max
             baseStatCurrentValue = baseStatMaxValue;
@@ -1245,7 +1326,7 @@ public class PartyUnit : MonoBehaviour {
                     if (!doPreview)
                     {
                         // apply usm power to this unit
-                        UnitHealthCurr = ApplyUSMPower(unitStatModifier, UnitHealthCurr, UnitHealthMax);
+                        UnitHealthCurr = ApplyUSMPower(unitStatModifier, UnitHealthCurr, UnitHealthMax, false);
                     }
                     // item is applicable to this unit
                     return true;
@@ -1275,7 +1356,7 @@ public class PartyUnit : MonoBehaviour {
                         if (!doPreview)
                         {
                             // apply usm power to this unit
-                            MovePointsCurrent = ApplyUSMPower(unitStatModifier, MovePointsCurrent, MovePointsMax);
+                            MovePointsCurrent = ApplyUSMPower(unitStatModifier, MovePointsCurrent, MovePointsMax, false);
                         }
                         // item is applicable to this unit
                         return true;
@@ -1325,6 +1406,23 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
+    InventoryItem GetUnitItemByName(string itemName)
+    {
+        // loop through all items in this unit
+        foreach (InventoryItem currentUnitItem in GetComponentsInChildren<InventoryItem>())
+        {
+            // normally item name is also used as unique item identifier, that is why it is enough to compare 2 item names
+            // compare if item which is about to be consumed is the same which unit already has
+            if (currentUnitItem.ItemName == itemName)
+            {
+                Debug.LogWarning("Found " + itemName + " item in unit items");
+                return currentUnitItem;
+            }
+        }
+        Debug.LogWarning("Failed to find " + itemName + " item");
+        return null;
+    }
+
     // doPreview - consume item without consumit it, just verify if item can be consumed by this unit
     public bool ConsumeItem(InventoryItem inventoryItem, bool doPreview = false)
     {
@@ -1341,57 +1439,70 @@ public class PartyUnit : MonoBehaviour {
         List<int> usmIDsTobeRemoved = new List<int>();
         // init is applicable by default with true, because normally it is applicable and this will be set to false by later checks if not applicable
         bool isApplicable = true;
-        // consume unique power modifiers
-        for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
+        // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items are not stackable
+        // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, that is why we do not do this additional check against partly-leader-equipped items
+        if (GetUnitItemByName(inventoryItem.ItemName) != null)
         {
-            // verify duration of unique power modifiers
-            if (inventoryItem.UniquePowerModifiers[i].upmDuration == 0)
-            {
-                // upm has instant one-time effect
-                // upm is normally applied only during the battle and to the enemy
-                // if we are in this situation, then it means that enemy has applied item with upm on this hero
-                // apply upm
-                isApplicable = ApplyInstantUPM(inventoryItem.UniquePowerModifiers[i]);
-                if (isApplicable)
-                    upmIDsTobeRemoved.Add(i);
-            }
-            // verify if duration is negative
-            else if (inventoryItem.UniquePowerModifiers[i].upmDuration < 0)
-            {
-                // upm has permanent effect
-                // it is applied automatically during calculations (for example damage or defence calculations)
-            }
-            // duration is more than 0
-            else
-            {
-                // upm has temporary effect defined by the Duration in number of game turns (days)
-                // it is destroyed before start of the next turn if duration reaches
-                // it is applied automatically during calculations (for example damage or defence calculations)
-            }
+            // unit already has this item
+            Debug.LogWarning("Unit already has " + inventoryItem.name + " item or its bonuses applied. The same item cannot be applied or consumed again.");
+            // same item cannot be applied once again
+            isApplicable = false;
         }
-        for (int i = 0; i < inventoryItem.UnitStatModifiers.Count; i++)
+        else
         {
-            // verify duration of unit stat modifiers
-            if (inventoryItem.UnitStatModifiers[i].duration == 0)
+            // unit does not have this item yet, do additional checks
+            // consume unique power modifiers
+            for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
             {
-                // usm has instant one-time effect
-                // apply usm
-                isApplicable = ApplyInstantUSM(inventoryItem.UnitStatModifiers[i]);
-                if (isApplicable)
-                    usmIDsTobeRemoved.Add(i);
+                // verify duration of unique power modifiers
+                if (inventoryItem.UniquePowerModifiers[i].upmDuration == 0)
+                {
+                    // upm has instant one-time effect
+                    // upm is normally applied only during the battle and to the enemy
+                    // if we are in this situation, then it means that enemy has applied item with upm on this hero
+                    // apply upm
+                    isApplicable = ApplyInstantUPM(inventoryItem.UniquePowerModifiers[i]);
+                    if (isApplicable)
+                        upmIDsTobeRemoved.Add(i);
+                }
+                // verify if duration is negative
+                else if (inventoryItem.UniquePowerModifiers[i].upmDuration < 0)
+                {
+                    // upm has permanent effect
+                    // it is applied automatically during calculations (for example damage or defence calculations)
+                }
+                // duration is more than 0
+                else
+                {
+                    // upm has temporary effect defined by the Duration in number of game turns (days)
+                    // it is destroyed before start of the next turn if duration reaches
+                    // it is applied automatically during calculations (for example damage or defence calculations)
+                }
             }
-            // verify if duration is negative
-            else if (inventoryItem.UnitStatModifiers[i].duration < 0)
+            for (int i = 0; i < inventoryItem.UnitStatModifiers.Count; i++)
             {
-                // usm has permanent effect
-                // it is applied automatically during calculations (for example damage or defence calculations)
-            }
-            // duration is more than 0
-            else
-            {
-                // usm has temporary effect defined by the Duration in number of game turns (days)
-                // it is destroyed before start of the next turn if duration reaches
-                // it is applied automatically during calculations (for example damage or defence calculations)
+                // verify duration of unit stat modifiers
+                if (inventoryItem.UnitStatModifiers[i].duration == 0)
+                {
+                    // usm has instant one-time effect
+                    // apply usm
+                    isApplicable = ApplyInstantUSM(inventoryItem.UnitStatModifiers[i]);
+                    if (isApplicable)
+                        usmIDsTobeRemoved.Add(i);
+                }
+                // verify if duration is negative
+                else if (inventoryItem.UnitStatModifiers[i].duration < 0)
+                {
+                    // usm has permanent effect
+                    // it is applied automatically during calculations (for example damage or defence calculations)
+                }
+                // duration is more than 0
+                else
+                {
+                    // usm has temporary effect defined by the Duration in number of game turns (days)
+                    // it is destroyed before start of the next turn if duration reaches
+                    // it is applied automatically during calculations (for example damage or defence calculations)
+                }
             }
         }
         // verify if at leats one UPM or USM has been applied

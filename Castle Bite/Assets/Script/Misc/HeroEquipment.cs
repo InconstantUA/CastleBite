@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HeroEquipment : MonoBehaviour {
     UnitEquipmentButton callingUnitEquipmentButton;
+    PartyUnit partyUnit;
 
     public UnitEquipmentButton CallingUnitEquipmentButton
     {
@@ -14,9 +16,18 @@ public class HeroEquipment : MonoBehaviour {
         }
     }
 
+    public PartyUnit PartyUnit
+    {
+        get
+        {
+            return partyUnit;
+        }
+    }
+
     public void ActivateAdvance(UnitEquipmentButton unitEquipmentButton)
     {
         callingUnitEquipmentButton = unitEquipmentButton;
+        partyUnit = callingUnitEquipmentButton.GetComponentInParent<PartyUnitUI>().LPartyUnit;
         // Activate intermediate background
         transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
         // activate this menu
@@ -64,8 +75,25 @@ public class HeroEquipment : MonoBehaviour {
                     // verify if equipment slot is compatible
                     if (slot.EquipmentSlot == slotType)
                     {
-                        // set compatible flag
-                        isCompatible = true;
+                        // verify if this is shard slot
+                        if (slotType == HeroEquipmentSlot.Shard)
+                        {
+                            // for shard slot we need to verify if party leader has skill at least 1st level
+                            if (Array.Find(partyUnit.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent >= 1)
+                            {
+                                // set compatible flag
+                                isCompatible = true;
+                            } else
+                            {
+                                // set not compatible flag
+                                isCompatible = false;
+                            }
+                        }
+                        else
+                        {
+                            // set compatible flag
+                            isCompatible = true;
+                        }
                         // exit loop
                         break;
                     }

@@ -95,6 +95,16 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
                 // [ right - top ]
                 GetComponent<RectTransform>().offsetMax = new Vector2(0, 0);
             }
+            else
+            {
+                // parent has changed
+                // verify if previous parent was hero eqiupment slot
+                if (InventorySlotDropHandler.Mode.HeroEquipment == itemBeingDraggedSlot.SlotMode)
+                {
+                    // update unit info UI
+                    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(itemBeingDraggedSlot.GetComponentInParent<HeroEquipment>().PartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
+                }
+            }
         }
     }
 }

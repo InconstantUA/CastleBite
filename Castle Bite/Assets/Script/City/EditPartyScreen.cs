@@ -782,7 +782,7 @@ public class EditPartyScreen : MonoBehaviour {
         // verify if garnizon is present
         if (garnizonUI)
         {
-            Debug.Log("Activate or Deactivate Hire Unit Buttons in City Garnizon");
+            // Debug.Log("Activate or Deactivate Hire Unit Buttons in City Garnizon");
             foreach (UnitSlot unitSlot in garnizonUI.GetComponentsInChildren<UnitSlot>(true))
             {
                 // verify if we are not checking wide cell, because there is no + button in wide cells

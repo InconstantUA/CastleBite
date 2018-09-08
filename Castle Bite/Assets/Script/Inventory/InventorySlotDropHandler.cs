@@ -89,17 +89,29 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
         InventorySlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
         // init exchange flag
         bool thisIsExachnge = false;
+        // init destination slot variable with this slot
+        InventorySlotDropHandler destinationSlot = this;
         // verify if there is no item already in this slot
         if (transform.childCount > 1)
         {
-            thisIsExachnge = true;
-            // Put item from this slot to the slot of the item beind dragged
-            srcItemSlot.PutItemIntoSlot(GetComponentInChildren<InventoryItemDragHandler>());
+            // verify if source is equipment slot and destination is party inventory slot
+            if ((srcItemSlot.SlotMode == Mode.HeroEquipment) && (slotMode == Mode.PartyInventory))
+            {
+                // do not do exchange, just move item into inventory into the new slot
+                // create new slot and set it as destination
+                destinationSlot = GetComponentInParent<PartyInventoryUI>().AddSlot();
+            }
+            else
+            {
+                thisIsExachnge = true;
+                // Put item from this slot to the slot of the item beind dragged
+                srcItemSlot.PutItemIntoSlot(GetComponentInChildren<InventoryItemDragHandler>());
+            }
             // trigger event
             // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
         }
         // Put dragged item into slot
-        PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+        destinationSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
         // verify if it was not just simple exchange
         if (!thisIsExachnge)
         {
@@ -114,19 +126,30 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
                 //// fill in empty slots in invenotory if needed;
                 //partyInventoryUI.FillInEmptySlots();
                 // Get parent slots grid
-                Transform srcSlotsGrid = srcItemSlot.transform.parent;
-                // loop through all slots in source inventory
-                foreach (InventorySlotDropHandler slot in srcSlotsGrid.GetComponentsInChildren<InventorySlotDropHandler>())
-                {
-                    // verify if slot is empty
-                    if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
-                    {
-                        // Remove slot
-                        Destroy(slot.gameObject);
-                    }
-                }
+                //Transform srcSlotsGrid = srcItemSlot.transform.parent;
+                //// loop through all slots in source inventory
+                //foreach (InventorySlotDropHandler slot in srcSlotsGrid.GetComponentsInChildren<InventorySlotDropHandler>())
+                //{
+                //    // verify if slot is empty
+                //    if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
+                //    {
+                //        // Remove slot
+                //        Destroy(slot.gameObject);
+                //    }
+                //}
+                // remove all empty slots in inventory
+                srcItemSlot.GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
                 // fill in empty slots in inventory
                 srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
+            }
+            // verify if destination slot was changed to the other from this slot
+            if (destinationSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
+            {
+                // trigger this party inventory reorganisation
+                // remove all empty slots in this inventory
+                GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
+                // fill in empty slots in inventory
+                GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
             }
         }
     }
@@ -139,10 +162,22 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
             // verify if slot is droppable for this item (this is being set during drag initiation)
             if (isDroppable)
             {
+                // move item into slot
                 MoveItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+                // verify if this is hero eqiupment slot
+                if (Mode.HeroEquipment == slotMode)
+                {
+                    // update unit info UI
+                    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().PartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
+                }
             }
         }
     }
+
+    //void OnTransformChildrenChanged()
+    //{
+    //    Debug.Log("On change");
+    //}
 
     //public void OnDrop(PointerEventData eventData)
     //{

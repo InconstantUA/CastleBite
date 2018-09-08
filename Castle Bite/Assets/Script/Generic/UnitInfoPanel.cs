@@ -26,7 +26,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string statusBonusPreviewStyleStart = "<color=yellow>";
     string statusBonusPreviewStyleEnd = "</color>";
 
-    string itemBonusPreviewStyleStart = "<color=#A52A2A>"; // brown
+    string itemBonusPreviewStyleStart = "<color=#A51A1A>"; // brown
     string itemBonusPreviewStyleEnd = "</color>";
 
     public enum Align { Left, Middle, Right }
@@ -259,6 +259,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitLeadership.ToString() + baseStatPreviewStyleEnd;
             // get and add skill bonus to text if upgrade unit panel is active
             AddBonusInfoToText(attributeText, partyUnit.GetLeadershipSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add items bonus to text if upgrade unit panel is active
+            AddBonusInfoToText(attributeText, partyUnit.GetLeadershipItemsBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             attributeText.text += ")";
         }
@@ -375,6 +377,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             attributeText.text += baseStatPreviewStyleStart + partyUnit.MovePointsMax.ToString() + baseStatPreviewStyleEnd;
             // get and add path finding skill bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetPathfindingSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add bonus from items to text
+            AddBonusInfoToText(attributeText, partyUnit.GetMovePointsItemsBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             attributeText.text += ")";
         }
@@ -396,6 +400,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             attributeText.text += baseStatPreviewStyleStart + partyUnit.ScoutingRange.ToString() + baseStatPreviewStyleEnd;
             // get and add skill bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetScoutingSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add bonus from items to text
+            AddBonusInfoToText(attributeText, partyUnit.GetScoutingPointsItemsBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             attributeText.text += ")";
         }
