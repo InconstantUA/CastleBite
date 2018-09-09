@@ -74,17 +74,7 @@ MonoBehaviour:
       upmSource: 1
       upmOrigin: 0
       upmDurationLeft: 0
-    - target: 1
-      upmAppliedBuff: 0
-      upmAppliedDebuff: 4
-      upmPower: 0
-      upmPowerIncrementOnLevelUp: 0
-      upmDuration: 1
-      upmChance: 70
-      upmChanceIncrementOnLevelUp: 0
-      upmSource: 8
-      upmOrigin: 1
-      upmDurationLeft: 0
+      skillPowerMultiplier: 1
     unitRole: Role
     unitBriefDescription: Brief description
     unitFullDescription: Full description
