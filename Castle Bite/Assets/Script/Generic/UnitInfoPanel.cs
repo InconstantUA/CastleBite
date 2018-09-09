@@ -20,13 +20,13 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string skillBonusPreviewStyleStart = "<color=blue>";
     string skillBonusPreviewStyleEnd = "</color>";
 
-    string cityBonusPreviewStyleStart = "<color=white>";
+    string cityBonusPreviewStyleStart = "<color=#C0C0C0>";
     string cityBonusPreviewStyleEnd = "</color>";
 
     string statusBonusPreviewStyleStart = "<color=yellow>";
     string statusBonusPreviewStyleEnd = "</color>";
 
-    string itemBonusPreviewStyleStart = "<color=#A51A1A>"; // brown
+    string itemBonusPreviewStyleStart = "<color=#b77f66>"; // brown
     string itemBonusPreviewStyleEnd = "</color>";
 
     public enum Align { Left, Middle, Right }
@@ -119,7 +119,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         //}
         //transform.Find("Panel/UnitImmunities/Value").GetComponent<Text>().text = immunities;
         // Fill in unit initiative
-        transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>().text = partyUnit.UnitInitiative.ToString();
+        SetUnitInitiativeInfo(partyUnit);
         // Fill in unit ability
         transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.UnitAbility.ToString();
         // Fill in unit power
@@ -328,8 +328,10 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             powerText.text += baseStatPreviewStyleStart + basePower.ToString() + baseStatPreviewStyleEnd;
             // get and add stats power bonus if it is present
             AddBonusInfoToText(powerText, GetStatsPowerBonus(partyUnit), statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
-            // get and add offence skill bonus to text if upgrade unit panel is active
+            // get and add offence skill bonus to text
             AddBonusInfoToText(powerText, partyUnit.GetOffenceSkillPowerBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add items bonus to the text
+            AddBonusInfoToText(powerText, partyUnit.GetItemsPowerBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             powerText.text += ")";
         }
@@ -349,10 +351,12 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             attributeText.text += "(";
             // set base unit defense without bonuses
             attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitDefense.ToString() + baseStatPreviewStyleEnd;
-            // get and add city bonus to text
-            AddBonusInfoToText(attributeText, partyUnit.GetCityDefenseBonus(), cityBonusPreviewStyleStart, cityBonusPreviewStyleEnd);
             // get and add offence skill bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetSkillDefenseBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add items bonus
+            AddBonusInfoToText(attributeText, partyUnit.GetItemsDefenseBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
+            // get and add city bonus to text
+            AddBonusInfoToText(attributeText, partyUnit.GetCityDefenseBonus(), cityBonusPreviewStyleStart, cityBonusPreviewStyleEnd);
             // get and add status bonus (example: defense stance) to text
             AddBonusInfoToText(attributeText, (int)(partyUnit.GetStatusDefenseBonus() * (100 - partyUnit.GetTotalAdditiveDefense())), statusBonusPreviewStyleStart, statusBonusPreviewStyleEnd);
             // not needed - stats do no give defense bonus
@@ -541,6 +545,14 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                         // add skill resistance to string
                         resistance += skillBonusPreviewStyleStart + "+" + skillResistance + skillBonusPreviewStyleEnd;
                     }
+                    // get skill resistance
+                    int itemsResistance = partyUnit.GetUnitResistanceItemsBonus(source);
+                    // verify if skill resistance is higher than 0
+                    if (itemsResistance > 0)
+                    {
+                        // add item bonus to text
+                        resistance += itemBonusPreviewStyleStart + "+" + itemsResistance + itemBonusPreviewStyleEnd;
+                    }
                     // close brackets
                     resistance += ")";
                 }
@@ -577,6 +589,29 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //}
         }
         transform.Find("Panel/UnitResistances/Value").GetComponent<Text>().text = resistances;
+    }
+
+    public void SetUnitInitiativeInfo(PartyUnit partyUnit)
+    {
+        // Get UI text
+        Text attributeText = transform.Find("Panel/UnitInitiative/Value").GetComponent<Text>();
+        // display effective value
+        attributeText.text = partyUnit.GetEffectiveInitiative().ToString();
+        // verify if base value does not equal to effective value
+        if (partyUnit.GetEffectiveInitiative() != partyUnit.UnitInitiative)
+        {
+            // Display how effective value is calculated
+            // open brackets
+            attributeText.text += "(";
+            // set base unit move points without bonuses
+            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitInitiative.ToString() + baseStatPreviewStyleEnd;
+            // get and add skill bonus to text
+            AddBonusInfoToText(attributeText, partyUnit.GetInitiativeSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            // get and add bonus from items to text
+            AddBonusInfoToText(attributeText, partyUnit.GetInitiativeItemsBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
+            // close brackets
+            attributeText.text += ")";
+        }
     }
 
     public void SetLearnedSkillsBonusPreview(UnitSkill learnedSkill, PartyUnit partyUnit)

@@ -1130,13 +1130,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // Activate not enough move points modifier
                     notEnoughMovePoints = true;
                     // get the rest of division
-                    float restOfDivision = movePointsLeft % partyLeader.MovePointsMax;
+                    float restOfDivision = movePointsLeft % partyLeader.GetEffectiveMaxMovePoints();
                     Debug.Log("Rest of division is " + restOfDivision);
                     // verify if we has reached next day limit
                     if (restOfDivision == 0)
                     {
                         // Get number of days needed to reach this path point
-                        int numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.MovePointsMax) + 1;
+                        int numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
                         Debug.Log("numberOfDaysToReachThisPathPoint = " + numberOfDaysToReachThisPathPoint);
                         // add day indicator to the move path highter
                         tileHighlighters[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();

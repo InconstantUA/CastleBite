@@ -260,7 +260,7 @@ public class MapFocusPanel : MonoBehaviour {
         // get party leader
         PartyUnit partyLeader = mapHero.LHeroParty.GetPartyLeader();
         // Set UI text
-        transform.Find("Info").GetComponent<Text>().text = partyLeader.MovePointsCurrent + "/" + partyLeader.MovePointsMax + " Move Points";
+        transform.Find("Info").GetComponent<Text>().text = partyLeader.MovePointsCurrent + "/" + partyLeader.GetEffectiveMaxMovePoints() + " Move Points";
     }
 
     void SetAdditionalInfo(MapHero mapHero)

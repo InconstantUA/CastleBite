@@ -147,7 +147,7 @@ public class TurnsManager : MonoBehaviour {
                 {
                     // reset move points to max
                     // Note: this should be done before giving control to other player, so during his turn he can make impact on the other parties move points
-                    heroParty.GetPartyLeader().MovePointsCurrent = heroParty.GetPartyLeader().MovePointsMax;
+                    heroParty.GetPartyLeader().MovePointsCurrent = heroParty.GetPartyLeader().GetEffectiveMaxMovePoints();
                 }
                 // .. decrement daily debuffs
             }

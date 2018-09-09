@@ -42,7 +42,7 @@ MonoBehaviour:
     itemName: Sword of Despair
     itemValue: 250
     compatibleEquipmentSlots: 0300000004000000
-    isConsumableItem: 0
+    maxUsagesCount: 0
     uniquePowerModifiers:
     - target: 1
       upmAppliedBuff: 0
@@ -54,7 +54,18 @@ MonoBehaviour:
       upmChanceIncrementOnLevelUp: 0
       upmSource: 8
       upmOrigin: 1
-    unitStatModifiers: []
+      upmDurationLeft: 0
+      skillPowerMultiplier: 1
+    unitStatModifiers:
+    - unitStat: 3
+      modifierScope: 0
+      duration: -1
+      modifierPower: 15
+      modifierAppliedHow: 0
+      durationLeft: 0
+      skillPowerMultiplier: 1
+    leftUsagesCount: 0
+    heroEquipmentSlot: 9
 --- !u!224 &224457537592959856
 RectTransform:
   m_ObjectHideFlags: 1

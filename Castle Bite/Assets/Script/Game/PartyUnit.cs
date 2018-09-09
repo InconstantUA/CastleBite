@@ -221,6 +221,7 @@ public class UniquePowerModifier
     public UnitPowerSource upmSource;
     public ModifierOrigin upmOrigin;
     public int upmDurationLeft;
+    public int skillPowerMultiplier = 1;
 
     public string GetDisplayName()
     {
@@ -277,6 +278,7 @@ public class UnitStatModifier : System.Object
     public int modifierPower;
     public ModifierAppliedHow modifierAppliedHow;
     public int durationLeft;
+    public int skillPowerMultiplier = 1;
 }
 
 [Serializable]
@@ -445,7 +447,7 @@ public class PartyUnitData : System.Object
             8, 5,
             "Allow hero to use shards which emit different aura based on the shard type."
             + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
-            + "\r\n" + "Each level increases shards aura bonus by 5."
+            + "\r\n" + "Each level increases shard's base aura bonus by 100%."
             + "\r\n" + "Maximum level: 3."
             //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
         ),
@@ -796,6 +798,11 @@ public class PartyUnit : MonoBehaviour {
         return totalDefense;
     }
 
+    public int GetItemsDefenseBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.Defense, UnitDefense);
+    }
+
     public int GetEffectiveDefense()
     {
         // ADDITIVE
@@ -807,6 +814,8 @@ public class PartyUnit : MonoBehaviour {
         // Apply status modifier;
         int restDamagePercent = 100 - totalDefense;
         int totalDefenseWithModifiers = totalDefense + (int)Math.Round(restDamagePercent * statusModifier);
+        // apply items bonus
+        totalDefenseWithModifiers += GetItemsDefenseBonus();
         // Return result
         return totalDefenseWithModifiers;
     }
@@ -1048,10 +1057,15 @@ public class PartyUnit : MonoBehaviour {
         return (int)Math.Round(UnitPower * skill.mLevel.mCurrent * 0.15f);
     }
 
+    public int GetItemsPowerBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.Power, UnitPower);
+    }
+
     public int GetUnitEffectivePower()
     {
         // get unit power plus skill bonus
-        return UnitPower + GetOffenceSkillPowerBonus();
+        return UnitPower + GetOffenceSkillPowerBonus() + GetItemsPowerBonus();
     }
 
     List<UnitStatModifier> GetItemUnitStatModifierByStat(UnitStat unitStat)
@@ -1074,6 +1088,12 @@ public class PartyUnit : MonoBehaviour {
                     {
                         //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                         //Debug.Log("Verify non-stackable USMs from the same item");
+                        // verify if this is shard slot item
+                        if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                        {
+                            // apply skill modifier to USMs power
+                            usm.skillPowerMultiplier = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent;
+                        }
                         // add modifier to the list
                         usmsList.Add(usm);
                     }
@@ -1085,24 +1105,36 @@ public class PartyUnit : MonoBehaviour {
         // we assume that only leader can have items with global scope
         if (!IsLeader)
         {
-            // loop through all items for this unit
-            foreach (InventoryItem inventoryItem in GetComponentInParent<HeroParty>().GetPartyLeader().GetComponentsInChildren<InventoryItem>())
+            // verify if this unit already part of a hero party, because it may be from hire unit menu
+            if (GetComponentInParent<HeroParty>() != null)
             {
-                // verify if item is not for belt
-                if (   (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
-                    && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
+                // Get party leader unit
+                PartyUnit partyLeader = GetComponentInParent<HeroParty>().GetPartyLeader();
+                // loop through all items for this unit
+                foreach (InventoryItem inventoryItem in partyLeader.GetComponentsInChildren<InventoryItem>())
                 {
-                    // verify if item gives stat bonus
-                    // loop through item stat modifiers
-                    foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+                    // verify if item is not for belt
+                    if ((inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
+                        && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
                     {
-                        // verify if usm applies to the stat and that it has global scope
-                        if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.EntireParty))
+                        // verify if item gives stat bonus
+                        // loop through item stat modifiers
+                        foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                         {
-                            //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
-                            //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
-                            // add modifier to the list
-                            usmsList.Add(usm);
+                            // verify if usm applies to the stat and that it has global scope
+                            if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.EntireParty))
+                            {
+                                //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
+                                //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
+                                // verify if this is shard slot item
+                                if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                                {
+                                    // apply skill modifier to USMs power
+                                    usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent;
+                                }
+                                // add modifier to the list
+                                usmsList.Add(usm);
+                            }
                         }
                     }
                 }
@@ -1114,16 +1146,17 @@ public class PartyUnit : MonoBehaviour {
     int GetGenericStatItemBonus(UnitStat unitStat, int statBaseValue)
     {
         // init bonus value
-        int bonus = 0;
+        int statTotalBonus = 0;
         // get list of uni unit stat modifiers from unit's items
         List<UnitStatModifier> usmsList = GetItemUnitStatModifierByStat(unitStat);
         // apply usms
         foreach (UnitStatModifier usm in usmsList)
         {
-            bonus += GetUSMStatBonus(usm, statBaseValue);
+            // get new stat total bonus
+            statTotalBonus += GetUSMStatBonus(usm, statBaseValue);
         }
         // return result
-        return bonus;
+        return statTotalBonus;
     }
 
     public int GetLeadershipItemsBonus()
@@ -1205,6 +1238,23 @@ public class PartyUnit : MonoBehaviour {
         return ScoutingRange + GetScoutingSkillBonus() + GetScoutingPointsItemsBonus();
     }
 
+    public int GetInitiativeSkillBonus()
+    {
+        Debug.Log("Non implemented: GetInitiativeSkillBonus");
+        return 0;
+    }
+
+    public int GetInitiativeItemsBonus()
+    {
+        return GetGenericStatItemBonus(UnitStat.Initiative, UnitInitiative);
+    }
+
+    public int GetEffectiveInitiative()
+    {
+        // get and return sum of default scouting range plus skill bonus
+        return UnitInitiative + GetInitiativeSkillBonus() + GetInitiativeItemsBonus();
+    }
+
     public int GetUnitHealthRegenPerDay()
     {
         return (int)Math.Floor(((float)UnitHealthMax * (float)UnitHealthRegenPercent) / 100f);
@@ -1262,6 +1312,30 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
+    public int GetUnitResistanceItemsBonus(UnitPowerSource source)
+    {
+        switch (source)
+        {
+            case UnitPowerSource.Death:
+                return GetGenericStatItemBonus(UnitStat.DeathResistance, GetUnitBaseResistance(source));
+            case UnitPowerSource.Fire:
+                return GetGenericStatItemBonus(UnitStat.FireResistance, GetUnitBaseResistance(source));
+            case UnitPowerSource.Mind:
+                return GetGenericStatItemBonus(UnitStat.MindResistance, GetUnitBaseResistance(source));
+            case UnitPowerSource.Water:
+                return GetGenericStatItemBonus(UnitStat.WaterResistance, GetUnitBaseResistance(source));
+            case UnitPowerSource.Wind:
+            case UnitPowerSource.Pure:
+            case UnitPowerSource.Earth:
+            case UnitPowerSource.Life:
+            case UnitPowerSource.Physical:
+                return 0;
+            default:
+                Debug.LogError("Unknown source " + source.ToString());
+                return 0;
+        }
+    }
+
     public int GetUnitBaseResistance(UnitPowerSource source)
     {
         // verify if unit has this base resistance
@@ -1279,12 +1353,8 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetUnitEffectiveResistance(UnitPowerSource source)
     {
-        // get base resistance
-        int baseResistance = GetUnitBaseResistance(source);
-        // get skill resistance
-        int skillResistance = GetUnitResistanceSkillBonus(source);
         // get and return effective resistance
-        return baseResistance + skillResistance;
+        return GetUnitBaseResistance(source) + GetUnitResistanceSkillBonus(source) + GetUnitResistanceItemsBonus(source);
     }
 
     bool ApplyInstantUPM(UniquePowerModifier uniquePowerModifier, bool doPreview = false)
@@ -1299,13 +1369,13 @@ public class PartyUnit : MonoBehaviour {
         {
             case ModifierAppliedHow.Additively:
                 // increase current value by amout unit stat modifier by power
-                return unitStatModifier.modifierPower;
+                return unitStatModifier.skillPowerMultiplier * unitStatModifier.modifierPower;
             case ModifierAppliedHow.Multiplicatively:
                 // increase current value by amout of base value multiplied by power
-                return baseStatMaxValue * unitStatModifier.modifierPower;
+                return unitStatModifier.skillPowerMultiplier * baseStatMaxValue * unitStatModifier.modifierPower;
             case ModifierAppliedHow.Percent:
                 // increase current value by amout of percent from base value
-                return Mathf.CeilToInt( ((float)baseStatMaxValue * (float)unitStatModifier.modifierPower) / 100f );
+                return Mathf.CeilToInt( (unitStatModifier.skillPowerMultiplier * (float)baseStatMaxValue * (float)unitStatModifier.modifierPower) / 100f );
             case ModifierAppliedHow.Toggle:
                 // not applicable for this function
                 return 0;
@@ -1315,11 +1385,13 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    int ApplyUSMPower(UnitStatModifier unitStatModifier, int baseStatCurrentValue, int baseStatMaxValue, bool allowMaxOverflow = true)
+    int ApplyInstantUSMPower(UnitStatModifier unitStatModifier, int baseStatCurrentValue, int baseStatMaxValue, bool allowMaxOverflow = true)
     {
         Debug.Log("Apply unit state modifier power " + unitStatModifier.modifierAppliedHow.ToString());
+        // get usm bonus
+        int usmBonus = GetUSMStatBonus(unitStatModifier, baseStatMaxValue);
         // get new stat current value
-        baseStatCurrentValue += GetUSMStatBonus(unitStatModifier, baseStatMaxValue);
+        baseStatCurrentValue += usmBonus;
         // verify if current value is not higher than max value
         if ((baseStatCurrentValue > baseStatMaxValue) && !allowMaxOverflow)
         {
@@ -1347,7 +1419,7 @@ public class PartyUnit : MonoBehaviour {
                     if (!doPreview)
                     {
                         // apply usm power to this unit
-                        UnitHealthCurr = ApplyUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
+                        UnitHealthCurr = ApplyInstantUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
                     }
                     // item is applicable to this unit
                     return true;
@@ -1371,13 +1443,13 @@ public class PartyUnit : MonoBehaviour {
                 if (IsLeader)
                 {
                     // verify if current move points are not max already
-                    if (MovePointsCurrent != MovePointsMax)
+                    if (MovePointsCurrent != GetEffectiveMaxMovePoints())
                     {
                         // verify if it is not preview
                         if (!doPreview)
                         {
                             // apply usm power to this unit
-                            MovePointsCurrent = ApplyUSMPower(unitStatModifier, MovePointsCurrent, MovePointsMax, false);
+                            MovePointsCurrent = ApplyInstantUSMPower(unitStatModifier, MovePointsCurrent, GetEffectiveMaxMovePoints(), false);
                         }
                         // item is applicable to this unit
                         return true;

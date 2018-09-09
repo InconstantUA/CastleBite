@@ -1120,7 +1120,9 @@ public class UpgradeUnit : MonoBehaviour {
         // consume skill upgrade points - this will also trigger all skills info regeneration
         WithdrawSkillPoint();
         // Set skill preview in unit info UI (+green bonus)
-        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
+        //transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
+        // completely update UI, because skills may affect other bonuses: from items for example
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(focusedPartyUnit, UnitInfoPanel.Align.Right, false);
     }
 
     void SetSkillPlusUIActions(Transform skillUI, UnitSkill unitSkill)
@@ -1142,7 +1144,9 @@ public class UpgradeUnit : MonoBehaviour {
         // return back skill upgrade point to the pool - this will also trigger all skills info regeneration
         AddSkillPoint();
         // Set skill preview in unit info UI (+green bonus)
-        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
+        // transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetLearnedSkillsBonusPreview(unitSkill, focusedPartyUnit);
+        // completely update UI, because skills may affect other bonuses: from items for example
+        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(focusedPartyUnit, UnitInfoPanel.Align.Right, false);
     }
 
     void SetSkillMinusUIActions(Transform skillUI, UnitSkill unitSkill)
