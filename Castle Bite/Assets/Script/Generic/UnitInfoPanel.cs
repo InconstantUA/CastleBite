@@ -9,7 +9,8 @@ using System;
 public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
     public bool interactable;
-    public readonly int maxModifiers = 4;
+    [SerializeField]
+    GameObject uniquePowerModifierUITemplate;
 
     string baseStatPreviewStyleStart = "<color=#606060>";
     string baseStatPreviewStyleEnd = "</color>";
@@ -654,54 +655,105 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    void ActivateModifier(string modifierUIName, UniquePowerModifier uniquePowerModifier)
+    void AddUPMInfo(Transform upmsListGrid, UniquePowerModifier uniquePowerModifier)
     {
-        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
-        modifier.Find("Name").GetComponent<Text>().text = uniquePowerModifier.GetDisplayName();
-        modifier.Find("Power").GetComponent<Text>().text = uniquePowerModifier.upmPower.ToString();
-        modifier.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.upmDuration.ToString();
-        modifier.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.upmChance.ToString();
-        modifier.Find("Source").GetComponent<Text>().text = uniquePowerModifier.upmSource.ToString();
-        modifier.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.upmOrigin.ToString();
+        Transform upmTransform = Instantiate(uniquePowerModifierUITemplate, upmsListGrid).transform;
+        upmTransform.Find("Name").GetComponent<Text>().text = uniquePowerModifier.GetDisplayName();
+        upmTransform.Find("Power").GetComponent<Text>().text = uniquePowerModifier.upmPower.ToString();
+        upmTransform.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.upmDuration.ToString();
+        // verify if duration left if is at least 1 day (which normally means that it will expire after upmDurationLeft days)
+        if (uniquePowerModifier.upmDurationLeft >= 1)
+        {
+            upmTransform.Find("Duration").GetComponent<Text>().text += " e" + uniquePowerModifier.upmDurationLeft.ToString() + "d";
+        }
+        upmTransform.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.upmChance.ToString();
+        upmTransform.Find("Source").GetComponent<Text>().text = uniquePowerModifier.upmSource.ToString();
+        upmTransform.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.upmOrigin.ToString();
     }
 
-    void DeactivateModifier(string modifierUIName)
-    {
-        // transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName).gameObject.SetActive(false);
-        // keep modifier there, but with empty text, so that rows in the table have the same spacing
-        // and start from header
-        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
-        modifier.Find("Name").GetComponent<Text>().text = "";
-        modifier.Find("Power").GetComponent<Text>().text = "";
-        modifier.Find("Duration").GetComponent<Text>().text = "";
-        modifier.Find("Chance").GetComponent<Text>().text = "";
-        modifier.Find("Source").GetComponent<Text>().text = "";
-        modifier.Find("Origin").GetComponent<Text>().text = "";
-    }
+    //void ActivateModifier(string modifierUIName, UniquePowerModifier uniquePowerModifier)
+    //{
+    //    Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
+    //    modifier.Find("Name").GetComponent<Text>().text = uniquePowerModifier.GetDisplayName();
+    //    modifier.Find("Power").GetComponent<Text>().text = uniquePowerModifier.upmPower.ToString();
+    //    modifier.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.upmDuration.ToString();
+    //    modifier.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.upmChance.ToString();
+    //    modifier.Find("Source").GetComponent<Text>().text = uniquePowerModifier.upmSource.ToString();
+    //    modifier.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.upmOrigin.ToString();
+    //}
+
+    //void DeactivateModifier(string modifierUIName)
+    //{
+    //    // transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName).gameObject.SetActive(false);
+    //    // keep modifier there, but with empty text, so that rows in the table have the same spacing
+    //    // and start from header
+    //    Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/" + modifierUIName);
+    //    modifier.Find("Name").GetComponent<Text>().text = "";
+    //    modifier.Find("Power").GetComponent<Text>().text = "";
+    //    modifier.Find("Duration").GetComponent<Text>().text = "";
+    //    modifier.Find("Chance").GetComponent<Text>().text = "";
+    //    modifier.Find("Source").GetComponent<Text>().text = "";
+    //    modifier.Find("Origin").GetComponent<Text>().text = "";
+    //}
 
     void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
     {
-        // get Unique power modifiers
-        List<UniquePowerModifier> uniquePowerModifiers = partyUnit.UniquePowerModifiers;
+        // get party unit Unique power modifiers
+        List<UniquePowerModifier> unitUniquePowerModifiers = partyUnit.UniquePowerModifiers;
+        // get items unique power modifiers
+        // init list
+        List<UniquePowerModifier> itemsUniquePowerModifiers = new List<UniquePowerModifier>();
+        // loop through all items owned by this unit
+        // ! we assume that there are no items, whith UPMs which are owned by party leader and have entire party scope
+        foreach (InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
+        {
+            // loop through all UPMs in the item
+            foreach (UniquePowerModifier upm in inventoryItem.UniquePowerModifiers)
+            {
+                // add upm from item to the list
+                itemsUniquePowerModifiers.Add(upm);
+            }
+        }
+        // get upms table
         Transform uniquePowerModifiersTable = transform.Find("Panel/UniquePowerModifiersTable");
-        if (uniquePowerModifiers.Count > 0)
+        // verify if number of total unique power modifiers is more than 0
+        if ((unitUniquePowerModifiers.Count + itemsUniquePowerModifiers.Count) > 0)
         {
             // Activate unique power modifiers table
             uniquePowerModifiersTable.gameObject.SetActive(true);
-            // Activate and fill in or deactivate power modifiers
-            for (int i = 1; i <= maxModifiers; i++)
+            // Get upms list grid
+            Transform upmsListGrid = uniquePowerModifiersTable.Find("ListOfUniquePowerModifiers/Grid");
+            // Remove all previously set UPMs UIs
+            foreach (Transform childTransform in upmsListGrid.transform)
             {
-                // Activate first modifier
-                if (i <= uniquePowerModifiers.Count)
-                {
-                    // activate first modifier
-                    ActivateModifier(("Modifier" + i.ToString()), uniquePowerModifiers[i - 1]);
-                }
-                else
-                {
-                    DeactivateModifier(("Modifier" + i.ToString()));
-                }
+                Destroy(childTransform.gameObject);
             }
+            // Loop through all unit's UPMs
+            foreach(UniquePowerModifier upm in unitUniquePowerModifiers)
+            {
+                // Add required UPMs info in UI
+                AddUPMInfo(upmsListGrid, upm);
+            }
+            // Loop through all items' UPMs
+            foreach (UniquePowerModifier upm in itemsUniquePowerModifiers)
+            {
+                // Add required UPMs info in UI
+                AddUPMInfo(upmsListGrid, upm);
+            }
+            //// Activate and fill in or deactivate power modifiers
+            //for (int i = 1; i <= 4; i++)
+            //{
+            //    // Activate first modifier
+            //    if (i <= unitUniquePowerModifiers.Count)
+            //    {
+            //        // activate first modifier
+            //        ActivateModifier(("Modifier" + i.ToString()), unitUniquePowerModifiers[i - 1]);
+            //    }
+            //    else
+            //    {
+            //        DeactivateModifier(("Modifier" + i.ToString()));
+            //    }
+            //}
         }
         else
         {
