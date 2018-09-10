@@ -137,8 +137,12 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         {
             // verify if there is a unit in the slot
             if (GetComponentInChildren<PartyUnitUI>() != null)
+            {
                 // try to apply item to the unit
                 GetComponentInChildren<PartyUnitUI>().TryToConsumeItem(InventoryItemDragHandler.itemBeingDragged);
+            }
+            // reset cursor to normal
+            transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
         }
         // verify if it is party unit being dragged
         else if (UnitDragHandler.unitBeingDraggedUI != null)

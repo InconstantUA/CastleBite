@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
@@ -106,5 +107,27 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
                 }
             }
         }
+        // verify if there is still item linked
+        if (LInventoryItem != null)
+        {
+            // verify if item has usages
+            if (LInventoryItem.MaxUsagesCount >= 1)
+            {
+                // update usages info, because it may be reduced
+                GetComponentInChildren<Text>().text = LInventoryItem.ItemName + " <size=12>(" + LInventoryItem.LeftUsagesCount + "/" + LInventoryItem.MaxUsagesCount + ")</size>";
+            }
+        }
+    }
+
+    public void ShowItemInformation()
+    {
+        // set content popup box with information
+        transform.root.Find("MiscUI").GetComponentInChildren<InventoryItemInfoPanel>(true).SetActive(LInventoryItem);
+    }
+
+    public void HideItemInformation()
+    {
+        // set content popup box with information
+        transform.root.Find("MiscUI").GetComponentInChildren<InventoryItemInfoPanel>(true).gameObject.SetActive(false);
     }
 }

@@ -48,10 +48,12 @@ MonoBehaviour:
     - unitStat: 1
       modifierScope: 0
       duration: -1
-      modifierPower: 100
+      modifierPower: 15
       modifierAppliedHow: 2
       durationLeft: 0
+      skillPowerMultiplier: 1
     leftUsagesCount: 1
+    heroEquipmentSlot: 9
 --- !u!224 &224871333375375478
 RectTransform:
   m_ObjectHideFlags: 1

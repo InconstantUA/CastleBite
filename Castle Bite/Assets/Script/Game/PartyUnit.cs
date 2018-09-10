@@ -196,7 +196,7 @@ public enum ModifierOrigin
 public enum ModifierScope
 {
     Self,
-    EntireParty
+    Party
 }
 
 [Serializable]
@@ -1083,8 +1083,8 @@ public class PartyUnit : MonoBehaviour {
                 // loop through item stat modifiers
                 foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                 {
-                    // verify if usm applies to the required stat stat
-                    if (usm.unitStat == unitStat)
+                    // verify if usm applies to the required stat type and that stat is not instant (duration != 0)
+                    if ((usm.unitStat == unitStat) && (usm.duration != 0))
                     {
                         //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                         //Debug.Log("Verify non-stackable USMs from the same item");
@@ -1122,7 +1122,7 @@ public class PartyUnit : MonoBehaviour {
                         foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                         {
                             // verify if usm applies to the stat and that it has global scope
-                            if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.EntireParty))
+                            if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.Party))
                             {
                                 //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                                 //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
@@ -1240,7 +1240,7 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetInitiativeSkillBonus()
     {
-        Debug.Log("Non implemented: GetInitiativeSkillBonus");
+        Debug.Log("Not implemented: GetInitiativeSkillBonus");
         return 0;
     }
 
@@ -1554,7 +1554,7 @@ public class PartyUnit : MonoBehaviour {
                     // upm is normally applied only during the battle and to the enemy
                     // if we are in this situation, then it means that enemy has applied item with upm on this hero
                     // apply upm
-                    isApplicable = ApplyInstantUPM(inventoryItem.UniquePowerModifiers[i]);
+                    isApplicable = ApplyInstantUPM(inventoryItem.UniquePowerModifiers[i], doPreview);
                     if (isApplicable)
                         upmIDsTobeRemoved.Add(i);
                 }
@@ -1579,8 +1579,9 @@ public class PartyUnit : MonoBehaviour {
                 {
                     // usm has instant one-time effect
                     // apply usm
-                    isApplicable = ApplyInstantUSM(inventoryItem.UnitStatModifiers[i]);
-                    if (isApplicable)
+                    isApplicable = ApplyInstantUSM(inventoryItem.UnitStatModifiers[i], doPreview);
+                    // verify if it is applicable and that usages are at least 1
+                    if (isApplicable && (inventoryItem.LeftUsagesCount <= 1))
                         usmIDsTobeRemoved.Add(i);
                 }
                 // verify if duration is negative
@@ -1618,18 +1619,19 @@ public class PartyUnit : MonoBehaviour {
                 // verify if item can be destroyed
                 // verify if number of usages reached 0 and this is item with instant one-time effect
                 // and if there is no more UPMs and USMs left
-                if ((inventoryItem.LeftUsagesCount == 0) && (inventoryItem.UniquePowerModifiers.Count == 0) && (inventoryItem.UnitStatModifiers.Count == 0))
+                if ( ((inventoryItem.LeftUsagesCount == 0) && (inventoryItem.UniquePowerModifiers.Count == 0) && (inventoryItem.UnitStatModifiers.Count == 0)) )
                 {
                     // destroy item, because there is no more use of it
-                    Debug.Log("Destoroy item");
-                    Destroy(inventoryItem.gameObject);
+                    // Debug.Log("Destoroy item");
+                    // Destroy(inventoryItem.gameObject);
+                    //return true;
                 }
                 else
                 {
                     // verify number of usages left
                     if (inventoryItem.LeftUsagesCount == 0)
                     {
-                        // there are still usages left
+                        // there are no usages left
                         Debug.Log("Move item to the unit");
                         // move item to the unit
                         inventoryItem.transform.SetParent(this.transform);
@@ -1638,10 +1640,50 @@ public class PartyUnit : MonoBehaviour {
                     {
                         // more usages are left
                         Debug.Log("Clone item to the unit");
-                        // clone item and place it into the unit
-                        Instantiate(inventoryItem, this.transform);
+                        // verify if there is not at least one non-instant upm or usm left
+                        // set only instant upms and usms are left to true
+                        bool onlyInstantModifiersAreLeft = true;
+                        // loop though all unit stat modifiers
+                        foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+                        {
+                            // verify if usm does not have instant duration
+                            if (usm.duration != 0)
+                            {
+                                // set flag
+                                onlyInstantModifiersAreLeft = false;
+                                // exit loop
+                                break;
+                            }
+                        }
+                        // loop though all unique power modifier
+                        foreach (UniquePowerModifier upm in inventoryItem.UniquePowerModifiers)
+                        {
+                            // verify if upm does not have instant duration
+                            if (upm.upmDurationLeft != 0)
+                            {
+                                // set flag
+                                onlyInstantModifiersAreLeft = false;
+                                // exit loop
+                                break;
+                            }
+                        }
+                        // check if onlyInstantModifiersAreLeft
+                        if (onlyInstantModifiersAreLeft)
+                        {
+                            // do not do anything to the item
+                            // instant modifiers are already applied
+                            // item will go back to inventory with reduced usages count
+                        }
+                        else
+                        {
+                            // clone item and place it into the unit
+                            // so non-instant modifiers can be applied
+                            Instantiate(inventoryItem.gameObject, this.transform);
+                        }
                         Debug.LogWarning("Verify item before and after clone.");
                         Debug.Break();
+                        // make sure that item goes back to the inventory
+                        //return false;
                     }
                 }
             }

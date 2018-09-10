@@ -20,6 +20,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // create event, which later can be configured in Unity Editor
     public UnityEvent OnClick;
     public UnityEvent OnRightMouseButtonDown;
+    public UnityEvent OnRightMouseButtonUp;
     public UnityEvent OnMouseEnter;
     public UnityEvent OnMouseExit;
 
@@ -69,6 +70,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             else if (Input.GetMouseButtonUp(1))
             {
                 // on right mouse
+                OnRightMouseButtonUp.Invoke();
             }
         }
     }

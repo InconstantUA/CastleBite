@@ -476,26 +476,45 @@ public class PartyUnitUI : MonoBehaviour {
                 // successfully consumed item
                 // update UI based on changed party unit data
                 UpdateUnitCellInfo();
-                // Get source item slot transform
-                InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
-                // verify if source slot is in party inventory mode
-                if (srcItemSlot.SlotMode == InventorySlotDropHandler.Mode.PartyInventory)
+                // verify if there are still usages left
+                if (inventoryItem.LeftUsagesCount >= 1)
                 {
-                    // Get PartyInventoryUI (before slot is destroyed)
-                    PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-                    //// remove source item slot
-                    //Destroy(srcItemSlot.gameObject);
-                    // remove all empty slots in inventory to fill in possible gaps after item consumption
-                    partyInventoryUI.RemoveAllEmptySlots();
-                    // fill in empty slots in inventory;
-                    partyInventoryUI.FillInEmptySlots();
+
+                }
+                // item has run out of usages
+                else if (inventoryItem.LeftUsagesCount == 0)
+                {
+                    // destroy item, because there is no more use of it
+                    // Debug.Log("Destoroy item");
+                    Destroy(inventoryItem.gameObject);
+                    // Destroy drag handler
+                    Destroy(inventoryItemDragHandler.gameObject);
+                }
+                // permanent item
+                else
+                {
+                    // Get source item slot transform
+                    InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
+                    // verify if source slot is in party inventory mode
+                    if (srcItemSlot.SlotMode == InventorySlotDropHandler.Mode.PartyInventory)
+                    {
+                        // Get PartyInventoryUI (before slot is destroyed)
+                        PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+                        //// remove source item slot
+                        //Destroy(srcItemSlot.gameObject);
+                        // remove all empty slots in inventory to fill in possible gaps after item consumption
+                        partyInventoryUI.RemoveAllEmptySlots();
+                        // fill in empty slots in inventory;
+                        partyInventoryUI.FillInEmptySlots();
+                    }
                 }
             }
             else
             {
-                // item cannot be consumed
-                // nothing to do here
+                // item cannot be consumed or it has more usages left
                 // item will return to its original position
+                // update UI based on changed party unit data
+                UpdateUnitCellInfo();
             }
         }
         else
