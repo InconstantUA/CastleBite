@@ -461,13 +461,13 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void TryToConsumeItem(InventoryItemDragHandler inventoryItemDragHandler)
+    public void ActOnItemDrop(InventoryItemDragHandler inventoryItemDragHandler)
     {
-        Debug.Log("Try to consume item");
+        Debug.Log("Act on Item Drop");
         // get item
         InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
         // verify if item is consumable
-        if (inventoryItem.MaxUsagesCount >= 1)
+        if (inventoryItem.HasActiveModifiers())
         {
             Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
             // consume item and verify if it was successfull
@@ -476,23 +476,13 @@ public class PartyUnitUI : MonoBehaviour {
                 // successfully consumed item
                 // update UI based on changed party unit data
                 UpdateUnitCellInfo();
-                // verify if there are still usages left
-                if (inventoryItem.LeftUsagesCount >= 1)
-                {
-
-                }
                 // item has run out of usages
-                else if (inventoryItem.LeftUsagesCount == 0)
+                if (inventoryItem.LeftUsagesCount == 0)
                 {
-                    // destroy item, because there is no more use of it
-                    // Debug.Log("Destoroy item");
-                    Destroy(inventoryItem.gameObject);
-                    // Destroy drag handler
-                    Destroy(inventoryItemDragHandler.gameObject);
-                }
-                // permanent item
-                else
-                {
+                    // there are no usages left
+                    Debug.Log("Move item to the unit");
+                    // move item to the unit, there are still might be non-instant upms and usms
+                    inventoryItem.transform.SetParent(this.transform);
                     // Get source item slot transform
                     InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
                     // verify if source slot is in party inventory mode
@@ -508,13 +498,49 @@ public class PartyUnitUI : MonoBehaviour {
                         partyInventoryUI.FillInEmptySlots();
                     }
                 }
+                else
+                {
+                    // there are still usages left
+                    Debug.Log("Clone item to the unit");
+                    // clone item and place it into the unit
+                    // so non-instant modifiers can be applied
+                    // and assign inventoryItem varible with new inventory item
+                    inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
+                    // old inventory item, which was clonned, will return back to the inventory
+                }
+                // remove expired modifiers from triggered item
+                inventoryItem.RemoveExpiredModifiers();
+                // verify if item has passive modifiers
+                if (inventoryItem.HasPassiveModifiers())
+                {
+                    Debug.Log("Item has passive modifiers.");
+                    // do not do anything to the item
+                    // instant modifiers are already applied
+                    // non-instant modifiers are also applied by placing item into the unit's inventory
+                }
+                else
+                {
+                    // verify if item run out of usages
+                    if (inventoryItem.LeftUsagesCount == 0)
+                    {
+                        // inventory item only does not have passive modifiers
+                        // item should be destroyed, because it has nothing applied afterwards
+                        Debug.Log("Destroy item");
+                        Destroy(inventoryItem.gameObject);
+                        // Destroy drag handler
+                        Destroy(inventoryItemDragHandler.gameObject);
+                    }
+                    else
+                    {
+                        // item still has usages left
+                        // it will drop back to its original slot
+                    }
+                }
             }
             else
             {
-                // item cannot be consumed or it has more usages left
+                // item cannot be consumed
                 // item will return to its original position
-                // update UI based on changed party unit data
-                UpdateUnitCellInfo();
             }
         }
         else
@@ -522,6 +548,7 @@ public class PartyUnitUI : MonoBehaviour {
             // item is not consumable
             // nothing to do here
             // item will return to its original position
+            // this type of items should be placed into hero equipment
         }
     }
 }

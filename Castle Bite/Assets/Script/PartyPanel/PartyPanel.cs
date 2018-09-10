@@ -1194,7 +1194,7 @@ public class PartyPanel : MonoBehaviour {
     public void SetActiveItemDrag(bool activate)
     {
         // verify if item is consumable
-        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.MaxUsagesCount >= 1)
+        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
         {
             Transform unitCell;
             Transform unitSlot;
@@ -1229,14 +1229,6 @@ public class PartyPanel : MonoBehaviour {
                                 // highlight with red
                                 hightlightColor = redHighlight;
                             }
-                            //// .. verify if unit already has the same buff applied (buffs from the same item type are not stackable)
-                            //bool unitHasTheSameBuffApplied = false;
-                            //if (unitHasTheSameBuffApplied)
-                            //{
-                            //}
-                            //else
-                            //{
-                            //}
                         }
                         else
                         {

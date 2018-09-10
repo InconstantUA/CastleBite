@@ -76,10 +76,10 @@ public class PartyInventoryUI : MonoBehaviour {
                 dragHandler.LInventoryItem = inventoryItem;
                 // set item name in UI
                 dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
-                // verify if item has usages
-                if (inventoryItem.MaxUsagesCount >= 1)
+                // verify if item has active modifiers
+                if (inventoryItem.HasActiveModifiers())
                 {
-                    dragHandler.GetComponentInChildren<Text>().text += " <size=12>(" + inventoryItem.LeftUsagesCount + "/" + inventoryItem.MaxUsagesCount + ")</size>";
+                    dragHandler.GetComponentInChildren<Text>().text += inventoryItem.GetUsagesInfo();
                 }
             }
         }

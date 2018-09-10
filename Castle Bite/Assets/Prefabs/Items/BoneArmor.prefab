@@ -42,19 +42,27 @@ MonoBehaviour:
     itemName: Bone Armor
     itemValue: 150
     compatibleEquipmentSlots: 05000000
-    isConsumableItem: 0
     uniquePowerModifiers: []
     unitStatModifiers:
     - unitStat: 2
       modifierScope: 0
-      duration: -1
       modifierPower: 5
-      modifierAppliedHow: 0
+      skillPowerMultiplier: 1
+      modifierCalculated: 0
+      modifierApplied: 1
+      duration: -1
+      durationLeft: 0
     - unitStat: 8
       modifierScope: 0
-      duration: -1
       modifierPower: 50
-      modifierAppliedHow: 0
+      skillPowerMultiplier: 1
+      modifierCalculated: 0
+      modifierApplied: 1
+      duration: -1
+      durationLeft: 0
+    heroEquipmentSlot: 9
+    maxUsagesCount: 0
+    leftUsagesCount: 0
 --- !u!224 &224728201970158054
 RectTransform:
   m_ObjectHideFlags: 1

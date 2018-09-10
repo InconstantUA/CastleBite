@@ -111,10 +111,10 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         if (LInventoryItem != null)
         {
             // verify if item has usages
-            if (LInventoryItem.MaxUsagesCount >= 1)
+            if (LInventoryItem.HasActiveModifiers())
             {
-                // update usages info, because it may be reduced
-                GetComponentInChildren<Text>().text = LInventoryItem.ItemName + " <size=12>(" + LInventoryItem.LeftUsagesCount + "/" + LInventoryItem.MaxUsagesCount + ")</size>";
+                // update usages info, because it may be reduced, if item is usable
+                GetComponentInChildren<Text>().text = LInventoryItem.ItemName + LInventoryItem.GetUsagesInfo();
             }
         }
     }

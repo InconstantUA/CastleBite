@@ -139,7 +139,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             if (GetComponentInChildren<PartyUnitUI>() != null)
             {
                 // try to apply item to the unit
-                GetComponentInChildren<PartyUnitUI>().TryToConsumeItem(InventoryItemDragHandler.itemBeingDragged);
+                GetComponentInChildren<PartyUnitUI>().ActOnItemDrop(InventoryItemDragHandler.itemBeingDragged);
             }
             // reset cursor to normal
             transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();

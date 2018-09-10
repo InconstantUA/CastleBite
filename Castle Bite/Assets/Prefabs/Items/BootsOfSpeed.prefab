@@ -42,14 +42,19 @@ MonoBehaviour:
     itemName: Boots of Speed
     itemValue: 30
     compatibleEquipmentSlots: 08000000
-    isConsumableItem: 0
     uniquePowerModifiers: []
     unitStatModifiers:
     - unitStat: 5
       modifierScope: 0
-      duration: -1
       modifierPower: 50
-      modifierAppliedHow: 2
+      skillPowerMultiplier: 1
+      modifierCalculated: 0
+      modifierApplied: 1
+      duration: -1
+      durationLeft: 0
+    heroEquipmentSlot: 9
+    maxUsagesCount: 0
+    leftUsagesCount: 0
 --- !u!224 &224812807544747040
 RectTransform:
   m_ObjectHideFlags: 1

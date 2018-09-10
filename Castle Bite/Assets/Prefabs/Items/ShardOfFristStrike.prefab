@@ -42,17 +42,19 @@ MonoBehaviour:
     itemName: Shard of First Strike
     itemValue: 100
     compatibleEquipmentSlots: 00000000
-    maxUsagesCount: 0
     uniquePowerModifiers: []
     unitStatModifiers:
     - unitStat: 4
       modifierScope: 1
-      duration: -1
       modifierPower: 10
-      modifierAppliedHow: 2
+      skillPowerMultiplier: 1
+      modifierCalculated: 0
+      modifierApplied: 1
+      duration: -1
       durationLeft: 0
-    leftUsagesCount: 0
     heroEquipmentSlot: 9
+    maxUsagesCount: 0
+    leftUsagesCount: 0
 --- !u!224 &224936540375792134
 RectTransform:
   m_ObjectHideFlags: 1
