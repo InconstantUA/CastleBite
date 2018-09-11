@@ -137,8 +137,8 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);
         // Deactivate/Activate Hero parties Inventory
-        transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(!doActivate);
-        transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(!doActivate);
+        transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(doActivate);
         // Activate/Deactivate Focus panels
         transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
@@ -155,6 +155,8 @@ public class BattleScreen : MonoBehaviour {
 
     void EnterBattleCommon(HeroParty playerHeroParty, HeroParty enemyHeroParty)
     {
+        // activate this battle sreen
+        gameObject.SetActive(true);
         // get Left Hero Party UI
         HeroPartyUI playerHeroPartyUI = transform.root.Find("MiscUI/LeftHeroParty").GetComponent<HeroPartyUI>();
         // link Player to the Left UI
@@ -173,8 +175,8 @@ public class BattleScreen : MonoBehaviour {
         //PartyUnit playerPartyLeader = playerHeroParty.GetPartyLeader();
         //PartyUnit enemyPartyLeader = enemyHeroParty.GetPartyLeader();
         // Activate Hero parties UIs upfront so that PartyLeaders UIs are created
-        transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(true);
-        transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(true);
+        playerHeroPartyUI.gameObject.SetActive(true);
+        enemyHeroPartyUI.gameObject.SetActive(true);
         // assign party leader to left focus panel
         transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerHeroPartyUI.GetPartyLeaderUI().gameObject;
         // activate left Focus panel
@@ -188,8 +190,6 @@ public class BattleScreen : MonoBehaviour {
         // .. do it automatically in future, based on ...
         playerPartyPanel.IsAIControlled = false;
         enemyPartyPanel.IsAIControlled = false;
-        // activate this battle sreen
-        gameObject.SetActive(true);
         // Set turn phase to main phase
         SetTurnPhase(TurnPhase.Main);
         // start turn based battle

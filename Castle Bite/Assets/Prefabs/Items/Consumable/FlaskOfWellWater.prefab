@@ -42,19 +42,22 @@ MonoBehaviour:
     itemName: Flask of Well Water
     itemValue: 50
     compatibleEquipmentSlots: 0600000007000000
-    uniquePowerModifiers: []
     unitStatModifiers:
     - unitStat: 5
-      modifierScope: 0
-      duration: 0
+      modifierScope: 1
       modifierPower: 50
+      skillPowerMultiplier: 1
       modifierCalculated: 0
       modifierApplied: 0
+      duration: 0
       durationLeft: 0
-      skillPowerMultiplier: 1
+      canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
+    uniquePowerModifiers: []
+    unitStatusModifiers: []
     heroEquipmentSlot: 9
     maxUsagesCount: 2
     leftUsagesCount: 2
+    itemIsStackable: 0
 --- !u!224 &224526058668812596
 RectTransform:
   m_ObjectHideFlags: 1

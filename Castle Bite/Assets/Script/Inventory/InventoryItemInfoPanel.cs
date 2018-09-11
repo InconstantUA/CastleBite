@@ -51,6 +51,21 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
             // disable usages information
             maxUsagesUI.gameObject.SetActive(false);
         }
+        // Get unit status modifier UI
+        Transform unitStatusUI = transform.Find("Modifiers/UnitStatusModifier");
+        // verify if item has unit status modifier
+        if (inventoryItem.UnitStatusModifiers.Count >= 1)
+        {
+            // enable unit status UI
+            unitStatusUI.gameObject.SetActive(true);
+            // Set status value
+            unitStatusUI.Find("UnitStatsModifierValue").GetComponent<Text>().text = inventoryItem.UnitStatusModifiers[0].modifierSetStatus.ToString();
+        }
+        else
+        {
+            // disable unit status UI
+            unitStatusUI.gameObject.SetActive(false);
+        }
         // Get unit stat modifiers table UI
         Transform usmsTableUI = transform.Find("Modifiers/UnitStatsModifiersTable");
         // verify if item has unit stats modifiers
@@ -75,19 +90,23 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
                 // init power information text
                 string powerText = "";
                 // set power information
-                switch (usm.modifierCalculated)
+                switch (usm.modifierCalculatedHow)
                 {
-                    case ModifierCalculated.Additively:
-                        powerText = "+" + usm.modifierPower.ToString();
+                    case ModifierCalculatedHow.Additively:
+                        // verify if it is positive, 0 or negative value
+                        if (usm.modifierPower > 0)
+                        {
+                            // add + sign
+                            powerText = "+";
+                        }
+                        // add power value
+                        powerText += usm.modifierPower.ToString();
                         break;
-                    case ModifierCalculated.Multiplicatively:
+                    case ModifierCalculatedHow.Multiplicatively:
                         powerText = "x" + usm.modifierPower.ToString();
                         break;
-                    case ModifierCalculated.Percent:
+                    case ModifierCalculatedHow.Percent:
                         powerText = usm.modifierPower.ToString() + "%";
-                        break;
-                    case ModifierCalculated.Toggle:
-                        powerText = "-";
                         break;
                     default:
                         Debug.LogError("Do not know how to apply modifier power");

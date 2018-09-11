@@ -175,24 +175,9 @@ public class TurnsManager : MonoBehaviour {
                     // loop through all items and verify if it has expired
                     foreach(InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
                     {
-                        // loop though all unit stat modifiers
-                        foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
-                        {
-                            // verify if usm has instant duration
-                            if (usm.duration == 0)
-                            {
-
-                            }
-                        }
-                        // loop though all unique power modifier
-                        foreach (UniquePowerModifier upm in inventoryItem.UniquePowerModifiers)
-                        {
-                            // verify if upm has instant duration
-                            if (upm.upmDurationLeft == 0)
-                            {
-
-                            }
-                        }
+                        inventoryItem.DecrementModifiersDuration();
+                        inventoryItem.RemoveExpiredModifiers();
+                        inventoryItem.SelfDestroyIfExpired();
                     }
                 }
             }

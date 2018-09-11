@@ -424,8 +424,8 @@ public class PartyUnitUI : MonoBehaviour {
     {
         if (lPartyUnit != null)
         {
-            // verify if unit is leader
-            if (LPartyUnit.IsLeader)
+            // verify if unit is leader and edit party screen is active
+            if (LPartyUnit.IsLeader && (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null))
             {
                 // activate equipment button
                 //Debug.LogWarning("Enable equipment button");
@@ -448,8 +448,8 @@ public class PartyUnitUI : MonoBehaviour {
 
     void UpdateUpgradeUnitControl()
     {
-        // verify if there is unit in slot
-        if (LPartyUnit != null)
+        // verify if there is unit in slot and that edit party screen is active
+        if ((LPartyUnit != null)  && (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null))
         {
             //Debug.LogWarning("Enable upgrade unit + button");
             transform.Find("UpgradeUnitControl").gameObject.SetActive(true);
@@ -466,12 +466,12 @@ public class PartyUnitUI : MonoBehaviour {
         Debug.Log("Act on Item Drop");
         // get item
         InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
-        // verify if item is consumable
+        // verify if item has active modifiers or usages
         if (inventoryItem.HasActiveModifiers())
         {
             Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
             // consume item and verify if it was successfull
-            if (lPartyUnit.ConsumeItem(inventoryItem))
+            if (lPartyUnit.UseItem(inventoryItem))
             {
                 // successfully consumed item
                 // update UI based on changed party unit data
@@ -482,7 +482,7 @@ public class PartyUnitUI : MonoBehaviour {
                     // there are no usages left
                     Debug.Log("Move item to the unit");
                     // move item to the unit, there are still might be non-instant upms and usms
-                    inventoryItem.transform.SetParent(this.transform);
+                    inventoryItem.transform.SetParent(LPartyUnit.transform);
                     // Get source item slot transform
                     InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
                     // verify if source slot is in party inventory mode
@@ -490,8 +490,6 @@ public class PartyUnitUI : MonoBehaviour {
                     {
                         // Get PartyInventoryUI (before slot is destroyed)
                         PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-                        //// remove source item slot
-                        //Destroy(srcItemSlot.gameObject);
                         // remove all empty slots in inventory to fill in possible gaps after item consumption
                         partyInventoryUI.RemoveAllEmptySlots();
                         // fill in empty slots in inventory;
@@ -510,32 +508,8 @@ public class PartyUnitUI : MonoBehaviour {
                 }
                 // remove expired modifiers from triggered item
                 inventoryItem.RemoveExpiredModifiers();
-                // verify if item has passive modifiers
-                if (inventoryItem.HasPassiveModifiers())
-                {
-                    Debug.Log("Item has passive modifiers.");
-                    // do not do anything to the item
-                    // instant modifiers are already applied
-                    // non-instant modifiers are also applied by placing item into the unit's inventory
-                }
-                else
-                {
-                    // verify if item run out of usages
-                    if (inventoryItem.LeftUsagesCount == 0)
-                    {
-                        // inventory item only does not have passive modifiers
-                        // item should be destroyed, because it has nothing applied afterwards
-                        Debug.Log("Destroy item");
-                        Destroy(inventoryItem.gameObject);
-                        // Destroy drag handler
-                        Destroy(inventoryItemDragHandler.gameObject);
-                    }
-                    else
-                    {
-                        // item still has usages left
-                        // it will drop back to its original slot
-                    }
-                }
+                // self-destory item on expire
+                inventoryItem.SelfDestroyIfExpired();
             }
             else
             {
@@ -550,5 +524,6 @@ public class PartyUnitUI : MonoBehaviour {
             // item will return to its original position
             // this type of items should be placed into hero equipment
         }
+
     }
 }

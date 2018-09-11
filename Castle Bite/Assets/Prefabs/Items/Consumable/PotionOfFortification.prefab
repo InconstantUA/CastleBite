@@ -42,19 +42,23 @@ MonoBehaviour:
     itemName: Potion of Fortification
     itemValue: 1000
     compatibleEquipmentSlots: 0600000007000000
-    uniquePowerModifiers: []
     unitStatModifiers:
     - unitStat: 1
-      modifierScope: 0
-      duration: -1
+      modifierAppliedTo: 1
+      modifierScope: 1
       modifierPower: 15
-      modifierCalculated: 0
-      modifierApplied: 0
-      durationLeft: -1
       skillPowerMultiplier: 1
+      modifierCalculatedHow: 2
+      modifierAppliedHow: 0
+      duration: -1
+      durationLeft: -1
+      canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
+    uniquePowerModifiers: []
+    unitStatusModifiers: []
     heroEquipmentSlot: 9
     maxUsagesCount: 1
     leftUsagesCount: 1
+    itemIsStackable: 0
 --- !u!224 &224871333375375478
 RectTransform:
   m_ObjectHideFlags: 1

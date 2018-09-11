@@ -42,27 +42,25 @@ MonoBehaviour:
     itemName: Scroll of Resurection
     itemValue: 50
     compatibleEquipmentSlots: 0600000007000000
-    uniquePowerModifiers: []
     unitStatModifiers:
-    - unitStat: 12
-      modifierScope: 0
-      duration: 0
-      modifierPower: 0
-      modifierCalculated: 0
-      modifierApplied: 0
-      durationLeft: 0
-      skillPowerMultiplier: 1
     - unitStat: 1
-      modifierScope: 0
-      duration: 0
+      modifierScope: 1
       modifierPower: 50
-      modifierCalculated: 0
-      modifierApplied: 0
-      durationLeft: 0
       skillPowerMultiplier: 1
+      modifierCalculated: 2
+      modifierApplied: 0
+      duration: 0
+      durationLeft: 0
+      canBeAppliedToTheUnitsWithStatuses: 04000000
+    uniquePowerModifiers: []
+    unitStatusModifiers:
+    - modifierScope: 1
+      modifierSetStatus: 0
+      canBeAppliedToTheUnitsWithStatuses: 04000000
     heroEquipmentSlot: 9
     maxUsagesCount: 1
     leftUsagesCount: 1
+    itemIsStackable: 0
 --- !u!224 &224189941288101632
 RectTransform:
   m_ObjectHideFlags: 1

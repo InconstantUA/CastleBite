@@ -28,11 +28,11 @@ public class HeroPartyUI : MonoBehaviour {
         // Get unit canvas template
         GameObject unitCanvasTemplate = transform.root.Find("Templates/UI/UnitCanvas").gameObject;
         // Create new unit canvas in unit slot
-        GameObject newUnitCanvasGO = Instantiate(unitCanvasTemplate, unitSlotTransform);
+        PartyUnitUI newUnitCanvas = Instantiate(unitCanvasTemplate, unitSlotTransform).GetComponent<PartyUnitUI>();
         // link party Unit to canvas
-        newUnitCanvasGO.GetComponent<PartyUnitUI>().LPartyUnit = partyUnit;
+        newUnitCanvas.LPartyUnit = partyUnit;
         // enable new unit canvas
-        newUnitCanvasGO.SetActive(true);
+        newUnitCanvas.gameObject.SetActive(true);
     }
 
     void LinkPartyUnitsToUI()

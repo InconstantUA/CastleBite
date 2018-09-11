@@ -1193,7 +1193,8 @@ public class PartyPanel : MonoBehaviour {
 
     public void SetActiveItemDrag(bool activate)
     {
-        // verify if item is consumable
+        Debug.LogWarning("SetActiveItemDrag: " + activate.ToString());
+        // verify if item has active modifiers or usages
         if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
         {
             Transform unitCell;
@@ -1219,7 +1220,7 @@ public class PartyPanel : MonoBehaviour {
                         {
                             // activate highlight
                             // try to consume item in preview mode without actually doing anything
-                            if (unit.ConsumeItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
+                            if (unit.UseItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
                             {
                                 // highlight it with green
                                 hightlightColor = greenHighlight;

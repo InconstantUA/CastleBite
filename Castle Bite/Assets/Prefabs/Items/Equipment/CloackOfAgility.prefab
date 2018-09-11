@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1709887391172712}
+  m_IsPrefabParent: 1
+--- !u!1 &1709887391172712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 224223896716581390}
+  - component: {fileID: 114667903910382668}
+  m_Layer: 5
+  m_Name: CloackOfAgility
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &114667903910382668
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1709887391172712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ddf364261061824aa7c000d3ad874b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItemData:
+    itemName: Cloack of Agility
+    itemValue: 70
+    compatibleEquipmentSlots: 05000000
+    unitStatModifiers:
+    - unitStat: 4
+      modifierAppliedTo: 1
+      modifierScope: 0
+      modifierPower: 20
+      skillPowerMultiplier: 1
+      modifierCalculatedHow: 0
+      modifierAppliedHow: 1
+      duration: -1
+      durationLeft: 0
+      canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
+    uniquePowerModifiers: []
+    unitStatusModifiers: []
+    heroEquipmentSlot: 9
+    maxUsagesCount: 0
+    leftUsagesCount: 0
+    itemIsStackable: 0
+--- !u!224 &224223896716581390
+RectTransform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1709887391172712}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
