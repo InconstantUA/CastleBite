@@ -1246,8 +1246,12 @@ public class PartyPanel : MonoBehaviour {
         {
             // item is not consumable, do not highlight anything
         }
-        // and disable/enable hire buttons
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
+        // verify if we are in edit party screen and not in battle screen mode
+        if (transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>() != null)
+        {
+            // and disable/enable hire buttons
+            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
+        }
     }
 
     #region For Battle Screen

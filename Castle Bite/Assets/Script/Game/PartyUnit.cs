@@ -1435,196 +1435,183 @@ public class PartyUnit : MonoBehaviour {
     bool ApplyUSMToCurrentStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
     {
         Debug.LogWarning("Apply unit stat modifier");
-        // verify if USM required statuses match current unit status
-        if (MatchStatuses(unitStatModifier.canBeAppliedToTheUnitsWithStatuses))
+        switch (unitStatModifier.unitStat)
         {
-            switch (unitStatModifier.unitStat)
-            {
-                case UnitStat.Leadership:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.Health:
-                    // verify if unit health is not max already and if unit is not dead
-                    if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
+            case UnitStat.Leadership:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.Health:
+                // verify if unit health is not max already and if unit is not dead
+                if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
+                {
+                    // verify if it is not preview
+                    if (!doPreview)
+                    {
+                        // apply usm power to this unit
+                        UnitHealthCurr = ApplyInstantUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
+                    }
+                    // item is applicable to this unit
+                    return true;
+                }
+                // by default item is not applicable
+                return false;
+            case UnitStat.Defense:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.Power:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.Initiative:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.MovePoints:
+                // verify if unit is a party leader 
+                if (IsLeader)
+                {
+                    // verify if current move points are not max already
+                    if (MovePointsCurrent != GetEffectiveMaxMovePoints())
                     {
                         // verify if it is not preview
                         if (!doPreview)
                         {
                             // apply usm power to this unit
-                            UnitHealthCurr = ApplyInstantUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
+                            MovePointsCurrent = ApplyInstantUSMPower(unitStatModifier, MovePointsCurrent, GetEffectiveMaxMovePoints(), false);
                         }
                         // item is applicable to this unit
                         return true;
                     }
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.Defense:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.Power:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.Initiative:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.MovePoints:
-                    // verify if unit is a party leader 
-                    if (IsLeader)
-                    {
-                        // verify if current move points are not max already
-                        if (MovePointsCurrent != GetEffectiveMaxMovePoints())
-                        {
-                            // verify if it is not preview
-                            if (!doPreview)
-                            {
-                                // apply usm power to this unit
-                                MovePointsCurrent = ApplyInstantUSMPower(unitStatModifier, MovePointsCurrent, GetEffectiveMaxMovePoints(), false);
-                            }
-                            // item is applicable to this unit
-                            return true;
-                        }
-                    }
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.ScoutingRange:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.DeathResistance:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.FireResistance:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.WaterResistance:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                case UnitStat.MindResistance:
-                    // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                    // by default item is not applicable
-                    return false;
-                default:
-                    Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
-                    // by default item is not applicable
-                    return false;
-            }
+                }
+                // by default item is not applicable
+                return false;
+            case UnitStat.ScoutingRange:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.DeathResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.FireResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.WaterResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            case UnitStat.MindResistance:
+                // not applicable for instant unit stat modifier, because it is not consumable unit stat
+                // by default item is not applicable
+                return false;
+            default:
+                Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
+                // by default item is not applicable
+                return false;
         }
-        // by default return false;
-        return false;
     }
 
     bool ApplyUSMToMaxStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
     {
         Debug.LogWarning("Apply unit stat modifier");
-        // verify if USM required statuses match current unit status
-        if (MatchStatuses(unitStatModifier.canBeAppliedToTheUnitsWithStatuses))
+        // init resistance var
+        Resistance resistance;
+        // 
+        switch (unitStatModifier.unitStat)
         {
-            Debug.Log("Status matches");
-            // init resistance var
-            Resistance resistance;
-            // 
-            switch (unitStatModifier.unitStat)
-            {
-                case UnitStat.Leadership:
-                    // verify if unit is a party leader 
-                    if (IsLeader)
-                    {
-                        if (!doPreview)
-                            UnitLeadership += GetUSMStatBonus(unitStatModifier, UnitLeadership);
-                        // return usm can be applied as result;
-                        return true;
-                    }
-                    // this is not applicable to non-leaders
-                    return false;
-                case UnitStat.Health:
+            case UnitStat.Leadership:
+                // verify if unit is a party leader 
+                if (IsLeader)
+                {
                     if (!doPreview)
-                        UnitHealthMax += GetUSMStatBonus(unitStatModifier, UnitHealthMax);
+                        UnitLeadership += GetUSMStatBonus(unitStatModifier, UnitLeadership);
                     // return usm can be applied as result;
                     return true;
-                case UnitStat.Defense:
+                }
+                // this is not applicable to non-leaders
+                return false;
+            case UnitStat.Health:
+                if (!doPreview)
+                    UnitHealthMax += GetUSMStatBonus(unitStatModifier, UnitHealthMax);
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.Defense:
+                if (!doPreview)
+                    UnitDefense += GetUSMStatBonus(unitStatModifier, UnitDefense);
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.Power:
+                if (!doPreview)
+                    UnitPower += GetUSMStatBonus(unitStatModifier, UnitPower);
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.Initiative:
+                if (!doPreview)
+                    UnitInitiative += GetUSMStatBonus(unitStatModifier, UnitInitiative);
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.MovePoints:
+                // verify if unit is a party leader 
+                if (IsLeader)
+                {
                     if (!doPreview)
-                        UnitDefense += GetUSMStatBonus(unitStatModifier, UnitDefense);
+                        MovePointsMax += GetUSMStatBonus(unitStatModifier, MovePointsMax);
                     // return usm can be applied as result;
                     return true;
-                case UnitStat.Power:
+                }
+                // this is not applicable to non-leaders
+                return false;
+            case UnitStat.ScoutingRange:
+                // verify if unit is a party leader 
+                if (IsLeader)
+                {
                     if (!doPreview)
-                        UnitPower += GetUSMStatBonus(unitStatModifier, UnitPower);
+                        ScoutingRange += GetUSMStatBonus(unitStatModifier, ScoutingRange);
                     // return usm can be applied as result;
                     return true;
-                case UnitStat.Initiative:
-                    if (!doPreview)
-                        UnitInitiative += GetUSMStatBonus(unitStatModifier, UnitInitiative);
-                    // return usm can be applied as result;
-                    return true;
-                case UnitStat.MovePoints:
-                    // verify if unit is a party leader 
-                    if (IsLeader)
-                    {
-                        if (!doPreview)
-                            MovePointsMax += GetUSMStatBonus(unitStatModifier, MovePointsMax);
-                        // return usm can be applied as result;
-                        return true;
-                    }
-                    // this is not applicable to non-leaders
-                    return false;
-                case UnitStat.ScoutingRange:
-                    // verify if unit is a party leader 
-                    if (IsLeader)
-                    {
-                        if (!doPreview)
-                            ScoutingRange += GetUSMStatBonus(unitStatModifier, ScoutingRange);
-                        // return usm can be applied as result;
-                        return true;
-                    }
-                    // this is not applicable to non-leaders
-                    return false;
-                case UnitStat.DeathResistance:
-                    if (!doPreview)
-                    {
-                        resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Death);
-                        resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                    }
-                    // return usm can be applied as result;
-                    return true;
-                case UnitStat.FireResistance:
-                    if (!doPreview)
-                    {
-                        resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Fire);
-                        resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                    }
-                    // return usm can be applied as result;
-                    return true;
-                case UnitStat.WaterResistance:
-                    if (!doPreview)
-                    {
-                        resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Water);
-                        resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                    }
-                    // return usm can be applied as result;
-                    return true;
-                case UnitStat.MindResistance:
-                    if (!doPreview)
-                    {
-                        resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Mind);
-                        resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                    }
-                    // return usm can be applied as result;
-                    return true;
-                default:
-                    Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
-                    // by default item is not applicable
-                    return false;
-            }
+                }
+                // this is not applicable to non-leaders
+                return false;
+            case UnitStat.DeathResistance:
+                if (!doPreview)
+                {
+                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Death);
+                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+                }
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.FireResistance:
+                if (!doPreview)
+                {
+                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Fire);
+                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+                }
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.WaterResistance:
+                if (!doPreview)
+                {
+                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Water);
+                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+                }
+                // return usm can be applied as result;
+                return true;
+            case UnitStat.MindResistance:
+                if (!doPreview)
+                {
+                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Mind);
+                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+                }
+                // return usm can be applied as result;
+                return true;
+            default:
+                Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
+                // by default item is not applicable
+                return false;
         }
-        // by default return false;
-        return false;
     }
 
     InventoryItem GetUnitItemByName(string itemName)
@@ -1696,6 +1683,77 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
+    bool MatchScope(ModifierScope modifierScope)
+    {
+        // verify if we are in edit party screen
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        {
+            switch (modifierScope)
+            {
+                case ModifierScope.Self:
+                case ModifierScope.FriendlyUnit:
+                case ModifierScope.FriendlyParty:
+                    return true;
+                case ModifierScope.EnemyUnit:
+                case ModifierScope.EnemyParty:
+                    return false;
+                default:
+                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                    return false;
+            }
+        }
+        // verify if we are in battle screen
+        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        {
+            // get party leader who has this item equipped
+            PartyUnit itemWearerLeaderUnit = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.transform.parent.GetComponent<PartyUnit>();
+            switch (modifierScope)
+            {
+                case ModifierScope.Self:
+                    // verify if itemWearerLeaderUnit matches current unit
+                    if (itemWearerLeaderUnit.gameObject.GetInstanceID() == gameObject.GetInstanceID())
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                case ModifierScope.FriendlyUnit:
+                case ModifierScope.FriendlyParty:
+                    // verify if faction matches
+                    if (itemWearerLeaderUnit.GetComponentInParent<HeroParty>().Faction == GetComponentInParent<HeroParty>().Faction)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                case ModifierScope.EnemyUnit:
+                case ModifierScope.EnemyParty:
+                    // verify if faction does not match
+                    if (itemWearerLeaderUnit.GetComponentInParent<HeroParty>().Faction != GetComponentInParent<HeroParty>().Faction)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                default:
+                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                    return false;
+            }
+        }
+        else
+        {
+            Debug.LogError("Unknown screen active");
+            // by default return false
+            return false;
+        }
+    }
+
     // doPreview - use item without actually using it, just verify if item can be used by this unit
     public bool UseItem(InventoryItem inventoryItem, bool doPreview = false)
     {
@@ -1713,9 +1771,12 @@ public class PartyUnit : MonoBehaviour {
         // init is applicable by default with false, if at least one modifier is applicable it should reset this flag to true
         bool isApplicable = false;
         // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items are not stackable
-        // and that item is not stackable
         // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, that is why we do not do this additional check against partly-leader-equipped items
-        if ((GetUnitItemByName(inventoryItem.ItemName) != null) && (!inventoryItem.ItemIsStackable))
+        if ((GetUnitItemByName(inventoryItem.ItemName) != null)
+            // and that item is not stackable
+            && (!inventoryItem.ItemIsStackable)
+            // and that item is not in equipment slot
+            && (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.None))
         {
             // unit already has this item
             // verify if item is stackable
@@ -1730,7 +1791,11 @@ public class PartyUnit : MonoBehaviour {
             for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
             {
                 // verify if this is active modifier
-                if (inventoryItem.UniquePowerModifiers[i].modifierApplied == ModifierAppliedHow.Active)
+                if ((inventoryItem.UniquePowerModifiers[i].modifierApplied == ModifierAppliedHow.Active)
+                // verify if UPM required statuses match current unit status
+                && (MatchStatuses(inventoryItem.UniquePowerModifiers[i].canBeAppliedToTheUnitsWithStatuses))
+                // verify if UPM scope matches
+                && (MatchScope(inventoryItem.UniquePowerModifiers[i].modifierScope)))
                 {
                     // upm has instant one-time effect
 
@@ -1758,7 +1823,11 @@ public class PartyUnit : MonoBehaviour {
             for (int i = 0; i < inventoryItem.UnitStatModifiers.Count; i++)
             {
                 // verify if this is active USM
-                if (inventoryItem.UnitStatModifiers[i].modifierAppliedHow == ModifierAppliedHow.Active)
+                if ((inventoryItem.UnitStatModifiers[i].modifierAppliedHow == ModifierAppliedHow.Active)
+                // verify if USM required statuses match current unit status
+                && (MatchStatuses(inventoryItem.UnitStatModifiers[i].canBeAppliedToTheUnitsWithStatuses))
+                // verify if USM scope matches
+                && (MatchScope(inventoryItem.UnitStatModifiers[i].modifierScope)))
                 {
                     // verify if usm applies to current stats
                     if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.CurrentStat)
@@ -1796,7 +1865,8 @@ public class PartyUnit : MonoBehaviour {
                 }
                 else
                 {
-                    // usm applied passively or it applies to the max stat value
+                    // usm applied passively from being placed in equipment slot
+                    // or it does not apply
                     // it is applied automatically during calculations (for example damage or defence calculations)
                 }
             }
@@ -1804,7 +1874,9 @@ public class PartyUnit : MonoBehaviour {
             if (inventoryItem.UnitStatusModifiers.Count >= 1)
             {
                 // verify if unit status matches
-                if (MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
+                if ((MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
+                // verify if scope matches
+                && (MatchScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
                 {
                     // set is applicable flag
                     isApplicable = true;

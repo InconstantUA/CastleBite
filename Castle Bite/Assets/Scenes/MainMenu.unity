@@ -403,6 +403,152 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 9184279}
+--- !u!1 &12555474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 12555475}
+  - component: {fileID: 12555476}
+  m_Layer: 5
+  m_Name: Warrior(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &12555475
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 12555474}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 754742950}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -400, y: 300}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &12555476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 12555474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partyUnitData:
+    unitName: Warrior
+    unitType: 7
+    isLeader: 0
+    unitLeadership: 0
+    givenName: 
+    unitLevel: 15
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 100
+    unitHealthMax: 100
+    unitHealthMaxIncrementOnLevelUp: 20
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 11
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 0
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers:
+    - modifierScope: 0
+      upmAppliedBuff: 0
+      upmAppliedDebuff: 2
+      upmPower: 10
+      upmPowerIncrementOnLevelUp: 3
+      upmDuration: 2
+      upmChance: 80
+      upmChanceIncrementOnLevelUp: 3
+      upmSource: 2
+      upmOrigin: 0
+      modifierApplied: 0
+      upmDurationLeft: 0
+      skillPowerMultiplier: 1
+      canBeAppliedToTheUnitsWithStatuses: 
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 0
+    isInterpartyMovable: 1
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 0000000000000000000000000000000000000000
+    unitBuffs: 0000000000000000
+    unitUpgradePoints: 15
+    unitStatPoints: 0
+    classIsUpgradable: 1
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 1100000012000000
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: Middle/Front
+    unitEquipment: []
 --- !u!1 &18572215
 GameObject:
   m_ObjectHideFlags: 0
@@ -11212,6 +11358,7 @@ RectTransform:
   - {fileID: 286496373}
   - {fileID: 380237765}
   - {fileID: 1948874318}
+  - {fileID: 754742950}
   m_Father: {fileID: 1713389793}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15384,6 +15531,94 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 425589036}
+--- !u!1 &431950114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 431950115}
+  - component: {fileID: 431950118}
+  - component: {fileID: 431950117}
+  - component: {fileID: 431950116}
+  m_Layer: 0
+  m_Name: HeroLabel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &431950115
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431950114}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1709355448}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -57.5, y: -8}
+  m_SizeDelta: {x: 85, y: 18}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &431950116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431950114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b70c4450353c3348a99fd0bda75141b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMouseOver: 0
+  interactable: 1
+--- !u!114 &431950117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431950114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 5
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "[Ares]\r\n <size=12>Knight</size> "
+--- !u!222 &431950118
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 431950114}
 --- !u!1 &432581327
 GameObject:
   m_ObjectHideFlags: 0
@@ -26217,6 +26452,69 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 747541709}
+--- !u!1 &754742949
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 754742950}
+  - component: {fileID: 754742951}
+  m_Layer: 5
+  m_Name: Ares Knight Party (1)
+  m_TagString: HeroParty
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &754742950
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 754742949}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1114459952}
+  - {fileID: 910886538}
+  - {fileID: 12555475}
+  m_Father: {fileID: 333226531}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 800, y: 600}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &754742951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 754742949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00afdf0637b08c4b896cd3efa9bcf28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partyData:
+    partyID: -1
+    linkedCityID: -1
+    faction: 0
+    partyMode: 0
+    partyMapPosition:
+      offsetMinX: 0
+      offsetMinY: 0
+      offsetMaxX: 0
+      offsetMaxY: 0
+    partyUIAddress: 
+    holdPosition: 0
+    partyUnitsData: []
+    partyInventory: []
+  lMapHero: {fileID: 1709355444}
 --- !u!1 &754762425
 GameObject:
   m_ObjectHideFlags: 0
@@ -29583,6 +29881,210 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 906457026}
+--- !u!1 &910886537
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1268232191193302, guid: 04df896598dfe8d4692c72372bebac56,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 910886538}
+  - component: {fileID: 910886539}
+  m_Layer: 5
+  m_Name: Colossus
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &910886538
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 224274748400919076, guid: 04df896598dfe8d4692c72372bebac56,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 910886537}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 754742950}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -539, y: 509}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &910886539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114003074188101490, guid: 04df896598dfe8d4692c72372bebac56,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 910886537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partyUnitData:
+    unitName: Colossus
+    unitType: 10
+    isLeader: 0
+    unitLeadership: 0
+    givenName: 
+    unitLevel: 1
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 300
+    unitHealthMax: 300
+    unitHealthMaxIncrementOnLevelUp: 60
+    unitHealthRegenPercent: 20
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 15
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 0
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers: []
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 100
+    unitSize: 1
+    isInterpartyMovable: 1
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 0000000000000000000000000000000000000000
+    unitBuffs: 0000000000000000
+    unitUpgradePoints: 0
+    unitStatPoints: 0
+    classIsUpgradable: 1
+    unitClassPoints: 0
+    canLearnSkills: 0
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 0
+    movePointsMax: 0
+    scoutingRange: 0
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: Bottom/Wide
+    unitEquipment: []
+--- !u!1 &914351372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1061840283958774, guid: e83a7865ad91f314794a4ebad841872e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 914351373}
+  - component: {fileID: 914351374}
+  m_Layer: 5
+  m_Name: BigHealingPotion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &914351373
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 224199871179383432, guid: e83a7865ad91f314794a4ebad841872e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 914351372}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1114459952}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -800, y: 600}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &914351374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114978470782689842, guid: e83a7865ad91f314794a4ebad841872e,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 914351372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ddf364261061824aa7c000d3ad874b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItemData:
+    itemName: Big Healing Potion
+    itemValue: 50
+    compatibleEquipmentSlots: 0600000007000000
+    unitStatModifiers:
+    - unitStat: 1
+      modifierAppliedTo: 0
+      modifierScope: 1
+      modifierPower: 300
+      skillPowerMultiplier: 1
+      modifierCalculatedHow: 0
+      modifierAppliedHow: 0
+      duration: 0
+      durationLeft: 0
+      canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
+    uniquePowerModifiers: []
+    unitStatusModifiers: []
+    heroEquipmentSlot: 7
+    maxUsagesCount: 1
+    leftUsagesCount: 1
+    itemIsStackable: 0
 --- !u!1 &919928147
 GameObject:
   m_ObjectHideFlags: 0
@@ -32973,6 +33475,78 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: '[ Menu ]'
+--- !u!1 &1049117992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1569186333841546, guid: a306f90e08f2f6b4fae11816bf7a5200,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1049117993}
+  - component: {fileID: 1049117994}
+  m_Layer: 5
+  m_Name: ScrollOfResurection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1049117993
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 224189941288101632, guid: a306f90e08f2f6b4fae11816bf7a5200,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1049117992}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1114459952}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -800, y: 600}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1049117994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114013279001741202, guid: a306f90e08f2f6b4fae11816bf7a5200,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1049117992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ddf364261061824aa7c000d3ad874b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryItemData:
+    itemName: Scroll of Resurection
+    itemValue: 50
+    compatibleEquipmentSlots: 0600000007000000
+    unitStatModifiers:
+    - unitStat: 1
+      modifierAppliedTo: 0
+      modifierScope: 1
+      modifierPower: 50
+      skillPowerMultiplier: 1
+      modifierCalculatedHow: 0
+      modifierAppliedHow: 0
+      duration: 0
+      durationLeft: 0
+      canBeAppliedToTheUnitsWithStatuses: 04000000
+    uniquePowerModifiers: []
+    unitStatusModifiers:
+    - modifierScope: 1
+      modifierSetStatus: 0
+      canBeAppliedToTheUnitsWithStatuses: 04000000
+    heroEquipmentSlot: 6
+    maxUsagesCount: 1
+    leftUsagesCount: 1
+    itemIsStackable: 0
 --- !u!1 &1052235380
 GameObject:
   m_ObjectHideFlags: 0
@@ -34771,6 +35345,154 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1113994154}
+--- !u!1 &1114459951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1114459952}
+  - component: {fileID: 1114459953}
+  m_Layer: 5
+  m_Name: Knight(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1114459952
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1114459951}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1049117993}
+  - {fileID: 914351373}
+  m_Father: {fileID: 754742950}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1114459953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1114459951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d42c835233793884d9337586cb4bb0dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partyUnitData:
+    unitName: Knight
+    unitType: 2
+    isLeader: 1
+    unitLeadership: 3
+    givenName: Ares
+    unitLevel: 20
+    unitExperience: 0
+    unitExperienceRequiredToReachNewLevel: 200
+    unitExperienceReward: 100
+    unitExperienceRewardIncrementOnLevelUp: 100
+    unitHealthCurr: 200
+    unitHealthMax: 200
+    unitHealthMaxIncrementOnLevelUp: 50
+    unitHealthRegenPercent: 10
+    unitDefense: 0
+    unitResistances: []
+    unitAbility: 11
+    unitPower: 50
+    unitPowerIncrementOnLevelUp: 10
+    unitPowerSource: 0
+    unitPowerDistance: 0
+    unitPowerScope: 0
+    unitInitiative: 50
+    uniquePowerModifiers:
+    - modifierScope: 0
+      upmAppliedBuff: 0
+      upmAppliedDebuff: 3
+      upmPower: 20
+      upmPowerIncrementOnLevelUp: 5
+      upmDuration: 2
+      upmChance: 80
+      upmChanceIncrementOnLevelUp: 3
+      upmSource: 1
+      upmOrigin: 0
+      modifierApplied: 0
+      upmDurationLeft: 0
+      skillPowerMultiplier: 1
+      canBeAppliedToTheUnitsWithStatuses: 
+    unitRole: Role
+    unitBriefDescription: Brief description
+    unitFullDescription: Full description
+    unitCost: 600
+    unitSize: 0
+    isInterpartyMovable: 0
+    isDismissable: 1
+    unitStatus: 0
+    unitDebuffs: 0000000000000000000000000000000000000000
+    unitBuffs: 0000000000000000
+    unitUpgradePoints: 20
+    unitStatPoints: 0
+    classIsUpgradable: 0
+    unitClassPoints: 0
+    canLearnSkills: 1
+    unitSkillPoints: 0
+    requiresUnitType: 0
+    unlocksUnitTypes: 
+    upgradeCost: 200
+    statsUpgradesCount: 0
+    movePointsCurrent: 4
+    movePointsMax: 5
+    scoutingRange: 4
+    unitSkills:
+    - mName: 0
+      mLevel:
+        mCurrent: 0
+    - mName: 1
+      mLevel:
+        mCurrent: 0
+    - mName: 2
+      mLevel:
+        mCurrent: 0
+    - mName: 3
+      mLevel:
+        mCurrent: 0
+    - mName: 4
+      mLevel:
+        mCurrent: 0
+    - mName: 5
+      mLevel:
+        mCurrent: 0
+    - mName: 8
+      mLevel:
+        mCurrent: 0
+    - mName: 7
+      mLevel:
+        mCurrent: 0
+    - mName: 6
+      mLevel:
+        mCurrent: 0
+    - mName: 9
+      mLevel:
+        mCurrent: 0
+    - mName: 10
+      mLevel:
+        mCurrent: 0
+    - mName: 11
+      mLevel:
+        mCurrent: 0
+    unitCellAddress: Top/Front
+    unitEquipment: []
 --- !u!1001 &1117568083
 Prefab:
   m_ObjectHideFlags: 0
@@ -49748,6 +50470,7 @@ RectTransform:
   - {fileID: 919928148}
   - {fileID: 266719550}
   - {fileID: 851003995}
+  - {fileID: 1709355448}
   m_Father: {fileID: 235041195}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -54251,6 +54974,117 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1709057799}
+--- !u!1 &1709355443
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1709355448}
+  - component: {fileID: 1709355447}
+  - component: {fileID: 1709355446}
+  - component: {fileID: 1709355445}
+  - component: {fileID: 1709355444}
+  m_Layer: 0
+  m_Name: Ares Knight Party
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1709355444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1709355443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb72dc55517a4442ae59b00d42f2130, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lHeroParty: {fileID: 754742951}
+  lMapCity: {fileID: 0}
+  labelDimTimeout: 0.5
+  animationDuration: 0.6
+--- !u!114 &1709355445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1709355443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 10
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: "\u25A0"
+--- !u!114 &1709355446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1709355443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2539f3f17e372e24390433e841e0e3a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelDimTimeout: 0.5
+  hiddenLabelColor: {r: 1, g: 1, b: 1, a: 0}
+  alwaysOnLabelColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
+  notHighlightedLabelColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  highlightedLabelColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  pressedLabelColor: {r: 1, g: 1, b: 1, a: 1}
+  isMouseOver: 0
+  labelAlwaysOn: 0
+--- !u!222 &1709355447
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1709355443}
+--- !u!224 &1709355448
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1709355443}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 431950115}
+  m_Father: {fileID: 1575848954}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -40, y: -104}
+  m_SizeDelta: {x: 16, y: 16}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1709637948
 GameObject:
   m_ObjectHideFlags: 0

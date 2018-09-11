@@ -11,10 +11,17 @@ public class PartyInventoryUI : MonoBehaviour {
     [SerializeField]
     Transform inventoryItemsGrid;
 
-    public InventorySlotDropHandler AddSlot()
+    public InventorySlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
     {
         Debug.Log("Add slot");
-        return Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<InventorySlotDropHandler>();
+        InventorySlotDropHandler newSlot = Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<InventorySlotDropHandler>();
+        // verify if we need to set current item equipment slot type to newly create slot
+        if (setCurrentItemEquipmentSlot && inventoryItem != null)
+        {
+            // set the same slot type as item had in the past, this is needed for battle screen
+            newSlot.EquipmentSlot = inventoryItem.HeroEquipmentSlot;
+        }
+        return newSlot;
     }
 
     public InventoryItemDragHandler AddItemDragHandler(InventorySlotDropHandler slot)
@@ -41,12 +48,39 @@ public class PartyInventoryUI : MonoBehaviour {
         // there should be at least 3 item slots present in UI
         // .. Change this to list and get only first-level items, non-recursive
         int numberOfItems = 0;
-        foreach(Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
         {
-            // verify if this is InventoryItem
-            if (childTransform.GetComponent<InventoryItem>() != null)
-                // increment items count
-                numberOfItems += 1;
+            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
+            {
+                // verify if this is InventoryItem
+                if (childTransform.GetComponent<InventoryItem>() != null)
+                    // increment items count
+                    numberOfItems += 1;
+            }
+        }
+        // verify if we are in battle screen mode
+        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        {
+            // get all usable items from party leader equipment
+            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
+            {
+                // get item
+                InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+                // verify if there is an item
+                if (inventoryItem != null)
+                {
+                    // verify if item is in hero eqipment slot
+                    if (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.None)
+                    {
+                        // increment items count
+                        numberOfItems += 1;
+                    }
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Unknown active screen");
         }
         // get number of empty item slots
         int emptySlots = 3 - numberOfItems;
@@ -58,30 +92,62 @@ public class PartyInventoryUI : MonoBehaviour {
         }
     }
 
+    void SetItemRepresentationInInventoryUI(InventoryItem inventoryItem, bool setCurrentItemEquipmentSlot = false)
+    {
+        // verify if this is InventoryItem
+        if (inventoryItem != null)
+        {
+            // create drag handler and slotTransform
+            InventoryItemDragHandler dragHandler = AddItemDragHandler(AddSlot(inventoryItem, setCurrentItemEquipmentSlot));
+            // link item to drag handler
+            dragHandler.LInventoryItem = inventoryItem;
+            // set item name in UI
+            dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
+            // verify if item has active modifiers
+            if (inventoryItem.HasActiveModifiers())
+            {
+                dragHandler.GetComponentInChildren<Text>().text += inventoryItem.GetUsagesInfo();
+            }
+        }
+    }
+
     void OnEnable()
     {
-        // all items in a party
-        // structure: LeftHeroParty-PartyInventory
-        // InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
-        // create inventory slot and drag handler for each item
-        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
+        // verify if EditPartyScreen is active
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
         {
-            InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
-            // verify if this is InventoryItem
-            if (inventoryItem != null)
+            // activate party inventory information
+            // all items in a party
+            // structure: LeftHeroParty-PartyInventory
+            // InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
+            // create inventory slot and drag handler for each item
+            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
             {
-                // create drag handler and slotTransform
-                InventoryItemDragHandler dragHandler = AddItemDragHandler(AddSlot());
-                // link item to drag handler
-                dragHandler.LInventoryItem = inventoryItem;
-                // set item name in UI
-                dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
-                // verify if item has active modifiers
-                if (inventoryItem.HasActiveModifiers())
+                SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>());
+            }
+        }
+        // verify if Battle screen is active
+        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        {
+            // get all usable items from party leader equipment
+            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
+            {
+                // get item
+                InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+                // verify if there is an item
+                if (inventoryItem != null)
                 {
-                    dragHandler.GetComponentInChildren<Text>().text += inventoryItem.GetUsagesInfo();
+                    // verify if item is in hero eqipment slot
+                    if (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.None)
+                    {
+                        SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
+                    }
                 }
             }
+        }
+        else
+        {
+            Debug.LogWarning("unknown screen is active");
         }
         // fill in empty slots
         FillInEmptySlots();

@@ -21,7 +21,10 @@ public class InventoryPanelDropHandler : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (InventoryItemDragHandler.itemBeingDragged != null)
+        // verify if item being dragged is not null
+        if ((InventoryItemDragHandler.itemBeingDragged != null)
+        // verify if we are in edit screen mode
+        && (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null))
         {
             Debug.Log("Find or create the right slot and put an item into it");
             // Get empty slot

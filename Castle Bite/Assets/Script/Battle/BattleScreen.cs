@@ -137,8 +137,8 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/LeftHeroParty").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/RightHeroParty").gameObject.SetActive(doActivate);
         // Deactivate/Activate Hero parties Inventory
-        transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(doActivate);
-        transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(!doActivate);
+        transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(!doActivate);
         // Activate/Deactivate Focus panels
         transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(doActivate);
         transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
@@ -247,7 +247,7 @@ public class BattleScreen : MonoBehaviour {
         HeroParty enemyHeroParty = GetPartyInCityWhichCanFight(enemyCityOnMap);
         // verify if there are units in party protecting this city, which can fight
         // it is possible that city is not protected
-        if (enemyHeroParty!= null)
+        if (enemyHeroParty != null)
         {
             // city is protected
             // get hero's parties
@@ -648,7 +648,7 @@ public class BattleScreen : MonoBehaviour {
             }
         }
     }
-    
+
     //IEnumerator EmptyQueueIndicator()
     //{
     //    Debug.Log("Queue is empty");
@@ -704,8 +704,8 @@ public class BattleScreen : MonoBehaviour {
         // Set Queue is active flag
         //queueIsActive = true;
         // Next actions are applicably only to active or escaping unit
-        if (  (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Active)
-           || (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Escaping) )
+        if ((ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Active)
+           || (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Escaping))
         {
             ActiveUnitUI.HighlightActiveUnitInBattle(true);
             // Trigger buffs and debuffs before applying highlights
@@ -730,6 +730,12 @@ public class BattleScreen : MonoBehaviour {
         yield return new WaitForSeconds(0.25f);
     }
 
+    public void SetHighlight()
+    {
+        queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+        queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+    }
+
     IEnumerator ActivateUnit()
     {
         //Debug.Log("ActivateUnit");
@@ -746,8 +752,7 @@ public class BattleScreen : MonoBehaviour {
         {
             case UnitStatus.Active:
                 // Activate highlights of which cells can or cannot be targeted
-                queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
-                queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+                SetHighlight();
                 // verify if active unit's party panel is AI controlled => faction not equal to player's faction
                 if (ActiveUnitUI.GetUnitPartyPanel().IsAIControlled)
                 {
@@ -798,6 +803,15 @@ public class BattleScreen : MonoBehaviour {
         {
             // deactivate flee button
             SetBattleControlButtonActive("Retreat", false);
+        }
+        // rest all party inventory panels to disabled state
+        transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(false);
+        transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(false);
+        // verify if active unit is party leader
+        if (ActiveUnitUI.LPartyUnit.IsLeader)
+        {
+            // activate party leader battle inventory
+            ActiveUnitUI.GetComponentInParent<HeroPartyUI>().transform.Find("PartyInventory").gameObject.SetActive(true);
         }
     }
 
