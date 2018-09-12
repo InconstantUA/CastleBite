@@ -107,6 +107,18 @@ public class SaveGame : MonoBehaviour {
             }
             // set party map address
             heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
+            // init party inventory data
+            heroParty.PartyData.partyInventory = new List<InventoryItemData>();
+            // loop through all items in the party one level below (items on deeper levels belong to units)
+            foreach (Transform childTransform in heroParty.transform)
+            {
+                // verify if it is item
+                if (childTransform.GetComponent<InventoryItem>() != null)
+                {
+                    // add item data to the list
+                    heroParty.PartyData.partyInventory.Add(childTransform.GetComponent<InventoryItem>().InventoryItemData);
+                }
+            }
             // get all units in party
             PartyUnit[] partyUnits = heroParty.GetComponentsInChildren<PartyUnit>(true);
             // init party units data
@@ -114,6 +126,14 @@ public class SaveGame : MonoBehaviour {
             // foreach party unit
             for (int i = 0; i < partyUnits.Length; i++)
             {
+                // init unit's inventory
+                partyUnits[i].PartyUnitData.unitIventory = new List<InventoryItemData>();
+                // loop though all items owned by unit
+                foreach (InventoryItem inventoryItem in partyUnits[i].GetComponentsInChildren<InventoryItem>())
+                {
+                    // add item's data to the list
+                    partyUnits[i].PartyUnitData.unitIventory.Add(inventoryItem.InventoryItemData);
+                }
                 // set party units data
                 heroParty.PartyData.partyUnitsData[i] = partyUnits[i].PartyUnitData;
             }
@@ -123,41 +143,31 @@ public class SaveGame : MonoBehaviour {
     GameData GetGameData()
     {
         Debug.Log("Get game data");
+        // Get Turns manager
+        TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
         // Get game players
         GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
+        // Get game map
+        GameMap gameMap = transform.root.GetComponentInChildren<GameMap>();
         // Get cities
-        City[] cities = transform.root.Find("Map/Cities").GetComponentsInChildren<City>();
+        City[] cities = gameMap.transform.Find("Cities").GetComponentsInChildren<City>();
         // Get hero parties
-        HeroParty[] heroParties = transform.root.GetComponentsInChildren<HeroParty>();
-        //// Init hero parties list
-        //List<HeroParty> heroParties = new List<HeroParty>();
-        //// Get all parties except Templates
-        //foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
-        //{
-        //    // get party UI address
-        //    string partyUIAddress = heroParty.GetPartyUIAddress();
-        //    // verify if this is tempalte
-        //    if (partyUIAddress.Contains("Templates"))
-        //    {
-        //        // skip it
-        //        Debug.Log("Skipping " + heroParty.name + " because party UI address [" + partyUIAddress + "] match Templates");
-        //    }
-        //    else
-        //    {
-        //        add party to the list
-        //        heroParties.Add(heroParty);
-        //    }
-        //}
+        HeroParty[] heroParties = gameMap.GetComponentsInChildren<HeroParty>();
         // init game data
         GameData gameData = new GameData
         {
             turnsData = new TurnsData(),
             playersData = new PlayerData[players.Length],
+            mapData = new MapData(),
             citiesData = new CityData[cities.Length],
             partiesData = new PartyData[heroParties.Length]
         };
-        // Get and write turns data
-        gameData.turnsData = transform.root.Find("Managers").GetComponent<TurnsManager>().TurnsData;
+        // Set turns manager data
+        gameData.turnsData = turnsManager.TurnsData;
+        // Prepare map data
+        gameMap.SetItemsOnMapData();
+        // Get and write Map data
+        gameData.mapData = gameMap.MapData;
         // Get and write to gameData players data
         for (int i = 0; i < players.Length; i++)
         {

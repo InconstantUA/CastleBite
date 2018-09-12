@@ -488,7 +488,7 @@ public class PartyUnitData : System.Object
     // UI attributes
     public string unitCellAddress;  // used during game save and load and when party UI is displayed
     // Unit Equipment
-    public InventoryItemData[] unitEquipment; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
+    public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
 }
 
 public class PartyUnit : MonoBehaviour {

@@ -6,7 +6,7 @@ public class MapItem : MonoBehaviour {
     [SerializeField]
     InventoryItem[] lInventoryItems;
 
-    public InventoryItem[] LInventoryItem
+    public InventoryItem[] LInventoryItems
     {
         get
         {

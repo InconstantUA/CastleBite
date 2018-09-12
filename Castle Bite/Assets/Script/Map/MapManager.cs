@@ -1774,7 +1774,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // init string for the message box
         string message = "<b>You have found</b>:\r\n";
         // Loop through each item in the chest
-        foreach (InventoryItem inventoryItem in mapItem.LInventoryItem)
+        foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
         {
             // change parent to hero party
             inventoryItem.transform.SetParent(selectedMapHero.LHeroParty.transform);

@@ -12,6 +12,8 @@ class GameData : System.Object
     public TurnsData turnsData;
     // Players
     public PlayerData[] playersData;
+    // Game data
+    public MapData mapData;
     // Cities
     public CityData[] citiesData;
     // Parties with units
