@@ -64,7 +64,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
             // item being dragged to the party leader (hero)
             // get hero (party leader)
             // structure: 2UnitCanvas[PartyUnitUI->LPartyUnit]-1UnitEquipmentControl-EquipmentButton
-            return GetComponentInParent<HeroEquipment>().CallingUnitEquipmentButton.transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit.transform;
+            return GetComponentInParent<HeroEquipment>().LUnitEquipmentButton.transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit.transform;
         }
         else if (slotMode == Mode.PartyInventory)
         {
@@ -183,7 +183,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
                         // change item position parameter
                         InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot = equipmentSlot;
                         // update unit info UI
-                        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().PartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
+                        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
                     }
                     else
                     {

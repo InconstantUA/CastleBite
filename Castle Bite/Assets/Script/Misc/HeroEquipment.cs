@@ -5,48 +5,107 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class HeroEquipment : MonoBehaviour {
-    UnitEquipmentButton callingUnitEquipmentButton;
-    PartyUnit partyUnit;
+    [SerializeField]
+    GameObject inventoryItemDragHandlerTemplate;
+    UnitEquipmentButton lUnitEquipmentButton;
+    PartyUnit lPartyUnit;
 
-    public UnitEquipmentButton CallingUnitEquipmentButton
+    public UnitEquipmentButton LUnitEquipmentButton
     {
         get
         {
-            return callingUnitEquipmentButton;
+            return lUnitEquipmentButton;
         }
     }
 
-    public PartyUnit PartyUnit
+    public PartyUnit LPartyUnit
     {
         get
         {
-            return partyUnit;
+            return lPartyUnit;
+        }
+    }
+
+    InventorySlotDropHandler GetEquipmentSlotByType(HeroEquipmentSlot heroEquipmentSlot)
+    {
+        // loop through all equipment slots
+        foreach(InventorySlotDropHandler inventorySlotDropHandler in GetComponentsInChildren<InventorySlotDropHandler>(true))
+        {
+            // verify if inventorySlotDropHandler match required slot
+            if (inventorySlotDropHandler.EquipmentSlot == heroEquipmentSlot)
+            {
+                return inventorySlotDropHandler;
+            }
+        }
+        // this should not happen, because all slot types, except None should be present in hero Equipment
+        Debug.LogError("Cound find slot of " + heroEquipmentSlot.ToString() + " type");
+        return null;
+    }
+
+    // on change - check similar function in PartyInventoryUI class
+    void SetItemRepresentationInEquipmentUI(InventoryItem inventoryItem)
+    {
+        // verify if this is InventoryItem
+        if (inventoryItem != null)
+        {
+            // create drag handler and slotTransform
+            InventoryItemDragHandler dragHandler = Instantiate(inventoryItemDragHandlerTemplate, GetEquipmentSlotByType(inventoryItem.HeroEquipmentSlot).transform).GetComponent<InventoryItemDragHandler>();
+            // link item to drag handler
+            dragHandler.LInventoryItem = inventoryItem;
+            // set item name in UI
+            dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
+            // verify if item has active modifiers
+            if (inventoryItem.HasActiveModifiers())
+            {
+                dragHandler.GetComponentInChildren<Text>().text += inventoryItem.GetUsagesInfo();
+            }
+        }
+    }
+
+    void SetEquipmentSlots(PartyUnit partyUnit)
+    {
+        // loop through all items owned by unit
+        foreach(InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
+        {
+            // verify if item has equipment slot assigned to it
+            if (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.None)
+            {
+                // set item representation in equipment UI
+                SetItemRepresentationInEquipmentUI(inventoryItem);
+            }
         }
     }
 
     public void ActivateAdvance(UnitEquipmentButton unitEquipmentButton)
     {
-        callingUnitEquipmentButton = unitEquipmentButton;
-        partyUnit = callingUnitEquipmentButton.GetComponentInParent<PartyUnitUI>().LPartyUnit;
+        lUnitEquipmentButton = unitEquipmentButton;
+        lPartyUnit = lUnitEquipmentButton.GetComponentInParent<PartyUnitUI>().LPartyUnit;
         // Activate intermediate background
         transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
         // activate this menu
         gameObject.SetActive(true);
         // deactivate other uneeded menus
-        callingUnitEquipmentButton.SetRequiredMenusActive(false);
-        // bring left and right hero parties with inventories to te front
+        lUnitEquipmentButton.SetRequiredMenusActive(false);
+        // bring left and right hero parties inventories with disabled party panels to te front
         transform.root.Find("MiscUI/LeftHeroParty").SetAsLastSibling();
         transform.root.Find("MiscUI/RightHeroParty").SetAsLastSibling();
+        // set equipment slots with items
+        SetEquipmentSlots(lPartyUnit);
     }
 
     public void DeactivateAdvance()
     {
         // Deactivate intermediate background
         transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
+        // remove all InventoryItemDragHandlers
+        foreach(InventoryItemDragHandler itemDragHandler in GetComponentsInChildren<InventoryItemDragHandler>())
+        {
+            Destroy(itemDragHandler.gameObject);
+        }
         // deactivate this menu
         gameObject.SetActive(false);
         // activate other menus back
-        callingUnitEquipmentButton.SetRequiredMenusActive(true);
+        lUnitEquipmentButton.SetRequiredMenusActive(true);
     }
 
     public void SetActiveItemDrag(bool activate)
@@ -79,7 +138,7 @@ public class HeroEquipment : MonoBehaviour {
                         if (slotType == HeroEquipmentSlot.Shard)
                         {
                             // for shard slot we need to verify if party leader has skill at least 1st level
-                            if (Array.Find(partyUnit.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent >= 1)
+                            if (Array.Find(lPartyUnit.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent >= 1)
                             {
                                 // set compatible flag
                                 isCompatible = true;

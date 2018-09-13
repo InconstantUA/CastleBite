@@ -36,7 +36,7 @@ public class GameMap : MonoBehaviour {
         foreach (Transform childTransform in transform.root.Find("MapScreen/Map"))
         {
             // get map item (chest)
-            MapItem mapItem = childTransform.GetComponent<MapItem>();
+            MapItemsContainer mapItem = childTransform.GetComponent<MapItemsContainer>();
             // verify if it is not null
             if (mapItem != null)
             {

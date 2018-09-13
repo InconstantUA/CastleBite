@@ -11,16 +11,16 @@ public class LoadGame : MonoBehaviour
 {
     [SerializeField]
     string fileExtension;
-    [SerializeField]
-    GameObject gamePlayerTemplate;
-    [SerializeField]
-    GameObject heroPartyTemplate;
-    [SerializeField]
-    GameObject cityGarnizonTemplate;
+    //[SerializeField]
+    //GameObject gamePlayerTemplate;
+    //[SerializeField]
+    //GameObject heroPartyTemplate;
+    //[SerializeField]
+    //GameObject cityGarnizonTemplate;
     //[SerializeField]
     //GameObject unitCanvasTemplate;
-    [SerializeField]
-    GameObject heroPartyOnMapTemplate;
+    //[SerializeField]
+    //GameObject heroPartyOnMapTemplate;
     string fullFilePath;
     TextToggle selectedToggle;
 
@@ -168,6 +168,14 @@ public class LoadGame : MonoBehaviour
         }
     }
 
+    public void RemoveAllInventoryItems()
+    {
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Remove all items on map, other items will be removed automatically with respective parties or units
+        objectsManager.RemoveAllInventoryItemsOnMap();
+    }
+
     void SetTurnsManager(GameData gameData)
     {
         // Get turns manager
@@ -183,6 +191,7 @@ public class LoadGame : MonoBehaviour
         // Block mouse input
         transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(true);
         // Note order is imporant, because some parties are children of cities
+        RemoveAllInventoryItems();
         RemoveAllParties();
         RemoveAllCities();
         RemoveAllPlayers();
@@ -192,6 +201,37 @@ public class LoadGame : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
     }
 
+    void CreateInventoryItemsOnMap(MapData mapData)
+    {
+        // Get objects manager
+        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Init map items container
+        MapItemsContainer mapItemsContainer = null;
+        // Init position on map variable
+        PositionOnMap previousItemPositionOnMap = new PositionOnMap();
+        // Get game map transform
+        GameMap gameMap = transform.root.GetComponentInChildren<GameMap>();
+        // Create parties
+        for (int i = 0; i < mapData.itemsOnMap.Count; i++)
+        {
+            // verify if do not have already container on map for this item
+            if ((mapItemsContainer == null)
+                // verify if item is not using same container by comparing current position with previous
+                // all items which has identical position on map are placed into the same container
+                || (previousItemPositionOnMap != mapData.itemsPositionOnMap[i]))
+            {
+                // create item container
+                mapItemsContainer = objectsManager.CreateInventoryItemContainerOnMap(mapData.itemsPositionOnMap[i]);
+                // save previous position
+                previousItemPositionOnMap = mapData.itemsPositionOnMap[i];
+            }
+            // create item
+            InventoryItem inventoryItem = objectsManager.CreateInventoryItem(mapData.itemsOnMap[i], gameMap.transform);
+            // link item to container
+            mapItemsContainer.LInventoryItems.Add(inventoryItem);
+        }
+    }
+
     IEnumerator CreateGameObjects(GameData gameData)
     {
         // Note order is important, if some party was child of a city, then city should be created first
@@ -199,6 +239,8 @@ public class LoadGame : MonoBehaviour
         CreateGamePlayers(gameData.playersData);
         // Set Turns manager data
         SetTurnsManager(gameData);
+        // Create items on map
+        CreateInventoryItemsOnMap(gameData.mapData);
         // Update game with data from save
         CreateCities(gameData.citiesData);
         // Update game with data from save

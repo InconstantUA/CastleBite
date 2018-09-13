@@ -31,6 +31,10 @@ public class ObjectsManager : MonoBehaviour {
     GameObject heroPartyTemplate;
     [SerializeField]
     GameObject heroPartyOnMapTemplate;
+    [SerializeField]
+    GameObject inventoryItemTemplate;
+    [SerializeField]
+    GameObject inventoryItemOnMapTemplate;
 
     public GameObject HeroPartyTemplate
     {
@@ -126,6 +130,11 @@ public class ObjectsManager : MonoBehaviour {
             PartyUnit partyUnit = Instantiate(unitTemplate, heroParty.transform).GetComponent<PartyUnit>();
             // set party unit data
             partyUnit.PartyUnitData = partyUnitData;
+            // create items for party unit
+            foreach(InventoryItemData inventoryItemData in partyUnit.PartyUnitData.unitIventory)
+            {
+                CreateInventoryItem(inventoryItemData, partyUnit.transform);
+            }
         }
         else
         {
@@ -230,6 +239,11 @@ public class ObjectsManager : MonoBehaviour {
                 newMapHero.lMapCity = mapCity;
             }
         }
+        // create items for party
+        foreach (InventoryItemData inventoryItemData in newHeroParty.PartyData.partyInventory)
+        {
+            CreateInventoryItem(inventoryItemData, newHeroParty.transform);
+        }
         // rename hero party
         if (partyData.partyUnitsData.Length >= 1 && newHeroParty.PartyMode != PartyMode.Garnizon)
         {
@@ -257,5 +271,58 @@ public class ObjectsManager : MonoBehaviour {
         // .. garnizon does not have leader, do check for this before enabling debug log
         // Debug.Log("Removing " + heroParty.GetPartyLeader().GivenName + " party");
         Destroy(heroParty.gameObject);
+    }
+
+    public void RemoveAllInventoryItemsOnMap()
+    {
+        // Loop through transforms 1 level below map (=belongs to the map)
+        foreach (Transform childTransform in transform.root.Find("MapScreen/Map"))
+        {
+            // get map item (chest)
+            MapItemsContainer mapItem = childTransform.GetComponent<MapItemsContainer>();
+            // verify if it is not null
+            if (mapItem != null)
+            {
+                // loop through all items linked to this map item (chest)
+                foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
+                {
+                    // remove inv item
+                    Destroy(inventoryItem.gameObject);
+                }
+                // remove map item
+                Destroy(mapItem.gameObject);
+            }
+        }
+    }
+
+    public InventoryItem CreateInventoryItem(InventoryItemData inventoryItemData, Transform parentTransform)
+    {
+        // create new item on map
+        InventoryItem inventoryItem = Instantiate(inventoryItemTemplate, parentTransform).GetComponent<InventoryItem>();
+        // set item data
+        inventoryItem.InventoryItemData = inventoryItemData;
+        // rename it
+        inventoryItem.gameObject.name = inventoryItem.ItemName;
+        // return item
+        return inventoryItem;
+    }
+
+    public MapItemsContainer CreateInventoryItemContainerOnMap(PositionOnMap positionOnMap)
+    {
+        // Get map transform
+        Transform map = transform.root.Find("MapScreen/Map");
+        // create new item on map
+        MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, map).GetComponent<MapItemsContainer>();
+        // place item on map to original position on map
+        mapItem.GetComponent<RectTransform>().offsetMin = new Vector2(positionOnMap.offsetMinX, positionOnMap.offsetMinY);
+        mapItem.GetComponent<RectTransform>().offsetMax = new Vector2(positionOnMap.offsetMaxX, positionOnMap.offsetMaxY);
+        // rename it
+        mapItem.gameObject.name = "TreasureChest";
+        // set it as first sibling so it does not apper in front of heroes, cities or labels
+        mapItem.transform.SetAsFirstSibling();
+        // activate it
+        mapItem.gameObject.SetActive(true);
+        // return it as result
+        return mapItem;
     }
 }

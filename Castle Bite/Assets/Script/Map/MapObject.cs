@@ -56,7 +56,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(this);
             }
             // verify if it is MapChest
-            else if (GetComponent<MapItem>() != null)
+            else if (GetComponent<MapItemsContainer>() != null)
             {
                 // show treasure chest info
                 transform.root.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(true, "<b>Treasure chest</b>.\r\n\r\nWho knows what is hidden inside...");
@@ -85,7 +85,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
                 transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
             }
             // verify if it is MapChest
-            else if (GetComponent<MapItem>() != null)
+            else if (GetComponent<MapItemsContainer>() != null)
             {
                 // disable treasure chest info
                 transform.root.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(false);

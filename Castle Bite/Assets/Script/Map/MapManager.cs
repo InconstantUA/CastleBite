@@ -12,6 +12,22 @@ public struct PositionOnMap
     public float offsetMinY;
     public float offsetMaxX;
     public float offsetMaxY;
+
+    public static bool operator ==(PositionOnMap p1, PositionOnMap p2)
+    {
+        return (p1.offsetMinX.Equals(p2.offsetMinX)
+             && p1.offsetMinY.Equals(p2.offsetMinY)
+             && p1.offsetMaxX.Equals(p2.offsetMaxX)
+             && p1.offsetMaxY.Equals(p2.offsetMaxY));
+    }
+
+    public static bool operator !=(PositionOnMap p1, PositionOnMap p2)
+    {
+        return (!p1.offsetMinX.Equals(p2.offsetMinX)
+             || !p1.offsetMinY.Equals(p2.offsetMinY)
+             || !p1.offsetMaxX.Equals(p2.offsetMaxX)
+             || !p1.offsetMaxY.Equals(p2.offsetMaxY));
+    }
 }
 
 public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
@@ -264,7 +280,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetTreasureChestsVisible(bool doShow)
     {
         Debug.Log("Show All Treasure chests names visible: " + doShow.ToString());
-        foreach (MapItem mapItem in transform.GetComponentsInChildren<MapItem>(true))
+        foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>(true))
         {
             // Set always on
             mapItem.GetComponent<MapObject>().SetAlwaysOn(doShow);
@@ -327,7 +343,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
-        foreach (MapItem mapItem in transform.GetComponentsInChildren<MapItem>())
+        foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
         {
             // verify if not null
             if (mapItem)
@@ -487,7 +503,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     GameObject childGameObject = GetObjectOnTile(highlightedPoint); // return map's objects: hero, city, other..
                     MapHero mapHero = null;
                     MapCity mapCity = null;
-                    MapItem mapItem = null;
+                    MapItemsContainer mapItem = null;
                     bool label = false;
                     if (GetActiveLabels().Count > 0)
                     {
@@ -500,7 +516,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         // predefine variables
                         mapHero = childGameObject.GetComponent<MapHero>();
                         mapCity = childGameObject.GetComponent<MapCity>();
-                        mapItem = childGameObject.GetComponent<MapItem>();
+                        mapItem = childGameObject.GetComponent<MapItemsContainer>();
                         // act based on current selection and object under mouse cursor
                         switch (selection)
                         {
@@ -914,7 +930,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 //}
             }
         }
-        foreach (MapItem mapItem in transform.GetComponentsInChildren<MapItem>())
+        foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
         {
             // verify if not null
             if (mapItem)
@@ -949,7 +965,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
             MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
-            MapItem mapItem = gameObjectOnTile.GetComponent<MapItem>();
+            MapItemsContainer mapItem = gameObjectOnTile.GetComponent<MapItemsContainer>();
             Relationships.State relationships;
             if (mapHero)
             {
@@ -1084,7 +1100,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     {
                         MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
                         MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
-                        MapItem mapItem = gameObjectOnTile.GetComponent<MapItem>();
+                        MapItemsContainer mapItem = gameObjectOnTile.GetComponent<MapItemsContainer>();
                         if (mapHero)
                         {
                             // check relationships with active player
@@ -1768,7 +1784,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
 
-    IEnumerator PickupItem(MapItem mapItem)
+    IEnumerator PickupItem(MapItemsContainer mapItem)
     {
         Debug.Log("Pick up item");
         // init string for the message box
@@ -1859,7 +1875,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     //Debug.Log("04");
                     MapHero mapHero = nextGameObjectOnPath.GetComponent<MapHero>();
                     MapCity mapCity = nextGameObjectOnPath.GetComponent<MapCity>();
-                    MapItem mapItem = nextGameObjectOnPath.GetComponent<MapItem>();
+                    MapItemsContainer mapItem = nextGameObjectOnPath.GetComponent<MapItemsContainer>();
                     if (mapHero)
                     {
                         // check relationships with moving party faction
@@ -2080,7 +2096,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // predefine variables
         MapHero mapHero = childGameObject.GetComponent<MapHero>();
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
-        MapItem mapItem = childGameObject.GetComponent<MapItem>();
+        MapItemsContainer mapItem = childGameObject.GetComponent<MapItemsContainer>();
         MapObjectLabel mapHeroViaLabel = null;
         MapObjectLabel mapCityViaLabel = null;
         MapObjectLabel label = childGameObject.GetComponent<MapObjectLabel>();
@@ -2590,7 +2606,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // predefine variables
         MapHero mapHero = childGameObject.GetComponent<MapHero>();
         MapCity mapCity = childGameObject.GetComponent<MapCity>();
-        MapItem mapItem = childGameObject.GetComponent<MapItem>();
+        MapItemsContainer mapItem = childGameObject.GetComponent<MapItemsContainer>();
         MapObjectLabel mapHeroViaLabel = null;
         MapObjectLabel mapCityViaLabel = null;
         MapObjectLabel label = childGameObject.GetComponent<MapObjectLabel>();

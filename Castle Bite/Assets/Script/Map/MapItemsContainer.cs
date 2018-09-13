@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapItem : MonoBehaviour {
+public class MapItemsContainer : MonoBehaviour {
     [SerializeField]
-    InventoryItem[] lInventoryItems;
+    List<InventoryItem> lInventoryItems;
 
-    public InventoryItem[] LInventoryItems
+    public List<InventoryItem> LInventoryItems
     {
         get
         {
