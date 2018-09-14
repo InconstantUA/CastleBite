@@ -51,7 +51,7 @@ MonoBehaviour:
       modifierCalculatedHow: 2
       modifierAppliedHow: 1
       duration: -1
-      durationLeft: 0
+      durationLeft: -1
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []

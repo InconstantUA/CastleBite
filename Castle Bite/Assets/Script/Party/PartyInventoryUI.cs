@@ -93,7 +93,7 @@ public class PartyInventoryUI : MonoBehaviour {
     }
 
     // on change - check similar function in HeroEquipment class
-    void SetItemRepresentationInInventoryUI(InventoryItem inventoryItem, bool setCurrentItemEquipmentSlot = false)
+    public void SetItemRepresentationInInventoryUI(InventoryItem inventoryItem, bool setCurrentItemEquipmentSlot = false)
     {
         // verify if this is InventoryItem
         if (inventoryItem != null)

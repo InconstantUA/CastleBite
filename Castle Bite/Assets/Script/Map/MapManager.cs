@@ -1787,15 +1787,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     IEnumerator PickupItem(MapItemsContainer mapItem)
     {
         Debug.Log("Pick up item");
-        // init string for the message box
-        string message = "<b>You have found</b>:\r\n";
+        // Activate inventory item pickup pop-up menu
+        transform.root.Find("MiscUI/ItemsPickUpPopUp").GetComponent<InventoryItemPickUpPopUp>().SetActive(mapItem);
         // Loop through each item in the chest
         foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
         {
             // change parent to hero party
             inventoryItem.transform.SetParent(selectedMapHero.LHeroParty.transform);
-            // get name for the message box
-            message += "\r\n" + inventoryItem.ItemName;
         }
         // Destroy chest
         Destroy(mapItem.gameObject);
@@ -1804,8 +1802,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         yield return new WaitForSeconds(0.5f);
         // Unblock mouse input
         transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(false);
-        // Display message about what item(s) were found
-        transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(message);
         // Exit coroutine
         yield return null;
     }
