@@ -89,7 +89,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // for pathfinding
     [SerializeField]
     GameObject movePathHighlighterTemplate;
-    bool[,] tilesmap;
+    float[,] tilesmap;
     int tileMapWidth = 60;
     int tileMapHeight = 60;
     MapHero selectedMapHero;
@@ -97,7 +97,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     NesScripts.Controls.PathFind.Point selectedTargetPathPoint;
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
-    GameObject[,] tileHighlighters;
+    MapTile[,] mapTiles;
     // for hero moving
     public float heroMoveSpeed = 10.1f;
     public float heroMoveSpeedDelay = 0.1f;
@@ -132,6 +132,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     // for animation and transition between states
     CoroutineQueue queue;
+
+    public float scrollSpeed = 0.5f;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -194,8 +196,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         mapHeight = 960;
         //  calculate screen borders
         //  get maximum possible offset
-        float xDeltaMax = (mapWidth - Screen.width) / 2;
-        float yDeltaMax = (mapHeight - Screen.height) / 2;
+        //float xDeltaMax = (mapWidth - Screen.width) / 2;
+        //float yDeltaMax = (mapHeight - Screen.height) / 2;
         //  border depend on the center position
         //  because canvas is positioned in the lower left corner
         //  mouse's 0:0 coordinates are located at the same position
@@ -214,9 +216,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Init map mode
         SetMode(Mode.Browse);
         // Initialize path finder
+        InitializeMapTiles();
         InitTilesMap();
         InitPathFinderGrid();
-        InitializePathHighligters();
     }
 
     // called via Unity Editor
@@ -315,15 +317,24 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void InitTilesMap()
     {
         // create the tiles map
-        tilesmap = new bool[tileMapWidth, tileMapHeight];
+        tilesmap = new float[tileMapWidth, tileMapHeight];
         // set values here....
         // true = walkable, false = blocking
         for (int x = 0; x < tilesmap.GetLength(0); x += 1)
         {
             for (int y = 0; y < tilesmap.GetLength(1); y += 1)
             {
-                // Debug.Log(tilesmap[x, y].ToString());
-                tilesmap[x, y] = true;
+                // Debug.Log(x.ToString() + ":" + y.ToString());
+                // verify if tile is passable
+                if (mapTiles[x, y].Terra.TerraIsPassable)
+                {
+                    tilesmap[x, y] = (float)mapTiles[x, y].Terra.TerraMoveCost;
+                }
+                else
+                {
+                    // mark is as non-passable
+                    tilesmap[x, y] = 0;
+                }
             }
         }
         // Loop over all map objects
@@ -335,7 +346,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (PositionIsWithinTilesMap(pos))
             {
                 // mark tile as non-passable
-                tilesmap[pos.x, pos.y] = false;
+                tilesmap[pos.x, pos.y] = 0;
             }
         }
         //// Set all tiles occupied by heroes or cities on map as non-passable
@@ -383,6 +394,24 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         grid = new NesScripts.Controls.PathFind.Grid(tilesmap);
     }
 
+    bool ValidateTileCoordinates(Vector2Int tileCoords)
+    {
+        if ((tileCoords.x > grid.nodes.GetLength(0) - 1)
+            || (tileCoords.y > grid.nodes.GetLength(1) - 1)
+            || (tileCoords.x < 0)
+            || (tileCoords.y < 0))
+        {
+            // nothing to do, mouse is over the screen
+            return false;
+        }
+        return true;
+    }
+
+    bool ValidateTileCoordinates(NesScripts.Controls.PathFind.Point pathPoint)
+    {
+        return ValidateTileCoordinates(new Vector2Int(pathPoint.x, pathPoint.y));
+    }
+
     void UpdateGridBasedOnHighlightedTile()
     {
         // reinitialize tile map to reset all previous changes
@@ -390,10 +419,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Get highligted tile state
         Vector2Int highlighterPosition = GetTileByPosition(Input.mousePosition); // GetTileHighlighterPosition();
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
-        if ((highlightedPoint.x > grid.nodes.GetLength(0) - 1)
-            || (highlightedPoint.y > grid.nodes.GetLength(1) - 1)
-            || (highlightedPoint.x < 0)
-            || (highlightedPoint.y < 0))
+        if (!ValidateTileCoordinates(highlightedPoint))
         {
             // nothing to do, mouse is over the screen
         }
@@ -405,7 +431,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // adjust grid to make this tile passable (highlightable)
                 // this is needed to get move path if user clicked on a occupied tile
                 // but this is not needed to be passable if user clicked on other tile
-                tilesmap[highlightedPoint.x, highlightedPoint.y] = true;
+                // make tile passable
+                tilesmap[highlightedPoint.x, highlightedPoint.y] = 1;
             }
             else
             {
@@ -699,6 +726,27 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
                             //tileHighlighterColor = Color.white;
+                            // get tile coordinates
+                            Vector2Int tileCoords = GetTileByPosition(Input.mousePosition);
+                            // Verify if tile coords are correct
+                            if (ValidateTileCoordinates(tileCoords))
+                            {
+                                // Get tile
+                                MapTile mapTile = mapTiles[tileCoords.x, tileCoords.y];
+                                // verify if tile is not passable
+                                if (!mapTile.Terra.TerraIsPassable)
+                                {
+                                    // make it gray, indicating that this is not passable
+                                    tileHighlighterColor = Color.gray;
+                                }
+                            }
+                            else
+                            {
+                                // Mouse is not over screen
+                                Debug.LogWarning("Mouse not over screen. Hide tile highlighter");
+                                // Hide tile highlighter in this mode
+                                tileHighlighterColor = new Color32(0, 0, 0, 0);
+                            }
                         }
                     }
                     // Update color of tile highlighter
@@ -791,22 +839,34 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return result;
     }
 
-    void InitializePathHighligters()
+    void InitializeMapTiles()
     {
         // todo: better keep them as string and highlight specific elements
-        Transform movePathHighlighterParent = transform.Find("MovePath");
-        tileHighlighters = new GameObject[tileMapWidth, tileMapHeight];
-        for (int x = 0; x < tileHighlighters.GetLength(0); x += 1)
+        // Transform mapTilesTransform = transform.Find("MapTiles");
+        mapTiles = new MapTile[tileMapWidth, tileMapHeight];
+        // init row and colum index variables
+        Vector2Int tileCoordinates;
+        // convert mapTiles to 2dimentional array
+        foreach (MapTile mapTile in transform.Find("MapTiles").GetComponentsInChildren<MapTile>(true))
         {
-            for (int y = 0; y < tileHighlighters.GetLength(1); y += 1)
-            {
-                // Debug.Log(tilesmap[x, y].ToString());
-                // create new highlight object
-                tileHighlighters[x, y] = Instantiate(movePathHighlighterTemplate, movePathHighlighterParent);
-                tileHighlighters[x, y].transform.position = new Vector3(x, y, 0) * tileSize;
-                // tileHighlighters[x, y].gameObject.SetActive(true);
-            }
+            // get tile coordintates by tile object position
+            tileCoordinates = GetTileByPosition(mapTile.transform.position);
+            // assign tile object to mapTileGOs
+            mapTiles[tileCoordinates.x, tileCoordinates.y] = mapTile;
+            // disable game object
+            // mapTile.gameObject.SetActive(false);
         }
+        //for (int x = 0; x < tileHighlighters.GetLength(0); x += 1)
+        //{
+        //    for (int y = 0; y < tileHighlighters.GetLength(1); y += 1)
+        //    {
+        //        // Debug.Log(tilesmap[x, y].ToString());
+        //        // create new highlight object
+        //        tileHighlighters[x, y] = Instantiate(movePathHighlighterTemplate, mapTilesTransform);
+        //        tileHighlighters[x, y].transform.position = new Vector3(x, y, 0) * tileSize;
+        //        // tileHighlighters[x, y].gameObject.SetActive(true);
+        //    }
+        //}
     }
 
     Vector2Int[] GetAllSurroundingTilesPositions(Vector2Int t)
@@ -1031,9 +1091,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 // output path to debug
                 // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
-                tileHighlighters[pathPoint.x, pathPoint.y].SetActive(doHighlight);
+                mapTiles[pathPoint.x, pathPoint.y].gameObject.SetActive(doHighlight);
                 // clear turn info text (because is not reset automatically and may be still present)
-                tileHighlighters[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = "";
+                mapTiles[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = "";
                 // Verify if enemy on way was not triggered on previous pathPoints
                 if (!enemyOnWay)
                 {
@@ -1102,7 +1162,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         int numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
                         Debug.Log("numberOfDaysToReachThisPathPoint = " + numberOfDaysToReachThisPathPoint);
                         // add day indicator to the move path highter
-                        tileHighlighters[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();
+                        mapTiles[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();
                     }
                 }
                 // verify if enemy on way
@@ -1118,7 +1178,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     tileHighlighColor = GetTileHighlightColor(gameObjectOnTile, notEnoughMovePoints);
                 }
                 // Highlight tile
-                tileHighlighters[pathPoint.x, pathPoint.y].GetComponentInChildren<Text>().color = tileHighlighColor;
+                mapTiles[pathPoint.x, pathPoint.y].transform.Find("TileHighliter").GetComponent<Text>().color = tileHighlighColor;
                 // reduce number of move points left
                 movePointsLeft -= 1;
             }
@@ -1209,7 +1269,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // some object is present
                     // adjust grid to make this tile passable (highlightable)
                     // this is needed if user conquered this city and need to move to it
-                    tilesmap[_to.x, _to.y] = true;
+                    tilesmap[_to.x, _to.y] = 1;
                     // Upgrade grid
                     grid.UpdateGrid(tilesmap);
                 }
