@@ -32,7 +32,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     void Start()
     {
         // set label
-        label = GetComponentInChildren<MapObjectLabel>();
+        label = GetComponentInChildren<MapObjectLabel>(true);
         // set label text object
         labelTxt = label.GetComponent<Text>();
     }

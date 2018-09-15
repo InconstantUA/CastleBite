@@ -87,6 +87,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Color tileHighlighterColor;
     TileHighlighter tileHighlighter;
     // for pathfinding
+    [SerializeField]
+    GameObject movePathHighlighterTemplate;
     bool[,] tilesmap;
     int tileMapWidth = 60;
     int tileMapHeight = 60;
@@ -186,8 +188,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // For map drag
         //  get map width and height
-        mapWidth = gameObject.GetComponentInChildren<SpriteRenderer>().size.x;
-        mapHeight = gameObject.GetComponentInChildren<SpriteRenderer>().size.y;
+        // mapWidth = gameObject.GetComponentInChildren<SpriteRenderer>().size.x;
+        // mapHeight = gameObject.GetComponentInChildren<SpriteRenderer>().size.y;
+        mapWidth = 960;
+        mapHeight = 960;
         //  calculate screen borders
         //  get maximum possible offset
         float xDeltaMax = (mapWidth - Screen.width) / 2;
@@ -196,10 +200,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //  because canvas is positioned in the lower left corner
         //  mouse's 0:0 coordinates are located at the same position
         //  center is screen width and height divided by 2
-        xMinDef = (Screen.width / 2) - xDeltaMax;
-        yMinDef = (Screen.height / 2) - yDeltaMax;
-        xMaxDef = (Screen.width / 2) + xDeltaMax;
-        yMaxDef = (Screen.height / 2) + yDeltaMax;
+        //xMinDef = (Screen.width / 2) - xDeltaMax;
+        //yMinDef = (Screen.height / 2) - yDeltaMax;
+        //xMaxDef = (Screen.width / 2) + xDeltaMax;
+        //yMaxDef = (Screen.height / 2) + yDeltaMax;
+        xMinDef = -mapWidth + Screen.width;
+        yMinDef = -mapHeight + Screen.height;
+        xMaxDef = 0;
+        yMaxDef = 0;
         // For map tile highligter in selection mode
         tileHighlighterTr = transform.Find("TileHighlighter");
         tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
@@ -207,7 +215,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         SetMode(Mode.Browse);
         // Initialize path finder
         InitTilesMap();
-        InitPathFinder();
+        InitPathFinderGrid();
         InitializePathHighligters();
     }
 
@@ -318,46 +326,58 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 tilesmap[x, y] = true;
             }
         }
-        // Set all tiles occupied by heroes or cities on map as non-passable
-        foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
+        // Loop over all map objects
+        foreach(MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
         {
-            // verify if not null
-            if (party)
+            // get map object position with tile coordinates
+            Vector2Int pos = GetTilePosition(mapObject.transform);
+            // verify if object is located within tile map border
+            if (PositionIsWithinTilesMap(pos))
             {
-                Vector2Int pos = GetTilePosition(party.transform);
-                if (PositionIsWithinTilesMap(pos))
-                {
-                    tilesmap[pos.x, pos.y] = false;
-                }
+                // mark tile as non-passable
+                tilesmap[pos.x, pos.y] = false;
             }
         }
-        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
-        {
-            // verify if not null
-            if (city)
-            {
-                Vector2Int pos = GetTilePosition(city.transform);
-                if (PositionIsWithinTilesMap(pos))
-                {
-                    tilesmap[pos.x, pos.y] = false;
-                }
-            }
-        }
-        foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
-        {
-            // verify if not null
-            if (mapItem)
-            {
-                Vector2Int pos = GetTilePosition(mapItem.transform);
-                if (PositionIsWithinTilesMap(pos))
-                {
-                    tilesmap[pos.x, pos.y] = false;
-                }
-            }
-        }
+        //// Set all tiles occupied by heroes or cities on map as non-passable
+        //foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
+        //{
+        //    // verify if not null
+        //    if (party)
+        //    {
+        //        Vector2Int pos = GetTilePosition(party.transform);
+        //        if (PositionIsWithinTilesMap(pos))
+        //        {
+        //            tilesmap[pos.x, pos.y] = false;
+        //        }
+        //    }
+        //}
+        //foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
+        //{
+        //    // verify if not null
+        //    if (city)
+        //    {
+        //        Vector2Int pos = GetTilePosition(city.transform);
+        //        if (PositionIsWithinTilesMap(pos))
+        //        {
+        //            tilesmap[pos.x, pos.y] = false;
+        //        }
+        //    }
+        //}
+        //foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
+        //{
+        //    // verify if not null
+        //    if (mapItem)
+        //    {
+        //        Vector2Int pos = GetTilePosition(mapItem.transform);
+        //        if (PositionIsWithinTilesMap(pos))
+        //        {
+        //            tilesmap[pos.x, pos.y] = false;
+        //        }
+        //    }
+        //}
     }
 
-    void InitPathFinder()
+    void InitPathFinderGrid()
     {
         // create a grid
         grid = new NesScripts.Controls.PathFind.Grid(tilesmap);
@@ -368,7 +388,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // reinitialize tile map to reset all previous changes
         InitTilesMap();
         // Get highligted tile state
-        Vector2Int highlighterPosition = GetTileHighlighterPosition();
+        Vector2Int highlighterPosition = GetTileByPosition(Input.mousePosition); // GetTileHighlighterPosition();
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
         if ((highlightedPoint.x > grid.nodes.GetLength(0) - 1)
             || (highlightedPoint.y > grid.nodes.GetLength(1) - 1)
@@ -476,7 +496,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void UpdateTileHighighterBasedOnMousePosition()
     {
-        Vector2Int highlighterPosition = GetTileHighlighterPosition();
+        Vector2Int highlighterPosition = GetTileByPosition(Input.mousePosition); // GetTileHighlighterPosition();
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
         if ((highlightedPoint.x > grid.nodes.GetLength(0) - 1)
             || (highlightedPoint.y > grid.nodes.GetLength(1) - 1)
@@ -732,22 +752,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public Vector2Int GetTileByPosition(Vector3 position)
     {
+        // calculate tile position base on object position and map position
         return new Vector2Int
         {
-            x = Mathf.FloorToInt(position.x / tileSize),
-            y = Mathf.FloorToInt(position.y / tileSize)
+            x = Mathf.FloorToInt((position.x - transform.position.x) / tileSize),
+            y = Mathf.FloorToInt((position.y - transform.position.y) / tileSize)
         };
     }
 
-    public Vector3 GetPositionByTile(int tileX, int tileY)
-    {
-        return new Vector3
-        {
-            x = tileX * tileSize,
-            y = tileY * tileSize,
-            z = 0
-        };
-    }
+    //public Vector3 GetPositionByTile(int tileX, int tileY)
+    //{
+    //    return new Vector3
+    //    {
+    //        x = tileX * tileSize,
+    //        y = tileY * tileSize,
+    //        z = 0
+    //    };
+    //}
 
     Vector2Int GetTilePosition(Transform tr)
     {
@@ -757,16 +778,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //    x = Mathf.FloorToInt(tr.position.x / tileSize),
         //    y = Mathf.FloorToInt(tr.position.y / tileSize)
         //};
-    }
-
-    Vector2Int GetHeroTilePosition()
-    {
-        //Vector2Int result = new Vector2Int
-        //{
-        //    x = Mathf.FloorToInt(selectedHero.transform.position.x / tileSize),
-        //    y = Mathf.FloorToInt(selectedHero.transform.position.y / tileSize)
-        //};
-        return GetTilePosition(selectedMapHero.transform);
     }
 
     Vector2Int GetTileHighlighterPosition()
@@ -783,7 +794,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void InitializePathHighligters()
     {
         // todo: better keep them as string and highlight specific elements
-        GameObject movePathHighlighterTemplate = transform.root.Find("Templates/UI/MovePathHighlighter").gameObject;
         Transform movePathHighlighterParent = transform.Find("MovePath");
         tileHighlighters = new GameObject[tileMapWidth, tileMapHeight];
         for (int x = 0; x < tileHighlighters.GetLength(0); x += 1)
@@ -831,117 +841,54 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return false;
     }
 
-    //bool PartyIsEnemy(MapHero party)
-    //{
-    //    // verify if this is friendly or enemy party
-    //    //if (party.LinkedPartyTr.GetComponent<HeroParty>().Faction != selectedHero.LinkedPartyTr.GetComponent<HeroParty>().Faction)
-    //    if (party.LinkedPartyTr.GetComponent<HeroParty>().Faction != player.Faction)
-    //    {
-    //        // different faction -enemy
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        // same faction - friendly
-    //        return false;
-    //    }
-    //}
-
-    //bool CityIsEnemy(MapCity city)
-    //{
-    //    // verify if this is friendly or enemy party
-    //    //if (city.LinkedCityTr.GetComponent<City>().Faction != selectedHero.LinkedPartyTr.GetComponent<HeroParty>().Faction)
-    //    if (city.LinkedCityTr.GetComponent<City>().Faction != player.Faction)
-    //    {
-    //        // different faction -enemy
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        // same faction - friendly
-    //        return false;
-    //    }
-    //}
-
     GameObject GetObjectOnTile(Vector2Int tilePosition)
     {
-        // go over all objects and verify if they are on the tile
-        foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
+        // loop over all map objects and verify if it is on the tile
+        foreach (MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
         {
-            // verify if not null
-            if (party)
+            // verify if object is located on tile which we are searching
+            if (GetTilePosition(mapObject.transform) == tilePosition)
             {
-                Vector2Int partyTilePosition = GetTilePosition(party.transform);
-                if (partyTilePosition == tilePosition)
-                {
-                    return party.gameObject;
-                }
-                //// verify if this is enemy or friendly party
-                //if (PartyIsEnemy(party))
-                //{
-                //    // verify if enemy party located in tile which we need to examine
-                //    if (partyTilePosition == tilePosition)
-                //    {
-                //        return TileState.EnemyParty;
-                //    }
-                //    // verify if enemy party located in nearby tiles
-                //    else if (TileIsProtectedByEnemyParty(partyTilePosition, tilePosition))
-                //    {
-                //        // Debug.LogWarning("Protected");
-                //        return TileState.Protected;
-                //    }
-                //}
-                //else
-                //{
-                //    // verify if friendly party located in tile
-                //    if (partyTilePosition == tilePosition)
-                //    {
-                //        return TileState.PlayerParty;
-                //    }
-                //}
+                return mapObject.gameObject;
             }
         }
-        foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
-        {
-            // verify if not null
-            if (city)
-            {
-                Vector2Int cityTilePosition = GetTilePosition(city.transform);
-                if (cityTilePosition == tilePosition)
-                {
-                    return city.gameObject;
-                }
-                //// verify if this is enemy or friendly city
-                //if (CityIsEnemy(city))
-                //{
-                //    // verify if enemy city located in tile
-                //    if (cityTilePosition == tilePosition)
-                //    {
-                //        return TileState.EnemyCity;
-                //    }
-                //}
-                //else
-                //{
-                //    // verify if friendly party located in tile
-                //    if (cityTilePosition == tilePosition)
-                //    {
-                //        return TileState.PlayerCity;
-                //    }
-                //}
-            }
-        }
-        foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
-        {
-            // verify if not null
-            if (mapItem)
-            {
-                Vector2Int itemTilePosition = GetTilePosition(mapItem.transform);
-                if (itemTilePosition == tilePosition)
-                {
-                    return mapItem.gameObject;
-                }
-            }
-        }
+        //// go over all objects and verify if they are on the tile
+        //foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
+        //{
+        //    // verify if not null
+        //    if (party)
+        //    {
+        //        Vector2Int partyTilePosition = GetTilePosition(party.transform);
+        //        if (partyTilePosition == tilePosition)
+        //        {
+        //            return party.gameObject;
+        //        }
+        //    }
+        //}
+        //foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
+        //{
+        //    // verify if not null
+        //    if (city)
+        //    {
+        //        Vector2Int cityTilePosition = GetTilePosition(city.transform);
+        //        if (cityTilePosition == tilePosition)
+        //        {
+        //            return city.gameObject;
+        //        }
+        //    }
+        //}
+        //foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
+        //{
+        //    // verify if not null
+        //    if (mapItem)
+        //    {
+        //        Vector2Int itemTilePosition = GetTilePosition(mapItem.transform);
+        //        if (itemTilePosition == tilePosition)
+        //        {
+        //            return mapItem.gameObject;
+        //        }
+        //    }
+        //}
         // Everything else is just terrain without hero, city or treasure on it.
         return null;
     }
@@ -1278,7 +1225,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // First remove highlight from previous path
         HighlightMovePath(false);
         // Debug.Log("FindAndHighlightPath");
-        SetMovePath(new Vector2Int(GetHeroTilePosition().x, GetHeroTilePosition().y), new Vector2Int(GetTileHighlighterPosition().x, GetTileHighlighterPosition().y));
+        SetMovePath(GetTileByPosition(selectedMapHero.transform.position), GetTileByPosition(Input.mousePosition));
         // highlight new path
         HighlightMovePath(true);
     }
@@ -1314,6 +1261,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             mapPosiiton = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
             // xCorrectionOnDragStart = (Screen.width / 2) - mouseOnDragStartPosition.x;
             // yCorrectionOnDragStart = (Screen.height / 2) - mouseOnDragStartPosition.y;
+            Debug.Log("Map   [" + mapPosiiton.x + "," + mapPosiiton.y + "]");
+            Debug.Log("Mouse [" + mouseOnDownStartPosition.x + "," + mouseOnDownStartPosition.y + "]");
             xCorrectionOnDragStart = mapPosiiton.x - mouseOnDownStartPosition.x;
             yCorrectionOnDragStart = mapPosiiton.y - mouseOnDownStartPosition.y;
             // this corrections should also be applied to x and y min and max
@@ -1562,8 +1511,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // + tileSize/ is to place it in the center of the tile
         return new Vector2
         {
-            x = (float)pathPoint.x * (float)tileSize + (float)tileSize / 2f,
-            y = (float)pathPoint.y * (float)tileSize + (float)tileSize / 2f
+            x = (float)(pathPoint.x) * (float)tileSize + (float)tileSize / 2f + transform.position.x,
+            y = (float)(pathPoint.y) * (float)tileSize + (float)tileSize / 2f + transform.position.y
         };
     }
 
@@ -1599,125 +1548,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // reset map state and selections, because hero can be removed while in city
         SetSelection(Selection.None);
     }
-
-    //MapCity GetCityByTile(Vector2Int tilePosition)
-    //{
-    //    MapCity mapCity = null;
-    //    foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
-    //    {
-    //        // verify if not null
-    //        if (city)
-    //        {
-    //            if (GetTilePosition(city.transform) == tilePosition)
-    //            {
-    //                return city;
-    //            }
-    //        }
-    //    }
-    //    return mapCity;
-    //}
-
-    //MapHero GetEnemyByTile(Vector2Int tilePosition)
-    //{
-    //    foreach (MapHero partyOnMap in transform.GetComponentsInChildren<MapHero>())
-    //    {
-    //        // verify if not null
-    //        if (partyOnMap)
-    //        {
-    //            if (PartyIsEnemy(partyOnMap))
-    //            {
-    //                if (GetTilePosition(partyOnMap.transform) == tilePosition)
-    //                {
-    //                    return partyOnMap.GetComponent<MapHero>();
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return null;
-    //}
-
-    //MapHero GetEnemyByProtectedTile(Vector2Int tilePosition)
-    //{
-    //    Vector2Int[] surroundingTilesPositions = GetAllSurroundingTilesPositions(tilePosition);
-    //    foreach (MapHero partyOnMap in transform.GetComponentsInChildren<MapHero>())
-    //    {
-    //        // verify if not null
-    //        if (partyOnMap)
-    //        {
-    //            // verify if party is enemy
-    //            if (PartyIsEnemy(partyOnMap))
-    //            {
-    //                // verify if enemy is located on one of the surrounding tiles
-    //                Vector2Int enemyTilePos = GetTilePosition(partyOnMap.transform);
-    //                foreach (Vector2Int tilePos in surroundingTilesPositions)
-    //                {
-    //                    if (enemyTilePos == tilePos)
-    //                    {
-    //                        return partyOnMap.GetComponent<MapHero>();
-    //                    }
-    //                }
-    //            }
-    //        }
-    //    }
-    //    return null;
-    //}
-
-    //void EnterBattleOnMove(NesScripts.Controls.PathFind.Point pathPoint)
-    //{
-    //    Debug.Log("Enter battle");
-    //    MapHero enemyOnMap = null;
-    //    TileState tileState = GetObjectOnTile(pathPoint);
-    //    switch (tileState)
-    //    {
-    //        case TileState.EnemyParty:
-    //            // Get Enemy party
-    //            enemyOnMap = GetEnemyByTile(new Vector2Int(pathPoint.x, pathPoint.y));
-    //            break;
-    //        case TileState.Protected:
-    //            // get random enemy which is protecting this tile
-    //            enemyOnMap = GetEnemyByProtectedTile(new Vector2Int(pathPoint.x, pathPoint.y));
-    //            break;
-    //        default:
-    //            Debug.LogError("Unhandled condition " + tileState.ToString());
-    //            break;
-    //    }
-    //    // initialize battle
-    //    if (enemyOnMap)
-    //    {
-    //        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, enemyOnMap);
-    //        // Remove hero Selection
-    //        SetSelection(Selection.None);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("Enemy not found");
-    //    }
-    //}
-
-    //void EndMoveTransition()
-    //{
-    //    // transition to required state based on the type of the last occupied cell
-    //    switch (lastTileState)
-    //    {
-    //        case TileState.None:
-    //            // Nothing special to do here
-    //            break;
-    //        case TileState.PlayerCity:
-    //            break;
-    //        case TileState.EnemyParty:
-    //        case TileState.Protected:
-    //            Debug.LogError("This state should not be here, but we should enter this state during move, state: " + lastTileState.ToString());
-    //            break;
-    //        case TileState.SelectedParty:
-    //        case TileState.PlayerParty:
-    //            // this should not be possible, because move path in this case is 0
-    //            Debug.LogError("Not possible condition " + lastTileState.ToString());
-    //            break;
-    //        default:
-    //            Debug.LogError("Unknown tile state " + lastTileState.ToString());
-    //            break;
-    //    }
-    //}
 
     IEnumerator EnterBattleCommonStart(MapHero mapHero)
     {
@@ -2002,32 +1832,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     EnterBattle(protectedTileEnemy);
                     break;
                 }
-                //// get tile state on current path point
-                //TileState tileState = GetObjectOnTile(pathPoint);
-                //// verify if state requires hero to enter battle
-                //if ((TileState.EnemyParty == tileState) || (TileState.Protected == tileState))
-                //{
-                //    // enter battle
-                //    //EnterBattleOnMove(pathPoint);
-                //    transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedHero, enemyOnMap);
-                //    // Remove hero Selection
-                //    SetSelection(Selection.None);
-                //    // break move
-                //    break;
-                //}
-                //// verify if state requires hero to stop
-                //// - 2 heroes cannot be on the same tile
-                //// - hero and treasure chest cannot be on the same tile
-                //if (TileState.PlayerParty)
-                //{
-
-                //}
-                //// Verify if we have reached last tile in path here
-                //if (movePath.Count - 1 == i)
-                //{
-                //    // We finished our move
-                //    EndMoveTransition();
-                //}
             }
             // verify if we reached this code without breaking move or entering city or protected enemy tile
             if (!(breakMove || enterCity || protectedTileEnemy))
@@ -2081,10 +1885,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    //public void OnPointerEnterChildObject(GameObject childGameObject, PointerEventData eventData)
-    //{
-
-    //}
     public void OnPointerEnterChildObject(GameObject childGameObject, PointerEventData eventData)
     {
         //// set default tile highlighter color
@@ -2383,20 +2183,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 Debug.LogError("Unknown mode " + mode.ToString());
                 break;
         }
-        //// Update color of tile highlighter
-        //if (label)
-        //{
-        //    // Hide tile highlighter if mouse if over label
-        //    Debug.Log("Hide tile highlighter");
-        //    tileHighlighterColor = new Color32(0, 0, 0, 0);
-        //}
-        //UpdateTileHighlighterColor();
     }
 
-    //public void OnPointerExitChildObject(GameObject childGameObject, PointerEventData eventData)
-    //{
-
-    //}
     public void OnPointerExitChildObject(GameObject childGameObject, PointerEventData eventData)
     {
         switch (mode)
