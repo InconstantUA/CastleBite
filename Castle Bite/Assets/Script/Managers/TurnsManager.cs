@@ -226,10 +226,11 @@ public class TurnsManager : MonoBehaviour {
                 }
             }
         }
+        // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
+        // mapManager.SetCitiesPassableByFaction(activePlayer.Faction);
+        mapManager.InitTilesMap();
         // Update top player income info panel
         transform.root.Find("MiscUI/TopInfoPanel").GetComponentInChildren<TextBoxDisplayCurrentGoldValue>(true).UpdateGoldValue();
-        // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
-        // ..
         // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
         transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
     }

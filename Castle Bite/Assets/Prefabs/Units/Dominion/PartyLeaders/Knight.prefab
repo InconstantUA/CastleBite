@@ -63,7 +63,7 @@ MonoBehaviour:
     unitPowerScope: 0
     unitInitiative: 50
     uniquePowerModifiers:
-    - target: 1
+    - modifierScope: 0
       upmAppliedBuff: 0
       upmAppliedDebuff: 3
       upmPower: 20
@@ -73,8 +73,10 @@ MonoBehaviour:
       upmChanceIncrementOnLevelUp: 3
       upmSource: 1
       upmOrigin: 0
+      modifierApplied: 0
       upmDurationLeft: 0
       skillPowerMultiplier: 1
+      canBeAppliedToTheUnitsWithStatuses: 
     unitRole: Role
     unitBriefDescription: Brief description
     unitFullDescription: Full description
@@ -95,8 +97,8 @@ MonoBehaviour:
     unlocksUnitTypes: 
     upgradeCost: 200
     statsUpgradesCount: 0
-    movePointsCurrent: 5
-    movePointsMax: 5
+    movePointsCurrent: 10
+    movePointsMax: 10
     scoutingRange: 4
     unitSkills:
     - mName: 0
@@ -136,7 +138,7 @@ MonoBehaviour:
       mLevel:
         mCurrent: 0
     unitCellAddress: 
-    unitEquipment: []
+    unitIventory: []
 --- !u!224 &224364017913245646
 RectTransform:
   m_ObjectHideFlags: 1

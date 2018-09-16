@@ -41,7 +41,7 @@ MonoBehaviour:
   terraData:
     terraType: 4
     terraIsPassable: 1
-    terraMoveCost: 3
+    terraMoveCost: 4
 --- !u!224 &224505713874367778
 RectTransform:
   m_ObjectHideFlags: 1

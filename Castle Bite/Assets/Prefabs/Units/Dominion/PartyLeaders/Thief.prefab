@@ -83,8 +83,8 @@ MonoBehaviour:
     unlocksUnitTypes: 
     upgradeCost: 200
     statsUpgradesCount: 0
-    movePointsCurrent: 7
-    movePointsMax: 7
+    movePointsCurrent: 14
+    movePointsMax: 14
     scoutingRange: 6
     unitSkills:
     - mName: 0
@@ -124,7 +124,7 @@ MonoBehaviour:
       mLevel:
         mCurrent: 0
     unitCellAddress: 
-    unitEquipment: []
+    unitIventory: []
 --- !u!224 &224051252343539266
 RectTransform:
   m_ObjectHideFlags: 1

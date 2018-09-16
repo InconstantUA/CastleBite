@@ -314,7 +314,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void InitTilesMap()
+    public void InitTilesMap()
     {
         // create the tiles map
         tilesmap = new float[tileMapWidth, tileMapHeight];
@@ -337,6 +337,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
+        // Get active player faction
+        Faction activePlayerFaction = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction;
         // Loop over all map objects
         foreach(MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
         {
@@ -345,8 +347,26 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // verify if object is located within tile map border
             if (PositionIsWithinTilesMap(pos))
             {
-                // mark tile as non-passable
-                tilesmap[pos.x, pos.y] = 0;
+                // verify if map object is city
+                if (mapObject.GetComponent<MapCity>() != null)
+                {
+                    // verify if city has the same faction as the active player (belongs to active player)
+                    if (mapObject.GetComponent<MapCity>().LCity.CityFaction == activePlayerFaction)
+                    {
+                        // mark tile as passable
+                        tilesmap[pos.x, pos.y] = 1;
+                    }
+                    else
+                    {
+                        // mark tile as non-passable
+                        tilesmap[pos.x, pos.y] = 0;
+                    }
+                }
+                else
+                {
+                    // mark tile as non-passable
+                    tilesmap[pos.x, pos.y] = 0;
+                }
             }
         }
         //// Set all tiles occupied by heroes or cities on map as non-passable
@@ -2816,5 +2836,26 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // start move 
         Debug.Log("StartCoroutine(Move())");
         StartCoroutine(Move());
+    }
+
+    public void SetCitiesPassableByFaction(Faction faction)
+    {
+        // loop though all cities on the map
+        foreach(MapCity mapCity in GetComponentsInChildren<MapCity>())
+        {
+            // get city tile coordintates
+            Vector2Int cityTileCoords = GetTileByPosition(mapCity.transform.position);
+            // verify map city faction
+            if (mapCity.LCity.CityFaction == faction)
+            {
+                // set city tile passable for active player
+                mapTiles[cityTileCoords.x, cityTileCoords.y].Terra.TerraIsPassable = true;
+            }
+            else
+            {
+                // set city tile not passable for active player
+                mapTiles[cityTileCoords.x, cityTileCoords.y].Terra.TerraIsPassable = false;
+            }
+        }
     }
 }
