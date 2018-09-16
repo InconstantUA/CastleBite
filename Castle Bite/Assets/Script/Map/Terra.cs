@@ -22,7 +22,8 @@ public enum TerraType
     Lava,
     Volcano,
     Road,
-    City
+    City,
+    Valley
 }
 
 [Serializable]

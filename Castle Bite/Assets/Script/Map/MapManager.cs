@@ -1087,6 +1087,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
             // Init variables
             GameObject gameObjectOnTile = null;
+            // initialize number of days to reach path point variable
+            int numberOfDaysToReachThisPathPoint = 0;
+            // Loop through each path point
             foreach (NesScripts.Controls.PathFind.Point pathPoint in movePath)
             {
                 // output path to debug
@@ -1152,18 +1155,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 {
                     // Activate not enough move points modifier
                     notEnoughMovePoints = true;
-                    // get the rest of division
-                    float restOfDivision = movePointsLeft % partyLeader.GetEffectiveMaxMovePoints();
-                    Debug.Log("Rest of division is " + restOfDivision);
-                    // verify if we has reached next day limit
-                    if (restOfDivision == 0)
+                    //// get the rest of division
+                    //float restOfDivision = movePointsLeft % partyLeader.GetEffectiveMaxMovePoints();
+                    //Debug.Log("Rest of division is " + restOfDivision);
+                    //// verify if we has reached next day limit
+                    //if (restOfDivision == 0)
+                    //{
+                    int newNumberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
+                    // verify if number of days to reach this path point has changed compare to previous value
+                    if (newNumberOfDaysToReachThisPathPoint != numberOfDaysToReachThisPathPoint)
                     {
                         // Get number of days needed to reach this path point
-                        int numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
+                        numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
                         Debug.Log("numberOfDaysToReachThisPathPoint = " + numberOfDaysToReachThisPathPoint);
                         // add day indicator to the move path highter
                         mapTiles[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();
                     }
+                    //}
                 }
                 // verify if enemy on way
                 if (enemyOnWay)
@@ -1179,8 +1187,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
                 // Highlight tile
                 mapTiles[pathPoint.x, pathPoint.y].transform.Find("TileHighliter").GetComponent<Text>().color = tileHighlighColor;
-                // reduce number of move points left
-                movePointsLeft -= 1;
+                // reduce number of move points left based on the tile move cost
+                movePointsLeft -= mapTiles[pathPoint.x, pathPoint.y].Terra.TerraMoveCost;
             }
         }
     }
@@ -1748,7 +1756,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             for (int i = 0; i < (movePath.Count) && (partyLeader.MovePointsCurrent >= 1) ; i++)
             {
                 // consume move points from hero
-                partyLeader.MovePointsCurrent -= 1;
+                partyLeader.MovePointsCurrent -= mapTiles[movePath[i].x, movePath[i].y].Terra.TerraMoveCost;
+                // verify if move points number is less than 0
+                if (partyLeader.MovePointsCurrent < 0)
+                {
+                    // reset it to 0
+                    partyLeader.MovePointsCurrent = 0;
+                }
                 // update focus panel info
                 mapFocusPanel.UpdateMovePointsInfo();
                 // .. change highlight for move points where user do not have enough move points
