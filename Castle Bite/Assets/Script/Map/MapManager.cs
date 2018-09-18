@@ -123,7 +123,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     // for debug
     Vector3 mousePosition;
-    Vector3 mapPosiiton;
+    Vector3 mapPosition;
 
     // Vector3 mouseOnDragStartPosition;
     Vector3 mouseOnDownStartPosition;
@@ -207,9 +207,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //xMaxDef = (Screen.width / 2) + xDeltaMax;
         //yMaxDef = (Screen.height / 2) + yDeltaMax;
         xMinDef = -mapWidth + Screen.width;
-        yMinDef = -mapHeight + Screen.height;
         xMaxDef = 0;
-        yMaxDef = 0;
+        yMinDef = -mapHeight + Screen.height + tileSize;
+        yMaxDef = -tileSize;
         // For map tile highligter in selection mode
         tileHighlighterTr = transform.Find("TileHighlighter");
         tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
@@ -1346,16 +1346,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // this actually depends one the current position of the map
             Vector3 mapNewPosiiton = Camera.main.WorldToScreenPoint(transform.position);
             // keep z position otherwise map will disappear
-            mapPosiiton = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
+            mapPosition = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
             // xCorrectionOnDragStart = (Screen.width / 2) - mouseOnDragStartPosition.x;
             // yCorrectionOnDragStart = (Screen.height / 2) - mouseOnDragStartPosition.y;
-            Debug.Log("Map   [" + mapPosiiton.x + "," + mapPosiiton.y + "]");
+            Debug.Log("Map   [" + mapPosition.x + "," + mapPosition.y + "]");
             Debug.Log("Mouse [" + mouseOnDownStartPosition.x + "," + mouseOnDownStartPosition.y + "]");
-            xCorrectionOnDragStart = mapPosiiton.x - mouseOnDownStartPosition.x;
-            yCorrectionOnDragStart = mapPosiiton.y - mouseOnDownStartPosition.y;
+            xCorrectionOnDragStart = mapPosition.x - mouseOnDownStartPosition.x;
+            yCorrectionOnDragStart = mapPosition.y - mouseOnDownStartPosition.y;
             // this corrections should also be applied to x and y min and max
-            xMin = xMinDef - xCorrectionOnDragStart;
-            xMax = xMaxDef - xCorrectionOnDragStart;
+            //xMin = xMinDef - xCorrectionOnDragStart;
+            //xMax = xMaxDef - xCorrectionOnDragStart;
+            xMin = mouseOnDownStartPosition.x - mapPosition.x + Screen.width - mapWidth + tileSize;
+            xMax = mouseOnDownStartPosition.x - mapPosition.x - tileSize;
             yMin = yMinDef - yCorrectionOnDragStart;
             yMax = yMaxDef - yCorrectionOnDragStart;
         }
@@ -1365,42 +1367,132 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    //public void OnDrag(PointerEventData eventData)
+    //{
+    //    // verify if user clicked left or right mouse button
+    //    if (Input.GetMouseButton(0))
+    //    {
+    //        // on left mouse held down
+    //        mousePosition = Input.mousePosition;
+    //        mapPosiiton = Camera.main.WorldToScreenPoint(transform.position);
+    //        // make sure that new position is within the borders of the map
+    //        float newPositionX = mousePosition.x;
+    //        Debug.Log("Before:" + GetIndexByPosition(mousePosition.x) / tileSize + "-" + GetIndexByPosition(xMax) / tileSize);
+    //        int xCurrent = GetIndexByPosition(transform.position.x) / tileSize;
+    //        //if (mousePosition.x <= xMin)
+    //        if (mousePosition.x < xMin)
+    //        {
+    //            newPositionX = xMin;
+    //            //// set first map slice as last
+    //            //transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
+    //            //// reset position
+    //            //newPositionX = xMin + tileSize;
+    //            //// adjust xMin
+    //            //xMin -= tileSize;
+    //            //// adjust xMax
+    //            //xMax -= tileSize;
+    //        }
+    //        //else if (mousePosition.x >= xMax)
+    //        else if (mousePosition.x > xMax)
+    //        {
+    //            newPositionX = xMax;
+    //            //// set last slice as first
+    //            //transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
+    //            //// reset position
+    //            //// newPositionX = xMax - tileSize;
+    //            //// adjust xMax
+    //            //xMax += tileSize;
+    //            //// adjust xMin
+    //            //xMin += tileSize;
+    //        }
+    //        float newPositionY = mousePosition.y;
+    //        if (mousePosition.y <= yMin)
+    //        {
+    //            newPositionY = yMin;
+    //        }
+    //        else if (mousePosition.y >= yMax)
+    //        {
+    //            newPositionY = yMax;
+    //        }
+    //        // for unknown reason z is set to -30000 on drag, that is why I use original value
+    //        Vector3 newPosition = new Vector3(newPositionX + xCorrectionOnDragStart, newPositionY + yCorrectionOnDragStart, 0);
+    //        // make drag to allign with tile size
+    //        float x = Mathf.RoundToInt(newPosition.x / tileSize) * tileSize;
+    //        float y = Mathf.RoundToInt(newPosition.y / tileSize) * tileSize;
+    //        newPosition = new Vector3(x, y, newPosition.z);
+    //        Vector3 newPositionTransformed = Camera.main.ScreenToWorldPoint(newPosition);
+    //        transform.position = new Vector3(newPositionTransformed.x, newPositionTransformed.y, 0);
+    //    }
+    //    else if (Input.GetMouseButton(1))
+    //    {
+    //        // on right mouse held down
+    //    }
+    //}
+
+    public int RoundToTileSize(float position)
+    {
+        return Mathf.RoundToInt(position / tileSize) * tileSize;
+    }
+
+    int rotationPositionModifier = 0;
+
     public void OnDrag(PointerEventData eventData)
     {
         // verify if user clicked left or right mouse button
         if (Input.GetMouseButton(0))
         {
             // on left mouse held down
-            mousePosition = Input.mousePosition;
-            mapPosiiton = Camera.main.WorldToScreenPoint(transform.position);
-            // make sure that new position is within the borders of the map
-            float newPositionX = mousePosition.x;
-            if (mousePosition.x <= xMin)
-            {
-                newPositionX = xMin;
-            }
-            else if (mousePosition.x >= xMax)
-            {
-                newPositionX = xMax;
-            }
-            float newPositionY = mousePosition.y;
-            if (mousePosition.y <= yMin)
+            float newPositionY = Input.mousePosition.y;
+            if (Input.mousePosition.y <= yMin)
             {
                 newPositionY = yMin;
             }
-            else if (mousePosition.y >= yMax)
+            else if (Input.mousePosition.y >= yMax)
             {
                 newPositionY = yMax;
             }
-            // for unknown reason z is set to -30000 on drag, that is why I use original value
-            Vector3 newPosition = new Vector3(newPositionX + xCorrectionOnDragStart, newPositionY + yCorrectionOnDragStart, 0);
-            // make drag to allign with tile size
-            float x = Mathf.RoundToInt(newPosition.x / tileSize) * tileSize;
-            float y = Mathf.RoundToInt(newPosition.y / tileSize) * tileSize;
-            newPosition = new Vector3(x, y, newPosition.z);
-            Vector3 newPositionTransformed = Camera.main.ScreenToWorldPoint(newPosition);
-            transform.position = new Vector3(newPositionTransformed.x, newPositionTransformed.y, 0);
-            //    Debug.Log("transform " + transform.position.x + " " + transform.position.y + " " + transform.position.z);
+            // for unknown reason z is set to -30000 on drag, that is why I reset it to 0
+            transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, newPositionY + yCorrectionOnDragStart, 0);
+            // Debug.Log("New position: " + transform.position.x + ":" + transform.position.y + ":" + transform.position.z);
+            // define border
+            float leftBorder = -tileSize;
+            float rightBorder = Screen.width - mapWidth + tileSize;
+            // verify if map has reached left border with tilesize buffer
+            if (transform.position.x >= leftBorder)
+            {
+                // get number of rotaitons required based on the distance and tile size
+                int numberOfRotationsRequired = Math.Abs(Mathf.RoundToInt(transform.position.x / tileSize)) + 1;
+                for (int i = 0; i < numberOfRotationsRequired; i++)
+                {
+                    // do rotation
+                    Debug.Log("Set last slice as first");
+                    // set last slice as first
+                    transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
+                    // adjust position by one tile size to the left
+                    transform.position = new Vector3(transform.position.x - tileSize, transform.position.y, 0);
+                    // increment rotation position modifier by tile size
+                    rotationPositionModifier -= tileSize;
+                }
+            }
+            // verify if map has reached right border with tilesize buffer
+            else if (transform.position.x <= rightBorder)
+            {
+                // get number of rotaitons required based on the distance and tile size
+                int numberOfRotationsRequired = Mathf.Abs(Mathf.RoundToInt((rightBorder - transform.position.x) / tileSize)) + 1;
+                // int numberOfRotationsRequired = 1;
+                Debug.Log("Number of rotaions required is " + numberOfRotationsRequired);
+                for (int i = 0; i < numberOfRotationsRequired; i++)
+                {
+                    // do rotation
+                    Debug.Log("Set first map slice as last");
+                    // set first map slice as last
+                    transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
+                    // shift position by one tile size to the right
+                    transform.position = new Vector3(transform.position.x + tileSize, transform.position.y, 0);
+                    // increment rotation position modifier by tile size
+                    rotationPositionModifier += tileSize;
+                }
+            }
         }
         else if (Input.GetMouseButton(1))
         {
@@ -1408,12 +1500,35 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    //public void OnEndDrag(PointerEventData eventData)
+    //{
+    //    // verify if user clicked left or right mouse button
+    //    if (Input.GetMouseButtonUp(0))
+    //    {
+    //        // on left mouse up
+    //        // enter back to Browse mode
+    //        SetMode(Mode.Browse);
+    //        // set tile highighter under mouse
+    //        SetTileHighlighterToMousePoistion();
+    //        // allow map to block raycasts
+    //        GetComponent<CanvasGroup>().blocksRaycasts = true;
+    //    }
+    //    else if (Input.GetMouseButtonUp(1))
+    //    {
+    //        // on right mouse up
+    //    }
+    //}
+
     public void OnEndDrag(PointerEventData eventData)
     {
         // verify if user clicked left or right mouse button
         if (Input.GetMouseButtonUp(0))
         {
             // on left mouse up
+            // align map with tile size
+            transform.position = new Vector3(RoundToTileSize(transform.position.x), RoundToTileSize(transform.position.y), RoundToTileSize(transform.position.z));
+            // reset rotation position modifier
+            rotationPositionModifier = 0;
             // enter back to Browse mode
             SetMode(Mode.Browse);
             // set tile highighter under mouse
