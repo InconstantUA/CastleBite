@@ -120,6 +120,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     float xMax;
     float yMin;
     float yMax;
+    // modifier for position based on slices rotations done
+    int rotationPositionModifier = 0;
+    public enum Shift { Left, Right };
 
     // for debug
     Vector3 mousePosition;
@@ -818,6 +821,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+
+
     public Vector2Int GetTileByPosition(Vector3 position)
     {
         // calculate tile position base on object position and map position
@@ -862,20 +867,42 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void InitializeMapTiles()
     {
         // todo: better keep them as string and highlight specific elements
+        // Get map slices container
+        Transform mapSlicesContainer = transform.Find("MapSlices");
         // Transform mapTilesTransform = transform.Find("MapTiles");
+        // Create map tiles array
         mapTiles = new MapTile[tileMapWidth, tileMapHeight];
         // init row and colum index variables
         Vector2Int tileCoordinates;
         // convert mapTiles to 2dimentional array
-        foreach (MapTile mapTile in transform.Find("MapTiles").GetComponentsInChildren<MapTile>(true))
+        int i = 0;
+        foreach(Transform childTransform in mapSlicesContainer)
         {
-            // get tile coordintates by tile object position
-            tileCoordinates = GetTileByPosition(mapTile.transform.position);
-            // assign tile object to mapTileGOs
-            mapTiles[tileCoordinates.x, tileCoordinates.y] = mapTile;
-            // disable game object
-            // mapTile.gameObject.SetActive(false);
+            MapTile[] _mapTiles = childTransform.GetComponentsInChildren<MapTile>(true);
+            for (int j = _mapTiles.Length - 1; j >= 0; j--)
+            {
+                // assign tile object to mapTiles array
+                mapTiles[i, j] = _mapTiles[j];
+            }
+            i++;
         }
+        //foreach (MapTile mapTile in transform.Find("MapTiles").GetComponentsInChildren<MapTile>(true))
+        //foreach (MapTile mapTile in mapSlicesContainer.GetComponentsInChildren<MapTile>(true))
+        //{
+        //    // get tile coordintates by tile object position
+        //    tileCoordinates = GetTileByPosition(mapTile.transform.position);
+        //    Debug.Log(tileCoordinates.x + ":" + tileCoordinates.y);
+        //    // assign tile object to mapTiles array
+        //    mapTiles[tileCoordinates.x, tileCoordinates.y] = mapTile;
+        //    // move tile to respective map slice
+        //    //mapTile.transform.SetParent(mapSlicesContainer.GetChild(tileCoordinates.x), false);
+        //    // reset position x to -8
+        //    //mapTile.transform.position = new Vector3(-8, mapTile.transform.position.y, 0);
+        //    // rename tile
+        //    //mapTile.name = "MapTile (" + tileCoordinates.y + ")";
+        //    // disable game object
+        //    // mapTile.gameObject.SetActive(false);
+        //}
         //for (int x = 0; x < tileHighlighters.GetLength(0); x += 1)
         //{
         //    for (int y = 0; y < tileHighlighters.GetLength(1); y += 1)
@@ -1349,8 +1376,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             mapPosition = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
             // xCorrectionOnDragStart = (Screen.width / 2) - mouseOnDragStartPosition.x;
             // yCorrectionOnDragStart = (Screen.height / 2) - mouseOnDragStartPosition.y;
-            Debug.Log("Map   [" + mapPosition.x + "," + mapPosition.y + "]");
-            Debug.Log("Mouse [" + mouseOnDownStartPosition.x + "," + mouseOnDownStartPosition.y + "]");
+            //Debug.Log("Map   [" + mapPosition.x + "," + mapPosition.y + "]");
+            //Debug.Log("Mouse [" + mouseOnDownStartPosition.x + "," + mouseOnDownStartPosition.y + "]");
             xCorrectionOnDragStart = mapPosition.x - mouseOnDownStartPosition.x;
             yCorrectionOnDragStart = mapPosition.y - mouseOnDownStartPosition.y;
             // this corrections should also be applied to x and y min and max
@@ -1434,7 +1461,72 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return Mathf.RoundToInt(position / tileSize) * tileSize;
     }
 
-    int rotationPositionModifier = 0;
+    void ShiftMapObjects(Shift shiftDirection, int count)
+    {
+        int shiftPositionModifier = 0;
+        switch (shiftDirection)
+        {
+            case Shift.Left:
+                shiftPositionModifier = -count * tileSize;
+                break;
+            case Shift.Right:
+                shiftPositionModifier = count * tileSize;
+                break;
+            default:
+                Debug.LogError("Unknown shift direction: " + shiftDirection.ToString());
+                break;
+        }
+        // shift objects on map
+        foreach (MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
+        {
+            float newPositionX = mapObject.transform.position.x + shiftPositionModifier;
+            // verify if object is moving off screen
+            Debug.Log(mapObject.name + " " + Mathf.RoundToInt(newPositionX / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
+            // object tile is lower or equal than map tile position with 1 tile shift
+            //if (Mathf.RoundToInt(mapObject.transform.position.x / tileSize) <= Mathf.RoundToInt((transform.position.x + tileSize) / tileSize))
+            if (Mathf.RoundToInt(newPositionX / tileSize) < Mathf.RoundToInt(transform.position.x / tileSize))
+            {
+                // move object to the other side of the map
+                // or shift it left or rotate
+                newPositionX += mapWidth;
+            }
+            // verify if object tile is higher than map maximum tile position
+            //else if (Mathf.RoundToInt(mapObject.transform.position.x / tileSize) >= Mathf.RoundToInt((transform.position.x + mapWidth - tileSize) / tileSize))
+            //else if (Mathf.RoundToInt(mapObject.transform.position.x / tileSize) > tileMapWidth)
+            //{
+            //    // move object to the other side of the map
+            //    // or shift it right or rotate
+            //    newPositionX -= mapWidth;
+            //}
+            // set object position
+            mapObject.transform.position = new Vector3(newPositionX, mapObject.transform.position.y, 0);
+            Debug.Log(mapObject.name + " " + Mathf.RoundToInt(mapObject.transform.position.x / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
+        }
+    }
+
+    void ShiftTiles(Shift shiftDirection, int count)
+    {
+        // get tiles parent container
+        //Transform tilesContainer = transform.Find("MapTiles");
+        //switch (shiftDirection)
+        //{
+        //    case Shift.Left:
+        //        for (int j = 1; j <= count; j++)
+        //        {
+        //            for (int i = tileMapHeight * j - 1; i >= 0; i--)
+        //            {
+        //                // move all childs in one column to the end of the list
+        //                tilesContainer.GetChild(i).SetAsLastSibling();
+        //            }
+        //        }
+        //        break;
+        //    case Shift.Right:
+        //        break;
+        //    default:
+        //        Debug.LogError("Unknown shift direction: " + shiftDirection.ToString());
+        //        break;
+        //}
+    }
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -1473,6 +1565,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // increment rotation position modifier by tile size
                     rotationPositionModifier -= tileSize;
                 }
+                // Shift map objects
+                ShiftMapObjects(Shift.Right, numberOfRotationsRequired);
+                ShiftTiles(Shift.Right, numberOfRotationsRequired);
             }
             // verify if map has reached right border with tilesize buffer
             else if (transform.position.x <= rightBorder)
@@ -1492,6 +1587,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // increment rotation position modifier by tile size
                     rotationPositionModifier += tileSize;
                 }
+                // Shift map objects
+                ShiftMapObjects(Shift.Left, numberOfRotationsRequired);
+                ShiftTiles(Shift.Left, numberOfRotationsRequired);
             }
         }
         else if (Input.GetMouseButton(1))
