@@ -889,7 +889,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Create map tiles array
         mapTiles = new MapTile[tileMapWidth, tileMapHeight];
         // init row and colum index variables
-        Vector2Int tileCoordinates;
+        // Vector2Int tileCoordinates;
         // convert mapTiles to 2dimentional array
         int i = 0;
         foreach(Transform childTransform in mapSlicesContainer)
@@ -1345,6 +1345,64 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     grid.UpdateGrid(tilesmap);
                 }
             }
+            // because we are using borderless screen we need to find the best possible path
+            // we have an object for we the path is needed to be found
+            // create 3 grids
+            // get the column ID where our object is located
+            int columnId = from.x;
+            // init new tiles map, which later will be used for grid generation
+            float[,] newTileMap = new float[tileMapWidth, tileMapHeight];
+            // - 1st grid where the object is located on the left edge of the grid
+            //// fill in tile map starting from the columnt where the object is now and finishing with the colum to the left from the object
+            //// set new tile map column index
+            //int nc = 0;
+            //for (int c = columnId; c < tileMapWidth; c++)
+            //{
+            //    // loop though all tiles in a column
+            //    for (int i = 0; i < tileMapHeight; i++)
+            //    {
+            //        // add tile to new tilemap from current tile map
+            //        newTileMap[nc, i] = tilesmap[c, i];
+            //    }
+            //    // increment new tile map column identifier
+            //    nc++;
+            //}
+            //// fill in the rest
+            //for (int c = 0; c < columnId; c++)
+            //{
+            //    // loop though all tiles in a column
+            //    for (int i = 0; i < tileMapHeight; i++)
+            //    {
+            //        // add tile to new tilemap from current tile map
+            //        newTileMap[nc, i] = tilesmap[c, i];
+            //    }
+            //    // increment new tile map column identifier
+            //    nc++;
+            //}
+            //// create new grid
+            //NesScripts.Controls.PathFind.Grid newGrid = new NesScripts.Controls.PathFind.Grid(newTileMap);
+            //// init new to x position
+            //int newTo;
+            //// get new to x position
+            //if (_to.x < _from.x)
+            //{
+            //    newTo = 1 + _to.x;
+            //}
+            //else if (_to.x == _from.x)
+            //{
+            //    newTo = 0;
+            //}
+            //else
+            //{
+            //    newTo = _to.x - _from.x;
+            //}
+            //// find path on a new grid
+            //movePath = NesScripts.Controls.PathFind.Pathfinding.FindPath(newGrid, new NesScripts.Controls.PathFind.Point(0, _from.y), new NesScripts.Controls.PathFind.Point(newTo, to.y));
+            // - 2nd grid where the object is located on the right edge of the grid
+            // ..
+            // - 3rd grid where the object is located in the middle of the grid
+            // ..
+            // default Find path
             movePath = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to);
             // for Manhattan distance
             // List<NesScripts.Controls.PathFind.Point> path = NesScripts.Controls.PathFind.Pathfinding.FindPath(grid, _from, _to, NesScripts.Controls.Pathfinding.DistanceType.Manhattan);

@@ -178,7 +178,25 @@ namespace NesScripts.Controls.PathFind
 			int checkX = node.gridX + x;
 			int checkY = node.gridY + y;
 
-			if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY)
+            // extension for round world
+            if (checkX == -1)
+            {
+                checkX = gridSizeX - 1;
+            }
+            else if (checkX == gridSizeX)
+            {
+                checkX = 0;
+            }
+            if (checkY == -1)
+            {
+                checkY = gridSizeY - 1;
+            }
+            else if (checkY == gridSizeY)
+            {
+                checkY = 0;
+            }
+
+            if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY)
 			{
 				neighbours.Add(nodes[checkX, checkY]);
 				return true;

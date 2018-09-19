@@ -6,6 +6,7 @@
  * Since: 2016. 
 */
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace NesScripts.Controls.PathFind
 {
@@ -104,11 +105,11 @@ namespace NesScripts.Controls.PathFind
                         continue;
                     }
 
-                    int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour) * (ignorePrices ? 1 : (int)(10.0f * neighbour.price));
+                    int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour, grid) * (ignorePrices ? 1 : (int)(10.0f * neighbour.price));
                     if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                     {
                         neighbour.gCost = newMovementCostToNeighbour;
-                        neighbour.hCost = GetDistance(neighbour, targetNode);
+                        neighbour.hCost = GetDistance(neighbour, targetNode, grid);
                         neighbour.parent = currentNode;
 
                         if (!openSet.Contains(neighbour))
@@ -147,14 +148,28 @@ namespace NesScripts.Controls.PathFind
         /// <param name="nodeA">First node.</param>
         /// <param name="nodeB">Second node.</param>
         /// <returns>Distance between nodes.</returns>
-        private static int GetDistance(Node nodeA, Node nodeB)
+        private static int GetDistance(Node nodeA, Node nodeB, Grid grid)
         {
-            int dstX = System.Math.Abs(nodeA.gridX - nodeB.gridX);
-            int dstY = System.Math.Abs(nodeA.gridY - nodeB.gridY);
-            return (dstX > dstY) ? 
-                14 * dstY + 10 * (dstX - dstY) :
-                14 * dstX + 10 * (dstY - dstX);
+            // Commented out version which does not work for the map where edges are wrap around (like a sphere)
+            //int dstX = System.Math.Abs(nodeA.gridX - nodeB.gridX);
+            //int dstY = System.Math.Abs(nodeA.gridY - nodeB.gridY);
+            //return (dstX > dstY) ?
+            //    14 * dstY + 10 * (dstX - dstY) :
+            //    14 * dstX + 10 * (dstY - dstX);
+
+            return Mathf.RoundToInt(GetDistanceWrapped(nodeA, nodeB, grid));
         }
+
+        private static float GetDistanceWrapped(Node nodeA, Node nodeB, Grid grid)
+        {
+            int MapX = grid.nodes.GetLength(0);
+            int MapY = grid.nodes.GetLength(1);
+            int DirX = ((nodeA.gridX - nodeB.gridX + 3 * MapX / 2) % MapX) - MapX / 2;
+            int DirY = ((nodeA.gridY - nodeB.gridY + 3 * MapY / 2) % MapY) - MapY / 2;
+            // return distance
+            return Mathf.Sqrt((float)(DirX * DirX + DirY * DirY));
+        }
+
     }
 
 }
