@@ -821,14 +821,30 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-
+    int GetShiftedTilePositionX(int defaultPositionX)
+    {
+        int shiftedTilePositionX = defaultPositionX - mapShift;
+        // verify if we are not ouside of the grid borders
+        if (shiftedTilePositionX >= tileMapWidth)
+        {
+            // reset it
+            shiftedTilePositionX -= tileMapWidth;
+        }
+        // verify if it is not less than 0
+        else if (shiftedTilePositionX < 0)
+        {
+            // reset it
+            shiftedTilePositionX += tileMapWidth;
+        }
+        return shiftedTilePositionX;
+    }
 
     public Vector2Int GetTileByPosition(Vector3 position)
     {
         // calculate tile position base on object position and map position
         return new Vector2Int
         {
-            x = Mathf.FloorToInt((position.x - transform.position.x) / tileSize),
+            x = GetShiftedTilePositionX(Mathf.FloorToInt((position.x - transform.position.x) / tileSize)),
             y = Mathf.FloorToInt((position.y - transform.position.y) / tileSize)
         };
     }
@@ -1476,56 +1492,83 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 Debug.LogError("Unknown shift direction: " + shiftDirection.ToString());
                 break;
         }
+        // init map world corners positions array
+        Vector3[] mapWorldCorners = new Vector3[4];
+        // Get map world corners
+        // structure:
+        // 12
+        // 03
+        GetComponent<RectTransform>().GetWorldCorners(mapWorldCorners);
+        // init buffer to prevent false positives
+        float buffer = tileSize / 3;
+        // init transform world corners positions array
+        Vector3[] mapObjectWorldCorners = new Vector3[4];
         // shift objects on map
         foreach (MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
         {
             float newPositionX = mapObject.transform.position.x + shiftPositionModifier;
+            // set object position
+            mapObject.transform.position = new Vector3(newPositionX, mapObject.transform.position.y, 0);
+            // get objects GetWorldCorners
+            mapObject.GetComponent<RectTransform>().GetWorldCorners(mapObjectWorldCorners);
             // verify if object is moving off screen
-            Debug.Log(mapObject.name + " " + Mathf.RoundToInt(newPositionX / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
+            // Debug.Log(mapObject.name + " " + Mathf.RoundToInt(newPositionX / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
             // object tile is lower or equal than map tile position with 1 tile shift
             //if (Mathf.RoundToInt(mapObject.transform.position.x / tileSize) <= Mathf.RoundToInt((transform.position.x + tileSize) / tileSize))
-            if (Mathf.RoundToInt(newPositionX / tileSize) < Mathf.RoundToInt(transform.position.x / tileSize))
+            //if (Mathf.RoundToInt(newPositionX / tileSize) < Mathf.RoundToInt(transform.position.x / tileSize))
+            // Debug.Log(mapObjectWorldCorners[0].x + ":" + mapWorldCorners[0].x);
+            // verify if objects right border position is less than the map left border position
+            if (mapObjectWorldCorners[3].x - buffer < mapWorldCorners[0].x)
             {
                 // move object to the other side of the map
                 // or shift it left or rotate
                 newPositionX += mapWidth;
             }
-            // verify if object tile is higher than map maximum tile position
             //else if (Mathf.RoundToInt(mapObject.transform.position.x / tileSize) >= Mathf.RoundToInt((transform.position.x + mapWidth - tileSize) / tileSize))
             //else if (Mathf.RoundToInt(mapObject.transform.position.x / tileSize) > tileMapWidth)
-            //{
-            //    // move object to the other side of the map
-            //    // or shift it right or rotate
-            //    newPositionX -= mapWidth;
-            //}
+            // verify if objects left border position is more than the map right border position
+            if (mapObjectWorldCorners[0].x + buffer > mapWorldCorners[3].x)
+            {
+                // move object to the other side of the map
+                // or shift it right or rotate
+                newPositionX -= mapWidth;
+            }
             // set object position
             mapObject.transform.position = new Vector3(newPositionX, mapObject.transform.position.y, 0);
-            Debug.Log(mapObject.name + " " + Mathf.RoundToInt(mapObject.transform.position.x / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
+            // Debug.Log(mapObject.name + " " + Mathf.RoundToInt(mapObject.transform.position.x / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
         }
     }
 
+    int mapShift;
+
     void ShiftTiles(Shift shiftDirection, int count)
     {
-        // get tiles parent container
-        //Transform tilesContainer = transform.Find("MapTiles");
-        //switch (shiftDirection)
-        //{
-        //    case Shift.Left:
-        //        for (int j = 1; j <= count; j++)
-        //        {
-        //            for (int i = tileMapHeight * j - 1; i >= 0; i--)
-        //            {
-        //                // move all childs in one column to the end of the list
-        //                tilesContainer.GetChild(i).SetAsLastSibling();
-        //            }
-        //        }
-        //        break;
-        //    case Shift.Right:
-        //        break;
-        //    default:
-        //        Debug.LogError("Unknown shift direction: " + shiftDirection.ToString());
-        //        break;
-        //}
+        switch (shiftDirection)
+        {
+            case Shift.Left:
+                mapShift -= count;
+                break;
+            case Shift.Right:
+                mapShift += count;
+                break;
+            default:
+                Debug.LogError("Unknown shift direction: " + shiftDirection.ToString());
+                break;
+        }
+        // verify if shift made a full circle
+        if (Math.Abs(mapShift) >= tileMapWidth)
+        {
+            Debug.Log("Reset map shift");
+            if (mapShift > 0)
+            {
+                mapShift -= tileMapWidth;
+            }
+            else
+            {
+                mapShift += tileMapWidth;
+            }
+        }
+        Debug.Log("Map Shift: " + mapShift);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -1557,7 +1600,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 for (int i = 0; i < numberOfRotationsRequired; i++)
                 {
                     // do rotation
-                    Debug.Log("Set last slice as first");
+                    // Debug.Log("Set last slice as first");
                     // set last slice as first
                     transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
                     // adjust position by one tile size to the left
@@ -1579,7 +1622,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 for (int i = 0; i < numberOfRotationsRequired; i++)
                 {
                     // do rotation
-                    Debug.Log("Set first map slice as last");
+                    // Debug.Log("Set first map slice as last");
                     // set first map slice as last
                     transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
                     // shift position by one tile size to the right
@@ -1807,12 +1850,30 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return result;
     }
 
+    int GetShiftedPathPointCoordinateX(int defaultCoordinateX)
+    {
+        int shiftedTilePositionX = defaultCoordinateX + mapShift;
+        // verify if we are not ouside of the grid borders
+        if (shiftedTilePositionX >= tileMapWidth)
+        {
+            // reset it
+            shiftedTilePositionX -= tileMapWidth;
+        }
+        // verify if it is not less than 0
+        else if (shiftedTilePositionX < 0)
+        {
+            // reset it
+            shiftedTilePositionX += tileMapWidth;
+        }
+        return shiftedTilePositionX;
+    }
+
     Vector2 GetDestination(NesScripts.Controls.PathFind.Point pathPoint)
     {
         // + tileSize/ is to place it in the center of the tile
         return new Vector2
         {
-            x = (float)(pathPoint.x) * (float)tileSize + (float)tileSize / 2f + transform.position.x,
+            x = (float)(GetShiftedPathPointCoordinateX(pathPoint.x)) * (float)tileSize + (float)tileSize / 2f + transform.position.x,
             y = (float)(pathPoint.y) * (float)tileSize + (float)tileSize / 2f + transform.position.y
         };
     }
