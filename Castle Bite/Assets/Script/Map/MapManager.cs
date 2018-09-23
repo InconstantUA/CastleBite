@@ -111,13 +111,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // Screen.width;
     // Screen.height;
     // Those are default and calculated on Start
-    float xMinDef;
-    float xMaxDef;
+    //float xMinDef;
+    //float xMaxDef;
     float yMinDef;
     float yMaxDef;
     // those are variables depending on the mouse onDragStart position
-    float xMin;
-    float xMax;
+    //float xMin;
+    //float xMax;
     float yMin;
     float yMax;
     // modifier for position based on slices rotations done
@@ -209,8 +209,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //yMinDef = (Screen.height / 2) - yDeltaMax;
         //xMaxDef = (Screen.width / 2) + xDeltaMax;
         //yMaxDef = (Screen.height / 2) + yDeltaMax;
-        xMinDef = -mapWidth + Screen.width;
-        xMaxDef = 0;
+        //xMinDef = -mapWidth + Screen.width;
+        //xMaxDef = 0;
         yMinDef = -mapHeight + Screen.height + tileSize;
         yMaxDef = -tileSize;
         // For map tile highligter in selection mode
@@ -1349,9 +1349,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // we have an object for we the path is needed to be found
             // create 3 grids
             // get the column ID where our object is located
-            int columnId = from.x;
+            //int columnId = from.x;
             // init new tiles map, which later will be used for grid generation
-            float[,] newTileMap = new float[tileMapWidth, tileMapHeight];
+            //float[,] newTileMap = new float[tileMapWidth, tileMapHeight];
             // - 1st grid where the object is located on the left edge of the grid
             //// fill in tile map starting from the columnt where the object is now and finishing with the colum to the left from the object
             //// set new tile map column index
@@ -1457,8 +1457,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // this corrections should also be applied to x and y min and max
             //xMin = xMinDef - xCorrectionOnDragStart;
             //xMax = xMaxDef - xCorrectionOnDragStart;
-            xMin = mouseOnDownStartPosition.x - mapPosition.x + Screen.width - mapWidth + tileSize;
-            xMax = mouseOnDownStartPosition.x - mapPosition.x - tileSize;
+            //xMin = mouseOnDownStartPosition.x - mapPosition.x + Screen.width - mapWidth + tileSize;
+            //xMax = mouseOnDownStartPosition.x - mapPosition.x - tileSize;
             yMin = yMinDef - yCorrectionOnDragStart;
             yMax = yMaxDef - yCorrectionOnDragStart;
         }
@@ -1616,7 +1616,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // verify if shift made a full circle
         if (Math.Abs(mapShift) >= tileMapWidth)
         {
-            Debug.Log("Reset map shift");
+            // Debug.Log("Reset map shift");
             if (mapShift > 0)
             {
                 mapShift -= tileMapWidth;
@@ -1626,7 +1626,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 mapShift += tileMapWidth;
             }
         }
-        Debug.Log("Map Shift: " + mapShift);
+        // Debug.Log("Map Shift: " + mapShift);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -1676,7 +1676,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // get number of rotaitons required based on the distance and tile size
                 int numberOfRotationsRequired = Mathf.Abs(Mathf.RoundToInt((rightBorder - transform.position.x) / tileSize)) + 1;
                 // int numberOfRotationsRequired = 1;
-                Debug.Log("Number of rotaions required is " + numberOfRotationsRequired);
+                // Debug.Log("Number of rotaions required is " + numberOfRotationsRequired);
                 for (int i = 0; i < numberOfRotationsRequired; i++)
                 {
                     // do rotation

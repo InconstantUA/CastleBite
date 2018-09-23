@@ -1131,30 +1131,34 @@ public class PartyUnit : MonoBehaviour {
             {
                 // Get party leader unit
                 PartyUnit partyLeader = GetComponentInParent<HeroParty>().GetPartyLeader();
-                // loop through all items for this unit
-                foreach (InventoryItem inventoryItem in partyLeader.GetComponentsInChildren<InventoryItem>())
+                // verify if party has leader, this is not the case for non-capital city garnizons
+                if (partyLeader != null)
                 {
-                    // verify if item is not for belt
-                    if ((inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
-                        && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
+                    // loop through all items owned by party leader
+                    foreach (InventoryItem inventoryItem in partyLeader.GetComponentsInChildren<InventoryItem>())
                     {
-                        // verify if item gives stat bonus
-                        // loop through item stat modifiers
-                        foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
+                        // verify if item is not for belt
+                        if ((inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
+                            && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
                         {
-                            // verify if usm applies to the stat and that it has global scope
-                            if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.FriendlyParty))
+                            // verify if item gives stat bonus
+                            // loop through item stat modifiers
+                            foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                             {
-                                //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
-                                //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
-                                // verify if this is shard slot item
-                                if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                                // verify if usm applies to the stat and that it has global scope
+                                if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.FriendlyParty))
                                 {
-                                    // apply skill modifier to USMs power
-                                    usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent;
+                                    //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
+                                    //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
+                                    // verify if this is shard slot item
+                                    if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                                    {
+                                        // apply skill modifier to USMs power
+                                        usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent;
+                                    }
+                                    // add modifier to the list
+                                    usmsList.Add(usm);
                                 }
-                                // add modifier to the list
-                                usmsList.Add(usm);
                             }
                         }
                     }

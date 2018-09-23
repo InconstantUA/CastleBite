@@ -280,15 +280,16 @@ public class UpgradeUnit : MonoBehaviour {
     #region Unique power modifiers
     void UpdateUniquePowerModifiersInfo()
     {
+        //transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().FillInUniquePowerModifiersInformation(focusedPartyUnit);
         List<UniquePowerModifier> uniquePowerModifiers = focusedPartyUnit.UniquePowerModifiers;
-        for (int i = 1; i <= uniquePowerModifiers.Count; i++)
+        for (int i = 0; i < uniquePowerModifiers.Count; i++)
         {
             transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUniquePowerModifiersPreview(
                 i,
-                uniquePowerModifiers[i - 1].upmPower,
-                uniquePowerModifiers[i - 1].upmPowerIncrementOnLevelUp * statsUpgradeCount,
-                uniquePowerModifiers[i - 1].upmChance,
-                uniquePowerModifiers[i - 1].upmChanceIncrementOnLevelUp * statsUpgradeCount
+                uniquePowerModifiers[i].upmPower,
+                uniquePowerModifiers[i].upmPowerIncrementOnLevelUp * statsUpgradeCount,
+                uniquePowerModifiers[i].upmChance,
+                uniquePowerModifiers[i].upmChanceIncrementOnLevelUp * statsUpgradeCount
             );
         }
     }

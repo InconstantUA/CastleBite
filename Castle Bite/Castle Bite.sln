@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle Bite", "Assembly-CSharp.csproj", "{242A1A1A-AE33-B1AF-FCCA-0BC7B015E6F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{242A1A1A-AE33-B1AF-FCCA-0BC7B015E6F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Castle Bite", "Assembly-CSharp-Editor.csproj", "{09782D55-8B0E-FE97-B3E7-C13CFF650B9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{09782D55-8B0E-FE97-B3E7-C13CFF650B9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

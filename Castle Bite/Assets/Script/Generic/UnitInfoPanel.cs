@@ -200,7 +200,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus, int chance, int chanceBonus)
     {
-        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/Modifier" + modifierID.ToString());
+        //Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/Modifier" + modifierID.ToString());
+        Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/ListOfUniquePowerModifiers/Grid").GetChild(modifierID);
         if (0 == powerBonus)
         {
             // do not display + info
@@ -209,7 +210,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         else
         {
             // display + bonus info
-            modifier.Find("Power").GetComponent<Text>().text = power.ToString() + statsBonusPreviewStyleStart + "+" + powerBonus.ToString() + statsBonusPreviewStyleEnd;
+            modifier.Find("Power").GetComponent<Text>().text = power.ToString() + "(" + statsBonusPreviewStyleStart + "+" + powerBonus.ToString() + statsBonusPreviewStyleEnd + ")";
         }
         if (0 == chanceBonus)
         {
@@ -219,7 +220,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         else
         {
             // display + bonus info
-            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + statsBonusPreviewStyleStart + "+" + chanceBonus.ToString() + statsBonusPreviewStyleEnd;
+            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + "(" + statsBonusPreviewStyleStart + "+" + chanceBonus.ToString() + statsBonusPreviewStyleEnd + ")";
         }
     }
 
@@ -696,7 +697,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     //    modifier.Find("Origin").GetComponent<Text>().text = "";
     //}
 
-    void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
+    public void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
     {
         // get party unit Unique power modifiers
         List<UniquePowerModifier> unitUniquePowerModifiers = partyUnit.UniquePowerModifiers;

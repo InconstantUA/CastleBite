@@ -215,7 +215,7 @@ public class HeroParty : MonoBehaviour {
                 return partyUnit;
             }
         }
-        Debug.LogError("No Leader in party.");
+        //Debug.LogError("No Leader in party.");
         return null;
     }
 

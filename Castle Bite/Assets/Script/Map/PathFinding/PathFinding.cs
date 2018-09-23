@@ -164,6 +164,8 @@ namespace NesScripts.Controls.PathFind
         {
             int MapX = grid.nodes.GetLength(0);
             int MapY = grid.nodes.GetLength(1);
+            // Compute one possible direction vector, even if it's not the shortest, then wrap its X coordinate so that it is in the [-MapX/2,MapX/2] range, and same for Y:
+            // (C) https://gamedev.stackexchange.com/questions/19809/finding-direction-of-travel-in-a-world-with-wrapped-edges
             int DirX = ((nodeA.gridX - nodeB.gridX + 3 * MapX / 2) % MapX) - MapX / 2;
             int DirY = ((nodeA.gridY - nodeB.gridY + 3 * MapY / 2) % MapY) - MapY / 2;
             // return distance
