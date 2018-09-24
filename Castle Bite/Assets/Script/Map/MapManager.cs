@@ -2159,8 +2159,16 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
-                                // continue move untill we are on the same tile
-                                enterCity = mapCity;
+                                // verify if the city is our destination point
+                                if (i == movePath.Count - 1)
+                                {
+                                    // continue move untill we are on the same tile
+                                    enterCity = mapCity;
+                                } else
+                                {
+                                    // city tile is intermediate point
+                                    // nothing to do here
+                                }
                                 break;
                             case Relationships.State.Allies:
                                 breakMove = true;

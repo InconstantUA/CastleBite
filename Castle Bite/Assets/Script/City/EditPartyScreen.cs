@@ -429,8 +429,19 @@ public class EditPartyScreen : MonoBehaviour {
         {
             targetCity = city;
         }
+        // adjust position, because city and hero transform have differnet anchor points
+        // Get ui world corners
+        // 12
+        // 03
+        Vector3[] worldCorners = new Vector3[4];
+        newPartyOnMapUI.GetComponent<RectTransform>().GetWorldCorners(worldCorners);
+        // get map hero ui width and heigh
+        float newPartyOnMapUIHeight = Mathf.Abs(worldCorners[3].x - worldCorners[0].x);
+        float newPartyOnMapUIWidth = Mathf.Abs(worldCorners[1].y - worldCorners[0].y);
+        Debug.Log(newPartyOnMapUIWidth + ":" + newPartyOnMapUIHeight);
+        Vector3 positionAdjustment = new Vector3(newPartyOnMapUIHeight/2f, newPartyOnMapUIWidth/2f, 0);
         // set it to the same position as the parent city
-        newPartyOnMapUI.transform.position = targetCity.LMapCity.transform.position;
+        newPartyOnMapUI.transform.position = targetCity.LMapCity.transform.position + positionAdjustment;
         // activate new party on map UI
         newPartyOnMapUI.gameObject.SetActive(true);
         // Link HeroParty to the hero party on the map
@@ -442,7 +453,8 @@ public class EditPartyScreen : MonoBehaviour {
         // Link city on the map to hero on the map
         newPartyOnMapUI.GetComponent<MapHero>().lMapCity = targetCity.LMapCity;
         // move hero party to the back, so its UI label is not covering city's UI label
-        newPartyOnMapUI.transform.SetAsFirstSibling();
+        // but it is in front of map slices
+        newPartyOnMapUI.transform.SetSiblingIndex(1);
         // rename it
         newPartyOnMapUI.gameObject.name = newLeaderParty.GetPartyLeader().GivenName + " " + newLeaderParty.GetPartyLeader().UnitName + " Party";
     }
