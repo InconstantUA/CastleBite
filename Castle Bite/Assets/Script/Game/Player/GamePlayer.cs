@@ -37,6 +37,7 @@ public class PlayerData : System.Object
     public Faction faction;
     public PlayerTurnState playerTurnState = PlayerTurnState.Waiting;
     public int focusedObjectID = 0;
+    public int[,] tilesDiscoveryState;
 }
 
 [Serializable]
@@ -52,6 +53,16 @@ public class GamePlayer : MonoBehaviour {
     //int totalGold;
     //[SerializeField]
     //Faction faction;
+
+    // for Debug when player are not create on game start
+    void Awake()
+    {
+        // Get map manager
+        MapManager mapManager = transform.root.Find("MapScreen").GetComponentInChildren<MapManager>(true);
+        // init tiles discovery array
+        playerData.tilesDiscoveryState = new int[mapManager.TileMapWidth, mapManager.TileMapHeight];
+    }
+    
     public PlayerUniqueAbility PlayerUniqueAbility
     {
         get
@@ -155,6 +166,20 @@ public class GamePlayer : MonoBehaviour {
         set
         {
             playerData.focusedObjectID = value;
+        }
+    }
+
+
+    public int[,] TilesDiscoveryState
+    {
+        get
+        {
+            return playerData.tilesDiscoveryState;
+        }
+
+        set
+        {
+            playerData.tilesDiscoveryState = value;
         }
     }
 

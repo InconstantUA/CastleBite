@@ -273,9 +273,14 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
         // Get objects manager
         ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // Get map manager
+        MapManager mapManager = transform.root.Find("MapScreen").GetComponentInChildren<MapManager>(true);
         // Create game players, get players data from Chapter manager
         foreach (PlayerData playerData in transform.root.Find("Managers").GetComponent<ChapterManager>().PlayersData)
         {
+            // init tiles discovery state (I assume that by default it will init with 0)
+            playerData.tilesDiscoveryState = new int[mapManager.TileMapWidth, mapManager.TileMapHeight];
+            // create player using player data
             objectsManager.CreatePlayer(playerData);
         }
         // Activate and reset turns manager, set Dominion as active player

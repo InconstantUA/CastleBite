@@ -103,7 +103,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public float heroMoveSpeedDelay = 0.1f;
     //TileState lastTileState = TileState.Terrain;
     NesScripts.Controls.PathFind.Point lastPathTile;
-
     // Map Sprite size
     float mapWidth;
     float mapHeight;
@@ -123,20 +122,98 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // modifier for position based on slices rotations done
     int rotationPositionModifier = 0;
     public enum Shift { Left, Right };
-
     // for debug
     Vector3 mousePosition;
     Vector3 mapPosition;
-
     // Vector3 mouseOnDragStartPosition;
     Vector3 mouseOnDownStartPosition;
     float xCorrectionOnDragStart;
     float yCorrectionOnDragStart;
-
     // for animation and transition between states
     CoroutineQueue queue;
-
     public float scrollSpeed = 0.5f;
+    // for tiles creation
+    [SerializeField]
+    GameObject tileBackgroundTemplate;
+    [SerializeField]
+    GameObject tileTextTemplate;
+    [SerializeField]
+    string cityTerraText;
+    [SerializeField]
+    Color cityTerraColor;
+    [SerializeField]
+    string forestTerraText;
+    [SerializeField]
+    Color forestTerraColor;
+    [SerializeField]
+    string hillTerraText;
+    [SerializeField]
+    Color hillTerraColor;
+    [SerializeField]
+    string iceTerraText;
+    [SerializeField]
+    Color iceTerraColor;
+    [SerializeField]
+    string jungleTerraText;
+    [SerializeField]
+    Color jungleTerraColor;
+    [SerializeField]
+    string lakeTerraText;
+    [SerializeField]
+    Color lakeTerraColor;
+    [SerializeField]
+    string lavaTerraText;
+    [SerializeField]
+    Color lavaTerraColor;
+    [SerializeField]
+    string mountainTerraText;
+    [SerializeField]
+    Color mountainTerraColor;
+    [SerializeField]
+    string oceanTerraText;
+    [SerializeField]
+    Color oceanTerraColor;
+    [SerializeField]
+    string plainTerraText;
+    [SerializeField]
+    Color plainTerraColor;
+    [SerializeField]
+    string riverTerraText;
+    [SerializeField]
+    Color riverTerraColor;
+    [SerializeField]
+    string roadTerraText;
+    [SerializeField]
+    Color roadTerraColor;
+    [SerializeField]
+    string sandTerraText;
+    [SerializeField]
+    Color sandTerraColor;
+    [SerializeField]
+    string seaTerraText;
+    [SerializeField]
+    Color seaTerraColor;
+    [SerializeField]
+    string shoreTerraText;
+    [SerializeField]
+    Color shoreTerraColor;
+    [SerializeField]
+    string snowTerraText;
+    [SerializeField]
+    Color snowTerraColor;
+    [SerializeField]
+    string tundraTerraText;
+    [SerializeField]
+    Color tundraTerraColor;
+    [SerializeField]
+    string valleyTerraText;
+    [SerializeField]
+    Color valleyTerraColor;
+    [SerializeField]
+    string volcanoTerraText;
+    [SerializeField]
+    Color volcanoTerraColor;
+
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -160,6 +237,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         set
         {
             queue = value;
+        }
+    }
+
+    public int TileMapWidth
+    {
+        get
+        {
+            return tileMapWidth;
+        }
+    }
+
+    public int TileMapHeight
+    {
+        get
+        {
+            return tileMapHeight;
         }
     }
 
@@ -317,6 +410,69 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    void DiscoverTilesAround(Vector2Int centerTileCoords, int discoveryRange)
+    {
+        // get active player tiles discovery state array
+        int[,] activePlayerTilesDiscoveryStateArray = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().TilesDiscoveryState;
+        // initialize tiles positions
+        int checkX, checkY;
+        // get all tiles around
+        for (int x = -discoveryRange; x < discoveryRange; x++)
+        {
+            for (int y = -discoveryRange; y < discoveryRange; y++)
+            {
+                // verify if we are within discovery range
+                if ((Mathf.Abs(x - y) < discoveryRange) && (Mathf.Abs(y + x) < discoveryRange))
+                {
+                    // calculate checked tiles coordinates
+                    checkX = centerTileCoords.x + x;
+                    checkY = centerTileCoords.y + y;
+                    // verify if we are over edges
+                    if (checkX < 0)
+                    {
+                        checkX = tileMapWidth - checkX;
+                    }
+                    else if (checkX == tileMapWidth)
+                    {
+                        checkX = 0;
+                    }
+                    if (checkY < 0)
+                    {
+                        checkY = tileMapHeight - checkY;
+                    }
+                    else if (checkY == tileMapHeight)
+                    {
+                        checkY = 0;
+                    }
+                    Debug.Log(checkX + ":" + checkY);
+                    // verify if this tile is not discovered
+                    if (activePlayerTilesDiscoveryStateArray[checkX, checkY] == 0)
+                    {
+                        // mark tile as discovered (not 0)
+                        activePlayerTilesDiscoveryStateArray[checkX, checkY] = 1;
+                    }
+                }
+            }
+        }
+        // activate all discovered tiles
+    }
+
+    void DiscoverTilesAround(MapCity mapCity)
+    {
+        // get city discovery range
+        int cityDiscoveryRange = 3 + mapCity.LCity.CityLevelCurrent;
+        // discover tiles around
+        DiscoverTilesAround(GetTileByPosition(mapCity.transform.position), cityDiscoveryRange);
+    }
+
+    void DiscoverTilesAround(MapHero mapHero)
+    {
+        // get hero discovery range
+        int heroDiscoveryRange = mapHero.LHeroParty.GetPartyLeader().ScoutingRange;
+        // discover tiles around
+        DiscoverTilesAround(GetTileByPosition(mapHero.transform.position), heroDiscoveryRange);
+    }
+
     public void InitTilesMap()
     {
         // create the tiles map
@@ -358,6 +514,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     {
                         // mark tile as passable
                         tilesmap[pos.x, pos.y] = 1;
+                        // discover tiles around
+                        DiscoverTilesAround(mapObject.GetComponent<MapCity>());
                     }
                     else
                     {
@@ -369,6 +527,58 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 {
                     // mark tile as non-passable
                     tilesmap[pos.x, pos.y] = 0;
+                    // verify if it hero on map
+                    if (mapObject.GetComponent<MapHero>() != null)
+                    {
+                        // verify if hero has the same faction as the active player (belongs to active player)
+                        if (mapObject.GetComponent<MapHero>().LHeroParty.Faction == activePlayerFaction)
+                        {
+                            // discover tiles around
+                            DiscoverTilesAround(mapObject.GetComponent<MapHero>());
+                        }
+                    }
+                }
+            }
+        }
+        // Create fog of war
+        int sliceIndex = 0;
+        foreach(Transform slice in transform.root.Find("MapScreen/Map/FogOfWar"))
+        {
+            // rename slice
+            slice.name = "FogSlice (" + sliceIndex.ToString() + ")";
+            // init tile index
+            int tileIndex = 0;
+            // loop through all tiles in the fog
+            foreach (Transform tileTransform in slice)
+            {
+                // rename tile
+                tileTransform.name = "FogTile (" + tileIndex.ToString() + ")";
+                // increment tile index
+                tileIndex++;
+            }
+            // increment index
+            sliceIndex++;
+        }
+        // get active player tiles discovery state array
+        int[,] activePlayerTilesDiscoveryStateArray = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().TilesDiscoveryState;
+        // Activate discovered tiles
+        for (int x = 0; x < tilesmap.GetLength(0); x += 1)
+        {
+            for (int y = 0; y < tilesmap.GetLength(1); y += 1)
+            {
+                // Debug.Log(x.ToString() + ":" + y.ToString());
+                // verify if tile has been discovered
+                if (activePlayerTilesDiscoveryStateArray[x, y] != 0)
+                {
+                    // enable tile
+                    mapTiles[x, y].gameObject.SetActive(true);
+                    // disable fog of war tile
+                }
+                else
+                {
+                    // disable tile
+                    mapTiles[x, y].gameObject.SetActive(false);
+                    // enable fog of war tile
                 }
             }
         }
@@ -880,6 +1090,164 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return result;
     }
 
+    string GetTileTextByTerra(TerraType terraType)
+    {
+        switch (terraType)
+        {
+            case TerraType.City:
+                return cityTerraText;
+            case TerraType.Forest:
+                return forestTerraText;
+            case TerraType.Hill:
+                return hillTerraText;
+            case TerraType.Ice:
+                return iceTerraText;
+            case TerraType.Jungle:
+                return jungleTerraText;
+            case TerraType.Lake:
+                return lakeTerraText;
+            case TerraType.Lava:
+                return lavaTerraText;
+            case TerraType.Mounain:
+                return mountainTerraText;
+            case TerraType.Ocean:
+                return oceanTerraText;
+            case TerraType.Plain:
+                return plainTerraText;
+            case TerraType.River:
+                return riverTerraText;
+            case TerraType.Road:
+                return roadTerraText;
+            case TerraType.Sand:
+                return sandTerraText;
+            case TerraType.Sea:
+                return seaTerraText;
+            case TerraType.Shore:
+                return shoreTerraText;
+            case TerraType.Snow:
+                return snowTerraText;
+            case TerraType.Tundra:
+                return tundraTerraText;
+            case TerraType.Valley:
+                return valleyTerraText;
+            case TerraType.Volcano:
+                return volcanoTerraText;
+            default:
+                Debug.LogError("Unknown terrain type");
+                return "e";
+        }
+    }
+
+    Color GetTileColorByTerra(TerraType terraType)
+    {
+        switch (terraType)
+        {
+            case TerraType.City:
+                return cityTerraColor;
+            case TerraType.Forest:
+                return forestTerraColor;
+            case TerraType.Hill:
+                return hillTerraColor;
+            case TerraType.Ice:
+                return iceTerraColor;
+            case TerraType.Jungle:
+                return jungleTerraColor;
+            case TerraType.Lake:
+                return lakeTerraColor;
+            case TerraType.Lava:
+                return lavaTerraColor;
+            case TerraType.Mounain:
+                return mountainTerraColor;
+            case TerraType.Ocean:
+                return oceanTerraColor;
+            case TerraType.Plain:
+                return plainTerraColor;
+            case TerraType.River:
+                return riverTerraColor;
+            case TerraType.Road:
+                return roadTerraColor;
+            case TerraType.Sand:
+                return sandTerraColor;
+            case TerraType.Sea:
+                return seaTerraColor;
+            case TerraType.Shore:
+                return shoreTerraColor;
+            case TerraType.Snow:
+                return snowTerraColor;
+            case TerraType.Tundra:
+                return tundraTerraColor;
+            case TerraType.Valley:
+                return valleyTerraColor;
+            case TerraType.Volcano:
+                return volcanoTerraColor;
+            default:
+                Debug.LogError("Unknown terrain type");
+                return Color.red;
+        }
+    }
+
+    Color GetTileBackgroundColorByTerra(TerraType terraType)
+    {
+        switch (terraType)
+        {
+            case TerraType.Ice:
+                return new Color(0.1f,0.1f,0.1f);
+            case TerraType.City:
+            case TerraType.Forest:
+            case TerraType.Hill:
+            case TerraType.Jungle:
+            case TerraType.Lake:
+            case TerraType.Lava:
+            case TerraType.Mounain:
+            case TerraType.Ocean:
+            case TerraType.Plain:
+            case TerraType.River:
+            case TerraType.Road:
+            case TerraType.Sand:
+            case TerraType.Sea:
+            case TerraType.Shore:
+            case TerraType.Snow:
+            case TerraType.Tundra:
+            case TerraType.Valley:
+                return Color.black;
+            case TerraType.Volcano:
+                return new Color(0.9f,0.13f,0,1f);
+            default:
+                Debug.LogError("Unknown terrain type");
+                return Color.red;
+        }
+    }
+
+    void InitMapTile(MapTile mapTile)
+    {
+        // create background
+        RawImage tileBackgroundRawImage = Instantiate(tileBackgroundTemplate, mapTile.transform).GetComponent<RawImage>();
+        // Set background color
+        tileBackgroundRawImage.color = GetTileBackgroundColorByTerra(mapTile.Terra.TerraType);
+        // send background to back
+        tileBackgroundRawImage.transform.SetAsFirstSibling();
+        // enable background
+        tileBackgroundRawImage.gameObject.SetActive(true);
+        // create tile text
+        Text tileText = Instantiate(tileTextTemplate, mapTile.transform).GetComponent<Text>();
+        // set text
+        tileText.text = GetTileTextByTerra(mapTile.Terra.TerraType);
+        // set text color
+        tileText.color = GetTileColorByTerra(mapTile.Terra.TerraType);
+        // enable text
+        tileText.gameObject.SetActive(true);
+        // disable tile highlighter
+        mapTile.transform.Find("TileHighliter").gameObject.SetActive(false);
+        // get turns info text
+        Text turnsInfoText = mapTile.transform.Find("TurnsInfo").GetComponent<Text>();
+        // clear text
+        turnsInfoText.text = "";
+        // set turns info text on top
+        turnsInfoText.transform.SetAsLastSibling();
+        // disable tile
+        mapTile.gameObject.SetActive(false);
+    }
+
     void InitializeMapTiles()
     {
         // todo: better keep them as string and highlight specific elements
@@ -899,6 +1267,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 // assign tile object to mapTiles array
                 mapTiles[i, j] = _mapTiles[j];
+                // init map tile
+                InitMapTile(_mapTiles[j]);
             }
             i++;
         }
@@ -1157,101 +1527,106 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 // output path to debug
                 // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
-                mapTiles[pathPoint.x, pathPoint.y].gameObject.SetActive(doHighlight);
+                // mapTiles[pathPoint.x, pathPoint.y].gameObject.SetActive(doHighlight);
+                mapTiles[pathPoint.x, pathPoint.y].transform.Find("TileHighliter").gameObject.SetActive(doHighlight);
                 // clear turn info text (because is not reset automatically and may be still present)
                 mapTiles[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = "";
-                // Verify if enemy on way was not triggered on previous pathPoints
-                if (!enemyOnWay)
+                // verify if we need to highlight
+                if (doHighlight == true)
                 {
-                    // get tile highlight color based on a tile state (what is in or near tile)
-                    // reset collor to correct highlight color
-                    // because it might be changed by previous highlight operations to something else
-                    // if for example in the past there was enemy standing and we were highliting is with red color
-                    // Check if there is enemy on way or tile is protected by enemy
-                    gameObjectOnTile = GetObjectOnTile(pathPoint);
-                    if (gameObjectOnTile)
+                    // Verify if enemy on way was not triggered on previous pathPoints
+                    if (!enemyOnWay)
                     {
-                        MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
-                        MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
-                        MapItemsContainer mapItem = gameObjectOnTile.GetComponent<MapItemsContainer>();
-                        if (mapHero)
+                        // get tile highlight color based on a tile state (what is in or near tile)
+                        // reset collor to correct highlight color
+                        // because it might be changed by previous highlight operations to something else
+                        // if for example in the past there was enemy standing and we were highliting is with red color
+                        // Check if there is enemy on way or tile is protected by enemy
+                        gameObjectOnTile = GetObjectOnTile(pathPoint);
+                        if (gameObjectOnTile)
                         {
-                            // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
-                            switch (relationships)
+                            MapHero mapHero = gameObjectOnTile.GetComponent<MapHero>();
+                            MapCity mapCity = gameObjectOnTile.GetComponent<MapCity>();
+                            MapItemsContainer mapItem = gameObjectOnTile.GetComponent<MapItemsContainer>();
+                            if (mapHero)
                             {
-                                case Relationships.State.SameFaction:
-                                case Relationships.State.Allies:
-                                case Relationships.State.Neutral:
-                                    break;
-                                case Relationships.State.AtWar:
-                                    enemyOnWay = true;
-                                    break;
-                                default:
-                                    Debug.LogError("Unknown relationships " + relationships.ToString());
-                                    break;
+                                // check relationships with active player
+                                Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
+                                switch (relationships)
+                                {
+                                    case Relationships.State.SameFaction:
+                                    case Relationships.State.Allies:
+                                    case Relationships.State.Neutral:
+                                        break;
+                                    case Relationships.State.AtWar:
+                                        enemyOnWay = true;
+                                        break;
+                                    default:
+                                        Debug.LogError("Unknown relationships " + relationships.ToString());
+                                        break;
+                                }
                             }
-                        }
-                        else if (mapCity)
-                        {
-                        }
-                        else if (mapItem)
-                        {
+                            else if (mapCity)
+                            {
+                            }
+                            else if (mapItem)
+                            {
 
+                            }
+                            else
+                            {
+                                Debug.LogError("Unknown object on map " + gameObject.name);
+                            }
                         }
                         else
                         {
-                            Debug.LogError("Unknown object on map " + gameObject.name);
+                            // no object on tile, just terrain
+                            // Verify if tile is not protected by enemy
+                            enemyOnWay = IsTileProtected(pathPoint);
                         }
+                    }
+                    // init not enough move points modifier
+                    bool notEnoughMovePoints = false;
+                    // verify if selectedMapHero is not null and if we has reached one day move points limit
+                    if ((selectedMapHero != null) && (movePointsLeft <= 0))
+                    {
+                        // Activate not enough move points modifier
+                        notEnoughMovePoints = true;
+                        //// get the rest of division
+                        //float restOfDivision = movePointsLeft % partyLeader.GetEffectiveMaxMovePoints();
+                        //Debug.Log("Rest of division is " + restOfDivision);
+                        //// verify if we has reached next day limit
+                        //if (restOfDivision == 0)
+                        //{
+                        int newNumberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
+                        // verify if number of days to reach this path point has changed compare to previous value
+                        if (newNumberOfDaysToReachThisPathPoint != numberOfDaysToReachThisPathPoint)
+                        {
+                            // Get number of days needed to reach this path point
+                            numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
+                            Debug.Log("numberOfDaysToReachThisPathPoint = " + numberOfDaysToReachThisPathPoint);
+                            // add day indicator to the move path highter
+                            mapTiles[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();
+                        }
+                        //}
+                    }
+                    // verify if enemy on way
+                    if (enemyOnWay)
+                    {
+                        // set tile highlight color as if there was an enemy
+                        tileHighlighColor = enemyOnWayColor; // Color.red;
+                        if (notEnoughMovePoints)
+                            tileHighlighColor = enemyOnWayColorNotEnoughMovePoints;
                     }
                     else
                     {
-                        // no object on tile, just terrain
-                        // Verify if tile is not protected by enemy
-                        enemyOnWay = IsTileProtected(pathPoint);
+                        tileHighlighColor = GetTileHighlightColor(gameObjectOnTile, notEnoughMovePoints);
                     }
+                    // Highlight tile
+                    mapTiles[pathPoint.x, pathPoint.y].transform.Find("TileHighliter").GetComponent<Text>().color = tileHighlighColor;
+                    // reduce number of move points left based on the tile move cost
+                    movePointsLeft -= mapTiles[pathPoint.x, pathPoint.y].Terra.TerraMoveCost;
                 }
-                // init not enough move points modifier
-                bool notEnoughMovePoints = false;
-                // verify if selectedMapHero is not null and if we has reached one day move points limit
-                if ((selectedMapHero != null) && (movePointsLeft <= 0))
-                {
-                    // Activate not enough move points modifier
-                    notEnoughMovePoints = true;
-                    //// get the rest of division
-                    //float restOfDivision = movePointsLeft % partyLeader.GetEffectiveMaxMovePoints();
-                    //Debug.Log("Rest of division is " + restOfDivision);
-                    //// verify if we has reached next day limit
-                    //if (restOfDivision == 0)
-                    //{
-                    int newNumberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
-                    // verify if number of days to reach this path point has changed compare to previous value
-                    if (newNumberOfDaysToReachThisPathPoint != numberOfDaysToReachThisPathPoint)
-                    {
-                        // Get number of days needed to reach this path point
-                        numberOfDaysToReachThisPathPoint = Math.Abs(movePointsLeft / partyLeader.GetEffectiveMaxMovePoints()) + 1;
-                        Debug.Log("numberOfDaysToReachThisPathPoint = " + numberOfDaysToReachThisPathPoint);
-                        // add day indicator to the move path highter
-                        mapTiles[pathPoint.x, pathPoint.y].transform.Find("TurnsInfo").GetComponent<Text>().text = numberOfDaysToReachThisPathPoint.ToString();
-                    }
-                    //}
-                }
-                // verify if enemy on way
-                if (enemyOnWay)
-                {
-                    // set tile highlight color as if there was an enemy
-                    tileHighlighColor = enemyOnWayColor; // Color.red;
-                    if (notEnoughMovePoints)
-                        tileHighlighColor = enemyOnWayColorNotEnoughMovePoints;
-                }
-                else
-                {
-                    tileHighlighColor = GetTileHighlightColor(gameObjectOnTile, notEnoughMovePoints);
-                }
-                // Highlight tile
-                mapTiles[pathPoint.x, pathPoint.y].transform.Find("TileHighliter").GetComponent<Text>().color = tileHighlighColor;
-                // reduce number of move points left based on the tile move cost
-                movePointsLeft -= mapTiles[pathPoint.x, pathPoint.y].Terra.TerraMoveCost;
             }
         }
     }
