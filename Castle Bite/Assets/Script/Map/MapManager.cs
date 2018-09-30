@@ -56,6 +56,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     [SerializeField]
     int tileSize = 16;
     [SerializeField]
+    Color fogOfWarColor;
+    [SerializeField]
     Color defaultTileHighlighterColor;
     [SerializeField]
     Color defaultTileHighlighterNotEnoughMovePoints;
@@ -98,6 +100,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     NesScripts.Controls.PathFind.Grid grid;
     List<NesScripts.Controls.PathFind.Point> movePath;
     MapTile[,] mapTiles;
+    Transform[,] fogOfWarTiles;
     // for hero moving
     public float heroMoveSpeed = 10.1f;
     public float heroMoveSpeedDelay = 0.1f;
@@ -410,19 +413,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void DiscoverTilesAround(Vector2Int centerTileCoords, int discoveryRange)
+    List<Vector2Int> DiscoverTilesAround(Vector2Int centerTileCoords, int discoveryRange)
     {
+        // init discovered tiles list
+        List<Vector2Int> discoveredTiles = new List<Vector2Int>();
         // get active player tiles discovery state array
         int[,] activePlayerTilesDiscoveryStateArray = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().TilesDiscoveryState;
         // initialize tiles positions
         int checkX, checkY;
         // get all tiles around
-        for (int x = -discoveryRange; x < discoveryRange; x++)
+        for (int x = -discoveryRange; x <= discoveryRange; x++)
         {
-            for (int y = -discoveryRange; y < discoveryRange; y++)
+            for (int y = -discoveryRange; y <= discoveryRange; y++)
             {
                 // verify if we are within discovery range
-                if ((Mathf.Abs(x - y) < discoveryRange) && (Mathf.Abs(y + x) < discoveryRange))
+                // if ((Mathf.Abs(x - y) < discoveryRange + 2) && (Mathf.Abs(y + x) < discoveryRange + 2))
+                // if (Math.Sqrt(x*x + y*y) <= discoveryRange)
+                if (Mathf.Sqrt(x*x + y*y) <= (float)(discoveryRange+1))
                 {
                     // calculate checked tiles coordinates
                     checkX = centerTileCoords.x + x;
@@ -444,33 +451,53 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     {
                         checkY = 0;
                     }
-                    Debug.Log(checkX + ":" + checkY);
+                    // Debug.Log(checkX + ":" + checkY);
                     // verify if this tile is not discovered
                     if (activePlayerTilesDiscoveryStateArray[checkX, checkY] == 0)
                     {
                         // mark tile as discovered (not 0)
                         activePlayerTilesDiscoveryStateArray[checkX, checkY] = 1;
+                        // add discovered tile position to the list
+                        discoveredTiles.Add(new Vector2Int(checkX, checkY));
                     }
                 }
             }
         }
-        // activate all discovered tiles
+        // return list with all discovered tiles
+        return discoveredTiles;
     }
 
-    void DiscoverTilesAround(MapCity mapCity)
+    List<Vector2Int> DiscoverTilesAround(MapCity mapCity)
     {
         // get city discovery range
         int cityDiscoveryRange = 3 + mapCity.LCity.CityLevelCurrent;
         // discover tiles around
-        DiscoverTilesAround(GetTileByPosition(mapCity.transform.position), cityDiscoveryRange);
+        return DiscoverTilesAround(GetTileByPosition(mapCity.transform.position), cityDiscoveryRange);
     }
 
-    void DiscoverTilesAround(MapHero mapHero)
+    List<Vector2Int> DiscoverTilesAround(MapHero mapHero)
     {
         // get hero discovery range
         int heroDiscoveryRange = mapHero.LHeroParty.GetPartyLeader().ScoutingRange;
         // discover tiles around
-        DiscoverTilesAround(GetTileByPosition(mapHero.transform.position), heroDiscoveryRange);
+        return DiscoverTilesAround(GetTileByPosition(mapHero.transform.position), heroDiscoveryRange);
+    }
+
+    void DiscoverTile(int x, int y)
+    {
+        // enable tile
+        mapTiles[x, y].gameObject.SetActive(true);
+        // disable fog of war tile
+        fogOfWarTiles[x, y].gameObject.SetActive(false);
+
+    }
+
+    void HideTile(int x, int y)
+    {
+        // disable tile
+        mapTiles[x, y].gameObject.SetActive(false);
+        // enable fog of war tile
+        fogOfWarTiles[x, y].gameObject.SetActive(true);
     }
 
     public void InitTilesMap()
@@ -540,24 +567,33 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
-        // Create fog of war
-        int sliceIndex = 0;
-        foreach(Transform slice in transform.root.Find("MapScreen/Map/FogOfWar"))
+        // verify if fog of war does not exist yet
+        if (fogOfWarTiles == null)
         {
-            // rename slice
-            slice.name = "FogSlice (" + sliceIndex.ToString() + ")";
-            // init tile index
-            int tileIndex = 0;
-            // loop through all tiles in the fog
-            foreach (Transform tileTransform in slice)
+            // Create fog of war
+            fogOfWarTiles = new Transform[tileMapWidth, tileMapHeight];
+            // Get fog of war transform
+            Transform fogOfWarTransform = transform.root.Find("MapScreen/Map/FogOfWar");
+            // activate fog of war
+            fogOfWarTransform.gameObject.SetActive(true);
+            // init slice index
+            int sliceIndex = 0;
+            // loop though all slices in fog of war
+            foreach (Transform slice in fogOfWarTransform)
             {
-                // rename tile
-                tileTransform.name = "FogTile (" + tileIndex.ToString() + ")";
-                // increment tile index
-                tileIndex++;
+                // init tile index
+                int tileIndex = 0;
+                // loop through all tiles in the fog
+                foreach (Transform tileTransform in slice)
+                {
+                    // save fog of war tile reference
+                    fogOfWarTiles[sliceIndex, tileIndex] = tileTransform;
+                    // increment tile index
+                    tileIndex++;
+                }
+                // increment index
+                sliceIndex++;
             }
-            // increment index
-            sliceIndex++;
         }
         // get active player tiles discovery state array
         int[,] activePlayerTilesDiscoveryStateArray = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().TilesDiscoveryState;
@@ -570,15 +606,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // verify if tile has been discovered
                 if (activePlayerTilesDiscoveryStateArray[x, y] != 0)
                 {
-                    // enable tile
-                    mapTiles[x, y].gameObject.SetActive(true);
-                    // disable fog of war tile
+                    DiscoverTile(x, y);
                 }
                 else
                 {
-                    // disable tile
-                    mapTiles[x, y].gameObject.SetActive(false);
-                    // enable fog of war tile
+                    HideTile(x, y);
                 }
             }
         }
@@ -2036,6 +2068,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // Debug.Log("Set last slice as first");
                     // set last slice as first
                     transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
+                    transform.Find("FogOfWar").GetChild(59).SetAsFirstSibling();
                     // adjust position by one tile size to the left
                     transform.position = new Vector3(transform.position.x - tileSize, transform.position.y, 0);
                     // increment rotation position modifier by tile size
@@ -2058,6 +2091,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // Debug.Log("Set first map slice as last");
                     // set first map slice as last
                     transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
+                    transform.Find("FogOfWar").GetChild(0).SetAsLastSibling();
                     // shift position by one tile size to the right
                     transform.position = new Vector3(transform.position.x + tileSize, transform.position.y, 0);
                     // increment rotation position modifier by tile size
@@ -2632,6 +2666,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     previousTime = Time.time;
                     yield return new WaitForSeconds(heroMoveSpeedDelay);
                 }
+                // discover tiles around
+                // reveal discovered tiles
+                foreach(Vector2Int tileCoords in DiscoverTilesAround(selectedMapHero))
+                {
+                    DiscoverTile(tileCoords.x, tileCoords.y);
+                }
+                // 
                 if (enterCity)
                 {
                     EnterCityAfterMove(enterCity);
