@@ -437,21 +437,25 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // verify if we are over edges
                     if (checkX < 0)
                     {
-                        checkX = tileMapWidth - checkX;
+                        checkX = tileMapWidth - (-checkX);
                     }
                     else if (checkX == tileMapWidth)
                     {
                         checkX = 0;
                     }
+                    else if (checkX > tileMapWidth)
+                    {
+                        checkX -= tileMapWidth;
+                    }
                     if (checkY < 0)
                     {
-                        checkY = tileMapHeight - checkY;
+                        checkY = tileMapHeight - (-checkY);
                     }
                     else if (checkY == tileMapHeight)
                     {
                         checkY = 0;
                     }
-                    // Debug.Log(checkX + ":" + checkY);
+                    //Debug.Log(checkX + ":" + checkY);
                     // verify if this tile is not discovered
                     if (activePlayerTilesDiscoveryStateArray[checkX, checkY] == 0)
                     {
