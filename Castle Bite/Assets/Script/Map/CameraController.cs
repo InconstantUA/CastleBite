@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour {
     bool cameraIsFocused = false;
     Vector3 offset;
     Vector3 moveDirection;
-    float previousTime;
+    // float previousTime;
 
     public float dampTime = 0.15f;
     private Vector3 velocity = Vector3.zero;
@@ -33,15 +33,15 @@ public class CameraController : MonoBehaviour {
     IEnumerator SetCameraFocus()
     {
         // centers camera on the followed object
-        float deltaTime;
+        // float deltaTime;
         // move camera center towards the followed object
         while (GetRemainingDistance() > minDistance)
         {
-            deltaTime = Time.time - previousTime;
-            // This is done in Update function now
+            // deltaTime = Time.time - previousTime;
+            // This is done in Update function now, because if I use it like below, there will be a jitter.
             // transform.position = mapManager.MoveTowards(transform.position, followedHeroOnMap.transform.position, deltaTime * focusMoveSpeed, moveDirection) + offset;
             // wait until next move
-            previousTime = Time.time;
+            // previousTime = Time.time;
             yield return new WaitForSeconds(focusMoveDelay);
         }
         // set camera is focused
@@ -107,7 +107,7 @@ public class CameraController : MonoBehaviour {
             Vector3 point = Camera.main.WorldToViewportPoint(followedHeroOnMap.transform.position);
             Vector3 delta = followedHeroOnMap.transform.position - Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
             Vector3 destination = transform.position + delta;
-            transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, focusMoveSpeed);
+            transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
         }
     }
 }

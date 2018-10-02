@@ -734,10 +734,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void SetTileHighlighterToMousePoistion()
     {
+        // get mouse position
+        // Vector3 mousePosition = Camera.main.WorldToViewportPoint(Input.mousePosition);
         // Update position
         int x = Mathf.FloorToInt(Input.mousePosition.x / tileSize);
         int y = Mathf.FloorToInt(Input.mousePosition.y / tileSize);
-        tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
+        // tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
+        tileHighlighterTr.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize);
         // Debug.Log("Tile: " + x + ";" + y);
     }
 
@@ -2791,7 +2794,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Remove path highlight
         HighlightMovePath(false);
         // Release camera focus
-        Camera.main.GetComponent<CameraController>().SetCameraFocus(null);
+        // Camera.main.GetComponent<CameraController>().SetCameraFocus(null);
     }
 
     public void SetMode(Mode value)
@@ -3217,8 +3220,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 // we target the same path point
                 // focus camera on a unit
-                Debug.Log("Focus camera on a map hero");
-                Camera.main.GetComponent<CameraController>().SetCameraFocus(selectedMapHero);
+                // Debug.Log("Focus camera on a map hero");
+                // Camera.main.GetComponent<CameraController>().SetCameraFocus(selectedMapHero);
                 // Move to the point
                 // StartCoroutine(Move());
                 queue.Run(Move());
