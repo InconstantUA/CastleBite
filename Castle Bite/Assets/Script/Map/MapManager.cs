@@ -590,6 +590,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // loop through all tiles in the fog
                 foreach (Transform tileTransform in slice)
                 {
+                    // set fog of war image color
+                    tileTransform.GetComponent<RawImage>().color = fogOfWarColor;
                     // save fog of war tile reference
                     fogOfWarTiles[sliceIndex, tileIndex] = tileTransform;
                     // increment tile index
@@ -2469,6 +2471,72 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         yield return null;
     }
 
+    Vector3 GetDirection(Vector2Int nodeA, Vector2Int nodeB)
+    {
+        return new Vector3
+        {
+            x = ((nodeA.x - nodeB.x + 3 * tileMapWidth / 2) % tileMapWidth) - tileMapWidth / 2,
+            y = ((nodeA.y - nodeB.y + 3 * tileMapHeight / 2) % tileMapHeight) - tileMapHeight / 2,
+            z = 0
+        };
+    }
+
+    //float ToroidalDistance(float x1, float y1, float x2, float y2)
+    //{
+    //    float dx = Mathf.Abs(x2 - x1);
+    //    float dy = Mathf.Abs(y2 - y1);
+
+    //    if (dx > 0.5f)
+    //        dx = 1.0f - dx;
+
+    //    if (dy > 0.5f)
+    //        dy = 1.0f - dy;
+
+    //    return Mathf.Sqrt(dx * dx + dy * dy);
+    //}
+
+    Vector3 GetDirection(Vector3 src, Vector3 dst)
+    {
+        return GetDirection(GetTileByPosition(src), GetTileByPosition(dst));
+    }
+
+    float GetToroidalDistance(Vector3 src, Vector3 dst)
+    {
+        float dx = Mathf.Abs(src.x - dst.x);
+        if (dx > mapWidth / 2f)
+            dx = mapWidth - dx;
+        float dy = Mathf.Abs(src.y - dst.y);
+        if (dy > mapHeight / 2f)
+            dy = mapHeight - dy;
+        return Mathf.Sqrt(dx*dx + dy*dy);
+    }
+
+    //Vector3 MoveTowards(Vector3 src, Vector2Int nodeB, float maxDistance)
+    Vector3 MoveTowards(Vector3 src, Vector3 dst, float maxDistance, Vector3 direction)
+    {
+
+        // float distance = Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y);
+        // move towards the goal
+        //src.x = (src.x - maxDistance * direction.x);
+        //src.y = (src.y - maxDistance * direction.y);
+        // get distance
+        float distance = GetToroidalDistance(src, dst);
+        Debug.Log("d: " + distance.ToString() + " md: " + maxDistance.ToString());
+        if (distance > maxDistance)
+        {
+            // move towards the goal
+            src.x = (src.x + maxDistance * direction.x);
+            src.y = (src.y + maxDistance * direction.y);
+        }
+        else
+        {
+            // already there
+            src.x = dst.x;
+            src.y = dst.y;
+        }
+        return src;
+    }
+
     IEnumerator Move()
     {
         Debug.Log("MapManager: Move");
@@ -2543,6 +2611,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     MapItemsContainer mapItem = nextGameObjectOnPath.GetComponent<MapItemsContainer>();
                     if (mapHero)
                     {
+                        Debug.Log("Map hero on path");
                         // check relationships with moving party faction
                         //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapHero.LinkedPartyTr.GetComponent<HeroParty>().Faction);
                         Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapHero.LHeroParty.Faction);
@@ -2599,6 +2668,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     }
                     else if (mapItem)
                     {
+                        Debug.Log("Map item on path");
                         queue.Run(PickupItem(mapItem));
                         breakMove = true;
                     }
@@ -2609,6 +2679,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
                 else
                 {
+                    Debug.Log("No object on path");
                     // no object on tile, just terrain
                     // Verify if tile is not protected by enemy
                     Vector2Int checkedTilePositoin = new Vector2Int
@@ -2660,12 +2731,19 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
                 // execute move animation
                 Vector2 dst = GetDestination(pathPoint);
+                // Get direction
+                Vector3 direction = GetDirection(new Vector2Int(pathPoint.x, pathPoint.y), GetTileByPosition(selectedMapHero.transform.position));
+                // Vector3 direction = GetDirection(dst, src);
+                Debug.Log("dir: " + direction.x.ToString() + ":" + direction.y.ToString() + ":" + direction.z.ToString());
                 while (GetRemainingDistance(pathPoint) > 0.5f)
                 {
                     // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                     // move hero
                     deltaTime = Time.time - previousTime;
-                    selectedMapHero.transform.position = Vector2.MoveTowards(selectedMapHero.transform.position, dst, deltaTime * heroMoveSpeed);
+                    // selectedMapHero.transform.position = Vector2.MoveTowards(selectedMapHero.transform.position, dst, deltaTime * heroMoveSpeed);
+                    // selectedMapHero.transform.position = MoveTowards(selectedMapHero.transform.position, new Vector2Int(pathPoint.x, pathPoint.y), deltaTime * heroMoveSpeed);
+                    selectedMapHero.transform.position = MoveTowards(selectedMapHero.transform.position, dst, deltaTime * heroMoveSpeed, direction);
+                    //selectedMapHero.transform.Translate(direction * deltaTime * heroMoveSpeed, Space.World);
                     // wait until next move
                     previousTime = Time.time;
                     yield return new WaitForSeconds(heroMoveSpeedDelay);

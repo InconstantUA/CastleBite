@@ -168,8 +168,19 @@ namespace NesScripts.Controls.PathFind
             // (C) https://gamedev.stackexchange.com/questions/19809/finding-direction-of-travel-in-a-world-with-wrapped-edges
             int DirX = ((nodeA.gridX - nodeB.gridX + 3 * MapX / 2) % MapX) - MapX / 2;
             int DirY = ((nodeA.gridY - nodeB.gridY + 3 * MapY / 2) % MapY) - MapY / 2;
+            // get angle
+            // double angle = Mathf.Atan2(DirY, DirX) * 180f / Mathf.PI; // provides angle in degrees
+            // initialize path modifier
+            float diagonalMovePathModifier = 10f;
+            // verify if this tile by diagonal (x and y directions are not 0)
+            if (DirX != 0 && DirY != 0)
+            {
+                // this is move by diagonal, add additional cost to it
+                diagonalMovePathModifier = 16f;
+            }
+            // Debug.Log("Angle: " + angle.ToString() + " DirX: " + DirX + " DirY " + DirY);
             // return distance
-            return Mathf.Sqrt((float)(DirX * DirX + DirY * DirY));
+            return Mathf.Sqrt((float)(DirX * DirX + DirY * DirY)) * diagonalMovePathModifier;
         }
 
     }
