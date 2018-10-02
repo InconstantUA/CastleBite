@@ -2473,12 +2473,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     Vector3 GetDirection(Vector2Int nodeA, Vector2Int nodeB)
     {
-        return new Vector3
+        // get direction vector
+        Vector3 direction = new Vector3
         {
             x = ((nodeA.x - nodeB.x + 3 * tileMapWidth / 2) % tileMapWidth) - tileMapWidth / 2,
             y = ((nodeA.y - nodeB.y + 3 * tileMapHeight / 2) % tileMapHeight) - tileMapHeight / 2,
             z = 0
         };
+        // normalize vector, so it can be used in move towards function with constant move speed
+        return Vector3.Normalize(direction);
     }
 
     //float ToroidalDistance(float x1, float y1, float x2, float y2)
@@ -2495,12 +2498,20 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     //    return Mathf.Sqrt(dx * dx + dy * dy);
     //}
 
-    Vector3 GetDirection(Vector3 src, Vector3 dst)
+    public Vector3 GetDirection(Vector3 dst, Vector3 src)
     {
-        return GetDirection(GetTileByPosition(src), GetTileByPosition(dst));
+        // get direction vector
+        Vector3 direction = new Vector3
+        {
+            x = ((dst.x - src.x + 3f * mapWidth / 2f) % mapWidth) - mapWidth / 2f,
+            y = ((dst.y - src.y + 3f * mapHeight / 2f) % mapHeight) - mapHeight / 2f,
+            z = 0
+        };
+        // normalize vector, so it can be used in move towards function with constant move speed
+        return Vector3.Normalize(direction);
     }
 
-    float GetToroidalDistance(Vector3 src, Vector3 dst)
+    public float GetToroidalDistance(Vector3 src, Vector3 dst)
     {
         float dx = Mathf.Abs(src.x - dst.x);
         if (dx > mapWidth / 2f)
@@ -2512,7 +2523,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
     //Vector3 MoveTowards(Vector3 src, Vector2Int nodeB, float maxDistance)
-    Vector3 MoveTowards(Vector3 src, Vector3 dst, float maxDistance, Vector3 direction)
+    public Vector3 MoveTowards(Vector3 src, Vector3 dst, float maxDistance, Vector3 direction)
     {
 
         // float distance = Mathf.Sqrt(direction.x * direction.x + direction.y * direction.y);
@@ -2521,16 +2532,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //src.y = (src.y - maxDistance * direction.y);
         // get distance
         float distance = GetToroidalDistance(src, dst);
-        Debug.Log("d: " + distance.ToString() + " md: " + maxDistance.ToString());
+        // Debug.Log("d: " + distance.ToString() + " md: " + maxDistance.ToString());
         if (distance > maxDistance)
         {
-            // move towards the goal
+            // move towards
             src.x = (src.x + maxDistance * direction.x);
             src.y = (src.y + maxDistance * direction.y);
+            // Debug.Log("post-remaining distance " + GetToroidalDistance(src, dst));
         }
         else
         {
             // already there
+            // Debug.Log("Already there");
             src.x = dst.x;
             src.y = dst.y;
         }
@@ -2777,6 +2790,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
         // Remove path highlight
         HighlightMovePath(false);
+        // Release camera focus
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(null);
     }
 
     public void SetMode(Mode value)
@@ -3201,8 +3216,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (selectedTargetPathPoint == clickedTargetPathPoint)
             {
                 // we target the same path point
+                // focus camera on a unit
+                Debug.Log("Focus camera on a map hero");
+                Camera.main.GetComponent<CameraController>().SetCameraFocus(selectedMapHero);
                 // Move to the point
-                StartCoroutine(Move());
+                // StartCoroutine(Move());
+                queue.Run(Move());
                 // Reset path point
                 selectedTargetPathPoint = null;
             }
