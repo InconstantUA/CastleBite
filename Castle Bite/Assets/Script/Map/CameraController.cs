@@ -16,6 +16,8 @@ public class CameraController : MonoBehaviour {
     Vector3 offset;
     Vector3 moveDirection;
     // float previousTime;
+    Vector3 dragOrigin;
+    bool doFollowMapDrag;
 
     public float dampTime = 0.15f;
     private Vector3 velocity = Vector3.zero;
@@ -25,7 +27,8 @@ public class CameraController : MonoBehaviour {
         // get postion of the camera center
         Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
         // get remaining distance
-        float remainingDistance = mapManager.GetToroidalDistance(followedHeroOnMap.transform.position, cameraCenter);
+        // float remainingDistance = mapManager.GetToroidalDistance(followedHeroOnMap.transform.position, cameraCenter);
+        float remainingDistance = mapManager.GetToroidalDistance(GetPositionWithScreenTopAndBottomBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
         // Debug.Log("Remaining distance " + remainingDistance);
         return remainingDistance;
     }
@@ -77,6 +80,13 @@ public class CameraController : MonoBehaviour {
         }
     }
 
+    public void SetCameraFocus(MapManager mManager, bool doActivate)
+    {
+        doFollowMapDrag = doActivate;
+        // get and save drag origin mouse position
+        dragOrigin = Input.mousePosition + transform.position;
+    }
+
     // Update is called once per frame
     //void Update()
     //{
@@ -89,25 +99,60 @@ public class CameraController : MonoBehaviour {
     //    }
     //}
 
+    Vector3 GetPositionWithScreenTopAndBottomBordersLimits(Vector3 position)
+    {
+        // get followed hero position
+        float screenBottomHeightLimit = Screen.height / 2f;
+        // verify if followed hero position x will not cause camera to be off map
+        float screenTopHeightLimit = 960f - Screen.height / 2f;
+        if (position.y < screenBottomHeightLimit)
+        {
+            // reset position to screen bottom limit
+            position.y = screenBottomHeightLimit;
+        }
+        else if (position.y > screenTopHeightLimit)
+        {
+            // reset position to screen top limit
+            position.y = screenTopHeightLimit;
+        }
+        return position;
+    }
+
     void LateUpdate()
     {
-        // move camera to the hero
-        if (followedHeroOnMap != null && !cameraIsFocused)
-        {
-            Vector3 point = Camera.main.WorldToViewportPoint(followedHeroOnMap.transform.position);
-            Vector3 delta = followedHeroOnMap.transform.position - Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
+        // verify if there is a hero which camera needs to follow
+        if (followedHeroOnMap != null) {
+            // Get destination position based on the map borders
+            // Avoid that camera goes over top or bottom border
+            // Get heroPosition
+            Vector3 followedHeroPosition = GetPositionWithScreenTopAndBottomBordersLimits(followedHeroOnMap.transform.position);
+            // Get camera position
+            Vector3 point = Camera.main.WorldToViewportPoint(followedHeroPosition);
+            Vector3 cameraPostion = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
+            // Debug.LogWarning("Hero:Camera y " + (int)followedHeroPosition.y + ":"  + (int)Camera.main.transform.position.y);
+            // Get destination
+            Vector3 delta = followedHeroPosition - cameraPostion;
             Vector3 destination = transform.position + delta;
-            transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, focusMoveSpeed);
+            // verify that camera has not already focused on a hero
+            if (!cameraIsFocused)
+            {
+                // move camera to the hero
+                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, focusMoveSpeed);
+            }
+            else
+            {
+                // make camera follow hero on Map
+                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+            }
         }
-        // follow hero
-        if (followedHeroOnMap != null && cameraIsFocused)
+        if (doFollowMapDrag)
         {
-            // make camera follow hero on Map
-            // transform.position = followedHeroOnMap.transform.position + offset;
-            Vector3 point = Camera.main.WorldToViewportPoint(followedHeroOnMap.transform.position);
-            Vector3 delta = followedHeroOnMap.transform.position - Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
+            Vector3 newPos = dragOrigin - Input.mousePosition;
+            Vector3 delta = newPos - Camera.main.transform.position;
             Vector3 destination = transform.position + delta;
-            transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+            Vector3 destinationBorderAligned = GetPositionWithScreenTopAndBottomBordersLimits(destination);
+            Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime);
         }
     }
 }

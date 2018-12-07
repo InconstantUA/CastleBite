@@ -217,7 +217,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     [SerializeField]
     Color volcanoTerraColor;
 
-
     public void OnPointerEnter(PointerEventData eventData)
     {
         //Debug.Log("Map manager: pointer enter");
@@ -542,6 +541,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 {
                     // verify if city has the same faction as the active player (belongs to active player)
                     if (mapObject.GetComponent<MapCity>().LCity.CityFaction == activePlayerFaction)
+                        // verify if city is not occupied
+                        // Todo: fix bug when trying to pass through occupied city
                     {
                         // mark tile as passable
                         tilesmap[pos.x, pos.y] = 1;
@@ -665,7 +666,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         grid = new NesScripts.Controls.PathFind.Grid(tilesmap);
     }
 
-    bool ValidateTileCoordinates(Vector2Int tileCoords)
+    bool ValidateOutOfScreenMouse(Vector2Int tileCoords)
     {
         if ((tileCoords.x > grid.nodes.GetLength(0) - 1)
             || (tileCoords.y > grid.nodes.GetLength(1) - 1)
@@ -678,9 +679,34 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return true;
     }
 
-    bool ValidateTileCoordinates(NesScripts.Controls.PathFind.Point pathPoint)
+    bool ValidateOutOfScreenMouse(NesScripts.Controls.PathFind.Point pathPoint)
     {
-        return ValidateTileCoordinates(new Vector2Int(pathPoint.x, pathPoint.y));
+        return ValidateOutOfScreenMouse(new Vector2Int(pathPoint.x, pathPoint.y));
+    }
+
+    GameObject GetFogOnTile(Vector2Int tilePosition)
+    {
+        // loop over all active fog of war tiles
+        foreach (MapFogOfWar fogObject in transform.Find("FogOfWar").GetComponentsInChildren<MapFogOfWar>(false))
+        {
+            // verify if there is a fog on tile which we are searching
+            // if fog is not active (disabled), then it will not be checked
+            if (GetTilePosition(fogObject.transform) == tilePosition)
+            {
+                return fogObject.gameObject;
+            }
+        }
+        return null;
+    }
+
+    GameObject GetFogOnTile(NesScripts.Controls.PathFind.Point pathPoint)
+    {
+        Vector2Int tilePosition = new Vector2Int
+        {
+            x = pathPoint.x,
+            y = pathPoint.y
+        };
+        return GetFogOnTile(tilePosition);
     }
 
     void UpdateGridBasedOnHighlightedTile()
@@ -690,13 +716,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Get highligted tile state
         Vector2Int highlighterPosition = GetTileByPosition(Input.mousePosition); // GetTileHighlighterPosition();
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
-        if (!ValidateTileCoordinates(highlightedPoint))
+        if (!ValidateOutOfScreenMouse(highlightedPoint))
         {
             // nothing to do, mouse is over the screen
         }
         else
         {
-            if (GetObjectOnTile(highlightedPoint))
+            if (GetFogOnTile(highlightedPoint))
+            {
+                // make tile impassable
+                tilesmap[highlightedPoint.x, highlightedPoint.y] = 0;
+            }
+            else if (GetObjectOnTile(highlightedPoint))
             {
                 // some object is present
                 // adjust grid to make this tile passable (highlightable)
@@ -707,7 +738,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
             else
             {
-                // no object on tile, just terrain
+                // no object on tile or fog, just terrain
             }
             //TileState highlightedTileState = GetObjectOnTile(highlightedPoint);
             //// highlight based on the occupation type
@@ -811,215 +842,224 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             switch (mode)
             {
                 case Mode.Browse:
-                    // predefine colors
-                    Color32 darkBlue = new Color32(0, 0, 128, 255);
-                    Color32 darkCyan = new Color32(0, 128, 128, 255);
-                    Color32 darkYellow = new Color32(128, 122, 0, 255);
-                    Color32 darkRed = new Color32(128, 0, 0, 255);
-                    // Update tile highlighter position
-                    SetTileHighlighterToMousePoistion();
-                    // set default tile highlighter color
-                    tileHighlighterColor = Color.white;
-                    // get game object below the tile highlighter
-                    GameObject childGameObject = GetObjectOnTile(highlightedPoint); // return map's objects: hero, city, other..
-                    MapHero mapHero = null;
-                    MapCity mapCity = null;
-                    MapItemsContainer mapItem = null;
-                    bool label = false;
-                    if (GetActiveLabels().Count > 0)
+                    // verify if mouse is over fog of war
+                    if (GetFogOnTile(highlightedPoint))
                     {
-                        // verify if mouse is over label
-                        label = true;
-                    }
-                    //GameObject getObjectUnderMouse = GetObjectUnderMouse();
-                    if (childGameObject)
-                    {
-                        // predefine variables
-                        mapHero = childGameObject.GetComponent<MapHero>();
-                        mapCity = childGameObject.GetComponent<MapCity>();
-                        mapItem = childGameObject.GetComponent<MapItemsContainer>();
-                        // act based on current selection and object under mouse cursor
-                        switch (selection)
-                        {
-                            case Selection.None:
-                            case Selection.PlayerCity:
-                                // act based on the object over which mouse is now
-                                if (mapHero)
-                                {
-                                    // change cursor to different based on the relationships between factions
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
-                                    switch (relationships)
-                                    {
-                                        case Relationships.State.SameFaction:
-                                            tileHighlighterColor = darkBlue;
-                                            break;
-                                        case Relationships.State.Allies:
-                                            tileHighlighterColor = darkCyan;
-                                            break;
-                                        case Relationships.State.Neutral:
-                                            tileHighlighterColor = darkYellow;
-                                            break;
-                                        case Relationships.State.AtWar:
-                                            tileHighlighterColor = darkRed;
-                                            break;
-                                        default:
-                                            Debug.LogError("Unknown relationships " + relationships.ToString());
-                                            break;
-                                    }
-                                }
-                                if (mapCity)
-                                {
-                                    // check relationships with active player
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
-                                    switch (relationships)
-                                    {
-                                        case Relationships.State.SameFaction:
-                                            tileHighlighterColor = darkBlue;
-                                            break;
-                                        case Relationships.State.Allies:
-                                            tileHighlighterColor = darkCyan;
-                                            break;
-                                        case Relationships.State.Neutral:
-                                            tileHighlighterColor = darkYellow;
-                                            break;
-                                        case Relationships.State.AtWar:
-                                            tileHighlighterColor = darkRed;
-                                            break;
-                                        default:
-                                            Debug.LogError("Unknown relationships " + relationships.ToString());
-                                            break;
-                                    }
-                                }
-                                if (mapItem)
-                                {
-                                    tileHighlighterColor = darkYellow;
-                                }
-                                // at this stage we assume that pointer is over map terrain
-                                // nothing to do, just keep normal pointer, which was set after exit highlighting other objects
-                                break;
-                            case Selection.PlayerHero:
-                                // act based on the object over which mouse is now
-                                if (mapHero)
-                                {
-                                    // change cursor to different based on the relationships between factions
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
-                                    switch (relationships)
-                                    {
-                                        case Relationships.State.SameFaction:
-                                            // highlighted hero belongs to player
-                                            // check if this is the same hero as selected
-                                            if (mapHero.GetInstanceID() == selectedMapHero.GetInstanceID())
-                                            {
-                                                tileHighlighterColor = Color.blue;
-                                            }
-                                            else
-                                            {
-                                                tileHighlighterColor = Color.blue;
-                                            }
-                                            break;
-                                        case Relationships.State.Allies:
-                                            tileHighlighterColor = Color.cyan;
-                                            break;
-                                        case Relationships.State.Neutral:
-                                            tileHighlighterColor = Color.yellow;
-                                            break;
-                                        case Relationships.State.AtWar:
-                                            tileHighlighterColor = Color.red;
-                                            break;
-                                        default:
-                                            Debug.LogError("Unknown relationships " + relationships.ToString());
-                                            break;
-                                    }
-                                }
-                                if (mapCity)
-                                {
-                                    // check relationships with active player
-                                    Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
-                                    switch (relationships)
-                                    {
-                                        case Relationships.State.SameFaction:
-                                            // change cursor to selection hand
-                                            tileHighlighterColor = Color.blue;
-                                            break;
-                                        case Relationships.State.Allies:
-                                            tileHighlighterColor = Color.cyan;
-                                            break;
-                                        case Relationships.State.Neutral:
-                                            tileHighlighterColor = Color.yellow;
-                                            break;
-                                        case Relationships.State.AtWar:
-                                            tileHighlighterColor = Color.red;
-                                            break;
-                                        default:
-                                            Debug.LogError("Unknown relationships " + relationships.ToString());
-                                            break;
-                                    }
-                                }
-                                if (mapItem)
-                                {
-                                    tileHighlighterColor = darkYellow;
-                                }
-                                // at this stage we assume that pointer is over map terrain
-                                // controls here are handled by Update() function
-                                break;
-                            default:
-                                Debug.LogError("Unknown selection " + selection.ToString());
-                                break;
-                        }
-                    }
-                    else if (label)
-                    {
-                        // Hide tile highlighter if mouse if over label
-                        // Debug.Log("Hide tile highlighter");
+                        // hide tile highligter
                         tileHighlighterColor = new Color32(0, 0, 0, 0);
                     }
                     else
                     {
-                        // no object on tile, just terrain
-                        // verify if the tile is protected by enemy hero and we are in hero selection mode
-                        if (IsTileProtected(GetTileByPosition(Input.mousePosition)))
+                        // predefine colors
+                        Color32 darkBlue = new Color32(0, 0, 128, 255);
+                        Color32 darkCyan = new Color32(0, 128, 128, 255);
+                        Color32 darkYellow = new Color32(128, 122, 0, 255);
+                        Color32 darkRed = new Color32(128, 0, 0, 255);
+                        // Update tile highlighter position
+                        SetTileHighlighterToMousePoistion();
+                        // set default tile highlighter color
+                        tileHighlighterColor = Color.white;
+                        // get game object below the tile highlighter
+                        GameObject childGameObject = GetObjectOnTile(highlightedPoint); // return map's objects: hero, city, other..
+                        MapHero mapHero = null;
+                        MapCity mapCity = null;
+                        MapItemsContainer mapItem = null;
+                        bool label = false;
+                        if (GetActiveLabels().Count > 0)
                         {
-                            // transform.root.Find("CursorController").GetComponent<CursorController>().SetAttackCursor();
-                            // act based on current selection
-                            tileHighlighterColor = Color.red;
+                            // verify if mouse is over label
+                            label = true;
+                        }
+                        //GameObject getObjectUnderMouse = GetObjectUnderMouse();
+                        if (childGameObject)
+                        {
+                            // predefine variables
+                            mapHero = childGameObject.GetComponent<MapHero>();
+                            mapCity = childGameObject.GetComponent<MapCity>();
+                            mapItem = childGameObject.GetComponent<MapItemsContainer>();
+                            // act based on current selection and object under mouse cursor
                             switch (selection)
                             {
                                 case Selection.None:
                                 case Selection.PlayerCity:
-                                    tileHighlighterColor = darkRed;
+                                    // act based on the object over which mouse is now
+                                    if (mapHero)
+                                    {
+                                        // change cursor to different based on the relationships between factions
+                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
+                                        switch (relationships)
+                                        {
+                                            case Relationships.State.SameFaction:
+                                                tileHighlighterColor = darkBlue;
+                                                break;
+                                            case Relationships.State.Allies:
+                                                tileHighlighterColor = darkCyan;
+                                                break;
+                                            case Relationships.State.Neutral:
+                                                tileHighlighterColor = darkYellow;
+                                                break;
+                                            case Relationships.State.AtWar:
+                                                tileHighlighterColor = darkRed;
+                                                break;
+                                            default:
+                                                Debug.LogError("Unknown relationships " + relationships.ToString());
+                                                break;
+                                        }
+                                    }
+                                    if (mapCity)
+                                    {
+                                        // check relationships with active player
+                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                                        switch (relationships)
+                                        {
+                                            case Relationships.State.SameFaction:
+                                                tileHighlighterColor = darkBlue;
+                                                break;
+                                            case Relationships.State.Allies:
+                                                tileHighlighterColor = darkCyan;
+                                                break;
+                                            case Relationships.State.Neutral:
+                                                tileHighlighterColor = darkYellow;
+                                                break;
+                                            case Relationships.State.AtWar:
+                                                tileHighlighterColor = darkRed;
+                                                break;
+                                            default:
+                                                Debug.LogError("Unknown relationships " + relationships.ToString());
+                                                break;
+                                        }
+                                    }
+                                    if (mapItem)
+                                    {
+                                        tileHighlighterColor = darkYellow;
+                                    }
+                                    // at this stage we assume that pointer is over map terrain
+                                    // nothing to do, just keep normal pointer, which was set after exit highlighting other objects
                                     break;
                                 case Selection.PlayerHero:
-                                    tileHighlighterColor = Color.red;
+                                    // act based on the object over which mouse is now
+                                    if (mapHero)
+                                    {
+                                        // change cursor to different based on the relationships between factions
+                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapHero.LHeroParty.Faction);
+                                        switch (relationships)
+                                        {
+                                            case Relationships.State.SameFaction:
+                                                // highlighted hero belongs to player
+                                                // check if this is the same hero as selected
+                                                if (mapHero.GetInstanceID() == selectedMapHero.GetInstanceID())
+                                                {
+                                                    tileHighlighterColor = Color.blue;
+                                                }
+                                                else
+                                                {
+                                                    tileHighlighterColor = Color.blue;
+                                                }
+                                                break;
+                                            case Relationships.State.Allies:
+                                                tileHighlighterColor = Color.cyan;
+                                                break;
+                                            case Relationships.State.Neutral:
+                                                tileHighlighterColor = Color.yellow;
+                                                break;
+                                            case Relationships.State.AtWar:
+                                                tileHighlighterColor = Color.red;
+                                                break;
+                                            default:
+                                                Debug.LogError("Unknown relationships " + relationships.ToString());
+                                                break;
+                                        }
+                                    }
+                                    if (mapCity)
+                                    {
+                                        // check relationships with active player
+                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                                        switch (relationships)
+                                        {
+                                            case Relationships.State.SameFaction:
+                                                // change cursor to selection hand
+                                                tileHighlighterColor = Color.blue;
+                                                break;
+                                            case Relationships.State.Allies:
+                                                tileHighlighterColor = Color.cyan;
+                                                break;
+                                            case Relationships.State.Neutral:
+                                                tileHighlighterColor = Color.yellow;
+                                                break;
+                                            case Relationships.State.AtWar:
+                                                tileHighlighterColor = Color.red;
+                                                break;
+                                            default:
+                                                Debug.LogError("Unknown relationships " + relationships.ToString());
+                                                break;
+                                        }
+                                    }
+                                    if (mapItem)
+                                    {
+                                        tileHighlighterColor = darkYellow;
+                                    }
+                                    // at this stage we assume that pointer is over map terrain
+                                    // controls here are handled by Update() function
                                     break;
                                 default:
                                     Debug.LogError("Unknown selection " + selection.ToString());
                                     break;
                             }
                         }
+                        else if (label)
+                        {
+                            // Hide tile highlighter if mouse if over label
+                            // Debug.Log("Hide tile highlighter");
+                            tileHighlighterColor = new Color32(0, 0, 0, 0);
+                        }
                         else
                         {
-                            //transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
-                            //tileHighlighterColor = Color.white;
-                            // get tile coordinates
-                            Vector2Int tileCoords = GetTileByPosition(Input.mousePosition);
-                            // Verify if tile coords are correct
-                            if (ValidateTileCoordinates(tileCoords))
+                            // no object on tile, just terrain
+                            // verify if the tile is protected by enemy hero and we are in hero selection mode
+                            if (IsTileProtected(GetTileByPosition(Input.mousePosition)))
                             {
-                                // Get tile
-                                MapTile mapTile = mapTiles[tileCoords.x, tileCoords.y];
-                                // verify if tile is not passable
-                                if (!mapTile.Terra.TerraIsPassable)
+                                // transform.root.Find("CursorController").GetComponent<CursorController>().SetAttackCursor();
+                                // act based on current selection
+                                tileHighlighterColor = Color.red;
+                                switch (selection)
                                 {
-                                    // make it gray, indicating that this is not passable
-                                    tileHighlighterColor = Color.gray;
+                                    case Selection.None:
+                                    case Selection.PlayerCity:
+                                        tileHighlighterColor = darkRed;
+                                        break;
+                                    case Selection.PlayerHero:
+                                        tileHighlighterColor = Color.red;
+                                        break;
+                                    default:
+                                        Debug.LogError("Unknown selection " + selection.ToString());
+                                        break;
                                 }
                             }
                             else
                             {
-                                // Mouse is not over screen
-                                Debug.LogWarning("Mouse not over screen. Hide tile highlighter");
-                                // Hide tile highlighter in this mode
-                                tileHighlighterColor = new Color32(0, 0, 0, 0);
+                                //transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                                //tileHighlighterColor = Color.white;
+                                // get tile coordinates
+                                Vector2Int tileCoords = GetTileByPosition(Input.mousePosition);
+                                // Verify if tile coords are correct
+                                if (ValidateOutOfScreenMouse(tileCoords))
+                                {
+                                    // Get tile
+                                    MapTile mapTile = mapTiles[tileCoords.x, tileCoords.y];
+                                    // verify if tile is not passable
+                                    if (!mapTile.Terra.TerraIsPassable)
+                                    {
+                                        // make it gray, indicating that this is not passable
+                                        tileHighlighterColor = Color.gray;
+                                    }
+                                }
+                                else
+                                {
+                                    // Mouse is not over screen
+                                    Debug.LogWarning("Mouse not over screen. Hide tile highlighter");
+                                    // Hide tile highlighter in this mode
+                                    tileHighlighterColor = new Color32(0, 0, 0, 0);
+                                }
                             }
                         }
                     }
@@ -1877,6 +1917,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             //xMax = mouseOnDownStartPosition.x - mapPosition.x - tileSize;
             yMin = yMinDef - yCorrectionOnDragStart;
             yMax = yMaxDef - yCorrectionOnDragStart;
+            // activate camera focus on a map
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(this, true);
         }
         else if (Input.GetMouseButton(1))
         {
@@ -2052,16 +2094,24 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             // on left mouse held down
             float newPositionY = Input.mousePosition.y;
-            if (Input.mousePosition.y <= yMin)
-            {
-                newPositionY = yMin;
-            }
-            else if (Input.mousePosition.y >= yMax)
-            {
-                newPositionY = yMax;
-            }
+            //if (Input.mousePosition.y <= yMin)
+            //{
+            //    newPositionY = yMin;
+            //}
+            //else if (Input.mousePosition.y >= yMax)
+            //{
+            //    newPositionY = yMax;
+            //}
+            Debug.LogWarning("Mouse:Camera y " + (int)Input.mousePosition.y + ":" + (int)Camera.main.transform.position.y);
+            // move camera up/down instead of map
+            //Vector3 newCameraPosition = Camera.main.transform.position;
+            //newCameraPosition.y = newPositionY;
+            //Camera.main.transform.position = newCameraPosition;
+            //
+            //
             // for unknown reason z is set to -30000 on drag, that is why I reset it to 0
-            transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, newPositionY + yCorrectionOnDragStart, 0);
+            // transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, newPositionY + yCorrectionOnDragStart, 0);
+            transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, 0, 0);
             // Debug.Log("New position: " + transform.position.x + ":" + transform.position.y + ":" + transform.position.z);
             // define border
             float leftBorder = -tileSize;
@@ -2152,6 +2202,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             SetTileHighlighterToMousePoistion();
             // allow map to block raycasts
             GetComponent<CanvasGroup>().blocksRaycasts = true;
+            // deactivate camera focus on a map
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(this, false);
         }
         else if (Input.GetMouseButtonUp(1))
         {
@@ -2794,7 +2846,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Remove path highlight
         HighlightMovePath(false);
         // Release camera focus
-        // Camera.main.GetComponent<CameraController>().SetCameraFocus(null);
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(null);
     }
 
     public void SetMode(Mode value)
@@ -3221,7 +3273,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // we target the same path point
                 // focus camera on a unit
                 // Debug.Log("Focus camera on a map hero");
-                // Camera.main.GetComponent<CameraController>().SetCameraFocus(selectedMapHero);
+                Camera.main.GetComponent<CameraController>().SetCameraFocus(selectedMapHero);
                 // Move to the point
                 // StartCoroutine(Move());
                 queue.Run(Move());
