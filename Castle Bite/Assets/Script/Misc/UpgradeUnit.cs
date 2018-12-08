@@ -684,7 +684,8 @@ public class UpgradeUnit : MonoBehaviour {
 
     GamePlayer GetActivePlayer()
     {
-        return transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer();
+        return TurnsManager.Instance.GetActivePlayer();
+        // return transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer();
     }
 
     bool VerifyClassPrerequisites(PartyUnit checkedUnitClass, int classLevel)

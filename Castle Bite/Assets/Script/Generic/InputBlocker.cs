@@ -4,31 +4,32 @@ using UnityEngine;
 
 public class InputBlocker : MonoBehaviour {
 
+    public static InputBlocker Instance { get; private set; }
+
+    void Awake()
+    {
+        // initialize instance
+        Instance = this;
+        // disable it
+        gameObject.SetActive(false);
+    }
+
     public void SetActive(bool doActivate)
     {
         // get mouse cursor controller
-        CursorController cursorController = transform.root.Find("CursorController").GetComponent<CursorController>();
+        // CursorController cursorController = CursorController.Instance;
         if (doActivate)
         {
             // change mouse cursor
-            cursorController.SetBlockInputCursor();
+            CursorController.Instance.SetBlockInputCursor();
         }
         else
         {
             // change mouse cursor
-            cursorController.SetNormalCursor();
+            CursorController.Instance.SetNormalCursor();
         }
         // Activate or deactivate input blocker
         gameObject.SetActive(doActivate);
     }
 
-    //// Use this for initialization
-    //void Start () {
-
-    //}
-
-    //// Update is called once per frame
-    //void Update () {
-
-    //}
 }

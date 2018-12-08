@@ -101,33 +101,33 @@ public class LoadGame : MonoBehaviour
     public void CreateGamePlayers(PlayerData[] playersData)
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create players
         foreach (PlayerData playerData in playersData)
         {
-            objectsManager.CreatePlayer(playerData);
+            ObjectsManager.Instance.CreatePlayer(playerData);
         }
     }
 
     public void RemoveAllPlayers()
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // remove players
         foreach (GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
         {
-            objectsManager.RemovePlayer(gamePlayer);
+            ObjectsManager.Instance.RemovePlayer(gamePlayer);
         }
     }
 
     public void RemoveAllCities()
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Remove cities
         foreach (City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>(true))
         {
-            objectsManager.RemoveCity(city);
+            ObjectsManager.Instance.RemoveCity(city);
         }
         Debug.LogWarning("All cities removed");
         //Debug.Break();
@@ -136,22 +136,22 @@ public class LoadGame : MonoBehaviour
     public void CreateCities(CityData[] citiesData)
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create cities
         foreach (CityData cityData in citiesData)
         {
-            objectsManager.CreateCity(cityData);
+            ObjectsManager.Instance.CreateCity(cityData);
         }
     }
 
     public void RemoveAllParties()
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Remove all parties
         foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
         {
-            objectsManager.RemoveHeroParty(heroParty);
+            ObjectsManager.Instance.RemoveHeroParty(heroParty);
         }
         Debug.LogWarning("All parties removed");
         //Debug.Break();
@@ -160,36 +160,36 @@ public class LoadGame : MonoBehaviour
     public void CreateParties(PartyData[] partiesData)
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create parties
         foreach (PartyData partyData in partiesData)
         {
-            objectsManager.CreateHeroParty(partyData);
+            ObjectsManager.Instance.CreateHeroParty(partyData);
         }
     }
 
     public void RemoveAllInventoryItems()
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Remove all items on map, other items will be removed automatically with respective parties or units
-        objectsManager.RemoveAllInventoryItemsOnMap();
+        ObjectsManager.Instance.RemoveAllInventoryItemsOnMap();
     }
 
     void SetTurnsManager(GameData gameData)
     {
         // Get turns manager
-        TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
+        // TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
         // Set data
-        turnsManager.TurnsData = gameData.turnsData;
+        TurnsManager.Instance.TurnsData = gameData.turnsData;
         // Update turns number in UI
-        turnsManager.UpdateTurnNumberText();
+        TurnsManager.Instance.UpdateTurnNumberText();
     }
 
     IEnumerator CleanGameBeforeLoad()
     {
         // Block mouse input
-        transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(true);
+        InputBlocker.Instance.SetActive(true);
         // Note order is imporant, because some parties are children of cities
         RemoveAllInventoryItems();
         RemoveAllParties();
@@ -204,7 +204,7 @@ public class LoadGame : MonoBehaviour
     void CreateInventoryItemsOnMap(MapData mapData)
     {
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Init map items container
         MapItemsContainer mapItemsContainer = null;
         // Init position on map variable
@@ -221,12 +221,12 @@ public class LoadGame : MonoBehaviour
                 || (previousItemPositionOnMap != mapData.itemsPositionOnMap[i]))
             {
                 // create item container
-                mapItemsContainer = objectsManager.CreateInventoryItemContainerOnMap(mapData.itemsPositionOnMap[i]);
+                mapItemsContainer = ObjectsManager.Instance.CreateInventoryItemContainerOnMap(mapData.itemsPositionOnMap[i]);
                 // save previous position
                 previousItemPositionOnMap = mapData.itemsPositionOnMap[i];
             }
             // create item
-            InventoryItem inventoryItem = objectsManager.CreateInventoryItem(mapData.itemsOnMap[i], gameMap.transform);
+            InventoryItem inventoryItem = ObjectsManager.Instance.CreateInventoryItem(mapData.itemsOnMap[i], gameMap.transform);
             // link item to container
             mapItemsContainer.LInventoryItems.Add(inventoryItem);
         }
@@ -250,7 +250,7 @@ public class LoadGame : MonoBehaviour
         // Wait for all animations to finish
         yield return new WaitForSeconds(0.25f);
         // Unblock mouse input
-        transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(false);
+        InputBlocker.Instance.SetActive(false);
         // Deactivate Loading screen
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
     }
@@ -259,7 +259,8 @@ public class LoadGame : MonoBehaviour
     {
         yield return null;
         // Activate map screen
-        transform.root.Find("MapScreen").gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
+        MapManager.Instance.gameObject.SetActive(true);
         // Deactivate this screen
         gameObject.SetActive(false);
         // Activate main menu panel, so it is visible next time main menu is activated
@@ -275,9 +276,9 @@ public class LoadGame : MonoBehaviour
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
         // .. Set map
         // remove old data
-        transform.root.Find("Managers").GetComponent<ChapterManager>().CoroutineQueue.Run(CleanGameBeforeLoad());
+        ChapterManager.Instance.CoroutineQueue.Run(CleanGameBeforeLoad());
         // create new objects from saved data
-        transform.root.Find("Managers").GetComponent<ChapterManager>().CoroutineQueue.Run(CreateGameObjects(gameData));
+        ChapterManager.Instance.CoroutineQueue.Run(CreateGameObjects(gameData));
     }
 
     void LoadGameData()
@@ -294,7 +295,7 @@ public class LoadGame : MonoBehaviour
         // Set game data
         SetGameData(gameData);
         // activate screens
-        transform.root.Find("Managers").GetComponent<ChapterManager>().CoroutineQueue.Run(ActivateScreens());
+        ChapterManager.Instance.CoroutineQueue.Run(ActivateScreens());
     }
 
     void OnLoadSaveYesConfirmation()

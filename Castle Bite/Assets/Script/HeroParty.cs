@@ -64,9 +64,9 @@ public class HeroParty : MonoBehaviour {
             offsetMaxY = 0
         };
         // get map manager
-        MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+        // MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
         // verify if map manager is present
-        if (mapManager == null)
+        if (MapManager.Instance == null)
         {
             Debug.LogError("cannot find map manager");
             // return default position

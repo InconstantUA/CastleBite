@@ -13,7 +13,7 @@ using UnityEngine;
 // which are critcal for game progress
 
 public class ChapterManager : MonoBehaviour {
-    //public static ChapterManager Instance { get; private set; }
+    public static ChapterManager Instance { get; private set; }
 
     [SerializeField]
     bool lastChapter;
@@ -51,7 +51,9 @@ public class ChapterManager : MonoBehaviour {
         }
     }
 
-    void Awake () {
+    void Awake()
+    {
+        Instance = this;
         // Create a coroutine queue that can run max 1 coroutine at once
         coroutineQueue = new CoroutineQueue(1, StartCoroutine);
     }
@@ -99,10 +101,10 @@ public class ChapterManager : MonoBehaviour {
         Debug.Log("Go to next chapter");
         // I assume that we were at map before game end
         // Get vars
-        GameObject map = transform.root.Find("MapScreen").gameObject;
         GameObject transferHeroScreen = transform.root.Find("MiscUI/TransferHeroAndItemsToNextChapter").gameObject;
         // Disable map and enable main menu
-        map.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
+        MapManager.Instance.gameObject.SetActive(false);
         transferHeroScreen.SetActive(true);
     }
 
@@ -117,8 +119,8 @@ public class ChapterManager : MonoBehaviour {
             cityScreen.gameObject.SetActive(false);
         }
         // Disable map
-        GameObject map = transform.root.Find("MapScreen").gameObject;
-        map.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
+        MapManager.Instance.gameObject.SetActive(false);
         // Enable credits
         GameObject credits = transform.root.Find("MiscUI/Credits").gameObject;
         credits.SetActive(true);
@@ -129,10 +131,10 @@ public class ChapterManager : MonoBehaviour {
         Debug.Log("End game");
         // I assume that we were at map before game end
         // Get vars
-        GameObject map = transform.root.Find("MapScreen").gameObject;
         GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
         // Disable map and enable main menu
-        map.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
+        MapManager.Instance.gameObject.SetActive(false);
         mainMenu.SetActive(true);
         // Activate and deactivate required menus in main menu so it looks like during game start
         // As long as we are in game mode now, then Start button is not needed any more

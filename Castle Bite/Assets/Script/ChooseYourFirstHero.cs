@@ -131,7 +131,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
         if ("" == name)
         {
             // reset name to default
-            name = transform.root.Find("Managers").GetComponent<ChapterManager>().PlayersData[0].givenName;
+            name = ChapterManager.Instance.PlayersData[0].givenName;
         }
         // return name
         return name;
@@ -142,7 +142,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
         foreach (City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>())
         {
             // verify if city faction match players faction and that it is capital city
-            if ((city.CityFaction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
+            // if ((city.CityFaction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
+            if ((city.CityFaction == TurnsManager.Instance.GetActivePlayer().Faction)
                 && (city.CityType == CityType.Capital))
             {
                 return city;

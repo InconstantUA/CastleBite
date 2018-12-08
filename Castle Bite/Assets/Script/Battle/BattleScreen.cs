@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleScreen : MonoBehaviour {
+    //[SerializeField]
+    //MapManager mapManager;
     PartyPanel playerPartyPanel;
     PartyPanel enemyPartyPanel;
 
@@ -283,10 +285,10 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
-    MapManager GetMapManager()
-    {
-        return transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
-    }
+    //MapManager GetMapManager()
+    //{
+    //    return transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+    //}
 
     void DefaultOnBattleExit()
     {
@@ -301,11 +303,12 @@ public class BattleScreen : MonoBehaviour {
         // Activate other required screen based on the original parties location
         // Always start with map screen, no matter where battle took place
         // Enable map screen
-        Transform mapScreen = transform.root.Find("MapScreen");
-        mapScreen.gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
+        // Activate map
+        MapManager.Instance.gameObject.SetActive(true);
         // Change map mode to browse
-        MapManager mapManager = GetMapManager();
-        mapManager.SetMode(MapManager.Mode.Browse);
+        //MapManager mapManager = GetMapManager();
+        MapManager.Instance.SetMode(MapManager.Mode.Browse);
         // Move heroes parties to thier initial positions before battle
         // Verify if player party is not destroyed
         //if (playerPartyPanel)
@@ -326,7 +329,7 @@ public class BattleScreen : MonoBehaviour {
             playerPartyPanel.ResetUnitCellStatus(new string[] { playerPartyPanel.deadStatusText });
             playerPartyPanel.ResetUnitCellHighlight();
             // set map focus
-            transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().SetActive(playerPartyPanel.GetHeroParty().LMapHero);
+            MapMenuManager.Instance.GetComponentInChildren<MapFocusPanel>().SetActive(playerPartyPanel.GetHeroParty().LMapHero);
         }
         // Verify if enemy party is not destroyed
         if (enemyPartyPanel)
@@ -387,7 +390,7 @@ public class BattleScreen : MonoBehaviour {
             oppositeTransform = otherHeroParty.LMapHero.transform;
         }
         // give control to map manager to flee
-        GetMapManager().EscapeBattle(fleeingPartyTransform, oppositeTransform);
+        MapManager.Instance.EscapeBattle(fleeingPartyTransform, oppositeTransform);
     }
 
     public void FleePlayer()
@@ -422,11 +425,11 @@ public class BattleScreen : MonoBehaviour {
         // Prepare variables to be used later
         MapHero mapHero = playerPartyPanel.GetHeroParty().LMapHero;
         MapCity destinationCityOnMap = enemyPartyPanel.GetCity().LMapCity;
-        MapManager mapManager = GetMapManager();
+        //MapManager mapManager = GetMapManager();
         // execute default on battle exit function
         DefaultOnBattleExit();
         // Trigger map hero move to and enter city
-        mapManager.MapHeroMoveToAndEnterCity(mapHero, destinationCityOnMap);
+        MapManager.Instance.MapHeroMoveToAndEnterCity(mapHero, destinationCityOnMap);
     }
 
     IEnumerator EndBattle()
@@ -660,8 +663,8 @@ public class BattleScreen : MonoBehaviour {
     {
         //Debug.Log("ExecutePreActivateActions");
         // Block mouse input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(true);
+        // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        InputBlocker.Instance.SetActive(true);
         //// Set Queue is active flag
         //queueIsActive = true;
         // Highlight it and reset all other highlights
@@ -785,8 +788,8 @@ public class BattleScreen : MonoBehaviour {
                 break;
         }
         // Unblock mouse input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(false);
+        // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        InputBlocker.Instance.SetActive(false);
         Debug.Log("Unit has been activated");
         yield return null;
     }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
-    [SerializeField]
-    MapManager mapManager;
+    //[SerializeField]
+    //MapManager mapManager;
     [SerializeField]
     float focusMoveSpeed;
     [SerializeField]
@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
         Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
         // get remaining distance
         // float remainingDistance = mapManager.GetToroidalDistance(followedHeroOnMap.transform.position, cameraCenter);
-        float remainingDistance = mapManager.GetToroidalDistance(GetPositionWithScreenTopAndBottomBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
+        float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenTopAndBottomBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
         // Debug.Log("Remaining distance " + remainingDistance);
         return remainingDistance;
     }
@@ -59,7 +59,7 @@ public class CameraController : MonoBehaviour {
         if (mapHero != null)
         {
             // get map queue
-            CoroutineQueue mapQueue = mapManager.Queue;
+            CoroutineQueue mapQueue = MapManager.Instance.Queue;
             //// get postion of the camera center
             //Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
             //Debug.Log("Camera center " + cameraCenter.x + ":" + cameraCenter.y + ":" + cameraCenter.z);

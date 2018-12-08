@@ -33,7 +33,7 @@ public class GameMap : MonoBehaviour {
         MapData.itemsOnMap = new List<InventoryItemData>();
         MapData.itemsPositionOnMap = new List<PositionOnMap>();
         // Loop through transforms 1 level below map (=belongs to the map)
-        foreach (Transform childTransform in transform.root.Find("MapScreen/Map"))
+        foreach (Transform childTransform in MapManager.Instance.transform)
         {
             // get map item (chest)
             MapItemsContainer mapItem = childTransform.GetComponent<MapItemsContainer>();

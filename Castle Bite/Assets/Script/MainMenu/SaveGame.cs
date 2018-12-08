@@ -144,7 +144,7 @@ public class SaveGame : MonoBehaviour {
     {
         Debug.Log("Get game data");
         // Get Turns manager
-        TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
+        // TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
         // Get game players
         GamePlayer[] players = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
         // Get game map
@@ -163,7 +163,7 @@ public class SaveGame : MonoBehaviour {
             partiesData = new PartyData[heroParties.Length]
         };
         // Set turns manager data
-        gameData.turnsData = turnsManager.TurnsData;
+        gameData.turnsData = TurnsManager.Instance.TurnsData;
         // Prepare map data
         gameMap.SetItemsOnMapData();
         // Get and write Map data

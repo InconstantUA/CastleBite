@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MapFocusPanel : MonoBehaviour {
+    //[SerializeField]
+    //MapManager mapManager;
     GameObject focusedObject;
     List<MapHero> mapHeroesList;
     List<MapCity> mapCitiesList;
@@ -41,7 +43,8 @@ public class MapFocusPanel : MonoBehaviour {
         Debug.Log("Update map focus panel with " + mapHero.name);
         focusedObject = mapHero.gameObject;
         // save currently focused object id to game player it will be needed for game load and turns switch
-        transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
+        TurnsManager.Instance.GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
+        // transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
         // Set hero name
         SetHeroNameUI(mapHero);
         // Set hero additinal info
@@ -60,7 +63,7 @@ public class MapFocusPanel : MonoBehaviour {
         // Set list of map heroes
         mapHeroesList = new List<MapHero>();
         // Loop through all map heroes
-        foreach (MapHero checkedHero in transform.root.Find("MapScreen/Map").GetComponentsInChildren<MapHero>())
+        foreach (MapHero checkedHero in MapManager.Instance.GetComponentsInChildren<MapHero>())
         {
             // verify if mHero faction is the same as for active hero and that hero is not on hold
             if (mapHero.LHeroParty.Faction == checkedHero.LHeroParty.Faction && checkedHero.LHeroParty.HoldPosition != true )
@@ -151,9 +154,9 @@ public class MapFocusPanel : MonoBehaviour {
         // set name UI
         SetHeroNameUI(nextHero);
         // select hero on map
-        transform.root.Find("MapScreen/Map").GetComponent<MapManager>().SetSelection(MapManager.Selection.PlayerHero, nextHero);
+        MapManager.Instance.SetSelection(MapManager.Selection.PlayerHero, nextHero);
         // reset cursor to normal, because it is changed by MapManager
-        transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+        CursorController.Instance.SetNormalCursor();
     }
 
     void ChangeCityFocus(MapCity nextCity)
@@ -162,9 +165,9 @@ public class MapFocusPanel : MonoBehaviour {
         // set name UI
         SetNameUI(nextCity);
         // select city on map
-        transform.root.Find("MapScreen/Map").GetComponent<MapManager>().SetSelection(MapManager.Selection.PlayerCity, nextCity);
+        MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, nextCity);
         // reset cursor to normal, because it is changed by MapManager
-        transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+        CursorController.Instance.SetNormalCursor();
     }
 
     public void ShowNext()
@@ -279,7 +282,8 @@ public class MapFocusPanel : MonoBehaviour {
         Debug.Log("Update map focus panel with " + mapCity.name);
         focusedObject = mapCity.gameObject;
         // save currently focused object id to game player it will be needed for game load and turns switch
-        transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
+        TurnsManager.Instance.GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
+        // transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
         // Set city name
         SetNameUI(mapCity);
         // Set additional info
@@ -287,7 +291,7 @@ public class MapFocusPanel : MonoBehaviour {
         // Set list of map heroes
         mapCitiesList = new List<MapCity>();
         // Loop through all map cities
-        foreach (MapCity mCity in transform.root.Find("MapScreen/Map").GetComponentsInChildren<MapCity>())
+        foreach (MapCity mCity in MapManager.Instance.GetComponentsInChildren<MapCity>())
         {
             // verify if faction is the same
             if (mapCity.LCity.CityFaction == mCity.LCity.CityFaction)
@@ -309,7 +313,7 @@ public class MapFocusPanel : MonoBehaviour {
     public void EnterCityOnMap()
     {
         Debug.Log("Enter city on map");
-        transform.root.Find("MapScreen/Map").GetComponent<MapManager>().EnterCityOnMap(focusedObject.GetComponent<MapCity>());
+        MapManager.Instance.EnterCityOnMap(focusedObject.GetComponent<MapCity>());
     }
 
     public void HoldPosition()
@@ -370,9 +374,9 @@ public class MapFocusPanel : MonoBehaviour {
         mapCitiesList = null;
         mapHeroesList = null;
         // reset selection on Map
-        //transform.root.Find("MapScreen/Map").GetComponent<MapManager>().SetSelection(MapManager.Selection.None);
+        //MapManager.Instance.SetSelection(MapManager.Selection.None);
         // reset cursor to normal, because it is changed by MapManager
-        //transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+        //CursorController.Instance.SetNormalCursor();
     }
 
 }

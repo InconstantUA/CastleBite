@@ -63,9 +63,8 @@ public class MapCity : MonoBehaviour
         label.LabelTxt.text = "[" + lCity.CityName + "]\n\r <size=12>" + lCity.CityDescription + "</size>";
     }
 
-    public IEnumerator EnterCityEditMode()
+    public void DimmLabel()
     {
-        //Debug.Log("EnterCityEditMode");
         // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
         // verify if MapObject's labe is still active and mouse over it
         if (GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && GetComponentInChildren<MapObjectLabel>().IsMouseOver)
@@ -73,25 +72,6 @@ public class MapCity : MonoBehaviour
             // disable it
             GetComponent<MapObject>().OnPointerExit(null);
         }
-        // Block mouse input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(true);
-        // Wait for all animations to finish
-        // this depends on the labelDimTimeout parameter in MapObject, we add additional 0.1f just in case
-        yield return new WaitForSeconds(GetComponent<MapObject>().LabelDimTimeout + 0.1f); 
-        // Unblock mouse input
-        inputBlocker.SetActive(false);
-        // map manager change to browse mode back
-        // . - this is done by OnDisable() automatically in MapManager
-        //MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        //mapManager.SetMode(MapManager.Mode.Browse);
-        // Deactivate map
-        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
-        mapScreen.SetActive(false);
-        // everything below related to mapManager or mapScreen will not be processed
-        // because map manager is disabled
-        // Activate city view = go to city edit mode
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(lCity);
     }
 
     public void SetSelectedState(bool doActivate)

@@ -21,7 +21,8 @@ public class Prolog : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPo
         // deactivate prolog and game screen
         SetActive(false);
         // activate map
-        transform.root.Find("MapScreen").gameObject.SetActive(true);
+        MapManager.Instance.gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
     }
 
     public void OnPointerDown(PointerEventData eventData)

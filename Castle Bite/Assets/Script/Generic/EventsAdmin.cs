@@ -9,6 +9,13 @@ public class CityCaptureEvent : UnityEvent<City>
 }
 
 public class EventsAdmin : MonoBehaviour {
+    public static EventsAdmin Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     // create events, which later can be handled in Unity Editor
     // Create on city has been captured event
     public CityCaptureEvent OnCityHasBeenCaptured;

@@ -121,8 +121,8 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         if (label.Interactable)
             labelTxt.raycastTarget = true;
         // give control on actions to map manager
-        MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        mapManager.OnPointerEnterChildObject(gameObject, eventData);
+        // MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        MapManager.Instance.OnPointerEnterChildObject(gameObject, eventData);
         // tigger on pointer enter event on linked object, if it is present
         MapObject linkedMapHeroMapObj = GetLinkedMapObject();
         if (GetLinkedMapObject())
@@ -145,8 +145,8 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             StartCoroutine(DimmLabelWithDelay());
         }
         // give control on actions to map manager
-        MapManager mapManager = transform.parent.GetComponent<MapManager>();
-        mapManager.OnPointerExitChildObject(gameObject, eventData);
+        // MapManager mapManager = transform.parent.GetComponent<MapManager>();
+        MapManager.Instance.OnPointerExitChildObject(gameObject, eventData);
         // tigger on pointer exit event on linked object, if it is present
         MapObject linkedMapHeroMapObj = GetLinkedMapObject();
         if (GetLinkedMapObject())
@@ -174,8 +174,8 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             // so it is not in pressed status any more
             SetHighlightedStatus();
             // give control on actions to map manager
-            MapManager mapManager = transform.parent.GetComponent<MapManager>();
-            mapManager.ActOnClick(gameObject, eventData);
+            // MapManager mapManager = transform.parent.GetComponent<MapManager>();
+            MapManager.Instance.ActOnClick(gameObject, eventData);
         }
         else if (Input.GetMouseButtonUp(1))
         {

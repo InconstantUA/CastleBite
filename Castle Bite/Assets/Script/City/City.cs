@@ -28,6 +28,8 @@ public class CityData
 }
 
 public class City : MonoBehaviour {
+    //[SerializeField]
+    //MapManager mapManager;
     [SerializeField]
     CityData cityData;
     [SerializeField]
@@ -117,9 +119,9 @@ public class City : MonoBehaviour {
             offsetMaxY = 0
         };
         // get map manager
-        MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+        //MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
         // verify if map manager is present
-        if (mapManager == null)
+        if (MapManager.Instance == null)
         {
             Debug.LogError("cannot find map manager");
             // return default position
@@ -167,7 +169,7 @@ public class City : MonoBehaviour {
                 Faction oldValue = cityData.cityFaction;
                 cityData.cityFaction = value;
                 // trigger event
-                transform.root.GetComponentInChildren<EventsAdmin>().IHasChanged(this, oldValue);
+                EventsAdmin.Instance.IHasChanged(this, oldValue);
             }
         }
     }

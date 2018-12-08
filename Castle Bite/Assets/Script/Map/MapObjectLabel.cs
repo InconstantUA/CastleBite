@@ -30,8 +30,8 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             isMouseOver = true;
             labelTxt.color = mapObject.HighlightedLabelColor;
             // give control on actions to map manager
-            MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-            mapManager.OnPointerEnterChildObject(gameObject, eventData);
+            // MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+            MapManager.Instance.OnPointerEnterChildObject(gameObject, eventData);
         }
     }
 
@@ -55,8 +55,8 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                     SetAlwaysOnLabelColor();
                 }
                 // give control on actions to map manager
-                MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-                mapManager.OnPointerExitChildObject(gameObject, eventData);
+                // MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+                MapManager.Instance.OnPointerExitChildObject(gameObject, eventData);
             }
             else
             {
@@ -123,8 +123,8 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             // Debug.Log("MapObjectLabel OnPointerClick");
             labelTxt.color = mapObject.HighlightedLabelColor;
             // give control on actions to map manager
-            MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
-            mapManager.ActOnClick(gameObject, eventData);
+            // MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
+            MapManager.Instance.ActOnClick(gameObject, eventData);
         }
     }
 

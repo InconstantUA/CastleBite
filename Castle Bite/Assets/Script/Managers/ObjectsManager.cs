@@ -21,6 +21,8 @@ class GameData : System.Object
 }
 
 public class ObjectsManager : MonoBehaviour {
+    public static ObjectsManager Instance { get; private set; }
+
     [SerializeField]
     GameObject gamePlayerTemplate;
     [SerializeField]
@@ -35,6 +37,11 @@ public class ObjectsManager : MonoBehaviour {
     GameObject inventoryItemTemplate;
     [SerializeField]
     GameObject inventoryItemOnMapTemplate;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     public GameObject HeroPartyTemplate
     {
@@ -73,10 +80,8 @@ public class ObjectsManager : MonoBehaviour {
 
     void CreateCityOnMap(City city, CityData cityData)
     {
-        // Get map transform
-        Transform map = transform.root.Find("MapScreen/Map");
-        // Create new party on map UI
-        MapCity newCityOnMap = Instantiate(cityOnMapTemplate, map).GetComponent<MapCity>();
+        // Create new party on map
+        MapCity newCityOnMap = Instantiate(cityOnMapTemplate, MapManager.Instance.transform).GetComponent<MapCity>();
         // city to original position on map
         newCityOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(cityData.cityMapPosition.offsetMinX, cityData.cityMapPosition.offsetMinY);
         newCityOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(cityData.cityMapPosition.offsetMaxX, cityData.cityMapPosition.offsetMaxY);
@@ -145,10 +150,8 @@ public class ObjectsManager : MonoBehaviour {
     MapHero CreatePartyOnMap(HeroParty heroParty, PartyData partyData)
     {
         Debug.Log("Creating party on map representation");
-        // Get map transform
-        Transform map = transform.root.Find("MapScreen/Map");
         // Create new party on map UI
-        MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, map).GetComponent<MapHero>();
+        MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, MapManager.Instance.transform).GetComponent<MapHero>();
         // place party to original position on map
         newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
         newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
@@ -276,7 +279,7 @@ public class ObjectsManager : MonoBehaviour {
     public void RemoveAllInventoryItemsOnMap()
     {
         // Loop through transforms 1 level below map (=belongs to the map)
-        foreach (Transform childTransform in transform.root.Find("MapScreen/Map"))
+        foreach (Transform childTransform in MapManager.Instance.transform)
         {
             // get map item (chest)
             MapItemsContainer mapItem = childTransform.GetComponent<MapItemsContainer>();
@@ -309,10 +312,8 @@ public class ObjectsManager : MonoBehaviour {
 
     public MapItemsContainer CreateInventoryItemContainerOnMap(PositionOnMap positionOnMap)
     {
-        // Get map transform
-        Transform map = transform.root.Find("MapScreen/Map");
         // create new item on map
-        MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, map).GetComponent<MapItemsContainer>();
+        MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, MapManager.Instance.transform).GetComponent<MapItemsContainer>();
         // place item on map to original position on map
         mapItem.GetComponent<RectTransform>().offsetMin = new Vector2(positionOnMap.offsetMinX, positionOnMap.offsetMinY);
         mapItem.GetComponent<RectTransform>().offsetMax = new Vector2(positionOnMap.offsetMaxX, positionOnMap.offsetMaxY);

@@ -349,7 +349,8 @@ public class MenuKeyboardControl : MonoBehaviour {
         // - mark some objects and non-removable
         // - on game start preload other scene with all needed objects
         // Deactivate map screen
-        transform.root.Find("MapScreen").gameObject.SetActive(false);
+        MapManager.Instance.gameObject.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
     }
 
     void StartGame()
@@ -368,14 +369,15 @@ public class MenuKeyboardControl : MonoBehaviour {
         mainMenuPanel.Find("Save").gameObject.SetActive(true);
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
         // Get objects manager
-        ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create game players, get players data from Chapter manager
-        foreach (PlayerData playerData in transform.root.Find("Managers").GetComponent<ChapterManager>().PlayersData)
+        foreach (PlayerData playerData in ChapterManager.Instance.PlayersData)
         {
-            objectsManager.CreatePlayer(playerData);
+            ObjectsManager.Instance.CreatePlayer(playerData);
         }
         // Activate and reset turns manager, set Dominion as active player
-        transform.root.Find("Managers").GetComponent<TurnsManager>().Reset(Faction.Dominion);
+        TurnsManager.Instance.Reset(Faction.Dominion);
+        // transform.root.Find("Managers").GetComponent<TurnsManager>().Reset(Faction.Dominion);
         //// Set human player as active player
         //transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.Human).PlayerData.playerTurnState = PlayerTurnState.Active;
         //// Set AI player as waiting for its turn
@@ -389,7 +391,8 @@ public class MenuKeyboardControl : MonoBehaviour {
         // Activate map screen and deactivate menu
         GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
         mainMenu.SetActive(false);
-        transform.root.Find("MapScreen").gameObject.SetActive(true);
+        MapManager.Instance.gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
     }
 
     void SaveGame()

@@ -401,7 +401,7 @@ public class EditPartyScreen : MonoBehaviour {
             targetCity = city;
         }
         // create new party instance in city
-        HeroParty newHeroParty = Instantiate(transform.root.GetComponentInChildren<ObjectsManager>().HeroPartyTemplate, targetCity.transform).GetComponent<HeroParty>();
+        HeroParty newHeroParty = Instantiate(ObjectsManager.Instance.HeroPartyTemplate, targetCity.transform).GetComponent<HeroParty>();
         // Set party mode
         newHeroParty.PartyMode = PartyMode.Party;
         // Activate new party
@@ -419,10 +419,8 @@ public class EditPartyScreen : MonoBehaviour {
         // Create Hero's object on the map
         // create and update Hero Party panel in UI, (no - parent it to city UI)
         //Transform parentCityOnMap = map.Find(transform.name);
-        // Get map transform
-        Transform map = transform.root.Find("MapScreen/Map");
         // Create new hero party on map ui
-        MapHero newPartyOnMapUI = Instantiate(transform.root.GetComponentInChildren<ObjectsManager>().HeroPartyOnMapTemplate, map).GetComponent<MapHero>();
+        MapHero newPartyOnMapUI = Instantiate(ObjectsManager.Instance.HeroPartyOnMapTemplate, MapManager.Instance.transform).GetComponent<MapHero>();
         // Get city
         City targetCity = LCity;
         if (city != null)
@@ -647,17 +645,17 @@ public class EditPartyScreen : MonoBehaviour {
     IEnumerator ReturnToTheMapScreenWithAnimation()
     {
         // Block mouse input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(true);
+        // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        InputBlocker.Instance.SetActive(true);
         // Wait for all animations to finish
         yield return new WaitForSeconds(0.51f);
         // Unblock mouse input
-        inputBlocker.SetActive(false);
+        InputBlocker.Instance.SetActive(false);
         // Deactivate this screen
         gameObject.SetActive(false);
         // activate map screen
-        GameObject mapScreen = transform.root.Find("MapScreen").gameObject;
-        mapScreen.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
+        MapManager.Instance.gameObject.SetActive(true);
     }
 
     public void DismissPartyLeader(UnitSlot unitSlot)

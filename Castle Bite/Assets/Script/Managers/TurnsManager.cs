@@ -13,6 +13,8 @@ public class TurnsData
 public class TurnsManager : MonoBehaviour {
     public static TurnsManager Instance { get; private set; }
     [SerializeField]
+    Transform gamePlayersTr;
+    [SerializeField]
     TurnsData turnsData;
     [SerializeField]
     Text turnNumberTextUI;
@@ -23,7 +25,7 @@ public class TurnsManager : MonoBehaviour {
         if (playerFaction != Faction.Unknown)
         {
             // loop through list of all players
-            foreach(GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
+            foreach(GamePlayer gamePlayer in gamePlayersTr.GetComponentsInChildren<GamePlayer>())
             {
                 // verify if there is a player that matches activePlayerID
                 if (gamePlayer.Faction == playerFaction)
@@ -66,7 +68,7 @@ public class TurnsManager : MonoBehaviour {
     public GamePlayer GetActivePlayer()
     {
         // .. Fix
-        foreach (GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
+        foreach (GamePlayer gamePlayer in gamePlayersTr.GetComponentsInChildren<GamePlayer>())
         {
             if (PlayerTurnState.Active == gamePlayer.PlayerTurnState)
             {
@@ -86,7 +88,7 @@ public class TurnsManager : MonoBehaviour {
     GamePlayer GetNextPlayer()
     {
         // get all players
-        GamePlayer[] allPlayers = transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>();
+        GamePlayer[] allPlayers = gamePlayersTr.GetComponentsInChildren<GamePlayer>();
         for (int i = 0; i < allPlayers.Length; i++)
         {
             // get current player ID
@@ -117,7 +119,7 @@ public class TurnsManager : MonoBehaviour {
     GameObject GetGameObjectOnMapByID(int id)
     {
         // loop through all objects on map
-        foreach(MapObject mapObject in transform.root.Find("MapScreen/Map").GetComponentsInChildren<MapObject>())
+        foreach(MapObject mapObject in MapManager.Instance.GetComponentsInChildren<MapObject>())
         {
             // verify if id is the same as we are searching for
             if (mapObject.gameObject.GetInstanceID() == id)
@@ -188,14 +190,14 @@ public class TurnsManager : MonoBehaviour {
         // Change next active player turn state to active
         nextPlayer.PlayerTurnState = PlayerTurnState.Active;
         // Get map focus panel
-        MapFocusPanel mapFocusPanel = transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>();
+        MapFocusPanel mapFocusPanel = MapMenuManager.Instance.GetComponentInChildren<MapFocusPanel>();
         // Reset map focus panel
         // Note it will also reset focused object ID for active player
         mapFocusPanel.ReleaseFocus();
         // Get map manager
-        MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+        // MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
         // Reset map selection
-        mapManager.SetSelection(MapManager.Selection.None);
+        MapManager.Instance.SetSelection(MapManager.Selection.None);
         // verify if next player had focused object in the past
         if (nextPlayer.FocusedObjectID != 0)
         {
@@ -210,7 +212,7 @@ public class TurnsManager : MonoBehaviour {
                     // init focus panel with map hero
                     mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
                     // select hero on map
-                    mapManager.SetSelection(MapManager.Selection.PlayerHero, previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
+                    MapManager.Instance.SetSelection(MapManager.Selection.PlayerHero, previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
                 }
                 // verify if it is MapCity
                 else if (previouslyFocusedGameObjectOnMap.GetComponent<MapCity>() != null)
@@ -218,7 +220,7 @@ public class TurnsManager : MonoBehaviour {
                     // init focus panel with map city
                     mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
                     // select city on map
-                    mapManager.SetSelection(MapManager.Selection.PlayerCity, previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
+                    MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
                 }
                 else
                 {
@@ -228,11 +230,11 @@ public class TurnsManager : MonoBehaviour {
         }
         // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
         // mapManager.SetCitiesPassableByFaction(activePlayer.Faction);
-        mapManager.InitTilesMap();
+        MapManager.Instance.InitTilesMap();
         // Update top player income info panel
         transform.root.Find("MiscUI/TopInfoPanel").GetComponentInChildren<TextBoxDisplayCurrentGoldValue>(true).UpdateGoldValue();
         // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
-        transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+        CursorController.Instance.SetNormalCursor();
     }
 
     public int TurnNumber

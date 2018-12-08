@@ -58,9 +58,10 @@ public class GamePlayer : MonoBehaviour {
     void Awake()
     {
         // Get map manager
-        MapManager mapManager = transform.root.Find("MapScreen").GetComponentInChildren<MapManager>(true);
+        // MapManager mapManager = transform.root.Find("MapScreen").GetComponentInChildren<MapManager>(true);
         // init tiles discovery array
-        playerData.tilesDiscoveryState = new int[mapManager.TileMapWidth, mapManager.TileMapHeight];
+        // playerData.tilesDiscoveryState = new int[MapManager.Instance.TileMapWidth, MapManager.Instance.TileMapHeight];
+        // playerData.tilesDiscoveryState = new int[MapManager.Instance.TileMapWidth, MapManager.Instance.TileMapHeight];
     }
     
     public PlayerUniqueAbility PlayerUniqueAbility

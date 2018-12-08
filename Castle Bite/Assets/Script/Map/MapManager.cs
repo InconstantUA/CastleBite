@@ -45,6 +45,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         PlayerCity
     }
 
+    public static MapManager Instance { get; private set; }
+
+    [SerializeField]
+    Transform gameRoot;
+    [SerializeField]
+    MapFocusPanel mapFocusPanel;
+    [SerializeField]
+    Transform mapOptions;
     [SerializeField]
     GameMap lMap;
     [SerializeField]
@@ -115,13 +123,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // Those are default and calculated on Start
     //float xMinDef;
     //float xMaxDef;
-    float yMinDef;
-    float yMaxDef;
+    //float yMinDef;
+    //float yMaxDef;
     // those are variables depending on the mouse onDragStart position
     //float xMin;
     //float xMax;
-    float yMin;
-    float yMax;
+    //float yMin;
+    //float yMax;
     // modifier for position based on slices rotations done
     int rotationPositionModifier = 0;
     public enum Shift { Left, Right };
@@ -131,7 +139,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // Vector3 mouseOnDragStartPosition;
     Vector3 mouseOnDownStartPosition;
     float xCorrectionOnDragStart;
-    float yCorrectionOnDragStart;
+    //float yCorrectionOnDragStart;
     // for animation and transition between states
     CoroutineQueue queue;
     public float scrollSpeed = 0.5f;
@@ -280,6 +288,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void Awake()
     {
+        Instance = this;
         // Create a coroutine queue that can run max 1 coroutine at once
         queue = new CoroutineQueue(1, StartCoroutine);
     }
@@ -306,8 +315,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //yMaxDef = (Screen.height / 2) + yDeltaMax;
         //xMinDef = -mapWidth + Screen.width;
         //xMaxDef = 0;
-        yMinDef = -mapHeight + Screen.height + tileSize;
-        yMaxDef = -tileSize;
+        //yMinDef = -mapHeight + Screen.height + tileSize;
+        //yMaxDef = -tileSize;
         // For map tile highligter in selection mode
         tileHighlighterTr = transform.Find("TileHighlighter");
         tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
@@ -375,7 +384,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetPlayerIncomeVisible(bool doShow)
     {
         Debug.Log("Show player income: " + doShow.ToString());
-        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
+        gameRoot.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
     }
 
     // called via Unity Editor
@@ -417,7 +426,17 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // init discovered tiles list
         List<Vector2Int> discoveredTiles = new List<Vector2Int>();
         // get active player tiles discovery state array
-        int[,] activePlayerTilesDiscoveryStateArray = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().TilesDiscoveryState;
+        int[,] activePlayerTilesDiscoveryStateArray;
+        if (TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState != null)
+        {
+            activePlayerTilesDiscoveryStateArray = TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState;
+        }
+        else
+        {
+            TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState = new int[TileMapWidth, TileMapHeight];
+            activePlayerTilesDiscoveryStateArray = TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState;
+        }
+
         // initialize tiles positions
         int checkX, checkY;
         // get all tiles around
@@ -527,7 +546,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
         // Get active player faction
-        Faction activePlayerFaction = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction;
+        Faction activePlayerFaction = TurnsManager.Instance.GetActivePlayer().Faction;
         // Loop over all map objects
         foreach(MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
         {
@@ -578,7 +597,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // Create fog of war
             fogOfWarTiles = new Transform[tileMapWidth, tileMapHeight];
             // Get fog of war transform
-            Transform fogOfWarTransform = transform.root.Find("MapScreen/Map/FogOfWar");
+            Transform fogOfWarTransform = transform.Find("FogOfWar");
             // activate fog of war
             fogOfWarTransform.gameObject.SetActive(true);
             // init slice index
@@ -603,7 +622,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
         // get active player tiles discovery state array
-        int[,] activePlayerTilesDiscoveryStateArray = transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().TilesDiscoveryState;
+        int[,] activePlayerTilesDiscoveryStateArray = TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState;
         // Activate discovered tiles
         for (int x = 0; x < tilesmap.GetLength(0); x += 1)
         {
@@ -1018,7 +1037,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             // verify if the tile is protected by enemy hero and we are in hero selection mode
                             if (IsTileProtected(GetTileByPosition(Input.mousePosition)))
                             {
-                                // transform.root.Find("CursorController").GetComponent<CursorController>().SetAttackCursor();
+                                // CursorController.Instance.SetAttackCursor();
                                 // act based on current selection
                                 tileHighlighterColor = Color.red;
                                 switch (selection)
@@ -1037,7 +1056,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             }
                             else
                             {
-                                //transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                                //CursorController.Instance.SetNormalCursor();
                                 //tileHighlighterColor = Color.white;
                                 // get tile coordinates
                                 Vector2Int tileCoords = GetTileByPosition(Input.mousePosition);
@@ -1909,14 +1928,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             //Debug.Log("Map   [" + mapPosition.x + "," + mapPosition.y + "]");
             //Debug.Log("Mouse [" + mouseOnDownStartPosition.x + "," + mouseOnDownStartPosition.y + "]");
             xCorrectionOnDragStart = mapPosition.x - mouseOnDownStartPosition.x;
-            yCorrectionOnDragStart = mapPosition.y - mouseOnDownStartPosition.y;
+            //yCorrectionOnDragStart = mapPosition.y - mouseOnDownStartPosition.y;
             // this corrections should also be applied to x and y min and max
             //xMin = xMinDef - xCorrectionOnDragStart;
             //xMax = xMaxDef - xCorrectionOnDragStart;
             //xMin = mouseOnDownStartPosition.x - mapPosition.x + Screen.width - mapWidth + tileSize;
             //xMax = mouseOnDownStartPosition.x - mapPosition.x - tileSize;
-            yMin = yMinDef - yCorrectionOnDragStart;
-            yMax = yMaxDef - yCorrectionOnDragStart;
+            //yMin = yMinDef - yCorrectionOnDragStart;
+            //yMax = yMaxDef - yCorrectionOnDragStart;
             // activate camera focus on a map
             Camera.main.GetComponent<CameraController>().SetCameraFocus(this, true);
         }
@@ -2092,8 +2111,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // verify if user clicked left or right mouse button
         if (Input.GetMouseButton(0))
         {
+            // note: for up/down movement camera will be moved
             // on left mouse held down
-            float newPositionY = Input.mousePosition.y;
+            // float newPositionY = Input.mousePosition.y;
             //if (Input.mousePosition.y <= yMin)
             //{
             //    newPositionY = yMin;
@@ -2102,7 +2122,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             //{
             //    newPositionY = yMax;
             //}
-            Debug.LogWarning("Mouse:Camera y " + (int)Input.mousePosition.y + ":" + (int)Camera.main.transform.position.y);
+            Debug.Log("Mouse:Camera y " + (int)Input.mousePosition.y + ":" + (int)Camera.main.transform.position.y);
             // move camera up/down instead of map
             //Vector3 newCameraPosition = Camera.main.transform.position;
             //newCameraPosition.y = newPositionY;
@@ -2215,7 +2235,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // Always show city names toggle options 0 - disable, 1 - enable
         // verify if toggle is currently selected
-        if (transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>().selected)
+        if (mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
         {
             // set option
             GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
@@ -2233,7 +2253,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // Always show city names toggle options 0 - disable, 1 - enable
         // verify if toggle is currently selected
-        if (transform.parent.Find("MapMenu/Options/ToggleHeroesNames").GetComponent<TextToggle>().selected)
+        if (mapOptions.Find("ToggleHeroesNames").GetComponent<TextToggle>().selected)
         {
             // set option
             GameOptions.options.mapUIOpt.toggleHeroesNames = 1;
@@ -2251,7 +2271,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // Always show city names toggle options 0 - disable, 1 - enable
         // verify if toggle is currently selected
-        if (transform.parent.Find("MapMenu/Options/TogglePlayerIncome").GetComponent<TextToggle>().selected)
+        if (mapOptions.Find("TogglePlayerIncome").GetComponent<TextToggle>().selected)
         {
             // set option
             GameOptions.options.mapUIOpt.togglePlayerIncome = 1;
@@ -2278,7 +2298,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Get map UI options
         GameOptions.options.mapUIOpt.toggleCitiesNames = PlayerPrefs.GetInt("MapUIShowCityNames", 0); // default 0 - disable "always show city names" toggle
         // Get City names toggle
-        TextToggle textToggle = transform.parent.Find("MapMenu/Options/ToggleCitiesNames").GetComponent<TextToggle>();
+        TextToggle textToggle = mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>();
         // verify if it was enabled before
         if (GameOptions.options.mapUIOpt.toggleCitiesNames == 0)
         {
@@ -2303,7 +2323,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Get map UI options
         GameOptions.options.mapUIOpt.toggleHeroesNames = PlayerPrefs.GetInt("MapUIShowHeroesNames", 0); // default 0 - disable "always show heroes names" toggle
         // Get toggle
-        TextToggle textToggle = transform.parent.Find("MapMenu/Options/ToggleHeroesNames").GetComponent<TextToggle>();
+        TextToggle textToggle = mapOptions.Find("ToggleHeroesNames").GetComponent<TextToggle>();
         // verify if it was enabled before
         if (GameOptions.options.mapUIOpt.toggleHeroesNames == 0)
         {
@@ -2328,7 +2348,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Get map UI options
         GameOptions.options.mapUIOpt.togglePlayerIncome = PlayerPrefs.GetInt("MapUIShowPlayerIncome", 0); // default 0 - disable "always show heroes names" toggle
         // Get toggle
-        TextToggle textToggle = transform.parent.Find("MapMenu/Options/TogglePlayerIncome").GetComponent<TextToggle>();
+        TextToggle textToggle = mapOptions.Find("TogglePlayerIncome").GetComponent<TextToggle>();
         // verify if it was enabled before
         if (GameOptions.options.mapUIOpt.togglePlayerIncome == 0)
         {
@@ -2432,7 +2452,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Move hero UI to City
         selectedMapHero.LHeroParty.transform.SetParent(mapCity.LCity.transform);
         // Enter city edit mode
-        queue.Run(mapCity.EnterCityEditMode());
+        queue.Run(MapMenuManager.Instance.EnterCityEditMode(mapCity));
         // Trigger on hero entering city
         // ..
         // reset map state and selections, because hero can be removed while in city
@@ -2469,22 +2489,22 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //// Deactivate map screen
         //transform.root.Find("MapScreen").gameObject.SetActive(false);
         // unblock input
-        InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        inputBlocker.SetActive(false);
+        // InputBlocker inputBlocker = gameRoot.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+        InputBlocker.Instance.SetActive(false);
         yield return null;
     }
 
     IEnumerator EnterBattleStep(MapHero mapHero)
     {
         Debug.Log("EnterBattleStep");
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapHero);
+        gameRoot.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapHero);
         yield return null;
     }
 
     IEnumerator EnterBattleStep(MapCity mapCity)
     {
         Debug.Log("EnterBattleStep");
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapCity);
+        gameRoot.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapCity);
         yield return null;
     }
 
@@ -2508,7 +2528,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         Debug.Log("Pick up item");
         // Activate inventory item pickup pop-up menu
-        transform.root.Find("MiscUI/ItemsPickUpPopUp").GetComponent<InventoryItemPickUpPopUp>().SetActive(mapItem);
+        gameRoot.Find("MiscUI/ItemsPickUpPopUp").GetComponent<InventoryItemPickUpPopUp>().SetActive(mapItem);
         // Loop through each item in the chest
         foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
         {
@@ -2521,7 +2541,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         SetMode(Mode.Browse);
         yield return new WaitForSeconds(0.5f);
         // Unblock mouse input
-        transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>().SetActive(false);
+        InputBlocker.Instance.SetActive(false);
         // Exit coroutine
         yield return null;
     }
@@ -2629,7 +2649,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (selectedMapHero.LHeroParty.HoldPosition == true)
         {
             // trigger break hold event
-            transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().BreakHoldPosition(selectedMapHero);
+            mapFocusPanel.BreakHoldPosition(selectedMapHero);
         }
         // Move
         float deltaTime;
@@ -2643,15 +2663,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // exit exit browse mode and enter animation mode
             SetMode(Mode.Animation);
             // Block mouse input
-            InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-            inputBlocker.SetActive(true);
+            // InputBlocker inputBlocker = gameRoot.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
+            InputBlocker.Instance.SetActive(true);
             // initialize break move condition
             bool breakMove = false;
             MapCity enterCity = null;
             MapHero protectedTileEnemy = null;
             Faction selectedHeroFaction = selectedMapHero.LHeroParty.Faction;
             // Get map focus panel
-            MapFocusPanel mapFocusPanel = transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>();
+            //MapFocusPanel mapFocusPanel = mapFocusPanel;
             // loop through path points
             Debug.Log("Move path count: " + movePath.Count.ToString());
             for (int i = 0; i < (movePath.Count) && (partyLeader.MovePointsCurrent >= 1) ; i++)
@@ -2840,7 +2860,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // exit animation mode and enter browse mode
                 SetMode(Mode.Browse);
                 // Unblock mouse input
-                inputBlocker.SetActive(false);
+                InputBlocker.Instance.SetActive(false);
             }
         }
         // Remove path highlight
@@ -2930,7 +2950,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 // highlighted hero belongs to player
                                 // change cursor to selection hand
-                                transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                CursorController.Instance.SetSelectionHandCursor();
                                 //tileHighlighterColor = Color.blue;
                             }
                             else
@@ -2948,7 +2968,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 // highlighted city belongs to player
                                 // change cursor to selection hand
-                                transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                CursorController.Instance.SetSelectionHandCursor();
                                 //tileHighlighterColor = Color.blue;
                             }
                             else
@@ -2984,29 +3004,29 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                             //Debug.Log("hero in city");
                                             // hero is in city
                                             // change cursor to open doors cursor -> enter city edit mode indicator
-                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                                            CursorController.Instance.SetOpenDoorsCursor();
                                         }
                                         else
                                         {
                                             //Debug.Log("hero on map");
                                             // her os on map
                                             // change cursor to edit hero cursor
-                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                                            CursorController.Instance.SetEditHeroCursor();
                                             //tileHighlighterColor = Color.blue;
                                         }
                                     }
                                     else
                                     {
                                         // change cursor to selection hand
-                                        //transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
-                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                        //CursorController.Instance.SetMoveArrowCursor();
+                                        CursorController.Instance.SetSelectionHandCursor();
                                     }
                                     break;
                                 case Relationships.State.Allies:
                                     break;
                                 case Relationships.State.Neutral:
                                 case Relationships.State.AtWar:
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetAttackCursor();
+                                    CursorController.Instance.SetAttackCursor();
                                     //tileHighlighterColor = Color.red;
                                     break;
                                 default:
@@ -3032,21 +3052,21 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                             Debug.Log("hero in city");
                                             // hero is in city
                                             // change cursor to open doors cursor -> enter city edit mode indicator
-                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                                            CursorController.Instance.SetOpenDoorsCursor();
                                         }
                                         else
                                         {
                                             Debug.Log("hero on map");
                                             // her os on map
                                             // change cursor to edit hero cursor
-                                            transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                                            CursorController.Instance.SetEditHeroCursor();
                                             //tileHighlighterColor = Color.blue;
                                         }
                                     }
                                     else
                                     {
                                         // change cursor to selection hand
-                                        transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                        CursorController.Instance.SetSelectionHandCursor();
                                         //tileHighlighterColor = Color.blue;
                                     }
                                     break;
@@ -3054,7 +3074,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     break;
                                 case Relationships.State.Neutral:
                                 case Relationships.State.AtWar:
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                                    CursorController.Instance.SetNormalCursor();
                                     //tileHighlighterColor = Color.red;
                                     break;
                                 default:
@@ -3073,12 +3093,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 case Relationships.State.Allies:
                                     // change cursor to selection hand
                                     // Todo: change to move to city cursor
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetMoveArrowCursor();
+                                    CursorController.Instance.SetMoveArrowCursor();
                                     //tileHighlighterColor = Color.blue;
                                     break;
                                 case Relationships.State.Neutral:
                                 case Relationships.State.AtWar:
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetAttackCursor();
+                                    CursorController.Instance.SetAttackCursor();
                                     //tileHighlighterColor = Color.red;
                                     break;
                                 default:
@@ -3095,14 +3115,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 case Relationships.State.SameFaction:
                                     // change cursor to selection hand
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                    CursorController.Instance.SetSelectionHandCursor();
                                     //tileHighlighterColor = Color.blue;
                                     break;
                                 case Relationships.State.Allies:
                                     break;
                                 case Relationships.State.Neutral:
                                 case Relationships.State.AtWar:
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                                    CursorController.Instance.SetNormalCursor();
                                     //tileHighlighterColor = Color.red;
                                     break;
                                 default:
@@ -3113,7 +3133,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         if (mapItem)
                         {
                             // change cursor to grab hand
-                            transform.root.Find("CursorController").GetComponent<CursorController>().SetGrabHandCursor();
+                            CursorController.Instance.SetGrabHandCursor();
                         }
                         // at this stage we assume that pointer is over map terrain
                         // controls here are handled by Update() function
@@ -3128,7 +3148,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             {
                                 // highlighted hero belongs to player
                                 // change cursor to selection hand
-                                transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                CursorController.Instance.SetSelectionHandCursor();
                             }
                             else
                             {
@@ -3148,12 +3168,12 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 if (mapCity.GetInstanceID() == selectedCity.GetInstanceID())
                                 {
                                     // change cursor to open doors cursor
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                                    CursorController.Instance.SetOpenDoorsCursor();
                                 }
                                 else
                                 {
                                     // change cursor to selection hand
-                                    transform.root.Find("CursorController").GetComponent<CursorController>().SetSelectionHandCursor();
+                                    CursorController.Instance.SetSelectionHandCursor();
                                 }
                             }
                             else
@@ -3193,7 +3213,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             case Mode.Browse:
                 // change cursor
-                transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                CursorController.Instance.SetNormalCursor();
                 //tileHighlighterColor = Color.white;
                 break;
             case Mode.Animation:
@@ -3314,9 +3334,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // deselect hero party
                 DeselectPreviouslySelectedObjectsOnMap();
                 // change cursor to normal
-                transform.root.Find("CursorController").GetComponent<CursorController>().SetNormalCursor();
+                CursorController.Instance.SetNormalCursor();
                 // update focus panel
-                transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().ReleaseFocus();
+                mapFocusPanel.ReleaseFocus();
                 break;
             default:
                 Debug.LogError("Unknown or incompatible selection " + selection);
@@ -3335,7 +3355,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedHero(mH);
                 // Update map focus panel
-                transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().SetActive(mH);
+                mapFocusPanel.SetActive(mH);
                 mH.SetSelectedState(true);
                 // verify if hero is in city
                 if (mH.lMapCity)
@@ -3343,14 +3363,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     //Debug.Log("SetSelection hero in city");
                     // hero is in city
                     // change cursor to open doors cursor -> enter city edit mode indicator
-                    transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                    CursorController.Instance.SetOpenDoorsCursor();
                 }
                 else
                 {
                     //Debug.Log("SetSelection hero on map");
                     // her os on map
                     // change cursor to edit hero cursor
-                    transform.root.Find("CursorController").GetComponent<CursorController>().SetEditHeroCursor();
+                    CursorController.Instance.SetEditHeroCursor();
                     //tileHighlighterColor = Color.blue;
                 }
                 break;
@@ -3371,10 +3391,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedCity(mC);
                 // Update map focus panel
-                transform.root.Find("MapScreen/MapMenu").GetComponentInChildren<MapFocusPanel>().SetActive(mC);
+                mapFocusPanel.SetActive(mC);
                 mC.SetSelectedState(true);
                 // change cursor to open doors cursor
-                transform.root.Find("CursorController").GetComponent<CursorController>().SetOpenDoorsCursor();
+                CursorController.Instance.SetOpenDoorsCursor();
                 break;
             default:
                 Debug.LogError("Unknown or incompatible selection " + selection);
@@ -3388,7 +3408,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         SetSelection(Selection.None);
         // Enter city edit mode
         SetMode(Mode.Animation);
-        queue.Run(mapCity.EnterCityEditMode());
+        queue.Run(MapMenuManager.Instance.EnterCityEditMode(mapCity));
     }
 
     public void ActOnClick(GameObject childGameObject, PointerEventData pointerEventData)
@@ -3412,6 +3432,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 mapCityViaLabel = label;
             }
         }
+        // check if child game object (on which we clicked is Map == MapManager)
         MapManager mapMgr = childGameObject.GetComponent<MapManager>();
         //Debug.Log("Mode " + mode.ToString());
         // act based on current mode
@@ -3496,7 +3517,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     SetSelection(Selection.None);
                                     // Enter city edit mode
                                     SetMode(Mode.Animation);
-                                    queue.Run(mapCity.EnterCityEditMode());
+                                    queue.Run(MapMenuManager.Instance.EnterCityEditMode(mapCity));
                                 }
                                 else
                                 {
@@ -3547,7 +3568,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     SetSelection(Selection.None);
                                     // Enter hero edit mode
                                     SetMode(Mode.Animation);
-                                    queue.Run(mapHero.EnterHeroEditMode());
+                                    queue.Run(MapMenuManager.Instance.EnterHeroEditMode(mapHero));
                                 }
                                 else
                                 {
@@ -3590,13 +3611,13 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                         // hero is in city
                                         // enter city edit mode
                                         MapCity _mapCity = mapHero.lMapCity;
-                                        queue.Run(_mapCity.EnterCityEditMode());
+                                        queue.Run(MapMenuManager.Instance.EnterCityEditMode(_mapCity));
                                     }
                                     else
                                     {
                                         // her os on map
                                         // enter hero edit mode
-                                        queue.Run(mapHero.EnterHeroEditMode());
+                                        queue.Run(MapMenuManager.Instance.EnterHeroEditMode(mapHero));
                                     }
                                 }
                                 else
