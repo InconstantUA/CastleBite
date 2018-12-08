@@ -232,7 +232,7 @@ public class TurnsManager : MonoBehaviour {
         // mapManager.SetCitiesPassableByFaction(activePlayer.Faction);
         MapManager.Instance.InitTilesMap();
         // Update top player income info panel
-        transform.root.Find("MiscUI/TopInfoPanel").GetComponentInChildren<TextBoxDisplayCurrentGoldValue>(true).UpdateGoldValue();
+        UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<TopInfoPanel>().UpdateInfo();
         // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
         CursorController.Instance.SetNormalCursor();
     }

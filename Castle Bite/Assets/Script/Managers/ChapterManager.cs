@@ -101,10 +101,10 @@ public class ChapterManager : MonoBehaviour {
         Debug.Log("Go to next chapter");
         // I assume that we were at map before game end
         // Get vars
-        GameObject transferHeroScreen = transform.root.Find("MiscUI/TransferHeroAndItemsToNextChapter").gameObject;
+        GameObject transferHeroScreen = UIRoot.Instance.transform.Find("MiscUI/TransferHeroAndItemsToNextChapter").gameObject;
         // Disable map and enable main menu
-        MapMenuManager.Instance.gameObject.SetActive(false);
         MapManager.Instance.gameObject.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
         transferHeroScreen.SetActive(true);
     }
 
@@ -119,10 +119,10 @@ public class ChapterManager : MonoBehaviour {
             cityScreen.gameObject.SetActive(false);
         }
         // Disable map
-        MapMenuManager.Instance.gameObject.SetActive(false);
         MapManager.Instance.gameObject.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
         // Enable credits
-        GameObject credits = transform.root.Find("MiscUI/Credits").gameObject;
+        GameObject credits = UIRoot.Instance.transform.Find("MiscUI/Credits").gameObject;
         credits.SetActive(true);
     }
 
@@ -133,8 +133,8 @@ public class ChapterManager : MonoBehaviour {
         // Get vars
         GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
         // Disable map and enable main menu
-        MapMenuManager.Instance.gameObject.SetActive(false);
         MapManager.Instance.gameObject.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
         mainMenu.SetActive(true);
         // Activate and deactivate required menus in main menu so it looks like during game start
         // As long as we are in game mode now, then Start button is not needed any more
@@ -150,7 +150,7 @@ public class ChapterManager : MonoBehaviour {
         // idea: add option to continue playing this chapter and continue to next chapter or end game when player wish
         // ..
         Debug.Log("Exit chapter");
-        NotificationPopUp notificationPopup = transform.root.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
+        NotificationPopUp notificationPopup = UIRoot.Instance.transform.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
         string messageText;
         if (failed)
         {

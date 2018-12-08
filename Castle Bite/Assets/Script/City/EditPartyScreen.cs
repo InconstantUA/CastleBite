@@ -654,8 +654,8 @@ public class EditPartyScreen : MonoBehaviour {
         // Deactivate this screen
         gameObject.SetActive(false);
         // activate map screen
-        MapMenuManager.Instance.gameObject.SetActive(true);
         MapManager.Instance.gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
     }
 
     public void DismissPartyLeader(UnitSlot unitSlot)

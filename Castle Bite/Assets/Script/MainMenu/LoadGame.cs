@@ -259,8 +259,8 @@ public class LoadGame : MonoBehaviour
     {
         yield return null;
         // Activate map screen
-        MapMenuManager.Instance.gameObject.SetActive(true);
         MapManager.Instance.gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
         // Deactivate this screen
         gameObject.SetActive(false);
         // Activate main menu panel, so it is visible next time main menu is activated

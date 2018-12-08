@@ -53,13 +53,13 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             if (GetComponent<MapCity>() != null || GetComponent<MapHero>() != null)
             {
                 // show unit info
-                transform.root.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(this);
+                UIRoot.Instance.transform.Find("MiscUI/PartiesInfoPanel").GetComponent<PartiesInfoPanel>().ActivateAdvance(this);
             }
             // verify if it is MapChest
             else if (GetComponent<MapItemsContainer>() != null)
             {
                 // show treasure chest info
-                transform.root.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(true, "<b>Treasure chest</b>.\r\n\r\nWho knows what is hidden inside...");
+                UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(true, "<b>Treasure chest</b>.\r\n\r\nWho knows what is hidden inside...");
             }
             else
             {
@@ -82,13 +82,13 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
             if (GetComponent<MapCity>() != null || GetComponent<MapHero>() != null)
             {
                 // deactivate unit info
-                transform.root.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
+                UIRoot.Instance.transform.Find("MiscUI/PartiesInfoPanel").gameObject.SetActive(false);
             }
             // verify if it is MapChest
             else if (GetComponent<MapItemsContainer>() != null)
             {
                 // disable treasure chest info
-                transform.root.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(false);
+                UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<ContextInfoPopUp>(true).SetActive(false);
             }
             else
             {

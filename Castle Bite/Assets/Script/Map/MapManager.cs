@@ -48,8 +48,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public static MapManager Instance { get; private set; }
 
     [SerializeField]
-    Transform gameRoot;
-    [SerializeField]
     MapFocusPanel mapFocusPanel;
     [SerializeField]
     Transform mapOptions;
@@ -384,7 +382,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetPlayerIncomeVisible(bool doShow)
     {
         Debug.Log("Show player income: " + doShow.ToString());
-        gameRoot.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
+        UIRoot.Instance.transform.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
     }
 
     // called via Unity Editor
@@ -2497,14 +2495,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     IEnumerator EnterBattleStep(MapHero mapHero)
     {
         Debug.Log("EnterBattleStep");
-        gameRoot.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapHero);
+        UIRoot.Instance.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapHero);
         yield return null;
     }
 
     IEnumerator EnterBattleStep(MapCity mapCity)
     {
         Debug.Log("EnterBattleStep");
-        gameRoot.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapCity);
+        UIRoot.Instance.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).EnterBattle(selectedMapHero, mapCity);
         yield return null;
     }
 
@@ -2528,7 +2526,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         Debug.Log("Pick up item");
         // Activate inventory item pickup pop-up menu
-        gameRoot.Find("MiscUI/ItemsPickUpPopUp").GetComponent<InventoryItemPickUpPopUp>().SetActive(mapItem);
+        UIRoot.Instance.transform.Find("MiscUI/ItemsPickUpPopUp").GetComponent<InventoryItemPickUpPopUp>().SetActive(mapItem);
         // Loop through each item in the chest
         foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
         {
