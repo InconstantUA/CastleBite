@@ -24,6 +24,8 @@ public class ObjectsManager : MonoBehaviour {
     public static ObjectsManager Instance { get; private set; }
 
     [SerializeField]
+    Transform gamePlayersRoot;
+    [SerializeField]
     GameObject gamePlayerTemplate;
     [SerializeField]
     GameObject cityTemplate;
@@ -63,8 +65,6 @@ public class ObjectsManager : MonoBehaviour {
 
     public void CreatePlayer(PlayerData playerData)
     {
-        // Get players root
-        Transform gamePlayersRoot = transform.root.Find("GamePlayers");
         // instantiate new player
         GamePlayer newGamePlayer = Instantiate(gamePlayerTemplate, gamePlayersRoot).GetComponent<GamePlayer>();
         // Set player data
@@ -98,7 +98,7 @@ public class ObjectsManager : MonoBehaviour {
     {
         Debug.Log("Creating " + cityData.cityName + " city");
         // get parent Transform
-        Transform citiesParentTransform = transform.root.Find("Map/Cities");
+        Transform citiesParentTransform = UIRoot.Instance.transform.Find("Map/Cities");
         // create city from tempalte
         City newCity = Instantiate(cityTemplate, citiesParentTransform).GetComponent<City>();
         // set city data
@@ -127,7 +127,7 @@ public class ObjectsManager : MonoBehaviour {
     public void CreatePartyUnit(PartyUnitData partyUnitData, HeroParty heroParty)
     {
         // get unit template by unit type
-        GameObject unitTemplate = transform.root.GetComponentInChildren<TemplatesManager>().GetPartyUnitTemplateByType(partyUnitData.unitType);
+        GameObject unitTemplate = TemplatesManager.Instance.GetPartyUnitTemplateByType(partyUnitData.unitType);
         if (unitTemplate != null)
         {
             Debug.Log("Creating unit of [" + partyUnitData.unitType + "] type from " + unitTemplate.name + " template");
@@ -171,7 +171,7 @@ public class ObjectsManager : MonoBehaviour {
     City GetCityByID(int cityID)
     {
         // loop through all cites
-        foreach(City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>())
+        foreach(City city in UIRoot.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>())
         {
             // compare city id to searchable id
             if (cityID == city.CityID)
@@ -207,11 +207,11 @@ public class ObjectsManager : MonoBehaviour {
         } else if (partyData.partyUIAddress != null)
         {
             // get parent transform by UI address
-            newHeroPartyParentTransform = transform.root.Find(partyData.partyUIAddress);
+            newHeroPartyParentTransform = UIRoot.Instance.transform.Find(partyData.partyUIAddress);
         } else
         {
             Debug.LogError("Unknown condition. Cannot find hero party parent transform");
-            newHeroPartyParentTransform = transform.root;
+            newHeroPartyParentTransform = UIRoot.Instance.transform;
         }
         newHeroParty = Instantiate(heroPartyTemplate, newHeroPartyParentTransform).GetComponent<HeroParty>();
         // set hero party data

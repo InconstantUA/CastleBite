@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TemplatesManager : MonoBehaviour {
+    public static TemplatesManager Instance { get; private set; }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     public GameObject GetPartyUnitTemplateByType(UnitType unitType)
     {
         // loop through all party units in Templates

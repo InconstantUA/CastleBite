@@ -10,6 +10,8 @@ using System.IO;
 public class LoadGame : MonoBehaviour
 {
     [SerializeField]
+    Transform gamePlayersRoot;
+    [SerializeField]
     string fileExtension;
     //[SerializeField]
     //GameObject gamePlayerTemplate;
@@ -114,7 +116,7 @@ public class LoadGame : MonoBehaviour
         // Get objects manager
         // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // remove players
-        foreach (GamePlayer gamePlayer in transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>())
+        foreach (GamePlayer gamePlayer in gamePlayersRoot.GetComponentsInChildren<GamePlayer>())
         {
             ObjectsManager.Instance.RemovePlayer(gamePlayer);
         }
@@ -440,7 +442,7 @@ public class LoadGame : MonoBehaviour
                     // file exists
                     // verify if game is already running
                     // check if there are players objects
-                    if (transform.root.Find("GamePlayers").GetComponentsInChildren<GamePlayer>().Length > 0)
+                    if (gamePlayersRoot.GetComponentsInChildren<GamePlayer>().Length > 0)
                     {
                         // game is already running
                         // Ask user whether he wants to load new game

@@ -608,7 +608,7 @@ public class EditPartyScreen : MonoBehaviour {
     public void HireUnit(Transform callerCell, UnitType hiredUnitType, bool doCreateUI = true, City city = null)
     {
         // get template for selected unit type
-        PartyUnit hiredUnitTemplate = transform.root.Find("Templates").GetComponent<TemplatesManager>().GetPartyUnitTemplateByType(hiredUnitType).GetComponent<PartyUnit>();
+        PartyUnit hiredUnitTemplate = TemplatesManager.Instance.GetPartyUnitTemplateByType(hiredUnitType).GetComponent<PartyUnit>();
         // 1 do basic verications, which are applicable to every hired unit
         if (VerifyIfPlayerHasEnoughGoldToBuyUnit(hiredUnitTemplate))
         {

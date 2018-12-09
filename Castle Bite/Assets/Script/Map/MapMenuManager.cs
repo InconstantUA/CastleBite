@@ -10,6 +10,8 @@ public class MapMenuManager : MonoBehaviour {
     void Awake()
     {
         Instance = this;
+        // disable it after initial start
+        gameObject.SetActive(false);
     }
 
     public IEnumerator EnterCityEditMode(MapCity mapCity)

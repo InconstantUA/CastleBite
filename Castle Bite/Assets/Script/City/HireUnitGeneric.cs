@@ -45,7 +45,7 @@ public class HireUnitGeneric : MonoBehaviour {
         // save destination cell for later use
         callerCell = destinationCellTr;
         // get templates manager
-        TemplatesManager templatesManager = transform.root.Find("Templates").GetComponent<TemplatesManager>();
+        // TemplatesManager templatesManager = transform.root.Find("Templates").GetComponent<TemplatesManager>();
         // get unit UI toggles list parent
         Transform togglesListTransform = transform.Find("UnitsToHire");
         // get unit toggle UI template
@@ -58,7 +58,7 @@ public class HireUnitGeneric : MonoBehaviour {
             // create menu entry from template
             UnitHirePanel newUnitToggle = Instantiate(unitUIToggle, togglesListTransform).GetComponent<UnitHirePanel>();
             // set unit to hire
-            newUnitToggle.unitToHire = templatesManager.GetPartyUnitTemplateByType(unitType).GetComponent<PartyUnit>();
+            newUnitToggle.unitToHire = TemplatesManager.Instance.GetPartyUnitTemplateByType(unitType).GetComponent<PartyUnit>();
             // activate toggle
             newUnitToggle.gameObject.SetActive(true);
             // set toggle selection state if this is first toggle

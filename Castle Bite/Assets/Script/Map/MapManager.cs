@@ -293,6 +293,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Instance = this;
         // Create a coroutine queue that can run max 1 coroutine at once
         queue = new CoroutineQueue(1, StartCoroutine);
+        //
+        tileHighlighterTr = transform.Find("TileHighlighter");
+        tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
+        // disable it on startup
+        gameObject.SetActive(false);
     }
 
     void Start()
@@ -320,8 +325,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //yMinDef = -mapHeight + Screen.height + tileSize;
         //yMaxDef = -tileSize;
         // For map tile highligter in selection mode
-        tileHighlighterTr = transform.Find("TileHighlighter");
-        tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
         // Init map mode
         SetMode(Mode.Browse);
         // Initialize path finder
@@ -2284,27 +2287,19 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void SaveCitiesNamesToggleOptions()
     {
         // Always show city names toggle options 0 - disable, 1 - enable
-        // verify if map options has not been destroyed
-        if (mapOptions)
+        // verify if toggle is currently selected
+        if (mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
         {
-            // verify if toggle is currently selected
-            if (mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
-            {
-                // set option
-                GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
-            }
-            else
-            {
-                // set option
-                GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
-            }
-            // save option
-            PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
+            // set option
+            GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
         }
         else
         {
-            Debug.LogWarning("MapOptions has been destoyed");
+            // set option
+            GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
         }
+        // save option
+        PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
     }
 
     void SaveHeroesNamesToggleOptions()
@@ -2346,9 +2341,17 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void SaveMapUIOptions()
     {
         Debug.Log("Save Map UI Options");
-        SaveCitiesNamesToggleOptions();
-        SaveHeroesNamesToggleOptions();
-        SavePlayerIncomeToggleOptions();
+        // verify if map options has not been destroyed
+        if (mapOptions)
+        {
+            SaveCitiesNamesToggleOptions();
+            SaveHeroesNamesToggleOptions();
+            SavePlayerIncomeToggleOptions();
+        }
+        else
+        {
+            Debug.LogWarning("Cannot save map options. MapOptions transform has been destoyed");
+        }
     }
 
     void LoadCitiesNamesToggleOptions()
