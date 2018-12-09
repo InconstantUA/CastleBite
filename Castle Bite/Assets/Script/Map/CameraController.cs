@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +19,15 @@ public class CameraController : MonoBehaviour {
     // float previousTime;
     Vector3 dragOrigin;
     bool doFollowMapDrag;
+    // 
+    int rotationsCounter;
+    bool doRotate;
+    int rotationDirection; // - or +
+    bool rotationLock;
+    [SerializeField]
+    float mapRotationSpeed;
+    [SerializeField]
+    int maxRotations;
 
     public float dampTime = 0.15f;
     private Vector3 velocity = Vector3.zero;
@@ -85,6 +95,11 @@ public class CameraController : MonoBehaviour {
         doFollowMapDrag = doActivate;
         // get and save drag origin mouse position
         dragOrigin = Input.mousePosition + transform.position;
+        // reset map rotations counter
+        rotationsCounter = 0;
+        // reset has rotated flag
+        doRotate = false;
+        rotationLock = false;
     }
 
     // Update is called once per frame
@@ -102,6 +117,7 @@ public class CameraController : MonoBehaviour {
     Vector3 GetPositionWithScreenBordersLimits(Vector3 position)
     {
         float mapsize = 960f;
+        float tilesize = 16f;
         // get followed hero position
         float screenBottomHeightLimit = Screen.height / 2f;
         // verify if followed hero position x will not cause camera to be off map
@@ -116,18 +132,61 @@ public class CameraController : MonoBehaviour {
             // reset position to screen top limit
             position.y = screenTopHeightLimit;
         }
+        // float buffer = 16f;
         float buffer = 16f;
-        float screenLeftLimit = Screen.width / 2 + buffer;
-        float screenRightLimit = mapsize - Screen.width / 2 - buffer;
+        // Debug.Log("Destination Position " + (int)position.x);
+        // float screenLeftLimit = Screen.width / 2 + buffer;
+        float screenLeftLimit = transform.position.x - buffer;
+        // float screenRightLimit = mapsize - Screen.width / 2 - buffer;
+        float screenRightLimit = transform.position.x + buffer;
+        // float screenRightLimit = Screen.width / 2 - buffer;
+        // if (position.x < screenLeftLimit - Mathf.Abs(rotationsCounter) * tilesize)
         if (position.x < screenLeftLimit)
         {
             // reset position to screen bottom limit
             position.x = screenLeftLimit;
+            // verify if rotation lock is not active{
+            if (!rotationLock)
+            {
+                // Rotate map
+                //MapManager.Instance.RotateLeft();
+                //// verify if we were previously rotating in opposite direction
+                //if (rotationsCounter >= 1)
+                //{
+                //    // reset counter, because we changed direction;
+                //    // Debug.Log("Reset rotaition counter");
+                //    // rotationsCounter = 0;
+                //}
+                rotationDirection = -1;
+                // Debug.Log("Trigger rotation");
+                doRotate = true;
+            }
+            // shift camera position
+            // transform.position += new Vector3(tilesize, 0, 0);
         }
+        // else if (position.x > screenRightLimit + Mathf.Abs(rotationsCounter) * tilesize)
         else if (position.x > screenRightLimit)
         {
             // reset position to screen top limit
             position.x = screenRightLimit;
+            // verify if rotation lock is not active
+            if (!rotationLock)
+            {
+                //// Rotate map
+                //MapManager.Instance.RotateRight();
+                // verify if we were previously rotating in opposite direction
+                //if (rotationsCounter <= -1)
+                //{
+                //    // reset counter, because we changed direction;
+                //    // Debug.Log("Reset rotaition counter");
+                //    // rotationsCounter = 0;
+                //}
+                rotationDirection = +1;
+                // Debug.Log("Trigger rotation");
+                doRotate = true;
+            }
+            // shift camera position
+            // transform.position -= new Vector3(tilesize, 0, 0);
         }
         return position;
     }
@@ -161,13 +220,84 @@ public class CameraController : MonoBehaviour {
         }
         if (doFollowMapDrag)
         {
+            // Debug.Log("Camera before x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
+            float tileSize = 16f;
+            float mapWidth = 960f;
             Vector3 newPos = dragOrigin - Input.mousePosition;
-            Vector3 delta = newPos - Camera.main.transform.position;
+            Vector3 delta = newPos - Camera.main.transform.position - new Vector3(tileSize * rotationsCounter, 0, 0);
+            // Debug.Log("delta x:y " + (int)delta.x + ":" + (int)delta.y);
             Vector3 destination = transform.position + delta;
             Vector3 destinationBorderAligned = GetPositionWithScreenBordersLimits(destination);
-            // Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
-            Vector3 destinationOYO = new Vector3(destinationBorderAligned.x, destinationBorderAligned.y, transform.position.z);
-            transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime);
+            // verify if we just rotated
+            if (doRotate)
+            {
+                // get xDistance
+                float xDistance = destination.x - transform.position.x;
+                // get number of rotaitons required based on the distance and tile size
+                int numberOfRotationsRequired = 1 + Math.Abs(Mathf.RoundToInt(xDistance / tileSize));
+                // set max number of rotations
+                // int maxRotations = (int)Mathf.Floor((mapWidth - (float)Screen.width) / tileSize) - 1;
+                if (maxRotations <= 0)
+                    maxRotations = 1;
+                // get number of rotations, which will cover whole map
+                int loopRotations = Mathf.RoundToInt(mapWidth / tileSize);
+                // verify if number of rotations is more than max and less than loop
+                //if (numberOfRotationsRequired > maxRotations && numberOfRotationsRequired < loopRotations)
+                //    numberOfRotationsRequired = maxRotations;
+                // Debug.Log("rotations reset to max when between: " + maxRotations + "-" + loopRotations);
+                // make sure that number of rotaions are not higher than the number or map slices
+                while (numberOfRotationsRequired >= loopRotations)
+                {
+                    numberOfRotationsRequired -= loopRotations;
+                    // calculate them in a distance
+                    rotationsCounter += loopRotations;
+                }
+                rotationsCounter += numberOfRotationsRequired * rotationDirection;
+                // Debug.Log("Do " + numberOfRotationsRequired + " rotations, total rotaitons: " + rotationsCounter);
+                if (numberOfRotationsRequired != 0)
+                {
+                    if (rotationDirection > 0)
+                    {
+                        // Rotate map
+                        MapManager.Instance.RotateRight(numberOfRotationsRequired);
+                    }
+                    else
+                    {
+                        // Rotate map
+                        MapManager.Instance.RotateLeft(numberOfRotationsRequired);
+                    }
+                    // shift camera to hide rotation
+                    // Debug.Log("Shift camera");
+                    // transform.position -= new Vector3(tileSize * rotationDirection * numberOfRotationsRequired, 0, 0);
+                }
+                // reset flag
+                // Debug.Log("Block rotations");
+                doRotate = false;
+                // Debug.Break();
+                // do not move camera anymore during this frame
+                // activate rotation lock, until camera has reached previous rotation target
+                // rotationLock = true;
+                // Debug.Log("Activate rotation lock");
+            }
+            // move camera to simulate drag
+            Vector3 destinationXYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            // Vector3 destinationXYO = new Vector3(destinationBorderAligned.x, destinationBorderAligned.y, transform.position.z);
+            // transform.position = Vector3.SmoothDamp(transform.position, destinationXYO, ref velocity, dampTime, mapRotationSpeed);
+            // do not move camera
+            transform.position = Vector3.SmoothDamp(transform.position, destinationXYO, ref velocity, dampTime);
+            // get distance
+            float remainingDistanceX = Mathf.Abs(transform.position.x - destinationBorderAligned.x);
+            // set min distance 
+            float minDistance = 0.5f;
+            // verify if rotation lock can be unlocked
+            if (remainingDistanceX <= minDistance && rotationLock == true)
+            {
+                // release rotation lock;
+                rotationLock = false;
+                // Debug.Log("Release rotation lock, remaining distance: " + (int)remainingDistanceX);
+            }
+            // Debug.Log("Camera after  x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
+            // Debug.Log("Rotations: " + rotationsCounter);
         }
     }
 }

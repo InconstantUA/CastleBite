@@ -48,6 +48,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public static MapManager Instance { get; private set; }
 
     [SerializeField]
+    Transform rootUITr;
+    [SerializeField]
     MapFocusPanel mapFocusPanel;
     [SerializeField]
     Transform mapOptions;
@@ -57,6 +59,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Mode mode;
     [SerializeField]
     Selection selection;
+    [SerializeField]
+    float yAdjustmentConstant;
     //Vector3 startPosition;
     // Transform startParent;
     [SerializeField]
@@ -382,7 +386,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetPlayerIncomeVisible(bool doShow)
     {
         Debug.Log("Show player income: " + doShow.ToString());
-        UIRoot.Instance.transform.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
+        rootUITr.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
     }
 
     // called via Unity Editor
@@ -492,7 +496,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // get city discovery range
         int cityDiscoveryRange = 3 + mapCity.LCity.CityLevelCurrent;
         // discover tiles around
-        return DiscoverTilesAround(GetTileByPosition(mapCity.transform.position), cityDiscoveryRange);
+        return DiscoverTilesAround(GetTileByWorldPosition(mapCity.transform.position), cityDiscoveryRange);
     }
 
     List<Vector2Int> DiscoverTilesAround(MapHero mapHero)
@@ -500,7 +504,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // get hero discovery range
         int heroDiscoveryRange = mapHero.LHeroParty.GetPartyLeader().ScoutingRange;
         // discover tiles around
-        return DiscoverTilesAround(GetTileByPosition(mapHero.transform.position), heroDiscoveryRange);
+        return DiscoverTilesAround(GetTileByWorldPosition(mapHero.transform.position), heroDiscoveryRange);
     }
 
     void DiscoverTile(int x, int y)
@@ -731,7 +735,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // reinitialize tile map to reset all previous changes
         InitTilesMap();
         // Get highligted tile state
-        Vector2Int highlighterPosition = GetTileByPosition(Input.mousePosition); // GetTileHighlighterPosition();
+        Vector2Int highlighterPosition = GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition)); // GetTileHighlighterPosition();
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
         if (!ValidateOutOfScreenMouse(highlightedPoint))
         {
@@ -784,11 +788,19 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // get mouse position
         // Vector3 mousePosition = Camera.main.WorldToViewportPoint(Input.mousePosition);
+        // get Y coords adjustments
+        float yAdjustment = Camera.main.transform.position.y;
+        // get the remaining adjustment
+        while (yAdjustment >= tileSize)
+        {
+            yAdjustment -= tileSize;
+        }
+        // Debug.Log("y adjustment " + yAdjustment);
         // Update position
         int x = Mathf.FloorToInt(Input.mousePosition.x / tileSize);
-        int y = Mathf.FloorToInt(Input.mousePosition.y / tileSize);
+        int y = Mathf.FloorToInt((Input.mousePosition.y + yAdjustment + yAdjustmentConstant) / tileSize);
         // tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
-        tileHighlighterTr.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize);
+        tileHighlighterTr.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize - new Vector3(0, yAdjustment + yAdjustmentConstant, 0));
         // Debug.Log("Tile: " + x + ";" + y);
     }
 
@@ -845,7 +857,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void UpdateTileHighighterBasedOnMousePosition()
     {
-        Vector2Int highlighterPosition = GetTileByPosition(Input.mousePosition); // GetTileHighlighterPosition();
+        Debug.Log("mouse: " + Input.mousePosition);
+        Vector3 pointerPositionInWorldSpace = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Debug.Log("trans: " + pointerPositionInWorldSpace);
+        // Vector2Int highlighterPosition = GetTileByPosition(pointerPositionInWorldSpace);
+        Vector2Int highlighterPosition = GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
         if ((highlightedPoint.x > grid.nodes.GetLength(0) - 1)
             || (highlightedPoint.y > grid.nodes.GetLength(1) - 1)
@@ -1033,7 +1049,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             // no object on tile, just terrain
                             // verify if the tile is protected by enemy hero and we are in hero selection mode
-                            if (IsTileProtected(GetTileByPosition(Input.mousePosition)))
+                            if (IsTileProtected(GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition))))
                             {
                                 // CursorController.Instance.SetAttackCursor();
                                 // act based on current selection
@@ -1057,7 +1073,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                 //CursorController.Instance.SetNormalCursor();
                                 //tileHighlighterColor = Color.white;
                                 // get tile coordinates
-                                Vector2Int tileCoords = GetTileByPosition(Input.mousePosition);
+                                Vector2Int tileCoords = GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
                                 // Verify if tile coords are correct
                                 if (ValidateOutOfScreenMouse(tileCoords))
                                 {
@@ -1147,7 +1163,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return shiftedTilePositionX;
     }
 
-    public Vector2Int GetTileByPosition(Vector3 position)
+    public Vector2Int GetTileByWorldPosition(Vector3 position)
     {
         // calculate tile position base on object position and map position
         return new Vector2Int
@@ -1169,7 +1185,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     Vector2Int GetTilePosition(Transform tr)
     {
-        return GetTileByPosition(tr.position);
+        return GetTileByWorldPosition(tr.position);
         //return new Vector2Int
         //{
         //    x = Mathf.FloorToInt(tr.position.x / tileSize),
@@ -1780,7 +1796,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void SetMovePath(Vector3 from, Vector3 to)
     {
-        SetMovePath(GetTileByPosition(from), GetTileByPosition(to));
+        SetMovePath(GetTileByWorldPosition(from), GetTileByWorldPosition(to));
     }
 
     void SetMovePath(Vector2Int from, Vector2Int to)
@@ -1887,7 +1903,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // First remove highlight from previous path
         HighlightMovePath(false);
         // Debug.Log("FindAndHighlightPath");
-        SetMovePath(GetTileByPosition(selectedMapHero.transform.position), GetTileByPosition(Input.mousePosition));
+        SetMovePath(GetTileByWorldPosition(selectedMapHero.transform.position), GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition)));
         // highlight new path
         HighlightMovePath(true);
     }
@@ -2104,6 +2120,38 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Debug.Log("Map Shift: " + mapShift);
     }
 
+    public void RotateLeft(int numberOfRotationsRequired = 1)
+    {
+        for (int i = 0; i < numberOfRotationsRequired; i++)
+        {
+            // do rotation
+            // Debug.Log("Set last slice as first");
+            // set last slice as first
+            transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
+            transform.Find("FogOfWar").GetChild(59).SetAsFirstSibling();
+        }
+        // Shift map objects
+        ShiftMapObjects(Shift.Right, numberOfRotationsRequired);
+        ShiftTiles(Shift.Right, numberOfRotationsRequired);
+    }
+
+    public void RotateRight(int numberOfRotationsRequired = 1)
+    {
+        // int numberOfRotationsRequired = 1;
+        // Debug.Log("Number of rotaions required is " + numberOfRotationsRequired);
+        for (int i = 0; i < numberOfRotationsRequired; i++)
+        {
+            // do rotation
+            // Debug.Log("Set first map slice as last");
+            // set first map slice as last
+            transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
+            transform.Find("FogOfWar").GetChild(0).SetAsLastSibling();
+        }
+        // Shift map objects
+        ShiftMapObjects(Shift.Left, numberOfRotationsRequired);
+        ShiftTiles(Shift.Left, numberOfRotationsRequired);
+    }
+
     public void OnDrag(PointerEventData eventData)
     {
         // verify if user clicked left or right mouse button
@@ -2132,7 +2180,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // do not change map position, instead move camera
             // transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, 0, 0);
             // Debug.Log("New position: " + transform.position.x + ":" + transform.position.y + ":" + transform.position.z);
-            Debug.Log("Camera x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
+            // Debug.Log("Camera x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
             /*
             // define border
             float leftBorder = -tileSize;
@@ -2236,19 +2284,27 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void SaveCitiesNamesToggleOptions()
     {
         // Always show city names toggle options 0 - disable, 1 - enable
-        // verify if toggle is currently selected
-        if (mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
+        // verify if map options has not been destroyed
+        if (mapOptions)
         {
-            // set option
-            GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
+            // verify if toggle is currently selected
+            if (mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
+            {
+                // set option
+                GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
+            }
+            else
+            {
+                // set option
+                GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
+            }
+            // save option
+            PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
         }
         else
         {
-            // set option
-            GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
+            Debug.LogWarning("MapOptions has been destoyed");
         }
-        // save option
-        PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
     }
 
     void SaveHeroesNamesToggleOptions()
@@ -2822,7 +2878,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // execute move animation
                 Vector2 dst = GetDestination(pathPoint);
                 // Get direction
-                Vector3 direction = GetDirection(new Vector2Int(pathPoint.x, pathPoint.y), GetTileByPosition(selectedMapHero.transform.position));
+                Vector3 direction = GetDirection(new Vector2Int(pathPoint.x, pathPoint.y), GetTileByWorldPosition(selectedMapHero.transform.position));
                 // Vector3 direction = GetDirection(dst, src);
                 Debug.Log("dir: " + direction.x.ToString() + ":" + direction.y.ToString() + ":" + direction.z.ToString());
                 while (GetRemainingDistance(pathPoint) > 0.5f)
@@ -3283,7 +3339,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void VerifyMovePathAndMoveIfNeeded(PointerEventData eventData)
     {
-        Vector2Int clickedTargetTile = GetTileByPosition(eventData.position);
+        Vector2Int clickedTargetTile = GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(eventData.position));
         NesScripts.Controls.PathFind.Point clickedTargetPathPoint = new NesScripts.Controls.PathFind.Point(clickedTargetTile.x, clickedTargetTile.y);
         // verify if we already highlighted path
         if (selectedTargetPathPoint != null)
@@ -3757,8 +3813,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void EscapeBattle(Transform fleeingPartyTransform, Transform oppositeObjectTransform)
     {
         // fleeing party position on map
-        Vector2Int fleeingPartyPositionOnMap = GetTileByPosition(fleeingPartyTransform.position);
-        Vector2Int oppositeObjectPositionOnMap = GetTileByPosition(oppositeObjectTransform.position);
+        Vector2Int fleeingPartyPositionOnMap = GetTileByWorldPosition(fleeingPartyTransform.position);
+        Vector2Int oppositeObjectPositionOnMap = GetTileByWorldPosition(oppositeObjectTransform.position);
         // get flee vector based on current position of the objects
         Vector2Int direction = fleeingPartyPositionOnMap - oppositeObjectPositionOnMap;
         Debug.Log(direction);
@@ -3779,7 +3835,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         foreach(MapCity mapCity in GetComponentsInChildren<MapCity>())
         {
             // get city tile coordintates
-            Vector2Int cityTileCoords = GetTileByPosition(mapCity.transform.position);
+            Vector2Int cityTileCoords = GetTileByWorldPosition(mapCity.transform.position);
             // verify map city faction
             if (mapCity.LCity.CityFaction == faction)
             {
