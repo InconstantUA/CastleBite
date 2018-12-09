@@ -857,9 +857,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void UpdateTileHighighterBasedOnMousePosition()
     {
-        Debug.Log("mouse: " + Input.mousePosition);
-        Vector3 pointerPositionInWorldSpace = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Debug.Log("trans: " + pointerPositionInWorldSpace);
+        // Debug.Log("mouse: " + Input.mousePosition);
+        // Vector3 pointerPositionInWorldSpace = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // Debug.Log("trans: " + pointerPositionInWorldSpace);
         // Vector2Int highlighterPosition = GetTileByPosition(pointerPositionInWorldSpace);
         Vector2Int highlighterPosition = GetTileByWorldPosition(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         NesScripts.Controls.PathFind.Point highlightedPoint = new NesScripts.Controls.PathFind.Point(highlighterPosition.x, highlighterPosition.y);
@@ -2883,6 +2883,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 Debug.Log("dir: " + direction.x.ToString() + ":" + direction.y.ToString() + ":" + direction.z.ToString());
                 while (GetRemainingDistance(pathPoint) > 0.5f)
                 {
+                    // Recalculate destination, because it may change due to map shift when camera follows hero
+                    dst = GetDestination(pathPoint);
                     // Debug.Log("Path point is [" + pathPoint.x + "]:[" + pathPoint.y + "]");
                     // move hero
                     deltaTime = Time.time - previousTime;

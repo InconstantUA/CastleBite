@@ -139,7 +139,7 @@ public class TurnsManager : MonoBehaviour {
         // Get next player
         GamePlayer nextPlayer = GetNextPlayer();
         // Loop through each hero Party and execute needed actions
-        foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>())
+        foreach (HeroParty heroParty in UIRoot.Instance.transform.GetComponentsInChildren<HeroParty>())
         {
             // verify if party belongs to active player
             if (heroParty.Faction == activePlayer.Faction)

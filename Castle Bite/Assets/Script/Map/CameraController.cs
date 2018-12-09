@@ -36,10 +36,12 @@ public class CameraController : MonoBehaviour {
     {
         // get postion of the camera center
         Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
+        // get destinaion with the border limits
+        Vector3 cameraCenterWithBorderLimitsAdjusted = GetPositionWithScreenBordersLimits(cameraCenter);
         // get remaining distance
-        // float remainingDistance = mapManager.GetToroidalDistance(followedHeroOnMap.transform.position, cameraCenter);
+        // float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
         float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
-        // Debug.Log("Remaining distance " + remainingDistance);
+        Debug.Log("Remaining distance " + remainingDistance);
         return remainingDistance;
     }
 
@@ -133,7 +135,7 @@ public class CameraController : MonoBehaviour {
             position.y = screenTopHeightLimit;
         }
         // float buffer = 16f;
-        float buffer = 16f;
+        float buffer = 14f;
         // Debug.Log("Destination Position " + (int)position.x);
         // float screenLeftLimit = Screen.width / 2 + buffer;
         float screenLeftLimit = transform.position.x - buffer;
@@ -149,20 +151,10 @@ public class CameraController : MonoBehaviour {
             if (!rotationLock)
             {
                 // Rotate map
-                //MapManager.Instance.RotateLeft();
-                //// verify if we were previously rotating in opposite direction
-                //if (rotationsCounter >= 1)
-                //{
-                //    // reset counter, because we changed direction;
-                //    // Debug.Log("Reset rotaition counter");
-                //    // rotationsCounter = 0;
-                //}
                 rotationDirection = -1;
-                // Debug.Log("Trigger rotation");
+                Debug.Log("Trigger rotation to the Left");
                 doRotate = true;
             }
-            // shift camera position
-            // transform.position += new Vector3(tilesize, 0, 0);
         }
         // else if (position.x > screenRightLimit + Mathf.Abs(rotationsCounter) * tilesize)
         else if (position.x > screenRightLimit)
@@ -172,21 +164,10 @@ public class CameraController : MonoBehaviour {
             // verify if rotation lock is not active
             if (!rotationLock)
             {
-                //// Rotate map
-                //MapManager.Instance.RotateRight();
-                // verify if we were previously rotating in opposite direction
-                //if (rotationsCounter <= -1)
-                //{
-                //    // reset counter, because we changed direction;
-                //    // Debug.Log("Reset rotaition counter");
-                //    // rotationsCounter = 0;
-                //}
                 rotationDirection = +1;
-                // Debug.Log("Trigger rotation");
+                Debug.Log("Trigger rotation to the Right");
                 doRotate = true;
             }
-            // shift camera position
-            // transform.position -= new Vector3(tilesize, 0, 0);
         }
         return position;
     }
@@ -198,7 +179,7 @@ public class CameraController : MonoBehaviour {
             // Get destination position based on the map borders
             // Avoid that camera goes over top or bottom border
             // Get heroPosition
-            Vector3 followedHeroPosition = GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position);
+            Vector3 followedHeroPosition = followedHeroOnMap.transform.position;
             // Get camera position
             Vector3 point = Camera.main.WorldToViewportPoint(followedHeroPosition);
             Vector3 cameraPostion = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
@@ -206,16 +187,56 @@ public class CameraController : MonoBehaviour {
             // Get destination
             Vector3 delta = followedHeroPosition - cameraPostion;
             Vector3 destination = transform.position + delta;
+            Vector3 destinationBorderAligned = GetPositionWithScreenBordersLimits(destination);
+            Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            // verify if we need to rotate
+            float tileSize = 16f;
+            float mapWidth = 960f;
+            if (doRotate)
+            {
+                // get xDistance
+                float xDistance = destination.x - transform.position.x;
+                // get number of rotaitons required based on the distance and tile size
+                int numberOfRotationsRequired = 1 + Math.Abs(Mathf.RoundToInt(xDistance / tileSize));
+                // get number of rotations, which will cover whole map
+                int loopRotations = Mathf.RoundToInt(mapWidth / tileSize);
+                // Debug.Log("rotations reset to max when between: " + maxRotations + "-" + loopRotations);
+                // make sure that number of rotaions are not higher than the number or map slices
+                while (numberOfRotationsRequired >= loopRotations)
+                {
+                    numberOfRotationsRequired -= loopRotations;
+                    // calculate them in a distance
+                    rotationsCounter += loopRotations;
+                }
+                rotationsCounter += numberOfRotationsRequired * rotationDirection;
+                // Debug.Log("Do " + numberOfRotationsRequired + " rotations, total rotaitons: " + rotationsCounter);
+                if (numberOfRotationsRequired != 0)
+                {
+                    if (rotationDirection > 0)
+                    {
+                        // Rotate map
+                        MapManager.Instance.RotateRight(numberOfRotationsRequired);
+                    }
+                    else
+                    {
+                        // Rotate map
+                        MapManager.Instance.RotateLeft(numberOfRotationsRequired);
+                    }
+                }
+                // reset flag
+                // Debug.Log("Block rotations");
+                doRotate = false;
+            }
             // verify that camera has not already focused on a hero
             if (!cameraIsFocused)
             {
                 // move camera to the hero
-                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, focusMoveSpeed);
+                transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime, focusMoveSpeed);
             }
             else
             {
                 // make camera follow hero on Map
-                transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime);
+                transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime);
             }
         }
         if (doFollowMapDrag)
@@ -228,7 +249,7 @@ public class CameraController : MonoBehaviour {
             // Debug.Log("delta x:y " + (int)delta.x + ":" + (int)delta.y);
             Vector3 destination = transform.position + delta;
             Vector3 destinationBorderAligned = GetPositionWithScreenBordersLimits(destination);
-            // verify if we just rotated
+            // verify if we need to rotate
             if (doRotate)
             {
                 // get xDistance
@@ -280,11 +301,11 @@ public class CameraController : MonoBehaviour {
                 // Debug.Log("Activate rotation lock");
             }
             // move camera to simulate drag
-            Vector3 destinationXYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
             // Vector3 destinationXYO = new Vector3(destinationBorderAligned.x, destinationBorderAligned.y, transform.position.z);
             // transform.position = Vector3.SmoothDamp(transform.position, destinationXYO, ref velocity, dampTime, mapRotationSpeed);
             // do not move camera
-            transform.position = Vector3.SmoothDamp(transform.position, destinationXYO, ref velocity, dampTime);
+            transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime);
             // get distance
             float remainingDistanceX = Mathf.Abs(transform.position.x - destinationBorderAligned.x);
             // set min distance 
