@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
         Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
         // get remaining distance
         // float remainingDistance = mapManager.GetToroidalDistance(followedHeroOnMap.transform.position, cameraCenter);
-        float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenTopAndBottomBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
+        float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
         // Debug.Log("Remaining distance " + remainingDistance);
         return remainingDistance;
     }
@@ -99,12 +99,13 @@ public class CameraController : MonoBehaviour {
     //    }
     //}
 
-    Vector3 GetPositionWithScreenTopAndBottomBordersLimits(Vector3 position)
+    Vector3 GetPositionWithScreenBordersLimits(Vector3 position)
     {
+        float mapsize = 960f;
         // get followed hero position
         float screenBottomHeightLimit = Screen.height / 2f;
         // verify if followed hero position x will not cause camera to be off map
-        float screenTopHeightLimit = 960f - Screen.height / 2f;
+        float screenTopHeightLimit = mapsize - Screen.height / 2f;
         if (position.y < screenBottomHeightLimit)
         {
             // reset position to screen bottom limit
@@ -114,6 +115,19 @@ public class CameraController : MonoBehaviour {
         {
             // reset position to screen top limit
             position.y = screenTopHeightLimit;
+        }
+        float buffer = 16f;
+        float screenLeftLimit = Screen.width / 2 + buffer;
+        float screenRightLimit = mapsize - Screen.width / 2 - buffer;
+        if (position.x < screenLeftLimit)
+        {
+            // reset position to screen bottom limit
+            position.x = screenLeftLimit;
+        }
+        else if (position.x > screenRightLimit)
+        {
+            // reset position to screen top limit
+            position.x = screenRightLimit;
         }
         return position;
     }
@@ -125,7 +139,7 @@ public class CameraController : MonoBehaviour {
             // Get destination position based on the map borders
             // Avoid that camera goes over top or bottom border
             // Get heroPosition
-            Vector3 followedHeroPosition = GetPositionWithScreenTopAndBottomBordersLimits(followedHeroOnMap.transform.position);
+            Vector3 followedHeroPosition = GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position);
             // Get camera position
             Vector3 point = Camera.main.WorldToViewportPoint(followedHeroPosition);
             Vector3 cameraPostion = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
@@ -150,8 +164,9 @@ public class CameraController : MonoBehaviour {
             Vector3 newPos = dragOrigin - Input.mousePosition;
             Vector3 delta = newPos - Camera.main.transform.position;
             Vector3 destination = transform.position + delta;
-            Vector3 destinationBorderAligned = GetPositionWithScreenTopAndBottomBordersLimits(destination);
-            Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            Vector3 destinationBorderAligned = GetPositionWithScreenBordersLimits(destination);
+            // Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            Vector3 destinationOYO = new Vector3(destinationBorderAligned.x, destinationBorderAligned.y, transform.position.z);
             transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime);
         }
     }

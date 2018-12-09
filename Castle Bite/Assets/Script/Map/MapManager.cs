@@ -2120,7 +2120,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             //{
             //    newPositionY = yMax;
             //}
-            Debug.Log("Mouse:Camera y " + (int)Input.mousePosition.y + ":" + (int)Camera.main.transform.position.y);
+            // Debug.Log("Mouse:Camera y " + (int)Input.mousePosition.y + ":" + (int)Camera.main.transform.position.y);
             // move camera up/down instead of map
             //Vector3 newCameraPosition = Camera.main.transform.position;
             //newCameraPosition.y = newPositionY;
@@ -2129,8 +2129,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             //
             // for unknown reason z is set to -30000 on drag, that is why I reset it to 0
             // transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, newPositionY + yCorrectionOnDragStart, 0);
-            transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, 0, 0);
+            // do not change map position, instead move camera
+            // transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, 0, 0);
             // Debug.Log("New position: " + transform.position.x + ":" + transform.position.y + ":" + transform.position.z);
+            Debug.Log("Camera x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
+            /*
             // define border
             float leftBorder = -tileSize;
             float rightBorder = Screen.width - mapWidth + tileSize;
@@ -2178,6 +2181,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 ShiftMapObjects(Shift.Left, numberOfRotationsRequired);
                 ShiftTiles(Shift.Left, numberOfRotationsRequired);
             }
+            */
         }
         else if (Input.GetMouseButton(1))
         {
