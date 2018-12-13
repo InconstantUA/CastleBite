@@ -7,11 +7,14 @@ public class MapMenuManager : MonoBehaviour {
 
     public static MapMenuManager Instance { get; private set; }
 
+    [SerializeField]
+    bool keepEnabledAfterStart;
+
     void Awake()
     {
         Instance = this;
         // disable it after initial start
-        gameObject.SetActive(false);
+        gameObject.SetActive(keepEnabledAfterStart);
     }
 
     public IEnumerator EnterCityEditMode(MapCity mapCity)
@@ -33,7 +36,7 @@ public class MapMenuManager : MonoBehaviour {
         // Deactivate map manager with map
         MapManager.Instance.gameObject.SetActive(false);
         // Deactivate this map menu
-        gameObject.SetActive(false);
+        gameObject.SetActive(keepEnabledAfterStart);
         // Note: everything below related to mapManager or mapScreen will not be processed, because map manager is disabled
         // Activate city view = go to city edit mode
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(mapCity.LCity);

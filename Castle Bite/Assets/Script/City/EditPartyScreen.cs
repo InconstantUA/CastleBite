@@ -420,7 +420,7 @@ public class EditPartyScreen : MonoBehaviour {
         // create and update Hero Party panel in UI, (no - parent it to city UI)
         //Transform parentCityOnMap = map.Find(transform.name);
         // Create new hero party on map ui
-        MapHero newPartyOnMapUI = Instantiate(ObjectsManager.Instance.HeroPartyOnMapTemplate, MapManager.Instance.transform).GetComponent<MapHero>();
+        MapHero newPartyOnMapUI = Instantiate(ObjectsManager.Instance.HeroPartyOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapHero>())).GetComponent<MapHero>();
         // Get city
         City targetCity = LCity;
         if (city != null)
@@ -436,7 +436,7 @@ public class EditPartyScreen : MonoBehaviour {
         // get map hero ui width and heigh
         float newPartyOnMapUIHeight = Mathf.Abs(worldCorners[3].x - worldCorners[0].x);
         float newPartyOnMapUIWidth = Mathf.Abs(worldCorners[1].y - worldCorners[0].y);
-        Debug.Log(newPartyOnMapUIWidth + ":" + newPartyOnMapUIHeight);
+        // Debug.Log(newPartyOnMapUIWidth + ":" + newPartyOnMapUIHeight);
         Vector3 positionAdjustment = new Vector3(newPartyOnMapUIHeight/2f, newPartyOnMapUIWidth/2f, 0);
         // set it to the same position as the parent city
         newPartyOnMapUI.transform.position = targetCity.LMapCity.transform.position + positionAdjustment;

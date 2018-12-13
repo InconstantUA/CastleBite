@@ -22,6 +22,7 @@ public class PartyData : System.Object
     public bool holdPosition = false;
     public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
     public List<InventoryItemData> partyInventory;
+    public MapCoordinates partyMapCoordinates; // used only during save and load
 }
 
 public class HeroParty : MonoBehaviour {
@@ -106,6 +107,36 @@ public class HeroParty : MonoBehaviour {
                         offsetMaxY = lMapHero.GetComponent<RectTransform>().offsetMax.y
                     };
                 }
+            }
+        }
+    }
+
+    public MapCoordinates GetPartyMapCoordinates()
+    {
+        // initialize map position with default values
+        MapCoordinates partyMapCoordinates = new MapCoordinates
+        {
+            x = 0,
+            y = 0
+        };
+        // verify if this is city garnizon
+        if (PartyMode.Garnizon == PartyMode)
+        {
+            // return default values as those values are not relevant
+            return partyMapCoordinates;
+        }
+        else
+        {
+            // verify if linked party on map is defined
+            if (lMapHero == null)
+            {
+                Debug.LogError("Linked party on map is null");
+                // return default position
+                return partyMapCoordinates;
+            }
+            else
+            {
+                return MapManager.Instance.GetCoordinatesByWorldPosition(LMapHero.transform.position);
             }
         }
     }

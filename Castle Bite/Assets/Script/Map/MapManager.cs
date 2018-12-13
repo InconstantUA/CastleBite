@@ -30,6 +30,13 @@ public struct PositionOnMap
     }
 }
 
+[Serializable]
+public struct MapCoordinates
+{
+    public int x;
+    public int y;
+}
+
 public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public enum Mode {
@@ -46,7 +53,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
     public static MapManager Instance { get; private set; }
-
+    [SerializeField]
+    bool keepEnabledAfterStart;
     [SerializeField]
     Transform rootUITr;
     [SerializeField]
@@ -55,6 +63,18 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Transform mapOptions;
     [SerializeField]
     GameMap lMap;
+    [SerializeField]
+    Transform fogOfWarTransform;
+    [SerializeField]
+    Transform mapSlicesTransform;
+    [SerializeField]
+    TileHighlighter tileHighlighter;
+    [SerializeField]
+    Transform mapHeroesParentTransformOnMap;
+    [SerializeField]
+    Transform mapCitiesParentTransformOnMap;
+    [SerializeField]
+    Transform mapItemsContainersParentTransformOnMap;
     [SerializeField]
     Mode mode;
     [SerializeField]
@@ -95,9 +115,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Color unknownRelationshipsUnitColor;
     [SerializeField]
     Color unknownRelationshipsUnitColorNotEnoughMovePoints;
-    Transform tileHighlighterTr;
+    // Transform tileHighlighterTr;
     Color tileHighlighterColor;
-    TileHighlighter tileHighlighter;
     // for pathfinding
     [SerializeField]
     GameObject movePathHighlighterTemplate;
@@ -293,11 +312,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Instance = this;
         // Create a coroutine queue that can run max 1 coroutine at once
         queue = new CoroutineQueue(1, StartCoroutine);
-        //
-        tileHighlighterTr = transform.Find("TileHighlighter");
-        tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
+        // modify note: tile highliter is not referenced via serialized field
+        // tileHighlighterTr = transform.Find("TileHighlighter");
+        // tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
         // disable it on startup
-        gameObject.SetActive(false);
+        gameObject.SetActive(keepEnabledAfterStart);
     }
 
     void Start()
@@ -602,7 +621,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // Create fog of war
             fogOfWarTiles = new Transform[tileMapWidth, tileMapHeight];
             // Get fog of war transform
-            Transform fogOfWarTransform = transform.Find("FogOfWar");
+            // Transform fogOfWarTransform = transform.Find("FogOfWar");
             // activate fog of war
             fogOfWarTransform.gameObject.SetActive(true);
             // init slice index
@@ -711,7 +730,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     GameObject GetFogOnTile(Vector2Int tilePosition)
     {
         // loop over all active fog of war tiles
-        foreach (MapFogOfWar fogObject in transform.Find("FogOfWar").GetComponentsInChildren<MapFogOfWar>(false))
+        foreach (MapFogOfWar fogObject in fogOfWarTransform.GetComponentsInChildren<MapFogOfWar>(false))
         {
             // verify if there is a fog on tile which we are searching
             // if fog is not active (disabled), then it will not be checked
@@ -803,7 +822,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         int x = Mathf.FloorToInt(Input.mousePosition.x / tileSize);
         int y = Mathf.FloorToInt((Input.mousePosition.y + yAdjustment + yAdjustmentConstant) / tileSize);
         // tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
-        tileHighlighterTr.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize - new Vector3(0, yAdjustment + yAdjustmentConstant, 0));
+        tileHighlighter.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize - new Vector3(0, yAdjustment + yAdjustmentConstant, 0));
         // Debug.Log("Tile: " + x + ";" + y);
     }
 
@@ -1100,7 +1119,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                     }
                     // Update color of tile highlighter
-                    tileHighlighterTr.GetComponentInChildren<Text>().color = tileHighlighterColor;
+                    tileHighlighter.GetComponentInChildren<Text>().color = tileHighlighterColor;
                     break;
                 case Mode.Animation:
                     // Hide tile highlighter in this mode
@@ -1173,6 +1192,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             x = GetShiftedTilePositionX(Mathf.FloorToInt((position.x - transform.position.x) / tileSize)),
             y = Mathf.FloorToInt((position.y - transform.position.y) / tileSize)
+        };
+    }
+
+    public Vector3 GetWorldPositionByCoordinates(MapCoordinates coordinates)
+    {
+        // get tile position by its coordinates
+        return mapTiles[coordinates.x, coordinates.y].transform.position;
+    }
+
+    public MapCoordinates GetCoordinatesByWorldPosition(Vector3 position)
+    {
+        // calculate tile position base on object position and map position
+        Vector2Int tileID = GetTileByWorldPosition(position);
+        return new MapCoordinates
+        {
+            x = tileID.x,
+            y = tileID.y
         };
     }
 
@@ -1369,7 +1405,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         // todo: better keep them as string and highlight specific elements
         // Get map slices container
-        Transform mapSlicesContainer = transform.Find("MapSlices");
+        // Transform mapSlicesContainer = transform.Find("MapSlices");
         // Transform mapTilesTransform = transform.Find("MapTiles");
         // Create map tiles array
         mapTiles = new MapTile[tileMapWidth, tileMapHeight];
@@ -1377,7 +1413,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Vector2Int tileCoordinates;
         // convert mapTiles to 2dimentional array
         int i = 0;
-        foreach(Transform childTransform in mapSlicesContainer)
+        foreach(Transform childTransform in mapSlicesTransform)
         {
             MapTile[] _mapTiles = childTransform.GetComponentsInChildren<MapTile>(true);
             for (int j = _mapTiles.Length - 1; j >= 0; j--)
@@ -2130,8 +2166,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // do rotation
             // Debug.Log("Set last slice as first");
             // set last slice as first
-            transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
-            transform.Find("FogOfWar").GetChild(59).SetAsFirstSibling();
+            mapSlicesTransform.GetChild(59).SetAsFirstSibling();
+            fogOfWarTransform.GetChild(59).SetAsFirstSibling();
         }
         // Shift map objects
         ShiftMapObjects(Shift.Right, numberOfRotationsRequired);
@@ -2147,8 +2183,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // do rotation
             // Debug.Log("Set first map slice as last");
             // set first map slice as last
-            transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
-            transform.Find("FogOfWar").GetChild(0).SetAsLastSibling();
+            mapSlicesTransform.GetChild(0).SetAsLastSibling();
+            fogOfWarTransform.GetChild(0).SetAsLastSibling();
         }
         // Shift map objects
         ShiftMapObjects(Shift.Left, numberOfRotationsRequired);
@@ -2199,7 +2235,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // Debug.Log("Set last slice as first");
                     // set last slice as first
                     transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
-                    transform.Find("FogOfWar").GetChild(59).SetAsFirstSibling();
+                    fogOfWarTransform.GetChild(59).SetAsFirstSibling();
                     // adjust position by one tile size to the left
                     transform.position = new Vector3(transform.position.x - tileSize, transform.position.y, 0);
                     // increment rotation position modifier by tile size
@@ -2222,7 +2258,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // Debug.Log("Set first map slice as last");
                     // set first map slice as last
                     transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
-                    transform.Find("FogOfWar").GetChild(0).SetAsLastSibling();
+                    fogOfWarTransform.GetChild(0).SetAsLastSibling();
                     // shift position by one tile size to the right
                     transform.position = new Vector3(transform.position.x + tileSize, transform.position.y, 0);
                     // increment rotation position modifier by tile size
@@ -2440,13 +2476,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     void OnEnable()
     {
         LoadMapUIOptions();
-        GetComponentInChildren<TileHighlighter>(true).gameObject.SetActive(true);
+        // GetComponentInChildren<TileHighlighter>(true).gameObject.SetActive(true);
+        tileHighlighter.gameObject.SetActive(true);
     }
 
     void OnDisable()
     {
         SaveMapUIOptions();
-        SetMode(MapManager.Mode.Browse);
+        SetMode(Mode.Browse);
     }
 
     float GetRemainingDistance(NesScripts.Controls.PathFind.Point pathPoint)
@@ -3853,5 +3890,20 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 mapTiles[cityTileCoords.x, cityTileCoords.y].Terra.TerraIsPassable = false;
             }
         }
+    }
+
+    public Transform GetParentTransformByType(MapHero mapHero)
+    {
+        return mapHeroesParentTransformOnMap;
+    }
+
+    public Transform GetParentTransformByType(MapCity mapCity)
+    {
+        return mapCitiesParentTransformOnMap;
+    }
+
+    public Transform GetParentTransformByType(MapItemsContainer mapItemsContainer)
+    {
+        return mapItemsContainersParentTransformOnMap;
     }
 }

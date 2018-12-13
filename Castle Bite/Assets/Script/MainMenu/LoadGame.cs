@@ -251,10 +251,6 @@ public class LoadGame : MonoBehaviour
         yield return new WaitForFixedUpdate();
         // Wait for all animations to finish
         yield return new WaitForSeconds(0.25f);
-        // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
-        // Deactivate Loading screen
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
     }
 
     IEnumerator ActivateScreens()
@@ -263,12 +259,20 @@ public class LoadGame : MonoBehaviour
         // Activate map screen
         MapManager.Instance.gameObject.SetActive(true);
         MapMenuManager.Instance.gameObject.SetActive(true);
-        // Deactivate this screen
-        gameObject.SetActive(false);
+        // UnFreeze map (during Animation internal updates are not done)
+        MapManager.Instance.SetMode(MapManager.Mode.Browse);
         // Activate main menu panel, so it is visible next time main menu is activated
         transform.parent.Find("MainMenuPanel").gameObject.SetActive(true);
         // Deactivate main menu
         transform.root.Find("MainMenu").gameObject.SetActive(false);
+        // Deactivate this screen
+        gameObject.SetActive(false);
+        // Wait a bit
+        yield return new WaitForSeconds(3);
+        // Unblock mouse input
+        InputBlocker.Instance.SetActive(false);
+        // Deactivate Loading screen
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
     }
 
     void SetGameData(GameData gameData)
@@ -277,6 +281,8 @@ public class LoadGame : MonoBehaviour
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
         // .. Set map
+        // Freeze map (during Animation internal updates are not done)
+        MapManager.Instance.SetMode(MapManager.Mode.Animation);
         // remove old data
         ChapterManager.Instance.CoroutineQueue.Run(CleanGameBeforeLoad());
         // create new objects from saved data

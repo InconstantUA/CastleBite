@@ -25,6 +25,7 @@ public class CityData
     public UnitType[] hireablePartyLeaders;
     public UnitType[] hireableCommonUnits;
     public PositionOnMap cityMapPosition;   // used only during load and save
+    public MapCoordinates cityMapCoordinates;   // used only during load and save
 }
 
 public class City : MonoBehaviour {
@@ -129,20 +130,15 @@ public class City : MonoBehaviour {
         }
         else
         {
-            // verify if linked party on map is defined
+            // verify if linked city on map is defined
             if (lMapCity == null)
             {
-                Debug.LogError("Linked party on map is null");
+                Debug.LogError("Linked city on map is null");
                 // return default position
                 return cityMapPosition;
             }
             else
             {
-                // return position in PartyMapPosition format, which can be serialized
-                //Debug.Log(" offsetMin.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x.ToString());
-                //Debug.Log(" offsetMin.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y.ToString());
-                //Debug.Log(" offsetMax.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x.ToString());
-                //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
                 return new PositionOnMap
                 {
                     offsetMinX = lMapCity.GetComponent<RectTransform>().offsetMin.x,

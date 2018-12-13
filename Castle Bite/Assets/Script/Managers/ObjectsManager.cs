@@ -81,10 +81,13 @@ public class ObjectsManager : MonoBehaviour {
     void CreateCityOnMap(City city, CityData cityData)
     {
         // Create new party on map
-        MapCity newCityOnMap = Instantiate(cityOnMapTemplate, MapManager.Instance.transform).GetComponent<MapCity>();
+        MapCity newCityOnMap = Instantiate(cityOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapCity>())).GetComponent<MapCity>();
         // city to original position on map
         newCityOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(cityData.cityMapPosition.offsetMinX, cityData.cityMapPosition.offsetMinY);
         newCityOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(cityData.cityMapPosition.offsetMaxX, cityData.cityMapPosition.offsetMaxY);
+        // place it to original position on map based on the tile coordinates
+        Vector3 cityPositionOffset = new Vector3(8f, 8f, 0);
+        newCityOnMap.transform.position = MapManager.Instance.GetWorldPositionByCoordinates(cityData.cityMapCoordinates) - cityPositionOffset;
         // create links between city on map and city
         newCityOnMap.LCity = city;
         city.LMapCity = newCityOnMap;
@@ -151,10 +154,12 @@ public class ObjectsManager : MonoBehaviour {
     {
         Debug.Log("Creating party on map representation");
         // Create new party on map UI
-        MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, MapManager.Instance.transform).GetComponent<MapHero>();
+        MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapHero>())).GetComponent<MapHero>();
         // place party to original position on map
         newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
         newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
+        // place it to original position on map based on the tile coordinates
+        newPartyOnMap.transform.position = MapManager.Instance.GetWorldPositionByCoordinates(partyData.partyMapCoordinates);
         // create links between party on map and hero party
         newPartyOnMap.LHeroParty = heroParty;
         heroParty.LMapHero = newPartyOnMap;
@@ -279,22 +284,16 @@ public class ObjectsManager : MonoBehaviour {
     public void RemoveAllInventoryItemsOnMap()
     {
         // Loop through transforms 1 level below map (=belongs to the map)
-        foreach (Transform childTransform in MapManager.Instance.transform)
+        foreach (MapItemsContainer mapItem in MapManager.Instance.GetParentTransformByType(GetComponent<MapItemsContainer>()).GetComponentsInChildren<MapItemsContainer>(true))
         {
-            // get map item (chest)
-            MapItemsContainer mapItem = childTransform.GetComponent<MapItemsContainer>();
-            // verify if it is not null
-            if (mapItem != null)
+            // loop through all items linked to this map item (chest)
+            foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
             {
-                // loop through all items linked to this map item (chest)
-                foreach (InventoryItem inventoryItem in mapItem.LInventoryItems)
-                {
-                    // remove inv item
-                    Destroy(inventoryItem.gameObject);
-                }
-                // remove map item
-                Destroy(mapItem.gameObject);
+                // remove inv item
+                Destroy(inventoryItem.gameObject);
             }
+            // remove map item
+            Destroy(mapItem.gameObject);
         }
     }
 
@@ -313,7 +312,7 @@ public class ObjectsManager : MonoBehaviour {
     public MapItemsContainer CreateInventoryItemContainerOnMap(PositionOnMap positionOnMap)
     {
         // create new item on map
-        MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, MapManager.Instance.transform).GetComponent<MapItemsContainer>();
+        MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapItemsContainer>())).GetComponent<MapItemsContainer>();
         // place item on map to original position on map
         mapItem.GetComponent<RectTransform>().offsetMin = new Vector2(positionOnMap.offsetMinX, positionOnMap.offsetMinY);
         mapItem.GetComponent<RectTransform>().offsetMax = new Vector2(positionOnMap.offsetMaxX, positionOnMap.offsetMaxY);

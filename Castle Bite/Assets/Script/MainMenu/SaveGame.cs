@@ -80,6 +80,7 @@ public class SaveGame : MonoBehaviour {
             city.CityID = city.gameObject.GetInstanceID();
             // save city position
             city.CityData.cityMapPosition = city.GetCityMapPosition();
+            city.CityData.cityMapCoordinates = MapManager.Instance.GetCoordinatesByWorldPosition(city.LMapCity.transform.position);
         }
     }
 
@@ -109,6 +110,7 @@ public class SaveGame : MonoBehaviour {
             }
             // set party map address
             heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
+            heroParty.PartyData.partyMapCoordinates = heroParty.GetPartyMapCoordinates();
             // init party inventory data
             heroParty.PartyData.partyInventory = new List<InventoryItemData>();
             // loop through all items in the party one level below (items on deeper levels belong to units)

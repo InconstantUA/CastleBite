@@ -135,7 +135,7 @@ public class CameraController : MonoBehaviour {
             position.y = screenTopHeightLimit;
         }
         // float buffer = 16f;
-        float buffer = 14f;
+        float buffer = 14f + 16f;
         // Debug.Log("Destination Position " + (int)position.x);
         // float screenLeftLimit = Screen.width / 2 + buffer;
         float screenLeftLimit = transform.position.x - buffer;
