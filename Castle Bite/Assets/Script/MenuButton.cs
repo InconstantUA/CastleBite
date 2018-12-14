@@ -256,11 +256,8 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         MapMenuManager.Instance.gameObject.SetActive(false);
     }
 
-    void StartGame()
+    public void OnGameStartMenuChanges()
     {
-        // Activate Game canvas and deactivate menu canvas
-        transform.root.Find("MainMenu").gameObject.SetActive(false);
-        transform.root.Find("MiscUI").gameObject.SetActive(true);
         // As long as we are in game mode now, then Start button is not needed any more
         // instead activate Continue button
         Transform mainMenuPanel = transform.root.Find("MainMenu/MainMenuPanel");
@@ -272,10 +269,15 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Also activate Save and Load buttons for future use
         mainMenuPanel.Find("Save").gameObject.SetActive(true);
         mainMenuPanel.Find("Load").gameObject.SetActive(true);
-        // Get objects manager
-        //ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
-        // Get map manager
-        // MapManager mapManager = transform.root.Find("MapScreen").GetComponentInChildren<MapManager>(true);
+    }
+
+    void StartGame()
+    {
+        // Activate Game canvas and deactivate menu canvas
+        transform.root.Find("MainMenu").gameObject.SetActive(false);
+        transform.root.Find("MiscUI").gameObject.SetActive(true);
+        // Activate and deactivate required menus
+        OnGameStartMenuChanges();
         // Create game players, get players data from Chapter manager
         foreach (PlayerData playerData in ChapterManager.Instance.PlayersData)
         {
@@ -286,11 +288,6 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
         // Activate and reset turns manager, set Dominion as active player
         TurnsManager.Instance.Reset(Faction.Dominion);
-        // transform.root.Find("Managers").GetComponent<TurnsManager>().Reset(Faction.Dominion);
-        //// Set human player as active player
-        //transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.Human).PlayerData.playerTurnState = PlayerTurnState.Active;
-        //// Set AI player as waiting for its turn
-        //transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.AI).PlayerData.playerTurnState = PlayerTurnState.Waiting;
         // Activate ChooseYourFirstHero menu
         transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(true);
     }

@@ -317,6 +317,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // tileHighlighter = tileHighlighterTr.GetComponent<TileHighlighter>();
         // disable it on startup
         gameObject.SetActive(keepEnabledAfterStart);
+        // disable player income information on the top info panel
+        // SetPlayerIncomeVisible(false);
     }
 
     void Start()
@@ -2452,7 +2454,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // disable toggle
             textToggle.selected = false;
             textToggle.SetNormalStatus();
-            // hide cities names
+            // hide player income
             SetPlayerIncomeVisible(false);
         }
         else
@@ -2460,7 +2462,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // enable toggle
             textToggle.selected = true;
             textToggle.SetPressedStatus();
-            // always show city names
+            // show player income
             SetPlayerIncomeVisible(true);
         }
     }

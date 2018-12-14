@@ -12,6 +12,8 @@ public class LoadGame : MonoBehaviour
     [SerializeField]
     Transform gamePlayersRoot;
     [SerializeField]
+    MenuButton menuButton;
+    [SerializeField]
     string fileExtension;
     //[SerializeField]
     //GameObject gamePlayerTemplate;
@@ -265,6 +267,8 @@ public class LoadGame : MonoBehaviour
         transform.parent.Find("MainMenuPanel").gameObject.SetActive(true);
         // Deactivate main menu
         transform.root.Find("MainMenu").gameObject.SetActive(false);
+        // trigger main menu changes related to running game state
+        menuButton.OnGameStartMenuChanges();
         // Deactivate this screen
         gameObject.SetActive(false);
         // Wait a bit
@@ -281,6 +285,8 @@ public class LoadGame : MonoBehaviour
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
         // .. Set map
+        // Activate map screen - it is needed to create objects
+        MapManager.Instance.gameObject.SetActive(true);
         // Freeze map (during Animation internal updates are not done)
         MapManager.Instance.SetMode(MapManager.Mode.Animation);
         // remove old data
