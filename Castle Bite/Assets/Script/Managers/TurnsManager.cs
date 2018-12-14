@@ -232,7 +232,8 @@ public class TurnsManager : MonoBehaviour {
         // mapManager.SetCitiesPassableByFaction(activePlayer.Faction);
         MapManager.Instance.InitTilesMap();
         // Update top player income info panel
-        UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<TopInfoPanel>().UpdateInfo();
+        Debug.LogWarning("Todo: Fix that top info panel is enabled, if needed");
+        UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<TopInfoPanel>(true).UpdateInfo();
         // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
         CursorController.Instance.SetNormalCursor();
     }

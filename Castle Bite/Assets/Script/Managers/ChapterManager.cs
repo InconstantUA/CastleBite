@@ -126,6 +126,12 @@ public class ChapterManager : MonoBehaviour {
         credits.SetActive(true);
     }
 
+    public void StartGame()
+    {
+        // Activate and reset turns manager, set Dominion as active player
+        TurnsManager.Instance.Reset(Faction.Dominion);
+    }
+
     void EndGame()
     {
         Debug.Log("End game");

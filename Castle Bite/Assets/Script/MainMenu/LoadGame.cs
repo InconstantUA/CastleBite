@@ -104,6 +104,7 @@ public class LoadGame : MonoBehaviour
 
     public void CreateGamePlayers(PlayerData[] playersData)
     {
+        Debug.Log("Create Game Players");
         // Get objects manager
         // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create players
@@ -122,6 +123,7 @@ public class LoadGame : MonoBehaviour
         {
             ObjectsManager.Instance.RemovePlayer(gamePlayer);
         }
+        Debug.Log("All Players Removed");
     }
 
     public void RemoveAllCities()
@@ -133,7 +135,7 @@ public class LoadGame : MonoBehaviour
         {
             ObjectsManager.Instance.RemoveCity(city);
         }
-        Debug.LogWarning("All cities removed");
+        Debug.Log("All cities removed");
         //Debug.Break();
     }
 
@@ -190,7 +192,7 @@ public class LoadGame : MonoBehaviour
         TurnsManager.Instance.UpdateTurnNumberText();
     }
 
-    IEnumerator CleanGameBeforeLoad()
+    public IEnumerator CleanGameBeforeLoad()
     {
         // Block mouse input
         InputBlocker.Instance.SetActive(true);
@@ -203,6 +205,7 @@ public class LoadGame : MonoBehaviour
         yield return new WaitForFixedUpdate();
         // Wait for all animations to finish
         yield return new WaitForSeconds(0.25f);
+        Debug.Log("Game has been cleaned");
     }
 
     void CreateInventoryItemsOnMap(MapData mapData)
@@ -238,6 +241,7 @@ public class LoadGame : MonoBehaviour
 
     IEnumerator CreateGameObjects(GameData gameData)
     {
+        Debug.Log("Create Game Objects");
         // Note order is important, if some party was child of a city, then city should be created first
         // Update game with data from save
         CreateGamePlayers(gameData.playersData);
@@ -258,8 +262,10 @@ public class LoadGame : MonoBehaviour
     IEnumerator ActivateScreens()
     {
         yield return null;
+        Debug.Log("Activate Screens");
         // Activate map screen
-        MapManager.Instance.gameObject.SetActive(true);
+        // MapManager should be already active
+        // MapManager.Instance.gameObject.SetActive(true);
         MapMenuManager.Instance.gameObject.SetActive(true);
         // UnFreeze map (during Animation internal updates are not done)
         MapManager.Instance.SetMode(MapManager.Mode.Browse);
@@ -279,6 +285,13 @@ public class LoadGame : MonoBehaviour
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
     }
 
+    IEnumerator FreezeMap()
+    {
+        // Freeze map (during Animation internal updates are not done)
+        MapManager.Instance.SetMode(MapManager.Mode.Animation);
+        yield return null;
+    }
+
     void SetGameData(GameData gameData)
     {
         // Activate Loading screen
@@ -286,9 +299,10 @@ public class LoadGame : MonoBehaviour
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
         // .. Set map
         // Activate map screen - it is needed to create objects
-        MapManager.Instance.gameObject.SetActive(true);
+        // MapManager.Instance.gameObject.SetActive(true);
+        ChapterManager.Instance.CoroutineQueue.Run(MapManager.Instance.SetActive());
         // Freeze map (during Animation internal updates are not done)
-        MapManager.Instance.SetMode(MapManager.Mode.Animation);
+        ChapterManager.Instance.CoroutineQueue.Run(FreezeMap());
         // remove old data
         ChapterManager.Instance.CoroutineQueue.Run(CleanGameBeforeLoad());
         // create new objects from saved data

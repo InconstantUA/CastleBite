@@ -53,6 +53,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
     public static MapManager Instance { get; private set; }
+
     [SerializeField]
     bool keepEnabledAfterStart;
     [SerializeField]
@@ -321,8 +322,15 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // SetPlayerIncomeVisible(false);
     }
 
+    public IEnumerator SetActive()
+    {
+        gameObject.SetActive(true);
+        yield return new WaitForSeconds(1);
+    }
+
     void Start()
     {
+        Debug.LogWarning("Starting Map Manager");
         // For map drag
         //  get map width and height
         // mapWidth = gameObject.GetComponentInChildren<SpriteRenderer>().size.x;
@@ -2973,6 +2981,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void SetMode(Mode value)
     {
+        Debug.LogWarning("Change map manager mode to : " + value);
         mode = value;
         switch (mode)
         {
