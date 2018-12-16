@@ -11,7 +11,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 {
     Text unitName;
     Toggle tgl;
-    Toggle[] allTogglesInGroup;
+    // Toggle[] allTogglesInGroup;
     Color tmpColor;
     public UnityEvent OnLeftMouseButtonClick;
     public UnityEvent OnRightMouseButtonClick;
@@ -28,7 +28,8 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             SetOnStatus();
         }
         // get all toggles in Toggle group
-        allTogglesInGroup = transform.parent.GetComponentsInChildren<Toggle>();
+        // this cause problems, when some toggle get destroyed
+        // allTogglesInGroup = transform.parent.GetComponentsInChildren<Toggle>();
     }
 
     void Update()
@@ -208,7 +209,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void DimmAllOtherMenusExceptToggled()
     {
-        foreach (Toggle tmpTgl in allTogglesInGroup)
+        foreach (Toggle tmpTgl in transform.parent.GetComponentsInChildren<Toggle>())
         {
             // do not dimm currently selected objects
             // first child in toggle is Name Text UI obj
@@ -224,7 +225,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     
     void DeselectAllOtherTogglesInGroup()
     {
-        foreach (Toggle tmpTgl in allTogglesInGroup)
+        foreach (Toggle tmpTgl in transform.parent.GetComponentsInChildren<Toggle>())
         {
             // do not dimm currently selected objects
             // first child in toggle is Name Text UI obj

@@ -9,6 +9,11 @@ public class FactionSelectionGroup : MonoBehaviour {
     [SerializeField]
     GameObject factionSelectionTemplate;
 
+    public Faction GetSelectedFaction()
+    {
+        return gameObject.GetComponentInChildren<FactionSelection>(false).Faction;
+    }
+
     int GetSelectedFactionIndex(FactionSelection selectedFaction, FactionSelection[] factions)
     {
         for (int i = 0; i < factions.Length; i++)

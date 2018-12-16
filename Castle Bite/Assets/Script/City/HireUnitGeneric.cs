@@ -37,13 +37,19 @@ public class HireUnitGeneric : MonoBehaviour {
         transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(doActivate);
     }
 
-    void OnDisable()
+    void RemoveAllCurrentUnitsToHire()
     {
         // remove all toggles for units created from template
         foreach (Transform tr in transform.Find("UnitsToHire").transform)
         {
             Destroy(tr.gameObject);
         }
+    }
+
+    void OnDisable()
+    {
+        // remove all toggles for units created from template
+        RemoveAllCurrentUnitsToHire();
         // Deactivate controls
         SetHireUnitMenuButtonsActive(false);
         // Deactivate top gold info panel
@@ -73,6 +79,8 @@ public class HireUnitGeneric : MonoBehaviour {
         GameObject unitUIToggle = transform.Find("UnitTemplate").gameObject;
         // reset flag for first toggle activation
         bool firstToggleIsActivated = false;
+        // remove all previously configured units to hire
+        RemoveAllCurrentUnitsToHire();
         // create menu entry for each unit which needs to be hired
         foreach (UnitType unitType in unitTypesToHire)
         {

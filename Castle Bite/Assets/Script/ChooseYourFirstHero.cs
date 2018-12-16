@@ -10,6 +10,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
     UnitType[] greenskinFactionSelectableUnits;
     [SerializeField]
     UnitType[] undeadFactionSelectableUnits;
+    [SerializeField]
+    FactionSelectionGroup factionSelectionGroup;
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
     {
@@ -24,10 +26,16 @@ public class ChooseYourFirstHero : MonoBehaviour {
         return null;
     }
 
-    public void SetFaction(Faction faction)
+    public void SetFaction(Faction faction = Faction.Unknown)
     {
+        // Verify if faction is unknown
+        if (faction == Faction.Unknown)
+        {
+            // Get currently active Faction
+            faction = factionSelectionGroup.GetSelectedFaction();
+        }
         // get higherable unit types
-        UnitType[] highrableUnitTypes;
+        UnitType[] highrableUnitTypes = null;
         switch (faction)
         {
             case Faction.Dominion:
@@ -44,25 +52,32 @@ public class ChooseYourFirstHero : MonoBehaviour {
                 break;
         }
         Debug.Log("Set faction to " + faction);
+        // Get hire unit menu
+        HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
+        hireUnitGeneric.SetActive(highrableUnitTypes, null, UnitHirePanel.Mode.FirstUnit);
     }
 
     public void SetActive(bool doActivate)
     {
         // Activate/Deactivate background
         transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(true);
+        // Activate/Dectivate this menu
+        // Note: order of activation is important: it should be activated before HireUnit to activate factionSelectionGroup
+        gameObject.SetActive(doActivate);
         // Get hire unit menu
         HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
         // Activate/Deactivate Hire Unit menu
         if (doActivate)
         {
             // Get unit types to hire
-            UnitType[] unitTypesToHire = new UnitType[] { UnitType.Knight, UnitType.Ranger, UnitType.Archmage, UnitType.Seraphim };
+            // UnitType[] unitTypesToHire = new UnitType[] { UnitType.Knight, UnitType.Ranger, UnitType.Archmage, UnitType.Seraphim };
             // Change UnitTemplate (unit information) preferred height
             hireUnitGeneric.transform.Find("UnitTemplate").GetComponent<LayoutElement>().preferredHeight = 48;
             // Get Dominion capital
             City dominionCapitalCity = GetCityByTypeAndFaction(CityType.Capital, Faction.Dominion);
             // Activate hire unit menu
-            hireUnitGeneric.SetActive(unitTypesToHire, null, UnitHirePanel.Mode.FirstUnit);
+            // hireUnitGeneric.SetActive(unitTypesToHire, null, UnitHirePanel.Mode.FirstUnit);
+            SetFaction();
             // Deactivate hire unit Header, because we will replace it with our header
             hireUnitGeneric.transform.Find("Header").gameObject.SetActive(false);
             //// Deactivate hire unit background, because it is not needed and it will cover other menus
@@ -105,8 +120,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Deactivate replacement for hire unit button
             transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/ContinueAndHireFirstHeroBtn").gameObject.SetActive(false);
         }
-        // Activate/Dectivate this menu
-        gameObject.SetActive(doActivate);
+        // bring it to the front
+        transform.SetAsLastSibling();
     }
 
     Toggle GetSelectedToggle()
