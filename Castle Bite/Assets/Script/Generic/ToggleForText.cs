@@ -56,7 +56,7 @@ public class ToggleForText : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (gameObject.GetComponent<UnitHirePanel>())
         {
             // show unit info
-            PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().GetUnitToHire();
+            PartyUnit partyUnit = gameObject.GetComponent<UnitHirePanel>().UnitToHire;
             // verify if this is partyUnit
             if (partyUnit)
             {

@@ -49,6 +49,6 @@ public class HirePartyUnitButton : MonoBehaviour {
                 break;
         }
         // activate hire unit menu
-        transform.root.Find("MiscUI/HireUnit").GetComponent<HireUnitGeneric>().SetActive(unitTypesToHire, destinationCellTr, destinationCity); // verfy if it will find disabled menus
+        transform.root.Find("MiscUI/HireUnit").GetComponent<HireUnitGeneric>().SetActive(unitTypesToHire, destinationCellTr); // verfy if it will find disabled menus
     }
 }

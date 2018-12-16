@@ -7,49 +7,121 @@ using UnityEngine.EventSystems;
 
 public class UnitHirePanel : MonoBehaviour
 {
-    public PartyUnit unitToHire;
+    [SerializeField]
+    GameObject characteristicTemplate;
+
+    PartyUnit unitToHire;
     public enum Mode {Normal, FirstUnit};
-    public Mode mode;
+    private Mode panelMode = Mode.Normal;
+
+    public PartyUnit UnitToHire
+    {
+        get
+        {
+            return unitToHire;
+        }
+
+        set
+        {
+            unitToHire = value;
+        }
+    }
+
+    public Mode PanelMode
+    {
+        get
+        {
+            return panelMode;
+        }
+
+        set
+        {
+            panelMode = value;
+        }
+    }
+
+    void SetUnitName()
+    {
+        transform.Find("Name").GetComponent<Text>().text = unitToHire.UnitName;
+    }
+
+    void SetUnitCharacteristic(string name, string value)
+    {
+        // copy characteristic from template
+        GameObject newCharacteristic = Instantiate(characteristicTemplate, transform.Find("Characteristics"));
+        // set characterstic name
+        newCharacteristic.transform.Find("Name").GetComponent<Text>().text = name;
+        // set characterstic value
+        newCharacteristic.transform.Find("Value").GetComponent<Text>().text = value;
+        // enable it
+        newCharacteristic.SetActive(true);
+    }
 
     // Use this for initialization
-    void Start() {
+    public void Start() {
         if (unitToHire != null)
         {
+            // Set unit name
+            SetUnitName();
             // populate panel with information from attached unitToHire
-            transform.Find("Name").GetComponent<Text>().text = "[" + unitToHire.UnitName + "]";
             // pupulate additional unit information
-            if (Mode.FirstUnit == mode)
+            if (Mode.FirstUnit == panelMode)
             {
-                // fill in first hero hire menu with hero's most important characteristics
-                transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                    unitToHire.UnitRole + "\r\n" +
-                    unitToHire.UnitBriefDescription;
+                SetUnitCharacteristic("Leadership", unitToHire.UnitLeadership.ToString());
+                SetUnitCharacteristic("Role", unitToHire.UnitRole);
+                //// Fill in characteristic names
+                //transform.Find("CharacteristicsNames").GetComponent<Text>().text =
+                //    "Leadership" + "\r\n" +
+                //    "Role" + "\r\n";
+                //// fill in first hero hire menu with hero's most important characteristics
+                //transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                //    unitToHire.UnitLeadership.ToString() + "\r\n" +
+                //    unitToHire.UnitRole;
             }
             else
             {
                 // Normal mode
-                if (unitToHire.UnitSize == UnitSize.Double)
+                // verify if unit is Leader
+                if (unitToHire.IsLeader)
                 {
-                    // for double size units also indicate their size
-                    transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                        unitToHire.UnitCost.ToString() + "\r\n" +
-                        unitToHire.UnitLeadership.ToString() + "\r\n" +
-                        unitToHire.UnitRole + "\r\n" + "Large";
+                    SetUnitCharacteristic("Cost", unitToHire.UnitCost.ToString());
+                    SetUnitCharacteristic("Leadership", unitToHire.UnitLeadership.ToString());
+                    SetUnitCharacteristic("Role", unitToHire.UnitRole);
+                    //// Fill in characteristic names
+                    //transform.Find("CharacteristicsNames").GetComponent<Text>().text =
+                    //    "Cost" + "\r\n" +
+                    //    "Leadership" + "\r\n" +
+                    //    "Role";
+                    //// Fill in characteristic values
+                    //transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                    //    unitToHire.UnitCost.ToString() + "\r\n" +
+                    //    unitToHire.UnitLeadership.ToString() + "\r\n" +
+                    //    unitToHire.UnitRole;
                 }
                 else
                 {
-                    transform.Find("CharacteristicsValues").GetComponent<Text>().text =
-                        unitToHire.UnitCost.ToString() + "\r\n" +
-                        unitToHire.UnitLeadership.ToString() + "\r\n" +
-                        unitToHire.UnitRole;
+                    SetUnitCharacteristic("Cost", unitToHire.UnitLeadership.ToString());
+                    // SetUnitCharacteristic("Ability", unitToHire.UnitAbility.ToString());
+                    SetUnitCharacteristic("Size", unitToHire.UnitSize.ToString());
+                    SetUnitCharacteristic("Role", unitToHire.UnitRole);
+                    //// Fill in characteristic names
+                    //transform.Find("CharacteristicsNames").GetComponent<Text>().text =
+                    //    "Cost" + "\r\n" +
+                    //    "Ability" + "\r\n" +
+                    //    "Size" + "\r\n" +
+                    //    "Role";
+                    //// Fill in characteristic values
+                    //transform.Find("CharacteristicsValues").GetComponent<Text>().text =
+                    //    unitToHire.UnitCost.ToString() + "\r\n" +
+                    //    unitToHire.UnitAbility.ToString() + "\r\n" +
+                    //    unitToHire.UnitSize.ToString() + "\r\n" +
+                    //    unitToHire.UnitRole;
                 }
             }
         }
-    }
-
-    public PartyUnit GetUnitToHire()
-    {
-        return unitToHire;
+        // Force layout update
+        // Note: this should be done to force all fields to be adjusted to the text size
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
     }
 
 }

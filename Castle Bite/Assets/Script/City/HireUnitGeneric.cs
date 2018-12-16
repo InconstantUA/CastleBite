@@ -9,6 +9,34 @@ public class HireUnitGeneric : MonoBehaviour {
     Transform callerCell;
     GameObject unitsPanel;
 
+    void SetCityControlsActive(bool doActivate)
+    {
+        // Activate city controls if city view is active
+        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>() != null)
+        {
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(doActivate);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(doActivate);
+            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(doActivate);
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(doActivate);
+        }
+    }
+
+    void SetIncomeInfoPanelActive(bool doActivate)
+    {
+        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doActivate);
+    }
+
+    void SetHireUnitMenuButtonsActive(bool doActivate)
+    {
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(doActivate);
+    }
+
+    void SetBackgroundActive(bool doActivate)
+    {
+        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(doActivate);
+    }
+
     void OnDisable()
     {
         // remove all toggles for units created from template
@@ -17,29 +45,22 @@ public class HireUnitGeneric : MonoBehaviour {
             Destroy(tr.gameObject);
         }
         // Deactivate controls
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
-        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
+        SetHireUnitMenuButtonsActive(false);
         // Deactivate top gold info panel
-        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
+        SetIncomeInfoPanelActive(false);
         // Deactivate unit info panel
         transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).gameObject.SetActive(false);
         // Deactivate intermediate background
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
-        // Activate city controls if city view is active
-        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>() != null)
-        {
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(true);
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(true);
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(true);
-            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(true);
-        }
+        SetBackgroundActive(false);
+        // Activate city controls
+        SetCityControlsActive(true);
     }
 
-    public void SetActive(UnitType[] unitTypesToHire, Transform destinationCellTr, City destinationCity)
+    public void SetActive(UnitType[] unitTypesToHire, Transform destinationCellTr, UnitHirePanel.Mode mode = UnitHirePanel.Mode.Normal)
     {
         // Note: order is important, because of bring to front control
         // Activate intermediate background (bring to front is triggered automatically)
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
+        SetBackgroundActive(true);
         // activate this object
         gameObject.SetActive(true);
         // save destination cell for later use
@@ -58,7 +79,9 @@ public class HireUnitGeneric : MonoBehaviour {
             // create menu entry from template
             UnitHirePanel newUnitToggle = Instantiate(unitUIToggle, togglesListTransform).GetComponent<UnitHirePanel>();
             // set unit to hire
-            newUnitToggle.unitToHire = TemplatesManager.Instance.GetPartyUnitTemplateByType(unitType).GetComponent<PartyUnit>();
+            newUnitToggle.UnitToHire = TemplatesManager.Instance.GetPartyUnitTemplateByType(unitType).GetComponent<PartyUnit>();
+            // set mode
+            newUnitToggle.PanelMode = mode;
             // activate toggle
             newUnitToggle.gameObject.SetActive(true);
             // set toggle selection state if this is first toggle
@@ -69,37 +92,33 @@ public class HireUnitGeneric : MonoBehaviour {
                 // set flag to true, so it does not trigger anymore
                 firstToggleIsActivated = true;
                 // Activate Unit info panel with the first unit info
-                transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).ActivateAdvance(newUnitToggle.unitToHire, UnitInfoPanel.Align.Right, false);
+                transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).ActivateAdvance(newUnitToggle.UnitToHire, UnitInfoPanel.Align.Right, false);
             }
         }
+        // Force layout update
+        // Note: this should be done to force all fields to be adjusted to the text size
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)togglesListTransform);
         // Activate controls
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(true);
-        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(true);
+        SetHireUnitMenuButtonsActive(true);
         // Activate top gold info panel
-        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(true);
-        // Deactivate city controls if city view is active
-        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>() != null)
-        {
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(false);
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(false);
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Dismiss").gameObject.SetActive(false);
-            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(false);
-        }
+        SetIncomeInfoPanelActive(true);
+        // DeActivate city controls
+        SetCityControlsActive(false);
     }
 
-    public void ActivateAdv(Transform cCell, GameObject unitsPanelTemplate)
-    {
-        callerCell = cCell;
-        gameObject.SetActive(true);
-        // and bring it to the front
-        transform.SetAsLastSibling();
-        // create new units panel
-        unitsPanel = Instantiate(unitsPanelTemplate, transform.Find("Panel"));
-        // turn it on
-        unitsPanel.SetActive(true);
-        // change position
-        unitsPanel.transform.localPosition = new Vector3(0, 20, 0);
-    }
+    //public void ActivateAdv(Transform cCell, GameObject unitsPanelTemplate)
+    //{
+    //    callerCell = cCell;
+    //    gameObject.SetActive(true);
+    //    // and bring it to the front
+    //    transform.SetAsLastSibling();
+    //    // create new units panel
+    //    unitsPanel = Instantiate(unitsPanelTemplate, transform.Find("Panel"));
+    //    // turn it on
+    //    unitsPanel.SetActive(true);
+    //    // change position
+    //    unitsPanel.transform.localPosition = new Vector3(0, 20, 0);
+    //}
 
     UnitType GetSelectedUnitType()
     {
@@ -109,7 +128,7 @@ public class HireUnitGeneric : MonoBehaviour {
         {
             if (toggle.isOn)
             {
-                return toggle.GetComponent<UnitHirePanel>().GetUnitToHire().UnitType;
+                return toggle.GetComponent<UnitHirePanel>().UnitToHire.UnitType;
             }
         }
         // if nothing found then return null
@@ -117,6 +136,7 @@ public class HireUnitGeneric : MonoBehaviour {
         return UnitType.Unknown;
     }
 
+    // Called from UI button
     public void HireSelectedUnit()
     {
         // Ask City to Hire unit
