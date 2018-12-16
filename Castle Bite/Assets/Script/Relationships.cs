@@ -8,6 +8,7 @@ public enum Faction
 {
     Dominion,
     Greenskin,
+    Undead,
     Unknown
 };
 

@@ -12,6 +12,8 @@ public class ValidateSaveNameInput : MonoBehaviour
     public InputField mainInputField;
     [SerializeField]
     int maxLength;
+    [SerializeField]
+    bool allowDefaultValue;
 
     IEnumerator ActivateInputField()
     {
@@ -50,16 +52,16 @@ public class ValidateSaveNameInput : MonoBehaviour
 
     void CheckForEmtpyString()
     {
-        // verify if input text is set
-        if (mainInputField.text != "")
+        // verify if input text is set and if we allow default values
+        if (mainInputField.text == "" && !allowDefaultValue)
         {
             // highlight string with normal color
-            mainInputField.transform.Find("Placeholder").GetComponent<Text>().color = normalColor;
+            mainInputField.transform.Find("Placeholder").GetComponent<Text>().color = errorColor;
         }
         else
         {
             // highlight string with red color
-            mainInputField.transform.Find("Placeholder").GetComponent<Text>().color = errorColor;
+            mainInputField.transform.Find("Placeholder").GetComponent<Text>().color = normalColor;
         }
     }
 

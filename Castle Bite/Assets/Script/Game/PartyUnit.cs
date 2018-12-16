@@ -8,11 +8,14 @@ using UnityEngine.UI;
 public enum UnitType
 {
     None,
-    Archangel,
-    Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer,
-    OrcWarrior, Goblin, Ogre, Cyclop, Troll,
+    Archangel, // Dominion Capital guard
+    Knight, Ranger, Archmage, Seraphim, Thief, Warrior, Mage, Priest, Colossus, Archer, // Dominion
+    OrcWarrior, Goblin, Ogre, Cyclop, Troll, // Orcs
     Chevalier, Gladiator, Templar, Lancer, Warlord, Paladin, Champion, // Warrior upgrades
-    GiantToad, OrcShaman,
+    GiantToad, OrcShaman, // More Orcs
+    Reaper, Vampire, Warlock, Wraith, Shadow, // Undead
+    Hades, // Undead Capital guard
+    Skeleton, Nighthaunt, Necromancer, Ghost, Abomination, // Undead common units
     Unknown
 };
 
@@ -45,6 +48,7 @@ public enum UnitAbility
     CastChainLightning, // Dominion Mage
     EarthShatteringLeap,// Greenskin Bombul captial guard
     Malediction,        // Greenskin Orc shaman
+    LastCall,           // Undead Hades capital guard
     None
 };
 

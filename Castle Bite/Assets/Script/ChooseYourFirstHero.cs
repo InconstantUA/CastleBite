@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ChooseYourFirstHero : MonoBehaviour {
-    //public GameObject unitsGroupToHire;
-
-    //// Use this for initialization
-    //void Start () {
-    //    gameObject.GetComponentInChildren<HireUnitGeneric>().ActivateAdv(null, unitsGroupToHire);
-    //}
+    [SerializeField]
+    UnitType[] dominionFactionSelectableUnits;
+    [SerializeField]
+    UnitType[] greenskinFactionSelectableUnits;
+    [SerializeField]
+    UnitType[] undeadFactionSelectableUnits;
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
     {
@@ -22,6 +22,28 @@ public class ChooseYourFirstHero : MonoBehaviour {
         }
         Debug.LogError("Failed to find city with " + cityType.ToString() + " type and " + faction.ToString() + " faction.");
         return null;
+    }
+
+    public void SetFaction(Faction faction)
+    {
+        // get higherable unit types
+        UnitType[] highrableUnitTypes;
+        switch (faction)
+        {
+            case Faction.Dominion:
+                highrableUnitTypes = dominionFactionSelectableUnits;
+                break;
+            case Faction.Greenskin:
+                highrableUnitTypes = greenskinFactionSelectableUnits;
+                break;
+            case Faction.Undead:
+                highrableUnitTypes = undeadFactionSelectableUnits;
+                break;
+            default:
+                Debug.LogError("Unknown faction " + faction);
+                break;
+        }
+        Debug.Log("Set faction to " + faction);
     }
 
     public void SetActive(bool doActivate)
