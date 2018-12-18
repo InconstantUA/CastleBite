@@ -6,6 +6,30 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour {
 
+    [SerializeField]
+    GameObject mStart;
+    [SerializeField]
+    GameObject mContinue;
+    [SerializeField]
+    GameObject mSave;
+    [SerializeField]
+    GameObject mLoad;
+    [SerializeField]
+    GameObject mOptions;
+    [SerializeField]
+    GameObject mQuit;
+    [SerializeField]
+    GameObject mQuitToTheMainMenu;
+    [SerializeField]
+    ChooseYourFirstHero chooseYourFirstHero;
+
+    public static MainMenuManager Instance { get; private set; }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     void SaveOptions()
     {
         Debug.Log("Save Options");
@@ -67,5 +91,43 @@ public class MainMenuManager : MonoBehaviour {
     void OnDisable()
     {
         SaveOptions();
+    }
+
+    public void MainMenuInGameModeSetActive(bool doActivate)
+    {
+        // disable Start new game menu button
+        mStart.gameObject.SetActive(!doActivate);
+        // disable Quit menu button
+        mQuit.gameObject.SetActive(!doActivate);
+        // enable Continue menu button
+        mContinue.gameObject.SetActive(doActivate);
+        // enable Save menu button
+        mSave.gameObject.SetActive(doActivate);
+        // enable Quit to the main menu button
+        mQuitToTheMainMenu.gameObject.SetActive(doActivate);
+    }
+
+    public void StartNewGame()
+    {
+        // activate choose your first hero menu
+        chooseYourFirstHero.SetActive(true);
+        // disable this menu
+        gameObject.SetActive(false);
+        // ..
+        //// activate main menu in game mode
+        //MainMenuInGameModeSetActive(true);
+        //// instruct chapter manager to start game
+        //ChapterManager.Instance.StartGame();
+    }
+
+    public void QuitToTheMainMenu()
+    {
+        // disable map and map menu
+        MapManager.Instance.gameObject.SetActive(false);
+        MapMenuManager.Instance.gameObject.SetActive(false);
+        // deactivate main menu in game mode
+        MainMenuInGameModeSetActive(false);
+        // instruct application manager to end current game
+        ApplicationManager.Instance.EndCurrentGame();
     }
 }

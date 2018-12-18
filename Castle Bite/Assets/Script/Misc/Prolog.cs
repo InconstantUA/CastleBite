@@ -11,7 +11,7 @@ public class Prolog : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPo
         // activate button
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/PrologBeginGameButton").gameObject.SetActive(doActivate);
         // activate background
-        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>().SetActive(doActivate);
+        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
         // activate this menu
         gameObject.SetActive(doActivate);
     }

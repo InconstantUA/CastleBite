@@ -404,6 +404,8 @@ public class EditPartyScreen : MonoBehaviour {
         HeroParty newHeroParty = Instantiate(ObjectsManager.Instance.HeroPartyTemplate, targetCity.transform).GetComponent<HeroParty>();
         // Set party mode
         newHeroParty.PartyMode = PartyMode.Party;
+        // Set faction
+        newHeroParty.Faction = city.CityFaction;
         // Activate new party
         newHeroParty.gameObject.SetActive(true);
         // Get LeftHeroParty UI

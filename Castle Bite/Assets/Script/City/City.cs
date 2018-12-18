@@ -26,6 +26,7 @@ public class CityData
     public UnitType[] hireableCommonUnits;
     public PositionOnMap cityMapPosition;   // used only during load and save
     public MapCoordinates cityMapCoordinates;   // used only during load and save
+    public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
 }
 
 public class City : MonoBehaviour {
@@ -273,6 +274,20 @@ public class City : MonoBehaviour {
             cityData.cityID = value;
         }
     }
+
+    public int IsStarting
+    {
+        get
+        {
+            return cityData.isStarting;
+        }
+
+        set
+        {
+            cityData.isStarting = value;
+        }
+    }
+
 
     //public int LinkedPartyID
     //{

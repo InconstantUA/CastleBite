@@ -12,6 +12,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
     UnitType[] undeadFactionSelectableUnits;
     [SerializeField]
     FactionSelectionGroup factionSelectionGroup;
+    [SerializeField]
+    HireUnitGeneric hireUnitGeneric;
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
     {
@@ -53,19 +55,24 @@ public class ChooseYourFirstHero : MonoBehaviour {
         }
         Debug.Log("Set faction to " + faction);
         // Get hire unit menu
-        HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
+        // HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
+        // activate hire unit menu
         hireUnitGeneric.SetActive(highrableUnitTypes, null, UnitHirePanel.Mode.FirstUnit);
+        // Deactivate standard hire unit button
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
+        // Deactivate standard close hire unit menu button
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
     }
 
     public void SetActive(bool doActivate)
     {
         // Activate/Deactivate background
-        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(true);
+        transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
         // Activate/Dectivate this menu
         // Note: order of activation is important: it should be activated before HireUnit to activate factionSelectionGroup
         gameObject.SetActive(doActivate);
         // Get hire unit menu
-        HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
+        // HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
         // Activate/Deactivate Hire Unit menu
         if (doActivate)
         {
@@ -89,14 +96,12 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Change position of Units to hire list
             unitsListRT.offsetMin = new Vector2(unitsListPlaceholderRT.offsetMin.x, unitsListPlaceholderRT.offsetMin.y); // left, bottom
             unitsListRT.offsetMax = new Vector2(unitsListPlaceholderRT.offsetMax.x, unitsListPlaceholderRT.offsetMax.y); // -right, -top
-            // Deactivate standard hire unit button
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
-            // Activate replacement for hire unit button
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/ContinueAndHireFirstHeroBtn").gameObject.SetActive(true);
-            // Deactivate standard close hire unit menu button
-            transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
+            // Activate back button
+            transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(true);
             // Deactivate activated by default top gold info panel
             transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
+            // bring it to the front
+            transform.SetAsLastSibling();
         }
         else
         {
@@ -117,11 +122,19 @@ public class ChooseYourFirstHero : MonoBehaviour {
             unitsListRT.offsetMax = new Vector2(unitsListPlaceholderRT.offsetMax.x, unitsListPlaceholderRT.offsetMax.y); // -right, -top
             // Change UnitTemplate (unit information) preferred height
             hireUnitGeneric.transform.Find("UnitTemplate").GetComponent<LayoutElement>().preferredHeight = 80;
-            // Deactivate replacement for hire unit button
-            transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/ContinueAndHireFirstHeroBtn").gameObject.SetActive(false);
         }
-        // bring it to the front
-        transform.SetAsLastSibling();
+        // Activate/Deactivate replacement for hire unit button
+        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/ContinueAndHireFirstHeroBtn").gameObject.SetActive(doActivate);
+        // Activate/Deactivate back button
+        transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(doActivate);
+    }
+
+    public void GoBack()
+    {
+        // deactivate this menu
+        SetActive(false);
+        // activate main menu
+        MainMenuManager.Instance.gameObject.SetActive(true);
     }
 
     Toggle GetSelectedToggle()
@@ -195,14 +208,32 @@ public class ChooseYourFirstHero : MonoBehaviour {
         return null;
     }
 
+    City GetActivePlayerStartingCity()
+    {
+        foreach (City city in transform.root.Find("Map/Cities").GetComponentsInChildren<City>())
+        {
+            // verify if city faction match players faction and that it is starting city
+            if ((city.CityFaction == TurnsManager.Instance.GetActivePlayer().Faction) && (city.IsStarting == 1))
+            {
+                return city;
+            }
+        }
+        return null;
+    }
+
     public void HireFirstHero()
     {
-        // Get Chosen race captial city link
+        // Activate and reset turns manager, set chosen faction as active player
+        TurnsManager.Instance.Reset(factionSelectionGroup.GetSelectedFaction());
+        // activate main menu in game mode
+        MainMenuManager.Instance.MainMenuInGameModeSetActive(true);
+        // Get Chosen race starting city
         // Ask City to Hire chosen unit
         //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerCapital());
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerStartingCity());
         // Deactivate Choose your first hero menu
-        transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(false);
+        // transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(false);
+        SetActive(false);
         // Activate Prolog
         transform.root.Find("MiscUI").GetComponentInChildren<Prolog>(true).SetActive(true);
     }
