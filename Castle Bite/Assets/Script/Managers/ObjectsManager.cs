@@ -32,13 +32,19 @@ public class ObjectsManager : MonoBehaviour {
     [SerializeField]
     GameObject cityOnMapTemplate;
     [SerializeField]
+    GameObject cityOnMapLabelTemplate;
+    [SerializeField]
     GameObject heroPartyTemplate;
     [SerializeField]
     GameObject heroPartyOnMapTemplate;
     [SerializeField]
+    GameObject heroPartyOnMapLabelTemplate;
+    [SerializeField]
     GameObject inventoryItemTemplate;
     [SerializeField]
     GameObject inventoryItemOnMapTemplate;
+    [SerializeField]
+    GameObject inventoryItemOnMapLabelTemplate;
 
     void Awake()
     {
@@ -61,6 +67,19 @@ public class ObjectsManager : MonoBehaviour {
             return heroPartyOnMapTemplate;
         }
         // set via Unity Editor
+    }
+
+    public GameObject HeroPartyOnMapLabelTemplate
+    {
+        get
+        {
+            return heroPartyOnMapLabelTemplate;
+        }
+
+        set
+        {
+            heroPartyOnMapLabelTemplate = value;
+        }
     }
 
     public void CreatePlayer(PlayerData playerData)
@@ -93,6 +112,13 @@ public class ObjectsManager : MonoBehaviour {
         city.LMapCity = newCityOnMap;
         // rename it
         newCityOnMap.gameObject.name = city.CityName;
+        // Create city label on map
+        MapObjectLabel newCityOnMapLabel = Instantiate(cityOnMapLabelTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapObjectLabel>())).GetComponent<MapObjectLabel>();
+        // Link city to the lable and label to the city
+        newCityOnMap.GetComponent<MapObject>().Label = newCityOnMapLabel;
+        newCityOnMapLabel.MapObject = newCityOnMap.GetComponent<MapObject>();
+        // activate city label on map
+        newCityOnMapLabel.gameObject.SetActive(true);
         // activate city on map
         newCityOnMap.gameObject.SetActive(true);
     }
@@ -120,6 +146,8 @@ public class ObjectsManager : MonoBehaviour {
         // verify if there is linked party on map
         if (city.LMapCity != null)
         {
+            // destroy city label on map
+            Destroy(city.LMapCity.GetComponent<MapObject>().Label.gameObject);
             // destroy city on map
             Destroy(city.LMapCity.gameObject);
         }
@@ -164,11 +192,18 @@ public class ObjectsManager : MonoBehaviour {
         newPartyOnMap.LHeroParty = heroParty;
         heroParty.LMapHero = newPartyOnMap;
         // send it backwards, because city UI should be on top
-        newPartyOnMap.transform.SetAsFirstSibling();
+        // newPartyOnMap.transform.SetAsFirstSibling();
         // rename it
         newPartyOnMap.gameObject.name = heroParty.GetPartyLeader().GivenName + " " + heroParty.GetPartyLeader().UnitName + " Party";
+        // Create hero label on map
+        MapObjectLabel newPartyOnMapLabel = Instantiate(heroPartyOnMapLabelTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapObjectLabel>())).GetComponent<MapObjectLabel>();
+        // Link hero to the lable and label to the hero
+        newPartyOnMap.GetComponent<MapObject>().Label = newPartyOnMapLabel;
+        newPartyOnMapLabel.MapObject = newPartyOnMap.GetComponent<MapObject>();
         // activate hero on map
         newPartyOnMap.gameObject.SetActive(true);
+        // activate hero label on map
+        newPartyOnMapLabel.gameObject.SetActive(true);
         // return result
         return newPartyOnMap;
     }
@@ -272,6 +307,8 @@ public class ObjectsManager : MonoBehaviour {
         // verify if there is linked party on map
         if (heroParty.LMapHero != null)
         {
+            // destroy hero party on map label
+            Destroy(heroParty.LMapHero.GetComponent<MapObject>().Label.gameObject);
             // destroy hero party on map
             Destroy(heroParty.LMapHero.gameObject);
         }
@@ -292,6 +329,8 @@ public class ObjectsManager : MonoBehaviour {
                 // remove inv item
                 Destroy(inventoryItem.gameObject);
             }
+            // remove map item label
+            Destroy(mapItem.GetComponent<MapObject>().Label.gameObject);
             // remove map item
             Destroy(mapItem.gameObject);
         }
@@ -319,7 +358,14 @@ public class ObjectsManager : MonoBehaviour {
         // rename it
         mapItem.gameObject.name = "TreasureChest";
         // set it as first sibling so it does not apper in front of heroes, cities or labels
-        mapItem.transform.SetAsFirstSibling();
+        // mapItem.transform.SetAsFirstSibling();
+        // Create item label on map
+        MapObjectLabel mapItemLabel = Instantiate(inventoryItemOnMapLabelTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapObjectLabel>())).GetComponent<MapObjectLabel>();
+        // Link item to the lable and label to the item
+        mapItem.GetComponent<MapObject>().Label = mapItemLabel;
+        mapItemLabel.MapObject = mapItem.GetComponent<MapObject>();
+        // activate item label on map
+        mapItemLabel.gameObject.SetActive(true);
         // activate it
         mapItem.gameObject.SetActive(true);
         // return it as result

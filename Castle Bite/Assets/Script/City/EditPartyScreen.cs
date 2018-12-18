@@ -394,14 +394,14 @@ public class EditPartyScreen : MonoBehaviour {
     HeroPartyUI CreateNewPartyInCity(City city = null)
     {
         // create and update Hero Party panel in UI, parent it to city UI
-        // Set target city
-        City targetCity = LCity;
-        if (city != null)
+        // verify if city argument is null
+        if (city == null)
         {
-            targetCity = city;
+            // Set target city to the linked city to this screen
+            city = LCity;
         }
         // create new party instance in city
-        HeroParty newHeroParty = Instantiate(ObjectsManager.Instance.HeroPartyTemplate, targetCity.transform).GetComponent<HeroParty>();
+        HeroParty newHeroParty = Instantiate(ObjectsManager.Instance.HeroPartyTemplate, city.transform).GetComponent<HeroParty>();
         // Set party mode
         newHeroParty.PartyMode = PartyMode.Party;
         // Set faction
@@ -423,11 +423,11 @@ public class EditPartyScreen : MonoBehaviour {
         //Transform parentCityOnMap = map.Find(transform.name);
         // Create new hero party on map ui
         MapHero newPartyOnMapUI = Instantiate(ObjectsManager.Instance.HeroPartyOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapHero>())).GetComponent<MapHero>();
-        // Get city
-        City targetCity = LCity;
-        if (city != null)
+        // Verify if argument is null
+        if (city == null)
         {
-            targetCity = city;
+            // Assign currently linked city
+            city = LCity;
         }
         // adjust position, because city and hero transform have differnet anchor points
         // Get ui world corners
@@ -441,17 +441,24 @@ public class EditPartyScreen : MonoBehaviour {
         // Debug.Log(newPartyOnMapUIWidth + ":" + newPartyOnMapUIHeight);
         Vector3 positionAdjustment = new Vector3(newPartyOnMapUIHeight/2f, newPartyOnMapUIWidth/2f, 0);
         // set it to the same position as the parent city
-        newPartyOnMapUI.transform.position = targetCity.LMapCity.transform.position + positionAdjustment;
+        newPartyOnMapUI.transform.position = city.LMapCity.transform.position + positionAdjustment;
+        // Create hero label on map
+        MapObjectLabel newPartyOnMapLabel = Instantiate(ObjectsManager.Instance.HeroPartyOnMapLabelTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapObjectLabel>())).GetComponent<MapObjectLabel>();
+        // Link hero to the lable and label to the hero
+        newPartyOnMapUI.GetComponent<MapObject>().Label = newPartyOnMapLabel;
+        newPartyOnMapLabel.MapObject = newPartyOnMapUI.GetComponent<MapObject>();
         // activate new party on map UI
         newPartyOnMapUI.gameObject.SetActive(true);
+        // activate hero label on map
+        newPartyOnMapLabel.gameObject.SetActive(true);
         // Link HeroParty to the hero party on the map
         newPartyOnMapUI.LHeroParty = newLeaderParty;
         // Link hero on the map to HeroParty
         newLeaderParty.LMapHero = (newPartyOnMapUI);
         // Link hero on the map to city on the map
-        targetCity.LMapCity.GetComponent<MapCity>().LMapHero = newPartyOnMapUI.GetComponent<MapHero>();
+        city.LMapCity.GetComponent<MapCity>().LMapHero = newPartyOnMapUI.GetComponent<MapHero>();
         // Link city on the map to hero on the map
-        newPartyOnMapUI.GetComponent<MapHero>().lMapCity = targetCity.LMapCity;
+        newPartyOnMapUI.GetComponent<MapHero>().lMapCity = city.LMapCity;
         // move hero party to the back, so its UI label is not covering city's UI label
         // but it is in front of map slices
         newPartyOnMapUI.transform.SetSiblingIndex(1);
@@ -671,6 +678,8 @@ public class EditPartyScreen : MonoBehaviour {
         FocusPanel focusPanel = GetComponentInParent<UIManager>().GetFocusPanelByHeroParty(heroParty);
         // Get Map hero UI
         MapHero mapHero = heroPartyUI.LHeroParty.LMapHero;
+        // Get map hero label
+        MapObjectLabel mapHeroLabel = mapHero.GetComponent<MapObject>().Label;
         // Deactivate HeroParty UI
         heroPartyUI.gameObject.SetActive(false);
         // verify if focus panel not deactivated already
@@ -680,6 +689,8 @@ public class EditPartyScreen : MonoBehaviour {
             // Deactivate Focus Panel
             focusPanel.gameObject.SetActive(false);
         }
+        // destroy label
+        Destroy(mapHeroLabel.gameObject);
         // Destroy hero's represetnation on map
         Destroy(mapHero.gameObject);
         // Destroy hero's party

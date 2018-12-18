@@ -14,7 +14,6 @@ public class MapCity : MonoBehaviour
     private MapHero lMapHero;
     //public float labelDimTimeout;
     //City linkedCity;
-    MapObjectLabel label;
     //Text labelTxt;
     Image markerImage;
     // Colors for Marker
@@ -57,17 +56,15 @@ public class MapCity : MonoBehaviour
         lCity.GetComponent<City>().LMapCity = GetComponent<MapCity>();
         // set markerImage
         markerImage = GetComponent<Image>();
-        // set label
-        label = GetComponentInChildren<MapObjectLabel>();
         // set label text
-        label.LabelTxt.text = "[" + lCity.CityName + "]\n\r <size=12>" + lCity.CityDescription + "</size>";
+        GetComponent<MapObject>().Label.LabelTxt.text = "[" + lCity.CityName + "]\n\r <size=12>" + lCity.CityDescription + "</size>";
     }
 
     public void DimmLabel()
     {
         // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
         // verify if MapObject's labe is still active and mouse over it
-        if (GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && GetComponentInChildren<MapObjectLabel>().IsMouseOver)
+        if (GetComponent<MapObject>().Label.GetComponent<Text>().raycastTarget && GetComponent<MapObject>().Label.IsMouseOver)
         {
             // disable it
             GetComponent<MapObject>().OnPointerExit(null);

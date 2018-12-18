@@ -348,6 +348,9 @@ public class BattleScreen : MonoBehaviour {
         // set variables
         HeroParty heroParty = partyPanel.GetHeroParty();
         MapHero heroOnMapRepresentation = heroParty.LMapHero;
+        MapObjectLabel heroOnMapLabel = heroOnMapRepresentation.GetComponent<MapObject>().Label;
+        // destroy label
+        Destroy(heroOnMapLabel.gameObject);
         // destroy on map party representation
         Destroy(heroOnMapRepresentation.gameObject);
         // destroy party

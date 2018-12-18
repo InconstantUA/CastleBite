@@ -7,18 +7,44 @@ using UnityEngine.UI;
 public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     Text labelTxt;
+    [SerializeField]
     MapObject mapObject;
     [SerializeField]
     bool isMouseOver = false;
     [SerializeField]
     bool interactable = true;
+    [SerializeField]
+    float offsetX;
+    [SerializeField]
+    float offsetY;
 
     void Awake()
     {
         labelTxt = GetComponent<Text>();
         //Debug.Log("Label text: " + labelTxt.text);
-        mapObject = transform.parent.GetComponent<MapObject>();
+        // mapObject = transform.parent.GetComponent<MapObject>();
         labelTxt.color = mapObject.HiddenLabelColor;
+    }
+
+    void OnEnable()
+    {
+        // place it at the map object position
+        // Offset position above object bbox (in world space)
+        float offsetPosX = mapObject.transform.position.x + offsetX;
+        float offsetPosY = mapObject.transform.position.y + offsetY;
+
+        // Final position of marker above GO in world space
+        Vector3 offsetPos = new Vector3(offsetPosX, offsetPosY, mapObject.transform.position.z);
+
+        // Calculate *screen* position (note, not a canvas/recttransform position)
+        Vector2 canvasPos;
+        Vector2 screenPoint = Camera.main.WorldToScreenPoint(offsetPos);
+
+        // Convert screen position to Canvas / RectTransform space <- leave camera null if Screen Space Overlay
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponentInParent<Canvas>().GetComponent<RectTransform>(), screenPoint, null, out canvasPos);
+
+        // Set
+        GetComponent<RectTransform>().localPosition = canvasPos;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -165,6 +191,19 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         set
         {
             interactable = value;
+        }
+    }
+
+    public MapObject MapObject
+    {
+        get
+        {
+            return mapObject;
+        }
+
+        set
+        {
+            mapObject = value;
         }
     }
 }

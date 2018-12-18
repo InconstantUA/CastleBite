@@ -9,6 +9,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     // For UI user interraction
     [SerializeField]
     private float labelDimTimeout;
+    [SerializeField]
     MapObjectLabel label;
     Text labelTxt;
     // Colors for Label
@@ -32,7 +33,7 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     void Start()
     {
         // set label
-        label = GetComponentInChildren<MapObjectLabel>(true);
+        // label = GetComponentInChildren<MapObjectLabel>(true);
         // set label text object
         labelTxt = label.GetComponent<Text>();
     }
@@ -197,11 +198,11 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         // verify if we need to show or hide all labels
         if (doActivate)
         {
-            GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
+            label.SetAlwaysOnLabelColor();
         }
         else
         {
-            GetComponentInChildren<MapObjectLabel>(true).HideLabel();
+            label.HideLabel();
         }
     }
 
@@ -306,6 +307,19 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         set
         {
             alwaysOnLabelColor = value;
+        }
+    }
+
+    public MapObjectLabel Label
+    {
+        get
+        {
+            return label;
+        }
+
+        set
+        {
+            label = value;
         }
     }
 }

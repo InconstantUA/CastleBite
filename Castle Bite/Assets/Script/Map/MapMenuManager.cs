@@ -48,7 +48,7 @@ public class MapMenuManager : MonoBehaviour {
         mapHero.DimmLabel();
         // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
         // verify if MapObject's labe is still active and mouse over it
-        if (mapHero.GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && mapHero.GetComponentInChildren<MapObjectLabel>().IsMouseOver)
+        if (mapHero.GetComponent<MapObject>().Label.GetComponent<Text>().raycastTarget && mapHero.GetComponent<MapObject>().Label.IsMouseOver)
         {
             // disable it
             mapHero.GetComponent<MapObject>().OnPointerExit(null);

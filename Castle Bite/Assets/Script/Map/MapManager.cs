@@ -77,6 +77,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     [SerializeField]
     Transform mapItemsContainersParentTransformOnMap;
     [SerializeField]
+    Transform mapLabelsParentTransformOnMap;
+    [SerializeField]
     Mode mode;
     [SerializeField]
     Selection selection;
@@ -864,7 +866,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (mapHero)
             {
                 // verify if mouse is over label
-                MapObjectLabel label = mapHero.GetComponentInChildren<MapObjectLabel>();
+                MapObjectLabel label = mapHero.GetComponent<MapObject>().Label;
                 if (label.IsMouseOver)
                 {
                     labels.Add(label.gameObject);
@@ -877,7 +879,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             if (mapCity)
             {
                 // verify if mouse is over label
-                MapObjectLabel label = mapCity.GetComponentInChildren<MapObjectLabel>();
+                MapObjectLabel label = mapCity.GetComponent<MapObject>().Label;
                 if (label.IsMouseOver)
                 {
                     labels.Add(label.gameObject);
@@ -3032,14 +3034,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (label)
         {
             // set hero and city variables
-            mapHero = label.transform.parent.GetComponent<MapHero>();
-            mapCity = label.transform.parent.GetComponent<MapCity>();
+            mapHero = label.MapObject.GetComponent<MapHero>();
+            mapCity = label.MapObject.GetComponent<MapCity>();
             // find out on which label we clicked
-            if (label.transform.parent.GetComponent<MapHero>())
+            if (label.MapObject.GetComponent<MapHero>())
             {
                 mapHeroViaLabel = label;
             }
-            if (label.transform.parent.GetComponent<MapCity>())
+            if (label.MapObject.GetComponent<MapCity>())
             {
                 mapCityViaLabel = label;
             }
@@ -3534,11 +3536,11 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (label)
         {
             // find out on which label we clicked
-            if (label.transform.parent.GetComponent<MapHero>())
+            if (label.MapObject.GetComponent<MapHero>())
             {
                 mapHeroViaLabel = label;
             }
-            if (label.transform.parent.GetComponent<MapCity>())
+            if (label.MapObject.GetComponent<MapCity>())
             {
                 mapCityViaLabel = label;
             }
@@ -3570,7 +3572,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             // get Hero Party depending on wheter user clicked on mapHero or its label
                             if (mapHeroViaLabel)
                             {
-                                mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
+                                mapHero = mapHeroViaLabel.MapObject.GetComponent<MapHero>();
                             }
                             HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
@@ -3592,7 +3594,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             // get Hero City depending on wheter user clicked on mapCity or its label
                             if (mapCityViaLabel)
                             {
-                                mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
+                                mapCity = mapCityViaLabel.MapObject.GetComponent<MapCity>();
                             }
                             City city = mapCity.LCity;
                             // verify if this is player's city
@@ -3646,7 +3648,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //Debug.Log("Clicked on city label on map");
                             // get Hero City
-                            mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
+                            mapCity = mapCityViaLabel.MapObject.GetComponent<MapCity>();
                             City city = mapCity.LCity;
                             // verify if this is player's city
                             if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityFaction)
@@ -3700,7 +3702,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //Debug.Log("Clicked on hero's partie's lable on map");
                             // get Hero Party depending on wheter user clicked on mapHero or its label
-                            mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
+                            mapHero = mapHeroViaLabel.MapObject.GetComponent<MapHero>();
                             HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
                             if (TurnsManager.Instance.GetActivePlayer().Faction == heroParty.Faction)
@@ -3762,7 +3764,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             // get Hero Party depending on wheter user clicked on mapHero or its label
                             if (mapHeroViaLabel)
                             {
-                                mapHero = mapHeroViaLabel.transform.parent.GetComponent<MapHero>();
+                                mapHero = mapHeroViaLabel.MapObject.GetComponent<MapHero>();
                             }
                             HeroParty heroParty = mapHero.LHeroParty;
                             // verify if this is player's hero
@@ -3785,7 +3787,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             // get Hero Party depending on wheter user clicked on mapCity or its label
                             if (mapCityViaLabel)
                             {
-                                mapCity = mapCityViaLabel.transform.parent.GetComponent<MapCity>();
+                                mapCity = mapCityViaLabel.MapObject.GetComponent<MapCity>();
                             }
                             City city = mapCity.LCity;
                             // verify if this is player's city
@@ -3916,5 +3918,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public Transform GetParentTransformByType(MapItemsContainer mapItemsContainer)
     {
         return mapItemsContainersParentTransformOnMap;
+    }
+
+    public Transform GetParentTransformByType(MapObjectLabel mapObjectLabel)
+    {
+        return mapLabelsParentTransformOnMap;
     }
 }

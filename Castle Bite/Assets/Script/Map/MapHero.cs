@@ -71,7 +71,7 @@ public class MapHero : MonoBehaviour
         PartyUnit leaderUnit = lHeroParty.GetPartyLeader();
         string givenName = leaderUnit.GivenName;
         string unitName = leaderUnit.UnitName;
-        GetComponentInChildren<MapObjectLabel>().LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
+        GetComponent<MapObject>().Label.LabelTxt.text = "[" + givenName + "]\r\n <size=12>" + unitName + "</size> ";
     }
 
     //public void OnPointerDown(PointerEventData eventData)
@@ -266,7 +266,7 @@ public class MapHero : MonoBehaviour
     {
         // Trigger on mapobject exit to Hide label(s - + hide hero's lable, if it is in city)
         // verify if MapObject's labe is still active and mouse over it
-        if (GetComponentInChildren<MapObjectLabel>().GetComponent<Text>().raycastTarget && GetComponentInChildren<MapObjectLabel>().IsMouseOver)
+        if (GetComponent<MapObject>().Label.GetComponent<Text>().raycastTarget && GetComponent<MapObject>().Label.IsMouseOver)
         {
             // disable it
             GetComponent<MapObject>().OnPointerExit(null);
