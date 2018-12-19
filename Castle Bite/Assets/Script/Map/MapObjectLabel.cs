@@ -26,12 +26,12 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         labelTxt.color = mapObject.HiddenLabelColor;
     }
 
-    void Update()
-    {
-        if (labelTxt.color != mapObject.HiddenLabelColor){
-            SetLabelByMapObjectPosition();
-        }
-    }
+    //void Update()
+    //{
+    //    if (labelTxt.color != mapObject.HiddenLabelColor){
+    //        SetLabelByMapObjectPosition();
+    //    }
+    //}
 
     public void SetLabelByMapObjectPosition()
     {
@@ -41,8 +41,9 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         float offsetPosY = mapObject.transform.position.y + offsetY;
         // Final position of marker above GO in world space
         Vector3 offsetPos = new Vector3(offsetPosX, offsetPosY, mapObject.transform.position.z);
-        Debug.LogWarning("Set label position");
-        transform.position = Camera.main.WorldToScreenPoint(offsetPos);
+        // Debug.Log("Set label position");
+        // transform.position = Camera.main.WorldToScreenPoint(offsetPos);
+        transform.position = offsetPos;
     }
 
     void OnEnable()

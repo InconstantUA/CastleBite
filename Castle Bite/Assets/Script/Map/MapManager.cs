@@ -2136,6 +2136,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // set object position
             mapObject.transform.position = new Vector3(newPositionX, mapObject.transform.position.y, 0);
             // Debug.Log(mapObject.name + " " + Mathf.RoundToInt(mapObject.transform.position.x / tileSize) + ":" + Mathf.RoundToInt((transform.position.x) / tileSize));
+            // set object label position
+            mapObject.Label.SetLabelByMapObjectPosition();
         }
     }
 
