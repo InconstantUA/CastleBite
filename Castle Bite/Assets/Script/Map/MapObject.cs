@@ -38,6 +38,16 @@ public class MapObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         labelTxt = label.GetComponent<Text>();
     }
 
+    void Update()
+    {
+        // verify if transform has changed
+        if (transform.hasChanged)
+        {
+            // set object label position
+            label.SetLabelByMapObjectPosition();
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (Input.GetMouseButtonDown(0))
