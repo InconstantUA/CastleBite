@@ -46,6 +46,8 @@ public class ObjectsManager : MonoBehaviour {
     [SerializeField]
     GameObject inventoryItemOnMapLabelTemplate;
 
+    GameMap gameMap;
+
     void Awake()
     {
         Instance = this;
@@ -79,6 +81,14 @@ public class ObjectsManager : MonoBehaviour {
         set
         {
             heroPartyOnMapLabelTemplate = value;
+        }
+    }
+
+    public GameMap GameMap
+    {
+        get
+        {
+            return GetComponentInChildren<GameMap>();
         }
     }
 

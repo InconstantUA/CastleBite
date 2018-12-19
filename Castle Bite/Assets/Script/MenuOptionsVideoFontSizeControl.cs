@@ -26,6 +26,6 @@ public class MenuOptionsVideoFontSizeControl : MonoBehaviour, IDragHandler {
     {
         txt.text = sld.value.ToString();
         txt.fontSize = (int)sld.value;
-        GameOptions.options.videoOpt.fontSize = (int)sld.value;
+        GameOptions.Instance.videoOpt.fontSize = (int)sld.value;
     }
 }

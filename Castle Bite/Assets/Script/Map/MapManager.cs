@@ -56,14 +56,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     [SerializeField]
     bool keepEnabledAfterStart;
-    [SerializeField]
-    Transform rootUITr;
-    [SerializeField]
-    MapFocusPanel mapFocusPanel;
-    [SerializeField]
-    Transform mapOptions;
-    [SerializeField]
-    GameMap lMap;
+    //[SerializeField]
+    //Transform rootUITr;
+    //[SerializeField]
+    //MapFocusPanel mapFocusPanel;
+    //[SerializeField]
+    //Transform mapOptions;
+    //[SerializeField]
+    //GameMap lMap;
     [SerializeField]
     Transform fogOfWarTransform;
     [SerializeField]
@@ -364,69 +364,68 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         InitPathFinderGrid();
     }
 
+    void SetMapObjectAlwaysOn(MapObject mapObject, bool doShow)
+    {
+        // mapObject.SetAlwaysOn(doShow);
+        // verify if we need to enable it or disable
+        if (doShow)
+        {
+            // get tile coordinates
+            Vector2Int tileCoordinates = GetTileByWorldPosition(mapObject.transform.position);
+            // verify if it is not under fog of war = verify if this tile is not discovered
+            if (TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState[tileCoordinates.x, tileCoordinates.y] == 0)
+            {
+                // under the for of war
+                // set only flag, but don't change color
+                mapObject.LabelAlwaysOn = doShow;
+            }
+            else
+            {
+                // tile was discovered
+                // Set always on flag and make label visible
+                mapObject.SetAlwaysOn(doShow);
+            }
+        }
+        else
+        {
+            // disable always on and hide label
+            mapObject.SetAlwaysOn(doShow);
+        }
+    }
+
     // called via Unity Editor
     public void SetCitiesNamesVisible(bool doShow)
     {
         Debug.Log("Show all cities names: " + doShow.ToString());
-        //// Init map object
         //MapObject mapObject;
         foreach (MapCity mapCity in transform.GetComponentsInChildren<MapCity>(true))
         {
             // Set always on
-            mapCity.GetComponent<MapObject>().SetAlwaysOn(doShow);
-            //// get map object
-            //mapObject = mapCity.GetComponent<MapObject>();
-            //// turn on label always on flag
-            //mapObject.LabelAlwaysOn = doShow;
-            //// verify if we need to show or hide all labels
-            //if (doShow)
-            //{
-            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
-            //}
-            //else
-            //{
-            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
-            //}
+            SetMapObjectAlwaysOn(mapCity.GetComponent<MapObject>(), doShow);
         }
+        // Save menu options
+        MapMenuManager.Instance.SaveCitiesNamesToggleOptions();
     }
 
     // called via Unity Editor
     public void SetHeroesNamesVisible(bool doShow)
     {
         Debug.Log("Show all heroes names: " + doShow.ToString());
-        //// Init map object
         //MapObject mapObject;
         foreach (MapHero mapHero in transform.GetComponentsInChildren<MapHero>(true))
         {
-            // Set always on
-            mapHero.GetComponent<MapObject>().SetAlwaysOn(doShow);
-            //// get map object
-            //mapObject = mapHero.GetComponent<MapObject>();
-            //// turn on label always on flag
-            //mapObject.LabelAlwaysOn = doShow;
-            //// verify if we need to show or hide all labels
-            //if (doShow)
-            //{
-            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).SetAlwaysOnLabelColor();
-            //}
-            //else
-            //{
-            //    mapObject.GetComponentInChildren<MapObjectLabel>(true).HideLabel();
-            //}
+            SetMapObjectAlwaysOn(mapHero.GetComponent<MapObject>(), doShow);
         }
-    }
-
-    // called via Unity Editor
-    public void SetPlayerIncomeVisible(bool doShow)
-    {
-        Debug.Log("Show player income: " + doShow.ToString());
-        rootUITr.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
+        // Save menu options
+        MapMenuManager.Instance.SaveHeroesNamesToggleOptions();
     }
 
     // called via Unity Editor
     public void SetManaSourcesVisible(bool doShow)
     {
         Debug.Log("Show All Mana sources names visible: " + doShow.ToString());
+        // Save menu options
+        MapMenuManager.Instance.SaveManaSourcesToggleOptions();
     }
 
     // called via Unity Editor
@@ -436,8 +435,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>(true))
         {
             // Set always on
-            mapItem.GetComponent<MapObject>().SetAlwaysOn(doShow);
+            SetMapObjectAlwaysOn(mapItem.GetComponent<MapObject>(), doShow);
         }
+        // Save menu options
+        MapMenuManager.Instance.SaveTreasureChestsToggleOptions();
     }
 
     bool PositionIsWithinTilesMap(Vector2Int pos)
@@ -547,7 +548,17 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         mapTiles[x, y].gameObject.SetActive(true);
         // disable fog of war tile
         fogOfWarTiles[x, y].gameObject.SetActive(false);
-
+        //// get map object label on tile
+        //MapObjectLabel mapObjectLabel = GetMapObjectLabelOnTile(new Vector2Int(x, y));
+        //// verify if map object label is not null
+        //if (mapObjectLabel != null)
+        //{
+        //    // verify if map object has always on flag
+        //    if (mapObjectLabel.MapObject.LabelAlwaysOn)
+        //    {
+        //        mapObjectLabel.SetAlwaysOnLabelColor();
+        //    }
+        //}
     }
 
     void HideTile(int x, int y)
@@ -556,6 +567,41 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         mapTiles[x, y].gameObject.SetActive(false);
         // enable fog of war tile
         fogOfWarTiles[x, y].gameObject.SetActive(true);
+        //// get map object label on tile
+        //MapObjectLabel mapObjectLabel = GetMapObjectLabelOnTile(new Vector2Int(x, y));
+        //// verify if map object label is not null
+        //if (mapObjectLabel != null)
+        //{
+        //    mapObjectLabel.HideLabel();
+        //}
+    }
+
+    MapObject GetMapObjectOnTile(Vector2Int tileCoords)
+    {
+        // get object on tile
+        GameObject objectOnTile = GetObjectOnTile(tileCoords);
+        // verify if object is not null
+        if (objectOnTile != null)
+        {
+            // return map object
+            return objectOnTile.GetComponent<MapObject>();
+        }
+        // default
+        return null;
+    }
+
+    MapObjectLabel GetMapObjectLabelOnTile(Vector2Int tileCoords)
+    {
+        // get map object
+        MapObject mapObject = GetMapObjectOnTile(tileCoords);
+        // verify if object is not null
+        if (mapObject != null)
+        {
+            // return map object label
+            return mapObject.Label;
+        }
+        // default
+        return null;
     }
 
     public void InitTilesMap()
@@ -602,7 +648,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         // mark tile as passable
                         tilesmap[pos.x, pos.y] = 1;
                         // discover tiles around
-                        DiscoverTilesAround(mapObject.GetComponent<MapCity>());
+                        List<Vector2Int> discoveredTiles = DiscoverTilesAround(mapObject.GetComponent<MapCity>());
                     }
                     else
                     {
@@ -626,14 +672,34 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     }
                 }
             }
+            // Activate/deactivate labels for discovered and hidden tiles
+            // verify if map object has always on flag
+            if (mapObject.LabelAlwaysOn)
+            {
+                // get map object label on tile
+                MapObjectLabel mapObjectLabel = mapObject.Label;
+                // verify if map object label is not null
+                if (mapObjectLabel != null)
+                {
+                    // verify if it is under fog of war = verify if this tile is discovered
+                    if (TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState[pos.x, pos.y] != 0)
+                    {
+                        // verify if mouse is not over the map object or its label at this moment
+                        if (!mapObject.IsMouseOver && !mapObjectLabel.IsMouseOver)
+                        {
+                            // tile was discovered
+                            // make label visible
+                            mapObjectLabel.SetAlwaysOnLabelColor();
+                        }
+                    }
+                }
+            }
         }
         // verify if fog of war does not exist yet
         if (fogOfWarTiles == null)
         {
             // Create fog of war
             fogOfWarTiles = new Transform[tileMapWidth, tileMapHeight];
-            // Get fog of war transform
-            // Transform fogOfWarTransform = transform.Find("FogOfWar");
             // activate fog of war
             fogOfWarTransform.gameObject.SetActive(true);
             // init slice index
@@ -676,43 +742,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
             }
         }
-        //// Set all tiles occupied by heroes or cities on map as non-passable
-        //foreach (MapHero party in transform.GetComponentsInChildren<MapHero>())
-        //{
-        //    // verify if not null
-        //    if (party)
-        //    {
-        //        Vector2Int pos = GetTilePosition(party.transform);
-        //        if (PositionIsWithinTilesMap(pos))
-        //        {
-        //            tilesmap[pos.x, pos.y] = false;
-        //        }
-        //    }
-        //}
-        //foreach (MapCity city in transform.GetComponentsInChildren<MapCity>())
-        //{
-        //    // verify if not null
-        //    if (city)
-        //    {
-        //        Vector2Int pos = GetTilePosition(city.transform);
-        //        if (PositionIsWithinTilesMap(pos))
-        //        {
-        //            tilesmap[pos.x, pos.y] = false;
-        //        }
-        //    }
-        //}
-        //foreach (MapItemsContainer mapItem in transform.GetComponentsInChildren<MapItemsContainer>())
-        //{
-        //    // verify if not null
-        //    if (mapItem)
-        //    {
-        //        Vector2Int pos = GetTilePosition(mapItem.transform);
-        //        if (PositionIsWithinTilesMap(pos))
-        //        {
-        //            tilesmap[pos.x, pos.y] = false;
-        //        }
-        //    }
-        //}
     }
 
     void InitPathFinderGrid()
@@ -795,23 +824,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             {
                 // no object on tile or fog, just terrain
             }
-            //TileState highlightedTileState = GetObjectOnTile(highlightedPoint);
-            //// highlight based on the occupation type
-            //switch (highlightedTileState)
-            //{
-            //    case TileState.Terrain:
-            //        // nothing to do
-            //        break;
-            //    case TileState.Party:
-            //    case TileState.City:
-            //    case TileState.Treasure:
-            //        // adjust grid to make this tile passable
-            //        tilesmap[highlightedPoint.x, highlightedPoint.y] = true;
-            //        break;
-            //    default:
-            //        Debug.LogError("Unknown tile state " + highlightedTileState.ToString());
-            //        break;
-            //}
         }
         // Upgrade grid
         grid.UpdateGrid(tilesmap);
@@ -1159,12 +1171,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     // update tile highliter position
                     UpdateGridBasedOnHighlightedTile();
                     UpdateTileHighighterBasedOnMousePosition();
-                    //SetTileHighlghterColorAndShapeBasedOnMousePoistion();
-                    //SetTileHighlighterToMousePoistion();
-                    //UpdateTileHighlighterColor();
-                    //// update tile highliter position
-                    //UpdateTileHighlighterToMousePoistion();
-                    //FindAndHighlightPath();
                     break;
                 case Mode.Drag:
                     // do nothing wait for drag to finish
@@ -2334,169 +2340,169 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void SaveCitiesNamesToggleOptions()
-    {
-        // Always show city names toggle options 0 - disable, 1 - enable
-        // verify if toggle is currently selected
-        if (mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
-        {
-            // set option
-            GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
-        }
-        else
-        {
-            // set option
-            GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
-        }
-        // save option
-        PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
-    }
+    //void SaveCitiesNamesToggleOptions()
+    //{
+    //    // Always show city names toggle options 0 - disable, 1 - enable
+    //    // verify if toggle is currently selected
+    //    if (MapMenuManager.Instance.MapOptions.transform.Find("ToggleCitiesNames").GetComponent<TextToggle>().selected)
+    //    {
+    //        // set option
+    //        GameOptions.options.mapUIOpt.toggleCitiesNames = 1;
+    //    }
+    //    else
+    //    {
+    //        // set option
+    //        GameOptions.options.mapUIOpt.toggleCitiesNames = 0;
+    //    }
+    //    // save option
+    //    PlayerPrefs.SetInt("MapUIShowCityNames", GameOptions.options.mapUIOpt.toggleCitiesNames); // 0 - disable, 1 - enable
+    //}
 
-    void SaveHeroesNamesToggleOptions()
-    {
-        // Always show city names toggle options 0 - disable, 1 - enable
-        // verify if toggle is currently selected
-        if (mapOptions.Find("ToggleHeroesNames").GetComponent<TextToggle>().selected)
-        {
-            // set option
-            GameOptions.options.mapUIOpt.toggleHeroesNames = 1;
-        }
-        else
-        {
-            // set option
-            GameOptions.options.mapUIOpt.toggleHeroesNames = 0;
-        }
-        // save option
-        PlayerPrefs.SetInt("MapUIShowHeroesNames", GameOptions.options.mapUIOpt.toggleHeroesNames); // 0 - disable, 1 - enable
-    }
+    //void SaveHeroesNamesToggleOptions()
+    //{
+    //    // Always show city names toggle options 0 - disable, 1 - enable
+    //    // verify if toggle is currently selected
+    //    if (MapMenuManager.Instance.MapOptions.transform.Find("ToggleHeroesNames").GetComponent<TextToggle>().selected)
+    //    {
+    //        // set option
+    //        GameOptions.options.mapUIOpt.toggleHeroesNames = 1;
+    //    }
+    //    else
+    //    {
+    //        // set option
+    //        GameOptions.options.mapUIOpt.toggleHeroesNames = 0;
+    //    }
+    //    // save option
+    //    PlayerPrefs.SetInt("MapUIShowHeroesNames", GameOptions.options.mapUIOpt.toggleHeroesNames); // 0 - disable, 1 - enable
+    //}
 
-    void SavePlayerIncomeToggleOptions()
-    {
-        // Always show city names toggle options 0 - disable, 1 - enable
-        // verify if toggle is currently selected
-        if (mapOptions.Find("TogglePlayerIncome").GetComponent<TextToggle>().selected)
-        {
-            // set option
-            GameOptions.options.mapUIOpt.togglePlayerIncome = 1;
-        }
-        else
-        {
-            // set option
-            GameOptions.options.mapUIOpt.togglePlayerIncome = 0;
-        }
-        // save option
-        PlayerPrefs.SetInt("MapUIShowPlayerIncome", GameOptions.options.mapUIOpt.togglePlayerIncome); // 0 - disable, 1 - enable
-    }
+    //void SavePlayerIncomeToggleOptions()
+    //{
+    //    // Always show city names toggle options 0 - disable, 1 - enable
+    //    // verify if toggle is currently selected
+    //    if (MapMenuManager.Instance.MapOptions.transform.Find("TogglePlayerIncome").GetComponent<TextToggle>().selected)
+    //    {
+    //        // set option
+    //        GameOptions.options.mapUIOpt.togglePlayerIncome = 1;
+    //    }
+    //    else
+    //    {
+    //        // set option
+    //        GameOptions.options.mapUIOpt.togglePlayerIncome = 0;
+    //    }
+    //    // save option
+    //    PlayerPrefs.SetInt("MapUIShowPlayerIncome", GameOptions.options.mapUIOpt.togglePlayerIncome); // 0 - disable, 1 - enable
+    //}
 
-    void SaveMapUIOptions()
-    {
-        Debug.Log("Save Map UI Options");
-        // verify if map options has not been destroyed
-        if (mapOptions)
-        {
-            SaveCitiesNamesToggleOptions();
-            SaveHeroesNamesToggleOptions();
-            SavePlayerIncomeToggleOptions();
-        }
-        else
-        {
-            Debug.LogWarning("Cannot save map options. MapOptions transform has been destoyed");
-        }
-    }
+    //void SaveMapUIOptions()
+    //{
+    //    Debug.Log("Save Map UI Options");
+    //    // verify if map options has not been destroyed
+    //    if (MapMenuManager.Instance.MapOptions != null)
+    //    {
+    //        SaveCitiesNamesToggleOptions();
+    //        SaveHeroesNamesToggleOptions();
+    //        SavePlayerIncomeToggleOptions();
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Cannot save map options. MapOptions transform has been destoyed");
+    //    }
+    //}
 
-    void LoadCitiesNamesToggleOptions()
-    {
-        // Get map UI options
-        GameOptions.options.mapUIOpt.toggleCitiesNames = PlayerPrefs.GetInt("MapUIShowCityNames", 0); // default 0 - disable "always show city names" toggle
-        // Get City names toggle
-        TextToggle textToggle = mapOptions.Find("ToggleCitiesNames").GetComponent<TextToggle>();
-        // verify if it was enabled before
-        if (GameOptions.options.mapUIOpt.toggleCitiesNames == 0)
-        {
-            // disable toggle
-            textToggle.selected = false;
-            textToggle.SetNormalStatus();
-            // hide cities names
-            SetCitiesNamesVisible(false);
-        }
-        else
-        {
-            // enable toggle
-            textToggle.selected = true;
-            textToggle.SetPressedStatus();
-            // always show city names
-            SetCitiesNamesVisible(true);
-        }
-    }
+    //void LoadCitiesNamesToggleOptions()
+    //{
+    //    // Get map UI options
+    //    GameOptions.options.mapUIOpt.toggleCitiesNames = PlayerPrefs.GetInt("MapUIShowCityNames", 0); // default 0 - disable "always show city names" toggle
+    //    // Get City names toggle
+    //    TextToggle textToggle = MapMenuManager.Instance.MapOptions.transform.Find("ToggleCitiesNames").GetComponent<TextToggle>();
+    //    // verify if it was enabled before
+    //    if (GameOptions.options.mapUIOpt.toggleCitiesNames == 0)
+    //    {
+    //        // disable toggle
+    //        textToggle.selected = false;
+    //        textToggle.SetNormalStatus();
+    //        // hide cities names
+    //        SetCitiesNamesVisible(false);
+    //    }
+    //    else
+    //    {
+    //        // enable toggle
+    //        textToggle.selected = true;
+    //        textToggle.SetPressedStatus();
+    //        // always show city names
+    //        SetCitiesNamesVisible(true);
+    //    }
+    //}
 
-    void LoadHeroesNamesToggleOptions()
-    {
-        // Get map UI options
-        GameOptions.options.mapUIOpt.toggleHeroesNames = PlayerPrefs.GetInt("MapUIShowHeroesNames", 0); // default 0 - disable "always show heroes names" toggle
-        // Get toggle
-        TextToggle textToggle = mapOptions.Find("ToggleHeroesNames").GetComponent<TextToggle>();
-        // verify if it was enabled before
-        if (GameOptions.options.mapUIOpt.toggleHeroesNames == 0)
-        {
-            // disable toggle
-            textToggle.selected = false;
-            textToggle.SetNormalStatus();
-            // hide cities names
-            SetHeroesNamesVisible(false);
-        }
-        else
-        {
-            // enable toggle
-            textToggle.selected = true;
-            textToggle.SetPressedStatus();
-            // always show city names
-            SetHeroesNamesVisible(true);
-        }
-    }
+    //void LoadHeroesNamesToggleOptions()
+    //{
+    //    // Get map UI options
+    //    GameOptions.options.mapUIOpt.toggleHeroesNames = PlayerPrefs.GetInt("MapUIShowHeroesNames", 0); // default 0 - disable "always show heroes names" toggle
+    //    // Get toggle
+    //    TextToggle textToggle = MapMenuManager.Instance.MapOptions.transform.Find("ToggleHeroesNames").GetComponent<TextToggle>();
+    //    // verify if it was enabled before
+    //    if (GameOptions.options.mapUIOpt.toggleHeroesNames == 0)
+    //    {
+    //        // disable toggle
+    //        textToggle.selected = false;
+    //        textToggle.SetNormalStatus();
+    //        // hide cities names
+    //        SetHeroesNamesVisible(false);
+    //    }
+    //    else
+    //    {
+    //        // enable toggle
+    //        textToggle.selected = true;
+    //        textToggle.SetPressedStatus();
+    //        // always show city names
+    //        SetHeroesNamesVisible(true);
+    //    }
+    //}
 
-    void LoadPlayerIncomeToggleOptions()
-    {
-        // Get map UI options
-        GameOptions.options.mapUIOpt.togglePlayerIncome = PlayerPrefs.GetInt("MapUIShowPlayerIncome", 0); // default 0 - disable "always show heroes names" toggle
-        // Get toggle
-        TextToggle textToggle = mapOptions.Find("TogglePlayerIncome").GetComponent<TextToggle>();
-        // verify if it was enabled before
-        if (GameOptions.options.mapUIOpt.togglePlayerIncome == 0)
-        {
-            // disable toggle
-            textToggle.selected = false;
-            textToggle.SetNormalStatus();
-            // hide player income
-            SetPlayerIncomeVisible(false);
-        }
-        else
-        {
-            // enable toggle
-            textToggle.selected = true;
-            textToggle.SetPressedStatus();
-            // show player income
-            SetPlayerIncomeVisible(true);
-        }
-    }
+    //void LoadPlayerIncomeToggleOptions()
+    //{
+    //    // Get map UI options
+    //    GameOptions.options.mapUIOpt.togglePlayerIncome = PlayerPrefs.GetInt("MapUIShowPlayerIncome", 0); // default 0 - disable "always show heroes names" toggle
+    //    // Get toggle
+    //    TextToggle textToggle = MapMenuManager.Instance.MapOptions.transform.Find("TogglePlayerIncome").GetComponent<TextToggle>();
+    //    // verify if it was enabled before
+    //    if (GameOptions.options.mapUIOpt.togglePlayerIncome == 0)
+    //    {
+    //        // disable toggle
+    //        textToggle.selected = false;
+    //        textToggle.SetNormalStatus();
+    //        // hide player income
+    //        SetPlayerIncomeVisible(false);
+    //    }
+    //    else
+    //    {
+    //        // enable toggle
+    //        textToggle.selected = true;
+    //        textToggle.SetPressedStatus();
+    //        // show player income
+    //        SetPlayerIncomeVisible(true);
+    //    }
+    //}
 
-    void LoadMapUIOptions()
-    {
-        Debug.Log("Load Map UI Options");
-        LoadCitiesNamesToggleOptions();
-        LoadHeroesNamesToggleOptions();
-        LoadPlayerIncomeToggleOptions();
-    }
+    //void LoadMapUIOptions()
+    //{
+    //    Debug.Log("Load Map UI Options");
+    //    LoadCitiesNamesToggleOptions();
+    //    LoadHeroesNamesToggleOptions();
+    //    LoadPlayerIncomeToggleOptions();
+    //}
 
     void OnEnable()
     {
-        LoadMapUIOptions();
+        //LoadMapUIOptions();
         // GetComponentInChildren<TileHighlighter>(true).gameObject.SetActive(true);
         tileHighlighter.gameObject.SetActive(true);
     }
 
     void OnDisable()
     {
-        SaveMapUIOptions();
+        //SaveMapUIOptions();
         SetMode(Mode.Browse);
     }
 
@@ -2753,7 +2759,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // ..
             // Move party from city to map
             // Transform partiesOnMap = transform.root.Find("PartiesOnMap");
-            heroParty.transform.SetParent(lMap.transform);
+            heroParty.transform.SetParent(ObjectsManager.Instance.GameMap.transform);
             // Update hero party place
             //heroParty.SetPlace(HeroParty.PartyPlace.Map);
         }
@@ -2761,7 +2767,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (selectedMapHero.LHeroParty.HoldPosition == true)
         {
             // trigger break hold event
-            mapFocusPanel.BreakHoldPosition(selectedMapHero);
+            MapMenuManager.Instance.MapFocusPanel.BreakHoldPosition(selectedMapHero);
         }
         // Move
         float deltaTime;
@@ -2797,7 +2803,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     partyLeader.MovePointsCurrent = 0;
                 }
                 // update focus panel info
-                mapFocusPanel.UpdateMovePointsInfo();
+                MapMenuManager.Instance.MapFocusPanel.UpdateMovePointsInfo();
                 // .. change highlight for move points where user do not have enough move points
                 // get path point
                 var pathPoint = movePath[i];
@@ -3451,7 +3457,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // change cursor to normal
                 CursorController.Instance.SetNormalCursor();
                 // update focus panel
-                mapFocusPanel.ReleaseFocus();
+                MapMenuManager.Instance.MapFocusPanel.ReleaseFocus();
                 break;
             default:
                 Debug.LogError("Unknown or incompatible selection " + selection);
@@ -3470,7 +3476,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedHero(mH);
                 // Update map focus panel
-                mapFocusPanel.SetActive(mH);
+                MapMenuManager.Instance.MapFocusPanel.SetActive(mH);
                 mH.SetSelectedState(true);
                 // verify if hero is in city
                 if (mH.lMapCity)
@@ -3506,7 +3512,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 DeselectPreviouslySelectedObjectsOnMap();
                 SetSelectedCity(mC);
                 // Update map focus panel
-                mapFocusPanel.SetActive(mC);
+                MapMenuManager.Instance.MapFocusPanel.SetActive(mC);
                 mC.SetSelectedState(true);
                 // change cursor to open doors cursor
                 CursorController.Instance.SetOpenDoorsCursor();

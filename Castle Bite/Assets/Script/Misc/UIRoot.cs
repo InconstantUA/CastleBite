@@ -8,5 +8,5 @@ public class UIRoot : MonoBehaviour {
 	void Awake () {
         Instance = this;
 	}
-	
+
 }

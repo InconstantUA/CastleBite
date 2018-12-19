@@ -2,7 +2,7 @@
 
 public class GameOptions : MonoBehaviour {
 
-    public static GameOptions options;
+    public static GameOptions Instance;
 
     public struct GameOpt
     {
@@ -35,24 +35,28 @@ public class GameOptions : MonoBehaviour {
         public int toggleCitiesNames;
         public int toggleHeroesNames;
         public int togglePlayerIncome;
+        public int toggleManaSources;
+        public int toggleTreasureChests;
     }
     public MapUIOpt mapUIOpt;
 
 	void Awake() {
         // verify if game options already initialized
-		if (options == null)
+		if (Instance == null)
         {
             // prevent this game object (game options) to be destroyed on scenes change
             // this only works on root objects in a scene, so disabled for now
             // DontDestroyOnLoad(gameObject);
             // initialize gameOptions with this game object
-            options = this;
+            Instance = this;
+            Debug.Log("Initialize game options");
         }
         // verify if game options were instantiated by some other scene, when there is already gameOptions present
-        else if (options != this)
+        else if (Instance != this)
         {
             // destroy this instance of game options to keep only one instance
             Destroy(gameObject);
+            Debug.Log("Destroy current game options");
         }
-	}
+    }
 }

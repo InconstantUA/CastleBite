@@ -361,12 +361,12 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 if (btnTxt.text == "Off")
                 {
                     btnTxt.text = "On";
-                    GameOptions.options.gameOpt.autosave = 1;
+                    GameOptions.Instance.gameOpt.autosave = 1;
                 }
                 else
                 {
                     btnTxt.text = "Off";
-                    GameOptions.options.gameOpt.autosave = 0;
+                    GameOptions.Instance.gameOpt.autosave = 0;
                 }
                 break;
             default:

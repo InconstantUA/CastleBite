@@ -26,6 +26,6 @@ public class MenuOptionsAudioMusicVolumeControl : MonoBehaviour, IDragHandler
     public void ValueChangeCheck()
     {
         txt.text = sld.value.ToString();
-        GameOptions.options.audioOpt.musicVolume = (int)sld.value;
+        GameOptions.Instance.audioOpt.musicVolume = (int)sld.value;
     }
 }
