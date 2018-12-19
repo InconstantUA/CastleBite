@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 320663046797628727}
   - component: {fileID: 320663046797628726}
   - component: {fileID: 320663046797628725}
+  - component: {fileID: 8191642284417987049}
   m_Layer: 0
   m_Name: HeroLabel
   m_TagString: Untagged
@@ -97,3 +98,17 @@ MonoBehaviour:
   interactable: 1
   offsetX: -8
   offsetY: 8
+--- !u!114 &8191642284417987049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320663046797628723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0

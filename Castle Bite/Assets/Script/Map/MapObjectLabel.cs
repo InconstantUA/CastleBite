@@ -26,25 +26,29 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         labelTxt.color = mapObject.HiddenLabelColor;
     }
 
-    void OnEnable()
+    void Update()
+    {
+        if (labelTxt.color != mapObject.HiddenLabelColor){
+            SetLabelByMapObjectPosition();
+        }
+    }
+
+    public void SetLabelByMapObjectPosition()
     {
         // place it at the map object position
         // Offset position above object bbox (in world space)
         float offsetPosX = mapObject.transform.position.x + offsetX;
         float offsetPosY = mapObject.transform.position.y + offsetY;
-
         // Final position of marker above GO in world space
         Vector3 offsetPos = new Vector3(offsetPosX, offsetPosY, mapObject.transform.position.z);
+        Debug.LogWarning("Set label position");
+        transform.position = Camera.main.WorldToScreenPoint(offsetPos);
+    }
 
-        // Calculate *screen* position (note, not a canvas/recttransform position)
-        Vector2 canvasPos;
-        Vector2 screenPoint = Camera.main.WorldToScreenPoint(offsetPos);
-
-        // Convert screen position to Canvas / RectTransform space <- leave camera null if Screen Space Overlay
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(GetComponentInParent<Canvas>().GetComponent<RectTransform>(), screenPoint, null, out canvasPos);
-
-        // Set
-        GetComponent<RectTransform>().localPosition = canvasPos;
+    void OnEnable()
+    {
+        // place it at the map object position
+        SetLabelByMapObjectPosition();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -74,11 +78,13 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             {
                 if (mapObject.LabelAlwaysOn)
                 {
-                    HideLabel();
+                    // HideLabel();
+                    SetAlwaysOnLabelColor();
                 }
                 else
                 {
-                    SetAlwaysOnLabelColor();
+                    // SetAlwaysOnLabelColor();
+                    HideLabel();
                 }
                 // give control on actions to map manager
                 // MapManager mapManager = transform.parent.parent.GetComponent<MapManager>();
@@ -88,7 +94,8 @@ public class MapObjectLabel : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             {
                 // trigger eneter on the parent object, like we entered it again
                 // because it will not trigger, because it does not know that mouse left it, because mosue was over child object
-                mapObject.OnPointerEnter(eventData);
+                // new note it will trigger on pointer enter, because we splited up label from map object
+                // mapObject.OnPointerEnter(eventData);
             }
         }
     }
