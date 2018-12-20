@@ -16,6 +16,7 @@ public enum UnitType
     Reaper, Vampire, Warlock, Wraith, Shadow, // Undead
     Hades, // Undead Capital guard
     Skeleton, Nighthaunt, Necromancer, Ghost, Abomination, // Undead common units
+    Megara, // Storyline hero
     Unknown
 };
 
@@ -490,7 +491,8 @@ public class PartyUnitData : System.Object
         )
     };
     // UI attributes
-    public string unitCellAddress;  // used during game save and load and when party UI is displayed
+    public PartyPanel.Row unitPPRow;  // used during game save and load and when party UI is displayed
+    public PartyPanel.Cell unitPPCell;  // used during game save and load and when party UI is displayed
     // Unit Equipment
     public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
 }
@@ -1694,7 +1696,7 @@ public class PartyUnit : MonoBehaviour {
     bool MatchScope(ModifierScope modifierScope)
     {
         // verify if we are in edit party screen
-        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        if (UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
         {
             switch (modifierScope)
             {
@@ -1711,7 +1713,7 @@ public class PartyUnit : MonoBehaviour {
             }
         }
         // verify if we are in battle screen
-        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        else if (UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
         {
             // get party leader who has this item equipped
             PartyUnit itemWearerLeaderUnit = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.transform.parent.GetComponent<PartyUnit>();
@@ -2558,18 +2560,32 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public string UnitCellAddress
+    public PartyPanel.Row UnitPPRow
     {
         get
         {
-            return partyUnitData.unitCellAddress;
+            return partyUnitData.unitPPRow;
         }
 
         set
         {
-            partyUnitData.unitCellAddress = value;
+            partyUnitData.unitPPRow = value;
         }
     }
+
+    public PartyPanel.Cell UnitPPCell
+    {
+        get
+        {
+            return partyUnitData.unitPPCell;
+        }
+
+        set
+        {
+            partyUnitData.unitPPCell = value;
+        }
+    }
+
     #endregion Attributes accessors
 
     #region Battle attributes

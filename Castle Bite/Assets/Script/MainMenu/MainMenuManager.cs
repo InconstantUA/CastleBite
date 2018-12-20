@@ -109,6 +109,8 @@ public class MainMenuManager : MonoBehaviour {
 
     public void StartNewGame()
     {
+        // create world from template and replace active chapter link
+        ChapterManager.Instance.ActiveChapter = Instantiate(ChapterManager.Instance.ActiveChapter.gameObject, World.Instance.transform).GetComponent<Chapter>();
         // activate choose your first hero menu
         chooseYourFirstHero.SetActive(true);
         // disable this menu
@@ -128,6 +130,15 @@ public class MainMenuManager : MonoBehaviour {
         // deactivate main menu in game mode
         MainMenuInGameModeSetActive(false);
         // instruct application manager to end current game
-        ApplicationManager.Instance.EndCurrentGame();
+        ChapterManager.Instance.EndCurrentGame();
+    }
+
+    public void Continue()
+    {
+        // enable map and map menu
+        MapManager.Instance.gameObject.SetActive(true);
+        MapMenuManager.Instance.gameObject.SetActive(true);
+        // disable main menu
+        gameObject.SetActive(false);
     }
 }

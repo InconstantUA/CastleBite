@@ -147,11 +147,11 @@ public class PartyUnitUI : MonoBehaviour {
         return transform.Find("UnitStatus/Debuffs");
     }
 
-    public string GetUnitCellAddress()
-    {
-        // structure: PartyPanel-3[Top/Middle/Bottom]-2[Front/Back/Wide]-1UnitSlot-PartyUnitUI(this)
-        return transform.parent.parent.parent.name + "/" + transform.parent.parent.name;
-    }
+    //public string GetUnitCellAddress()
+    //{
+    //    // structure: PartyPanel-3[Top/Middle/Bottom]-2[Front/Back/Wide]-1UnitSlot-PartyUnitUI(this)
+    //    return transform.parent.parent.parent.name + "/" + transform.parent.parent.name;
+    //}
 
     public void ClearPartyUnitStatusUI()
     {

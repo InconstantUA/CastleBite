@@ -13,8 +13,6 @@ public class TurnsData
 public class TurnsManager : MonoBehaviour {
     public static TurnsManager Instance { get; private set; }
     [SerializeField]
-    Transform gamePlayersRoot;
-    [SerializeField]
     TurnsData turnsData;
     [SerializeField]
     Text turnNumberTextUI;
@@ -25,7 +23,7 @@ public class TurnsManager : MonoBehaviour {
         if (playerFaction != Faction.Unknown)
         {
             // loop through list of all players
-            foreach(GamePlayer gamePlayer in gamePlayersRoot.GetComponentsInChildren<GamePlayer>())
+            foreach(GamePlayer gamePlayer in ObjectsManager.Instance.GetGamePlayers())
             {
                 // verify if there is a player that matches activePlayerID
                 if (gamePlayer.Faction == playerFaction)
@@ -68,7 +66,7 @@ public class TurnsManager : MonoBehaviour {
     public GamePlayer GetActivePlayer()
     {
         // .. Fix
-        foreach (GamePlayer gamePlayer in gamePlayersRoot.GetComponentsInChildren<GamePlayer>())
+        foreach (GamePlayer gamePlayer in ObjectsManager.Instance.GetGamePlayers())
         {
             if (PlayerTurnState.Active == gamePlayer.PlayerTurnState)
             {
@@ -88,7 +86,7 @@ public class TurnsManager : MonoBehaviour {
     GamePlayer GetNextPlayer()
     {
         // get all players
-        GamePlayer[] allPlayers = gamePlayersRoot.GetComponentsInChildren<GamePlayer>();
+        GamePlayer[] allPlayers = ObjectsManager.Instance.GetGamePlayers();
         for (int i = 0; i < allPlayers.Length; i++)
         {
             // get current player ID

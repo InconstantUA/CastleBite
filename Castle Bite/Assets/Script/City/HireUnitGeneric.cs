@@ -106,10 +106,15 @@ public class HireUnitGeneric : MonoBehaviour {
         // Force layout update
         // Note: this should be done to force all fields to be adjusted to the text size
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)togglesListTransform);
-        // Activate controls
-        SetHireUnitMenuButtonsActive(true);
-        // Activate top gold info panel
-        SetIncomeInfoPanelActive(true);
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)togglesListTransform);
+        // verify if mode is not hire first hero
+        if (mode != UnitHirePanel.Mode.FirstUnit)
+        {
+            // Activate controls
+            SetHireUnitMenuButtonsActive(true);
+            // Activate top gold info panel
+            SetIncomeInfoPanelActive(true);
+        }
         // DeActivate city controls
         SetCityControlsActive(false);
     }

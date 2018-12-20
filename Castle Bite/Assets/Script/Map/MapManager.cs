@@ -290,6 +290,32 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    public int TileSize
+    {
+        get
+        {
+            return tileSize;
+        }
+
+        set
+        {
+            tileSize = value;
+        }
+    }
+
+    public float YAdjustmentConstant
+    {
+        get
+        {
+            return yAdjustmentConstant;
+        }
+
+        set
+        {
+            yAdjustmentConstant = value;
+        }
+    }
+
     public Mode GetMode()
     {
         return mode;
@@ -312,7 +338,23 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void Awake()
     {
-        Instance = this;
+        // verify if instance is null = not set
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            // verify if instance not is equal this = this is the new instance spawned
+            if (Instance.GetInstanceID() != this.GetInstanceID())
+            {
+                Debug.LogError("Another instance should be destoryed before spawning this instance.");
+                // destroy previous instance
+                Destroy(Instance.gameObject);
+                // init new instance
+                Instance = this;
+            }
+        }
         // Create a coroutine queue that can run max 1 coroutine at once
         queue = new CoroutineQueue(1, StartCoroutine);
         // modify note: tile highliter is not referenced via serialized field
@@ -830,25 +872,25 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
 
-    void SetTileHighlighterToMousePoistion()
-    {
-        // get mouse position
-        // Vector3 mousePosition = Camera.main.WorldToViewportPoint(Input.mousePosition);
-        // get Y coords adjustments
-        float yAdjustment = Camera.main.transform.position.y;
-        // get the remaining adjustment
-        while (yAdjustment >= tileSize)
-        {
-            yAdjustment -= tileSize;
-        }
-        // Debug.Log("y adjustment " + yAdjustment);
-        // Update position
-        int x = Mathf.FloorToInt(Input.mousePosition.x / tileSize);
-        int y = Mathf.FloorToInt((Input.mousePosition.y + yAdjustment + yAdjustmentConstant) / tileSize);
-        // tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
-        tileHighlighter.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize - new Vector3(0, yAdjustment + yAdjustmentConstant, 0));
-        // Debug.Log("Tile: " + x + ";" + y);
-    }
+    //void SetTileHighlighterToMousePoistion()
+    //{
+    //    // get mouse position
+    //    // Vector3 mousePosition = Camera.main.WorldToViewportPoint(Input.mousePosition);
+    //    // get Y coords adjustments
+    //    float yAdjustment = Camera.main.transform.position.y;
+    //    // get the remaining adjustment
+    //    while (yAdjustment >= tileSize)
+    //    {
+    //        yAdjustment -= tileSize;
+    //    }
+    //    // Debug.Log("y adjustment " + yAdjustment);
+    //    // Update position
+    //    int x = Mathf.FloorToInt(Input.mousePosition.x / tileSize);
+    //    int y = Mathf.FloorToInt((Input.mousePosition.y + yAdjustment + yAdjustmentConstant) / tileSize);
+    //    // tileHighlighterTr.position = new Vector3(x, y, 0) * tileSize;
+    //    tileHighlighter.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(x, y, 0) * tileSize - new Vector3(0, yAdjustment + yAdjustmentConstant, 0));
+    //    // Debug.Log("Tile: " + x + ";" + y);
+    //}
 
     GameObject GetObjectUnderMouse()
     {
@@ -935,7 +977,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         Color32 darkYellow = new Color32(128, 122, 0, 255);
                         Color32 darkRed = new Color32(128, 0, 0, 255);
                         // Update tile highlighter position
-                        SetTileHighlighterToMousePoistion();
+                        tileHighlighter.SetToMousePoistion();
                         // set default tile highlighter color
                         tileHighlighterColor = Color.white;
                         // get game object below the tile highlighter
@@ -1143,7 +1185,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         }
                     }
                     // Update color of tile highlighter
-                    tileHighlighter.GetComponentInChildren<Text>().color = tileHighlighterColor;
+                    tileHighlighter.SetColor(tileHighlighterColor);
                     break;
                 case Mode.Animation:
                     // Hide tile highlighter in this mode
@@ -2240,55 +2282,53 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // transform.position = new Vector3(Input.mousePosition.x + xCorrectionOnDragStart + rotationPositionModifier, 0, 0);
             // Debug.Log("New position: " + transform.position.x + ":" + transform.position.y + ":" + transform.position.z);
             // Debug.Log("Camera x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
-            /*
             // define border
-            float leftBorder = -tileSize;
-            float rightBorder = Screen.width - mapWidth + tileSize;
-            // verify if map has reached left border with tilesize buffer
-            if (transform.position.x >= leftBorder)
-            {
-                // get number of rotaitons required based on the distance and tile size
-                int numberOfRotationsRequired = Math.Abs(Mathf.RoundToInt(transform.position.x / tileSize)) + 1;
-                for (int i = 0; i < numberOfRotationsRequired; i++)
-                {
-                    // do rotation
-                    // Debug.Log("Set last slice as first");
-                    // set last slice as first
-                    transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
-                    fogOfWarTransform.GetChild(59).SetAsFirstSibling();
-                    // adjust position by one tile size to the left
-                    transform.position = new Vector3(transform.position.x - tileSize, transform.position.y, 0);
-                    // increment rotation position modifier by tile size
-                    rotationPositionModifier -= tileSize;
-                }
-                // Shift map objects
-                ShiftMapObjects(Shift.Right, numberOfRotationsRequired);
-                ShiftTiles(Shift.Right, numberOfRotationsRequired);
-            }
-            // verify if map has reached right border with tilesize buffer
-            else if (transform.position.x <= rightBorder)
-            {
-                // get number of rotaitons required based on the distance and tile size
-                int numberOfRotationsRequired = Mathf.Abs(Mathf.RoundToInt((rightBorder - transform.position.x) / tileSize)) + 1;
-                // int numberOfRotationsRequired = 1;
-                // Debug.Log("Number of rotaions required is " + numberOfRotationsRequired);
-                for (int i = 0; i < numberOfRotationsRequired; i++)
-                {
-                    // do rotation
-                    // Debug.Log("Set first map slice as last");
-                    // set first map slice as last
-                    transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
-                    fogOfWarTransform.GetChild(0).SetAsLastSibling();
-                    // shift position by one tile size to the right
-                    transform.position = new Vector3(transform.position.x + tileSize, transform.position.y, 0);
-                    // increment rotation position modifier by tile size
-                    rotationPositionModifier += tileSize;
-                }
-                // Shift map objects
-                ShiftMapObjects(Shift.Left, numberOfRotationsRequired);
-                ShiftTiles(Shift.Left, numberOfRotationsRequired);
-            }
-            */
+            //float leftBorder = -tileSize;
+            //float rightBorder = Screen.width - mapWidth + tileSize;
+            //// verify if map has reached left border with tilesize buffer
+            //if (transform.position.x >= leftBorder)
+            //{
+            //    // get number of rotaitons required based on the distance and tile size
+            //    int numberOfRotationsRequired = Math.Abs(Mathf.RoundToInt(transform.position.x / tileSize)) + 1;
+            //    for (int i = 0; i < numberOfRotationsRequired; i++)
+            //    {
+            //        // do rotation
+            //        // Debug.Log("Set last slice as first");
+            //        // set last slice as first
+            //        transform.Find("MapSlices").GetChild(59).SetAsFirstSibling();
+            //        fogOfWarTransform.GetChild(59).SetAsFirstSibling();
+            //        // adjust position by one tile size to the left
+            //        transform.position = new Vector3(transform.position.x - tileSize, transform.position.y, 0);
+            //        // increment rotation position modifier by tile size
+            //        rotationPositionModifier -= tileSize;
+            //    }
+            //    // Shift map objects
+            //    ShiftMapObjects(Shift.Right, numberOfRotationsRequired);
+            //    ShiftTiles(Shift.Right, numberOfRotationsRequired);
+            //}
+            //// verify if map has reached right border with tilesize buffer
+            //else if (transform.position.x <= rightBorder)
+            //{
+            //    // get number of rotaitons required based on the distance and tile size
+            //    int numberOfRotationsRequired = Mathf.Abs(Mathf.RoundToInt((rightBorder - transform.position.x) / tileSize)) + 1;
+            //    // int numberOfRotationsRequired = 1;
+            //    // Debug.Log("Number of rotaions required is " + numberOfRotationsRequired);
+            //    for (int i = 0; i < numberOfRotationsRequired; i++)
+            //    {
+            //        // do rotation
+            //        // Debug.Log("Set first map slice as last");
+            //        // set first map slice as last
+            //        transform.Find("MapSlices").GetChild(0).SetAsLastSibling();
+            //        fogOfWarTransform.GetChild(0).SetAsLastSibling();
+            //        // shift position by one tile size to the right
+            //        transform.position = new Vector3(transform.position.x + tileSize, transform.position.y, 0);
+            //        // increment rotation position modifier by tile size
+            //        rotationPositionModifier += tileSize;
+            //    }
+            //    // Shift map objects
+            //    ShiftMapObjects(Shift.Left, numberOfRotationsRequired);
+            //    ShiftTiles(Shift.Left, numberOfRotationsRequired);
+            //}
         }
         else if (Input.GetMouseButton(1))
         {
@@ -2328,7 +2368,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // enter back to Browse mode
             SetMode(Mode.Browse);
             // set tile highighter under mouse
-            SetTileHighlighterToMousePoistion();
+            tileHighlighter.SetToMousePoistion();
             // allow map to block raycasts
             GetComponent<CanvasGroup>().blocksRaycasts = true;
             // deactivate camera focus on a map
@@ -2653,6 +2693,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // change parent to hero party
             inventoryItem.transform.SetParent(selectedMapHero.LHeroParty.transform);
         }
+        // Destroy chest label
+        Destroy(mapItem.GetComponent<MapObject>().Label.gameObject);
         // Destroy chest
         Destroy(mapItem.gameObject);
         // exit animation mode and enter browse mode

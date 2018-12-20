@@ -174,10 +174,16 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     #endregion Button controls
 
-    public string GetUnitCellAddress()
+    public PartyPanel.Row GetUnitPPRow()
     {
         // structure: PartyPanel-2[Top/Middle/Bottom]-1[Front/Back/Wide]-UnitSlot(this)
-        return transform.parent.parent.name + "/" + transform.parent.name;
+        return transform.parent.parent.GetComponent<PartyPanelRow>().Row;
+    }
+
+    public PartyPanel.Cell GetUnitPPCell()
+    {
+        // structure: PartyPanel-2[Top/Middle/Bottom]-1[Front/Back/Wide]-UnitSlot(this)
+        return transform.parent.GetComponent<PartyPanelCell>().Cell;
     }
 
     //IEnumerator UpdateUnitEquipmentControl()

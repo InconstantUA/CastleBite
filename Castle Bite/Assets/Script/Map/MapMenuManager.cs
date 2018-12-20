@@ -13,6 +13,8 @@ public class MapMenuManager : MonoBehaviour {
     MapFocusPanel mapFocusPanel;
     [SerializeField]
     MapOptions mapOptions;
+    [SerializeField]
+    GameObject currentGold;
 
     void Awake()
     {
@@ -345,6 +347,38 @@ public class MapMenuManager : MonoBehaviour {
         // Note: everything below related to mapManager or mapScreen will not be processed, because map manager is disabled
         // Activate hero edit menu
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).SetEditPartyScreenActive(mapHero.LHeroParty);
+    }
+
+    public void TurnMainMenu()
+    {
+        // enable main menu
+        MainMenuManager.Instance.gameObject.SetActive(true);
+        // disable world map
+        MapManager.Instance.gameObject.SetActive(false);
+        // disable map menu
+        gameObject.SetActive(false);
+        // disable current gold info
+        currentGold.SetActive(false);
+    }
+
+    public void SetCitiesNamesVisible(bool doActivate)
+    {
+        MapManager.Instance.SetCitiesNamesVisible(doActivate);
+    }
+
+    public void SetHeroesNamesVisible(bool doActivate)
+    {
+        MapManager.Instance.SetHeroesNamesVisible(doActivate);
+    }
+
+    public void SetManaSourcesVisible(bool doActivate)
+    {
+        MapManager.Instance.SetManaSourcesVisible(doActivate);
+    }
+
+    public void SetTreasureChestsVisible(bool doActivate)
+    {
+        MapManager.Instance.SetTreasureChestsVisible(doActivate);
     }
 
     public MapFocusPanel MapFocusPanel

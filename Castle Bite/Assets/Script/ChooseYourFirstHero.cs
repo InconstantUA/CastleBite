@@ -58,14 +58,16 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
         // activate hire unit menu
         hireUnitGeneric.SetActive(highrableUnitTypes, null, UnitHirePanel.Mode.FirstUnit);
-        // Deactivate standard hire unit button
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
-        // Deactivate standard close hire unit menu button
-        transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
+        //// Deactivate standard hire unit button
+        //transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
+        //// Deactivate standard close hire unit menu button
+        //transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
     }
 
     public void SetActive(bool doActivate)
     {
+        // Create world from template
+        
         // Activate/Deactivate background
         transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
         // Activate/Dectivate this menu
@@ -179,19 +181,19 @@ public class ChooseYourFirstHero : MonoBehaviour {
         return UnitType.Unknown;
     }
 
-    string GetPlayerName()
-    {
-        // get name from input
-        string name = transform.root.Find("MiscUI/ChooseYourFirstHero/InputField").GetComponent<InputField>().text;
-        // verify if name is not empty
-        if ("" == name)
-        {
-            // reset name to default
-            name = ChapterManager.Instance.PlayersData[0].givenName;
-        }
-        // return name
-        return name;
-    }
+    //string GetPlayerName()
+    //{
+    //    // get name from input
+    //    string name = transform.root.Find("MiscUI/ChooseYourFirstHero/InputField").GetComponent<InputField>().text;
+    //    // verify if name is not empty
+    //    if ("" == name)
+    //    {
+    //        // reset name to default
+    //        name = ChapterManager.Instance.PlayersData[0].givenName;
+    //    }
+    //    // return name
+    //    return name;
+    //}
 
     City GetActivePlayerCapital()
     {
@@ -225,14 +227,15 @@ public class ChooseYourFirstHero : MonoBehaviour {
     {
         // Activate and reset turns manager, set chosen faction as active player
         TurnsManager.Instance.Reset(factionSelectionGroup.GetSelectedFaction());
-        // activate main menu in game mode
+        // Activate main menu in game mode
         MainMenuManager.Instance.MainMenuInGameModeSetActive(true);
+        // Activate world map
+        ChapterManager.Instance.ActiveChapter.GetComponentInChildren<MapManager>(true).gameObject.SetActive(true);
         // Get Chosen race starting city
-        // Ask City to Hire chosen unit
+        // Ask EditPartyScreen to Hire chosen unit
         //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerStartingCity());
         // Deactivate Choose your first hero menu
-        // transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(false);
         SetActive(false);
         // Activate Prolog
         transform.root.Find("MiscUI").GetComponentInChildren<Prolog>(true).SetActive(true);

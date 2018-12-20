@@ -152,7 +152,7 @@ public class SaveGame : MonoBehaviour {
         // Get game players
         GamePlayer[] players = gamePlayersRoot.GetComponentsInChildren<GamePlayer>();
         // Get game map
-        GameMap gameMap = transform.root.GetComponentInChildren<GameMap>();
+        GameMap gameMap = ObjectsManager.Instance.GetComponentInChildren<GameMap>();
         // Get cities
         City[] cities = gameMap.transform.Find("Cities").GetComponentsInChildren<City>();
         // Get hero parties

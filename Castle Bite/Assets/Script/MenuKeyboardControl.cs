@@ -371,10 +371,10 @@ public class MenuKeyboardControl : MonoBehaviour {
         // Get objects manager
         // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // Create game players, get players data from Chapter manager
-        foreach (PlayerData playerData in ChapterManager.Instance.PlayersData)
-        {
-            ObjectsManager.Instance.CreatePlayer(playerData);
-        }
+        //foreach (PlayerData playerData in ChapterManager.Instance.PlayersData)
+        //{
+        //    ObjectsManager.Instance.CreatePlayer(playerData);
+        //}
         // Activate and reset turns manager, set Dominion as active player
         TurnsManager.Instance.Reset(Faction.Dominion);
         // transform.root.Find("Managers").GetComponent<TurnsManager>().Reset(Faction.Dominion);

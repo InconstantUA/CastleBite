@@ -197,10 +197,12 @@ public class LoadGame : MonoBehaviour
         // Block mouse input
         InputBlocker.Instance.SetActive(true);
         // Note order is imporant, because some parties are children of cities
-        RemoveAllInventoryItems();
-        RemoveAllParties();
-        RemoveAllCities();
-        RemoveAllPlayers();
+        //RemoveAllInventoryItems();
+        //RemoveAllParties();
+        //RemoveAllCities();
+        //RemoveAllPlayers();
+        // remove current world
+        Destroy(World.Instance.GetComponentInChildren<Transform>(true).gameObject);
         // wait for guaranteed next updated, in case of performance issues
         yield return new WaitForFixedUpdate();
         // Wait for all animations to finish
@@ -217,7 +219,7 @@ public class LoadGame : MonoBehaviour
         // Init position on map variable
         PositionOnMap previousItemPositionOnMap = new PositionOnMap();
         // Get game map transform
-        GameMap gameMap = transform.root.GetComponentInChildren<GameMap>();
+        GameMap gameMap = ObjectsManager.Instance.GetComponentInChildren<GameMap>();
         // Create parties
         for (int i = 0; i < mapData.itemsOnMap.Count; i++)
         {
@@ -239,10 +241,17 @@ public class LoadGame : MonoBehaviour
         }
     }
 
+    void CreateWorld(ChapterData chapterData)
+    {
+        // Instantiate();
+    }
+
     IEnumerator CreateGameObjects(GameData gameData)
     {
         Debug.Log("Create Game Objects");
         // Note order is important, if some party was child of a city, then city should be created first
+        // Instantiate empty world
+        CreateWorld(gameData.chapterData);
         // Update game with data from save
         CreateGamePlayers(gameData.playersData);
         // Set Turns manager data
@@ -297,12 +306,12 @@ public class LoadGame : MonoBehaviour
         // Activate Loading screen
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
-        // .. Set map
-        // Activate map screen - it is needed to create objects
-        // MapManager.Instance.gameObject.SetActive(true);
-        ChapterManager.Instance.CoroutineQueue.Run(MapManager.Instance.SetActive());
-        // Freeze map (during Animation internal updates are not done)
-        ChapterManager.Instance.CoroutineQueue.Run(FreezeMap());
+        //// .. Set map
+        //// Activate map screen - it is needed to create objects
+        //// MapManager.Instance.gameObject.SetActive(true);
+        //ChapterManager.Instance.CoroutineQueue.Run(MapManager.Instance.SetActive());
+        //// Freeze map (during Animation internal updates are not done)
+        //ChapterManager.Instance.CoroutineQueue.Run(FreezeMap());
         // remove old data
         ChapterManager.Instance.CoroutineQueue.Run(CleanGameBeforeLoad());
         // create new objects from saved data

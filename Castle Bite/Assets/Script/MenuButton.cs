@@ -279,13 +279,13 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // Activate and deactivate required menus
         OnGameStartMenuChanges();
         // Create game players, get players data from Chapter manager
-        foreach (PlayerData playerData in ChapterManager.Instance.PlayersData)
-        {
-            // init tiles discovery state (I assume that by default it will init with 0)
-            playerData.tilesDiscoveryState = new int[MapManager.Instance.TileMapWidth, MapManager.Instance.TileMapHeight];
-            // create player using player data
-            ObjectsManager.Instance.CreatePlayer(playerData);
-        }
+        //foreach (PlayerData playerData in ChapterManager.Instance.PlayersData)
+        //{
+        //    // init tiles discovery state (I assume that by default it will init with 0)
+        //    playerData.tilesDiscoveryState = new int[MapManager.Instance.TileMapWidth, MapManager.Instance.TileMapHeight];
+        //    // create player using player data
+        //    ObjectsManager.Instance.CreatePlayer(playerData);
+        //}
         // Activate and reset turns manager, set Dominion as active player
         TurnsManager.Instance.Reset(Faction.Dominion);
         // Activate ChooseYourFirstHero menu

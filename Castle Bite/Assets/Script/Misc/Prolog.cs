@@ -8,11 +8,11 @@ public class Prolog : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPo
 {
     public void SetActive(bool doActivate)
     {
-        // activate button
+        // activate/deactivate button
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/PrologBeginGameButton").gameObject.SetActive(doActivate);
-        // activate background
+        // activate/deactivate background
         transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
-        // activate this menu
+        // activate/deactivate this menu
         gameObject.SetActive(doActivate);
     }
 
@@ -22,7 +22,7 @@ public class Prolog : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPo
         SetActive(false);
         // activate map
         MapManager.Instance.gameObject.SetActive(true);
-        MapMenuManager.Instance.gameObject.SetActive(true);
+        UIRoot.Instance.GetComponentInChildren<MapMenuManager>(true).gameObject.SetActive(true);
     }
 
     public void OnPointerDown(PointerEventData eventData)

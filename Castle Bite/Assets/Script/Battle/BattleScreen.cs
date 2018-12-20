@@ -116,9 +116,14 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/" + buttonName).gameObject.SetActive(doActivate);
     }
 
-    void SetBattleControlPanelActive(bool doActivate)
+    void SetBattleControlsActive(bool doActivate)
     {
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls").gameObject.SetActive(doActivate);
+        SetBattleControlButtonActive("Defend", doActivate);
+        SetBattleControlButtonActive("Wait", doActivate);
+        SetBattleControlButtonActive("Retreat", doActivate);
+        SetBattleControlButtonActive("AutoBattle", doActivate);
+        SetBattleControlButtonActive("InstantResolve", doActivate);
+        // transform.root.Find("MiscUI/BottomControlPanel/MiddleControls").gameObject.SetActive(doActivate);
     }
 
     void SetBattleExitButtonActive(bool doActivate)
@@ -146,11 +151,12 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
         // Activate/Deactivate city controls
         //transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
-        SetBattleControlButtonActive("Defend", doActivate);
-        SetBattleControlButtonActive("Wait", doActivate);
-        SetBattleControlButtonActive("Retreat", doActivate);
-        SetBattleControlButtonActive("AutoBattle", doActivate);
-        SetBattleControlButtonActive("InstantResolve", doActivate);
+        SetBattleControlsActive(doActivate);
+        //SetBattleControlButtonActive("Defend", doActivate);
+        //SetBattleControlButtonActive("Wait", doActivate);
+        //SetBattleControlButtonActive("Retreat", doActivate);
+        //SetBattleControlButtonActive("AutoBattle", doActivate);
+        //SetBattleControlButtonActive("InstantResolve", doActivate);
         // Always Deactivate Exit button
         SetBattleExitButtonActive(false);
     }
@@ -447,7 +453,7 @@ public class BattleScreen : MonoBehaviour {
         // Activate exit battle button;
         exitButton.gameObject.SetActive(true);
         // Deactivate all other battle buttons;
-        SetBattleControlPanelActive(false);
+        SetBattleControlsActive(false);
         // Check who win battle
         if (!playerPartyPanel.CanFight())
         {

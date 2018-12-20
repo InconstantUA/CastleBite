@@ -13,13 +13,29 @@ using UnityEngine.UI;
 
 // Controls all operations with child panels
 public class PartyPanel : MonoBehaviour {
+
+    // Party panel row
+    public enum Row
+    {
+        Top,
+        Middle,
+        Bottom
+    }
+
+    // Party panel cell
+    public enum Cell
+    {
+        Front,
+        Back,
+        Wide
+    }
+
     //[SerializeField]
     //PartyPanelData partyPanelData;
-    string[] horisontalPanels = { "Top", "Middle", "Bottom" };
-    //string[] singleUnitCells = { "Front", "Back" };
-    string[] cells = { "Front", "Back", "Wide" };
-    string[] cellsFront = { "Front", "Wide" };
-    string[] cellsBack = { "Back", "Wide" };
+    Row[] horisontalPanels = { Row.Top, Row.Middle, Row.Bottom };
+    Cell[] cells = { Cell.Front, Cell.Back, Cell.Wide };
+    Cell[] cellsFront = { Cell.Front, Cell.Wide };
+    Cell[] cellsBack = { Cell.Back, Cell.Wide };
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader}
 
     // for battle
@@ -54,10 +70,10 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    public Transform GetUnitSlotTr(string row, string cell)
+    public Transform GetUnitSlotTr(Row row, Cell cell)
     {
         // Debug.Log(row + " " + cell);
-        return transform.Find(row).Find(cell).Find("UnitSlot");
+        return transform.Find(row.ToString()).Find(cell.ToString()).Find("UnitSlot");
     }
 
     public PartyMode PartyMode
@@ -94,12 +110,12 @@ public class PartyPanel : MonoBehaviour {
 
     //public void SetOnEditClickHandler(bool doActivate)
     //{
-    //    foreach (string horisontalPanel in horisontalPanels)
+    //    foreach (Row horisontalPanel in horisontalPanels)
     //    {
-    //        foreach (string cell in cells)
+    //        foreach (Cell cell in cells)
     //        {
     //            // verify if slot has an unit in it
-    //            Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+    //            Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
     //            if (unitSlot.childCount > 0)
     //            {
     //                // Unit canvas is present
@@ -137,12 +153,12 @@ public class PartyPanel : MonoBehaviour {
     //            Destroy(partyUnitUI.GetComponent<UnitOnBattleMouseHandler>());
     //        }
     //    }
-    //    //foreach (string horisontalPanel in horisontalPanels)
+    //    //foreach (Row horisontalPanel in horisontalPanels)
     //    //{
-    //    //    foreach (string cell in cells)
+    //    //    foreach (Cell cell in cells)
     //    //    {
     //    //        // verify if slot has an unit in it
-    //    //        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+    //    //        Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
     //    //        if (unitSlot.childCount > 0)
     //    //        {
     //    //            // Unit canvas is present
@@ -199,17 +215,17 @@ public class PartyPanel : MonoBehaviour {
     void OnHireDoubleUnit(Transform changedCell)
     {
         // Also we need to enable Wide panel, because by defaut it is disabled
-        changedCell.parent.Find("Wide").gameObject.SetActive(true);
+        changedCell.parent.Find(Cell.Wide.ToString()).gameObject.SetActive(true);
         // And disable left and right panels
-        changedCell.parent.Find("Front").gameObject.SetActive(false);
-        changedCell.parent.Find("Back").gameObject.SetActive(false);
+        changedCell.parent.Find(Cell.Front.ToString()).gameObject.SetActive(false);
+        changedCell.parent.Find(Cell.Back.ToString()).gameObject.SetActive(false);
         // Disable hire unit buttons
         SetHireUnitButtonActiveByCell(false, changedCell.parent.name + "/Front");
         SetHireUnitButtonActiveByCell(false, changedCell.parent.name + "/Back");
         // Update name and health information
         // UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         //// it is more reliable to use GetChild(0), because it is only one child there
-        //Transform parentCell = changedCell.parent.Find("Wide");
+        //Transform parentCell = changedCell.parent.Find(Cell.Wide);
         //PartyUnitUI unitUI = parentCell.GetComponentInChildren<UnitSlot>().GetComponentInChildren<PartyUnitUI>();
         // fill in highered object UI panel
         //unitUI.SetUnitCellInfoUI();
@@ -251,14 +267,14 @@ public class PartyPanel : MonoBehaviour {
         //// Clean status
         //ClearUnitCellStatus(changedCell);
         // Disable Wide panel
-        changedCell.parent.Find("Wide").gameObject.SetActive(false);
+        changedCell.parent.Find(Cell.Wide.ToString()).gameObject.SetActive(false);
         // And enable left and right panels
-        changedCell.parent.Find("Front").gameObject.SetActive(true);
-        changedCell.parent.Find("Back").gameObject.SetActive(true);
+        changedCell.parent.Find(Cell.Front.ToString()).gameObject.SetActive(true);
+        changedCell.parent.Find(Cell.Back.ToString()).gameObject.SetActive(true);
         //// Update name and health information
         //// UnitCanvas name on instantiate will change to UnitCanvas(Clone), 
         //// it is more reliable to use GetChild(0), because it is only one child there
-        //Transform parentCell = changedCell.parent.Find("Wide");
+        //Transform parentCell = changedCell.parent.Find(Cell.Wide);
         //CleanHealthUI(parentCell);
         // activate hire unit buttons on left and right cells if panel is in garnizon state
         if (PartyMode.Garnizon == PartyMode)
@@ -344,9 +360,9 @@ public class PartyPanel : MonoBehaviour {
         if (PartyMode.Garnizon == PartyMode)
         {
             PartyUnitUI partyUnitUI;
-            foreach (string horisontalPanel in horisontalPanels)
+            foreach (Row horisontalPanel in horisontalPanels)
             {
-                foreach (string cell in cells)
+                foreach (Cell cell in cells)
                 {
                     // Get party unit UI
                     partyUnitUI = transform.Find(horisontalPanel + "/" + cell).GetComponentInChildren<PartyUnitUI>(true);
@@ -354,13 +370,13 @@ public class PartyPanel : MonoBehaviour {
                     if (partyUnitUI != null)
                     {
                         // verify if this is left or right single panel
-                        if (("Front" == cell) || ("Back" == cell))
+                        if ((Cell.Front == cell) || (Cell.Back == cell))
                         {
                             // deactivate hire unit button for this cell
                             SetHireUnitButtonActiveByCell(false, horisontalPanel + "/" + cell);
                         }
                         // verify if this is wide cell
-                        else if ("Wide" == cell)
+                        else if (Cell.Wide == cell)
                         {
                             // deactivate hire unit button for single-unit cells
                             SetHireUnitButtonActiveByCell(false, horisontalPanel + "/Front");
@@ -370,9 +386,9 @@ public class PartyPanel : MonoBehaviour {
                     else
                     {
                         // verify if this is single-unit cells
-                        if ((("Front" == cell) || ("Back" == cell))
+                        if (((Cell.Front == cell) || (Cell.Back == cell))
                             // verify if wide (double) cell is not occupied in the same row
-                            && (!transform.Find(horisontalPanel).Find("Wide/UnitSlot").GetComponentInChildren<PartyUnitUI>(true))
+                            && (!transform.Find(horisontalPanel.ToString()).Find("Wide/UnitSlot").GetComponentInChildren<PartyUnitUI>(true))
                             )
                         {
                             // activate hire unit button in this cell
@@ -401,7 +417,7 @@ public class PartyPanel : MonoBehaviour {
         if (partyUnitUI != null)
         {
             // deactivate double-unit cell in the same raw
-            SetDoubleUnitCellActive(unitCell.parent.Find("Wide"), null);
+            SetDoubleUnitCellActive(unitCell.parent.Find(Cell.Wide.ToString()), null);
         }
     }
 
@@ -410,8 +426,8 @@ public class PartyPanel : MonoBehaviour {
         SetGenericUnitCellActive(unitCell, partyUnitUI);
         // activate singe-unit cells if party unit UI is null
         // deactivate singe-unit cells if party unit UI is not null
-        unitCell.parent.Find("Front").gameObject.SetActive(partyUnitUI == null);
-        unitCell.parent.Find("Back").gameObject.SetActive(partyUnitUI == null);
+        unitCell.parent.Find(Cell.Front.ToString()).gameObject.SetActive(partyUnitUI == null);
+        unitCell.parent.Find(Cell.Back.ToString()).gameObject.SetActive(partyUnitUI == null);
     }
 
     void InitPartyPanelCells()
@@ -419,20 +435,20 @@ public class PartyPanel : MonoBehaviour {
         Transform unitCell;
         //Transform unitSlot;
         PartyUnitUI partyUnitUI;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 unitCell = transform.Find(horisontalPanel + "/" + cell);
                 //unitSlot = unitCell.Find("UnitSlot");
                 // Get party unit UI
                 partyUnitUI = transform.Find(horisontalPanel + "/" + cell).GetComponentInChildren<PartyUnitUI>(true);
                 // verify if this is single- or double-unit cell
-                if (("Front" == cell) || ("Back" == cell))
+                if ((Cell.Front == cell) || (Cell.Back == cell))
                 {
                     SetSingleUnitCellActive(unitCell, partyUnitUI);
                 }
-                if ("Wide" == cell)
+                if (Cell.Wide == cell)
                 {
                     SetDoubleUnitCellActive(unitCell, partyUnitUI);
                 }
@@ -440,11 +456,11 @@ public class PartyPanel : MonoBehaviour {
                 //if (partyUnitUI != null)
                 //{
                 //    // verify if this is single- or double-unit cell
-                //    if (("Front" == cell) || ("Back" == cell))
+                //    if ((Cell.Front == cell) || (Cell.Back == cell))
                 //    {
                 //        SetSingleUnitCellActive(partyUnitUI, unitCell, true);
                 //    }
-                //    if ("Wide" == cell)
+                //    if (Cell.Wide == cell)
                 //    {
                 //        SetDoubleUnitCellActive(partyUnitUI, unitCell, true);
                 //    }
@@ -453,20 +469,20 @@ public class PartyPanel : MonoBehaviour {
                 //{
                 //    // cell does not have a unit
                 //    // verify if this is single-unit cell
-                //    if (("Front" == cell) || ("Back" == cell))
+                //    if ((Cell.Front == cell) || (Cell.Back == cell))
                 //    {
                 //        // keep it enabled, for UI visibility
                 //    }
                 //    // verify if this is wide cell
-                //    else if ("Wide" == cell)
+                //    else if (Cell.Wide == cell)
                 //    {
                 //        // no unit in wide cell
                 //        // it is possible that double unit was dismissed
                 //        // we need to disable Wide panel, because it is still enabled and placed on top of single panels
-                //        unitCell.parent.Find("Wide").gameObject.SetActive(false);
+                //        unitCell.parent.Find(Cell.Wide).gameObject.SetActive(false);
                 //        // and enable Front and Back panels
-                //        unitCell.parent.Find("Front").gameObject.SetActive(true);
-                //        unitCell.parent.Find("Back").gameObject.SetActive(true);
+                //        unitCell.parent.Find(Cell.Front).gameObject.SetActive(true);
+                //        unitCell.parent.Find(Cell.Back).gameObject.SetActive(true);
                 //    }
                 //}
             }
@@ -506,15 +522,15 @@ public class PartyPanel : MonoBehaviour {
     public int GetNumberOfPresentUnits()
     {
         int unitsNumber = 0;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                if (transform.Find(horisontalPanel).Find(cell).Find("UnitSlot").childCount > 0)
+                if (transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot").childCount > 0)
                 {
                     // if this is double unit, then count is as +2
-                    if (cell == "Wide")
+                    if (cell == Cell.Wide)
                     {
                         // double unit
                         unitsNumber += 2;
@@ -532,11 +548,11 @@ public class PartyPanel : MonoBehaviour {
     public List<UnitSlot> GetAllPowerTargetableUnitSlots()
     {
         List<UnitSlot> unitSlots = new List<UnitSlot> { };
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
-                Transform unitSlotTr = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlotTr = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 UnitSlot unitSlot = unitSlotTr.GetComponent<UnitSlot>();
                 // verify if slot has an unit in it and it is allowed to apply power to this unit
                 if ((unitSlotTr.childCount > 0) && (unitSlot.IsAllowedToApplyPowerToThisUnit))
@@ -585,14 +601,14 @@ public class PartyPanel : MonoBehaviour {
         // verify cell, which is located nearby
         // if it is occuped, then show an error message
         Transform oppositeCell;
-        if (callerCell.name == "Front")
+        if (callerCell.name == Cell.Front.ToString())
         {
             // check Back cell
-            oppositeCell = callerCell.parent.Find("Back");
+            oppositeCell = callerCell.parent.Find(Cell.Back.ToString());
         } else
         {
             // check Front cell
-            oppositeCell = callerCell.parent.Find("Front");
+            oppositeCell = callerCell.parent.Find(Cell.Front.ToString());
         }
         // check if cell is occupied
         // structure [Front/Back cell]-UnitSlot-unit
@@ -615,12 +631,12 @@ public class PartyPanel : MonoBehaviour {
         Color normalColor = new Color(0.5f, 0.5f, 0.5f);
         Color hightlightColor;
         // highlight differently cells with and without units
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                unitCell = transform.Find(horisontalPanel).Find(cell);
+                unitCell = transform.Find(horisontalPanel + "/" + cell);
                 unitSlot = unitCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
@@ -669,12 +685,12 @@ public class PartyPanel : MonoBehaviour {
         Color normalColor = new Color(0.5f, 0.5f, 0.5f);
         Color hightlightColor;
         // highlight differently cells with and without units
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                unitCell = transform.Find(horisontalPanel).Find(cell);
+                unitCell = transform.Find(horisontalPanel + "/" + cell);
                 unitSlot = unitCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
@@ -727,12 +743,12 @@ public class PartyPanel : MonoBehaviour {
         Color normalColor = new Color(0.5f, 0.5f, 0.5f);
         Color hightlightColor;
         // highlight differently cells with and without units
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                unitCell = transform.Find(horisontalPanel).Find(cell);
+                unitCell = transform.Find(horisontalPanel + "/" + cell);
                 unitSlot = unitCell.Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
@@ -862,9 +878,9 @@ public class PartyPanel : MonoBehaviour {
             {
                 // We are in a source panel
                 // Debug.Log("Highlight source panel");
-                foreach (string horisontalPanel in horisontalPanels)
+                foreach (Row horisontalPanel in horisontalPanels)
                 {
-                    foreach (string cell in cells)
+                    foreach (Cell cell in cells)
                     {
                         // verify if slot is active
                         // here we highlight only party panel of the draggable unit
@@ -908,9 +924,9 @@ public class PartyPanel : MonoBehaviour {
                             PartyUnit cellUnit;
                             UnitDragHandler unitCanvas;
                             bool isUnitInterPartyDraggable;
-                            foreach (string horisontalPanel in horisontalPanels)
+                            foreach (Row horisontalPanel in horisontalPanels)
                             {
-                                foreach (string cell in cells)
+                                foreach (Cell cell in cells)
                                 {
                                     // verify if slot is active
                                     // wo do not need to do anything with inacive cells
@@ -932,7 +948,7 @@ public class PartyPanel : MonoBehaviour {
                                                 // if occupied cell is single-unit, 
                                                 // then we can easily drag here unit and exchange units between the cells
                                                 // but if the occupied cell is double unit cells, then we need to do additional verification
-                                                if ("Wide" == cell)
+                                                if (Cell.Wide == cell)
                                                 {
                                                     // do additional verification
                                                     // possible states and tranistions
@@ -942,13 +958,13 @@ public class PartyPanel : MonoBehaviour {
                                                     // 1x/x1        2           not ok
                                                     // get nearby cell
                                                     Transform nearbySrcCellTr;
-                                                    if ("Front" == unitCell.name)
+                                                    if (Cell.Front.ToString() == unitCell.name)
                                                     {
-                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Back");
+                                                        nearbySrcCellTr = horizontalPanelGroup.Find(Cell.Back.ToString());
                                                     }
                                                     else
                                                     {
-                                                        nearbySrcCellTr = horizontalPanelGroup.Find("Front");
+                                                        nearbySrcCellTr = horizontalPanelGroup.Find(Cell.Front.ToString());
                                                     }
                                                     // verify if nearby source cell is occupied
                                                     UnitDragHandler nearbySrcCellUnitCanvas = nearbySrcCellTr.Find("UnitSlot").GetComponentInChildren<UnitDragHandler>();
@@ -1045,7 +1061,7 @@ public class PartyPanel : MonoBehaviour {
                             UnitDragHandler isBackCellOccupied; // if null - false, if other - true, we use it as bool
                             bool isFrontCellUnitInterPartyMovable = false;
                             bool isBackCellUnitInterPartyMovable = false;
-                            foreach (string horisontalPanel in horisontalPanels)
+                            foreach (Row horisontalPanel in horisontalPanels)
                             {
                                 // verify if wide slot is active
                                 // if wide is active, then we have unit there
@@ -1160,10 +1176,10 @@ public class PartyPanel : MonoBehaviour {
                     {
                         // unit is not inter-party movable
                         // highlight other panel with (red) - unit cannot be dropped there
-                        foreach (string horisontalPanel in horisontalPanels)
+                        foreach (Row horisontalPanel in horisontalPanels)
                         {
                             // get state of active cells
-                            foreach (string cell in cells)
+                            foreach (Cell cell in cells)
                             {
                                 // Change text box color
                                 errorMessage = "This unit cannot be moved to other party.";
@@ -1177,9 +1193,9 @@ public class PartyPanel : MonoBehaviour {
         else
         {
             // reset all colors to normal
-            foreach (string horisontalPanel in horisontalPanels)
+            foreach (Row horisontalPanel in horisontalPanels)
             {
-                foreach (string cell in cells)
+                foreach (Cell cell in cells)
                 {
                     // Change text box color
                     transform.Find(horisontalPanel+"/"+cell+"/Br").GetComponent<Text>().color = normalColor;
@@ -1205,12 +1221,12 @@ public class PartyPanel : MonoBehaviour {
             Color normalColor = new Color(0.5f, 0.5f, 0.5f);
             Color hightlightColor;
             // highlight differently cells with and without units
-            foreach (string horisontalPanel in horisontalPanels)
+            foreach (Row horisontalPanel in horisontalPanels)
             {
-                foreach (string cell in cells)
+                foreach (Cell cell in cells)
                 {
                     // verify if slot has an unit in it
-                    unitCell = transform.Find(horisontalPanel).Find(cell);
+                    unitCell = transform.Find(horisontalPanel + "/" + cell);
                     unitSlot = unitCell.Find("UnitSlot");
                     if (unitSlot.childCount > 0)
                     {
@@ -1259,12 +1275,12 @@ public class PartyPanel : MonoBehaviour {
     public bool CanFight()
     {
         // loop through all units in each party and verify if there is at least one unit, which can fight
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     if (GetUnitWhichCanFight(horisontalPanel, cell))
@@ -1282,12 +1298,12 @@ public class PartyPanel : MonoBehaviour {
     public PartyUnitUI GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
     {
         PartyUnitUI unitWithHighestInitiative = null;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // verify if 
@@ -1336,12 +1352,12 @@ public class PartyPanel : MonoBehaviour {
 
     public void ResetHasMovedFlag()
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // set unit has moved to false, so it can move again
@@ -1364,12 +1380,12 @@ public class PartyPanel : MonoBehaviour {
             return true;
         }
         // method 2
-        //foreach (string horisontalPanel in horisontalPanels)
+        //foreach (Row horisontalPanel in horisontalPanels)
         //{
-        //    foreach (string cell in cells)
+        //    foreach (Cell cell in cells)
         //    {
         //        // verify if slot has an unit in it
-        //        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+        //        Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
         //        if (unitSlot.childCount > 0)
         //        {
         //            // verify if unit has isLeader atrribute ON
@@ -1437,12 +1453,12 @@ public class PartyPanel : MonoBehaviour {
         Color positiveColor = Color.green;
         // Color negativeColor = new Color32(221, 24, 24, 255); // dark red
         Color negativeColor = Color.grey;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // Unit canvas (and unit) is present
@@ -1502,12 +1518,12 @@ public class PartyPanel : MonoBehaviour {
         string errorMessage = "";
         Color positiveColor = Color.green;
         Color negativeColor = Color.grey;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // Unit canvas (and unit) is present
@@ -1552,10 +1568,10 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    PartyUnitUI GetUnitWhichCanFight(string horisontalPanel, string cell)
+    PartyUnitUI GetUnitWhichCanFight(Row horisontalPanel, Cell cell)
     {
         // verify if slot has an unit in it
-        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+        Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
         if (unitSlot.childCount > 0)
         {
             // cell has a unit in it
@@ -1573,9 +1589,9 @@ public class PartyPanel : MonoBehaviour {
 
     bool FrontRowHasUnitsWhichCanFight()
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cellsFront)
+            foreach (Cell cell in cellsFront)
             {
                 if (GetUnitWhichCanFight(horisontalPanel, cell))
                 {
@@ -1588,9 +1604,9 @@ public class PartyPanel : MonoBehaviour {
 
     bool BackRowHasUnitsWhichCanFight()
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cellsBack)
+            foreach (Cell cell in cellsBack)
             {
                 if (GetUnitWhichCanFight(horisontalPanel, cell))
                 {
@@ -1601,9 +1617,9 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    bool CellsHaveUnit(string horisontalPanel, string[] cells)
+    bool CellsHaveUnit(Row horisontalPanel, Cell[] cells)
     {
-        foreach (string cell in cells)
+        foreach (Cell cell in cells)
         {
             if (GetUnitWhichCanFight(horisontalPanel, cell))
             {
@@ -1613,15 +1629,15 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    bool HorizontalPanelHasUnitsWhichCanFightInTheSameRow(string horisontalPanel, string row)
+    bool HorizontalPanelHasUnitsWhichCanFightInTheSameRow(Row horisontalPanel, Cell cell)
     {
-        switch (row)
+        switch (cell)
         {
-            case "Front":
+            case Cell.Front:
                 return CellsHaveUnit(horisontalPanel, cellsFront);
-            case "Back":
+            case Cell.Back:
                 return CellsHaveUnit(horisontalPanel, cellsBack);
-            case "Wide":
+            case Cell.Wide:
                 return CellsHaveUnit(horisontalPanel, cellsFront);
             default:
                 Debug.LogError("Unknown row");
@@ -1637,7 +1653,7 @@ public class PartyPanel : MonoBehaviour {
         PartyPanel activeUnitPartyPanel = activeBattleUnitUI.GetUnitPartyPanel(); // .transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
         bool isBlocked = true;
         bool frontRowHasUnitsWhichCanFight = activeUnitPartyPanel.FrontRowHasUnitsWhichCanFight();
-        if ("Back" == activeMeleUnitFrontBackWideRowPosition)
+        if (Cell.Back.ToString() == activeMeleUnitFrontBackWideRowPosition)
         {
 
             if (frontRowHasUnitsWhichCanFight)
@@ -1667,9 +1683,9 @@ public class PartyPanel : MonoBehaviour {
         Color negativeColor = Color.grey;
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "This cannot be targeted";
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
             }
@@ -1686,12 +1702,12 @@ public class PartyPanel : MonoBehaviour {
         bool activeMeleUnitIsBlocked = IsActiveMeleUnitBlockedByItsPartyMembers();
         string activeMeleUnitTopMiddleBottomPosition = activeBattleUnitUI.GetUnitRow().name; //.transform.parent.parent.parent.parent.name;
         bool enemyUnitIsPotentialTarget = false;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if destination slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // Unit canvas (and unit) is present
@@ -1747,7 +1763,7 @@ public class PartyPanel : MonoBehaviour {
                                     // 5PartyPanel-4[Top/Middle/Bottom]HorizontalPanelGroup-3[Front/Back/Wide]Cell-2UnitSlot-1UnitCanvas-(this)Unit
                                     // if mele unit is in back row, then verify if it is not blocked by front row units
                                     // verify if this enemy unit is from front row or from back row
-                                    if ("Back" == cell)
+                                    if (Cell.Back == cell)
                                     {
                                         // unit is from back row and it may be protected by front row units
                                         // If front row is empty, then unit in back row potentially be reached
@@ -1778,7 +1794,7 @@ public class PartyPanel : MonoBehaviour {
                                             case "Top":
                                                 // can reach closest 2 (top and middle) units
                                                 // and also farest unit (if it is not protected by top and middle) units
-                                                if (("Top" == horisontalPanel) || ("Middle" == horisontalPanel))
+                                                if ((Row.Top == horisontalPanel) || (Row.Middle == horisontalPanel))
                                                 {
                                                     isAllowedToApplyPwrToThisUnit = true;
                                                     errorMessage = "";
@@ -1788,8 +1804,8 @@ public class PartyPanel : MonoBehaviour {
                                                     // Bottom horisontalPanel
                                                     // verify if top or middle has units, which can fight
                                                     // which means that they can protect bottom unit from mele attacks
-                                                    if (HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Top", cell)
-                                                        || HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Middle", cell))
+                                                    if (HorizontalPanelHasUnitsWhichCanFightInTheSameRow(Row.Top, cell)
+                                                        || HorizontalPanelHasUnitsWhichCanFightInTheSameRow(Row.Middle, cell))
                                                     {
                                                         // unit is protected
                                                         isAllowedToApplyPwrToThisUnit = false;
@@ -1811,7 +1827,7 @@ public class PartyPanel : MonoBehaviour {
                                             case "Bottom":
                                                 // can reach closest 2 (bottom and middle) units
                                                 // and also farest unit (if it is not protected by bottom and middle) units
-                                                if (("Bottom" == horisontalPanel) || ("Middle" == horisontalPanel))
+                                                if ((Row.Bottom == horisontalPanel) || (Row.Middle == horisontalPanel))
                                                 {
                                                     isAllowedToApplyPwrToThisUnit = true;
                                                     errorMessage = "";
@@ -1821,8 +1837,8 @@ public class PartyPanel : MonoBehaviour {
                                                     // Top horisontalPanel
                                                     // verify if bottom or middle has units, which can fight
                                                     // which means that they can protect top unit from mele attacks
-                                                    if (HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Bottom", cell)
-                                                        || HorizontalPanelHasUnitsWhichCanFightInTheSameRow("Middle", cell))
+                                                    if (HorizontalPanelHasUnitsWhichCanFightInTheSameRow(Row.Bottom, cell)
+                                                        || HorizontalPanelHasUnitsWhichCanFightInTheSameRow(Row.Middle, cell))
                                                     {
                                                         // unit is protected
                                                         isAllowedToApplyPwrToThisUnit = false;
@@ -1878,12 +1894,12 @@ public class PartyPanel : MonoBehaviour {
         Color negativeColor = Color.grey;
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "";
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // get unit for later checks
@@ -1937,9 +1953,9 @@ public class PartyPanel : MonoBehaviour {
         bool isAllowedToApplyPwrToThisUnit = false;
         string errorMessage = "";
         // highlight all cells based on friendly/enemy principle
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // Unit canvas (and unit) is present
                 if (activeUnitIsFromThisParty)
@@ -1951,7 +1967,7 @@ public class PartyPanel : MonoBehaviour {
                 else
                 {
                     // verify if slot has an unit in it
-                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                    Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                     if (unitSlot.childCount > 0)
                     {
                         // get unit for later checks
@@ -2190,9 +2206,9 @@ public class PartyPanel : MonoBehaviour {
     //    infoPanelTxt.color = defaultColor;
     //}
 
-    //void ClearInfoPanel(Transform partyPanelTr, string horisontalPanel, string cell)
+    //void ClearInfoPanel(Transform partyPanelTr, Row horisontalPanel, Cell cell)
     //{
-    //    ClearInfoPanel(partyPanelTr.Find(horisontalPanel).Find(cell));
+    //    ClearInfoPanel(partyPanelTr.Find(horisontalPanel + "/" + cell));
     //}
 
     public void ResetUnitCellInfoPanel()
@@ -2201,13 +2217,13 @@ public class PartyPanel : MonoBehaviour {
         {
             partyUnitUI.ClearUnitInfoPanel();
         }
-            //foreach (string horisontalPanel in horisontalPanels)
+            //foreach (Row horisontalPanel in horisontalPanels)
             //{
-            //    foreach (string cell in cells)
+            //    foreach (Cell cell in cells)
             //    {
             //        // Unit canvas (and unit) is present
             //        // verify if slot has an unit in it
-            //        Transform unitSlot = partyPanel.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+            //        Transform unitSlot = partyPanel.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
             //        if (unitSlot.childCount > 0)
             //        {
             //            //// get unit for later checks
@@ -2225,11 +2241,11 @@ public class PartyPanel : MonoBehaviour {
 
         public void ResetUnitCellHighlight()
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
-                transform.Find(horisontalPanel).Find(cell).Find("Br").GetComponent<Text>().color = new Color32(128, 128, 128, 255);
+                transform.Find(horisontalPanel + "/" + cell).Find("Br").GetComponent<Text>().color = new Color32(128, 128, 128, 255);
             }
         }
     }
@@ -2237,13 +2253,13 @@ public class PartyPanel : MonoBehaviour {
     //public void RemoveDeadUnits()
     //{
     //    //City city = GetCity();
-    //    foreach (string horisontalPanel in horisontalPanels)
+    //    foreach (Row horisontalPanel in horisontalPanels)
     //    {
-    //        foreach (string cell in cells)
+    //        foreach (Cell cell in cells)
     //        {
     //            // Unit canvas (and unit) is present
     //            // verify if slot has an unit in it
-    //            Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+    //            Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
     //            if (unitSlot.childCount > 0)
     //            {
     //                PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
@@ -2268,9 +2284,9 @@ public class PartyPanel : MonoBehaviour {
     //    infoPanelTxt.color = defaultColor;
     //}
 
-    //void ClearUnitCellStatus(Transform partyPanelTr, string horisontalPanel, string cell)
+    //void ClearUnitCellStatus(Transform partyPanelTr, Row horisontalPanel, Cell cell)
     //{
-    //    ClearUnitCellStatus(partyPanelTr.Find(horisontalPanel).Find(cell));
+    //    ClearUnitCellStatus(partyPanelTr.Find(horisontalPanel + "/" + cell));
     //}
 
     public void ResetUnitCellStatus(string[] exceptions)
@@ -2296,13 +2312,13 @@ public class PartyPanel : MonoBehaviour {
                 partyUnitUI.SetUnitStatus(UnitStatus.Active);
             }
         }
-        //foreach (string horisontalPanel in horisontalPanels)
+        //foreach (Row horisontalPanel in horisontalPanels)
         //{
-        //    foreach (string cell in cells)
+        //    foreach (Cell cell in cells)
         //    {
         //        // Unit canvas (and unit) is present
         //        // verify if slot has an unit in it
-        //        Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+        //        Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
         //        if (unitSlot.childCount > 0)
         //        {
         //            // Do not remove some statuses, because they should persist
@@ -2328,7 +2344,7 @@ public class PartyPanel : MonoBehaviour {
         //}
     }
 
-    //void ClearUnitCellBuffsOrDebuffs(Transform partyPanelTr, string horisontalPanel, string cell, string whatToRemove)
+    //void ClearUnitCellBuffsOrDebuffs(Transform partyPanelTr, Row horisontalPanel, Cell cell, string whatToRemove)
     //{
     //    UnitBuffIndicator[] allBuffs = partyPanelTr.Find(horisontalPanel + "/" + cell + "/" + "UnitStatus/" + whatToRemove).GetComponentsInChildren<UnitBuffIndicator>();
     //    foreach (UnitBuffIndicator buff in allBuffs)
@@ -2339,13 +2355,13 @@ public class PartyPanel : MonoBehaviour {
 
     public void RemoveAllBuffsAndDebuffs()
     {
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // Unit canvas (and unit) is present
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // Remove all buffs and debuffs from unit
@@ -2441,9 +2457,9 @@ public class PartyPanel : MonoBehaviour {
             {
                 // we found other (enemy hero party)
                 // apply damage to all party members
-                foreach (string horisontalPanel in horisontalPanels)
+                foreach (Row horisontalPanel in horisontalPanels)
                 {
-                    foreach (string cell in cells)
+                    foreach (Cell cell in cells)
                     {
                         PartyUnitUI unitUI = GetUnitWhichCanFight(horisontalPanel, cell);
                         if (unitUI)
@@ -2451,7 +2467,7 @@ public class PartyPanel : MonoBehaviour {
                             ApplyDestructivePowerToSingleUnit(unitUI);
                         }
                         //// verify if slot has an unit in it
-                        //Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                        //Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                         //if (unitSlot.childCount > 0)
                         //{
                         //    // get unit for later checks
@@ -2576,12 +2592,12 @@ public class PartyPanel : MonoBehaviour {
     public bool HasEscapedBattle()
     {
         // verify if at least one unit has escaped the battle
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // get unit for later checks
@@ -2601,12 +2617,12 @@ public class PartyPanel : MonoBehaviour {
     int GetExperienceForDestroyedUnits()
     {
         int experiencePool = 0;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     // get unit for later checks
@@ -2627,12 +2643,12 @@ public class PartyPanel : MonoBehaviour {
     int GetNumberOfAfterBattleLeftUnit()
     {
         int unitsLeft = 0;
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     if (GetUnitWhichCanFight(horisontalPanel, cell))
@@ -2736,12 +2752,12 @@ public class PartyPanel : MonoBehaviour {
         int unitsLeftAfterBattle = GetNumberOfAfterBattleLeftUnit();
         int experiencePerUnit = gainedExperiencePool / unitsLeftAfterBattle;
         // grant experience and show gained experience
-        foreach (string horisontalPanel in horisontalPanels)
+        foreach (Row horisontalPanel in horisontalPanels)
         {
-            foreach (string cell in cells)
+            foreach (Cell cell in cells)
             {
                 // verify if slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                 if (unitSlot.childCount > 0)
                 {
                     PartyUnitUI unitUI = GetUnitWhichCanFight(horisontalPanel, cell);
@@ -2785,12 +2801,12 @@ public class PartyPanel : MonoBehaviour {
         // Fade
         for (float f = 1f; f >= 0; f -= 0.1f)
         {
-            foreach (string horisontalPanel in horisontalPanels)
+            foreach (Row horisontalPanel in horisontalPanels)
             {
-                foreach (string cell in cells)
+                foreach (Cell cell in cells)
                 {
                     // verify if slot has an unit in it
-                    Transform unitSlot = transform.Find(horisontalPanel).Find(cell).Find("UnitSlot");
+                    Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
                     if (unitSlot.childCount > 0)
                     {
                         // change infoPanel transparancy

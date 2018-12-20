@@ -152,7 +152,7 @@ public class CameraController : MonoBehaviour {
             {
                 // Rotate map
                 rotationDirection = -1;
-                Debug.Log("Trigger rotation to the Left");
+                // Debug.Log("Trigger rotation to the Left");
                 doRotate = true;
             }
         }
@@ -165,7 +165,7 @@ public class CameraController : MonoBehaviour {
             if (!rotationLock)
             {
                 rotationDirection = +1;
-                Debug.Log("Trigger rotation to the Right");
+                // Debug.Log("Trigger rotation to the Right");
                 doRotate = true;
             }
         }

@@ -7,7 +7,7 @@ using UnityEngine;
 class GameData : System.Object
 {
     // Map (Scene)
-    // ..
+    public ChapterData chapterData;
     // Turns: active player, turn number
     public TurnsData turnsData;
     // Players
@@ -50,7 +50,22 @@ public class ObjectsManager : MonoBehaviour {
 
     void Awake()
     {
-        Instance = this;
+        // verify if instance is null = not set
+        if (Instance == null)
+        {
+            Instance = this;
+        } else
+        {
+            // verify if instance not is equal this = this is the new instance spawned
+            if (Instance.GetInstanceID() != this.GetInstanceID())
+            {
+                Debug.LogError("Another instance should be destoryed before spawning this instance.");
+                // destroy previous instance
+                Destroy(Instance.gameObject);
+                // init new instance
+                Instance = this;
+            }
+        }
     }
 
     public GameObject HeroPartyTemplate
@@ -102,6 +117,11 @@ public class ObjectsManager : MonoBehaviour {
         newGamePlayer.gameObject.name = playerData.givenName + " " + playerData.faction;
     }
 
+    public GamePlayer[] GetGamePlayers()
+    {
+        return gamePlayersRoot.GetComponentsInChildren<GamePlayer>(true);
+    }
+
     public void RemovePlayer(GamePlayer gamePlayer)
     {
         Destroy(gamePlayer.gameObject);
@@ -137,7 +157,7 @@ public class ObjectsManager : MonoBehaviour {
     {
         Debug.Log("Creating " + cityData.cityName + " city");
         // get parent Transform
-        Transform citiesParentTransform = UIRoot.Instance.transform.Find("Map/Cities");
+        Transform citiesParentTransform = transform.Find("Map/Cities");
         // create city from tempalte
         City newCity = Instantiate(cityTemplate, citiesParentTransform).GetComponent<City>();
         // set city data
@@ -198,18 +218,16 @@ public class ObjectsManager : MonoBehaviour {
         newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
         // place it to original position on map based on the tile coordinates
         newPartyOnMap.transform.position = MapManager.Instance.GetWorldPositionByCoordinates(partyData.partyMapCoordinates);
-        // create links between party on map and hero party
-        newPartyOnMap.LHeroParty = heroParty;
-        heroParty.LMapHero = newPartyOnMap;
-        // send it backwards, because city UI should be on top
-        // newPartyOnMap.transform.SetAsFirstSibling();
-        // rename it
-        newPartyOnMap.gameObject.name = heroParty.GetPartyLeader().GivenName + " " + heroParty.GetPartyLeader().UnitName + " Party";
         // Create hero label on map
         MapObjectLabel newPartyOnMapLabel = Instantiate(heroPartyOnMapLabelTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapObjectLabel>())).GetComponent<MapObjectLabel>();
         // Link hero to the lable and label to the hero
         newPartyOnMap.GetComponent<MapObject>().Label = newPartyOnMapLabel;
         newPartyOnMapLabel.MapObject = newPartyOnMap.GetComponent<MapObject>();
+        // create links between party on map and hero party
+        newPartyOnMap.LHeroParty = heroParty;
+        heroParty.LMapHero = newPartyOnMap;
+        // rename it
+        newPartyOnMap.gameObject.name = heroParty.GetPartyLeader().GivenName + " " + heroParty.GetPartyLeader().UnitName + " Party";
         // activate hero on map
         newPartyOnMap.gameObject.SetActive(true);
         // activate hero label on map
@@ -221,7 +239,7 @@ public class ObjectsManager : MonoBehaviour {
     City GetCityByID(int cityID)
     {
         // loop through all cites
-        foreach(City city in UIRoot.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>())
+        foreach(City city in transform.Find("Map/Cities").GetComponentsInChildren<City>())
         {
             // compare city id to searchable id
             if (cityID == city.CityID)

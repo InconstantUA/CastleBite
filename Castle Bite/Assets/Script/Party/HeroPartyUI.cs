@@ -24,7 +24,7 @@ public class HeroPartyUI : MonoBehaviour {
         // Get PartyPanel
         PartyPanel partyPanel = GetComponentInChildren<PartyPanel>(true);
         // Get unit slot Transform by unit address
-        Transform unitSlotTransform = partyPanel.transform.Find(partyUnit.UnitCellAddress).GetComponentInChildren<UnitSlot>(true).transform;
+        Transform unitSlotTransform = partyPanel.transform.Find(partyUnit.UnitPPRow + "/" + partyUnit.UnitPPCell).GetComponentInChildren<UnitSlot>(true).transform;
         // Get unit canvas template
         GameObject unitCanvasTemplate = transform.root.Find("Templates/UI/UnitCanvas").gameObject;
         // Create new unit canvas in unit slot

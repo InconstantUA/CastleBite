@@ -16,20 +16,18 @@ public class ChapterManager : MonoBehaviour {
     public static ChapterManager Instance { get; private set; }
 
     [SerializeField]
-    bool lastChapter;
+    Chapter activeChapter;
     [SerializeField]
-    string targetCityName; // we do not use direct link to the city, because it may be destroyed and recreated during save/load process
-    [SerializeField]
-    PlayerData[] playersData;
+    Chapter[] chapters;
+    //[SerializeField]
+    //PlayerData[] playersData;
     CoroutineQueue coroutineQueue;
-    // define chapter goals
-    bool goalTargetCityCaptured = false;
-    bool goalTargetHeroDestroyed = true;
     // for end (exit) chapter logic
     bool completed = false;
     bool failed = false;
     string failureReason = "";
 
+    #region Properties
     public CoroutineQueue CoroutineQueue
     {
         get
@@ -43,13 +41,27 @@ public class ChapterManager : MonoBehaviour {
         }
     }
 
-    public PlayerData[] PlayersData
+    //public PlayerData[] PlayersData
+    //{
+    //    get
+    //    {
+    //        return playersData;
+    //    }
+    //}
+
+    public Chapter ActiveChapter
     {
         get
         {
-            return playersData;
+            return activeChapter;
+        }
+
+        set
+        {
+            activeChapter = value;
         }
     }
+    #endregion Properties
 
     void Awake()
     {
@@ -58,16 +70,30 @@ public class ChapterManager : MonoBehaviour {
         coroutineQueue = new CoroutineQueue(1, StartCoroutine);
     }
 
+    //public GameObject GetWorldTemplate()
+    //{
+    //    foreach(Chapter chapter in chapters)
+    //    {
+    //        // verify if chaper matches
+    //        if (chapter.ChapterData.chapterName == activeChapter.ChapterData.chapterName)
+    //        {
+    //            return chapter.gameObject;
+    //        }
+    //    }
+    //    Debug.LogError("Cannot find world template for " + chapterData.chapterName + " chapter");
+    //    return null;
+    //}
+
     public void OnGoalCityCapture(City city)
     {
-        if (city.name == targetCityName)
+        if (city.name == activeChapter.ChapterData.targetCityName)
         {
             GamePlayer player = TurnsManager.Instance.GetActivePlayer();
             // verify if city has been captured by human player
             // .. I assume that game is in single player game mode, where there is only one human player and all others are AI players
             if ((city.CityFaction == player.Faction) && (PlayerType.Human == player.PlayerType))
             {
-                goalTargetCityCaptured = true;
+                activeChapter.ChapterData.goalTargetCityCaptured = true;
                 Debug.Log("Target city has been captured by player");
             }
             else
@@ -82,7 +108,7 @@ public class ChapterManager : MonoBehaviour {
     void Update()
     {
         // Verify if player has win game
-        if (goalTargetCityCaptured && goalTargetHeroDestroyed)
+        if (activeChapter.ChapterData.goalTargetCityCaptured && activeChapter.ChapterData.goalTargetHeroDestroyed)
         {
             Debug.Log("Player has completed this chapter");
             completed = true;
@@ -113,7 +139,7 @@ public class ChapterManager : MonoBehaviour {
         Debug.Log("Show credits");
         // I assume that we were at map before game end
         // Disable city screen if it was active
-        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
+        EditPartyScreen cityScreen = UIRoot.Instance.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
         if (cityScreen)
         {
             cityScreen.gameObject.SetActive(false);
@@ -126,18 +152,12 @@ public class ChapterManager : MonoBehaviour {
         credits.SetActive(true);
     }
 
-    //public void StartGame()
-    //{
-    //    // Activate and reset turns manager, set Dominion as active player
-    //    TurnsManager.Instance.Reset(Faction.Dominion);
-    //}
-
     void EndGame()
     {
         Debug.Log("End game");
         // I assume that we were at map before game end
         // Get vars
-        GameObject mainMenu = transform.root.Find("MainMenu").gameObject;
+        GameObject mainMenu = UIRoot.Instance.transform.Find("MainMenu").gameObject;
         // Disable map and enable main menu
         MapManager.Instance.gameObject.SetActive(false);
         MapMenuManager.Instance.gameObject.SetActive(false);
@@ -165,7 +185,7 @@ public class ChapterManager : MonoBehaviour {
         }
         else if (completed)
         {
-            if (lastChapter)
+            if (activeChapter.ChapterData.lastChapter)
             {
                 notificationPopup.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(ShowCredits);
                 messageText = "Congratulations! You have completed this game!";
@@ -185,7 +205,32 @@ public class ChapterManager : MonoBehaviour {
         notificationPopup.gameObject.SetActive(true);
         // reset variables to remove constant popups on Update() function call:
         failed = false;
-        goalTargetCityCaptured = false;
-        goalTargetHeroDestroyed = false;
+        activeChapter.ChapterData.goalTargetCityCaptured = false;
+        activeChapter.ChapterData.goalTargetHeroDestroyed = false;
+    }
+
+    IEnumerator SetEndingGameScreen()
+    {
+        // Activate Loading screen
+        UIRoot.Instance.GetComponentInChildren<EndingGameScreen>(true).SetActive(true);
+        // Set waiting cursor
+        CursorController.Instance.SetBlockInputCursor();
+        // Activate input blocker
+        InputBlocker.Instance.SetActive(true);
+        // Replace map with the clear Map
+        Debug.LogWarning("Replace map with new map from template");
+        // Deactivate loading screen after clean
+        yield return new WaitForSeconds(2);
+        // Deactivate Loading screen
+        UIRoot.Instance.GetComponentInChildren<EndingGameScreen>(true).SetActive(false);
+        // Set normal cursor
+        CursorController.Instance.SetNormalCursor();
+        // Disable input blocker
+        InputBlocker.Instance.SetActive(false);
+    }
+
+    public void EndCurrentGame()
+    {
+        coroutineQueue.Run(SetEndingGameScreen());
     }
 }

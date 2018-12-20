@@ -166,7 +166,7 @@ public class EditPartyScreen : MonoBehaviour {
         transform.root.Find("MiscUI/BottomControlPanel/RightControls/CityBackButton").gameObject.SetActive(doActivate);
         if (LCity != null)
         {
-            // Activate/Deactivate city controls
+            Debug.Log("Activate/Deactivate city controls");
             transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Heal").gameObject.SetActive(doActivate);
             transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/Resurect").gameObject.SetActive(doActivate);
         }
@@ -466,13 +466,13 @@ public class EditPartyScreen : MonoBehaviour {
         newPartyOnMapUI.gameObject.name = newLeaderParty.GetPartyLeader().GivenName + " " + newLeaderParty.GetPartyLeader().UnitName + " Party";
     }
 
-    string GetHiredLeaderDestinationSlotName(PartyUnit hiredUnitTemplate)
+    PartyPanel.Cell GetHiredLeaderDestinationSlotName(PartyUnit hiredUnitTemplate)
     {
         // verify if hired unit size is single or double
         if (hiredUnitTemplate.UnitSize == UnitSize.Double)
         {
             // Double unit size
-            return "Wide";
+            return PartyPanel.Cell.Wide;
         }
         else
         {
@@ -481,12 +481,12 @@ public class EditPartyScreen : MonoBehaviour {
             if (hiredUnitTemplate.UnitPowerDistance == UnitPowerDistance.Mele)
             {
                 // Place mele units in front row
-                return "Front";
+                return PartyPanel.Cell.Front;
             }
             else
             {
                 // Place ranged unit into back row
-                return "Back";
+                return PartyPanel.Cell.Back;
             }
         }
     }
@@ -496,7 +496,8 @@ public class EditPartyScreen : MonoBehaviour {
         // create unit in HeroParty
         PartyUnit newPartyUnit = Instantiate(hiredUnitTemplate, heroParty.transform).GetComponent<PartyUnit>();
         // Set new unit cell address
-        newPartyUnit.PartyUnitData.unitCellAddress = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitCellAddress();
+        newPartyUnit.PartyUnitData.unitPPRow = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitPPRow();
+        newPartyUnit.PartyUnitData.unitPPCell = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitPPCell();
         // take gold from player
         TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
         if (doCreateUI)
@@ -517,7 +518,7 @@ public class EditPartyScreen : MonoBehaviour {
         // create new party
         HeroPartyUI newHeroPartyUI = CreateNewPartyInCity(city);
         // Get unit's slot transform
-        Transform newUnitParentSlot = newHeroPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr("Middle", GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
+        Transform newUnitParentSlot = newHeroPartyUI.GetComponentInChildren<PartyPanel>(true).GetUnitSlotTr(PartyPanel.Row.Middle, GetHiredLeaderDestinationSlotName(hiredUnitTemplate));
         // Hire unit, but do not create canvas, because it will be done automatically by HeroParty on enable
         PartyUnit newPartyLeader = HireGenericUnit(hiredUnitTemplate, newHeroPartyUI.LHeroParty, newUnitParentSlot, false);
         // Rename hero party, when we know the leader
@@ -781,10 +782,10 @@ public class EditPartyScreen : MonoBehaviour {
     #endregion Dismiss unit
 
     // todo: fix duplicate function in PartyPanel
-    public void SetHireUnitButtonActiveByCell(bool doActivate, string cellAddress)
+    public void SetHireUnitButtonActiveByCell(bool doActivate, PartyPanel.Row row, PartyPanel.Cell cell)
     {
         // Debug.Log("Set hire unit button at " + cellAddress + " " + doActivate.ToString());
-        transform.root.Find("MiscUI/HireCommonUnitButtons/" + cellAddress).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+        transform.root.Find("MiscUI/HireCommonUnitButtons/" + row + "/" + cell).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
     }
 
     void BringHireUnitPnlButtonToTheFront()
@@ -819,18 +820,18 @@ public class EditPartyScreen : MonoBehaviour {
                         // verify if drop slot doesn't have an !active! unit in it
                         && (!unitSlot.GetComponentInChildren<PartyUnitUI>(false))
                         // verify if wide cell is not active = occupied in the same row
-                        && (!unitSlot.transform.parent.parent.Find("Wide").gameObject.activeSelf)
+                        && (!unitSlot.transform.parent.parent.Find(PartyPanel.Cell.Wide.ToString()).gameObject.activeSelf)
                         )
                     {
                         //Debug.Log("Activate + button in " + horisontalPanel + "/" + cell + " cell");
-                        SetHireUnitButtonActiveByCell(true, unitSlot.GetUnitCellAddress());
+                        SetHireUnitButtonActiveByCell(true, unitSlot.GetUnitPPRow(), unitSlot.GetUnitPPCell());
                         // And bring panel to the front
                         BringHireUnitPnlButtonToTheFront();
                     }
                     else
                     {
                         //Debug.Log("Deactivate + button in " + horisontalPanel + "/" + cell + " cell");
-                        SetHireUnitButtonActiveByCell(false, unitSlot.GetUnitCellAddress());
+                        SetHireUnitButtonActiveByCell(false, unitSlot.GetUnitPPRow(), unitSlot.GetUnitPPCell());
                     }
                 }
             }

@@ -77,7 +77,8 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 srcPartyUnitUI.LPartyUnit.transform.SetParent(dstHeroParty.transform);
             }
             // Change unit's address
-            srcPartyUnitUI.LPartyUnit.UnitCellAddress = srcPartyUnitUI.GetUnitCellAddress();
+            srcPartyUnitUI.LPartyUnit.UnitPPRow = srcPartyUnitUI.GetUnitRow().GetComponent<PartyPanelRow>().Row;
+            srcPartyUnitUI.LPartyUnit.UnitPPCell = srcPartyUnitUI.GetUnitCell().GetComponent<PartyPanelCell>().Cell;
         }
         //  verfy that unit canvas is present, dst cell may be free
         if (dstPartyUnitUI != null)
@@ -91,7 +92,8 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 dstPartyUnitUI.LPartyUnit.transform.SetParent(srcHeroParty.transform);
             }
             // Change unit's address
-            dstPartyUnitUI.LPartyUnit.UnitCellAddress = dstPartyUnitUI.GetUnitCellAddress();
+            dstPartyUnitUI.LPartyUnit.UnitPPRow = dstPartyUnitUI.GetUnitRow().GetComponent<PartyPanelRow>().Row;
+            dstPartyUnitUI.LPartyUnit.UnitPPCell = dstPartyUnitUI.GetUnitCell().GetComponent<PartyPanelCell>().Cell;
         }
     }
 
@@ -106,12 +108,12 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         // get horizontal panels for later use
         Transform srcPanelTr = srcCellTr.parent;
         Transform dstPanelTr = dstCellTr.parent;
-        Transform srcL = srcPanelTr.Find("Front");
-        Transform srcR = srcPanelTr.Find("Back");
-        Transform srcW = srcPanelTr.Find("Wide");
-        Transform dstL = dstPanelTr.Find("Front");
-        Transform dstR = dstPanelTr.Find("Back");
-        Transform dstW = dstPanelTr.Find("Wide");
+        Transform srcL = srcPanelTr.Find(PartyPanel.Cell.Front.ToString());
+        Transform srcR = srcPanelTr.Find(PartyPanel.Cell.Back.ToString());
+        Transform srcW = srcPanelTr.Find(PartyPanel.Cell.Wide.ToString());
+        Transform dstL = dstPanelTr.Find(PartyPanel.Cell.Front.ToString());
+        Transform dstR = dstPanelTr.Find(PartyPanel.Cell.Back.ToString());
+        Transform dstW = dstPanelTr.Find(PartyPanel.Cell.Wide.ToString());
         SwapTwoCellsContent(srcL, dstL);
         SwapTwoCellsContent(srcR, dstR);
         SwapTwoCellsContent(srcW, dstW);
