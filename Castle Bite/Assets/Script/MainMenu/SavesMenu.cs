@@ -12,7 +12,9 @@ public class SavesMenu : MonoBehaviour {
 
     void OnDisable()
     {
-        DeselectSave();
+        // DeselectSave();
+        // clean up selectedSave
+        selectedSave = null;
     }
 
     public void SetSaveDetails(GameObject save = null)
@@ -33,22 +35,25 @@ public class SavesMenu : MonoBehaviour {
             {
                 saveName = "",
                 date = DateTime.Now,
-                turnNumber = 0,
-                playersData = new PlayerData[players.Length]
+                gameData = GetComponentInParent<SaveGame>().GetGameData()
+                //turnNumber = 0,
+                //playersData = new PlayerData[players.Length]
             };
-            // Get and save players data
-            for (int i = 0; i < players.Length; i++)
-            {
-                saveData.playersData[i] = players[i].PlayerData;
-            }
+            //// Get and save players data
+            //for (int i = 0; i < players.Length; i++)
+            //{
+            //    saveData.playersData[i] = players[i].PlayerData;
+            //}
         }
         // update UI
         // set save details  transform
         Transform saveDetails = transform.parent.Find("SaveDetails");
         // activate info
         saveDetails.Find("Info").gameObject.SetActive(true);
+        // set chapter name
+        saveDetails.Find("Info/Chapter/Value").GetComponent<Text>().text = saveData.gameData.chapterData.chapterDisplayName;
         // set turn nuber
-        saveDetails.Find("Info/Turn/Value").GetComponent<Text>().text = saveData.turnNumber.ToString();
+        saveDetails.Find("Info/Turn/Value").GetComponent<Text>().text = saveData.gameData.turnsData.turnNumber.ToString();
         // set date string
         saveDetails.Find("Info/Date/Value").GetComponent<Text>().text = saveData.date.ToLocalTime().ToShortDateString() + " " + saveData.date.ToLocalTime().ToShortTimeString();
         // set player information
@@ -61,7 +66,7 @@ public class SavesMenu : MonoBehaviour {
         }
         // get player info template
         GameObject playerInfoTemplateUI = transform.root.Find("Templates/UI/Menu/PlayerInfoTemplate").gameObject;
-        foreach (PlayerData playerData in saveData.playersData)
+        foreach (PlayerData playerData in saveData.gameData.playersData)
         {
             // clone template
             GameObject newPlayerInfo = Instantiate(playerInfoTemplateUI, playersInfoRoot);

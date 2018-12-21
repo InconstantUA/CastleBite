@@ -6,14 +6,19 @@ public class World : MonoBehaviour
 {
     public static World Instance;
 
-    void Awake()
+    public void RemoveCurrentChapter()
     {
-        Instance = this;
         // Remove all current chapers in the World
         foreach (Chapter chapter in GetComponentsInChildren<Chapter>(true))
         {
             Debug.LogWarning("Removing " + chapter.ChapterData.chapterName + " chapter.");
             Destroy(chapter.gameObject);
         }
+    }
+
+    void Awake()
+    {
+        Instance = this;
+        RemoveCurrentChapter();
     }
 }

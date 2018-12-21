@@ -12,9 +12,10 @@ public class SaveData : System.Object
     // Minium save data, which is displayed in the load- and save game UI
     public string saveName;
     public DateTime date;
-    // values below actually are read from other datas
-    public int turnNumber;
-    public PlayerData[] playersData;
+    public GameData gameData;
+    //// values below actually are read from other datas
+    //public int turnNumber;
+    //public PlayerData[] playersData;
 }
 
 public class Save : MonoBehaviour {
@@ -57,13 +58,13 @@ public class Save : MonoBehaviour {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             // open file stream for read
             FileStream fileStream = File.OpenRead(file.FullName);
-            // Get game data
-            GameData gameData = (GameData)binaryFormatter.Deserialize(fileStream);
-            // set turn number
-            // .. read turn number from save file
-            saveData.turnNumber = 0;
-            // init list of players
-            saveData.playersData = gameData.playersData;
+            // Get and set game data
+            saveData.gameData = (GameData)binaryFormatter.Deserialize(fileStream);
+            //// set turn number
+            //// .. read turn number from save file
+            //saveData.turnNumber = 0;
+            //// init list of players
+            //saveData.playersData = gameData.playersData;
             // close file
             fileStream.Close();
         }

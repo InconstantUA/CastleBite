@@ -23,6 +23,7 @@ public class EventsAdmin : MonoBehaviour {
     public UnityEvent OnPlayerGoldHasChanged;
 
     // For city faction changes
+    // This function is Triggered when city faction parameter is set
     public void IHasChanged(City city, Faction oldFaction)
     {
         // Invoke all functions, which are registered as listeners in Unity Editor

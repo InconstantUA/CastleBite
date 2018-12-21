@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-class GameData : System.Object
+public class GameData : System.Object
 {
-    // Map (Scene)
+    // Map = Chapter = World
     public ChapterData chapterData;
     // Turns: active player, turn number
     public TurnsData turnsData;
@@ -274,12 +274,13 @@ public class ObjectsManager : MonoBehaviour {
             newHeroPartyParentTransform = GetCityByID(partyData.linkedCityID).transform;
         } else if (partyData.partyUIAddress != null)
         {
+            Debug.Log("Creating party at " + partyData.partyUIAddress);
             // get parent transform by UI address
-            newHeroPartyParentTransform = UIRoot.Instance.transform.Find(partyData.partyUIAddress);
+            newHeroPartyParentTransform = transform.Find(partyData.partyUIAddress);
         } else
         {
             Debug.LogError("Unknown condition. Cannot find hero party parent transform");
-            newHeroPartyParentTransform = UIRoot.Instance.transform;
+            newHeroPartyParentTransform = transform;
         }
         newHeroParty = Instantiate(heroPartyTemplate, newHeroPartyParentTransform).GetComponent<HeroParty>();
         // set hero party data
@@ -362,6 +363,36 @@ public class ObjectsManager : MonoBehaviour {
             // remove map item
             Destroy(mapItem.gameObject);
         }
+    }
+
+    public void RemoveAllParties()
+    {
+        // Remove all parties
+        foreach (HeroParty heroParty in GetComponentsInChildren<HeroParty>(true))
+        {
+            RemoveHeroParty(heroParty);
+        }
+        Debug.LogWarning("All parties removed");
+    }
+
+    public void RemoveAllCities()
+    {
+        // Remove cities
+        foreach (City city in GetComponentsInChildren<City>(true))
+        {
+            RemoveCity(city);
+        }
+        Debug.Log("All cities removed");
+    }
+
+    public void RemoveAllPlayers()
+    {
+        // remove players
+        foreach (GamePlayer gamePlayer in GetGamePlayers())
+        {
+            RemovePlayer(gamePlayer);
+        }
+        Debug.Log("All Players Removed");
     }
 
     public InventoryItem CreateInventoryItem(InventoryItemData inventoryItemData, Transform parentTransform)

@@ -23,6 +23,8 @@ public class LoadGame : MonoBehaviour
     //GameObject unitCanvasTemplate;
     //[SerializeField]
     //GameObject heroPartyOnMapTemplate;
+    [SerializeField]
+    int loadWaitTimeSeconds;
     string fullFilePath;
     TextToggle selectedToggle;
 
@@ -112,30 +114,54 @@ public class LoadGame : MonoBehaviour
         }
     }
 
-    public void RemoveAllPlayers()
-    {
-        // Get objects manager
-        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
-        // remove players
-        foreach (GamePlayer gamePlayer in ObjectsManager.Instance.GetGamePlayers())
-        {
-            ObjectsManager.Instance.RemovePlayer(gamePlayer);
-        }
-        Debug.Log("All Players Removed");
-    }
+    //public void RemoveAllPlayers()
+    //{
+    //    // Get objects manager
+    //    // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+    //    // remove players
+    //    //foreach (GamePlayer gamePlayer in ObjectsManager.Instance.GetGamePlayers())
+    //    //{
+    //    //    ObjectsManager.Instance.RemovePlayer(gamePlayer);
+    //    //}
+    //    //Debug.Log("All Players Removed");
+    //    ObjectsManager.Instance.RemoveAllCities();
+    //}
 
-    public void RemoveAllCities()
-    {
-        // Get objects manager
-        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
-        // Remove cities
-        foreach (City city in ObjectsManager.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>(true))
-        {
-            ObjectsManager.Instance.RemoveCity(city);
-        }
-        Debug.Log("All cities removed");
-        //Debug.Break();
-    }
+    //public void RemoveAllCities()
+    //{
+    //    // Get objects manager
+    //    // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+    //    // Remove cities
+    //    //foreach (City city in ObjectsManager.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>(true))
+    //    //{
+    //    //    ObjectsManager.Instance.RemoveCity(city);
+    //    //}
+    //    //Debug.Log("All cities removed");
+    //    //Debug.Break();
+    //    ObjectsManager.Instance.RemoveAllCities();
+    //}
+
+    //public void RemoveAllParties()
+    //{
+    //    // Get objects manager
+    //    // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+    //    // Remove all parties
+    //    //foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
+    //    //{
+    //    //    ObjectsManager.Instance.RemoveHeroParty(heroParty);
+    //    //}
+    //    //Debug.LogWarning("All parties removed");
+    //    //Debug.Break();
+    //    ObjectsManager.Instance.RemoveAllParties();
+    //}
+
+    //public void RemoveAllInventoryItems()
+    //{
+    //    // Get objects manager
+    //    // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
+    //    // Remove all items on map, other items will be removed automatically with respective parties or units
+    //    ObjectsManager.Instance.RemoveAllInventoryItemsOnMap();
+    //}
 
     public void CreateCities(CityData[] citiesData)
     {
@@ -146,19 +172,6 @@ public class LoadGame : MonoBehaviour
         {
             ObjectsManager.Instance.CreateCity(cityData);
         }
-    }
-
-    public void RemoveAllParties()
-    {
-        // Get objects manager
-        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
-        // Remove all parties
-        foreach (HeroParty heroParty in transform.root.GetComponentsInChildren<HeroParty>(true))
-        {
-            ObjectsManager.Instance.RemoveHeroParty(heroParty);
-        }
-        Debug.LogWarning("All parties removed");
-        //Debug.Break();
     }
 
     public void CreateParties(PartyData[] partiesData)
@@ -172,14 +185,6 @@ public class LoadGame : MonoBehaviour
         }
     }
 
-    public void RemoveAllInventoryItems()
-    {
-        // Get objects manager
-        // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
-        // Remove all items on map, other items will be removed automatically with respective parties or units
-        ObjectsManager.Instance.RemoveAllInventoryItemsOnMap();
-    }
-
     void SetTurnsManager(GameData gameData)
     {
         // Get turns manager
@@ -190,18 +195,18 @@ public class LoadGame : MonoBehaviour
         TurnsManager.Instance.UpdateTurnNumberText();
     }
 
-    public IEnumerator CleanGameBeforeLoad()
+    public IEnumerator CleanNewWorldBeforeLoad()
     {
-        // Block mouse input
-        InputBlocker.Instance.SetActive(true);
+        // Activate Map Manager - it is needed to manipulate with map objects
+        ChapterManager.Instance.ActiveChapter.GetComponentInChildren<MapManager>(true).gameObject.SetActive(true);
+        // Freeze map (during Animation internal updates are not done)
+        MapManager.Instance.SetMode(MapManager.Mode.Animation);
         // Note order is imporant, because some parties are children of cities
-        //RemoveAllInventoryItems();
-        //RemoveAllParties();
-        //RemoveAllCities();
-        //RemoveAllPlayers();
-        // remove current world
-        Destroy(World.Instance.GetComponentInChildren<Transform>(true).gameObject);
-        // wait for guaranteed next updated, in case of performance issues
+        ObjectsManager.Instance.RemoveAllInventoryItemsOnMap(); // all other items will be removed because they are hierarchically inside of the party or city or hero
+        ObjectsManager.Instance.RemoveAllParties();
+        ObjectsManager.Instance.RemoveAllCities();
+        ObjectsManager.Instance.RemoveAllPlayers();
+        // wait for guaranteed next update, in case of performance issues
         yield return new WaitForFixedUpdate();
         // Wait for all animations to finish
         yield return new WaitForSeconds(0.25f);
@@ -239,17 +244,10 @@ public class LoadGame : MonoBehaviour
         }
     }
 
-    void CreateWorld(ChapterData chapterData)
-    {
-        // Instantiate();
-    }
-
     IEnumerator CreateGameObjects(GameData gameData)
     {
         Debug.Log("Create Game Objects");
         // Note order is important, if some party was child of a city, then city should be created first
-        // Instantiate empty world
-        CreateWorld(gameData.chapterData);
         // Update game with data from save
         CreateGamePlayers(gameData.playersData);
         // Set Turns manager data
@@ -273,7 +271,7 @@ public class LoadGame : MonoBehaviour
         // Activate map screen
         // MapManager should be already active
         // MapManager.Instance.gameObject.SetActive(true);
-        MapMenuManager.Instance.gameObject.SetActive(true);
+        UIRoot.Instance.GetComponentInChildren<MapMenuManager>(true).gameObject.SetActive(true);
         // UnFreeze map (during Animation internal updates are not done)
         MapManager.Instance.SetMode(MapManager.Mode.Browse);
         // Activate main menu panel, so it is visible next time main menu is activated
@@ -285,17 +283,29 @@ public class LoadGame : MonoBehaviour
         // Deactivate this screen
         gameObject.SetActive(false);
         // Wait a bit
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(loadWaitTimeSeconds);
         // Unblock mouse input
         InputBlocker.Instance.SetActive(false);
         // Deactivate Loading screen
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
     }
 
-    IEnumerator FreezeMap()
+    //IEnumerator FreezeMap()
+    //{
+    //    // Freeze map (during Animation internal updates are not done)
+    //    MapManager.Instance.SetMode(MapManager.Mode.Animation);
+    //    yield return null;
+    //}
+
+    IEnumerator LoadChapterWorldFromTemplate(GameData gameData)
     {
-        // Freeze map (during Animation internal updates are not done)
-        MapManager.Instance.SetMode(MapManager.Mode.Animation);
+        ChapterManager.Instance.LoadChapter(gameData.chapterData.chapterName);
+        yield return null;
+    }
+
+    IEnumerator RemoveCurrentWorld()
+    {
+        World.Instance.RemoveCurrentChapter();
         yield return null;
     }
 
@@ -304,14 +314,14 @@ public class LoadGame : MonoBehaviour
         // Activate Loading screen
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
         // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
-        //// .. Set map
-        //// Activate map screen - it is needed to create objects
-        //// MapManager.Instance.gameObject.SetActive(true);
-        //ChapterManager.Instance.CoroutineQueue.Run(MapManager.Instance.SetActive());
-        //// Freeze map (during Animation internal updates are not done)
-        //ChapterManager.Instance.CoroutineQueue.Run(FreezeMap());
+        // Block mouse input
+        InputBlocker.Instance.SetActive(true);
+        // remove current world
+        ChapterManager.Instance.CoroutineQueue.Run(RemoveCurrentWorld());
+        // load chapter world from template
+        ChapterManager.Instance.CoroutineQueue.Run(LoadChapterWorldFromTemplate(gameData));
         // remove old data
-        ChapterManager.Instance.CoroutineQueue.Run(CleanGameBeforeLoad());
+        ChapterManager.Instance.CoroutineQueue.Run(CleanNewWorldBeforeLoad());
         // create new objects from saved data
         ChapterManager.Instance.CoroutineQueue.Run(CreateGameObjects(gameData));
     }

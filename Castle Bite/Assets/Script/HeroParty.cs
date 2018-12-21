@@ -208,7 +208,8 @@ public class HeroParty : MonoBehaviour {
         // init address with the parent's address
         address = parentTransform.name;
         // get address untill we reach root
-        while (parentTransform.parent != transform.root)
+        // while (parentTransform.parent != transform.root)
+        while (parentTransform.parent != ObjectsManager.Instance.transform)
         {
             parentTransform = parentTransform.parent;
             address = parentTransform.name + "/" + address;

@@ -86,13 +86,15 @@ public class ChooseChapter : MonoBehaviour
     {
         // activate choose your first hero menu
         MainMenuManager.Instance.ChooseYourFirstHero.SetActive(true);
+        // enable main menu panel
+        MainMenuManager.Instance.MainMenuPanel.SetActive(true);
         // disable main menu
         MainMenuManager.Instance.gameObject.SetActive(false);
     }
 
     public void Back()
     {
-        // enable main menu
+        // enable main menu panel
         MainMenuManager.Instance.MainMenuPanel.SetActive(true);
         // disable this menu
         gameObject.SetActive(false);

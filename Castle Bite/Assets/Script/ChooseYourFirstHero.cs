@@ -227,8 +227,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
     {
         // Disable Choose Chapter menu
         MainMenuManager.Instance.ChooseChapter.gameObject.SetActive(false);
-        // create world from template and replace active chapter link
-        ChapterManager.Instance.ActiveChapter = Instantiate(ChapterManager.Instance.ActiveChapter.gameObject, World.Instance.transform).GetComponent<Chapter>();
+        // Load currently set active chapter
+        ChapterManager.Instance.LoadChapter(ChapterManager.Instance.ActiveChapter.ChapterData.chapterName);
         // Activate and reset turns manager, set chosen faction as active player
         TurnsManager.Instance.Reset(factionSelectionGroup.GetSelectedFaction());
         // Activate main menu in game mode

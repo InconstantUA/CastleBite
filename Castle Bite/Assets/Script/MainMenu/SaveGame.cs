@@ -142,11 +142,9 @@ public class SaveGame : MonoBehaviour {
         }
     }
 
-    GameData GetGameData()
+    public GameData GetGameData()
     {
         Debug.Log("Get game data");
-        // Get Turns manager
-        // TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
         // Get game players
         GamePlayer[] players = ObjectsManager.Instance.GetGamePlayers();
         // Get game map
@@ -158,12 +156,15 @@ public class SaveGame : MonoBehaviour {
         // init game data
         GameData gameData = new GameData
         {
+            chapterData = new ChapterData(),
             turnsData = new TurnsData(),
             playersData = new PlayerData[players.Length],
             mapData = new MapData(),
             citiesData = new CityData[cities.Length],
             partiesData = new PartyData[heroParties.Length]
         };
+        // Set chapter data
+        gameData.chapterData = ChapterManager.Instance.ActiveChapter.ChapterData;
         // Set turns manager data
         gameData.turnsData = TurnsManager.Instance.TurnsData;
         // Prepare map data

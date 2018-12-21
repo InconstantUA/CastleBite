@@ -65,7 +65,6 @@ public class TurnsManager : MonoBehaviour {
 
     public GamePlayer GetActivePlayer()
     {
-        // .. Fix
         foreach (GamePlayer gamePlayer in ObjectsManager.Instance.GetGamePlayers())
         {
             if (PlayerTurnState.Active == gamePlayer.PlayerTurnState)
@@ -73,7 +72,7 @@ public class TurnsManager : MonoBehaviour {
                 return gamePlayer;
             }
         }
-        Debug.LogError("No active player");
+        Debug.LogWarning("No active player");
         return null;
     }
 

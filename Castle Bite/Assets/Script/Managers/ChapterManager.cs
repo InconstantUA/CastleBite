@@ -83,20 +83,7 @@ public class ChapterManager : MonoBehaviour {
         coroutineQueue = new CoroutineQueue(1, StartCoroutine);
     }
 
-    //public GameObject GetWorldTemplate()
-    //{
-    //    foreach(Chapter chapter in chapters)
-    //    {
-    //        // verify if chaper matches
-    //        if (chapter.ChapterData.chapterName == activeChapter.ChapterData.chapterName)
-    //        {
-    //            return chapter.gameObject;
-    //        }
-    //    }
-    //    Debug.LogError("Cannot find world template for " + chapterData.chapterName + " chapter");
-    //    return null;
-    //}
-
+    // Verify EventsAdmin for additional logic
     public void OnGoalCityCapture(City city)
     {
         if (city.name == activeChapter.ChapterData.targetCityName)
@@ -245,5 +232,26 @@ public class ChapterManager : MonoBehaviour {
     public void EndCurrentGame()
     {
         coroutineQueue.Run(SetEndingGameScreen());
+    }
+
+    public GameObject GetWorldTemplateByName(ChapterName chapterName)
+    {
+        foreach (Chapter chapter in chapters)
+        {
+            // verify if chaper name matches
+            if (chapter.ChapterData.chapterName == chapterName)
+            {
+                return chapter.gameObject;
+            }
+        }
+        Debug.LogError("Cannot find world template for " + chapterName + " chapter");
+        return null;
+    }
+
+    public void LoadChapter(ChapterName chapterName)
+    {
+        Debug.Log("Load " + chapterName + " chapter");
+        // create world from template and replace active chapter link
+        ActiveChapter = Instantiate(GetWorldTemplateByName(chapterName), World.Instance.transform).GetComponent<Chapter>();
     }
 }

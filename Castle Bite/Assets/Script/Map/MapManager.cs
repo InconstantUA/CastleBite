@@ -402,6 +402,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         SetMode(Mode.Browse);
         // Initialize path finder
         InitializeMapTiles();
+        InitFogOfWarTiles();
         InitTilesMap();
         InitPathFinderGrid();
     }
@@ -646,97 +647,8 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return null;
     }
 
-    public void InitTilesMap()
+    void InitFogOfWarTiles()
     {
-        // create the tiles map
-        tilesmap = new float[tileMapWidth, tileMapHeight];
-        // set values here....
-        // true = walkable, false = blocking
-        for (int x = 0; x < tilesmap.GetLength(0); x += 1)
-        {
-            for (int y = 0; y < tilesmap.GetLength(1); y += 1)
-            {
-                // Debug.Log(x.ToString() + ":" + y.ToString());
-                // verify if tile is passable
-                if (mapTiles[x, y].Terra.TerraIsPassable)
-                {
-                    tilesmap[x, y] = (float)mapTiles[x, y].Terra.TerraMoveCost;
-                }
-                else
-                {
-                    // mark is as non-passable
-                    tilesmap[x, y] = 0;
-                }
-            }
-        }
-        // Get active player faction
-        Faction activePlayerFaction = TurnsManager.Instance.GetActivePlayer().Faction;
-        // Loop over all map objects
-        foreach(MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
-        {
-            // get map object position with tile coordinates
-            Vector2Int pos = GetTilePosition(mapObject.transform);
-            // verify if object is located within tile map border
-            if (PositionIsWithinTilesMap(pos))
-            {
-                // verify if map object is city
-                if (mapObject.GetComponent<MapCity>() != null)
-                {
-                    // verify if city has the same faction as the active player (belongs to active player)
-                    if (mapObject.GetComponent<MapCity>().LCity.CityFaction == activePlayerFaction)
-                        // verify if city is not occupied
-                        // Todo: fix bug when trying to pass through occupied city
-                    {
-                        // mark tile as passable
-                        tilesmap[pos.x, pos.y] = 1;
-                        // discover tiles around
-                        List<Vector2Int> discoveredTiles = DiscoverTilesAround(mapObject.GetComponent<MapCity>());
-                    }
-                    else
-                    {
-                        // mark tile as non-passable
-                        tilesmap[pos.x, pos.y] = 0;
-                    }
-                }
-                else
-                {
-                    // mark tile as non-passable
-                    tilesmap[pos.x, pos.y] = 0;
-                    // verify if it hero on map
-                    if (mapObject.GetComponent<MapHero>() != null)
-                    {
-                        // verify if hero has the same faction as the active player (belongs to active player)
-                        if (mapObject.GetComponent<MapHero>().LHeroParty.Faction == activePlayerFaction)
-                        {
-                            // discover tiles around
-                            DiscoverTilesAround(mapObject.GetComponent<MapHero>());
-                        }
-                    }
-                }
-            }
-            // Activate/deactivate labels for discovered and hidden tiles
-            // verify if map object has always on flag
-            if (mapObject.LabelAlwaysOn)
-            {
-                // get map object label on tile
-                MapObjectLabel mapObjectLabel = mapObject.Label;
-                // verify if map object label is not null
-                if (mapObjectLabel != null)
-                {
-                    // verify if it is under fog of war = verify if this tile is discovered
-                    if (TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState[pos.x, pos.y] != 0)
-                    {
-                        // verify if mouse is not over the map object or its label at this moment
-                        if (!mapObject.IsMouseOver && !mapObjectLabel.IsMouseOver)
-                        {
-                            // tile was discovered
-                            // make label visible
-                            mapObjectLabel.SetAlwaysOnLabelColor();
-                        }
-                    }
-                }
-            }
-        }
         // verify if fog of war does not exist yet
         if (fogOfWarTiles == null)
         {
@@ -765,22 +677,119 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 sliceIndex++;
             }
         }
-        // get active player tiles discovery state array
-        int[,] activePlayerTilesDiscoveryStateArray = TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState;
-        // Activate discovered tiles
+    }
+
+    public void InitTilesMap()
+    {
+        // create the tiles map
+        tilesmap = new float[tileMapWidth, tileMapHeight];
+        // init tiles map based on the Terra info
+        // true = walkable, false = blocking
         for (int x = 0; x < tilesmap.GetLength(0); x += 1)
         {
             for (int y = 0; y < tilesmap.GetLength(1); y += 1)
             {
                 // Debug.Log(x.ToString() + ":" + y.ToString());
-                // verify if tile has been discovered
-                if (activePlayerTilesDiscoveryStateArray[x, y] != 0)
+                // verify if tile is passable
+                if (mapTiles[x, y].Terra.TerraIsPassable)
                 {
-                    DiscoverTile(x, y);
+                    tilesmap[x, y] = (float)mapTiles[x, y].Terra.TerraMoveCost;
                 }
                 else
                 {
-                    HideTile(x, y);
+                    // mark is as non-passable
+                    tilesmap[x, y] = 0;
+                }
+            }
+        }
+        // Get active player faction
+        GamePlayer activePlayer = TurnsManager.Instance.GetActivePlayer();
+        // Adjust map to active player if it exists (it may not exist during game load)
+        if (activePlayer != null)
+        {
+            // Loop over all map objects
+            foreach (MapObject mapObject in transform.GetComponentsInChildren<MapObject>())
+            {
+                // get map object position with tile coordinates
+                Vector2Int pos = GetTilePosition(mapObject.transform);
+                // verify if object is located within tile map border
+                if (PositionIsWithinTilesMap(pos))
+                {
+                    // verify if map object is city
+                    if (mapObject.GetComponent<MapCity>() != null)
+                    {
+                        // verify if city has the same faction as the active player (belongs to active player)
+                        if (mapObject.GetComponent<MapCity>().LCity.CityFaction == activePlayer.Faction)
+                        // verify if city is not occupied
+                        // Todo: fix bug when trying to pass through occupied city
+                        {
+                            // mark tile as passable
+                            tilesmap[pos.x, pos.y] = 1;
+                            // discover tiles around
+                            List<Vector2Int> discoveredTiles = DiscoverTilesAround(mapObject.GetComponent<MapCity>());
+                        }
+                        else
+                        {
+                            // mark tile as non-passable
+                            tilesmap[pos.x, pos.y] = 0;
+                        }
+                    }
+                    else
+                    {
+                        // mark tile as non-passable
+                        tilesmap[pos.x, pos.y] = 0;
+                        // verify if it hero on map
+                        if (mapObject.GetComponent<MapHero>() != null)
+                        {
+                            // verify if hero has the same faction as the active player (belongs to active player)
+                            if (mapObject.GetComponent<MapHero>().LHeroParty.Faction == activePlayer.Faction)
+                            {
+                                // discover tiles around
+                                DiscoverTilesAround(mapObject.GetComponent<MapHero>());
+                            }
+                        }
+                    }
+                }
+                // Activate/deactivate labels for discovered and hidden tiles
+                // verify if map object has always on flag
+                if (mapObject.LabelAlwaysOn)
+                {
+                    // get map object label on tile
+                    MapObjectLabel mapObjectLabel = mapObject.Label;
+                    // verify if map object label is not null
+                    if (mapObjectLabel != null)
+                    {
+                        // verify if it is under fog of war = verify if this tile is discovered
+                        if (TurnsManager.Instance.GetActivePlayer().TilesDiscoveryState[pos.x, pos.y] != 0)
+                        {
+                            // verify if mouse is not over the map object or its label at this moment
+                            if (!mapObject.IsMouseOver && !mapObjectLabel.IsMouseOver)
+                            {
+                                // tile was discovered
+                                // make label visible
+                                mapObjectLabel.SetAlwaysOnLabelColor();
+                            }
+                        }
+                    }
+                }
+            }
+            // get active player tiles discovery state array
+            int[,] activePlayerTilesDiscoveryStateArray = activePlayer.TilesDiscoveryState;
+            // Activate discovered tiles
+            for (int x = 0; x < tilesmap.GetLength(0); x += 1)
+            {
+                for (int y = 0; y < tilesmap.GetLength(1); y += 1)
+                {
+                    // Debug.Log(x.ToString() + ":" + y.ToString());
+                    // verify if tile has been discovered
+                    if (activePlayerTilesDiscoveryStateArray[x, y] != 0)
+                    {
+                        DiscoverTile(x, y);
+                    }
+                    else
+                    {
+                        HideTile(x, y);
+                    }
                 }
             }
         }
