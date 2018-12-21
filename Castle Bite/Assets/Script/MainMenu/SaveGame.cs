@@ -9,8 +9,6 @@ using System.IO;
 
 public class SaveGame : MonoBehaviour {
     [SerializeField]
-    Transform gamePlayersRoot;
-    [SerializeField]
     string fileExtension;
     string fullFilePath;
 
@@ -150,7 +148,7 @@ public class SaveGame : MonoBehaviour {
         // Get Turns manager
         // TurnsManager turnsManager = transform.root.Find("Managers").GetComponent<TurnsManager>();
         // Get game players
-        GamePlayer[] players = gamePlayersRoot.GetComponentsInChildren<GamePlayer>();
+        GamePlayer[] players = ObjectsManager.Instance.GetGamePlayers();
         // Get game map
         GameMap gameMap = ObjectsManager.Instance.GetComponentInChildren<GameMap>();
         // Get cities

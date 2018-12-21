@@ -55,7 +55,7 @@ public class FactionSelectionGroup : MonoBehaviour {
         // activate next selection
         factions[nextFactionIndex].gameObject.SetActive(true);
         // Update Heroes selection
-        GetComponentInParent<ChooseYourFirstHero>().SetFaction(factions[nextFactionIndex].Faction);
+        GetComponentInParent<ChooseYourFirstHero>().SelectFaction(factions[nextFactionIndex].Faction);
     }
 
     public void SelectPrevious()
@@ -87,7 +87,7 @@ public class FactionSelectionGroup : MonoBehaviour {
         // activate next selection
         factions[previousFactionIndex].gameObject.SetActive(true);
         // Update Heroes selection
-        GetComponentInParent<ChooseYourFirstHero>().SetFaction(factions[previousFactionIndex].Faction);
+        GetComponentInParent<ChooseYourFirstHero>().SelectFaction(factions[previousFactionIndex].Faction);
     }
 
     void Awake () {

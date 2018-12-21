@@ -61,6 +61,19 @@ public class ChapterManager : MonoBehaviour {
             activeChapter = value;
         }
     }
+
+    public Chapter[] Chapters
+    {
+        get
+        {
+            return chapters;
+        }
+
+        set
+        {
+            chapters = value;
+        }
+    }
     #endregion Properties
 
     void Awake()

@@ -28,7 +28,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
         return null;
     }
 
-    public void SetFaction(Faction faction = Faction.Unknown)
+    public void SelectFaction(Faction faction = Faction.Unknown)
     {
         // Verify if faction is unknown
         if (faction == Faction.Unknown)
@@ -83,12 +83,10 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Change UnitTemplate (unit information) preferred height
             hireUnitGeneric.transform.Find("UnitTemplate").GetComponent<LayoutElement>().preferredHeight = 48;
             // Get Dominion capital
-            City dominionCapitalCity = GetCityByTypeAndFaction(CityType.Capital, Faction.Dominion);
+            // City dominionCapitalCity = GetCityByTypeAndFaction(CityType.Capital, Faction.Dominion);
             // Activate hire unit menu
             // hireUnitGeneric.SetActive(unitTypesToHire, null, UnitHirePanel.Mode.FirstUnit);
-            SetFaction();
-            // Deactivate hire unit Header, because we will replace it with our header
-            hireUnitGeneric.transform.Find("Header").gameObject.SetActive(false);
+            SelectFaction();
             //// Deactivate hire unit background, because it is not needed and it will cover other menus
             //hireUnitGeneric.transform.Find("Background").gameObject.SetActive(false);
             // Get current units list rect transform
@@ -98,10 +96,10 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Change position of Units to hire list
             unitsListRT.offsetMin = new Vector2(unitsListPlaceholderRT.offsetMin.x, unitsListPlaceholderRT.offsetMin.y); // left, bottom
             unitsListRT.offsetMax = new Vector2(unitsListPlaceholderRT.offsetMax.x, unitsListPlaceholderRT.offsetMax.y); // -right, -top
-            // Activate back button
+            // Activate Back button
             transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(true);
             // Deactivate activated by default top gold info panel
-            transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
+            // transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
             // bring it to the front
             transform.SetAsLastSibling();
         }
@@ -109,8 +107,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
         {
             // Deactivate hire unit menu
             hireUnitGeneric.gameObject.SetActive(false);
-            // Activate back hire unit Header
-            hireUnitGeneric.transform.Find("Header").gameObject.SetActive(true);
             //// Activate back hire unit background
             //hireUnitGeneric.transform.Find("Background").gameObject.SetActive(true);
             // Get the list of units to hire transform
@@ -125,10 +121,14 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Change UnitTemplate (unit information) preferred height
             hireUnitGeneric.transform.Find("UnitTemplate").GetComponent<LayoutElement>().preferredHeight = 80;
         }
+        // Deactivate/Activate hire unit Header, because we will be replaced it with our header
+        hireUnitGeneric.transform.Find("Header").gameObject.SetActive(!doActivate);
         // Activate/Deactivate replacement for hire unit button
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/ContinueAndHireFirstHeroBtn").gameObject.SetActive(doActivate);
         // Activate/Deactivate back button
         transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(doActivate);
+        // ..
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
     }
 
     public void GoBack()
@@ -225,6 +225,10 @@ public class ChooseYourFirstHero : MonoBehaviour {
 
     public void HireFirstHero()
     {
+        // Disable Choose Chapter menu
+        MainMenuManager.Instance.ChooseChapter.gameObject.SetActive(false);
+        // create world from template and replace active chapter link
+        ChapterManager.Instance.ActiveChapter = Instantiate(ChapterManager.Instance.ActiveChapter.gameObject, World.Instance.transform).GetComponent<Chapter>();
         // Activate and reset turns manager, set chosen faction as active player
         TurnsManager.Instance.Reset(factionSelectionGroup.GetSelectedFaction());
         // Activate main menu in game mode
@@ -238,6 +242,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Deactivate Choose your first hero menu
         SetActive(false);
         // Activate Prolog
-        transform.root.Find("MiscUI").GetComponentInChildren<Prolog>(true).SetActive(true);
+        transform.root.Find("MiscUI").GetComponentInChildren<Prolog>(true).SetActive(true, ChapterManager.Instance.ActiveChapter.ChapterData);
     }
 }

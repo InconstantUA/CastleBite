@@ -6,14 +6,23 @@ using UnityEngine.UI;
 
 public class Prolog : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
-    public void SetActive(bool doActivate)
+    public void SetActive(bool doActivate, ChapterData chapterData = null)
     {
         // activate/deactivate button
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/PrologBeginGameButton").gameObject.SetActive(doActivate);
         // activate/deactivate background
         transform.root.Find("MiscUI").GetComponentInChildren<BackgroundUI>(true).SetActive(doActivate);
+        // activate animation if we are activating prolog
+        if (doActivate)
+            GetComponentInChildren<PrologAnimation>(true).SetActive(chapterData);
         // activate/deactivate this menu
         gameObject.SetActive(doActivate);
+    }
+
+    void OnDisable()
+    {
+        // disable Prolog Animation game object
+        GetComponentInChildren<PrologAnimation>(true).gameObject.SetActive(false);
     }
 
     public void BeginGame()

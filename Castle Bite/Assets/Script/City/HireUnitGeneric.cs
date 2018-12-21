@@ -106,7 +106,6 @@ public class HireUnitGeneric : MonoBehaviour {
         // Force layout update
         // Note: this should be done to force all fields to be adjusted to the text size
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)togglesListTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)togglesListTransform);
         // verify if mode is not hire first hero
         if (mode != UnitHirePanel.Mode.FirstUnit)
         {

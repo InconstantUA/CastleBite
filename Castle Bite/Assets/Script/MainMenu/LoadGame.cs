@@ -10,8 +10,6 @@ using System.IO;
 public class LoadGame : MonoBehaviour
 {
     [SerializeField]
-    Transform gamePlayersRoot;
-    [SerializeField]
     MenuButton menuButton;
     [SerializeField]
     string fileExtension;
@@ -119,7 +117,7 @@ public class LoadGame : MonoBehaviour
         // Get objects manager
         // ObjectsManager objectsManager = transform.root.GetComponentInChildren<ObjectsManager>();
         // remove players
-        foreach (GamePlayer gamePlayer in gamePlayersRoot.GetComponentsInChildren<GamePlayer>())
+        foreach (GamePlayer gamePlayer in ObjectsManager.Instance.GetGamePlayers())
         {
             ObjectsManager.Instance.RemovePlayer(gamePlayer);
         }
@@ -476,8 +474,8 @@ public class LoadGame : MonoBehaviour
                 {
                     // file exists
                     // verify if game is already running
-                    // check if there are players objects
-                    if (gamePlayersRoot.GetComponentsInChildren<GamePlayer>().Length > 0)
+                    // check if there is a Chapter in World
+                    if (World.Instance.GetComponentInChildren<Chapter>(true) != null)
                     {
                         // game is already running
                         // Ask user whether he wants to load new game

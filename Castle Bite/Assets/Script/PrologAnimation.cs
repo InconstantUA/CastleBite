@@ -7,40 +7,81 @@ public class PrologAnimation : MonoBehaviour {
     enum State { Start, Header, BrifeLineAnimation, BriefNexLine, Objective, End };
     State state;
     // float curColAlpha;
-    public float headerAnimationDuration = 3f; // in seconds
-    public float briefLineAnimationDuration = 1f; // in seconds
-    public float objectiveAnimationDuration = 2f; // in seconds
+    [SerializeField]
+    float headerAnimationDuration = 3f; // in seconds
+    [SerializeField]
+    float briefLineAnimationDuration = 1f; // in seconds
+    [SerializeField]
+    float objectiveAnimationDuration = 2f; // in seconds
+    [SerializeField]
+    Text prologHeaderText;
+    [SerializeField]
+    Text prologObjectiveText;
+    [SerializeField]
+    GameObject briefLineTemplate;
+    [SerializeField]
+    Transform briefRootTransform;
     float animationDuration;
     float animationStartTime;
     float previousAnimationTime;
-    Text header;
-    Text[] brief;
+    Text[] briefTextLines;
     int animatedBriefLine = 0;
-    Text objective;
 
-	// Use this for initialization
-	void Start () {
+	//// Use this for initialization
+	//void Start () {
+ //       // set first state
+ //       state = State.Start;
+ //       // init variables
+ //       //prologHeaderText = transform.Find("Header").GetComponentInChildren<Text>();
+ //       //prologObjectiveText = transform.Find("Objective").GetComponentInChildren<Text>();
+ //       // brief = transform.Find("Brief").GetComponentInChildren<VerticalLayoutGroup>().GetComponentsInChildren<Text>();
+ //       briefTextLines = null;
+ //       // Hide all text
+ //       // SetAllTextAlphaColor(0);
+ //   }
+
+    void OnDisable()
+    {
+        // cleanup brief lines
+        foreach (Transform childTransform in transform.Find("Brief"))
+        {
+            Destroy(childTransform.gameObject);
+        }
+    }
+
+    public void SetActive(ChapterData chapterData)
+    {
+        Debug.Log("Activating Prolog Animation");
         // set first state
         state = State.Start;
-        // init variables
-        header = gameObject.transform.Find("Header").gameObject.GetComponentInChildren<Text>();
-        objective = gameObject.transform.Find("Objective").gameObject.GetComponentInChildren<Text>();
-        // brief = gameObject.transform.Find("Brief").GetComponentInChildren<VerticalLayoutGroup>().GetComponentsInChildren<Text>();
-        brief = gameObject.transform.Find("Brief").gameObject.GetComponentsInChildren<Text>();
+        // init header
+        prologHeaderText.text = chapterData.prologHeader;
+        // loop through all lines in prolog
+        foreach(string briefString in chapterData.prologBrief)
+        {
+            // create a brief text line in UI and set its text from prolog
+            Instantiate(briefLineTemplate, briefRootTransform).GetComponent<Text>().text = briefString;
+        }
+        // init brief
+        briefTextLines = transform.Find("Brief").GetComponentsInChildren<Text>();
+        // init objective
+        prologObjectiveText.text = chapterData.prologObjective;
         // Hide all text
         SetAllTextAlphaColor(0);
+        // activating this object
+        gameObject.SetActive(true);
     }
 
     void SetAllTextAlphaColor(float alphaColor)
     {
         //  Hide header and objective
         Color tmpClr;
-        tmpClr = new Color(header.color.r, header.color.g, header.color.b, alphaColor);
-        header.color = tmpClr;
-        tmpClr = new Color(objective.color.r, objective.color.g, objective.color.b, alphaColor);
-        objective.color = tmpClr;
+        tmpClr = new Color(prologHeaderText.color.r, prologHeaderText.color.g, prologHeaderText.color.b, alphaColor);
+        prologHeaderText.color = tmpClr;
+        tmpClr = new Color(prologObjectiveText.color.r, prologObjectiveText.color.g, prologObjectiveText.color.b, alphaColor);
+        prologObjectiveText.color = tmpClr;
         //  hide brief
-        foreach (Text line in brief)
+        foreach (Text line in briefTextLines)
         {
             tmpClr = new Color(line.color.r, line.color.g, line.color.b, alphaColor);
             line.color = tmpClr;
@@ -60,14 +101,14 @@ public class PrologAnimation : MonoBehaviour {
             // Activate header
             if (state == State.Header)
             {
-                Animate(header, State.BrifeLineAnimation, headerAnimationDuration);
+                Animate(prologHeaderText, State.BrifeLineAnimation, headerAnimationDuration);
             }
             // Activate brief
             if (state == State.BrifeLineAnimation)
             {
-                if (animatedBriefLine < brief.Length)
+                if (animatedBriefLine < briefTextLines.Length)
                 {
-                    Animate(brief[animatedBriefLine], State.BriefNexLine, briefLineAnimationDuration);
+                    Animate(briefTextLines[animatedBriefLine], State.BriefNexLine, briefLineAnimationDuration);
                 }
                 else
                 {
@@ -83,7 +124,7 @@ public class PrologAnimation : MonoBehaviour {
             // Activate objective
             if (state == State.Objective)
             {
-                Animate(objective, State.End, objectiveAnimationDuration);
+                Animate(prologObjectiveText, State.End, objectiveAnimationDuration);
             }
         }
     }
@@ -130,6 +171,7 @@ public class PrologAnimation : MonoBehaviour {
 
     void SwitchToTheNextState(State nextState)
     {
+        Debug.Log("Switching to the " + nextState.ToString() + " state");
         state = nextState;
         // curColAlpha = 0;
         animationStartTime = Time.time;

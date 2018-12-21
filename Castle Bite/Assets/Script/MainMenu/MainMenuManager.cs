@@ -22,8 +22,36 @@ public class MainMenuManager : MonoBehaviour {
     GameObject mQuitToTheMainMenu;
     [SerializeField]
     ChooseYourFirstHero chooseYourFirstHero;
+    [SerializeField]
+    ChooseChapter chooseChapter;
+    [SerializeField]
+    GameObject mainMenuPanel;
 
     public static MainMenuManager Instance { get; private set; }
+
+    public GameObject MainMenuPanel
+    {
+        get
+        {
+            return mainMenuPanel;
+        }
+    }
+
+    public ChooseYourFirstHero ChooseYourFirstHero
+    {
+        get
+        {
+            return chooseYourFirstHero;
+        }
+    }
+
+    public ChooseChapter ChooseChapter
+    {
+        get
+        {
+            return chooseChapter;
+        }
+    }
 
     void Awake()
     {
@@ -109,12 +137,14 @@ public class MainMenuManager : MonoBehaviour {
 
     public void StartNewGame()
     {
-        // create world from template and replace active chapter link
-        ChapterManager.Instance.ActiveChapter = Instantiate(ChapterManager.Instance.ActiveChapter.gameObject, World.Instance.transform).GetComponent<Chapter>();
-        // activate choose your first hero menu
-        chooseYourFirstHero.SetActive(true);
-        // disable this menu
-        gameObject.SetActive(false);
+        // Activate choose chapter menu
+        chooseChapter.gameObject.SetActive(true);
+        //// create world from template and replace active chapter link
+        //ChapterManager.Instance.ActiveChapter = Instantiate(ChapterManager.Instance.ActiveChapter.gameObject, World.Instance.transform).GetComponent<Chapter>();
+        //// activate choose your first hero menu
+        //chooseYourFirstHero.SetActive(true);
+        // disable main menu panels
+        mainMenuPanel.SetActive(false);
         // ..
         //// activate main menu in game mode
         //MainMenuInGameModeSetActive(true);

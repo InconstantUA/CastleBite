@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class SavesMenu : MonoBehaviour {
     public enum Mode { Save, Load };
     [SerializeField]
-    Transform gamePlayersRoot;
-    [SerializeField]
     Mode mode;
     GameObject selectedSave;
 
@@ -28,8 +26,8 @@ public class SavesMenu : MonoBehaviour {
         }
         else
         {
-            // Get game players
-            GamePlayer[] players = gamePlayersRoot.GetComponentsInChildren<GamePlayer>();
+            // Get game players information from running game
+            GamePlayer[] players = ObjectsManager.Instance.GetGamePlayers();
             // set save data from currently running game
             saveData = new SaveData
             {

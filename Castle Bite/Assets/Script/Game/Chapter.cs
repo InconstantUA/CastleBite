@@ -10,15 +10,20 @@ public enum ChapterName
 }
 
 [Serializable]
-class ChapterData : System.Object
+public class ChapterData : System.Object
 {
     public ChapterName chapterName;
+    public string chapterDisplayName;
     public bool lastChapter;
     // define chapter goals
     public string targetCityName; // we do not use direct link to the city, because it may be destroyed and recreated during save/load process
     public bool goalTargetCityCaptured;
     public string targetHeroName; // we do not use direct link to the hero, because it may be destroyed and recreated during save/load process
     public bool goalTargetHeroDestroyed;
+    public string description;
+    public string prologHeader;
+    public string[] prologBrief;
+    public string prologObjective;
 }
 
 public class Chapter : MonoBehaviour
