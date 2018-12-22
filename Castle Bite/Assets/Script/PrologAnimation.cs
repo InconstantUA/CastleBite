@@ -16,6 +16,8 @@ public class PrologAnimation : MonoBehaviour {
     [SerializeField]
     Text prologHeaderText;
     [SerializeField]
+    Text prologObjectiveHeader;
+    [SerializeField]
     Text prologObjectiveText;
     [SerializeField]
     GameObject briefLineTemplate;
@@ -25,7 +27,7 @@ public class PrologAnimation : MonoBehaviour {
     float animationStartTime;
     float previousAnimationTime;
     Text[] briefTextLines;
-    int animatedBriefLine = 0;
+    int animatedBriefLine;
 
 	//// Use this for initialization
 	//void Start () {
@@ -68,23 +70,28 @@ public class PrologAnimation : MonoBehaviour {
         prologObjectiveText.text = chapterData.prologObjective;
         // Hide all text
         SetAllTextAlphaColor(0);
+        // reset animated brief line number
+        animatedBriefLine = 0;
         // activating this object
         gameObject.SetActive(true);
+    }
+
+    void SetTextAlphaColor(Text text, float alphaColor)
+    {
+        Color tmpClr = new Color(text.color.r, text.color.g, text.color.b, alphaColor);
+        text.color = tmpClr;
     }
 
     void SetAllTextAlphaColor(float alphaColor)
     {
         //  Hide header and objective
-        Color tmpClr;
-        tmpClr = new Color(prologHeaderText.color.r, prologHeaderText.color.g, prologHeaderText.color.b, alphaColor);
-        prologHeaderText.color = tmpClr;
-        tmpClr = new Color(prologObjectiveText.color.r, prologObjectiveText.color.g, prologObjectiveText.color.b, alphaColor);
-        prologObjectiveText.color = tmpClr;
+        SetTextAlphaColor(prologHeaderText, alphaColor);
+        SetTextAlphaColor(prologObjectiveHeader, alphaColor);
+        SetTextAlphaColor(prologObjectiveText, alphaColor);
         //  hide brief
         foreach (Text line in briefTextLines)
         {
-            tmpClr = new Color(line.color.r, line.color.g, line.color.b, alphaColor);
-            line.color = tmpClr;
+            SetTextAlphaColor(line, alphaColor);
         }
     }
 
@@ -114,6 +121,8 @@ public class PrologAnimation : MonoBehaviour {
                 {
                     // last line has been animated, switch to the objective animation
                     state = State.Objective;
+                    // show objective header
+                    SetTextAlfaToMax(prologObjectiveHeader);
                 }
             }
             if (state == State.BriefNexLine)

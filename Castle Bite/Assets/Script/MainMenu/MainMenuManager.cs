@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+
 
 public class MainMenuManager : MonoBehaviour {
 
@@ -26,6 +28,9 @@ public class MainMenuManager : MonoBehaviour {
     ChooseChapter chooseChapter;
     [SerializeField]
     GameObject mainMenuPanel;
+    [SerializeField]
+    GameObject currentGold;
+
 
     public static MainMenuManager Instance { get; private set; }
 
@@ -152,7 +157,20 @@ public class MainMenuManager : MonoBehaviour {
         //ChapterManager.Instance.StartGame();
     }
 
-    public void QuitToTheMainMenu()
+    void OnQuitToTheMainMenuYesConfirmation()
+    {
+        Debug.Log("Yes");
+        // end current game
+        QuitToTheMainMenu();
+    }
+
+    void OnQuitToTheMainMenuNoConfirmation()
+    {
+        Debug.Log("No");
+        // nothing to do here
+    }
+
+    void QuitToTheMainMenu()
     {
         // disable map and map menu
         MapManager.Instance.gameObject.SetActive(false);
@@ -163,11 +181,33 @@ public class MainMenuManager : MonoBehaviour {
         ChapterManager.Instance.EndCurrentGame();
     }
 
+    public void AskQuitToTheMainMenuConfirmation()
+    {
+        // ask for confirmation
+        // Ask user whether he wants to delete save
+        ConfirmationPopUp confirmationPopUp = ConfirmationPopUp.Instance();
+        // set actions
+        UnityAction YesAction = new UnityAction(OnQuitToTheMainMenuYesConfirmation);
+        UnityAction NoAction = new UnityAction(OnQuitToTheMainMenuNoConfirmation);
+        // set message
+        string confirmationMessage = "Do you want to terminate current game? Not saved progress will be lost.";
+        // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+        confirmationPopUp.Choice(confirmationMessage, YesAction, NoAction);
+    }
+
     public void Continue()
     {
-        // enable map and map menu
-        MapManager.Instance.gameObject.SetActive(true);
-        MapMenuManager.Instance.gameObject.SetActive(true);
+        // return map manager to the browse mode
+        MapManager.Instance.SetMode(MapManager.Mode.Browse);
+        // verify if current gold info should be visible
+        if (GameOptions.Instance.mapUIOpt.togglePlayerIncome != 0)
+        {
+            // enable current gold info
+            currentGold.SetActive(true);
+        }
+        //// enable map and map menu
+        //MapManager.Instance.gameObject.SetActive(true);
+        //MapMenuManager.Instance.gameObject.SetActive(true);
         // disable main menu
         gameObject.SetActive(false);
     }

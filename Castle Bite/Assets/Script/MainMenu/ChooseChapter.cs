@@ -6,6 +6,11 @@ public class ChooseChapter : MonoBehaviour
 {
     [SerializeField]
     int numberOfChaptersToLoadAtOnce = 10;
+    [SerializeField]
+    GameObject continueButton;
+    [SerializeField]
+    GameObject backButton;
+
 
     IEnumerator SelectFirstChapter()
     {
@@ -61,10 +66,18 @@ public class ChooseChapter : MonoBehaviour
         yield return null;
     }
 
+    void SetButtonsActive(bool doActivate)
+    {
+        continueButton.SetActive(doActivate);
+        backButton.SetActive(doActivate);
+    }
+
     void OnEnable()
     {
         // update list of chapters on a next frame
         StartCoroutine(SetListOfChapters());
+        // enable buttons
+        SetButtonsActive(true);
     }
 
     void OnDisable()
@@ -80,14 +93,14 @@ public class ChooseChapter : MonoBehaviour
                         Destroy(chapter.gameObject);
                     }
                 }
+        // disable buttons
+        SetButtonsActive(false);
     }
 
     public void Continue()
     {
         // activate choose your first hero menu
         MainMenuManager.Instance.ChooseYourFirstHero.SetActive(true);
-        // enable main menu panel
-        MainMenuManager.Instance.MainMenuPanel.SetActive(true);
         // disable main menu
         MainMenuManager.Instance.gameObject.SetActive(false);
     }

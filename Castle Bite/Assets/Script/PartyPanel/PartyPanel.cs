@@ -671,7 +671,7 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // and disable hire buttons
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(activate);
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
 
@@ -725,11 +725,8 @@ public class PartyPanel : MonoBehaviour {
                 }
             }
         }
-        if (activate)
-        {
-            // and disable hire unit buttons panel
-            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(false);
-        }
+        // and disable hire buttons
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
     }
 
 

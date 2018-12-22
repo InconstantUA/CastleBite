@@ -25,6 +25,13 @@ public class LoadGame : MonoBehaviour
     //GameObject heroPartyOnMapTemplate;
     [SerializeField]
     int loadWaitTimeSeconds;
+    [SerializeField]
+    GameObject loadButton;
+    [SerializeField]
+    GameObject deleteButton;
+    [SerializeField]
+    GameObject backButton;
+
     string fullFilePath;
     TextToggle selectedToggle;
 
@@ -75,20 +82,29 @@ public class LoadGame : MonoBehaviour
         yield return null;
     }
 
+    void SetButtonsActive(bool doActivate)
+    {
+        loadButton.SetActive(doActivate);
+        deleteButton.SetActive(doActivate);
+        backButton.SetActive(doActivate);
+    }
+
     void OnEnable()
     {
         // update list of saves on a next frame
         StartCoroutine(SetListOfSaves());
+        // enable buttons
+        SetButtonsActive(true);
     }
 
     void OnDisable()
     {
-        // check if load button is not destroyed yet
-        if (transform.Find("LoadBtn"))
-        {
-            // return load button to normal state
-            transform.Find("LoadBtn").GetComponent<TextButton>().SetNormalStatus();
-        }
+        //// check if load button is not destroyed yet
+        //if (transform.Find("LoadBtn"))
+        //{
+        //    // return load button to normal state
+        //    transform.Find("LoadBtn").GetComponent<TextButton>().SetNormalStatus();
+        //}
         // check if objects are not destroyed yet
         if (transform.Find("Saves"))
             if (transform.Find("Saves/SavesList"))
@@ -100,6 +116,8 @@ public class LoadGame : MonoBehaviour
                         Destroy(save.gameObject);
                     }
                 }
+        // disable buttons
+        SetButtonsActive(false);
     }
 
     public void CreateGamePlayers(PlayerData[] playersData)
@@ -282,6 +300,8 @@ public class LoadGame : MonoBehaviour
         menuButton.OnGameStartMenuChanges();
         // Deactivate this screen
         gameObject.SetActive(false);
+        // Bring loading screen to front
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().transform.SetAsLastSibling();
         // Wait a bit
         yield return new WaitForSeconds(loadWaitTimeSeconds);
         // Unblock mouse input
@@ -309,23 +329,6 @@ public class LoadGame : MonoBehaviour
         yield return null;
     }
 
-    void SetGameData(GameData gameData)
-    {
-        // Activate Loading screen
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
-        // we use coroutine to make sure that all objects are removed before new objects are created and to show some animation
-        // Block mouse input
-        InputBlocker.Instance.SetActive(true);
-        // remove current world
-        ChapterManager.Instance.CoroutineQueue.Run(RemoveCurrentWorld());
-        // load chapter world from template
-        ChapterManager.Instance.CoroutineQueue.Run(LoadChapterWorldFromTemplate(gameData));
-        // remove old data
-        ChapterManager.Instance.CoroutineQueue.Run(CleanNewWorldBeforeLoad());
-        // create new objects from saved data
-        ChapterManager.Instance.CoroutineQueue.Run(CreateGameObjects(gameData));
-    }
-
     void LoadGameData()
     {
         // open file stream for read
@@ -337,8 +340,19 @@ public class LoadGame : MonoBehaviour
         GameData gameData = (GameData)binaryFormatter.Deserialize(file);
         // Close file
         file.Close();
-        // Set game data
-        SetGameData(gameData);
+        // Activate Loading screen
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
+        // Block mouse input
+        InputBlocker.Instance.SetActive(true);
+        // We use coroutine to make sure that all objects are removed before new objects are created and to show some animation
+        // remove current world
+        ChapterManager.Instance.CoroutineQueue.Run(RemoveCurrentWorld());
+        // load chapter world from template
+        ChapterManager.Instance.CoroutineQueue.Run(LoadChapterWorldFromTemplate(gameData));
+        // remove old data
+        ChapterManager.Instance.CoroutineQueue.Run(CleanNewWorldBeforeLoad());
+        // create new objects from saved data
+        ChapterManager.Instance.CoroutineQueue.Run(CreateGameObjects(gameData));
         // activate screens
         ChapterManager.Instance.CoroutineQueue.Run(ActivateScreens());
     }

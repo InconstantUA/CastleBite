@@ -1213,9 +1213,9 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void Update()
     {
-        // verify if mouse is moving
-        if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0))
-        {
+        //// verify if mouse is moving
+        //if ((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0))
+        //{
             switch (mode)
             {
                 case Mode.Browse:
@@ -1233,7 +1233,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     Debug.LogError("Unknown mode " + mode.ToString());
                     break;
             }
-        }
+        //}
     }
 
     int GetShiftedTilePositionX(int defaultPositionX)
@@ -3042,7 +3042,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void SetMode(Mode value)
     {
-        Debug.LogWarning("Change map manager mode to : " + value);
+        Debug.Log("Change map manager mode to : " + value);
         mode = value;
         switch (mode)
         {

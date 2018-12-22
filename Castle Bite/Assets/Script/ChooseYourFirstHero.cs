@@ -81,7 +81,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Get unit types to hire
             // UnitType[] unitTypesToHire = new UnitType[] { UnitType.Knight, UnitType.Ranger, UnitType.Archmage, UnitType.Seraphim };
             // Change UnitTemplate (unit information) preferred height
-            hireUnitGeneric.transform.Find("UnitTemplate").GetComponent<LayoutElement>().preferredHeight = 48;
+            hireUnitGeneric.UnitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = 48;
             // Get Dominion capital
             // City dominionCapitalCity = GetCityByTypeAndFaction(CityType.Capital, Faction.Dominion);
             // Activate hire unit menu
@@ -90,7 +90,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
             //// Deactivate hire unit background, because it is not needed and it will cover other menus
             //hireUnitGeneric.transform.Find("Background").gameObject.SetActive(false);
             // Get current units list rect transform
-            RectTransform unitsListRT = hireUnitGeneric.transform.Find("UnitsToHire").GetComponent<RectTransform>();
+            RectTransform unitsListRT = hireUnitGeneric.UnitsToHireList.GetComponent<RectTransform>();
             // Get new position placehoslder rect transform
             RectTransform unitsListPlaceholderRT = hireUnitGeneric.transform.Find("UnitsToHirePlaceholderMiddle").GetComponent<RectTransform>();
             // Change position of Units to hire list
@@ -110,16 +110,16 @@ public class ChooseYourFirstHero : MonoBehaviour {
             //// Activate back hire unit background
             //hireUnitGeneric.transform.Find("Background").gameObject.SetActive(true);
             // Get the list of units to hire transform
-            Transform unitsListTr = hireUnitGeneric.transform.Find("UnitsToHire");
+            // Transform unitsListTr = hireUnitGeneric.UnitsToHireList.transform;
             // Get current units list rect transform
-            RectTransform unitsListRT = unitsListTr.GetComponent<RectTransform>();
+            RectTransform unitsListRT = hireUnitGeneric.UnitsToHireList.GetComponent<RectTransform>();
             // Get new position placehoslder rect transform
             RectTransform unitsListPlaceholderRT = hireUnitGeneric.transform.Find("UnitsToHirePlaceholderTop").GetComponent<RectTransform>();
             // Change position of Units to hire list
             unitsListRT.offsetMin = new Vector2(unitsListPlaceholderRT.offsetMin.x, unitsListPlaceholderRT.offsetMin.y); // left, bottom
             unitsListRT.offsetMax = new Vector2(unitsListPlaceholderRT.offsetMax.x, unitsListPlaceholderRT.offsetMax.y); // -right, -top
             // Change UnitTemplate (unit information) preferred height
-            hireUnitGeneric.transform.Find("UnitTemplate").GetComponent<LayoutElement>().preferredHeight = 80;
+            hireUnitGeneric.UnitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = 80;
         }
         // Deactivate/Activate hire unit Header, because we will be replaced it with our header
         hireUnitGeneric.transform.Find("Header").gameObject.SetActive(!doActivate);
@@ -225,6 +225,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
 
     public void HireFirstHero()
     {
+        // enable main menu panel (it was disabled by ChooseChapter)
+        MainMenuManager.Instance.MainMenuPanel.SetActive(true);
         // Disable Choose Chapter menu
         MainMenuManager.Instance.ChooseChapter.gameObject.SetActive(false);
         // Load currently set active chapter

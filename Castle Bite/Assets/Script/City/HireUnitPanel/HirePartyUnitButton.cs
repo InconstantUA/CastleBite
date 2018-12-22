@@ -11,6 +11,16 @@ public class HirePartyUnitButton : MonoBehaviour {
     [SerializeField]
     ButtonMode buttonMode;
 
+    void OnEnable()
+    {
+        // Debug.LogWarning("HirePartyUnitButton has been Enabled");
+    }
+
+    void OnDisable()
+    {
+        // Debug.LogWarning("HirePartyUnitButton has been Disabled");
+    }
+
     public void ShowHireUnitMenu()
     {
         // Get unit which we need to hire parameters from caller

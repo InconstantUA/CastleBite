@@ -11,6 +11,10 @@ public class SaveGame : MonoBehaviour {
     [SerializeField]
     string fileExtension;
     string fullFilePath;
+    [SerializeField]
+    GameObject saveButton;
+    [SerializeField]
+    GameObject backButton;
 
     IEnumerator SetListOfSaves()
     {
@@ -51,23 +55,33 @@ public class SaveGame : MonoBehaviour {
         yield return null;
     }
 
+    void SetButtonsActive(bool doActivate)
+    {
+        saveButton.SetActive(doActivate);
+        backButton.SetActive(doActivate);
+    }
+
     void OnEnable()
     {
         // update list of saves
         StartCoroutine(SetListOfSaves());
         // set save details
         transform.Find("Saves").GetComponent<SavesMenu>().SetSaveDetails();
+        // enable buttons
+        SetButtonsActive(true);
     }
 
     void OnDisable()
     {
-        // return save button to normal state
-        transform.Find("SaveBtn").GetComponent<TextButton>().SetNormalStatus();
+        //// return save button to normal state
+        //transform.Find("SaveBtn").GetComponent<TextButton>().SetNormalStatus();
         // Clean up current list of saves
         foreach (Save save in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<Save>())
         {
             Destroy(save.gameObject);
         }
+        // disable buttons
+        SetButtonsActive(false);
     }
 
     void PrepareCitiesForSave(City[] cities)

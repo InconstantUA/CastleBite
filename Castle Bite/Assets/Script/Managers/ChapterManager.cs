@@ -19,6 +19,8 @@ public class ChapterManager : MonoBehaviour {
     Chapter activeChapter;
     [SerializeField]
     Chapter[] chapters;
+    [SerializeField]
+    int endGameScreenWaitingTimeSeconds;
     //[SerializeField]
     //PlayerData[] playersData;
     CoroutineQueue coroutineQueue;
@@ -209,7 +211,7 @@ public class ChapterManager : MonoBehaviour {
         activeChapter.ChapterData.goalTargetHeroDestroyed = false;
     }
 
-    IEnumerator SetEndingGameScreen()
+    IEnumerator EndChapter()
     {
         // Activate Loading screen
         UIRoot.Instance.GetComponentInChildren<EndingGameScreen>(true).SetActive(true);
@@ -217,10 +219,10 @@ public class ChapterManager : MonoBehaviour {
         CursorController.Instance.SetBlockInputCursor();
         // Activate input blocker
         InputBlocker.Instance.SetActive(true);
-        // Replace map with the clear Map
-        Debug.LogWarning("Replace map with new map from template");
+        // Remove world map
+        World.Instance.RemoveCurrentChapter();
         // Deactivate loading screen after clean
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(endGameScreenWaitingTimeSeconds);
         // Deactivate Loading screen
         UIRoot.Instance.GetComponentInChildren<EndingGameScreen>(true).SetActive(false);
         // Set normal cursor
@@ -231,7 +233,7 @@ public class ChapterManager : MonoBehaviour {
 
     public void EndCurrentGame()
     {
-        coroutineQueue.Run(SetEndingGameScreen());
+        coroutineQueue.Run(EndChapter());
     }
 
     public GameObject GetWorldTemplateByName(ChapterName chapterName)

@@ -6,8 +6,28 @@ using UnityEngine.UI;
 // When this class is called it requires special objects to be set
 // This is later will be used by other sub-scripts
 public class HireUnitGeneric : MonoBehaviour {
+    [SerializeField]
+    GameObject unitUIToggleTemplate;
+    [SerializeField]
+    ToggleGroup unitsToHireList;
     Transform callerCell;
     GameObject unitsPanel;
+
+    public GameObject UnitUIToggleTemplate
+    {
+        get
+        {
+            return unitUIToggleTemplate;
+        }
+    }
+
+    public ToggleGroup UnitsToHireList
+    {
+        get
+        {
+            return unitsToHireList;
+        }
+    }
 
     void SetCityControlsActive(bool doActivate)
     {
@@ -40,7 +60,7 @@ public class HireUnitGeneric : MonoBehaviour {
     void RemoveAllCurrentUnitsToHire()
     {
         // remove all toggles for units created from template
-        foreach (Transform tr in transform.Find("UnitsToHire").transform)
+        foreach (Transform tr in unitsToHireList.transform)
         {
             Destroy(tr.gameObject);
         }
@@ -74,9 +94,9 @@ public class HireUnitGeneric : MonoBehaviour {
         // get templates manager
         // TemplatesManager templatesManager = transform.root.Find("Templates").GetComponent<TemplatesManager>();
         // get unit UI toggles list parent
-        Transform togglesListTransform = transform.Find("UnitsToHire");
+        // Transform togglesListTransform = transform.Find("UnitsToHire");
         // get unit toggle UI template
-        GameObject unitUIToggle = transform.Find("UnitTemplate").gameObject;
+        // GameObject unitUIToggleTemplate = transform.Find("UnitTemplate").gameObject;
         // reset flag for first toggle activation
         bool firstToggleIsActivated = false;
         // remove all previously configured units to hire
@@ -85,7 +105,9 @@ public class HireUnitGeneric : MonoBehaviour {
         foreach (UnitType unitType in unitTypesToHire)
         {
             // create menu entry from template
-            UnitHirePanel newUnitToggle = Instantiate(unitUIToggle, togglesListTransform).GetComponent<UnitHirePanel>();
+            UnitHirePanel newUnitToggle = Instantiate(unitUIToggleTemplate, unitsToHireList.transform).GetComponent<UnitHirePanel>();
+            // set toggle group
+            newUnitToggle.GetComponent<Toggle>().group = unitsToHireList;
             // set unit to hire
             newUnitToggle.UnitToHire = TemplatesManager.Instance.GetPartyUnitTemplateByType(unitType).GetComponent<PartyUnit>();
             // set mode
@@ -105,7 +127,7 @@ public class HireUnitGeneric : MonoBehaviour {
         }
         // Force layout update
         // Note: this should be done to force all fields to be adjusted to the text size
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)togglesListTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)unitsToHireList.transform);
         // verify if mode is not hire first hero
         if (mode != UnitHirePanel.Mode.FirstUnit)
         {
@@ -136,7 +158,7 @@ public class HireUnitGeneric : MonoBehaviour {
     {
         //  Find selected toggle and get attached to it unit template
         // get unit UI toggles list parent
-        foreach (Toggle toggle in transform.Find("UnitsToHire").GetComponentsInChildren<Toggle>())
+        foreach (Toggle toggle in unitsToHireList.GetComponentsInChildren<Toggle>())
         {
             if (toggle.isOn)
             {

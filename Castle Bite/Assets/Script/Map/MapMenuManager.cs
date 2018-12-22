@@ -353,10 +353,12 @@ public class MapMenuManager : MonoBehaviour {
     {
         // enable main menu
         MainMenuManager.Instance.gameObject.SetActive(true);
-        // disable world map
-        MapManager.Instance.gameObject.SetActive(false);
-        // disable map menu
-        gameObject.SetActive(false);
+        // Enter animation mode on map to prevent Update() from acting
+        MapManager.Instance.SetMode(MapManager.Mode.Animation);
+        //// disable world map
+        //MapManager.Instance.gameObject.SetActive(false);
+        //// disable map menu
+        //gameObject.SetActive(false);
         // disable current gold info
         currentGold.SetActive(false);
     }
