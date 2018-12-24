@@ -1,6 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+//[Serializable]
+//public struct UniqueAbilityConfigsMap
+//{
+//    public PlayerUniqueAbility playerUniqueAbility;
+//    public UniqueAbilityConfig uniqueAbilityConfig;
+//}
 
 public class ConfigManager : MonoBehaviour
 {
@@ -8,6 +16,8 @@ public class ConfigManager : MonoBehaviour
 
     [SerializeField]
     UniqueAbilityConfig[] uniqueAbilityConfigs;
+    //[SerializeField]
+    //UniqueAbilityConfigsMap[] uniqueAbilityConfigsMap;
 
     void Awake()
     {
@@ -22,4 +32,16 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
+    //public UniqueAbilityConfigsMap[] UniqueAbilityConfigsMap
+    //{
+    //    get
+    //    {
+    //        return uniqueAbilityConfigsMap;
+    //    }
+
+    //    set
+    //    {
+    //        uniqueAbilityConfigsMap = value;
+    //    }
+    //}
 }

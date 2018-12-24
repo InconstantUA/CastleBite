@@ -330,7 +330,9 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Activate world map
         ChapterManager.Instance.ActiveChapter.GetComponentInChildren<MapManager>(true).gameObject.SetActive(true);
         // Set chosen Unique ability for chosen player
-        TurnsManager.Instance.GetActivePlayer().PlayerData.playerUniqueAbilityData.uniqueAbilityConfig = uniqueAbilitiesToggleGroup.GetSelectedToggle().GetComponent<UniqueAbilitySelector>().UniqueAbilityConfig;
+        // TurnsManager.Instance.GetActivePlayer().PlayerData.playerUniqueAbilityData.uniqueAbilityConfig = Array.Find(ConfigManager.Instance.UniqueAbilityConfigsMap, element => element.playerUniqueAbility == playerUniqueAbility).uniqueAbilityConfig;
+        // Array.Find(ConfigManager.Instance.UniqueAbilityConfigs, element => element.playerUniqueAbility == playerUniqueAbility);
+        TurnsManager.Instance.GetActivePlayer().PlayerData.playerUniqueAbilityData.playerUniqueAbility = uniqueAbilitiesToggleGroup.GetSelectedToggle().GetComponent<UniqueAbilitySelector>().UniqueAbilityConfig.playerUniqueAbility;
         // GetSelectedUnitType and Get Chosen race starting city and hire first hero
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerStartingCity());
         // Deactivate Choose your first hero menu

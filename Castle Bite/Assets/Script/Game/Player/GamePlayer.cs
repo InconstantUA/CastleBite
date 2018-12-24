@@ -24,7 +24,7 @@ public enum PlayerUniqueAbility {
 [Serializable]
 public class UniqueAbilityData : System.Object
 {
-    public UniqueAbilityConfig uniqueAbilityConfig;
+    public PlayerUniqueAbility playerUniqueAbility;
     public int currentLevel;
     public int currentLearningPoints;
 }

@@ -3219,8 +3219,6 @@ MonoBehaviour:
   factionSpecificAbilityNormalColor: {r: 0, g: 0, b: 0.5019608, a: 1}
   factionSpecificAbilityHighlightedColor: {r: 0, g: 0, b: 1, a: 1}
   factionSpecificAbilityPressedColor: {r: 0, g: 0.5019608, b: 1, a: 1}
-  uniqueAbilitiesInfoTextButton: {fileID: 0}
-  abilityInfoText: Test
 --- !u!114 &107089515
 MonoBehaviour:
   m_ObjectHideFlags: 0
