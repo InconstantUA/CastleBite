@@ -25,10 +25,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
     Color factionSpecificAbilityHighlightedColor;
     [SerializeField]
     Color factionSpecificAbilityPressedColor;
-    [SerializeField]
-    TextButton uniqueAbilitiesInfoTextButton;
-    [SerializeField]
-    String abilityInfoText;
 
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
@@ -100,6 +96,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
                 text.text = uniqueAbilityConfig.description;
             }
         }
+        // set unique ability reference
+        uniqueAbilityToggle.GetComponent<UniqueAbilitySelector>().UniqueAbilityConfig = uniqueAbilityConfig;
         // return reference to the new toggle
         return uniqueAbilityToggle;
     }
@@ -145,10 +143,10 @@ public class ChooseYourFirstHero : MonoBehaviour {
         }
     }
 
-    public void ShowInfo(string info)
-    {
-        transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(info);
-    }
+    //public void ShowInfo(string info)
+    //{
+    //    transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(info);
+    //}
 
     public void SetActive(bool doActivate)
     {
@@ -331,9 +329,9 @@ public class ChooseYourFirstHero : MonoBehaviour {
         MainMenuManager.Instance.MainMenuInGameModeSetActive(true);
         // Activate world map
         ChapterManager.Instance.ActiveChapter.GetComponentInChildren<MapManager>(true).gameObject.SetActive(true);
-        // Get Chosen race starting city
-        // Ask EditPartyScreen to Hire chosen unit
-        //GetCityTransform().GetComponent<City>().HireUnit(null, GetSelectedUnitType());
+        // Set chosen Unique ability for chosen player
+        TurnsManager.Instance.GetActivePlayer().PlayerData.playerUniqueAbilityData.uniqueAbilityConfig = uniqueAbilitiesToggleGroup.GetSelectedToggle().GetComponent<UniqueAbilitySelector>().UniqueAbilityConfig;
+        // GetSelectedUnitType and Get Chosen race starting city and hire first hero
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerStartingCity());
         // Deactivate Choose your first hero menu
         SetActive(false);
