@@ -29,7 +29,7 @@ public class SavesMenu : MonoBehaviour {
         else
         {
             // Get game players information from running game
-            GamePlayer[] players = ObjectsManager.Instance.GetGamePlayers();
+            //GamePlayer[] players = ObjectsManager.Instance.GetGamePlayers();
             // set save data from currently running game
             saveData = new SaveData
             {

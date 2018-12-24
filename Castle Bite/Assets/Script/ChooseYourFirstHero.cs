@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,21 @@ public class ChooseYourFirstHero : MonoBehaviour {
     FactionSelectionGroup factionSelectionGroup;
     [SerializeField]
     HireUnitGeneric hireUnitGeneric;
+    [SerializeField]
+    TextToggleGroup uniqueAbilitiesToggleGroup;
+    [SerializeField]
+    TextToggle uniqueAbilityToggleTemplate;
+    [SerializeField]
+    Color factionSpecificAbilityNormalColor;
+    [SerializeField]
+    Color factionSpecificAbilityHighlightedColor;
+    [SerializeField]
+    Color factionSpecificAbilityPressedColor;
+    [SerializeField]
+    TextButton uniqueAbilitiesInfoTextButton;
+    [SerializeField]
+    String abilityInfoText;
+
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
     {
@@ -62,6 +78,76 @@ public class ChooseYourFirstHero : MonoBehaviour {
         //transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
         //// Deactivate standard close hire unit menu button
         //transform.root.Find("MiscUI/BottomControlPanel/RightControls/CloseHireUnitMenuBtn").gameObject.SetActive(false);
+        // Reset unique abilities (it may be specific to faction)
+        SetUniqueAbilitiesActive(false);
+        SetUniqueAbilitiesActive(true);
+    }
+
+    TextToggle CreateNewAbilityToggle(UniqueAbilityConfig uniqueAbilityConfig)
+    {
+        // create toggle in UI
+        TextToggle uniqueAbilityToggle = Instantiate(uniqueAbilityToggleTemplate.gameObject, uniqueAbilitiesToggleGroup.transform).GetComponent<TextToggle>();
+        // set toggle group
+        uniqueAbilityToggle.toggleGroup = uniqueAbilitiesToggleGroup;
+        // set unique ability name
+        uniqueAbilityToggle.GetComponent<Text>().text = uniqueAbilityConfig.displayName;
+        // Set unique ability description
+        foreach (Text text in uniqueAbilityToggle.GetComponentsInChildren<Text>())
+        {
+            // verify if we are not getting toggle = we are getting description
+            if (text.gameObject != uniqueAbilityToggle.gameObject)
+            {
+                text.text = uniqueAbilityConfig.description;
+            }
+        }
+        // return reference to the new toggle
+        return uniqueAbilityToggle;
+    }
+
+    void SetUniqueAbilitiesActive(bool doActivate)
+    {
+        // verify if we need to activate or deactivate abilities list
+        if (doActivate)
+        {
+            // loop through all possible unique abilities configs
+            foreach (UniqueAbilityConfig uniqueAbilityConfig in ConfigManager.Instance.UniqueAbilityConfigs)
+            {
+                // verify this ability is applicable only to specific factions
+                if (uniqueAbilityConfig.doLimitUsageByFaction)
+                {
+                    // verify if that ability is allowed for this Faction
+                    if (Array.Exists(uniqueAbilityConfig.applicableToFactions, element => element == factionSelectionGroup.GetSelectedFaction()))
+                    {
+                        TextToggle uniqueAbilityToggle = CreateNewAbilityToggle(uniqueAbilityConfig);
+                        // adjust text color and toggle color schema to represent Faction-specific ability
+                        uniqueAbilityToggle.GetComponent<Text>().color = factionSpecificAbilityNormalColor;
+                        uniqueAbilityToggle.NormalColor = factionSpecificAbilityNormalColor;
+                        uniqueAbilityToggle.HighlightedColor = factionSpecificAbilityHighlightedColor;
+                        uniqueAbilityToggle.PressedColor = factionSpecificAbilityPressedColor;
+                    }
+                }
+                else
+                {
+                    CreateNewAbilityToggle(uniqueAbilityConfig);
+                }
+            }
+            // preselect first toggle
+            uniqueAbilitiesToggleGroup.GetComponentsInChildren<TextToggle>()[0].ActOnLeftMouseClick();
+        }
+        else
+        {
+            // loop through all abilities in UI
+            foreach(Transform t in uniqueAbilitiesToggleGroup.transform)
+            {
+                // remove toggle
+                Destroy(t.gameObject);
+            }
+        }
+    }
+
+    public void ShowInfo(string info)
+    {
+        transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(info);
     }
 
     public void SetActive(bool doActivate)
@@ -100,6 +186,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
             transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(true);
             // Deactivate activated by default top gold info panel
             // transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
+            // Set action on abilities information button click
+            // uniqueAbilitiesInfoTextButton.OnClick.AddListener(delegate { ShowInfo(abilityInfoText); });
             // bring it to the front
             transform.SetAsLastSibling();
         }
@@ -127,6 +215,12 @@ public class ChooseYourFirstHero : MonoBehaviour {
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/ContinueAndHireFirstHeroBtn").gameObject.SetActive(doActivate);
         // Activate/Deactivate back button
         transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(doActivate);
+        // verify if we are disabling this menu
+        if (!doActivate)
+        {
+            // Deactivate unique abilities list
+            SetUniqueAbilitiesActive(doActivate);
+        }
         // ..
         LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)transform);
     }

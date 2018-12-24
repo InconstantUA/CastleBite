@@ -13,11 +13,21 @@ public enum PlayerType
 
 [Serializable]
 public enum PlayerUniqueAbility {
-    Offence,
-    Defense,
-    Sorcery,
+    Powerful,
+    Tough,
+    Blessed,
+    Cursed,
+    Leech,
     Hardcore
 };
+
+[Serializable]
+public class UniqueAbilityData : System.Object
+{
+    public UniqueAbilityConfig uniqueAbilityConfig;
+    public int currentLevel;
+    public int currentLearningPoints;
+}
 
 [Serializable]
 public enum PlayerTurnState
@@ -30,7 +40,7 @@ public enum PlayerTurnState
 [Serializable]
 public class PlayerData : System.Object
 {
-    public PlayerUniqueAbility playerUniqueAbility;
+    public UniqueAbilityData playerUniqueAbilityData;
     public PlayerType playerType;
     public string givenName;
     public int totalGold;
@@ -62,19 +72,6 @@ public class GamePlayer : MonoBehaviour {
         // init tiles discovery array
         // playerData.tilesDiscoveryState = new int[MapManager.Instance.TileMapWidth, MapManager.Instance.TileMapHeight];
         // playerData.tilesDiscoveryState = new int[MapManager.Instance.TileMapWidth, MapManager.Instance.TileMapHeight];
-    }
-    
-    public PlayerUniqueAbility PlayerUniqueAbility
-    {
-        get
-        {
-            return playerData.playerUniqueAbility;
-        }
-
-        set
-        {
-            playerData.playerUniqueAbility = value;
-        }
     }
 
     public PlayerType PlayerType

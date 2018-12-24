@@ -73,7 +73,7 @@ MonoBehaviour:
     unitPowerScope: 0
     unitInitiative: 50
     uniquePowerModifiers: []
-    unitRole: Scouting
+    unitRole: Scouting and special operations under cover
     unitBriefDescription: Brief description
     unitFullDescription: Full description
     unitCost: 150

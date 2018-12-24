@@ -204,7 +204,8 @@ public enum ModifierScope
     FriendlyUnit,
     FriendlyParty,
     EnemyUnit,
-    EnemyParty
+    EnemyParty,
+    AllPlayerUnits
 }
 
 [Serializable]

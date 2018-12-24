@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9aa873d6983a9c4193fb2792edaf4a0, type: 3}
+  m_Name: PlayerUniqueAbilityInfo
+  m_EditorClassIdentifier: 
+  message: "Allows to gain certain bonuses: defense, damage, healing power or add
+    poison or life drain to attacks. Some abilities are available only for some Factions.\r\nAbility
+    power is increased automatically while unit is using special skills which trigger
+    such ability. For example if user uses Defense Stance in battle, then he gains
+    a learning point for Tough unique ability, if this ability was chosen.\r\nIt is
+    increased only if skill which triggers ability is being used. If unit doesn't
+    have such skill by default, then find the way to use ability using potions or
+    other items. In case of damage dealing or healing powers after ability has gained
+    at least 1 power, it will be automatically used on next attacks and trained without
+    need to reuse consumable. Skill power starts with 0 power and applies to every
+    unit which is owned by the Player."

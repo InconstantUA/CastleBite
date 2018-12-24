@@ -28,6 +28,45 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public UnityEvent OnMouseExit;
     bool mouseIsOver = false;
 
+    public Color NormalColor
+    {
+        get
+        {
+            return normalColor;
+        }
+
+        set
+        {
+            normalColor = value;
+        }
+    }
+
+    public Color HighlightedColor
+    {
+        get
+        {
+            return highlightedColor;
+        }
+
+        set
+        {
+            highlightedColor = value;
+        }
+    }
+
+    public Color PressedColor
+    {
+        get
+        {
+            return pressedColor;
+        }
+
+        set
+        {
+            pressedColor = value;
+        }
+    }
+
     void Start()
     {
     }
@@ -133,13 +172,21 @@ public class TextToggle : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // verify if it is selected
         if (selected)
         {
-            TurnOff();
-            OnTurnOff.Invoke();
             // verify if toggle is part of the group
             if (toggleGroup != null)
             {
-                // instruct toggle group to act on this
-                toggleGroup.DeselectToggle();
+                // verify if it is allowed to have none of the toggles selected
+                if (toggleGroup.AllowSwitchOff)
+                {
+                    TurnOff();
+                    OnTurnOff.Invoke();
+                    // instruct toggle group to act on this
+                    toggleGroup.DeselectToggle();
+                }
+            } else
+            {
+                TurnOff();
+                OnTurnOff.Invoke();
             }
         }
         else

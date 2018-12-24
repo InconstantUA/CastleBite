@@ -5,6 +5,16 @@ using UnityEngine.UI;
 
 public class TextToggleGroup : MonoBehaviour {
     TextToggle selectedToggle;
+    [SerializeField]
+    bool allowSwitchOff;
+
+    public bool AllowSwitchOff
+    {
+        get
+        {
+            return allowSwitchOff;
+        }
+    }
 
     void OnDisable()
     {
