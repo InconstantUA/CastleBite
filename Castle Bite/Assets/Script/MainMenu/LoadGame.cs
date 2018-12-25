@@ -211,6 +211,8 @@ public class LoadGame : MonoBehaviour
         TurnsManager.Instance.TurnsData = gameData.turnsData;
         // Update turns number in UI
         TurnsManager.Instance.UpdateTurnNumberText();
+        // update active player name
+        TurnsManager.Instance.UpdateActivePlayerNameOnMapUI();
     }
 
     public IEnumerator CleanNewWorldBeforeLoad()

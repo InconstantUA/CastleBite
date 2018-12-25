@@ -15,7 +15,9 @@ public class TurnsManager : MonoBehaviour {
     [SerializeField]
     TurnsData turnsData;
     [SerializeField]
-    Text turnNumberTextUI;
+    Text turnNumberText;
+    [SerializeField]
+    Text activePlayerNameText;
 
     public void Reset(Faction playerFaction = Faction.Unknown)
     {
@@ -42,6 +44,8 @@ public class TurnsManager : MonoBehaviour {
         TurnNumber = 1;
         // update turn number UI
         UpdateTurnNumberText();
+        // update active player name
+        UpdateActivePlayerNameOnMapUI();
     }
 
     void Awake()
@@ -79,7 +83,12 @@ public class TurnsManager : MonoBehaviour {
     public void UpdateTurnNumberText()
     {
         Debug.Log("Set turn number text UI to " + TurnNumber.ToString());
-        turnNumberTextUI.text = TurnNumber.ToString();
+        turnNumberText.text = TurnNumber.ToString();
+    }
+
+    public void UpdateActivePlayerNameOnMapUI()
+    {
+        activePlayerNameText.text = GetActivePlayer().GivenName;
     }
 
     GamePlayer GetNextPlayer()
@@ -225,6 +234,8 @@ public class TurnsManager : MonoBehaviour {
                 }
             }
         }
+        // update active player name
+        TurnsManager.Instance.UpdateActivePlayerNameOnMapUI();
         // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
         // mapManager.SetCitiesPassableByFaction(activePlayer.Faction);
         MapManager.Instance.InitTilesMap();

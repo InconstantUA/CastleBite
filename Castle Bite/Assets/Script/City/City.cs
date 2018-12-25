@@ -27,6 +27,8 @@ public class CityData
     public PositionOnMap cityMapPosition;   // used only during load and save
     public MapCoordinates cityMapCoordinates;   // used only during load and save
     public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
+    public int goldIncomePerDay;
+    public int manaIncomePerDay;
 }
 
 public class City : MonoBehaviour {
@@ -288,6 +290,31 @@ public class City : MonoBehaviour {
         }
     }
 
+    public int GoldIncomePerDay
+    {
+        get
+        {
+            return cityData.goldIncomePerDay;
+        }
+
+        set
+        {
+            cityData.goldIncomePerDay = value;
+        }
+    }
+
+    public int ManaIncomePerDay
+    {
+        get
+        {
+            return cityData.manaIncomePerDay;
+        }
+
+        set
+        {
+            cityData.manaIncomePerDay = value;
+        }
+    }
 
     //public int LinkedPartyID
     //{

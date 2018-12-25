@@ -369,7 +369,7 @@ public class EditPartyScreen : MonoBehaviour {
         bool result = false;
         int requiredGold = hiredUnitTemplate.UnitCost;
         //  Verify if player has enough gold
-        if (TurnsManager.Instance.GetActivePlayer().PlayerGold >= requiredGold)
+        if (TurnsManager.Instance.GetActivePlayer().TotalGold >= requiredGold)
         {
             result = true;
         }
@@ -499,7 +499,7 @@ public class EditPartyScreen : MonoBehaviour {
         newPartyUnit.PartyUnitData.unitPPRow = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitPPRow();
         newPartyUnit.PartyUnitData.unitPPCell = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitPPCell();
         // take gold from player
-        TurnsManager.Instance.GetActivePlayer().PlayerGold -= hiredUnitTemplate.UnitCost;
+        TurnsManager.Instance.GetActivePlayer().TotalGold -= hiredUnitTemplate.UnitCost;
         if (doCreateUI)
         {
             // create unit canvas in unit slot

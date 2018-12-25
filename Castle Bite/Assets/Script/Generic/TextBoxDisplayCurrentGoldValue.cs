@@ -16,6 +16,6 @@ public class TextBoxDisplayCurrentGoldValue : MonoBehaviour {
         // verify if there is active player present
         if (TurnsManager.Instance.GetActivePlayer())
             // update gold value in UI
-            GetComponent<Text>().text = TurnsManager.Instance.GetActivePlayer().PlayerGold.ToString();
+            GetComponent<Text>().text = TurnsManager.Instance.GetActivePlayer().TotalGold.ToString();
     }
 }

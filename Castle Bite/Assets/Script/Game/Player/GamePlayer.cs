@@ -44,10 +44,16 @@ public class PlayerData : System.Object
     public PlayerType playerType;
     public string givenName;
     public int totalGold;
+    public int totalMana;
     public Faction faction;
     public PlayerTurnState playerTurnState = PlayerTurnState.Waiting;
     public int focusedObjectID = 0;
     public int[,] tilesDiscoveryState;
+    public float age;             // For Achievements and stats: time spend playing game
+    public int battlesWon;      // For Achievements and stats
+    public int battlesLost;     // For Achievements and stats
+    public int battlesEscaped;  // For Achievements and stats
+    public int citiesCaptured;  // For Achievements and stats
 }
 
 [Serializable]
@@ -59,6 +65,9 @@ public class Gold : System.Object
 public class GamePlayer : MonoBehaviour {
     [SerializeField]
     PlayerData playerData;
+    // for player time tracking
+    float timeOfTheLastTakenMeasurement;
+
     //[SerializeField]
     //int totalGold;
     //[SerializeField]
@@ -67,6 +76,8 @@ public class GamePlayer : MonoBehaviour {
     // for Debug when player are not create on game start
     void Awake()
     {
+        // init time
+        timeOfTheLastTakenMeasurement = Time.time;
         // Get map manager
         // MapManager mapManager = transform.root.Find("MapScreen").GetComponentInChildren<MapManager>(true);
         // init tiles discovery array
@@ -126,7 +137,7 @@ public class GamePlayer : MonoBehaviour {
         }
     }
 
-    public int PlayerGold
+    public int TotalGold
     {
         get
         {
@@ -138,6 +149,19 @@ public class GamePlayer : MonoBehaviour {
             playerData.totalGold = value;
             // trigger event
 
+        }
+    }
+
+    public int TotalMana
+    {
+        get
+        {
+            return playerData.totalMana;
+        }
+
+        set
+        {
+            playerData.totalMana = value;
         }
     }
 
@@ -167,7 +191,6 @@ public class GamePlayer : MonoBehaviour {
         }
     }
 
-
     public int[,] TilesDiscoveryState
     {
         get
@@ -181,14 +204,127 @@ public class GamePlayer : MonoBehaviour {
         }
     }
 
-    //public int GetTotalGold()
-    //{
-    //    return playerData.totalGold;
-    //}
+    public float Age
+    {
+        get
+        {
+            return playerData.age;
+        }
 
-    //public void SetTotalGold(int newTotalGoldValue)
-    //{
-    //    playerData.totalGold = newTotalGoldValue;
-    //    // Trigger gold update event to update gold value in UI
-    //}
+        set
+        {
+            playerData.age = value;
+        }
+    }
+
+    public UniqueAbilityData PlayerUniqueAbilityData
+    {
+        get
+        {
+            return playerData.playerUniqueAbilityData;
+        }
+
+        set
+        {
+            playerData.playerUniqueAbilityData = value;
+        }
+    }
+
+    public int BattlesWon
+    {
+        get
+        {
+            return playerData.battlesWon;
+        }
+
+        set
+        {
+            playerData.battlesWon = value;
+        }
+    }
+
+    public int BattlesLost
+    {
+        get
+        {
+            return playerData.battlesLost;
+        }
+
+        set
+        {
+            playerData.battlesLost = value;
+        }
+    }
+
+    public int BattlesEscaped
+    {
+        get
+        {
+            return playerData.battlesEscaped;
+        }
+
+        set
+        {
+            playerData.battlesEscaped = value;
+        }
+    }
+
+    public int CitiesCaptured
+    {
+        get
+        {
+            return playerData.citiesCaptured;
+        }
+
+        set
+        {
+            playerData.citiesCaptured = value;
+        }
+    }
+
+    public string GetAge()
+    {
+        // Get time difference between last measurement and current time
+        float timeDelta = Time.time - timeOfTheLastTakenMeasurement;
+        // Add player delta to the player age value
+        playerData.age += timeDelta;
+        // Get timespan
+        TimeSpan timeSpan = TimeSpan.FromSeconds(playerData.age);
+        // Calculate automatically number of years/months/days/hours/minutes and return this as a result
+        return timeSpan.Days + " day(s) " + timeSpan.Hours + " hour(s) " + timeSpan.Minutes + " minute(s)";
+    }
+
+    public int GetTotalGoldIncomePerDay()
+    {
+        // set total gold income per day to 0
+        int totalGoldIncomePerDay = 0;
+        // loop through all cities
+        foreach(City city in ObjectsManager.Instance.GetComponentsInChildren<City>(true))
+        {
+            // verify if city belongs to the player's faction
+            if (city.CityFaction == Faction)
+            {
+                totalGoldIncomePerDay += city.GoldIncomePerDay;
+            }
+        }
+        // return result
+        return totalGoldIncomePerDay;
+    }
+
+    public int GetTotalManaIncomePerDay()
+    {
+        // set total gold income per day to 0
+        int totalManaIncomePerDay = 0;
+        // loop through all cities
+        foreach (City city in ObjectsManager.Instance.GetComponentsInChildren<City>(true))
+        {
+            // verify if city belongs to the player's faction
+            if (city.CityFaction == Faction)
+            {
+                totalManaIncomePerDay += city.ManaIncomePerDay;
+            }
+        }
+        // return result
+        return totalManaIncomePerDay;
+    }
 }
