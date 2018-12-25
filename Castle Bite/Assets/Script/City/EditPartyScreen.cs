@@ -376,14 +376,13 @@ public class EditPartyScreen : MonoBehaviour {
         else
         {
             // display message that is not enough gold
-            NotificationPopUp notificationPopup = transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>();
             if (hiredUnitTemplate.IsLeader)
             {
-                notificationPopup.DisplayMessage("More gold is needed to hire this party leader.");
+                NotificationPopUp.Instance().DisplayMessage("More gold is needed to hire this party leader.");
             }
             else
             {
-                notificationPopup.DisplayMessage("More gold is needed to hire this party member.");
+                NotificationPopUp.Instance().DisplayMessage("More gold is needed to hire this party member.");
             }
         }
         return result;
@@ -793,10 +792,10 @@ public class EditPartyScreen : MonoBehaviour {
     {
         transform.root.GetComponentInChildren<UIManager>().transform.Find("HireCommonUnitButtons").SetAsLastSibling();
         // verify if notification pop-up window is active NotificationPopUp
-        if (transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<NotificationPopUp>())
+        if (NotificationPopUp.Instance().NotificationPopUpGO.activeSelf)
         {
             // set nofiction pop-up as last sibling
-            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<NotificationPopUp>().transform.SetAsLastSibling();
+            NotificationPopUp.Instance().NotificationPopUpGO.transform.SetAsLastSibling();
         }
     }
 

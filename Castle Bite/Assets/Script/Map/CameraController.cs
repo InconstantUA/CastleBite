@@ -124,7 +124,7 @@ public class CameraController : MonoBehaviour {
     Vector3 GetPositionWithScreenBordersLimits(Vector3 position)
     {
         float mapsize = 960f;
-        float tilesize = 16f;
+        //float tilesize = 16f;
         // get followed hero position
         float screenBottomHeightLimit = Screen.height / 2f;
         // verify if followed hero position x will not cause camera to be off map

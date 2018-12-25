@@ -27,8 +27,10 @@ public class CityData
     public PositionOnMap cityMapPosition;   // used only during load and save
     public MapCoordinates cityMapCoordinates;   // used only during load and save
     public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
-    public int goldIncomePerDay;
-    public int manaIncomePerDay;
+    // Normally this is taken from CityUpgradeConfig, but can be overwritten here, if not -1
+    public int goldIncomePerDay = -1;
+    // Normally this is taken from CityUpgradeConfig, but can be overwritten here, if not -1
+    public int manaIncomePerDay = -1;
 }
 
 public class City : MonoBehaviour {
@@ -294,7 +296,17 @@ public class City : MonoBehaviour {
     {
         get
         {
-            return cityData.goldIncomePerDay;
+            // verify if it is not overwritten
+            if (cityData.goldIncomePerDay == -1)
+            {
+                // get data from config based on the city level
+                return ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[CityLevelCurrent];
+            }
+            else
+            {
+                // return overwritten value
+                return cityData.goldIncomePerDay;
+            }
         }
 
         set
@@ -307,7 +319,17 @@ public class City : MonoBehaviour {
     {
         get
         {
-            return cityData.manaIncomePerDay;
+            // verify if it is not overwritten
+            if (cityData.manaIncomePerDay == -1)
+            {
+                // get data from config based on the city level
+                return ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[CityLevelCurrent];
+            }
+            else
+            {
+                // return overwritten value
+                return cityData.manaIncomePerDay;
+            }
         }
 
         set

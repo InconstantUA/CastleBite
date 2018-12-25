@@ -143,11 +143,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
         }
     }
 
-    //public void ShowInfo(string info)
-    //{
-    //    transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(info);
-    //}
-
     public void SetActive(bool doActivate)
     {
         // Create world from template

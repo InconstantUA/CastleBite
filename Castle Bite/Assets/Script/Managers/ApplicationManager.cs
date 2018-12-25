@@ -5,13 +5,9 @@ using UnityEngine;
 public class ApplicationManager : MonoBehaviour {
     public static ApplicationManager Instance { get; private set; }
 
-    CoroutineQueue coroutineQueue;
-
     void Awake()
     {
         Instance = this;
-        // Create a coroutine queue that can run max 1 coroutine at once
-        coroutineQueue = new CoroutineQueue(1, StartCoroutine);
     }
 
     void Start()

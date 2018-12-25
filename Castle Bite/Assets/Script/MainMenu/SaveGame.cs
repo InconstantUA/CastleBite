@@ -250,7 +250,7 @@ public class SaveGame : MonoBehaviour {
             // file name is not set
             // show error message
             string errMsg = "Error: the name of save is not set. Please type new save name or select existing save to overwrite it.";
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+            NotificationPopUp.Instance().DisplayMessage(errMsg);
         }
         else
         {

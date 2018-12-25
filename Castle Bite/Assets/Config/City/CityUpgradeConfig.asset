@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36644ce726f895947ad02d0d982a76aa, type: 3}
+  m_Name: CityUpgradeConfig
+  m_EditorClassIdentifier: 
+  minCityLevel: 1
+  maxCityLevel: 5
+  capitalCityLevel: 6
+  cityUpgradeCostPerCityLevel: 0000000000000000fa000000f4010000ee020000e803000000000000
+  cityGoldIncomePerCityLevel: 0000000019000000320000004b000000640000007d00000096000000
+  cityManaIncomePerCityLevel: 000000000f0000001e0000002d0000003c0000004b00000050000000

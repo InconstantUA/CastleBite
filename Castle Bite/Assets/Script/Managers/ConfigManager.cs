@@ -3,21 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[Serializable]
-//public struct UniqueAbilityConfigsMap
-//{
-//    public PlayerUniqueAbility playerUniqueAbility;
-//    public UniqueAbilityConfig uniqueAbilityConfig;
-//}
-
 public class ConfigManager : MonoBehaviour
 {
     public static ConfigManager Instance { get; private set; }
 
     [SerializeField]
     UniqueAbilityConfig[] uniqueAbilityConfigs;
-    //[SerializeField]
-    //UniqueAbilityConfigsMap[] uniqueAbilityConfigsMap;
+    [SerializeField]
+    CityUpgradeConfig cityUpgradeConfig;
 
     void Awake()
     {
@@ -32,16 +25,17 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
-    //public UniqueAbilityConfigsMap[] UniqueAbilityConfigsMap
-    //{
-    //    get
-    //    {
-    //        return uniqueAbilityConfigsMap;
-    //    }
+    public CityUpgradeConfig CityUpgradeConfig
+    {
+        get
+        {
+            return cityUpgradeConfig;
+        }
 
-    //    set
-    //    {
-    //        uniqueAbilityConfigsMap = value;
-    //    }
-    //}
+        set
+        {
+            cityUpgradeConfig = value;
+        }
+    }
+
 }

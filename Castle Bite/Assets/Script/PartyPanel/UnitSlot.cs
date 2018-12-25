@@ -425,7 +425,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 // it is not allowed to use powers on this cell
                 // display error message
-                transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
+                NotificationPopUp.Instance().DisplayMessage(errorMessage);
             }
         }
     }
@@ -482,8 +482,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else
         {
             // display error message
-            NotificationPopUp notificationPopup = transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>();
-            notificationPopup.DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
+            NotificationPopUp.Instance().DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
         }
     }
 

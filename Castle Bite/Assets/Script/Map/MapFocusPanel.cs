@@ -34,8 +34,6 @@ public class MapFocusPanel : MonoBehaviour {
     void SetHeroNameUI(MapHero mapHero)
     {
         SetFocusedObjectName(mapHero.LHeroParty.GetPartyLeader().GivenName + "\r\n<size=12>" + mapHero.LHeroParty.GetPartyLeader().UnitName + "</size>");
-        // set camera focus
-        Camera.main.GetComponent<CameraController>().SetCameraFocus(mapHero);
     }
 
     void ActivateNextAndPreviousControls()
@@ -170,6 +168,8 @@ public class MapFocusPanel : MonoBehaviour {
         MapManager.Instance.SetSelection(MapManager.Selection.PlayerHero, nextHero);
         // reset cursor to normal, because it is changed by MapManager
         CursorController.Instance.SetNormalCursor();
+        // set camera focus on a hero on map
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(nextHero);
     }
 
     void ChangeCityFocus(MapCity nextCity)
@@ -181,6 +181,8 @@ public class MapFocusPanel : MonoBehaviour {
         MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, nextCity);
         // reset cursor to normal, because it is changed by MapManager
         CursorController.Instance.SetNormalCursor();
+        // set camera focus on a city
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(nextCity);
     }
 
     public void ShowNext()
@@ -247,8 +249,6 @@ public class MapFocusPanel : MonoBehaviour {
         }
         // Set UI text
         SetFocusedObjectName(mapCity.LCity.CityName + "\r\n<size=12>" + additionalInfo + "</size>");
-        // set camera focus
-        Camera.main.GetComponent<CameraController>().SetCameraFocus(mapCity);
     }
 
     public void UpdateMovePointsInfo()
@@ -313,6 +313,8 @@ public class MapFocusPanel : MonoBehaviour {
         {
             // activate focus on a map city
             SetActive(mapCity);
+            // set camera focus on a city
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(mapCity);
         }
     }
 
@@ -334,6 +336,25 @@ public class MapFocusPanel : MonoBehaviour {
         return null;
     }
 
+    public void FocusOnFocusedObject()
+    {
+        // verify if focused object is city
+        if (focusedObject.GetComponent<MapCity>() != null)
+        {
+            // focus on map city
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(focusedObject.GetComponent<MapCity>());
+        }
+        else if (focusedObject.GetComponent<MapHero>() != null)
+        {
+            // focus on map hero
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(focusedObject.GetComponent<MapHero>());
+        }
+        else
+        {
+            Debug.LogWarning("Unknown focused object type");
+        }
+    }
+
     public void FocusOnHero()
     {
         // get first city
@@ -343,6 +364,8 @@ public class MapFocusPanel : MonoBehaviour {
         {
             // activate focus on a map city
             SetActive(mapHero);
+            // set camera focus on a hero on map
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(mapHero);
         }
     }
 

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class FocusPanel : MonoBehaviour {
     public GameObject focusedObject;
+    [SerializeField]
+    TextButton cityUpgradeButton;
     City city;
     //public enum FocusMode { HeroPartyNoFocus, HeroPartyFocus, CityFocus };
     //FocusMode focusMode;
@@ -40,12 +42,6 @@ public class FocusPanel : MonoBehaviour {
             childTransform.gameObject.SetActive(false);
         }
     }
-
-    // Use this for initialization
-    //void Start()
-    //{
-    //    InitFocusPanel();
-    //}
 
     #region Initialize
 
@@ -95,6 +91,20 @@ public class FocusPanel : MonoBehaviour {
         }
     }
 
+    void SetCityLevelInfo(City city)
+    {
+        if (city != null)
+        {
+            transform.Find("CityFocus").Find("LevelValue").GetComponent<Text>().text = city.CityLevelCurrent.ToString();
+            // verify if city has not reached max level or it is not capital city
+            if (city.CityLevelCurrent >= ConfigManager.Instance.CityUpgradeConfig.maxCityLevel)
+            {
+                // add (max) information next to the level
+                transform.Find("CityFocus").Find("LevelValue").GetComponent<Text>().text += "<size=12> max</size>";
+            }
+        }
+    }
+
     void SetCurrentAndMaxUnitsInCityUIValue()
     {
         Debug.Log("Update current and maximum city units capacity");
@@ -103,6 +113,21 @@ public class FocusPanel : MonoBehaviour {
         {
             //Debug.Log("City is not null");
             transform.Find("CityFocus/UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+        }
+    }
+
+    void SetUpgradeCityButton(City city)
+    {
+        // verify if city has not reached max level or it is not capital city
+        if (city.CityLevelCurrent >= ConfigManager.Instance.CityUpgradeConfig.maxCityLevel)
+        {
+            // disable (hide) upgrade city button
+            cityUpgradeButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            // enable city upgrade city button
+            cityUpgradeButton.gameObject.SetActive(true);
         }
     }
 
@@ -116,10 +141,13 @@ public class FocusPanel : MonoBehaviour {
         city = focusedObject.GetComponent<City>();
         transform.Find("FocusedName").GetComponent<Text>().text = city.CityName;
         transform.Find("FocusedDescription").GetComponent<Text>().text = city.CityDescription;
-        transform.Find("CityFocus").Find("LevelValue").GetComponent<Text>().text = city.CityLevelCurrent.ToString();
+        SetCityLevelInfo(city);
         transform.Find("CityFocus").Find("DefenseValue").GetComponent<Text>().text = city.GetCityDefense().ToString() + "%";
         transform.Find("CityFocus").Find("HealPerDayValue").GetComponent<Text>().text = city.GetHealPerDay().ToString() + "%";
+        transform.Find("CityFocus").Find("GoldPerDayValue").GetComponent<Text>().text = city.GoldIncomePerDay.ToString();
+        transform.Find("CityFocus").Find("ManaPerDayValue").GetComponent<Text>().text = city.ManaIncomePerDay.ToString();
         SetCurrentAndMaxUnitsInCityUIValue();
+        SetUpgradeCityButton(city);
     }
 
     void SetLeaderInformation()
@@ -220,7 +248,84 @@ public class FocusPanel : MonoBehaviour {
 
     #endregion
 
-    //// Update is called once per frame
-    //void Update () {
-    //}
+
+    void OnCityUpgradeYesConfirmation()
+    {
+        Debug.Log("Yes");
+        // get city
+        City city = focusedObject.GetComponent<City>();
+        // verify if it is not null
+        if (city != null)
+        {
+            // upgrade city level
+            city.CityLevelCurrent += 1;
+            // verify if city has custom starting gold income
+            if (city.CityData.goldIncomePerDay != -1)
+            {
+                // upgrade custom income by the difference between levels
+                city.CityData.goldIncomePerDay += (ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[city.CityLevelCurrent] - ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[city.CityLevelCurrent - 1]);
+            }
+            // verify if city has custom starting mana income
+            if (city.CityData.manaIncomePerDay != -1)
+            {
+                // upgrade custom income by the difference between levels
+                city.CityData.manaIncomePerDay += (ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[city.CityLevelCurrent] - ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[city.CityLevelCurrent - 1]);
+            }
+            // reinit city info panel
+            SetCityInformation();
+        }
+        else
+        {
+            Debug.LogWarning("City is null");
+        }
+    }
+
+    void OnCityUpgradeNoConfirmation()
+    {
+        Debug.Log("No");
+        // nothing to do here
+    }
+
+    public void UpgradeCity()
+    {
+        // get city
+        City city = focusedObject.GetComponent<City>();
+        // verify if it is not null
+        if (city != null)
+        {
+            // init city upgrade menu
+            Debug.Log("Ugrading city");
+            // verify if city has not reached max level (normally button should be disabled, but just in case
+            // verify if city has not reached max level or it is not capital city
+            if (city.CityLevelCurrent >= ConfigManager.Instance.CityUpgradeConfig.maxCityLevel)
+            {
+                // Display notification that city has reached maximum level;
+                NotificationPopUp.Instance().DisplayMessage("City has reached maximum level. No further upgrades are apossible.");
+            }
+            else
+            {
+                // get upgrade cost
+                int cityUpgradeCost = ConfigManager.Instance.CityUpgradeConfig.cityUpgradeCostPerCityLevel[city.CityLevelCurrent + 1];
+                // verify if player has enough money
+                if (TurnsManager.Instance.GetActivePlayer().TotalGold >= cityUpgradeCost)
+                {
+                    // player has enough money
+                    // set confirmation message
+                    string confirmationMessage = "Do you want to spend " + cityUpgradeCost.ToString() + " gold to upgrade city to the next level?";
+                    // display confirmation pop up asking player whether he wants to upgrade city
+                    ConfirmationPopUp.Instance().Choice(confirmationMessage, new UnityEngine.Events.UnityAction(OnCityUpgradeYesConfirmation), new UnityEngine.Events.UnityAction(OnCityUpgradeNoConfirmation));
+                }
+                else
+                {
+                    // player doesn't have enough money
+                    // Display notification that player doesn't have enough money
+                    NotificationPopUp.Instance().DisplayMessage("You don't have enough money for city upgrade. Required " + cityUpgradeCost.ToString() + " gold.");
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("City is null");
+        }
+    }
 }

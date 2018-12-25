@@ -589,7 +589,7 @@ public class PartyPanel : MonoBehaviour {
             {
                 errMsg = "Not enough city capacity, 2 free slots are required. Dismiss or move other units to Hero's party or increase city level.";
             }
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+            NotificationPopUp.Instance().DisplayMessage(errMsg);
         }
         return result;
     }
@@ -616,7 +616,7 @@ public class PartyPanel : MonoBehaviour {
         {
             result = false;
             string errMsg = "Not enough free space to hire this large unit, 2 free nearby horisontal slots are required. " + oppositeCell.name + " unit slot is occupied. Move unit from " + oppositeCell.name + " slot to other free slot or to Hero's party or dismiss it to free up a slot or click on hire button where 2 free nearby horisontal slots are available.";
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+            NotificationPopUp.Instance().DisplayMessage(errMsg);
         }
         return result;
     }

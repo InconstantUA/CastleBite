@@ -59,7 +59,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     void ShowInfo(string info)
     {
-        transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(info);
+        NotificationPopUp.Instance().DisplayMessage(info);
     }
 
     #region Generic/UpgradePoints

@@ -200,8 +200,6 @@ public class TurnsManager : MonoBehaviour {
         // Reset map focus panel
         // Note it will also reset focused object ID for active player
         mapFocusPanel.ReleaseFocus();
-        // Get map manager
-        // MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
         // Reset map selection
         MapManager.Instance.SetSelection(MapManager.Selection.None);
         // verify if next player had focused object in the past
@@ -219,6 +217,8 @@ public class TurnsManager : MonoBehaviour {
                     mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
                     // select hero on map
                     MapManager.Instance.SetSelection(MapManager.Selection.PlayerHero, previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
+                    // set camera focus on a hero on map
+                    Camera.main.GetComponent<CameraController>().SetCameraFocus(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
                 }
                 // verify if it is MapCity
                 else if (previouslyFocusedGameObjectOnMap.GetComponent<MapCity>() != null)
@@ -227,6 +227,8 @@ public class TurnsManager : MonoBehaviour {
                     mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
                     // select city on map
                     MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
+                    // set camera focus on a city
+                    Camera.main.GetComponent<CameraController>().SetCameraFocus(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
                 }
                 else
                 {
@@ -234,10 +236,12 @@ public class TurnsManager : MonoBehaviour {
                 }
             }
         }
+        // Add player gold and mana income
+        nextPlayer.TotalGold += nextPlayer.GetTotalGoldIncomePerDay();
+        nextPlayer.TotalMana += nextPlayer.GetTotalManaIncomePerDay();
         // update active player name
-        TurnsManager.Instance.UpdateActivePlayerNameOnMapUI();
+        UpdateActivePlayerNameOnMapUI();
         // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
-        // mapManager.SetCitiesPassableByFaction(activePlayer.Faction);
         MapManager.Instance.InitTilesMap();
         // Update top player income info panel
         Debug.LogWarning("Todo: Fix that top info panel is enabled, if needed");

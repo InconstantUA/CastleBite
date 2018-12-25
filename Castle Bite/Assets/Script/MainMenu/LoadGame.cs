@@ -420,7 +420,7 @@ public class LoadGame : MonoBehaviour
             // no any save available
             // show error message
             string errMsg = "Error: no any save.";
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+            NotificationPopUp.Instance().DisplayMessage(errMsg);
         }
         else
         {
@@ -432,7 +432,7 @@ public class LoadGame : MonoBehaviour
             {
                 // file name is empty
                 string errMsg = "Error: file name is empty.";
-                transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+                NotificationPopUp.Instance().DisplayMessage(errMsg);
             }
             else
             {
@@ -457,7 +457,7 @@ public class LoadGame : MonoBehaviour
                 {
                     // display error message
                     string errMsg = "Error: [" + fullFilePath + "] file not found. Please try to exit 'Load' menu and open it again.";
-                    transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+                    NotificationPopUp.Instance().DisplayMessage(errMsg);
                     // remove UI element
                     Destroy(selectedToggle.gameObject);
                 }
@@ -476,7 +476,7 @@ public class LoadGame : MonoBehaviour
             // no any save available
             // show error message
             string errMsg = "Error: no any save.";
-            transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+            NotificationPopUp.Instance().DisplayMessage(errMsg);
         }
         else
         {
@@ -488,7 +488,7 @@ public class LoadGame : MonoBehaviour
             {
                 // file name is empty
                 string errMsg = "Error: file name is empty.";
-                transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+                NotificationPopUp.Instance().DisplayMessage(errMsg);
             }
             else
             {
@@ -524,7 +524,7 @@ public class LoadGame : MonoBehaviour
                 else
                 {
                     string errMsg = "Error: [" + fullFilePath + "] file not found. Please verify if file is present on disk drive.";
-                    transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errMsg);
+                    NotificationPopUp.Instance().DisplayMessage(errMsg);
                 }
             }
         }

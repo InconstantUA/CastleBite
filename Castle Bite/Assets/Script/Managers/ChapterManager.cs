@@ -178,23 +178,22 @@ public class ChapterManager : MonoBehaviour {
         // idea: add option to continue playing this chapter and continue to next chapter or end game when player wish
         // ..
         Debug.Log("Exit chapter");
-        NotificationPopUp notificationPopup = UIRoot.Instance.transform.Find("MiscUI").Find("NotificationPopUp").GetComponent<NotificationPopUp>();
         string messageText;
         if (failed)
         {
-            notificationPopup.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(EndGame);
+            NotificationPopUp.Instance().NotificationPopUpGO.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(EndGame);
             messageText = "You failed to complete this chapter. " + failureReason;
         }
         else if (completed)
         {
             if (activeChapter.ChapterData.lastChapter)
             {
-                notificationPopup.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(ShowCredits);
+                NotificationPopUp.Instance().NotificationPopUpGO.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(ShowCredits);
                 messageText = "Congratulations! You have completed this game!";
             }
             else
             {
-                notificationPopup.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(GoToNextChapter);
+                NotificationPopUp.Instance().NotificationPopUpGO.GetComponentInChildren<NotificationPopUpOkButton>().SetOnClickFunc(GoToNextChapter);
                 messageText = "Congratulations! You have completed this chapter.";
             }
         }
@@ -203,8 +202,8 @@ public class ChapterManager : MonoBehaviour {
             Debug.LogError("Unhandled condition");
             messageText = "Unhandled condition";
         }
-        notificationPopup.SetMessage(messageText);
-        notificationPopup.gameObject.SetActive(true);
+        NotificationPopUp.Instance().SetMessage(messageText);
+        NotificationPopUp.Instance().NotificationPopUpGO.SetActive(true);
         // reset variables to remove constant popups on Update() function call:
         failed = false;
         activeChapter.ChapterData.goalTargetCityCaptured = false;

@@ -24,10 +24,10 @@ public class PlayerAchievementsInfoPanel : MonoBehaviour
         }
         else
         {
-            // remove all heroes infos
-            foreach (PlayerHeroInfo playerHeroInfo in GetComponentsInChildren<PlayerHeroInfo>())
+            // remove all achievement infos
+            foreach (PlayerAchievementInfo playerAchievementInfo in GetComponentsInChildren<PlayerAchievementInfo>())
             {
-                Destroy(playerHeroInfo.gameObject);
+                Destroy(playerAchievementInfo.gameObject);
             }
         }
     }

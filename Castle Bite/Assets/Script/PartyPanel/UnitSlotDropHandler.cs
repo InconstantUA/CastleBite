@@ -224,7 +224,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
             {
                 // drop is not allowed
                 // display error message
-                transform.root.Find("MiscUI/NotificationPopUp").GetComponent<NotificationPopUp>().DisplayMessage(errorMessage);
+                NotificationPopUp.Instance().DisplayMessage(errorMessage);
             }
         }
         else
