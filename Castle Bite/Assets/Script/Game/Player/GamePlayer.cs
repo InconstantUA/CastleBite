@@ -49,7 +49,8 @@ public class PlayerData : System.Object
     public PlayerTurnState playerTurnState = PlayerTurnState.Waiting;
     public int focusedObjectID = 0;
     public int[,] tilesDiscoveryState;
-    public float age;             // For Achievements and stats: time spend playing game
+    public AchievementData[] achievements;
+    public float age;           // For Achievements and stats: time spend playing game
     public int battlesWon;      // For Achievements and stats
     public int battlesLost;     // For Achievements and stats
     public int battlesEscaped;  // For Achievements and stats
@@ -279,6 +280,19 @@ public class GamePlayer : MonoBehaviour {
         set
         {
             playerData.citiesCaptured = value;
+        }
+    }
+
+    public AchievementData[] Achievements
+    {
+        get
+        {
+            return playerData.achievements;
+        }
+
+        set
+        {
+            playerData.achievements = value;
         }
     }
 

@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerCitiesInfoPanel : MonoBehaviour
 {
     [SerializeField]
-    GameObject cityInfoTemplate;
+    GameObject playerCityInfoTemplate;
+    [SerializeField]
+    Transform playerCitiesListTransform;
 
 
     public void SetActive(bool doActivate)
@@ -20,16 +22,19 @@ public class PlayerCitiesInfoPanel : MonoBehaviour
                 // verify if city belongs to the player's faction
                 if (city.CityFaction == activePlayerFaction)
                 {
-                    // create city info 
-                    // ..
+                    // create and activate city info 
+                    Instantiate(playerCityInfoTemplate, playerCitiesListTransform).GetComponent<PlayerCityInfo>().SetActive(city);
                 }
             }
 
         }
         else
         {
-            // remove all cities
-            // ..
+            // remove all cities infos
+            foreach (PlayerCityInfo playerCityInfo in GetComponentsInChildren<PlayerCityInfo>())
+            {
+                Destroy(playerCityInfo.gameObject);
+            }
         }
     }
 
