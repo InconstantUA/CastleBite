@@ -696,6 +696,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c68e80db2a3b1f40abeb5c975b51c85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  previousButton: {fileID: 317495346}
+  nextButton: {fileID: 1773298354}
+  focusedObjectNameText: {fileID: 1524107552}
+  focusedObjectInfoText: {fileID: 754762428}
 --- !u!1 &22804166
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +993,7 @@ GameObject:
   - component: {fileID: 38174071}
   - component: {fileID: 38174070}
   m_Layer: 5
-  m_Name: FocusOnLabel
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20080,7 +20084,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   focusMoveSpeed: 360
   focusMoveDelay: 0.05
-  minDistance: 32
+  minDistanceToTheHero: 32
+  minDistanceToTheCity: 32
+  leftAndRightBuffer: 30
   mapRotationSpeed: 200
   maxRotations: 59
   dampTime: 0.15
@@ -43898,7 +43904,7 @@ GameObject:
   - component: {fileID: 732356034}
   - component: {fileID: 732356037}
   m_Layer: 5
-  m_Name: PlayerCities
+  m_Name: FocusOnPlayerCities
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43942,7 +43948,18 @@ MonoBehaviour:
   disabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 21598818}
+        m_MethodName: FocusOnCity
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   OnRightMouseButtonDown:
@@ -106957,7 +106974,7 @@ GameObject:
   - component: {fileID: 2019591759}
   - component: {fileID: 2019591762}
   m_Layer: 5
-  m_Name: PlayerHeroes
+  m_Name: FocusOnPlayerHeroes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107001,7 +107018,18 @@ MonoBehaviour:
   disabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 21598818}
+        m_MethodName: FocusOnHero
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   OnRightMouseButtonDown:

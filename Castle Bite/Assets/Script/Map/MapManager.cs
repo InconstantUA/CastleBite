@@ -3037,7 +3037,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // Remove path highlight
         HighlightMovePath(false);
         // Release camera focus
-        Camera.main.GetComponent<CameraController>().SetCameraFocus(null);
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(GetComponent<MapHero>());
     }
 
     public void SetMode(Mode value)

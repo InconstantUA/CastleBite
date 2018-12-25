@@ -11,8 +11,14 @@ public class CameraController : MonoBehaviour {
     [SerializeField]
     float focusMoveDelay;
     [SerializeField]
-    float minDistance;
+    float minDistanceToTheHero = 32;
+    [SerializeField]
+    float minDistanceToTheCity = 1f;
+    [SerializeField]
+    float leftAndRightBuffer = 30f;
     MapHero followedHeroOnMap;
+    MapCity followedCityOnMap;
+    Transform followedObjectTransform;
     bool cameraIsFocused = false;
     Vector3 offset;
     Vector3 moveDirection;
@@ -21,7 +27,7 @@ public class CameraController : MonoBehaviour {
     bool doFollowMapDrag;
     // 
     int rotationsCounter;
-    bool doRotate;
+    bool doShifMapTiles;
     int rotationDirection; // - or +
     bool rotationLock;
     [SerializeField]
@@ -37,26 +43,19 @@ public class CameraController : MonoBehaviour {
         // get postion of the camera center
         Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
         // get destinaion with the border limits
-        Vector3 cameraCenterWithBorderLimitsAdjusted = GetPositionWithScreenBordersLimits(cameraCenter);
+        // Vector3 cameraCenterWithBorderLimitsAdjusted = GetPositionWithScreenBordersLimits(cameraCenter);
         // get remaining distance
         // float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
-        float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenBordersLimits(followedHeroOnMap.transform.position), cameraCenter);
+        float remainingDistance = MapManager.Instance.GetToroidalDistance(GetPositionWithScreenBordersLimits(followedObjectTransform.position), cameraCenter);
         Debug.Log("Remaining distance " + remainingDistance);
         return remainingDistance;
     }
 
-    IEnumerator SetCameraFocus()
+    IEnumerator WaitUntilCameraIsFocused(float minDistance)
     {
-        // centers camera on the followed object
-        // float deltaTime;
-        // move camera center towards the followed object
+        // wait while camera center moves towards the followed object
         while (GetRemainingDistance() > minDistance)
         {
-            // deltaTime = Time.time - previousTime;
-            // This is done in Update function now, because if I use it like below, there will be a jitter.
-            // transform.position = mapManager.MoveTowards(transform.position, followedHeroOnMap.transform.position, deltaTime * focusMoveSpeed, moveDirection) + offset;
-            // wait until next move
-            // previousTime = Time.time;
             yield return new WaitForSeconds(focusMoveDelay);
         }
         // set camera is focused
@@ -65,56 +64,62 @@ public class CameraController : MonoBehaviour {
 
     public void SetCameraFocus(MapHero mapHero)
     {
+        // Remove previous focus
+        ResetFocusedObject();
         // save followed hero on map
         followedHeroOnMap = mapHero;
         // verify if mapHero is not null
         if (mapHero != null)
         {
-            // get map queue
-            CoroutineQueue mapQueue = MapManager.Instance.Queue;
-            //// get postion of the camera center
-            //Vector3 cameraCenter = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.nearClipPlane));
-            //Debug.Log("Camera center " + cameraCenter.x + ":" + cameraCenter.y + ":" + cameraCenter.z);
-            //Debug.Log("Camera position " + transform.position.x + ":" + transform.position.y + ":" + transform.position.z);
-            //// get offset between camera and its center
-            //offset = transform.position - cameraCenter;
-            //Debug.Log("Offset " + offset.x + ":" + offset.y + ":" + offset.z);
-            //Debug.Log("Hero position " + followedHeroOnMap.transform.position.x + ":" + followedHeroOnMap.transform.position.y + ":" + followedHeroOnMap.transform.position.z);
-            //// Get move direction
-            //moveDirection = mapManager.GetDirection(followedHeroOnMap.transform.position, cameraCenter);
-            //Debug.Log("Direction " + moveDirection.x + ":" + moveDirection.y + ":" + moveDirection.z);
-            //// set time
-            //previousTime = Time.time;
             // reset camera is focused
             cameraIsFocused = false;
+            // set followed object position
+            followedObjectTransform = mapHero.transform;
             // start set focus animation
-            mapQueue.Run(SetCameraFocus());
+            MapManager.Instance.Queue.Run(WaitUntilCameraIsFocused(minDistanceToTheHero));
+        }
+    }
+
+    void ResetFocusedObject()
+    {
+        followedHeroOnMap = null;
+        followedCityOnMap = null;
+        doFollowMapDrag = false;
+    }
+
+    public void SetCameraFocus(MapCity mapCity)
+    {
+        // Remove previous focus
+        ResetFocusedObject();
+        // save followed city link
+        followedCityOnMap = mapCity;
+        // verify if mapCity is not null
+        if (mapCity != null)
+        {
+            Debug.Log("Set camera focus on " + mapCity.LCity.CityName + " city");
+            // reset camera is focused flag
+            cameraIsFocused = false;
+            // set followed object position
+            followedObjectTransform = mapCity.transform;
+            // start set focus animation
+            MapManager.Instance.Queue.Run(WaitUntilCameraIsFocused(minDistanceToTheCity));
         }
     }
 
     public void SetCameraFocus(MapManager mManager, bool doActivate)
     {
+        // Remove previous focus
+        ResetFocusedObject();
+        // activate/deactivate follow map drag
         doFollowMapDrag = doActivate;
         // get and save drag origin mouse position
         dragOrigin = Input.mousePosition + transform.position;
         // reset map rotations counter
         rotationsCounter = 0;
         // reset has rotated flag
-        doRotate = false;
+        doShifMapTiles = false;
         rotationLock = false;
     }
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (followedHeroOnMap != null && !cameraIsFocused)
-    //    {
-    //        Vector3 point = Camera.main.WorldToViewportPoint(followedHeroOnMap.transform.position);
-    //        Vector3 delta = followedHeroOnMap.transform.position - Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
-    //        Vector3 destination = transform.position + delta;
-    //        transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, dampTime, focusMoveSpeed);
-    //    }
-    //}
 
     Vector3 GetPositionWithScreenBordersLimits(Vector3 position)
     {
@@ -135,12 +140,11 @@ public class CameraController : MonoBehaviour {
             position.y = screenTopHeightLimit;
         }
         // float buffer = 16f;
-        float buffer = 14f + 16f;
         // Debug.Log("Destination Position " + (int)position.x);
         // float screenLeftLimit = Screen.width / 2 + buffer;
-        float screenLeftLimit = transform.position.x - buffer;
+        float screenLeftLimit = transform.position.x - leftAndRightBuffer;
         // float screenRightLimit = mapsize - Screen.width / 2 - buffer;
-        float screenRightLimit = transform.position.x + buffer;
+        float screenRightLimit = transform.position.x + leftAndRightBuffer;
         // float screenRightLimit = Screen.width / 2 - buffer;
         // if (position.x < screenLeftLimit - Mathf.Abs(rotationsCounter) * tilesize)
         if (position.x < screenLeftLimit)
@@ -153,7 +157,7 @@ public class CameraController : MonoBehaviour {
                 // Rotate map
                 rotationDirection = -1;
                 // Debug.Log("Trigger rotation to the Left");
-                doRotate = true;
+                doShifMapTiles = true;
             }
         }
         // else if (position.x > screenRightLimit + Mathf.Abs(rotationsCounter) * tilesize)
@@ -166,7 +170,7 @@ public class CameraController : MonoBehaviour {
             {
                 rotationDirection = +1;
                 // Debug.Log("Trigger rotation to the Right");
-                doRotate = true;
+                doShifMapTiles = true;
             }
         }
         return position;
@@ -192,7 +196,7 @@ public class CameraController : MonoBehaviour {
             // verify if we need to rotate
             float tileSize = 16f;
             float mapWidth = 960f;
-            if (doRotate)
+            if (doShifMapTiles)
             {
                 // get xDistance
                 float xDistance = destination.x - transform.position.x;
@@ -225,7 +229,7 @@ public class CameraController : MonoBehaviour {
                 }
                 // reset flag
                 // Debug.Log("Block rotations");
-                doRotate = false;
+                doShifMapTiles = false;
             }
             // verify that camera has not already focused on a hero
             if (!cameraIsFocused)
@@ -239,7 +243,72 @@ public class CameraController : MonoBehaviour {
                 transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime);
             }
         }
-        if (doFollowMapDrag)
+        else if (followedCityOnMap != null)
+        {
+            // Get destination position based on the map borders
+            // Avoid that camera goes over top or bottom border
+            // Get heroPosition
+            Vector3 followedCityPosition = followedCityOnMap.transform.position;
+            // Get camera position
+            Vector3 point = Camera.main.WorldToViewportPoint(followedCityPosition);
+            Vector3 cameraPostion = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
+            // Debug.LogWarning("Hero:Camera y " + (int)followedCityPosition.y + ":"  + (int)Camera.main.transform.position.y);
+            // Get destination
+            Vector3 delta = followedCityPosition - cameraPostion;
+            Vector3 destination = transform.position + delta;
+            Vector3 destinationBorderAligned = GetPositionWithScreenBordersLimits(destination);
+            Vector3 destinationOYO = new Vector3(transform.position.x, destinationBorderAligned.y, transform.position.z);
+            // verify if we need to rotate
+            float tileSize = 16f;
+            float mapWidth = 960f;
+            if (doShifMapTiles)
+            {
+                // get xDistance
+                float xDistance = destination.x - transform.position.x;
+                // get number of rotaitons required based on the distance and tile size
+                int numberOfRotationsRequired = 1 + Math.Abs(Mathf.RoundToInt(xDistance / tileSize));
+                // get number of rotations, which will cover whole map
+                int loopRotations = Mathf.RoundToInt(mapWidth / tileSize);
+                // Debug.Log("rotations reset to max when between: " + maxRotations + "-" + loopRotations);
+                // make sure that number of rotaions are not higher than the number or map slices
+                while (numberOfRotationsRequired >= loopRotations)
+                {
+                    numberOfRotationsRequired -= loopRotations;
+                    // calculate them in a distance
+                    rotationsCounter += loopRotations;
+                }
+                rotationsCounter += numberOfRotationsRequired * rotationDirection;
+                // Debug.Log("Do " + numberOfRotationsRequired + " rotations, total rotaitons: " + rotationsCounter);
+                if (numberOfRotationsRequired != 0)
+                {
+                    if (rotationDirection > 0)
+                    {
+                        // Rotate map
+                        MapManager.Instance.RotateRight(numberOfRotationsRequired);
+                    }
+                    else
+                    {
+                        // Rotate map
+                        MapManager.Instance.RotateLeft(numberOfRotationsRequired);
+                    }
+                }
+                // reset flag
+                // Debug.Log("Block rotations");
+                doShifMapTiles = false;
+            }
+            // verify that camera has not already focused on a hero
+            if (!cameraIsFocused)
+            {
+                // move camera to the city
+                transform.position = Vector3.SmoothDamp(transform.position, destinationOYO, ref velocity, dampTime, focusMoveSpeed);
+            }
+            else
+            {
+                // stop following
+                followedCityOnMap = null;
+            }
+        }
+        else if (doFollowMapDrag)
         {
             // Debug.Log("Camera before x:y " + (int)Camera.main.transform.position.x + ":" + (int)Camera.main.transform.position.y);
             float tileSize = 16f;
@@ -249,8 +318,8 @@ public class CameraController : MonoBehaviour {
             // Debug.Log("delta x:y " + (int)delta.x + ":" + (int)delta.y);
             Vector3 destination = transform.position + delta;
             Vector3 destinationBorderAligned = GetPositionWithScreenBordersLimits(destination);
-            // verify if we need to rotate
-            if (doRotate)
+            // verify if we need to rotate (shift map slides)
+            if (doShifMapTiles)
             {
                 // get xDistance
                 float xDistance = destination.x - transform.position.x;
@@ -293,7 +362,7 @@ public class CameraController : MonoBehaviour {
                 }
                 // reset flag
                 // Debug.Log("Block rotations");
-                doRotate = false;
+                doShifMapTiles = false;
                 // Debug.Break();
                 // do not move camera anymore during this frame
                 // activate rotation lock, until camera has reached previous rotation target

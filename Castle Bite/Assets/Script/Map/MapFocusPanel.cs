@@ -4,8 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MapFocusPanel : MonoBehaviour {
-    //[SerializeField]
-    //MapManager mapManager;
+    [SerializeField]
+    TextButton previousButton;
+    [SerializeField]
+    TextButton nextButton;
+    [SerializeField]
+    Text focusedObjectNameText;
+    [SerializeField]
+    Text focusedObjectInfoText;
     GameObject focusedObject;
     List<MapHero> mapHeroesList;
     List<MapCity> mapCitiesList;
@@ -20,15 +26,22 @@ public class MapFocusPanel : MonoBehaviour {
         }
     }
 
+    void SetFocusedObjectName(string name)
+    {
+        focusedObjectNameText.text = name;
+    }
+
     void SetHeroNameUI(MapHero mapHero)
     {
-        transform.Find("Name").GetComponent<Text>().text = mapHero.LHeroParty.GetPartyLeader().GivenName + "\r\n<size=12>" + mapHero.LHeroParty.GetPartyLeader().UnitName + "</size>";
+        SetFocusedObjectName(mapHero.LHeroParty.GetPartyLeader().GivenName + "\r\n<size=12>" + mapHero.LHeroParty.GetPartyLeader().UnitName + "</size>");
+        // set camera focus
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(mapHero);
     }
 
     void ActivateNextAndPreviousControls()
     {
-        transform.Find("Previous").GetComponent<TextButton>().SetInteractable(true);
-        transform.Find("Next").GetComponent<TextButton>().SetInteractable(true);
+        previousButton.SetInteractable(true);
+        nextButton.SetInteractable(true);
     }
 
     public void SetActive(MapHero mapHero)
@@ -163,7 +176,7 @@ public class MapFocusPanel : MonoBehaviour {
     {
         focusedObject = nextCity.gameObject;
         // set name UI
-        SetNameUI(nextCity);
+        SetCityNameUI(nextCity);
         // select city on map
         MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, nextCity);
         // reset cursor to normal, because it is changed by MapManager
@@ -220,7 +233,7 @@ public class MapFocusPanel : MonoBehaviour {
         }
     }
 
-    void SetNameUI(MapCity mapCity)
+    void SetCityNameUI(MapCity mapCity)
     {
         // initialize additional info string
         string additionalInfo = "";
@@ -233,7 +246,9 @@ public class MapFocusPanel : MonoBehaviour {
             additionalInfo = "City";
         }
         // Set UI text
-        transform.Find("Name").GetComponent<Text>().text = mapCity.LCity.CityName + "\r\n<size=12>" + additionalInfo + "</size>";
+        SetFocusedObjectName(mapCity.LCity.CityName + "\r\n<size=12>" + additionalInfo + "</size>");
+        // set camera focus
+        Camera.main.GetComponent<CameraController>().SetCameraFocus(mapCity);
     }
 
     public void UpdateMovePointsInfo()
@@ -255,7 +270,7 @@ public class MapFocusPanel : MonoBehaviour {
             additionalInfo = mapCity.LCity.CityLevelCurrent + " Level";
         }
         // Set UI text
-        transform.Find("Info").GetComponent<Text>().text = additionalInfo;
+        focusedObjectInfoText.text = additionalInfo;
     }
 
     void SetPartyLeaderMovePointsInfo(MapHero mapHero)
@@ -263,12 +278,72 @@ public class MapFocusPanel : MonoBehaviour {
         // get party leader
         PartyUnit partyLeader = mapHero.LHeroParty.GetPartyLeader();
         // Set UI text
-        transform.Find("Info").GetComponent<Text>().text = partyLeader.MovePointsCurrent + "/" + partyLeader.GetEffectiveMaxMovePoints() + " Move Points";
+        focusedObjectInfoText.text = partyLeader.MovePointsCurrent + "/" + partyLeader.GetEffectiveMaxMovePoints() + " Move Points";
     }
 
     void SetAdditionalInfo(MapHero mapHero)
     {
         SetPartyLeaderMovePointsInfo(mapHero);
+    }
+
+    MapCity GetFirstCityOnMap()
+    {
+        // Get active player
+        GamePlayer activePlayer = TurnsManager.Instance.GetActivePlayer();
+        // get first city of the player
+        foreach (MapCity mapCity in MapManager.Instance.GetComponentsInChildren<MapCity>(true))
+        {
+            // verify if city belongs to the active player
+            if (mapCity.LCity.CityFaction == activePlayer.Faction)
+            {
+                // return map city
+                return mapCity;
+            }
+        }
+        // default
+        return null;
+    }
+
+    public void FocusOnCity()
+    {
+        // get first city
+        MapCity mapCity = GetFirstCityOnMap();
+        // verify if mapCity is not null
+        if (mapCity != null)
+        {
+            // activate focus on a map city
+            SetActive(mapCity);
+        }
+    }
+
+    MapHero GetFirstHeroOnMap()
+    {
+        // Get active player
+        GamePlayer activePlayer = TurnsManager.Instance.GetActivePlayer();
+        // get first city of the player
+        foreach (MapHero mapHero in MapManager.Instance.GetComponentsInChildren<MapHero>(true))
+        {
+            // verify if city belongs to the active player
+            if (mapHero.LHeroParty.Faction == activePlayer.Faction)
+            {
+                // return map city
+                return mapHero;
+            }
+        }
+        // default
+        return null;
+    }
+
+    public void FocusOnHero()
+    {
+        // get first city
+        MapHero mapHero = GetFirstHeroOnMap();
+        // verify if mapCity is not null
+        if (mapHero != null)
+        {
+            // activate focus on a map city
+            SetActive(mapHero);
+        }
     }
 
     public void SetActive(MapCity mapCity)
@@ -278,17 +353,19 @@ public class MapFocusPanel : MonoBehaviour {
         {
             ReleaseFocus();
         }
+        // Get active player
+        GamePlayer activePlayer = TurnsManager.Instance.GetActivePlayer();
         // Set focused object
         Debug.Log("Update map focus panel with " + mapCity.name);
         focusedObject = mapCity.gameObject;
         // save currently focused object id to game player it will be needed for game load and turns switch
-        TurnsManager.Instance.GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
+        activePlayer.FocusedObjectID = focusedObject.gameObject.GetInstanceID();
         // transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer().FocusedObjectID = focusedObject.gameObject.GetInstanceID();
         // Set city name
-        SetNameUI(mapCity);
+        SetCityNameUI(mapCity);
         // Set additional info
         SetAdditionalInfo(mapCity);
-        // Set list of map heroes
+        // Set list of map cities
         mapCitiesList = new List<MapCity>();
         // Loop through all map cities
         foreach (MapCity mCity in MapManager.Instance.GetComponentsInChildren<MapCity>())
@@ -303,8 +380,8 @@ public class MapFocusPanel : MonoBehaviour {
         if (mapCitiesList.Count > 1)
         {
             // activate next and previous controls
-            transform.Find("Previous").GetComponent<TextButton>().SetInteractable(true);
-            transform.Find("Next").GetComponent<TextButton>().SetInteractable(true);
+            previousButton.SetInteractable(true);
+            nextButton.SetInteractable(true);
         }
         // Activate enter city control
         transform.Find("FocusedObjectControl/EnterCity").gameObject.SetActive(true);
@@ -357,11 +434,11 @@ public class MapFocusPanel : MonoBehaviour {
         // reset currently focused object id
         // transform.root.Find("Managers").GetComponent<TurnsManager>().GetActivePlayer().FocusedObjectID = 0;
         // clear name and additional info
-        transform.Find("Name").GetComponent<Text>().text = "";
-        transform.Find("Info").GetComponent<Text>().text = "";
+        focusedObjectNameText.text = "";
+        focusedObjectInfoText.text = "";
         // dimm left and right arrows
-        transform.Find("Previous").GetComponent<TextButton>().SetInteractable(false);
-        transform.Find("Next").GetComponent<TextButton>().SetInteractable(false);
+        previousButton.SetInteractable(false);
+        nextButton.SetInteractable(false);
         //transform.Find("Next").gameObject.SetActive(false);
         // disable all focused object controls
         foreach (Transform childTransform in transform.Find("FocusedObjectControl"))
