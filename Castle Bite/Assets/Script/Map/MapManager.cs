@@ -316,6 +316,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
+    public TileHighlighter TileHighlighter
+    {
+        get
+        {
+            return tileHighlighter;
+        }
+    }
+
     public Mode GetMode()
     {
         return mode;

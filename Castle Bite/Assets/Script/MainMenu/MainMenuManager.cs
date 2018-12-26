@@ -29,7 +29,7 @@ public class MainMenuManager : MonoBehaviour {
     [SerializeField]
     GameObject mainMenuPanel;
     [SerializeField]
-    GameObject currentGold;
+    PlayerIncomeInfo playerIncome;
 
 
     public static MainMenuManager Instance { get; private set; }
@@ -202,8 +202,8 @@ public class MainMenuManager : MonoBehaviour {
         // verify if current gold info should be visible
         if (GameOptions.Instance.mapUIOpt.togglePlayerIncome != 0)
         {
-            // enable current gold info
-            currentGold.SetActive(true);
+            // enable current player income info
+            playerIncome.SetActive(true);
         }
         //// enable map and map menu
         //MapManager.Instance.gameObject.SetActive(true);

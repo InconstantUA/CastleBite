@@ -177,10 +177,6 @@ public class ChooseYourFirstHero : MonoBehaviour {
             unitsListRT.offsetMax = new Vector2(unitsListPlaceholderRT.offsetMax.x, unitsListPlaceholderRT.offsetMax.y); // -right, -top
             // Activate Back button
             transform.root.Find("MiscUI/BottomControlPanel/RightControls/HireFirstHeroBackBtn").gameObject.SetActive(true);
-            // Deactivate activated by default top gold info panel
-            // transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(false);
-            // Set action on abilities information button click
-            // uniqueAbilitiesInfoTextButton.OnClick.AddListener(delegate { ShowInfo(abilityInfoText); });
             // bring it to the front
             transform.SetAsLastSibling();
         }

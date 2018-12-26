@@ -243,9 +243,8 @@ public class TurnsManager : MonoBehaviour {
         UpdateActivePlayerNameOnMapUI();
         // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
         MapManager.Instance.InitTilesMap();
-        // Update top player income info panel
-        Debug.LogWarning("Todo: Fix that top info panel is enabled, if needed");
-        UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<TopInfoPanel>(true).UpdateInfo();
+        // Update player income on the top info panel
+        UIRoot.Instance.GetComponentInChildren<UIManager>().GetComponentInChildren<TopInfoPanel>(true).GetComponentInChildren<PlayerIncomeInfo>(true).UpdateInfo();
         // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
         CursorController.Instance.SetNormalCursor();
     }

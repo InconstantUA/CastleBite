@@ -21,6 +21,8 @@ public class EventsAdmin : MonoBehaviour {
     public CityCaptureEvent OnCityHasBeenCaptured;
     // create on player gold changed event
     public UnityEvent OnPlayerGoldHasChanged;
+    // create on player gold changed event
+    public UnityEvent OnPlayerManaHasChanged;
 
     // For city faction changes
     // This function is Triggered when city faction parameter is set
@@ -36,6 +38,12 @@ public class EventsAdmin : MonoBehaviour {
     public void IHasChanged(GamePlayer gamePlayer, Gold gold)
     {
         OnPlayerGoldHasChanged.Invoke();
+    }
+
+    // For player mana changed
+    public void IHasChanged(GamePlayer gamePlayer, Mana gold)
+    {
+        OnPlayerManaHasChanged.Invoke();
     }
 
 }

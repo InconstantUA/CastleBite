@@ -57,8 +57,16 @@ public class PlayerData : System.Object
     public int citiesCaptured;  // For Achievements and stats
 }
 
+// class for events references
 [Serializable]
 public class Gold : System.Object
+{
+
+}
+
+// class for events references
+[Serializable]
+public class Mana : System.Object
 {
 
 }
@@ -149,7 +157,7 @@ public class GamePlayer : MonoBehaviour {
         {
             playerData.totalGold = value;
             // trigger event
-
+            EventsAdmin.Instance.IHasChanged(this, new Gold());
         }
     }
 
@@ -163,6 +171,8 @@ public class GamePlayer : MonoBehaviour {
         set
         {
             playerData.totalMana = value;
+            // trigger event
+            EventsAdmin.Instance.IHasChanged(this, new Mana());
         }
     }
 

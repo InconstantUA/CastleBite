@@ -4,10 +4,4 @@ using UnityEngine;
 
 public class TopInfoPanel : MonoBehaviour {
     
-    public void UpdateInfo()
-    {
-        GetComponentInChildren<TextBoxDisplayCurrentGoldValue>(true).UpdateGoldValue();
-        GetComponentInChildren<TextBoxDisplayCurrentGoldValue>(true).UpdateGoldValue();
-    }
-
 }

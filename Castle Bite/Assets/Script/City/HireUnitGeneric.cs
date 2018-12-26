@@ -10,6 +10,8 @@ public class HireUnitGeneric : MonoBehaviour {
     GameObject unitUIToggleTemplate;
     [SerializeField]
     ToggleGroup unitsToHireList;
+    [SerializeField]
+    PlayerIncomeInfo playerIncomeInfo;
     Transform callerCell;
     GameObject unitsPanel;
 
@@ -41,11 +43,6 @@ public class HireUnitGeneric : MonoBehaviour {
         }
     }
 
-    void SetIncomeInfoPanelActive(bool doActivate)
-    {
-        transform.root.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doActivate);
-    }
-
     void SetHireUnitMenuButtonsActive(bool doActivate)
     {
         transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(doActivate);
@@ -72,8 +69,12 @@ public class HireUnitGeneric : MonoBehaviour {
         RemoveAllCurrentUnitsToHire();
         // Deactivate controls
         SetHireUnitMenuButtonsActive(false);
-        // Deactivate top gold info panel
-        SetIncomeInfoPanelActive(false);
+        // check if gold info panel should be enabled
+        if (GameOptions.Instance.mapUIOpt.togglePlayerIncome == 0)
+        {
+            // Deactivate top gold info panel if it was disabled before activation
+            playerIncomeInfo.SetActive(false);
+        }
         // Deactivate unit info panel
         transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).gameObject.SetActive(false);
         // Deactivate intermediate background
@@ -134,7 +135,7 @@ public class HireUnitGeneric : MonoBehaviour {
             // Activate controls
             SetHireUnitMenuButtonsActive(true);
             // Activate top gold info panel
-            SetIncomeInfoPanelActive(true);
+            playerIncomeInfo.SetActive(true);
         }
         // DeActivate city controls
         SetCityControlsActive(false);

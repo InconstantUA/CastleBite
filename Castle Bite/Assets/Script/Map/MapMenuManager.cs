@@ -14,7 +14,7 @@ public class MapMenuManager : MonoBehaviour {
     [SerializeField]
     MapOptions mapOptions;
     [SerializeField]
-    GameObject currentGold;
+    PlayerIncomeInfo playerIncomeInfo;
 
     void Awake()
     {
@@ -291,9 +291,9 @@ public class MapMenuManager : MonoBehaviour {
     public void SetPlayerIncomeVisible(bool doShow)
     {
         Debug.Log("Show player income: " + doShow.ToString());
-        UIRoot.Instance.transform.Find("MiscUI/TopInfoPanel/Middle/CurrentGold").gameObject.SetActive(doShow);
+        playerIncomeInfo.SetActive(doShow);
         // Save menu options
-        MapMenuManager.Instance.SavePlayerIncomeToggleOptions();
+        SavePlayerIncomeToggleOptions();
     }
 
     public IEnumerator EnterCityEditMode(MapCity mapCity)
@@ -360,7 +360,7 @@ public class MapMenuManager : MonoBehaviour {
         //// disable map menu
         //gameObject.SetActive(false);
         // disable current gold info
-        currentGold.SetActive(false);
+        playerIncomeInfo.SetActive(false);
     }
 
     public void SetCitiesNamesVisible(bool doActivate)
@@ -381,6 +381,11 @@ public class MapMenuManager : MonoBehaviour {
     public void SetTreasureChestsVisible(bool doActivate)
     {
         MapManager.Instance.SetTreasureChestsVisible(doActivate);
+    }
+
+    public void SetTileHighlighterVisible(bool doActivate)
+    {
+        MapManager.Instance.TileHighlighter.gameObject.SetActive(doActivate);
     }
 
     public MapFocusPanel MapFocusPanel
