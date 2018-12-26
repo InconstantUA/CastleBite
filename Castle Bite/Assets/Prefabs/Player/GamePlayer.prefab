@@ -50,13 +50,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData:
     playerUniqueAbilityData:
-      uniqueAbilityConfig: {fileID: 11400000, guid: ad6fac49fd8913142ae9cfc47db893f2,
-        type: 2}
+      playerUniqueAbility: 0
       currentLevel: 0
       currentLearningPoints: 0
     playerType: 0
     givenName: 
     totalGold: 9999
+    totalMana: 0
     faction: 0
     playerTurnState: 1
     focusedObjectID: 0
+    achievements: []
+    playerColor: {r: 0.86274517, g: 0.86274517, b: 0.86274517, a: 1}
+    age: 0
+    battlesWon: 0
+    battlesLost: 0
+    battlesEscaped: 0
+    citiesCaptured: 0

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [Serializable]
 public class GameData : System.Object
@@ -149,6 +150,8 @@ public class ObjectsManager : MonoBehaviour {
         newCityOnMapLabel.MapObject = newCityOnMap.GetComponent<MapObject>();
         // activate city label on map
         newCityOnMapLabel.gameObject.SetActive(true);
+        // set color according to the player color preference
+        newCityOnMap.SetColor(GetPlayerByFaction(city.CityFaction).PlayerColor);
         // activate city on map
         newCityOnMap.gameObject.SetActive(true);
     }
@@ -208,6 +211,20 @@ public class ObjectsManager : MonoBehaviour {
         }
     }
 
+    public GamePlayer GetPlayerByFaction(Faction faction)
+    {
+        foreach (GamePlayer gamePlayer in gamePlayersRoot.GetComponentsInChildren<GamePlayer>())
+        {
+            // verify if faction matches
+            if (gamePlayer.Faction == faction)
+            {
+                return gamePlayer;
+            }
+        }
+        // default
+        return null;
+    }
+
     MapHero CreatePartyOnMap(HeroParty heroParty, PartyData partyData)
     {
         Debug.Log("Creating party on map representation");
@@ -228,6 +245,8 @@ public class ObjectsManager : MonoBehaviour {
         heroParty.LMapHero = newPartyOnMap;
         // rename it
         newPartyOnMap.gameObject.name = heroParty.GetPartyLeader().GivenName + " " + heroParty.GetPartyLeader().UnitName + " Party";
+        // set color according to the player color preference
+        newPartyOnMap.SetColor(GetPlayerByFaction(heroParty.Faction).PlayerColor);
         // activate hero on map
         newPartyOnMap.gameObject.SetActive(true);
         // activate hero label on map

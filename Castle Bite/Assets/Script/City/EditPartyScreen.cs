@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [Serializable]
 public enum EditPartyScreenActiveState
@@ -460,9 +461,11 @@ public class EditPartyScreen : MonoBehaviour {
         newPartyOnMapUI.GetComponent<MapHero>().lMapCity = city.LMapCity;
         // move hero party to the back, so its UI label is not covering city's UI label
         // but it is in front of map slices
-        newPartyOnMapUI.transform.SetSiblingIndex(1);
+        // newPartyOnMapUI.transform.SetSiblingIndex(1);
         // rename it
         newPartyOnMapUI.gameObject.name = newLeaderParty.GetPartyLeader().GivenName + " " + newLeaderParty.GetPartyLeader().UnitName + " Party";
+        // set color according to the player color preference
+        newPartyOnMapUI.SetColor(ObjectsManager.Instance.GetPlayerByFaction(newLeaderParty.Faction).PlayerColor);
     }
 
     PartyPanel.Cell GetHiredLeaderDestinationSlotName(PartyUnit hiredUnitTemplate)

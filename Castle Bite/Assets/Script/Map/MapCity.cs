@@ -86,6 +86,15 @@ public class MapCity : MonoBehaviour
         }
     }
 
+    public void SetColor(Color color)
+    {
+        // GetComponent<Image>().color = color;
+        // change highlighted marker (image) color
+        highlightedMarkerColor = color;
+        // change symbol text color
+        GetComponentInChildren<Text>().color = color;
+    }
+
     //public bool IsMouseOver
     //{
     //    get

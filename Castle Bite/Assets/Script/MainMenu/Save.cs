@@ -59,12 +59,18 @@ public class Save : MonoBehaviour {
             // open file stream for read
             FileStream fileStream = File.OpenRead(file.FullName);
             // Get and set game data
-            saveData.gameData = (GameData)binaryFormatter.Deserialize(fileStream);
-            //// set turn number
-            //// .. read turn number from save file
-            //saveData.turnNumber = 0;
-            //// init list of players
-            //saveData.playersData = gameData.playersData;
+            try
+            {
+                saveData.gameData = (GameData)binaryFormatter.Deserialize(fileStream);
+            }
+            catch
+            {
+                Debug.LogWarning("Failed to read save data from " + file.Name + " save file.");
+                // add Corrupted save information to the name
+                saveData.saveName += " (Corrupted)";
+                // make save non-interractable
+                GetComponent<TextToggle>().SetInteractable(false);
+            }
             // close file
             fileStream.Close();
         }

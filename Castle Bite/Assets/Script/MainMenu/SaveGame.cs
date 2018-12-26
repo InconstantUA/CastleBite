@@ -38,7 +38,7 @@ public class SaveGame : MonoBehaviour {
         {
             // create save UI
             newSave = Instantiate(saveUITemplate, savesParentTr);
-            // read and set save data
+            // try to read and set save data
             newSave.GetComponent<Save>().SetSaveData(files[i]);
             // rename game object 
             newSave.name = newSave.GetComponent<Save>().SaveName;

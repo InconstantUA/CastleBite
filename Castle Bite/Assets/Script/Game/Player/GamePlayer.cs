@@ -38,6 +38,15 @@ public enum PlayerTurnState
 }
 
 [Serializable]
+public class CBColor
+{
+    public float r;
+    public float g;
+    public float b;
+    public float a;
+}
+
+[Serializable]
 public class PlayerData : System.Object
 {
     public UniqueAbilityData playerUniqueAbilityData;
@@ -50,6 +59,7 @@ public class PlayerData : System.Object
     public int focusedObjectID = 0;
     public int[,] tilesDiscoveryState;
     public AchievementData[] achievements;
+    public CBColor playerColor;
     public float age;           // For Achievements and stats: time spend playing game
     public int battlesWon;      // For Achievements and stats
     public int battlesLost;     // For Achievements and stats
@@ -303,6 +313,24 @@ public class GamePlayer : MonoBehaviour {
         set
         {
             playerData.achievements = value;
+        }
+    }
+
+    public Color PlayerColor
+    {
+        get
+        {
+            // convert serializable player color to Unity Color
+            return new Color (playerData.playerColor.r, playerData.playerColor.g, playerData.playerColor.b, playerData.playerColor.a);
+        }
+
+        set
+        {
+            // convert unity color to serializable color
+            playerData.playerColor.r = value.r;
+            playerData.playerColor.g = value.g;
+            playerData.playerColor.b = value.b;
+            playerData.playerColor.a = value.a;
         }
     }
 

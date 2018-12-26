@@ -11,6 +11,8 @@ public class ConfigManager : MonoBehaviour
     UniqueAbilityConfig[] uniqueAbilityConfigs;
     [SerializeField]
     CityUpgradeConfig cityUpgradeConfig;
+    [SerializeField]
+    ColorsConfig playersObjectsOnMapColor;
 
     void Awake()
     {
@@ -38,4 +40,16 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
+    public ColorsConfig PlayersObjectsOnMapColor
+    {
+        get
+        {
+            return playersObjectsOnMapColor;
+        }
+
+        set
+        {
+            playersObjectsOnMapColor = value;
+        }
+    }
 }

@@ -294,6 +294,11 @@ public class MapHero : MonoBehaviour
         // yield return new WaitForSeconds(0.2f);
     }
 
+    public void SetColor(Color color)
+    {
+        GetComponent<Text>().color = color;
+    }
+
     //public void SetHighlightedStatus()
     //{
     //    // Debug.Log("SetHighlightedStatus " + btn.name + " button");

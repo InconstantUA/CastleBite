@@ -165,10 +165,15 @@ public class City : MonoBehaviour {
 
         set
         {
+            // verify if city faction is not the same
             if (cityData.cityFaction != value)
             {
+                // save old city faction value
                 Faction oldValue = cityData.cityFaction;
+                // set new city faction
                 cityData.cityFaction = value;
+                // change city on map color to the new color
+                lMapCity.SetColor(ObjectsManager.Instance.GetPlayerByFaction(value).PlayerColor);
                 // trigger event
                 EventsAdmin.Instance.IHasChanged(this, oldValue);
             }

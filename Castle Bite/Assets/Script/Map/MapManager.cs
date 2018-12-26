@@ -3992,4 +3992,35 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         return mapLabelsParentTransformOnMap;
     }
+
+    public void SetPlayerColor(Color color)
+    {
+        // change player color
+        Debug.Log("Change player color to " + color);
+        // Get active player
+        GamePlayer activePlayer = TurnsManager.Instance.GetActivePlayer();
+        // Set player color
+        activePlayer.PlayerColor = color;
+        // change colors for all objects on map which belong to the active player
+        // loop through all heroes
+        foreach(MapHero mapHero in mapHeroesParentTransformOnMap.GetComponentsInChildren<MapHero>())
+        {
+            // check if faction is the same as for the active player
+            if (mapHero.LHeroParty.Faction == activePlayer.Faction)
+            {
+                // change text color
+                mapHero.SetColor(color);
+            }
+        }
+        // loop through all cities
+        foreach (MapCity mapCity in mapCitiesParentTransformOnMap.GetComponentsInChildren<MapCity>())
+        {
+            // check if faction is the same as for the active player
+            if (mapCity.LCity.CityFaction == activePlayer.Faction)
+            {
+                // change text color
+                mapCity.SetColor(color);
+            }
+        }
+    }
 }

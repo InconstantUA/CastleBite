@@ -379,10 +379,14 @@ public class LoadGame : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
         foreach (TextToggle toggle in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<TextToggle>())
         {
-            Debug.Log("Latest save is " + toggle.name);
-            // select first save and exit loop
-            toggle.ActOnLeftMouseClick();
-            break;
+            // verify if save is not corrupted == toggle is interactable
+            if (toggle.interactable)
+            {
+                Debug.Log("Latest save is " + toggle.name);
+                // select first save and exit loop
+                toggle.ActOnLeftMouseClick();
+                break;
+            }
         }
     }
 

@@ -15,6 +15,8 @@ public class MapMenuManager : MonoBehaviour {
     MapOptions mapOptions;
     [SerializeField]
     PlayerIncomeInfo playerIncomeInfo;
+    [SerializeField]
+    ColorPicker colorPicker;
 
     void Awake()
     {
@@ -404,4 +406,19 @@ public class MapMenuManager : MonoBehaviour {
         }
     }
 
+    void OnColorPickerSave()
+    {
+        // ask mapmanager to change player color
+        MapManager.Instance.SetPlayerColor(colorPicker.GetSelectedColor());
+    }
+
+    void OnColorPickerCancel()
+    {
+        // nothing to do here
+    }
+
+    public void ShowPlayerColorPicker()
+    {
+        colorPicker.SetActive(ConfigManager.Instance.PlayersObjectsOnMapColor, new UnityEngine.Events.UnityAction(OnColorPickerSave), new UnityEngine.Events.UnityAction(OnColorPickerCancel));
+    }
 }
