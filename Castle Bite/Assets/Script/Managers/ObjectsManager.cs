@@ -7,6 +7,8 @@ using UnityEngine.UI;
 [Serializable]
 public class GameData : System.Object
 {
+    // Save data
+    public SaveData saveData;
     // Map = Chapter = World
     public ChapterData chapterData;
     // Turns: active player, turn number
@@ -133,8 +135,8 @@ public class ObjectsManager : MonoBehaviour {
         // Create new party on map
         MapCity newCityOnMap = Instantiate(cityOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapCity>())).GetComponent<MapCity>();
         // city to original position on map
-        newCityOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(cityData.cityMapPosition.offsetMinX, cityData.cityMapPosition.offsetMinY);
-        newCityOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(cityData.cityMapPosition.offsetMaxX, cityData.cityMapPosition.offsetMaxY);
+        //newCityOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(cityData.cityMapPosition.offsetMinX, cityData.cityMapPosition.offsetMinY);
+        //newCityOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(cityData.cityMapPosition.offsetMaxX, cityData.cityMapPosition.offsetMaxY);
         // place it to original position on map based on the tile coordinates
         Vector3 cityPositionOffset = new Vector3(8f, 8f, 0);
         newCityOnMap.transform.position = MapManager.Instance.GetWorldPositionByCoordinates(cityData.cityMapCoordinates) - cityPositionOffset;
@@ -231,8 +233,8 @@ public class ObjectsManager : MonoBehaviour {
         // Create new party on map UI
         MapHero newPartyOnMap = Instantiate(heroPartyOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapHero>())).GetComponent<MapHero>();
         // place party to original position on map
-        newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
-        newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
+        //newPartyOnMap.GetComponent<RectTransform>().offsetMin = new Vector2(partyData.partyMapPosition.offsetMinX, partyData.partyMapPosition.offsetMinY);
+        //newPartyOnMap.GetComponent<RectTransform>().offsetMax = new Vector2(partyData.partyMapPosition.offsetMaxX, partyData.partyMapPosition.offsetMaxY);
         // place it to original position on map based on the tile coordinates
         newPartyOnMap.transform.position = MapManager.Instance.GetWorldPositionByCoordinates(partyData.partyMapCoordinates);
         // Create hero label on map
@@ -426,13 +428,38 @@ public class ObjectsManager : MonoBehaviour {
         return inventoryItem;
     }
 
-    public MapItemsContainer CreateInventoryItemContainerOnMap(PositionOnMap positionOnMap)
+    //public MapItemsContainer CreateInventoryItemContainerOnMap(PositionOnMap positionOnMap)
+    //{
+    //    // create new item on map
+    //    MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapItemsContainer>())).GetComponent<MapItemsContainer>();
+    //    // place item on map to original position on map
+    //    mapItem.GetComponent<RectTransform>().offsetMin = new Vector2(positionOnMap.offsetMinX, positionOnMap.offsetMinY);
+    //    mapItem.GetComponent<RectTransform>().offsetMax = new Vector2(positionOnMap.offsetMaxX, positionOnMap.offsetMaxY);
+    //    // rename it
+    //    mapItem.gameObject.name = "TreasureChest";
+    //    // set it as first sibling so it does not apper in front of heroes, cities or labels
+    //    // mapItem.transform.SetAsFirstSibling();
+    //    // Create item label on map
+    //    MapObjectLabel mapItemLabel = Instantiate(inventoryItemOnMapLabelTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapObjectLabel>())).GetComponent<MapObjectLabel>();
+    //    // Link item to the lable and label to the item
+    //    mapItem.GetComponent<MapObject>().Label = mapItemLabel;
+    //    mapItemLabel.MapObject = mapItem.GetComponent<MapObject>();
+    //    // activate item label on map
+    //    mapItemLabel.gameObject.SetActive(true);
+    //    // activate it
+    //    mapItem.gameObject.SetActive(true);
+    //    // return it as result
+    //    return mapItem;
+    //}
+
+    public MapItemsContainer CreateInventoryItemContainerOnMap(MapCoordinates mapCoordinates)
     {
         // create new item on map
         MapItemsContainer mapItem = Instantiate(inventoryItemOnMapTemplate, MapManager.Instance.GetParentTransformByType(GetComponent<MapItemsContainer>())).GetComponent<MapItemsContainer>();
-        // place item on map to original position on map
-        mapItem.GetComponent<RectTransform>().offsetMin = new Vector2(positionOnMap.offsetMinX, positionOnMap.offsetMinY);
-        mapItem.GetComponent<RectTransform>().offsetMax = new Vector2(positionOnMap.offsetMaxX, positionOnMap.offsetMaxY);
+        // set position offset
+        Vector3 itemPositionOffset = new Vector3(8f, 8f, 0);
+        // place it to original position on map based on the tile coordinates
+        mapItem.transform.position = MapManager.Instance.GetWorldPositionByCoordinates(mapCoordinates) - itemPositionOffset;
         // rename it
         mapItem.gameObject.name = "TreasureChest";
         // set it as first sibling so it does not apper in front of heroes, cities or labels
@@ -449,4 +476,5 @@ public class ObjectsManager : MonoBehaviour {
         // return it as result
         return mapItem;
     }
+
 }

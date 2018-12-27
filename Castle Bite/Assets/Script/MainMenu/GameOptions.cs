@@ -1,13 +1,15 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GameOptions : MonoBehaviour {
 
     public static GameOptions Instance;
 
+    [Serializable]
     public struct GameOpt
     {
-        public int autosave;
-
+        public int autosave;    // 0 - disable, 1 - enable
+        public int autosaveLastSavesToKeep;
     }
     public GameOpt gameOpt;
 
@@ -30,6 +32,7 @@ public class GameOptions : MonoBehaviour {
     }
     public KeyboardAndMouseOpt keyboardAndMouseOpt;
 
+    [Serializable]
     public struct MapUIOpt
     {
         public int toggleCitiesNames;

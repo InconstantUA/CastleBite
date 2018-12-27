@@ -5,30 +5,30 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-[Serializable]
-public struct PositionOnMap
-{
-    public float offsetMinX;
-    public float offsetMinY;
-    public float offsetMaxX;
-    public float offsetMaxY;
+//[Serializable]
+//public struct PositionOnMap
+//{
+//    public float offsetMinX;
+//    public float offsetMinY;
+//    public float offsetMaxX;
+//    public float offsetMaxY;
 
-    public static bool operator ==(PositionOnMap p1, PositionOnMap p2)
-    {
-        return (p1.offsetMinX.Equals(p2.offsetMinX)
-             && p1.offsetMinY.Equals(p2.offsetMinY)
-             && p1.offsetMaxX.Equals(p2.offsetMaxX)
-             && p1.offsetMaxY.Equals(p2.offsetMaxY));
-    }
+//    public static bool operator ==(PositionOnMap p1, PositionOnMap p2)
+//    {
+//        return (p1.offsetMinX.Equals(p2.offsetMinX)
+//             && p1.offsetMinY.Equals(p2.offsetMinY)
+//             && p1.offsetMaxX.Equals(p2.offsetMaxX)
+//             && p1.offsetMaxY.Equals(p2.offsetMaxY));
+//    }
 
-    public static bool operator !=(PositionOnMap p1, PositionOnMap p2)
-    {
-        return (!p1.offsetMinX.Equals(p2.offsetMinX)
-             || !p1.offsetMinY.Equals(p2.offsetMinY)
-             || !p1.offsetMaxX.Equals(p2.offsetMaxX)
-             || !p1.offsetMaxY.Equals(p2.offsetMaxY));
-    }
-}
+//    public static bool operator !=(PositionOnMap p1, PositionOnMap p2)
+//    {
+//        return (!p1.offsetMinX.Equals(p2.offsetMinX)
+//             || !p1.offsetMinY.Equals(p2.offsetMinY)
+//             || !p1.offsetMaxX.Equals(p2.offsetMaxX)
+//             || !p1.offsetMaxY.Equals(p2.offsetMaxY));
+//    }
+//}
 
 [Serializable]
 public struct MapCoordinates

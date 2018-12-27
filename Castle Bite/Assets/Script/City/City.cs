@@ -24,7 +24,7 @@ public class CityData
     public int cityLevelMax = 5;
     public UnitType[] hireablePartyLeaders;
     public UnitType[] hireableCommonUnits;
-    public PositionOnMap cityMapPosition;   // used only during load and save
+    //public PositionOnMap cityMapPosition;   // used only during load and save
     public MapCoordinates cityMapCoordinates;   // used only during load and save
     public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
     // Normally this is taken from CityUpgradeConfig, but can be overwritten here, if not -1
@@ -114,46 +114,46 @@ public class City : MonoBehaviour {
         return null;
     }
 
-    public PositionOnMap GetCityMapPosition()
-    {
-        // initialize map position with default values
-        PositionOnMap cityMapPosition = new PositionOnMap
-        {
-            offsetMinX = 0,
-            offsetMinY = 0,
-            offsetMaxX = 0,
-            offsetMaxY = 0
-        };
-        // get map manager
-        //MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
-        // verify if map manager is present
-        if (MapManager.Instance == null)
-        {
-            Debug.LogError("cannot find map manager");
-            // return default position
-            return cityMapPosition;
-        }
-        else
-        {
-            // verify if linked city on map is defined
-            if (lMapCity == null)
-            {
-                Debug.LogError("Linked city on map is null");
-                // return default position
-                return cityMapPosition;
-            }
-            else
-            {
-                return new PositionOnMap
-                {
-                    offsetMinX = lMapCity.GetComponent<RectTransform>().offsetMin.x,
-                    offsetMinY = lMapCity.GetComponent<RectTransform>().offsetMin.y,
-                    offsetMaxX = lMapCity.GetComponent<RectTransform>().offsetMax.x,
-                    offsetMaxY = lMapCity.GetComponent<RectTransform>().offsetMax.y
-                };
-            }
-        }
-    }
+    //public PositionOnMap GetCityMapPosition()
+    //{
+    //    // initialize map position with default values
+    //    PositionOnMap cityMapPosition = new PositionOnMap
+    //    {
+    //        offsetMinX = 0,
+    //        offsetMinY = 0,
+    //        offsetMaxX = 0,
+    //        offsetMaxY = 0
+    //    };
+    //    // get map manager
+    //    //MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+    //    // verify if map manager is present
+    //    if (MapManager.Instance == null)
+    //    {
+    //        Debug.LogError("cannot find map manager");
+    //        // return default position
+    //        return cityMapPosition;
+    //    }
+    //    else
+    //    {
+    //        // verify if linked city on map is defined
+    //        if (lMapCity == null)
+    //        {
+    //            Debug.LogError("Linked city on map is null");
+    //            // return default position
+    //            return cityMapPosition;
+    //        }
+    //        else
+    //        {
+    //            return new PositionOnMap
+    //            {
+    //                offsetMinX = lMapCity.GetComponent<RectTransform>().offsetMin.x,
+    //                offsetMinY = lMapCity.GetComponent<RectTransform>().offsetMin.y,
+    //                offsetMaxX = lMapCity.GetComponent<RectTransform>().offsetMax.x,
+    //                offsetMaxY = lMapCity.GetComponent<RectTransform>().offsetMax.y
+    //            };
+    //        }
+    //    }
+    //}
 
     #region City Properties
     public Faction CityFaction

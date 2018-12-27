@@ -379,4 +379,33 @@ public class GamePlayer : MonoBehaviour {
         // return result
         return totalManaIncomePerDay;
     }
+
+    public void ExecutePreTurnActions()
+    {
+        // Add player gold and mana income
+        TotalGold += GetTotalGoldIncomePerDay();
+        TotalMana += GetTotalManaIncomePerDay();
+        // Loop through each hero Party and execute needed actions
+        foreach (HeroParty heroParty in ObjectsManager.Instance.GetComponentsInChildren<HeroParty>())
+        {
+            // verify if party belongs to the next player
+            if (heroParty.Faction == Faction)
+            {
+                heroParty.ExecutePreTurnActions();
+            }
+        }
+    }
+
+    public void ExecutePostTurnActions()
+    {
+        // Loop through each hero Party and execute needed actions
+        foreach (HeroParty heroParty in ObjectsManager.Instance.GetComponentsInChildren<HeroParty>())
+        {
+            // verify if party belongs to active player
+            if (heroParty.Faction == Faction)
+            {
+                heroParty.ExecutePostTurnActions();
+            }
+        }
+    }
 }

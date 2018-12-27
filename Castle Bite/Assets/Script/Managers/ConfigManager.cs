@@ -15,6 +15,8 @@ public class ConfigManager : MonoBehaviour
     ColorsConfig playersObjectsOnMapColor;
     [SerializeField]
     UnitSkillConfig[] unitSkillConfigs;
+    [SerializeField]
+    GameSaveConfig gameSaveConfig;
 
     void Awake()
     {
@@ -65,6 +67,19 @@ public class ConfigManager : MonoBehaviour
         set
         {
             unitSkillConfigs = value;
+        }
+    }
+
+    public GameSaveConfig GameSaveConfig
+    {
+        get
+        {
+            return gameSaveConfig;
+        }
+
+        set
+        {
+            gameSaveConfig = value;
         }
     }
 }

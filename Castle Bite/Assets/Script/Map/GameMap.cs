@@ -7,7 +7,8 @@ using UnityEngine;
 public class MapData
 {
     public List<InventoryItemData> itemsOnMap; // used only during game save and load
-    public List<PositionOnMap> itemsPositionOnMap; // used only during game save and load, linked to itemsOnMap
+    // public List<PositionOnMap> itemsPositionOnMap; // used only during game save and load, linked to itemsOnMap
+    public List<MapCoordinates> itemsMapCoordinates; // used only during game save and load, linked to itemsOnMap
 }
 
 public class GameMap : MonoBehaviour {
@@ -31,7 +32,8 @@ public class GameMap : MonoBehaviour {
     {
         // init lists
         MapData.itemsOnMap = new List<InventoryItemData>();
-        MapData.itemsPositionOnMap = new List<PositionOnMap>();
+        // MapData.itemsPositionOnMap = new List<PositionOnMap>();
+        MapData.itemsMapCoordinates = new List<MapCoordinates>();
         // Loop through transforms 1 level below map (=belongs to the map)
         foreach (Transform childTransform in MapManager.Instance.GetParentTransformByType(GetComponent<MapItemsContainer>()))
         {
@@ -46,15 +48,17 @@ public class GameMap : MonoBehaviour {
                     // set item data
                     MapData.itemsOnMap.Add(inventoryItem.InventoryItemData);
                     // set item position 
-                    MapData.itemsPositionOnMap.Add(
-                        new PositionOnMap
-                        {
-                            offsetMinX = mapItem.GetComponent<RectTransform>().offsetMin.x,
-                            offsetMinY = mapItem.GetComponent<RectTransform>().offsetMin.y,
-                            offsetMaxX = mapItem.GetComponent<RectTransform>().offsetMax.x,
-                            offsetMaxY = mapItem.GetComponent<RectTransform>().offsetMax.y
-                        }
-                        );
+                    //MapData.itemsPositionOnMap.Add(
+                    //    new PositionOnMap
+                    //    {
+                    //        offsetMinX = mapItem.GetComponent<RectTransform>().offsetMin.x,
+                    //        offsetMinY = mapItem.GetComponent<RectTransform>().offsetMin.y,
+                    //        offsetMaxX = mapItem.GetComponent<RectTransform>().offsetMax.x,
+                    //        offsetMaxY = mapItem.GetComponent<RectTransform>().offsetMax.y
+                    //    }
+                    //    );
+                    // set item coordinates
+                    MapData.itemsMapCoordinates.Add(MapManager.Instance.GetCoordinatesByWorldPosition(mapItem.transform.position));
                 }
             }
         }

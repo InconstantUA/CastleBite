@@ -17,7 +17,7 @@ public class TurnsManager : MonoBehaviour {
     [SerializeField]
     Text turnNumberText;
     [SerializeField]
-    Text activePlayerNameText;
+    SaveGame saveGame;
 
     public void Reset(Faction playerFaction = Faction.Unknown)
     {
@@ -45,7 +45,7 @@ public class TurnsManager : MonoBehaviour {
         // update turn number UI
         UpdateTurnNumberText();
         // update active player name
-        UpdateActivePlayerNameOnMapUI();
+        MapMenuManager.Instance.UpdateActivePlayerNameOnMapUI();
     }
 
     void Awake()
@@ -86,11 +86,6 @@ public class TurnsManager : MonoBehaviour {
         turnNumberText.text = TurnNumber.ToString();
     }
 
-    public void UpdateActivePlayerNameOnMapUI()
-    {
-        activePlayerNameText.text = GetActivePlayer().GivenName;
-    }
-
     GamePlayer GetNextPlayer()
     {
         // get all players
@@ -122,125 +117,30 @@ public class TurnsManager : MonoBehaviour {
         return null;
     }
 
-    GameObject GetGameObjectOnMapByID(int id)
-    {
-        // loop through all objects on map
-        foreach(MapObject mapObject in MapManager.Instance.GetComponentsInChildren<MapObject>())
-        {
-            // verify if id is the same as we are searching for
-            if (mapObject.gameObject.GetInstanceID() == id)
-            {
-                return mapObject.gameObject;
-            }
-        }
-        Debug.LogWarning("Failed to find game object by ID");
-        return null;
-    }
-
     public void EndTurn()
     {
         Debug.Log("End turn");
+        // Verify if we need to save game
+        if (GameOptions.Instance.gameOpt.autosave >= 1)
+        {
+            // automatically save game
+            saveGame.AutoSave();
+        }
         // Get active player
         GamePlayer activePlayer = GetActivePlayer();
         // Get next player
         GamePlayer nextPlayer = GetNextPlayer();
-        // Loop through each hero Party and execute needed actions
-        foreach (HeroParty heroParty in UIRoot.Instance.transform.GetComponentsInChildren<HeroParty>())
-        {
-            // verify if party belongs to active player
-            if (heroParty.Faction == activePlayer.Faction)
-            {
-                // verify if this is not city harnizon party
-                if (heroParty.PartyMode != PartyMode.Garnizon)
-                {
-                    // reset move points to max
-                    // Note: this should be done before giving control to other player, so during his turn he can make impact on the other parties move points
-                    heroParty.GetPartyLeader().MovePointsCurrent = heroParty.GetPartyLeader().GetEffectiveMaxMovePoints();
-                }
-                // .. decrement daily debuffs
-            }
-            // verify if party belongs to the next player
-            else if (heroParty.Faction == nextPlayer.Faction)
-            {
-                // loop through all party units
-                foreach (PartyUnit partyUnit in heroParty.GetComponentsInChildren<PartyUnit>())
-                {
-                    // apply daily heal to all party members
-                    // verify if health is not max already
-                    if (partyUnit.UnitHealthCurr != partyUnit.GetUnitEffectiveMaxHealth())
-                    {
-                        // apply daily health regen
-                        // Note: this should be done before taking control
-                        partyUnit.UnitHealthCurr += partyUnit.GetUnitEffectiveHealthRegenPerDay();
-                        // verify if health is not higher than max
-                        if (partyUnit.UnitHealthCurr > partyUnit.GetUnitEffectiveMaxHealth())
-                        {
-                            // reset current health to max
-                            partyUnit.UnitHealthCurr = partyUnit.GetUnitEffectiveMaxHealth();
-                        }
-                    }
-                    // .. decrement daily buffs
-                    // loop through all items and verify if it has expired
-                    foreach(InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
-                    {
-                        inventoryItem.DecrementModifiersDuration();
-                        inventoryItem.RemoveExpiredModifiers();
-                        inventoryItem.SelfDestroyIfExpired();
-                    }
-                }
-            }
-        }
+        // Execute post turn actions for the active player
+        activePlayer.ExecutePostTurnActions();
+        // Execute pre-turn actions for the next player
+        nextPlayer.ExecutePreTurnActions();
         // Change active player
         // Change current active player turn state to "HasMoved"
         activePlayer.PlayerTurnState = PlayerTurnState.HasMoved;
         // Change next active player turn state to active
         nextPlayer.PlayerTurnState = PlayerTurnState.Active;
-        // Get map focus panel
-        MapFocusPanel mapFocusPanel = MapMenuManager.Instance.GetComponentInChildren<MapFocusPanel>();
-        // Reset map focus panel
-        // Note it will also reset focused object ID for active player
-        mapFocusPanel.ReleaseFocus();
-        // Reset map selection
-        MapManager.Instance.SetSelection(MapManager.Selection.None);
-        // verify if next player had focused object in the past
-        if (nextPlayer.FocusedObjectID != 0)
-        {
-            // get previously focused ame object on map by id
-            GameObject previouslyFocusedGameObjectOnMap = GetGameObjectOnMapByID(nextPlayer.FocusedObjectID);
-            // verify if it is not null
-            if (previouslyFocusedGameObjectOnMap != null)
-            {
-                // verify if it is MapHero
-                if (previouslyFocusedGameObjectOnMap.GetComponent<MapHero>() != null)
-                {
-                    // init focus panel with map hero
-                    mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
-                    // select hero on map
-                    MapManager.Instance.SetSelection(MapManager.Selection.PlayerHero, previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
-                    // set camera focus on a hero on map
-                    Camera.main.GetComponent<CameraController>().SetCameraFocus(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
-                }
-                // verify if it is MapCity
-                else if (previouslyFocusedGameObjectOnMap.GetComponent<MapCity>() != null)
-                {
-                    // init focus panel with map city
-                    mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
-                    // select city on map
-                    MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
-                    // set camera focus on a city
-                    Camera.main.GetComponent<CameraController>().SetCameraFocus(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
-                }
-                else
-                {
-                    Debug.LogWarning("Failed to find focused game object type");
-                }
-            }
-        }
-        // Add player gold and mana income
-        nextPlayer.TotalGold += nextPlayer.GetTotalGoldIncomePerDay();
-        nextPlayer.TotalMana += nextPlayer.GetTotalManaIncomePerDay();
-        // update active player name
-        UpdateActivePlayerNameOnMapUI();
+        // execute pre-turn actions for MapMenu
+        MapMenuManager.Instance.ExecutePreTurnActions(nextPlayer);
         // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
         MapManager.Instance.InitTilesMap();
         // Update player income on the top info panel

@@ -8,52 +8,17 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
 public class SaveGame : MonoBehaviour {
-    [SerializeField]
-    string fileExtension;
+    //[SerializeField]
+    //string fileExtension;
     string fullFilePath;
     [SerializeField]
     GameObject saveButton;
     [SerializeField]
     GameObject backButton;
-
-    IEnumerator SetListOfSaves()
-    {
-        // number of saves to load at one time
-        int numberOfSavesToLoadAtOneTime = 10;
-        // get list of .save files in directory
-        FileInfo[] files = new DirectoryInfo(Application.persistentDataPath).GetFiles("*" + fileExtension);
-        // sort them by modify date older -> jonger
-        Array.Sort(files, delegate (FileInfo f1, FileInfo f2)
-        {
-            return f2.LastWriteTime.CompareTo(f1.LastWriteTime);
-        });
-        // Get save UI template
-        GameObject saveUITemplate = transform.Find("Saves/SavesList/SaveTemplate").gameObject;
-        // Get parent for new saves UI
-        Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
-        // create entry in UI for each *.save file, if it does not exist
-        GameObject newSave;
-        for (int i = 0; i < files.Length; i++)
-        //foreach (FileInfo file in files)
-        {
-            // create save UI
-            newSave = Instantiate(saveUITemplate, savesParentTr);
-            // try to read and set save data
-            newSave.GetComponent<Save>().SetSaveData(files[i]);
-            // rename game object 
-            newSave.name = newSave.GetComponent<Save>().SaveName;
-            // enable save
-            newSave.gameObject.SetActive(true);
-            // verify if it is time to wait
-            if (i % numberOfSavesToLoadAtOneTime == 0)
-            {
-                // skip to next frame
-                yield return null;
-                //yield return new WaitForSeconds(2);
-            }
-        }
-        yield return null;
-    }
+    [SerializeField]
+    SavesMenu savesMenu;
+    [SerializeField]
+    InputField saveNameInputField;
 
     void SetButtonsActive(bool doActivate)
     {
@@ -64,7 +29,7 @@ public class SaveGame : MonoBehaviour {
     void OnEnable()
     {
         // update list of saves
-        StartCoroutine(SetListOfSaves());
+        StartCoroutine(savesMenu.SetListOfSaves());
         // set save details
         transform.Find("Saves").GetComponent<SavesMenu>().SetSaveDetails();
         // enable buttons
@@ -75,11 +40,11 @@ public class SaveGame : MonoBehaviour {
     {
         //// return save button to normal state
         //transform.Find("SaveBtn").GetComponent<TextButton>().SetNormalStatus();
-        // Clean up current list of saves
-        foreach (Save save in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<Save>())
-        {
-            Destroy(save.gameObject);
-        }
+        //// Clean up current list of saves
+        //foreach (Save save in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<Save>())
+        //{
+        //    Destroy(save.gameObject);
+        //}
         // disable buttons
         SetButtonsActive(false);
     }
@@ -91,7 +56,7 @@ public class SaveGame : MonoBehaviour {
             // save city ID
             city.CityID = city.gameObject.GetInstanceID();
             // save city position
-            city.CityData.cityMapPosition = city.GetCityMapPosition();
+            //city.CityData.cityMapPosition = city.GetCityMapPosition();
             city.CityData.cityMapCoordinates = MapManager.Instance.GetCoordinatesByWorldPosition(city.LMapCity.transform.position);
         }
     }
@@ -121,7 +86,7 @@ public class SaveGame : MonoBehaviour {
                 Debug.Log(heroParty.name + " party UI address is " + heroParty.PartyData.partyUIAddress);
             }
             // set party map address
-            heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
+            //heroParty.PartyData.partyMapPosition = heroParty.GetPartyMapPosition();
             heroParty.PartyData.partyMapCoordinates = heroParty.GetPartyMapCoordinates();
             // init party inventory data
             heroParty.PartyData.partyInventory = new List<InventoryItemData>();
@@ -156,7 +121,7 @@ public class SaveGame : MonoBehaviour {
         }
     }
 
-    public GameData GetGameData()
+    public GameData GetGameData(bool isAutoSave = false)
     {
         Debug.Log("Get game data");
         // Get game players
@@ -170,6 +135,7 @@ public class SaveGame : MonoBehaviour {
         // init game data
         GameData gameData = new GameData
         {
+            saveData = new SaveData(),
             chapterData = new ChapterData(),
             turnsData = new TurnsData(),
             playersData = new PlayerData[players.Length],
@@ -177,6 +143,8 @@ public class SaveGame : MonoBehaviour {
             citiesData = new CityData[cities.Length],
             partiesData = new PartyData[heroParties.Length]
         };
+        // Set save Data (set whether this is automatically generated save file)
+        gameData.saveData.isAutosave = isAutoSave;
         // Set chapter data
         gameData.chapterData = ChapterManager.Instance.ActiveChapter.ChapterData;
         // Set turns manager data
@@ -209,12 +177,12 @@ public class SaveGame : MonoBehaviour {
         return gameData;
     }
 
-    void SaveGameData(FileStream file)
+    void SaveGameData(FileStream file, bool isAutoSave = false)
     {
         // Create binary formater
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         // Put data to a file
-        binaryFormatter.Serialize(file, GetGameData());
+        binaryFormatter.Serialize(file, GetGameData(isAutoSave));
         // Close file
         file.Close();
         // Activate main menu panel
@@ -239,11 +207,60 @@ public class SaveGame : MonoBehaviour {
         // nothing to do here
     }
 
+    void CleanupOldSaves()
+    {
+        // get list of saves files sorted from youngest[0] to the oldest[size-1]
+        FileInfo[] files = ConfigManager.Instance.GameSaveConfig.GetSavesFilesSortedYoungerToOlder();
+        // init save to use its GetSaveInfo() function;
+        SaveInfo saveInfo;
+        // init saves counter
+        int savesCount = 0;
+        // remove all files, which are out of auto-save limit
+        // loop through all files
+        for (int i = 0; i < files.Length; i++)
+        {
+            // get save info
+            saveInfo = ConfigManager.Instance.GameSaveConfig.GetSaveInfo(files[i]);
+            // verify if save is not corrupted and it is auto-save
+            if (!saveInfo.isCorrupted) {
+                Debug.Log("Reading isAutosave parameter from " + saveInfo.saveName + " save.");
+                // cannot read game data if save is corrupted, that is why we verify it only after we know that it is not corrupted
+                if (saveInfo.gameData.saveData.isAutosave)
+                {
+                    // increment saves counter
+                    savesCount += 1;
+                    // verify savesCount is more than the limit
+                    if (savesCount > GameOptions.Instance.gameOpt.autosaveLastSavesToKeep)
+                    {
+                        // remove this save file
+                        Debug.Log("Removing old " + saveInfo.saveName + " save.");
+                        files[i].Delete();
+                    }
+                }
+            }
+        }
+    }
+
+    public void AutoSave()
+    {
+        // get full file name
+        fullFilePath = ConfigManager.Instance.GameSaveConfig.GetAutoSaveFullFileName();
+        Debug.Log("File name is " + fullFilePath + "");
+        // create file
+        FileStream file = File.Create(fullFilePath);
+        // set is autosave flag (just for code readability)
+        bool isAutosave = true;
+        // write to a file and close it
+        SaveGameData(file, isAutosave);
+        // cleanup old saves
+        CleanupOldSaves();
+    }
+
     public void Save()
     {
         // Open file
         //  get file name from input field
-        string fileName = transform.Find("Saves/NewSave/InputField").GetComponent<InputField>().text;
+        string fileName = saveNameInputField.text;
         // verify if file name is set
         if (fileName == "")
         {
@@ -255,7 +272,7 @@ public class SaveGame : MonoBehaviour {
         else
         {
             //  construct full file name
-            fullFilePath = Application.persistentDataPath + "/" + fileName + fileExtension;
+            fullFilePath = ConfigManager.Instance.GameSaveConfig.GetSaveFullNameByFileName(fileName);
             Debug.Log("File name is " + fullFilePath + "");
             // verify if file exists
             if (File.Exists(fullFilePath))

@@ -257,6 +257,15 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
+    public void ExecutePreTurnActions()
+    {
+        DecrementModifiersDuration();
+        RemoveExpiredModifiers();
+        SelfDestroyIfExpired();
+    }
+
+    #region Properties
+
     public InventoryItemData InventoryItemData
     {
         get
@@ -399,5 +408,6 @@ public class InventoryItem : MonoBehaviour {
             inventoryItemData.unitStatusModifiers = value;
         }
     }
+    #endregion Properties
 
 }

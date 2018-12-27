@@ -11,8 +11,8 @@ public class LoadGame : MonoBehaviour
 {
     [SerializeField]
     MenuButton menuButton;
-    [SerializeField]
-    string fileExtension;
+    //[SerializeField]
+    //string fileExtension;
     //[SerializeField]
     //GameObject gamePlayerTemplate;
     //[SerializeField]
@@ -31,56 +31,50 @@ public class LoadGame : MonoBehaviour
     GameObject deleteButton;
     [SerializeField]
     GameObject backButton;
+    [SerializeField]
+    SavesMenu savesMenu;
 
     string fullFilePath;
     TextToggle selectedToggle;
 
-    IEnumerator SetListOfSaves()
-    {
-        int numberOfSavesToLoadAtOneTime = 10;
-        // update list of saves
-        // get list of .save files in directory
-        FileInfo[] files = new DirectoryInfo(Application.persistentDataPath).GetFiles("*" + fileExtension);
-        // sort them by modify date older -> jonger
-        Array.Sort(files, delegate (FileInfo f1, FileInfo f2)
-        {
-            return f2.LastWriteTime.CompareTo(f1.LastWriteTime);
-        });
-        // verify if all object are loaded
-        if (transform.Find("Saves"))
-            if (transform.Find("Saves/SavesList"))
-                if (transform.Find("Saves/SavesList/SaveTemplate"))
-                {
-                    // Get save UI template
-                    GameObject saveUITemplate = transform.Find("Saves/SavesList/SaveTemplate").gameObject;
-                    // Get parent for new saves UI
-                    Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
-                    // create entry in UI for each *.save file, if it does not exist
-                    GameObject newSave;
-                    for (int i = 0; i < files.Length; i++)
-                    //foreach (FileInfo file in files)
-                    {
-                        // create save UI
-                        newSave = Instantiate(saveUITemplate, savesParentTr);
-                        // read and set save data
-                        newSave.GetComponent<Save>().SetSaveData(files[i]);
-                        // rename game object 
-                        newSave.name = newSave.GetComponent<Save>().SaveName;
-                        // enable save
-                        newSave.gameObject.SetActive(true);
-                        // verify if it is time to wait
-                        if (i % numberOfSavesToLoadAtOneTime == 0)
-                        {
-                            // skip to next frame
-                            yield return null;
-                            //yield return new WaitForSeconds(2);
-                        }
-                    }
-                    // preselect first save in the list on the next frame
-                    StartCoroutine(SelectLastestSave());
-                }
-        yield return null;
-    }
+    //IEnumerator SetListOfSaves()
+    //{
+    //    // update list of saves
+    //    // get list of .save files in directory
+    //    FileInfo[] files = ConfigManager.Instance.GameSaveConfig.GetSavesFilesSortedOlderToYounger();
+    //    // verify if all object are loaded
+    //    if (transform.Find("Saves"))
+    //        if (transform.Find("Saves/SavesList"))
+    //            if (transform.Find("Saves/SavesList/SaveTemplate"))
+    //            {
+    //                // Get save UI template
+    //                GameObject saveUITemplate = transform.Find("Saves/SavesList/SaveTemplate").gameObject;
+    //                // Get parent for new saves UI
+    //                Transform savesParentTr = transform.Find("Saves/SavesList/Grid");
+    //                // create entry in UI for each *.save file, if it does not exist
+    //                GameObject newSave;
+    //                for (int i = 0; i < files.Length; i++)
+    //                //foreach (FileInfo file in files)
+    //                {
+    //                    // create save UI
+    //                    newSave = Instantiate(saveUITemplate, savesParentTr);
+    //                    // read and set save data
+    //                    newSave.GetComponent<Save>().SetSaveInfo(files[i]);
+    //                    // enable save
+    //                    newSave.gameObject.SetActive(true);
+    //                    // verify if it is time to wait
+    //                    if (i % numberOfSavesToLoadAtOneTime == 0)
+    //                    {
+    //                        // skip to next frame
+    //                        yield return null;
+    //                        //yield return new WaitForSeconds(2);
+    //                    }
+    //                }
+    //                // preselect first save in the list on the next frame
+    //                StartCoroutine(SelectLastestSave());
+    //            }
+    //    yield return null;
+    //}
 
     void SetButtonsActive(bool doActivate)
     {
@@ -92,7 +86,7 @@ public class LoadGame : MonoBehaviour
     void OnEnable()
     {
         // update list of saves on a next frame
-        StartCoroutine(SetListOfSaves());
+        StartCoroutine(savesMenu.SetListOfSaves());
         // enable buttons
         SetButtonsActive(true);
     }
@@ -105,17 +99,17 @@ public class LoadGame : MonoBehaviour
         //    // return load button to normal state
         //    transform.Find("LoadBtn").GetComponent<TextButton>().SetNormalStatus();
         //}
-        // check if objects are not destroyed yet
-        if (transform.Find("Saves"))
-            if (transform.Find("Saves/SavesList"))
-                if (transform.Find("Saves/SavesList/Grid"))
-                {
-                    // Clean up current list of saves
-                    foreach (Save save in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<Save>())
-                    {
-                        Destroy(save.gameObject);
-                    }
-                }
+        //// check if objects are not destroyed yet
+        //if (transform.Find("Saves"))
+        //    if (transform.Find("Saves/SavesList"))
+        //        if (transform.Find("Saves/SavesList/Grid"))
+        //        {
+        //            // Clean up current list of saves
+        //            foreach (Save save in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<Save>())
+        //            {
+        //                Destroy(save.gameObject);
+        //            }
+        //        }
         // disable buttons
         SetButtonsActive(false);
     }
@@ -212,7 +206,7 @@ public class LoadGame : MonoBehaviour
         // Update turns number in UI
         TurnsManager.Instance.UpdateTurnNumberText();
         // update active player name
-        TurnsManager.Instance.UpdateActivePlayerNameOnMapUI();
+        UIRoot.Instance.GetComponentInChildren<MapMenuManager>(true).UpdateActivePlayerNameOnMapUI();
     }
 
     public IEnumerator CleanNewWorldBeforeLoad()
@@ -240,7 +234,9 @@ public class LoadGame : MonoBehaviour
         // Init map items container
         MapItemsContainer mapItemsContainer = null;
         // Init position on map variable
-        PositionOnMap previousItemPositionOnMap = new PositionOnMap();
+        // PositionOnMap previousItemPositionOnMap = new PositionOnMap();
+        // init map coordinates variable
+        MapCoordinates previousItemMapCoordinates = new MapCoordinates();
         // Get game map transform
         GameMap gameMap = ObjectsManager.Instance.GetComponentInChildren<GameMap>();
         // Create parties
@@ -250,12 +246,16 @@ public class LoadGame : MonoBehaviour
             if ((mapItemsContainer == null)
                 // verify if item is not using same container by comparing current position with previous
                 // all items which has identical position on map are placed into the same container
-                || (previousItemPositionOnMap != mapData.itemsPositionOnMap[i]))
+                // || (previousItemPositionOnMap != mapData.itemsPositionOnMap[i]))
+                || (previousItemMapCoordinates.x != mapData.itemsMapCoordinates[i].x)
+                || (previousItemMapCoordinates.y != mapData.itemsMapCoordinates[i].y))
             {
                 // create item container
-                mapItemsContainer = ObjectsManager.Instance.CreateInventoryItemContainerOnMap(mapData.itemsPositionOnMap[i]);
+                //mapItemsContainer = ObjectsManager.Instance.CreateInventoryItemContainerOnMap(mapData.itemsPositionOnMap[i]);
+                mapItemsContainer = ObjectsManager.Instance.CreateInventoryItemContainerOnMap(mapData.itemsMapCoordinates[i]);
                 // save previous position
-                previousItemPositionOnMap = mapData.itemsPositionOnMap[i];
+                //previousItemPositionOnMap = mapData.itemsPositionOnMap[i];
+                previousItemMapCoordinates = mapData.itemsMapCoordinates[i];
             }
             // create item
             InventoryItem inventoryItem = ObjectsManager.Instance.CreateInventoryItem(mapData.itemsOnMap[i], gameMap.transform);
@@ -373,29 +373,12 @@ public class LoadGame : MonoBehaviour
         // nothing to do here
     }
 
-    IEnumerator SelectLastestSave()
-    {
-        Debug.Log("Select latest save");
-        yield return new WaitForSeconds(0.01f);
-        foreach (TextToggle toggle in transform.Find("Saves/SavesList/Grid").GetComponentsInChildren<TextToggle>())
-        {
-            // verify if save is not corrupted == toggle is interactable
-            if (toggle.interactable)
-            {
-                Debug.Log("Latest save is " + toggle.name);
-                // select first save and exit loop
-                toggle.ActOnLeftMouseClick();
-                break;
-            }
-        }
-    }
-
     void DeleteSaveUI(TextToggle selectedToggle)
     {
         // remove current toggle
         Destroy(selectedToggle.gameObject);
         // select other save on next frame if there is any present
-        StartCoroutine(SelectLastestSave());
+        StartCoroutine(savesMenu.SelectLastestSave());
     }
 
     void OnDeleteSaveYesConfirmation()
@@ -417,7 +400,7 @@ public class LoadGame : MonoBehaviour
     {
         Debug.Log("Delete save");
         // querry toggle group for currently selected toggle
-        selectedToggle = transform.Find("Saves").GetComponent<TextToggleGroup>().GetSelectedToggle();
+        selectedToggle = savesMenu.GetComponent<TextToggleGroup>().GetSelectedToggle();
         // verify if there is any toggle selected now
         if (selectedToggle == null)
         {
@@ -441,7 +424,7 @@ public class LoadGame : MonoBehaviour
             else
             {
                 //  construct full file name
-                fullFilePath = Application.persistentDataPath + "/" + fileName + fileExtension;
+                fullFilePath = ConfigManager.Instance.GameSaveConfig.GetSaveFullNameByFileName(fileName); // Application.persistentDataPath + "/" + fileName + fileExtension;
                 Debug.Log("File name is " + fullFilePath + "");
                 // verify if file exists
                 if (File.Exists(fullFilePath))
@@ -473,7 +456,7 @@ public class LoadGame : MonoBehaviour
     {
         Debug.Log("Load save");
         // querry toggle group for currently selected toggle
-        TextToggle selectedToggle = transform.Find("Saves").GetComponent<TextToggleGroup>().GetSelectedToggle();
+        TextToggle selectedToggle = savesMenu.GetComponent<TextToggleGroup>().GetSelectedToggle();
         // verify if there is any toggle selected now
         if (selectedToggle == null)
         {
@@ -497,7 +480,7 @@ public class LoadGame : MonoBehaviour
             else
             {
                 //  construct full file name
-                fullFilePath = Application.persistentDataPath + "/" + fileName + fileExtension;
+                fullFilePath = ConfigManager.Instance.GameSaveConfig.GetSaveFullNameByFileName(fileName); // Application.persistentDataPath + "/" + fileName + fileExtension;
                 //Debug.Log("File name is " + fullFilePath + "");
                 // verify if file exists
                 if (File.Exists(fullFilePath))

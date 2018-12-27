@@ -17,7 +17,7 @@ public class PartyData : System.Object
     public int linkedCityID = -1;
     public Faction faction;
     public PartyMode partyMode;
-    public PositionOnMap partyMapPosition;
+    // public PositionOnMap partyMapPosition;
     public string partyUIAddress = null;
     public bool holdPosition = false;
     public PartyUnitData[] partyUnitsData; // initialized and used only during game save and load
@@ -54,62 +54,62 @@ public class HeroParty : MonoBehaviour {
         return null;
     }
 
-    public PositionOnMap GetPartyMapPosition()
-    {
-        // initialize map position with default values
-        PositionOnMap partyMapPosition = new PositionOnMap
-        {
-            offsetMinX = 0,
-            offsetMinY = 0,
-            offsetMaxX = 0,
-            offsetMaxY = 0
-        };
-        // get map manager
-        // MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
-        // verify if map manager is present
-        if (MapManager.Instance == null)
-        {
-            Debug.LogError("cannot find map manager");
-            // return default position
-            return partyMapPosition;
-        }
-        else
-        {
-            // verify if this is city garnizon
-            if (PartyMode.Garnizon == PartyMode)
-            {
-                // return default values as those values are not relevan
-                return partyMapPosition;
-            }
-            else
-            {
-                // verify if linked party on map is defined
-                if (lMapHero == null)
-                {
-                    Debug.LogError("Linked party on map is null");
-                    // return default position
-                    return partyMapPosition;
-                }
-                else
-                {
-                    //// get position
-                    //Vector2Int position = mapManager.GetTileByPosition(linkedPartyOnMap.transform.position);
-                    //// return position in PartyMapPosition format, which can be serialized
-                    //Debug.Log(" offsetMin.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x.ToString());
-                    //Debug.Log(" offsetMin.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y.ToString());
-                    //Debug.Log(" offsetMax.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x.ToString());
-                    //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
-                    return new PositionOnMap
-                    {
-                        offsetMinX = lMapHero.GetComponent<RectTransform>().offsetMin.x,
-                        offsetMinY = lMapHero.GetComponent<RectTransform>().offsetMin.y,
-                        offsetMaxX = lMapHero.GetComponent<RectTransform>().offsetMax.x,
-                        offsetMaxY = lMapHero.GetComponent<RectTransform>().offsetMax.y
-                    };
-                }
-            }
-        }
-    }
+    //public PositionOnMap GetPartyMapPosition()
+    //{
+    //    // initialize map position with default values
+    //    PositionOnMap partyMapPosition = new PositionOnMap
+    //    {
+    //        offsetMinX = 0,
+    //        offsetMinY = 0,
+    //        offsetMaxX = 0,
+    //        offsetMaxY = 0
+    //    };
+    //    // get map manager
+    //    // MapManager mapManager = transform.root.Find("MapScreen/Map").GetComponent<MapManager>();
+    //    // verify if map manager is present
+    //    if (MapManager.Instance == null)
+    //    {
+    //        Debug.LogError("cannot find map manager");
+    //        // return default position
+    //        return partyMapPosition;
+    //    }
+    //    else
+    //    {
+    //        // verify if this is city garnizon
+    //        if (PartyMode.Garnizon == PartyMode)
+    //        {
+    //            // return default values as those values are not relevan
+    //            return partyMapPosition;
+    //        }
+    //        else
+    //        {
+    //            // verify if linked party on map is defined
+    //            if (lMapHero == null)
+    //            {
+    //                Debug.LogError("Linked party on map is null");
+    //                // return default position
+    //                return partyMapPosition;
+    //            }
+    //            else
+    //            {
+    //                //// get position
+    //                //Vector2Int position = mapManager.GetTileByPosition(linkedPartyOnMap.transform.position);
+    //                //// return position in PartyMapPosition format, which can be serialized
+    //                //Debug.Log(" offsetMin.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.x.ToString());
+    //                //Debug.Log(" offsetMin.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMin.y.ToString());
+    //                //Debug.Log(" offsetMax.x " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.x.ToString());
+    //                //Debug.Log(" offsetMax.y " + linkedPartyOnMap.GetComponent<RectTransform>().offsetMax.y.ToString());
+    //                return new PositionOnMap
+    //                {
+    //                    offsetMinX = lMapHero.GetComponent<RectTransform>().offsetMin.x,
+    //                    offsetMinY = lMapHero.GetComponent<RectTransform>().offsetMin.y,
+    //                    offsetMaxX = lMapHero.GetComponent<RectTransform>().offsetMax.x,
+    //                    offsetMaxY = lMapHero.GetComponent<RectTransform>().offsetMax.y
+    //                };
+    //            }
+    //        }
+    //    }
+    //}
 
     public MapCoordinates GetPartyMapCoordinates()
     {
@@ -249,6 +249,28 @@ public class HeroParty : MonoBehaviour {
         }
         //Debug.LogError("No Leader in party.");
         return null;
+    }
+
+    public void ExecutePreTurnActions()
+    {
+        // loop through all party units
+        foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
+        {
+            partyUnit.ExecutePreTurnActions();
+        }
+    }
+
+    public void ExecutePostTurnActions()
+    {
+        // verify if this is not city harnizon party
+        if (PartyMode != PartyMode.Garnizon)
+        {
+            Debug.Log("Reset move points to max for " + name + " party");
+            // reset move points to max
+            // Note: this should be done before giving control to other player, so during his turn he can make impact on the other parties move points
+            GetPartyLeader().MovePointsCurrent = GetPartyLeader().GetEffectiveMaxMovePoints();
+        }
+        // .. decrement daily debuffs
     }
 
     public PartyData PartyData

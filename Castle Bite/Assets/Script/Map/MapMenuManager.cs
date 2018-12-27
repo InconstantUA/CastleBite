@@ -17,6 +17,8 @@ public class MapMenuManager : MonoBehaviour {
     PlayerIncomeInfo playerIncomeInfo;
     [SerializeField]
     ColorPicker colorPicker;
+    [SerializeField]
+    Text activePlayerNameText;
 
     void Awake()
     {
@@ -420,5 +422,72 @@ public class MapMenuManager : MonoBehaviour {
     public void ShowPlayerColorPicker()
     {
         colorPicker.SetActive(ConfigManager.Instance.PlayersObjectsOnMapColor, new UnityEngine.Events.UnityAction(OnColorPickerSave), new UnityEngine.Events.UnityAction(OnColorPickerCancel));
+    }
+
+    GameObject GetGameObjectOnMapByID(int id)
+    {
+        // loop through all objects on map
+        foreach (MapObject mapObject in MapManager.Instance.GetComponentsInChildren<MapObject>())
+        {
+            // verify if id is the same as we are searching for
+            if (mapObject.gameObject.GetInstanceID() == id)
+            {
+                return mapObject.gameObject;
+            }
+        }
+        Debug.LogWarning("Failed to find game object by ID");
+        return null;
+    }
+
+    public void UpdateActivePlayerNameOnMapUI()
+    {
+        activePlayerNameText.text = TurnsManager.Instance.GetActivePlayer().GivenName;
+    }
+
+    public void ExecutePreTurnActions(GamePlayer nextPlayer)
+    {
+        // Get map focus panel
+        // MapFocusPanel mapFocusPanel = MapMenuManager.Instance.GetComponentInChildren<MapFocusPanel>();
+        // Reset map focus panel
+        // Note it will also reset focused object ID for active player
+        mapFocusPanel.ReleaseFocus();
+        // Reset map selection
+        MapManager.Instance.SetSelection(MapManager.Selection.None);
+        // verify if next player had focused object in the past
+        if (nextPlayer.FocusedObjectID != 0)
+        {
+            // get previously focused game object on map by id
+            GameObject previouslyFocusedGameObjectOnMap = GetGameObjectOnMapByID(nextPlayer.FocusedObjectID);
+            // verify if it is not null
+            if (previouslyFocusedGameObjectOnMap != null)
+            {
+                // verify if it is MapHero
+                if (previouslyFocusedGameObjectOnMap.GetComponent<MapHero>() != null)
+                {
+                    // init focus panel with map hero
+                    mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
+                    // select hero on map
+                    MapManager.Instance.SetSelection(MapManager.Selection.PlayerHero, previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
+                    // set camera focus on a hero on map
+                    Camera.main.GetComponent<CameraController>().SetCameraFocus(previouslyFocusedGameObjectOnMap.GetComponent<MapHero>());
+                }
+                // verify if it is MapCity
+                else if (previouslyFocusedGameObjectOnMap.GetComponent<MapCity>() != null)
+                {
+                    // init focus panel with map city
+                    mapFocusPanel.SetActive(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
+                    // select city on map
+                    MapManager.Instance.SetSelection(MapManager.Selection.PlayerCity, previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
+                    // set camera focus on a city
+                    Camera.main.GetComponent<CameraController>().SetCameraFocus(previouslyFocusedGameObjectOnMap.GetComponent<MapCity>());
+                }
+                else
+                {
+                    Debug.LogWarning("Failed to find focused game object type");
+                }
+            }
+        }
+        // update active player name
+        UpdateActivePlayerNameOnMapUI();
     }
 }

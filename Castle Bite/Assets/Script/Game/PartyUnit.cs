@@ -2002,6 +2002,30 @@ public class PartyUnit : MonoBehaviour {
         return UnitHealthMax + GetItemsHealthBonus();
     }
 
+    public void ExecutePreTurnActions()
+    {
+        // apply daily heal to all party members
+        // verify if health is not max already
+        if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
+        {
+            // apply daily health regen
+            // Note: this should be done before taking control
+            UnitHealthCurr += GetUnitEffectiveHealthRegenPerDay();
+            // verify if health is not higher than max
+            if (UnitHealthCurr > GetUnitEffectiveMaxHealth())
+            {
+                // reset current health to max
+                UnitHealthCurr = GetUnitEffectiveMaxHealth();
+            }
+        }
+        // .. decrement daily buffs
+        // loop through all items and verify if it has expired
+        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        {
+            inventoryItem.ExecutePreTurnActions();
+        }
+    }
+
     #region Attributes accessors
     public string UnitName
     {

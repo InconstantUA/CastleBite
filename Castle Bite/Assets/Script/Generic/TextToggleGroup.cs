@@ -1,12 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+
+[System.Serializable]
+public class TextToggleGroupToggleTurnOnEvent : UnityEvent<TextToggle>
+{
+}
 
 public class TextToggleGroup : MonoBehaviour {
     TextToggle selectedToggle;
     [SerializeField]
     bool allowSwitchOff;
+    public TextToggleGroupToggleTurnOnEvent OnToggleTurnOn;
+    public UnityEvent OnToggleTurnOff;
+
 
     public bool AllowSwitchOff
     {
@@ -37,6 +46,8 @@ public class TextToggleGroup : MonoBehaviour {
         selectedToggle.TurnOff();
         // clean up selectedToggle
         selectedToggle = null;
+        // trigger regiestered functions
+        OnToggleTurnOff.Invoke();
     }
 
     public void SetSelectedToggle(TextToggle toggle)
@@ -49,6 +60,8 @@ public class TextToggleGroup : MonoBehaviour {
         }
         // select new toggle
         SelectToggle(toggle);
+        // trigger regiestered functions
+        OnToggleTurnOn.Invoke(toggle);
     }
 
     public TextToggle GetSelectedToggle()
