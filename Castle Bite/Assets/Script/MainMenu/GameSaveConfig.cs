@@ -11,6 +11,8 @@ public class GameSaveConfig : ScriptableObject
     public string saveFileExtension = ".save";
     public string datetimeFormat = "yyyyMMddHHmmss";
     public string autoSaveFileName = "Autosave_<datetimeFormat>";
+    public int doAutoSave = 1; // 0 disabled, 1 enabled
+    public int lastAutoSavesToKeep = 10;
     // number of saves to load at one time to the saves list
     public int numberOfSavesToLoadAtOneTime = 10;
 

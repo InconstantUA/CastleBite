@@ -230,7 +230,7 @@ public class SaveGame : MonoBehaviour {
                     // increment saves counter
                     savesCount += 1;
                     // verify savesCount is more than the limit
-                    if (savesCount > GameOptions.Instance.gameOpt.autosaveLastSavesToKeep)
+                    if (savesCount > GameOptions.Instance.gameOpt.LastAutoSavesToKeep)
                     {
                         // remove this save file
                         Debug.Log("Removing old " + saveInfo.saveName + " save.");

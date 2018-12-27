@@ -33,6 +33,8 @@ public class LoadGame : MonoBehaviour
     GameObject backButton;
     [SerializeField]
     SavesMenu savesMenu;
+    [SerializeField]
+    LoadingScreen loadingScreen;
 
     string fullFilePath;
     TextToggle selectedToggle;
@@ -205,8 +207,8 @@ public class LoadGame : MonoBehaviour
         TurnsManager.Instance.TurnsData = gameData.turnsData;
         // Update turns number in UI
         TurnsManager.Instance.UpdateTurnNumberText();
-        // update active player name
-        UIRoot.Instance.GetComponentInChildren<MapMenuManager>(true).UpdateActivePlayerNameOnMapUI();
+        //// update active player name
+        //UIRoot.Instance.GetComponentInChildren<MapMenuManager>(true).UpdateActivePlayerNameOnMapUI();
     }
 
     public IEnumerator CleanNewWorldBeforeLoad()
@@ -300,16 +302,20 @@ public class LoadGame : MonoBehaviour
         transform.root.Find("MainMenu").gameObject.SetActive(false);
         // trigger main menu changes related to running game state
         menuButton.OnGameStartMenuChanges();
+        // execute pre-turn actions for MapMenu
+        MapMenuManager.Instance.ExecutePreTurnActions(TurnsManager.Instance.GetActivePlayer());
+        // execute pre-turn actions for MapManager
+        MapManager.Instance.ExecutePreTurnActions();
         // Deactivate this screen
         gameObject.SetActive(false);
         // Bring loading screen to front
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().transform.SetAsLastSibling();
+        loadingScreen.transform.SetAsLastSibling();
         // Wait a bit
         yield return new WaitForSeconds(loadWaitTimeSeconds);
         // Unblock mouse input
         InputBlocker.Instance.SetActive(false);
         // Deactivate Loading screen
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>().SetActive(false);
+        loadingScreen.SetActive(false);
     }
 
     //IEnumerator FreezeMap()
@@ -343,7 +349,7 @@ public class LoadGame : MonoBehaviour
         // Close file
         file.Close();
         // Activate Loading screen
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<LoadingScreen>(true).SetActive(true);
+        loadingScreen.SetActive(true);
         // Block mouse input
         InputBlocker.Instance.SetActive(true);
         // We use coroutine to make sure that all objects are removed before new objects are created and to show some animation

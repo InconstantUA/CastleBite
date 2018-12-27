@@ -34,26 +34,28 @@ public class MapMenuManager : MonoBehaviour {
 
     void OnDisable()
     {
+        // don't do this on disable, because it will not represent actual option settings
+        // instead save options when they are changed.
         // SaveMapUIOptions();
     }
 
-    void SaveMapUIOptions()
-    {
-        Debug.Log("Save Map UI Options");
-        // verify if map options has not been destroyed
-        if (MapOptions != null)
-        {
-            SaveCitiesNamesToggleOptions();
-            SaveHeroesNamesToggleOptions();
-            SavePlayerIncomeToggleOptions();
-            SaveManaSourcesToggleOptions();
-            SaveTreasureChestsToggleOptions();
-        }
-        else
-        {
-            Debug.LogWarning("Cannot save map options. MapOptions transform has been destoyed");
-        }
-    }
+    //void SaveMapUIOptions()
+    //{
+    //    Debug.Log("Save Map UI Options");
+    //    // verify if map options has not been destroyed
+    //    if (MapOptions != null)
+    //    {
+    //        SaveCitiesNamesToggleOptions();
+    //        SaveHeroesNamesToggleOptions();
+    //        SavePlayerIncomeToggleOptions();
+    //        SaveManaSourcesToggleOptions();
+    //        SaveTreasureChestsToggleOptions();
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Cannot save map options. MapOptions transform has been destoyed");
+    //    }
+    //}
 
     void LoadMapUIOptions()
     {
@@ -65,6 +67,7 @@ public class MapMenuManager : MonoBehaviour {
             LoadPlayerIncomeToggleOptions();
             LoadManaSourcesToggleOptions();
             LoadTreasureChestsToggleOptions();
+            LoadAutoSaveOptions();
         }
         else
         {
@@ -289,6 +292,11 @@ public class MapMenuManager : MonoBehaviour {
             SetPlayerIncomeVisible(true);
         }
     }
+
+    void LoadAutoSaveOptions()
+    {
+        // not needed to do here, because it will be loaded by GameOptions and it will be checked on OnEnable in AutoSaveMenu
+    }
     #endregion Load Options
 
     // called via Unity Editor
@@ -487,7 +495,26 @@ public class MapMenuManager : MonoBehaviour {
                 }
             }
         }
+        else
+        {
+            // get starting city by faction
+            City startingCity = ObjectsManager.Instance.GetStartingCityByFaction(nextPlayer.Faction);
+            // verify if this faction has starting city on a map = it is not null
+            if (startingCity != null)
+            {
+                // Set camera focus on a starting city
+                Camera.main.GetComponent<CameraController>().SetCameraFocus(startingCity.LMapCity);
+            }
+            else
+            {
+                Debug.LogWarning("No starting city for " + nextPlayer.Faction + " faction.");
+            }
+        }
         // update active player name
         UpdateActivePlayerNameOnMapUI();
+        // update active player income
+        playerIncomeInfo.UpdateInfo();
+        // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
+        CursorController.Instance.SetNormalCursor();
     }
 }

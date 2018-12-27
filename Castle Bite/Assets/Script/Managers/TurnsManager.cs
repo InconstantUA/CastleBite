@@ -18,6 +18,8 @@ public class TurnsManager : MonoBehaviour {
     Text turnNumberText;
     [SerializeField]
     SaveGame saveGame;
+    [SerializeField]
+    MapMenuManager mapMenuManager;
 
     public void Reset(Faction playerFaction = Faction.Unknown)
     {
@@ -44,8 +46,8 @@ public class TurnsManager : MonoBehaviour {
         TurnNumber = 1;
         // update turn number UI
         UpdateTurnNumberText();
-        // update active player name
-        MapMenuManager.Instance.UpdateActivePlayerNameOnMapUI();
+        // update active player name (do not use static instance, because it has not been enabled yet at game start)
+        mapMenuManager.UpdateActivePlayerNameOnMapUI();
     }
 
     void Awake()
@@ -121,7 +123,7 @@ public class TurnsManager : MonoBehaviour {
     {
         Debug.Log("End turn");
         // Verify if we need to save game
-        if (GameOptions.Instance.gameOpt.autosave >= 1)
+        if (GameOptions.Instance.gameOpt.DoAutoSave >= 1)
         {
             // automatically save game
             saveGame.AutoSave();
@@ -141,12 +143,8 @@ public class TurnsManager : MonoBehaviour {
         nextPlayer.PlayerTurnState = PlayerTurnState.Active;
         // execute pre-turn actions for MapMenu
         MapMenuManager.Instance.ExecutePreTurnActions(nextPlayer);
-        // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
-        MapManager.Instance.InitTilesMap();
-        // Update player income on the top info panel
-        UIRoot.Instance.GetComponentInChildren<UIManager>().GetComponentInChildren<TopInfoPanel>(true).GetComponentInChildren<PlayerIncomeInfo>(true).UpdateInfo();
-        // reset cursor to normal, because it is changed by MapManager on mapManager.SetSelection
-        CursorController.Instance.SetNormalCursor();
+        // execute pre-turn actions for MapManager
+        MapManager.Instance.ExecutePreTurnActions(); 
     }
 
     public int TurnNumber

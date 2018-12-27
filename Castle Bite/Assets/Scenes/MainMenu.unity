@@ -3586,6 +3586,7 @@ MonoBehaviour:
   deleteButton: {fileID: 760575897}
   backButton: {fileID: 1381217180}
   savesMenu: {fileID: 689556674}
+  loadingScreen: {fileID: 1195473688}
 --- !u!1 &103284473
 GameObject:
   m_ObjectHideFlags: 0
@@ -71925,6 +71926,7 @@ MonoBehaviour:
     turnNumber: 0
   turnNumberText: {fileID: 169551293}
   saveGame: {fileID: 253405556}
+  mapMenuManager: {fileID: 1130650654}
 --- !u!114 &1201476883
 MonoBehaviour:
   m_ObjectHideFlags: 0

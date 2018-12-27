@@ -78,6 +78,10 @@ public class PartyInventoryUI : MonoBehaviour {
                 }
             }
         }
+        else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
+        {
+            Debug.Log("Parties info panel is active, probably we are on map. Normally inventory should not be active in this case.");
+        }
         else
         {
             Debug.LogWarning("Unknown active screen");
@@ -126,6 +130,8 @@ public class PartyInventoryUI : MonoBehaviour {
             {
                 SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>());
             }
+            // fill in empty slots
+            FillInEmptySlots();
         }
         // verify if Battle screen is active
         else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
@@ -145,13 +151,18 @@ public class PartyInventoryUI : MonoBehaviour {
                     }
                 }
             }
+            // fill in empty slots
+            FillInEmptySlots();
+        }
+        // verify if PartiesInfoPanel is active
+        else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
+        {
+            Debug.Log("Parties info panel is active, probably we are on map. No need to do anything, because party inventory will be disabled");
         }
         else
         {
             Debug.LogWarning("unknown screen is active");
         }
-        // fill in empty slots
-        FillInEmptySlots();
     }
 
     void OnDisable()

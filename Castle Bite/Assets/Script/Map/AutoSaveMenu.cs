@@ -16,12 +16,12 @@ public class AutoSaveMenu : MonoBehaviour
     void OnEnable()
     {
         // Verify if auto-save is enabled in player options
-        if (GameOptions.Instance.gameOpt.autosave >= 1)
+        if (GameOptions.Instance.gameOpt.DoAutoSave >= 1)
         {
             // enable auto-save
             SetActive(true);
         }
-        else if (GameOptions.Instance.gameOpt.autosave <= 0)
+        else if (GameOptions.Instance.gameOpt.DoAutoSave <= 0)
         {
             // disable auto-save
             SetActive(false);
@@ -38,20 +38,20 @@ public class AutoSaveMenu : MonoBehaviour
                 numberOfLatestSavesToKeepInputField.gameObject.SetActive(true);
             }
             // activate autosave in game options, if it is not active already
-            if (GameOptions.Instance.gameOpt.autosave != 1)
+            if (GameOptions.Instance.gameOpt.DoAutoSave != 1)
             {
-                GameOptions.Instance.gameOpt.autosave = 1;
+                GameOptions.Instance.gameOpt.DoAutoSave = 1;
             }
             // verify if auto-save option number of last saves to keep is not invalid
-            if (GameOptions.Instance.gameOpt.autosaveLastSavesToKeep <= 0)
+            if (GameOptions.Instance.gameOpt.LastAutoSavesToKeep <= 0)
             {
                 // set it at least to 1
-                GameOptions.Instance.gameOpt.autosaveLastSavesToKeep = 1;
+                GameOptions.Instance.gameOpt.LastAutoSavesToKeep = 1;
             }
             // configure auto-save options based on game options (this normally should not be done if SetActive is called from by the InputField itself, but this doesn't harm, because we do validation)
-            if (numberOfLatestSavesToKeepInputField.text != GameOptions.Instance.gameOpt.autosaveLastSavesToKeep.ToString())
+            if (numberOfLatestSavesToKeepInputField.text != GameOptions.Instance.gameOpt.LastAutoSavesToKeep.ToString())
             {
-                numberOfLatestSavesToKeepInputField.text = GameOptions.Instance.gameOpt.autosaveLastSavesToKeep.ToString();
+                numberOfLatestSavesToKeepInputField.text = GameOptions.Instance.gameOpt.LastAutoSavesToKeep.ToString();
             }
             // set symbol visible if it is not active yet
             if (!symbol.gameObject.activeSelf)
@@ -70,7 +70,7 @@ public class AutoSaveMenu : MonoBehaviour
             // deactivate number of latest saves to keep input field
             numberOfLatestSavesToKeepInputField.gameObject.SetActive(false);
             // dactivate autosave in options, but keep number of saves to keep the same, because it may be required for user to keep it with this number
-            GameOptions.Instance.gameOpt.autosave = 0;
+            GameOptions.Instance.gameOpt.DoAutoSave = 0;
             // hide symbol
             symbol.gameObject.SetActive(false);
             // verify if toggle is not Off already (this can be during game start)
@@ -92,7 +92,7 @@ public class AutoSaveMenu : MonoBehaviour
             // get number of last saves to keep
             numberOfLatestSavesToKeep = Int32.Parse(numberOfLatestSavesToKeepInputField.text);
             // save value to the Options
-            GameOptions.Instance.gameOpt.autosaveLastSavesToKeep = numberOfLatestSavesToKeep;
+            GameOptions.Instance.gameOpt.LastAutoSavesToKeep = numberOfLatestSavesToKeep;
             // verify if value is equal or greater than 1
             if (numberOfLatestSavesToKeep >= 1)
             {
@@ -109,7 +109,7 @@ public class AutoSaveMenu : MonoBehaviour
         {
             Debug.LogWarning("Input field String to Int Parsing failed");
             // assume that user wants to keep it On, because input field was On and reset it to 1
-            GameOptions.Instance.gameOpt.autosave = 1;
+            GameOptions.Instance.gameOpt.DoAutoSave = 1;
         }
     }
 }

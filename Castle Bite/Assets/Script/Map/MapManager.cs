@@ -4023,4 +4023,10 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             }
         }
     }
+
+    public void ExecutePreTurnActions()
+    {
+        // Update map tiles data, because some friendly cities are passable and other cities are not passable unless conquerred.
+        InitTilesMap();
+    }
 }

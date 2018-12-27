@@ -67,7 +67,7 @@ public class MainMenuManager : MonoBehaviour {
     {
         Debug.Log("Save Options");
         // Game options
-        PlayerPrefs.SetInt("Autosave", GameOptions.Instance.gameOpt.autosave); // 0 - disable, 1 - enable
+        //PlayerPrefs.SetInt("Autosave", GameOptions.Instance.gameOpt.DoAutoSave); // 0 - disable, 1 - enable
         // Video options
         PlayerPrefs.SetInt("FontSize", GameOptions.Instance.videoOpt.fontSize);
         // Audio options
@@ -81,15 +81,15 @@ public class MainMenuManager : MonoBehaviour {
     {
         Debug.Log("Load Options");
         // Game options
-        GameOptions.Instance.gameOpt.autosave = PlayerPrefs.GetInt("Autosave", 0); // default 1 - enable autosave
-        if (GameOptions.Instance.gameOpt.autosave == 0)
-        {
-            transform.root.Find("MainMenu/OptionsGameSubmenuL3Panel/Autosave/Value").GetComponent<Text>().text = "Off";
-        }
-        else
-        {
-            transform.root.Find("MainMenu/OptionsGameSubmenuL3Panel/Autosave/Value").GetComponent<Text>().text = "On";
-        }
+        //GameOptions.Instance.gameOpt.DoAutoSave = PlayerPrefs.GetInt("Autosave", 0); // default 1 - enable autosave
+        //if (GameOptions.Instance.gameOpt.DoAutoSave == 0)
+        //{
+        //    transform.root.Find("MainMenu/OptionsGameSubmenuL3Panel/Autosave/Value").GetComponent<Text>().text = "Off";
+        //}
+        //else
+        //{
+        //    transform.root.Find("MainMenu/OptionsGameSubmenuL3Panel/Autosave/Value").GetComponent<Text>().text = "On";
+        //}
         // Video options
         GameOptions.Instance.videoOpt.fontSize = PlayerPrefs.GetInt("FontSize", 14); // default 14
         transform.root.Find("MainMenu/OptionsVideoSubmenuL3Panel/FontSize/Panel/Text").GetComponent<Text>().text = GameOptions.Instance.videoOpt.fontSize.ToString();

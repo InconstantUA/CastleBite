@@ -301,33 +301,20 @@ public class ChooseYourFirstHero : MonoBehaviour {
     //    return name;
     //}
 
-    City GetActivePlayerCapital()
-    {
-        foreach (City city in ObjectsManager.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>())
-        {
-            // verify if city faction match players faction and that it is capital city
-            // if ((city.CityFaction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
-            if ((city.CityFaction == TurnsManager.Instance.GetActivePlayer().Faction)
-                && (city.CityType == CityType.Capital))
-            {
-                return city;
-            }
-        }
-        return null;
-    }
-
-    City GetActivePlayerStartingCity()
-    {
-        foreach (City city in ObjectsManager.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>())
-        {
-            // verify if city faction match players faction and that it is starting city
-            if ((city.CityFaction == TurnsManager.Instance.GetActivePlayer().Faction) && (city.IsStarting == 1))
-            {
-                return city;
-            }
-        }
-        return null;
-    }
+    //City GetActivePlayerCapital()
+    //{
+    //    foreach (City city in ObjectsManager.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>())
+    //    {
+    //        // verify if city faction match players faction and that it is capital city
+    //        // if ((city.CityFaction == transform.root.GetComponentInChildren<TurnsManager>().GetActivePlayer().Faction)
+    //        if ((city.CityFaction == TurnsManager.Instance.GetActivePlayer().Faction)
+    //            && (city.CityType == CityType.Capital))
+    //        {
+    //            return city;
+    //        }
+    //    }
+    //    return null;
+    //}
 
     string GetPlayerName()
     {
@@ -355,8 +342,10 @@ public class ChooseYourFirstHero : MonoBehaviour {
         ChapterManager.Instance.LoadChapter(ChapterManager.Instance.ActiveChapter.ChapterData.chapterName);
         // change player name to the name which is set by the user
         TurnsManager.Instance.GetActivePlayer().PlayerData.givenName = GetPlayerName();
+        // get selected faction
+        Faction selectedFaction = factionSelectionGroup.GetSelectedFaction();
         // Activate and reset turns manager, set chosen faction as active player
-        TurnsManager.Instance.Reset(factionSelectionGroup.GetSelectedFaction());
+        TurnsManager.Instance.Reset(selectedFaction);
         // Activate main menu in game mode
         MainMenuManager.Instance.MainMenuInGameModeSetActive(true);
         // Activate world map
@@ -366,7 +355,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Array.Find(ConfigManager.Instance.UniqueAbilityConfigs, element => element.playerUniqueAbility == playerUniqueAbility);
         TurnsManager.Instance.GetActivePlayer().PlayerData.playerUniqueAbilityData.playerUniqueAbility = uniqueAbilitiesToggleGroup.GetSelectedToggle().GetComponent<UniqueAbilitySelector>().UniqueAbilityConfig.playerUniqueAbility;
         // GetSelectedUnitType and Get Chosen race starting city and hire first hero
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, GetActivePlayerStartingCity());
+        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, ObjectsManager.Instance.GetStartingCityByFaction(selectedFaction));
         // Deactivate Choose your first hero menu
         SetActive(false);
         // Activate Prolog

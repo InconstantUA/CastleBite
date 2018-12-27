@@ -477,4 +477,17 @@ public class ObjectsManager : MonoBehaviour {
         return mapItem;
     }
 
+    public City GetStartingCityByFaction(Faction faction)
+    {
+        
+        foreach (City city in GetComponentsInChildren<City>())
+        {
+            // verify if city faction match players faction and that it is starting city
+            if ((city.CityFaction == faction) && (city.IsStarting == 1))
+            {
+                return city;
+            }
+        }
+        return null;
+    }
 }
