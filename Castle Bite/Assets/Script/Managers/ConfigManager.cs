@@ -13,6 +13,8 @@ public class ConfigManager : MonoBehaviour
     CityUpgradeConfig cityUpgradeConfig;
     [SerializeField]
     ColorsConfig playersObjectsOnMapColor;
+    [SerializeField]
+    UnitSkillConfig[] unitSkillConfigs;
 
     void Awake()
     {
@@ -50,6 +52,19 @@ public class ConfigManager : MonoBehaviour
         set
         {
             playersObjectsOnMapColor = value;
+        }
+    }
+
+    public UnitSkillConfig[] UnitSkillConfigs
+    {
+        get
+        {
+            return unitSkillConfigs;
+        }
+
+        set
+        {
+            unitSkillConfigs = value;
         }
     }
 }

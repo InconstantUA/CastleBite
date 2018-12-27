@@ -25,6 +25,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
     Color factionSpecificAbilityHighlightedColor;
     [SerializeField]
     Color factionSpecificAbilityPressedColor;
+    [SerializeField]
+    InputField playerNameInputField;
 
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
@@ -77,6 +79,27 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Reset unique abilities (it may be specific to faction)
         SetUniqueAbilitiesActive(false);
         SetUniqueAbilitiesActive(true);
+        // Reset default player name, when needed
+        if (playerNameInputField.text == "")
+        {
+            SetDefaultPlayerName();
+        }
+    }
+
+    string GetDefaultPlayerName()
+    {
+        // get selected faction
+        Faction selectedFaction = factionSelectionGroup.GetSelectedFaction();
+        // get chapter data for the player with selected faction
+        GameObject worldTemplate = ChapterManager.Instance.GetWorldTemplateByName(ChapterManager.Instance.ActiveChapter.ChapterData.chapterName);
+        // get player name which is defined in the world template
+        return worldTemplate.GetComponentInChildren<ObjectsManager>().GetPlayerByFaction(selectedFaction).GivenName;
+    }
+
+    void SetDefaultPlayerName()
+    {
+        // set in placeholder give name defined in the world template
+        playerNameInputField.placeholder.GetComponent<Text>().text = GetDefaultPlayerName();
     }
 
     TextToggle CreateNewAbilityToggle(UniqueAbilityConfig uniqueAbilityConfig)
@@ -306,6 +329,22 @@ public class ChooseYourFirstHero : MonoBehaviour {
         return null;
     }
 
+    string GetPlayerName()
+    {
+        string playerName = playerNameInputField.text;
+        // verify if player name is empty
+        if (playerName == "")
+        {
+            // use default player name for selected faction
+            Debug.LogWarning("Using default player name");
+            return GetDefaultPlayerName();
+        }
+        else
+        {
+            return playerName;
+        }
+    }
+
     public void HireFirstHero()
     {
         // enable main menu panel (it was disabled by ChooseChapter)
@@ -314,6 +353,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
         MainMenuManager.Instance.ChooseChapter.gameObject.SetActive(false);
         // Load currently set active chapter
         ChapterManager.Instance.LoadChapter(ChapterManager.Instance.ActiveChapter.ChapterData.chapterName);
+        // change player name to the name which is set by the user
+        TurnsManager.Instance.GetActivePlayer().PlayerData.givenName = GetPlayerName();
         // Activate and reset turns manager, set chosen faction as active player
         TurnsManager.Instance.Reset(factionSelectionGroup.GetSelectedFaction());
         // Activate main menu in game mode

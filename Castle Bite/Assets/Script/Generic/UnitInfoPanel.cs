@@ -616,42 +616,42 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    public void SetLearnedSkillsBonusPreview(UnitSkill learnedSkill, PartyUnit partyUnit)
+    public void SetLearnedSkillsBonusPreview(UnitSkillData learnedSkill, PartyUnit partyUnit)
     {
-        switch (learnedSkill.mName)
+        switch (learnedSkill.unitSkill)
         {
-            case UnitSkill.SkillName.Leadership:
+            case UnitSkill.Leadership:
                 // update normal values
                 SetUnitLeadershipInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.Offence:
+            case UnitSkill.Offence:
                 //SetUnitPowerInfo(partyUnit, learnedSkill);
                 SetUnitPowerInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.Defense:
+            case UnitSkill.Defense:
                 SetUnitDefenseInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.Pathfinding:
+            case UnitSkill.Pathfinding:
                 SetUnitMovePointsInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.Scouting:
+            case UnitSkill.Scouting:
                 SetUnitScoutingRangeInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.Healing:
+            case UnitSkill.Healing:
                 SetUnitHealthInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.DeathResistance:
-            case UnitSkill.SkillName.FireResistance:
-            case UnitSkill.SkillName.WaterResistance:
-            case UnitSkill.SkillName.MindResistance:
+            case UnitSkill.DeathResistance:
+            case UnitSkill.FireResistance:
+            case UnitSkill.WaterResistance:
+            case UnitSkill.MindResistance:
                 SetUnitResistancesInfo(partyUnit);
                 break;
-            case UnitSkill.SkillName.ShardAura:
+            case UnitSkill.ShardAura:
                 break;
-            case UnitSkill.SkillName.LifelessContinuation:
+            case UnitSkill.LifelessContinuation:
                 break;
             default:
-                Debug.LogError("Unknown skill: " + learnedSkill.mName);
+                Debug.LogError("Unknown skill: " + learnedSkill.unitSkill);
                 break;
         }
     }

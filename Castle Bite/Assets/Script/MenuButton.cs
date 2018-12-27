@@ -287,7 +287,7 @@ public class MenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         //    ObjectsManager.Instance.CreatePlayer(playerData);
         //}
         // Activate and reset turns manager, set Dominion as active player
-        TurnsManager.Instance.Reset(Faction.Dominion);
+        // TurnsManager.Instance.Reset(Faction.Dominion);
         // Activate ChooseYourFirstHero menu
         transform.root.Find("MiscUI").GetComponentInChildren<ChooseYourFirstHero>(true).SetActive(true);
     }

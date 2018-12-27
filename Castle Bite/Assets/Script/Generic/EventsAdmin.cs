@@ -8,6 +8,11 @@ public class CityCaptureEvent : UnityEvent<City>
 {
 }
 
+[System.Serializable]
+public class PartyUnitEvent : UnityEvent<PartyUnit>
+{
+}
+
 public class EventsAdmin : MonoBehaviour {
     public static EventsAdmin Instance { get; private set; }
 
@@ -19,10 +24,14 @@ public class EventsAdmin : MonoBehaviour {
     // create events, which later can be handled in Unity Editor
     // Create on city has been captured event
     public CityCaptureEvent OnCityHasBeenCaptured;
-    // create on player gold changed event
+    // on player gold changed event
     public UnityEvent OnPlayerGoldHasChanged;
-    // create on player gold changed event
+    // on player mana changed event
     public UnityEvent OnPlayerManaHasChanged;
+    // on party unit health current changed event
+    public PartyUnitEvent OnPartyUnitHealthCurrentChanged;
+    // on party unit health max changed event
+    public PartyUnitEvent OnPartyUnitHealthMaxChanged;
 
     // For city faction changes
     // This function is Triggered when city faction parameter is set
@@ -44,6 +53,20 @@ public class EventsAdmin : MonoBehaviour {
     public void IHasChanged(GamePlayer gamePlayer, Mana gold)
     {
         OnPlayerManaHasChanged.Invoke();
+    }
+
+    // For player current health changes
+    public void IHasChanged(PartyUnit partyUnit, HealthCurrent healthCurrent)
+    {
+        Debug.Log(partyUnit.UnitName + " unit current health has changed");
+        OnPartyUnitHealthCurrentChanged.Invoke(partyUnit);
+    }
+
+    // For player max health changes
+    public void IHasChanged(PartyUnit partyUnit, HealthMax healthMax)
+    {
+        Debug.Log(partyUnit.UnitName + " unit max health has changed");
+        OnPartyUnitHealthMaxChanged.Invoke(partyUnit);
     }
 
 }

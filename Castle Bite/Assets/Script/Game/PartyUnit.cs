@@ -118,70 +118,77 @@ public enum UnitBuff : int
     ArrSize // for dynamic resizing of UnitBuffs array
 }
 
+[Serializable]
+public enum UnitSkill
+{
+    Leadership,
+    Offence,
+    Defense,
+    Pathfinding,
+    Scouting,
+    Healing,
+    DeathResistance,
+    FireResistance,
+    WaterResistance,
+    MindResistance,
+    ShardAura,
+    LifelessContinuation
+}
 
 [Serializable]
-public class UnitSkill
+public class UnitSkillData
 {
-    [Serializable]
-    public enum SkillName {
-        Leadership,
-        Offence,
-        Defense,
-        Pathfinding,
-        Scouting,
-        Healing,
-        DeathResistance,
-        FireResistance,
-        WaterResistance,
-        MindResistance,
-        ShardAura,
-        LifelessContinuation
-    }
-    public SkillName mName;
-    [NonSerialized]
-    public string mDisplayName;
-    [Serializable]
-    public class SkillLevel
+    public UnitSkill unitSkill;
+    ////[NonSerialized]
+    //public string mDisplayName;
+    //[Serializable]
+    //public class SkillLevel
+    //{
+    //    public int mCurrent;
+    //    [NonSerialized]
+    //    public int mMax;
+    //    public SkillLevel(int current, int max)
+    //    {
+    //        mCurrent = current;
+    //        mMax = max;
+    //    }
+    //}
+    //public SkillLevel mLevel;
+    public int currentSkillLevel;
+    ////[NonSerialized]
+    //public int requiredHeroLevel;
+    ////[NonSerialized]
+    //public int levelUpEveryXHeroLevels; // skill can be learned only after this number of levels has passed
+    ////[NonSerialized]
+    //public string description;
+    public UnitSkillData(UnitSkill unitSkill, int currentSkillLevel)
     {
-        public int mCurrent;
-        [NonSerialized]
-        public int mMax;
-        public SkillLevel(int current, int max)
-        {
-            mCurrent = current;
-            mMax = max;
-        }
+        this.unitSkill = unitSkill;
+        this.currentSkillLevel = currentSkillLevel;
     }
-    public SkillLevel mLevel;
-    [NonSerialized]
-    public int mRequiredHeroLevel;
-    [NonSerialized]
-    public int mLevelUpIncrementStep; // skill can be learned only after this number of levels has passed
-    [NonSerialized]
-    public string mDescription;
-    public UnitSkill(SkillName name, string displayName, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
-    {
-        mName = name;
-        mDisplayName = displayName;
-        mLevel = new SkillLevel(currentLevel, maxLevel);
-        mRequiredHeroLevel = requiredHeroLevel;
-        mLevelUpIncrementStep = levelUpIncrementStep;
-        mDescription = description;
-    }
-    public bool EqualTo(UnitSkill unitSkill)
+    //public UnitSkillData(UnitSkill name, string displayName, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
+    //{
+    //    mName = name;
+    //    mDisplayName = displayName;
+    //    mLevel = new SkillLevel(currentLevel, maxLevel);
+    //    mRequiredHeroLevel = requiredHeroLevel;
+    //    mLevelUpIncrementStep = levelUpIncrementStep;
+    //    mDescription = description;
+    //}
+    public bool EqualTo(UnitSkillData unitSkillData)
     {
 
         if (
             // verify skill name
-            (unitSkill.mName == mName) &&
+            (unitSkillData.unitSkill == this.unitSkill) &&
             // verify skill current level
-            (unitSkill.mLevel.mCurrent == mLevel.mCurrent) &&
-            // verify skill max level
-            (unitSkill.mLevel.mMax == mLevel.mMax) &&
-            // verify skill required hero level level
-            (unitSkill.mRequiredHeroLevel == mRequiredHeroLevel) &&
-            // verify skill level up increment step level
-            (unitSkill.mLevelUpIncrementStep == mLevelUpIncrementStep)
+            (unitSkillData.currentSkillLevel == this.currentSkillLevel) // &&
+            //// verify skill max level
+            //(unitSkill.mLevel.mMax == mLevel.mMax) &&
+            //// verify skill required hero level level
+            //(unitSkill.mRequiredHeroLevel == mRequiredHeroLevel) &&
+            //// verify skill level up increment step level
+            //(unitSkill.mLevelUpIncrementStep == mLevelUpIncrementStep)
         )
         {
             return true;
@@ -371,131 +378,190 @@ public class PartyUnitData : System.Object
     public int movePointsMax;
     public int scoutingRange;
     // Skills
-    public UnitSkill[] unitSkills = new UnitSkill[]
+    public UnitSkillData[] unitSkillsData = new UnitSkillData[]
     {
-        new UnitSkill(
-            UnitSkill.SkillName.Leadership,
-            "Leadership",
-            0, 3,
-            3, 2,
-            "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
-            + "\r\n" + "Maximum level: 3."
-            //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+        new UnitSkillData(
+            UnitSkill.Leadership,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.Offence,
-            "Offence",
-            0, 3,
-            2, 2,
-            "Increase hero attack power by 15% multiplied by skill level."
-            + "\r\n" + "Maximum level: 3."
-            //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+        new UnitSkillData(
+            UnitSkill.Offence,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.Defense,
-            "Defense",
-            0, 3,
-            2, 2,
-            "Increase hero defense from all sources by adding 10 defense points multiplied by skill level to current hero defense value."
-            + "\r\n" + "Maximum level: 3."
-            //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+        new UnitSkillData(
+            UnitSkill.Defense,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.Pathfinding,
-            "Pathfinding",
-            0, 3,
-            2, 1,
-            "Increase hero move points by 50% multiplied by skill level."
-            + "\r\n" + "Maximum level: 3."
-            //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
+        new UnitSkillData(
+            UnitSkill.Pathfinding,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.Scouting,
-            "Scouting",
-            0, 3,
-            2, 1,
-            "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
-            + "\r\n" + "Maximum level: 3."
-            //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
+        new UnitSkillData(
+            UnitSkill.Scouting,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.Healing,
-            "Healing",
-            0, 2,
-            2, 3,
-            "Increase hero and its party members daily healing rate by 15% from total health multiplied by skill level."
-            + "\r\n" + "Maximum level: 2."
-            //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        new UnitSkillData(
+            UnitSkill.Healing,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.WaterResistance,
-            "Water Resistance",
-            0, 2,
-            5, 5,
-            "Increase hero change to resist Water-based attacks, for example Chill."
-            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-            + "\r\n" + "Maximum level: 2."
-            //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+        new UnitSkillData(
+            UnitSkill.WaterResistance,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.FireResistance,
-            "Fire Resistance",
-            0, 2,
-            5, 5,
-            "Increase hero change to resist Fire-based attacks, for example Burning."
-            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-            + "\r\n" + "Maximum level: 2."
-            //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+        new UnitSkillData(
+            UnitSkill.FireResistance,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.DeathResistance,
-            "Death Resistance",
-            0, 2,
-            5, 5,
-            "Increase hero change to resist Death-based attacks, for example Poison."
-            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-            + "\r\n" + "Maximum level: 2."
-            //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+        new UnitSkillData(
+            UnitSkill.DeathResistance,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.MindResistance,
-            "Mind Resistance",
-            0, 2,
-            7, 7,
-            "Increase hero change to resist Mind-based attacks, for example paralyze."
-            + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-            + "\r\n" + "Maximum level: 2."
-            //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
+        new UnitSkillData(
+            UnitSkill.MindResistance,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.ShardAura,
-            "Shard Aura",
-            0, 3,
-            8, 5,
-            "Allow hero to use shards which emit different aura based on the shard type."
-            + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
-            + "\r\n" + "Each level increases shard's base aura bonus by 100%."
-            + "\r\n" + "Maximum level: 3."
-            //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        new UnitSkillData(
+            UnitSkill.ShardAura,
+            0
         ),
-        new UnitSkill(
-            UnitSkill.SkillName.LifelessContinuation,
-            "Lifeless Continuation",
-            0, 1,
-            9, 0,
-            "Allow hero to continue battle after death."
-            + "\r\n" + "After death all debuffs are removed and hero enters spirit form with half of the normal health and physical damage immunity. "
-            + "Hero can be resurected by friendly party unit or by using blood stone during the battle. "
-            + "If not resurected before the end of the battle hero dies without gainig experience."
-            + "\r\n" + "Maximum level: 1."
-            //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-        )
+        new UnitSkillData(
+            UnitSkill.LifelessContinuation,
+            0
+            )
+        //new UnitSkillData(
+        //    UnitSkill.Leadership,
+        //    "Leadership",
+        //    0, 3,
+        //    3, 2,
+        //    "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
+        //    + "\r\n" + "Maximum level: 3."
+        //    //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.Offence,
+        //    "Offence",
+        //    0, 3,
+        //    2, 2,
+        //    "Increase hero attack power by 15% multiplied by skill level."
+        //    + "\r\n" + "Maximum level: 3."
+        //    //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.Defense,
+        //    "Defense",
+        //    0, 3,
+        //    2, 2,
+        //    "Increase hero defense from all sources by adding 10 defense points multiplied by skill level to current hero defense value."
+        //    + "\r\n" + "Maximum level: 3."
+        //    //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.Pathfinding,
+        //    "Pathfinding",
+        //    0, 3,
+        //    2, 1,
+        //    "Increase hero move points by 50% multiplied by skill level."
+        //    + "\r\n" + "Maximum level: 3."
+        //    //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.Scouting,
+        //    "Scouting",
+        //    0, 3,
+        //    2, 1,
+        //    "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
+        //    + "\r\n" + "Maximum level: 3."
+        //    //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.Healing,
+        //    "Healing",
+        //    0, 2,
+        //    2, 3,
+        //    "Increase hero and its party members daily healing rate by 15% from total health multiplied by skill level."
+        //    + "\r\n" + "Maximum level: 2."
+        //    //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.WaterResistance,
+        //    "Water Resistance",
+        //    0, 2,
+        //    5, 5,
+        //    "Increase hero change to resist Water-based attacks, for example Chill."
+        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        //    + "\r\n" + "Maximum level: 2."
+        //    //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.FireResistance,
+        //    "Fire Resistance",
+        //    0, 2,
+        //    5, 5,
+        //    "Increase hero change to resist Fire-based attacks, for example Burning."
+        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        //    + "\r\n" + "Maximum level: 2."
+        //    //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.DeathResistance,
+        //    "Death Resistance",
+        //    0, 2,
+        //    5, 5,
+        //    "Increase hero change to resist Death-based attacks, for example Poison."
+        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        //    + "\r\n" + "Maximum level: 2."
+        //    //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.MindResistance,
+        //    "Mind Resistance",
+        //    0, 2,
+        //    7, 7,
+        //    "Increase hero change to resist Mind-based attacks, for example paralyze."
+        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
+        //    + "\r\n" + "Maximum level: 2."
+        //    //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.ShardAura,
+        //    "Shard Aura",
+        //    0, 3,
+        //    8, 5,
+        //    "Allow hero to use shards which emit different aura based on the shard type."
+        //    + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
+        //    + "\r\n" + "Each level increases shard's base aura bonus by 100%."
+        //    + "\r\n" + "Maximum level: 3."
+        //    //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        //),
+        //new UnitSkillData(
+        //    UnitSkill.LifelessContinuation,
+        //    "Lifeless Continuation",
+        //    0, 1,
+        //    9, 0,
+        //    "Allow hero to continue battle after death."
+        //    + "\r\n" + "After death all debuffs are removed and hero enters spirit form with half of the normal health and physical damage immunity. "
+        //    + "Hero can be resurected by friendly party unit or by using blood stone during the battle. "
+        //    + "If not resurected before the end of the battle hero dies without gainig experience."
+        //    + "\r\n" + "Maximum level: 1."
+        //    //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
+        //)
     };
     // UI attributes
     public PartyPanel.Row unitPPRow;  // used during game save and load and when party UI is displayed
     public PartyPanel.Cell unitPPCell;  // used during game save and load and when party UI is displayed
     // Unit Equipment
     public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
+}
+
+// For events admin
+public class HealthCurrent
+{
+
+}
+
+public class HealthMax
+{
+
 }
 
 public class PartyUnit : MonoBehaviour {
@@ -768,9 +834,9 @@ public class PartyUnit : MonoBehaviour {
     public int GetSkillDefenseBonus()
     {
         // get skill from partyUnit
-        UnitSkill skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Defense);
+        UnitSkillData skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Defense);
         // get bonus based on fact that 1 skill level = 10 defense
-        return skill.mLevel.mCurrent * 10;
+        return skill.currentSkillLevel * 10;
     }
 
     public float GetStatusDefenseBonus()
@@ -1074,15 +1140,15 @@ public class PartyUnit : MonoBehaviour {
     //    GetUnitStatusText().text = statusString;
     //}
 
-    public int GetOffenceSkillPowerBonus(UnitSkill skill = null)
+    public int GetOffenceSkillPowerBonus(UnitSkillData skill = null)
     {
         // verify if custom skill parameter was passed
         if (skill == null)
         {
             // get local party unit skill
-            skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Offence);
+            skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Offence);
         }
-        return (int)Math.Round(UnitPower * skill.mLevel.mCurrent * 0.15f);
+        return (int)Math.Round(UnitPower * skill.currentSkillLevel * 0.15f);
     }
 
     public int GetItemsPowerBonus()
@@ -1120,7 +1186,7 @@ public class PartyUnit : MonoBehaviour {
                         if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
                         {
                             // apply skill modifier to USMs power
-                            usm.skillPowerMultiplier = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent;
+                            usm.skillPowerMultiplier = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel;
                         }
                         // add modifier to the list
                         usmsList.Add(usm);
@@ -1161,7 +1227,7 @@ public class PartyUnit : MonoBehaviour {
                                     if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
                                     {
                                         // apply skill modifier to USMs power
-                                        usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkills, element => element.mName == UnitSkill.SkillName.ShardAura).mLevel.mCurrent;
+                                        usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel;
                                     }
                                     // add modifier to the list
                                     usmsList.Add(usm);
@@ -1199,8 +1265,8 @@ public class PartyUnit : MonoBehaviour {
     public int GetEffectiveLeadership()
     {
         // get current skill leadership bonus = skill level
-        UnitSkill skill = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Leadership);
-        int skillBonus = skill.mLevel.mCurrent;
+        UnitSkillData skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Leadership);
+        int skillBonus = skill.currentSkillLevel;
         // get items bonus
         int itemsBonus = GetLeadershipItemsBonus();
         // return result
@@ -1210,7 +1276,7 @@ public class PartyUnit : MonoBehaviour {
     public float GetPathfindingSkillMultiplier()
     {
         // get current skill level
-        int currentSkillLevel = Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Pathfinding).mLevel.mCurrent;
+        int currentSkillLevel = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Pathfinding).currentSkillLevel;
         // get and return bonus multiplier
         return (float)currentSkillLevel * 0.5f;
     }
@@ -1239,13 +1305,13 @@ public class PartyUnit : MonoBehaviour {
     public int GetScoutingSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
-        return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Scouting).mLevel.mCurrent;
+        return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Scouting).currentSkillLevel;
     }
 
     public int GetLeadershipSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
-        return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Leadership).mLevel.mCurrent;
+        return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Leadership).currentSkillLevel;
     }
 
     public int GetEffectiveMaxMovePoints()
@@ -1295,7 +1361,7 @@ public class PartyUnit : MonoBehaviour {
     public float GetUnitHealSkillHealthRegenModifier()
     {
         // get and return skill current level multiplied by 0.15
-        return (float)Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.Healing).mLevel.mCurrent * 0.15f;
+        return (float)Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Healing).currentSkillLevel * 0.15f;
     }
 
     public int GetUnitHealSkillHealthRegenBonusPerDay()
@@ -1325,13 +1391,13 @@ public class PartyUnit : MonoBehaviour {
         switch (source)
         {
             case UnitPowerSource.Death:
-                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.DeathResistance).mLevel.mCurrent * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.DeathResistance).currentSkillLevel * 50;
             case UnitPowerSource.Fire:
-                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.FireResistance).mLevel.mCurrent * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.FireResistance).currentSkillLevel * 50;
             case UnitPowerSource.Mind:
-                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.MindResistance).mLevel.mCurrent * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.MindResistance).currentSkillLevel * 50;
             case UnitPowerSource.Water:
-                return Array.Find(UnitSkills, element => element.mName == UnitSkill.SkillName.WaterResistance).mLevel.mCurrent * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.WaterResistance).currentSkillLevel * 50;
             case UnitPowerSource.Wind:
             case UnitPowerSource.Pure:
             case UnitPowerSource.Earth:
@@ -2077,6 +2143,8 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.unitHealthCurr = value;
+            // trigger event
+            EventsAdmin.Instance.IHasChanged(this, new HealthCurrent());
         }
     }
 
@@ -2090,6 +2158,8 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.unitHealthMax = value;
+            // trigger event
+            EventsAdmin.Instance.IHasChanged(this, new HealthMax());
         }
     }
 
@@ -2535,16 +2605,16 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public UnitSkill[] UnitSkills
+    public UnitSkillData[] UnitSkillsData
     {
         get
         {
-            return partyUnitData.unitSkills;
+            return partyUnitData.unitSkillsData;
         }
 
         set
         {
-            partyUnitData.unitSkills = value;
+            partyUnitData.unitSkillsData = value;
         }
     }
 

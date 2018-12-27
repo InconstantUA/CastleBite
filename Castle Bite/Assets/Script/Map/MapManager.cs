@@ -155,14 +155,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     //float yMin;
     //float yMax;
     // modifier for position based on slices rotations done
-    int rotationPositionModifier = 0;
+    // int rotationPositionModifier = 0;
     public enum Shift { Left, Right };
     // for debug
     Vector3 mousePosition;
-    Vector3 mapPosition;
+    // Vector3 mapPosition;
     // Vector3 mouseOnDragStartPosition;
-    Vector3 mouseOnDownStartPosition;
-    float xCorrectionOnDragStart;
+    // Vector3 mouseOnDownStartPosition;
+    // float xCorrectionOnDragStart;
     //float yCorrectionOnDragStart;
     // for animation and transition between states
     CoroutineQueue queue;
@@ -734,7 +734,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             // mark tile as passable
                             tilesmap[pos.x, pos.y] = 1;
                             // discover tiles around
-                            List<Vector2Int> discoveredTiles = DiscoverTilesAround(mapObject.GetComponent<MapCity>());
+                            DiscoverTilesAround(mapObject.GetComponent<MapCity>());
                         }
                         else
                         {
@@ -2027,7 +2027,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void OnPointerDown(PointerEventData eventData)
     {
         // save mouse position, it may be required for OnBeginDrag
-        mouseOnDownStartPosition = Input.mousePosition;
+        // mouseOnDownStartPosition = Input.mousePosition;
         // disable tile highliter
         // tileHighlighter.SetActive(false);
     }
@@ -2050,14 +2050,14 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // mouseOnDragStartPosition = Input.mousePosition;
             // apply corrections depeding on location from the canvas center
             // this actually depends one the current position of the map
-            Vector3 mapNewPosiiton = Camera.main.WorldToScreenPoint(transform.position);
+            // Vector3 mapNewPosiiton = Camera.main.WorldToScreenPoint(transform.position);
             // keep z position otherwise map will disappear
-            mapPosition = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
+            // mapPosition = new Vector3(mapNewPosiiton.x, mapNewPosiiton.y, 0);
             // xCorrectionOnDragStart = (Screen.width / 2) - mouseOnDragStartPosition.x;
             // yCorrectionOnDragStart = (Screen.height / 2) - mouseOnDragStartPosition.y;
             //Debug.Log("Map   [" + mapPosition.x + "," + mapPosition.y + "]");
             //Debug.Log("Mouse [" + mouseOnDownStartPosition.x + "," + mouseOnDownStartPosition.y + "]");
-            xCorrectionOnDragStart = mapPosition.x - mouseOnDownStartPosition.x;
+            // xCorrectionOnDragStart = mapPosition.x - mouseOnDownStartPosition.x;
             //yCorrectionOnDragStart = mapPosition.y - mouseOnDownStartPosition.y;
             // this corrections should also be applied to x and y min and max
             //xMin = xMinDef - xCorrectionOnDragStart;
@@ -2381,7 +2381,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // align map with tile size
             transform.position = new Vector3(RoundToTileSize(transform.position.x), RoundToTileSize(transform.position.y), RoundToTileSize(transform.position.z));
             // reset rotation position modifier
-            rotationPositionModifier = 0;
+            // rotationPositionModifier = 0;
             // enter back to Browse mode
             SetMode(Mode.Browse);
             // set tile highighter under mouse

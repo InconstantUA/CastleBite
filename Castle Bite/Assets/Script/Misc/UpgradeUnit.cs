@@ -12,7 +12,7 @@ public class UpgradeUnit : MonoBehaviour {
     //UnitInfoPanel unitInfoPanel;
     int statsUpgradeCount;
     List<UnitType> upgradedToClasses;
-    List<UnitSkill> learnedSkills;
+    List<UnitSkillData> learnedSkills;
 
     [SerializeField] Color satisfiedRequirementsColor;
     [SerializeField] Color dissatisfiedRequirementsColor;
@@ -1001,40 +1001,41 @@ public class UpgradeUnit : MonoBehaviour {
         transform.Find("Panel/SkillsUpgrade/ChooseAndLearnSkills/Info").GetComponent<TextButton>().OnClick.AddListener(delegate { ShowInfo(info); });
     }
 
-    void SetSkillUICurrentLevel(Transform skillUI, UnitSkill skill)
+    void SetSkillUICurrentLevel(Transform skillUI, UnitSkillData unitSkillData)
     {
         // set text to level + 1
-        if (skill.mLevel.mCurrent == skill.mLevel.mMax)
+        if (unitSkillData.currentSkillLevel == Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).maxSkillLevel)
         {
             // add (max) to the skill text
-            skillUI.Find("SkillLevel").GetComponent<Text>().text = skill.mLevel.mCurrent.ToString() + "(max)";
+            skillUI.Find("SkillLevel").GetComponent<Text>().text = unitSkillData.currentSkillLevel.ToString() + "(max)";
         }
         else
         {
-            skillUI.Find("SkillLevel").GetComponent<Text>().text = skill.mLevel.mCurrent.ToString();
+            skillUI.Find("SkillLevel").GetComponent<Text>().text = unitSkillData.currentSkillLevel.ToString();
         }
     }
 
-    void SetSkillUIName(Transform skillUI, UnitSkill skill)
+    void SetSkillUIName(Transform skillUI, UnitSkillData unitSkillData)
     {
         // set text to unit name
-        skillUI.Find("SkillName").GetComponent<Text>().text = skill.mDisplayName;
+        skillUI.Find("SkillName").GetComponent<Text>().text = Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).skillDisplayName;
     }
 
-    int GetSkillRequiredLevel(UnitSkill skill)
+    int GetSkillRequiredLevel(UnitSkillData unitSkillData)
     {
+        UnitSkillConfig unitSkillConfig = Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill);
         // act based on the current skill level
-        if (0 == skill.mLevel.mCurrent)
+        if (0 == unitSkillData.currentSkillLevel)
         {
-            return skill.mRequiredHeroLevel;
+            return unitSkillConfig.requiredHeroLevel;
         }
-        else if (1 == skill.mLevel.mCurrent)
+        else if (1 == unitSkillData.currentSkillLevel)
         {
-            return skill.mRequiredHeroLevel + skill.mLevelUpIncrementStep;
+            return unitSkillConfig.requiredHeroLevel + unitSkillConfig.levelUpEveryXHeroLevels;
         }
-        else if (1 < skill.mLevel.mCurrent)
+        else if (1 < unitSkillData.currentSkillLevel)
         {
-            return skill.mRequiredHeroLevel + skill.mLevel.mCurrent * skill.mLevelUpIncrementStep;
+            return unitSkillConfig.requiredHeroLevel + unitSkillData.currentSkillLevel * unitSkillConfig.levelUpEveryXHeroLevels;
         }
         else
         {
@@ -1042,12 +1043,12 @@ public class UpgradeUnit : MonoBehaviour {
         }
     }
 
-    void SetSkillUIRequiredLevel(Transform skillUI, UnitSkill skill)
+    void SetSkillUIRequiredLevel(Transform skillUI, UnitSkillData unitSkillData)
     {
         // Get text component
         Text levelText = skillUI.Find("RequiredHeroLevel").GetComponent<Text>();
         // verify if skill level is already maximum
-        if (skill.mLevel.mCurrent == skill.mLevel.mMax)
+        if (unitSkillData.currentSkillLevel == Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).maxSkillLevel)
         {
             // set '-' text to represent that hero level is not relevan any more, because maximum skill level was learned
             levelText.text = "-";
@@ -1057,10 +1058,10 @@ public class UpgradeUnit : MonoBehaviour {
         else
         {
             // set text
-            levelText.text = GetSkillRequiredLevel(skill).ToString();
+            levelText.text = GetSkillRequiredLevel(unitSkillData).ToString();
             // set color
             // verify if hero level requirements are met
-            if (focusedPartyUnit.UnitLevel < GetSkillRequiredLevel(skill))
+            if (focusedPartyUnit.UnitLevel < GetSkillRequiredLevel(unitSkillData))
             {
                 levelText.color = dissatisfiedRequirementsColor;
             }
@@ -1099,26 +1100,26 @@ public class UpgradeUnit : MonoBehaviour {
     //{
     //    // find skill and increase it's level
     //    UnitSkill unitSkill = FindUnitSkill(unitSkillToLearn);
-    //    unitSkill.mLevel.mCurrent += 1;
+    //    unitSkill.currentSkillLevel += 1;
     //}
 
     //void DowngradeSkill(UnitSkill unitSkillToDowngrade)
     //{
     //    // find skill and decrease it's level
     //    UnitSkill unitSkill = FindUnitSkill(unitSkillToDowngrade);
-    //    unitSkill.mLevel.mCurrent -= 1;
+    //    unitSkill.currentSkillLevel -= 1;
     //}
 
-    void SkillPlusUIActions(Transform skillUI, UnitSkill unitSkill)
+    void SkillPlusUIActions(Transform skillUI, UnitSkillData unitSkillData)
     {
         Debug.Log("SkillPlusUIActions");
         // record skill to which we have just upgraded for later use
-        learnedSkills.Add(unitSkill);
+        learnedSkills.Add(unitSkillData);
         // upgrade (learn) skill
-        unitSkill.mLevel.mCurrent += 1;
+        unitSkillData.currentSkillLevel += 1;
         //LearnSkill(unitSkill);
         // Upgrade UI to represent skill level increase
-        SetSkillUICurrentLevel(skillUI, unitSkill);
+        SetSkillUICurrentLevel(skillUI, unitSkillData);
         // consume skill upgrade points - this will also trigger all skills info regeneration
         WithdrawSkillPoint();
         // Set skill preview in unit info UI (+green bonus)
@@ -1127,22 +1128,22 @@ public class UpgradeUnit : MonoBehaviour {
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(focusedPartyUnit, UnitInfoPanel.Align.Right, false);
     }
 
-    void SetSkillPlusUIActions(Transform skillUI, UnitSkill unitSkill)
+    void SetSkillPlusUIActions(Transform skillUI, UnitSkillData unitSkillData)
     {
         skillUI.Find("Plus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
-        skillUI.Find("Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { SkillPlusUIActions(skillUI, unitSkill); });
+        skillUI.Find("Plus").GetComponent<TextButton>().OnClick.AddListener(delegate { SkillPlusUIActions(skillUI, unitSkillData); });
     }
 
-    void SkillMinusUIActions(Transform skillUI, UnitSkill unitSkill)
+    void SkillMinusUIActions(Transform skillUI, UnitSkillData unitSkillData)
     {
         Debug.Log("SkillMinusUIActions");
         // remove just upgarded skill from the list
-        learnedSkills.Remove(unitSkill);
+        learnedSkills.Remove(unitSkillData);
         // forget learned skill or decrease skill level
-        unitSkill.mLevel.mCurrent -= 1;
+        unitSkillData.currentSkillLevel -= 1;
         //DowngradeSkill(unitSkill);
         // Upgrade UI to represent skill level reduction
-        SetSkillUICurrentLevel(skillUI, unitSkill);
+        SetSkillUICurrentLevel(skillUI, unitSkillData);
         // return back skill upgrade point to the pool - this will also trigger all skills info regeneration
         AddSkillPoint();
         // Set skill preview in unit info UI (+green bonus)
@@ -1151,17 +1152,17 @@ public class UpgradeUnit : MonoBehaviour {
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(focusedPartyUnit, UnitInfoPanel.Align.Right, false);
     }
 
-    void SetSkillMinusUIActions(Transform skillUI, UnitSkill unitSkill)
+    void SetSkillMinusUIActions(Transform skillUI, UnitSkillData unitSkillData)
     {
         skillUI.Find("Minus").GetComponent<TextButton>().OnClick.RemoveAllListeners();
-        skillUI.Find("Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { SkillMinusUIActions(skillUI, unitSkill); });
+        skillUI.Find("Minus").GetComponent<TextButton>().OnClick.AddListener(delegate { SkillMinusUIActions(skillUI, unitSkillData); });
     }
     #endregion Skill Plus and Minus button actions
-    bool WasSkillJustLearned(UnitSkill skill)
+    bool WasSkillJustLearned(UnitSkillData unitSkillData)
     {
-        foreach (UnitSkill justLearnedSkill in learnedSkills)
+        foreach (UnitSkillData justLearnedSkill in learnedSkills)
         {
-            if (skill.EqualTo(justLearnedSkill))
+            if (unitSkillData.EqualTo(justLearnedSkill))
             {
                 return true;
             }
@@ -1169,10 +1170,10 @@ public class UpgradeUnit : MonoBehaviour {
         return false;
     }
 
-    void InitSkillUIMinusButton(Transform skillUI, UnitSkill skill)
+    void InitSkillUIMinusButton(Transform skillUI, UnitSkillData unitSkillData)
     {
         // verify if this is not the skill which was just learned
-        if (WasSkillJustLearned(skill))
+        if (WasSkillJustLearned(unitSkillData))
         {
             // enable minus, so user can roll back changes
             SetSkillUIMinusButtonInteractable(skillUI, true);
@@ -1184,13 +1185,13 @@ public class UpgradeUnit : MonoBehaviour {
         }
     }
 
-    bool VerifySkillPrerequisites(UnitSkill skill)
+    bool VerifySkillPrerequisites(UnitSkillData unitSkillData)
     {
         // verify if hero level meets skill level requirements
-        if (focusedPartyUnit.UnitLevel >= GetSkillRequiredLevel(skill))
+        if (focusedPartyUnit.UnitLevel >= GetSkillRequiredLevel(unitSkillData))
         {
             // verify if skill level is not maximum
-            if (skill.mLevel.mCurrent < skill.mLevel.mMax)
+            if (unitSkillData.currentSkillLevel < Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).maxSkillLevel)
             {
                 return true;
             }
@@ -1199,7 +1200,7 @@ public class UpgradeUnit : MonoBehaviour {
         return false;
     }
 
-    void InitSkillUIPlusButton(Transform skillUI, UnitSkill skill)
+    void InitSkillUIPlusButton(Transform skillUI, UnitSkillData unitSkillData)
     {
         // Verify if there are free upgrade stats points available
         if (focusedPartyUnit.UnitSkillPoints >= 1)
@@ -1207,7 +1208,7 @@ public class UpgradeUnit : MonoBehaviour {
             // verify if prerequsities are met
             //  met prerequisites == can change to this class
             //  does not met prerequisites == cannot change to this class
-            SetSkillUIPlusButtonInteractable(skillUI, VerifySkillPrerequisites(skill));
+            SetSkillUIPlusButtonInteractable(skillUI, VerifySkillPrerequisites(unitSkillData));
         }
         else
         {
@@ -1216,14 +1217,14 @@ public class UpgradeUnit : MonoBehaviour {
         }
     }
 
-    void SetSkillNameUIShowUnitInfoOnRightClick(Transform skillUI, UnitSkill skill)
+    void SetSkillNameUIShowUnitInfoOnRightClick(Transform skillUI, UnitSkillData unitSkillData)
     {
         // Get Text button
         skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.RemoveAllListeners();
-        skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowInfo(skill.mDescription); });
+        skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowInfo(Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).description); });
     }
 
-    void SetSkillUI(UnitSkill skill)
+    void SetSkillUI(UnitSkillData unitSkillData)
     {
         // create skill string in UI
         // Get class UI template
@@ -1235,21 +1236,21 @@ public class UpgradeUnit : MonoBehaviour {
         // Activate it
         newSkillUI.gameObject.SetActive(true);
         // Fill in all required information
-        SetSkillUICurrentLevel(newSkillUI, skill);
-        SetSkillUIName(newSkillUI, skill);
-        SetSkillUIRequiredLevel(newSkillUI, skill);
-        InitSkillUIMinusButton(newSkillUI, skill);
-        InitSkillUIPlusButton(newSkillUI, skill);
-        SetSkillMinusUIActions(newSkillUI, skill);
-        SetSkillPlusUIActions(newSkillUI, skill);
-        SetSkillNameUIShowUnitInfoOnRightClick(newSkillUI, skill);
+        SetSkillUICurrentLevel(newSkillUI, unitSkillData);
+        SetSkillUIName(newSkillUI, unitSkillData);
+        SetSkillUIRequiredLevel(newSkillUI, unitSkillData);
+        InitSkillUIMinusButton(newSkillUI, unitSkillData);
+        InitSkillUIPlusButton(newSkillUI, unitSkillData);
+        SetSkillMinusUIActions(newSkillUI, unitSkillData);
+        SetSkillPlusUIActions(newSkillUI, unitSkillData);
+        SetSkillNameUIShowUnitInfoOnRightClick(newSkillUI, unitSkillData);
     }
 
     void SetUnitSkillsUI()
     {
-        foreach (UnitSkill skill in focusedPartyUnit.UnitSkills)
+        foreach (UnitSkillData unitSkillData in focusedPartyUnit.UnitSkillsData)
         {
-            SetSkillUI(skill);
+            SetSkillUI(unitSkillData);
         }
     }
 
@@ -1392,12 +1393,12 @@ public class UpgradeUnit : MonoBehaviour {
         // copy name of the focused game object to backup game object
         unitBackupGameObject.name = focusedPartyUnit.gameObject.name;
         // copy skills current levels
-        UnitSkill[] unitSkills = unitBackupGameObject.GetComponent<PartyUnit>().UnitSkills;
-        foreach (UnitSkill skill in focusedPartyUnit.UnitSkills)
+        UnitSkillData[] unitSkillsData = unitBackupGameObject.GetComponent<PartyUnit>().UnitSkillsData;
+        foreach (UnitSkillData unitSkillData in focusedPartyUnit.UnitSkillsData)
         {
             // copy skill level
-            Array.Find(unitSkills, element => element.mName == skill.mName).mLevel.mCurrent = skill.mLevel.mCurrent;
-            Array.Find(unitSkills, element => element.mName == skill.mName).mLevel.mMax = skill.mLevel.mMax;
+            Array.Find(unitSkillsData, element => element.unitSkill == unitSkillData.unitSkill).currentSkillLevel = unitSkillData.currentSkillLevel;
+            // Array.Find(unitSkillsData, element => element.unitSkill == unitSkillData.unitSkill).mLevel.mMax = unitSkillData.mLevel.mMax;
         }
         // copy buffs and defbuffs
         UnitBuff[] buffs = unitBackupGameObject.GetComponent<PartyUnit>().UnitBuffs;
@@ -1449,7 +1450,7 @@ public class UpgradeUnit : MonoBehaviour {
         // Reset counters
         statsUpgradeCount = 0;
         upgradedToClasses = new List<UnitType>();
-        learnedSkills = new List<UnitSkill>();
+        learnedSkills = new List<UnitSkillData>();
         // Save link to Party unit for later use
         focusedPartyUnitUI = partyUnitUI;
         focusedPartyUnit = partyUnitUI.LPartyUnit;

@@ -376,7 +376,7 @@ public class MenuKeyboardControl : MonoBehaviour {
         //    ObjectsManager.Instance.CreatePlayer(playerData);
         //}
         // Activate and reset turns manager, set Dominion as active player
-        TurnsManager.Instance.Reset(Faction.Dominion);
+        // TurnsManager.Instance.Reset(Faction.Dominion);
         // transform.root.Find("Managers").GetComponent<TurnsManager>().Reset(Faction.Dominion);
         //// Set human player as active player
         //transform.root.Find("Managers").GetComponent<PlayersManager>().GetPlayerByType(PlayerType.Human).PlayerData.playerTurnState = PlayerTurnState.Active;

@@ -3761,6 +3761,7 @@ MonoBehaviour:
   factionSpecificAbilityNormalColor: {r: 0, g: 0, b: 0.5019608, a: 1}
   factionSpecificAbilityHighlightedColor: {r: 0, g: 0, b: 1, a: 1}
   factionSpecificAbilityPressedColor: {r: 0, g: 0.5019608, b: 1, a: 1}
+  playerNameInputField: {fileID: 941036743}
 --- !u!114 &107089515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72044,6 +72045,16 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
+  OnPartyUnitHealthCurrentChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  OnPartyUnitHealthMaxChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
 --- !u!114 &1201476887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72066,6 +72077,19 @@ MonoBehaviour:
   cityUpgradeConfig: {fileID: 11400000, guid: 5046bdf876b7087499a5318d8e84d0a1, type: 2}
   playersObjectsOnMapColor: {fileID: 11400000, guid: f84170ee952966b46b4c07375efd2570,
     type: 2}
+  unitSkillConfigs:
+  - {fileID: 11400000, guid: 3da975d158b51be45874e3f3de54f2c6, type: 2}
+  - {fileID: 11400000, guid: c63790bc831522e418c1fb030dc47940, type: 2}
+  - {fileID: 11400000, guid: 2c953dfeed68c844a9424bfd38429716, type: 2}
+  - {fileID: 11400000, guid: 4ffcacde094fa69478deec028b874deb, type: 2}
+  - {fileID: 11400000, guid: 1216a0e7e6daaff4695386228effebc7, type: 2}
+  - {fileID: 11400000, guid: b9b8706869c54f044aa73fdc6b21f252, type: 2}
+  - {fileID: 11400000, guid: 7e8eaa6b04fa1294696df5cd4fd305be, type: 2}
+  - {fileID: 11400000, guid: 4baee4d71c9c58046b664e28ae676cf7, type: 2}
+  - {fileID: 11400000, guid: 18036475d562a6a4fa9804d970f4d713, type: 2}
+  - {fileID: 11400000, guid: 9507dc4bb273b0c4199d0321d73427a8, type: 2}
+  - {fileID: 11400000, guid: 15d5dcac2f7a3c44eb4efc02e9b903b5, type: 2}
+  - {fileID: 11400000, guid: 42f1c26673b3ddc4b96ae10892def60f, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -24,6 +24,24 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
+    void OnCurrentHealthChanged(PartyUnit partyUnit)
+    {
+        // verify if party unit is this
+        if (partyUnit == LPartyUnit)
+        {
+            UpdateUnitCurrentHealthInfo();
+        }
+    }
+
+    void OnMaxHealthChanged(PartyUnit partyUnit)
+    {
+        // verify if party unit is this
+        if (partyUnit == LPartyUnit)
+        {
+            UpdateUnitMaxHealthInfo();
+        }
+    }
+
     void OnEnable()
     {
         // verify if party unit is set
@@ -34,12 +52,18 @@ public class PartyUnitUI : MonoBehaviour {
         UpdateUpgradeUnitControl();
         // Set required PartyUnit handlers
         SetPartyUnitHandlersActive(true);
+        // register for unit health events changes
+        EventsAdmin.Instance.OnPartyUnitHealthCurrentChanged.AddListener(OnCurrentHealthChanged);
+        EventsAdmin.Instance.OnPartyUnitHealthMaxChanged.AddListener(OnMaxHealthChanged);
     }
 
     void OnDisable()
     {
         // Remove required PartyUnit handlers
         SetPartyUnitHandlersActive(false);
+        // unregister from unit health events changes
+        EventsAdmin.Instance.OnPartyUnitHealthCurrentChanged.RemoveListener(OnCurrentHealthChanged);
+        EventsAdmin.Instance.OnPartyUnitHealthMaxChanged.RemoveListener(OnMaxHealthChanged);
     }
 
     void OnTransformChildrenChanged()
@@ -228,11 +252,22 @@ public class PartyUnitUI : MonoBehaviour {
 
     #region Unit Health
 
-    void SetUnitHealthUI()
+    void UpdateUnitCurrentHealthInfo()
     {
-        // set Health
+        Debug.Log("Upgrading " + LPartyUnit.UnitName + " unit current health");
         transform.Find("HPPanel/HPcurr").GetComponent<Text>().text = LPartyUnit.UnitHealthCurr.ToString();
+    }
+
+    void UpdateUnitMaxHealthInfo()
+    {
+        Debug.Log("Upgrading " + LPartyUnit.UnitName + " unit max health");
         transform.Find("HPPanel/HPmax").GetComponent<Text>().text = LPartyUnit.GetUnitEffectiveMaxHealth().ToString();
+    }
+
+    void UpdateUnitHealthInfo()
+    {
+        UpdateUnitCurrentHealthInfo();
+        UpdateUnitMaxHealthInfo();
     }
 
     public Text GetUnitCurrentHealthText()
@@ -250,7 +285,7 @@ public class PartyUnitUI : MonoBehaviour {
         // this is done on lvl up
         LPartyUnit.UnitHealthCurr = LPartyUnit.GetUnitEffectiveMaxHealth();
         // update Health panel
-        SetUnitHealthUI();
+        UpdateUnitHealthInfo();
     }
 
     #endregion Unit Health
@@ -260,7 +295,7 @@ public class PartyUnitUI : MonoBehaviour {
         // Set unit name
         SetUnitNameUI();
         // Set unit health
-        SetUnitHealthUI();
+        UpdateUnitHealthInfo();
         // Set unit status
         SetUnitStatus(LPartyUnit.UnitStatus);
     }

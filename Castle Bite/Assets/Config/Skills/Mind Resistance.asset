@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
+  m_Name: Mind Resistance
+  m_EditorClassIdentifier: 
+  unitSkill: 9
+  skillDisplayName: Mind Resistance
+  maxSkillLevel: 2
+  requiredHeroLevel: 5
+  levelUpEveryXHeroLevels: 5
+  description: 'Increase hero change to resist Mind-based attacks, for example Paralyze.
+
+    Chance to resist on the first skill level is 50%. Grants complete immunity on
+    the 2nd level.
+
+    Maximum level: 2.
+
+    2nd skill level can be learned after 5 hero level ups.'
