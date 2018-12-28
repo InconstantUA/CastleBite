@@ -27,6 +27,8 @@ public class ChooseYourFirstHero : MonoBehaviour {
     Color factionSpecificAbilityPressedColor;
     [SerializeField]
     InputField playerNameInputField;
+    [SerializeField]
+    int unitTemplateHeight;
 
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
@@ -71,7 +73,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Get hire unit menu
         // HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
         // activate hire unit menu
-        hireUnitGeneric.SetActive(highrableUnitTypes, null, UnitHirePanel.Mode.FirstUnit);
+        hireUnitGeneric.SetActive(highrableUnitTypes, null, UnitHirePanel.Mode.FirstUnit, unitTemplateHeight);
         //// Deactivate standard hire unit button
         //transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
         //// Deactivate standard close hire unit menu button
@@ -183,7 +185,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Get unit types to hire
             // UnitType[] unitTypesToHire = new UnitType[] { UnitType.Knight, UnitType.Ranger, UnitType.Archmage, UnitType.Seraphim };
             // Change UnitTemplate (unit information) preferred height
-            hireUnitGeneric.UnitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = 48;
+            // hireUnitGeneric.UnitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = 48;
             // Get Dominion capital
             // City dominionCapitalCity = GetCityByTypeAndFaction(CityType.Capital, Faction.Dominion);
             // Activate hire unit menu
@@ -219,7 +221,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
             unitsListRT.offsetMin = new Vector2(unitsListPlaceholderRT.offsetMin.x, unitsListPlaceholderRT.offsetMin.y); // left, bottom
             unitsListRT.offsetMax = new Vector2(unitsListPlaceholderRT.offsetMax.x, unitsListPlaceholderRT.offsetMax.y); // -right, -top
             // Change UnitTemplate (unit information) preferred height
-            hireUnitGeneric.UnitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = 80;
+            // hireUnitGeneric.UnitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = 80;
         }
         // Deactivate/Activate hire unit Header, because we will be replaced it with our header
         hireUnitGeneric.transform.Find("Header").gameObject.SetActive(!doActivate);

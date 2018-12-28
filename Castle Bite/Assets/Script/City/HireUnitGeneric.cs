@@ -12,16 +12,9 @@ public class HireUnitGeneric : MonoBehaviour {
     ToggleGroup unitsToHireList;
     [SerializeField]
     PlayerIncomeInfo playerIncomeInfo;
+    const int DefaultUnitTemplateHeight = 80;
     Transform callerCell;
     GameObject unitsPanel;
-
-    public GameObject UnitUIToggleTemplate
-    {
-        get
-        {
-            return unitUIToggleTemplate;
-        }
-    }
 
     public ToggleGroup UnitsToHireList
     {
@@ -67,6 +60,8 @@ public class HireUnitGeneric : MonoBehaviour {
     {
         // remove all toggles for units created from template
         RemoveAllCurrentUnitsToHire();
+        //// disable units hire list (to enable it again and force layout rebuild to correctly display list of units)
+        //unitsToHireList.gameObject.SetActive(false);
         // Deactivate controls
         SetHireUnitMenuButtonsActive(false);
         // check if gold info panel should be enabled
@@ -83,7 +78,21 @@ public class HireUnitGeneric : MonoBehaviour {
         SetCityControlsActive(true);
     }
 
-    public void SetActive(UnitType[] unitTypesToHire, Transform destinationCellTr, UnitHirePanel.Mode mode = UnitHirePanel.Mode.Normal)
+    //IEnumerator UpdateLayout()
+    //{
+    //    // yield return new WaitForEndOfFrame();
+    //    //yield return new WaitForSeconds(5);
+    //    //unitsToHireList.gameObject.SetActive(false);
+    //    //yield return new WaitForFixedUpdate();
+    //    //unitsToHireList.gameObject.SetActive(true);
+    //    //int waitduraiton = 2;
+    //    //yield return new WaitForSeconds(waitduraiton);
+    //    //unitsToHireList.gameObject.SetActive(false);
+    //    //yield return new WaitForSeconds(waitduraiton);
+    //    //unitsToHireList.gameObject.SetActive(true);
+    //}
+
+    public void SetActive(UnitType[] unitTypesToHire, Transform destinationCellTr, UnitHirePanel.Mode mode = UnitHirePanel.Mode.Normal, int unitTemplateHeight = DefaultUnitTemplateHeight)
     {
         // Note: order is important, because of bring to front control
         // Activate intermediate background (bring to front is triggered automatically)
@@ -102,6 +111,8 @@ public class HireUnitGeneric : MonoBehaviour {
         bool firstToggleIsActivated = false;
         // remove all previously configured units to hire
         RemoveAllCurrentUnitsToHire();
+        // Change UnitTemplate (unit information) preferred height
+        unitUIToggleTemplate.GetComponent<LayoutElement>().preferredHeight = unitTemplateHeight;
         // create menu entry for each unit which needs to be hired
         foreach (UnitType unitType in unitTypesToHire)
         {
@@ -126,9 +137,27 @@ public class HireUnitGeneric : MonoBehaviour {
                 transform.root.Find("MiscUI").GetComponentInChildren<UnitInfoPanel>(true).ActivateAdvance(newUnitToggle.UnitToHire, UnitInfoPanel.Align.Right, false);
             }
         }
-        // Force layout update
+        //foreach (ContentSizeFitter csf in unitsToHireList.GetComponentsInChildren<ContentSizeFitter>())
+        //{
+        //    csf.SetLayoutHorizontal();
+        //    csf.SetLayoutVertical();
+        //}
+        //unitsToHireList.gameObject.SetActive(true);
+        // update layout
+        //foreach(Transform t in unitsToHireList.transform)
+        //{
+        //    LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)t);
+        //}
+        // StartCoroutine(UpdateLayout());
+        // Force layout update - doesn't work
         // Note: this should be done to force all fields to be adjusted to the text size
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)unitsToHireList.transform);
+        // LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)unitsToHireList.transform);
+        // code below doesn't work
+        //VerticalLayoutGroup unitsToHireListVerticalLayoutGroup = unitsToHireList.GetComponent<VerticalLayoutGroup>();
+        //unitsToHireListVerticalLayoutGroup.CalculateLayoutInputHorizontal();
+        //unitsToHireListVerticalLayoutGroup.CalculateLayoutInputVertical();
+        //unitsToHireListVerticalLayoutGroup.SetLayoutHorizontal();
+        //unitsToHireListVerticalLayoutGroup.SetLayoutVertical();
         // verify if mode is not hire first hero
         if (mode != UnitHirePanel.Mode.FirstUnit)
         {
