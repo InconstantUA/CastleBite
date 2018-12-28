@@ -97,7 +97,7 @@ public class UnitEquipmentButton : MonoBehaviour {
                 // get party unit, structure: 2UnitCanvas(Clone)-1UnitEquipmentControl-EquipmentButton(this)
                 PartyUnit partyUnit = transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit;
                 // activate unit info panel
-                unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
+                unitInfoPanel.ActivateAdvance(partyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
             }
             else
             {

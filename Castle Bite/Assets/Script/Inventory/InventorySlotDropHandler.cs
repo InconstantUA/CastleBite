@@ -183,7 +183,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
                         // change item position parameter
                         InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot = equipmentSlot;
                         // update unit info UI
-                        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.Mode.Short);
+                        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
                     }
                     else
                     {

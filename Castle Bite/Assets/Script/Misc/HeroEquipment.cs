@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class HeroEquipment : MonoBehaviour {
     [SerializeField]
     GameObject inventoryItemDragHandlerTemplate;
+    [SerializeField]
+    BackgroundIntermediate backgroundIntermediate;
     UnitEquipmentButton lUnitEquipmentButton;
     PartyUnit lPartyUnit;
 
@@ -81,7 +83,7 @@ public class HeroEquipment : MonoBehaviour {
         lUnitEquipmentButton = unitEquipmentButton;
         lPartyUnit = lUnitEquipmentButton.GetComponentInParent<PartyUnitUI>().LPartyUnit;
         // Activate intermediate background
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
+        backgroundIntermediate.SetActive(true, BackgroundIntermediate.Mode.MiddleScreen);
         // activate this menu
         gameObject.SetActive(true);
         // deactivate other uneeded menus
@@ -96,7 +98,7 @@ public class HeroEquipment : MonoBehaviour {
     public void DeactivateAdvance()
     {
         // Deactivate intermediate background
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
+        backgroundIntermediate.SetActive(false);
         // remove all InventoryItemDragHandlers
         foreach(InventoryItemDragHandler itemDragHandler in GetComponentsInChildren<InventoryItemDragHandler>())
         {

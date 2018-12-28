@@ -16,6 +16,7 @@ public class UpgradeUnit : MonoBehaviour {
 
     [SerializeField] Color satisfiedRequirementsColor;
     [SerializeField] Color dissatisfiedRequirementsColor;
+    [SerializeField] BackgroundIntermediate backgroundIntermediate;
 
     public int StatsUpgradeCount
     {
@@ -1432,7 +1433,7 @@ public class UpgradeUnit : MonoBehaviour {
     public void ActivateAdvance(PartyUnitUI partyUnitUI)
     {
         // Activate intermediate background 
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(true);
+        backgroundIntermediate.SetActive(true, BackgroundIntermediate.Mode.MiddleScreen);
         // Activate this object
         gameObject.SetActive(true);
         // Activate upgrade unit controls
@@ -1476,7 +1477,7 @@ public class UpgradeUnit : MonoBehaviour {
     void OnDisable()
     {
         // Deactivate intermediate background 
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
+        backgroundIntermediate.SetActive(false);
         // Deactivate unit info panel
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().gameObject.SetActive(false);
         // Deactivate controls

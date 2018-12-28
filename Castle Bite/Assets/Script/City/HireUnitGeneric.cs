@@ -12,6 +12,8 @@ public class HireUnitGeneric : MonoBehaviour {
     ToggleGroup unitsToHireList;
     [SerializeField]
     PlayerIncomeInfo playerIncomeInfo;
+    [SerializeField]
+    BackgroundIntermediate backgroundIntermediate;
     const int DefaultUnitTemplateHeight = 80;
     Transform callerCell;
     GameObject unitsPanel;
@@ -44,7 +46,7 @@ public class HireUnitGeneric : MonoBehaviour {
 
     void SetBackgroundActive(bool doActivate)
     {
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(doActivate);
+        backgroundIntermediate.SetActive(doActivate, BackgroundIntermediate.Mode.MiddleScreen);
     }
 
     void RemoveAllCurrentUnitsToHire()

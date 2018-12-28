@@ -11,6 +11,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public bool interactable;
     [SerializeField]
     GameObject uniquePowerModifierUITemplate;
+    [SerializeField]
+    BackgroundIntermediate backgroundIntermediate;
 
     string baseStatPreviewStyleStart = "<color=#606060>";
     string baseStatPreviewStyleEnd = "</color>";
@@ -31,7 +33,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     string itemBonusPreviewStyleEnd = "</color>";
 
     public enum Align { Left, Middle, Right }
-    public enum Mode { Full, Short }
+    public enum ContentMode { Full, Short }
 
     void OnDisable()
     {
@@ -40,21 +42,13 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Allow Unit info panel to react on right clicks and close
         interactable = true;
         // Deactivate intermediate background
-        transform.root.Find("MiscUI/BackgroundIntermediate").gameObject.SetActive(false);
+        backgroundIntermediate.SetActive(false);
     }
 
-    void ActivateUnitInfoPanel(PartyUnit partyUnit)
+    void ActivateUnitInfoPanel(PartyUnit partyUnit, BackgroundIntermediate.Mode backgroundMode)
     {
-        //// skip few miliseconds
-        //yield return new WaitForSeconds(0.3f);
-        // get intermediate background game object
-        GameObject intermediateBackgroundGO = transform.root.Find("MiscUI/BackgroundIntermediate").gameObject;
-        // verify if intermediate background is not active yet
-        if (!intermediateBackgroundGO.activeSelf)
-        {
-            // activate it
-            intermediateBackgroundGO.SetActive(true);
-        }
+        // activate intermediate background
+        backgroundIntermediate.SetActive(true, backgroundMode);
         // activate it
         gameObject.SetActive(true);
         // Fill in unit name
@@ -162,16 +156,16 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    public void ActivateAdvance(PartyUnit partyUnit, Align align = Align.Middle, bool isInterractible = true, Mode mode = Mode.Full)
+    public void ActivateAdvance(PartyUnit partyUnit, Align align = Align.Middle, bool isInterractible = true, ContentMode mode = ContentMode.Full, BackgroundIntermediate.Mode backgroundMode = BackgroundIntermediate.Mode.MiddleScreen)
     {
         // verify party unit is not null, if it is null,
         // then user right clicked on a cell without unit
         if (partyUnit)
         {
-            ActivateUnitInfoPanel(partyUnit);
+            ActivateUnitInfoPanel(partyUnit, backgroundMode);
             SetAlign(align);
             interactable = isInterractible;
-            if (mode == Mode.Full)
+            if (mode == ContentMode.Full)
             {
                 // activate full mode Br
                 transform.Find("BrFull").gameObject.SetActive(true);
@@ -180,7 +174,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 // activate unit description
                 transform.Find("Panel/UnitDescription").gameObject.SetActive(true);
             }
-            else if (mode == Mode.Short)
+            else if (mode == ContentMode.Short)
             {
                 // deactivate full mode Br
                 transform.Find("BrFull").gameObject.SetActive(false);

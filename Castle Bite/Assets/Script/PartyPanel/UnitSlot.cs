@@ -74,8 +74,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // on right mouse click
             // verify is partyunit UI is present
             if (GetComponentInChildren<PartyUnitUI>())
-                // show unit info
-                transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInChildren<PartyUnitUI>().LPartyUnit);
+                // show unit info with full screen background
+                transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInChildren<PartyUnitUI>().LPartyUnit, UnitInfoPanel.Align.Middle, true, UnitInfoPanel.ContentMode.Full, BackgroundIntermediate.Mode.FullScreen);
         }
     }
 

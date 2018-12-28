@@ -9,7 +9,7 @@ public class PlayerInfoPanel : MonoBehaviour
     [SerializeField]
     BackgroundUI backgroundUI;
     [SerializeField]
-    int backgroundAlfaTransparency = 222;
+    byte backgroundAlfaTransparency = 222;
     [SerializeField]
     TextButton backButton;
     [SerializeField]
