@@ -452,6 +452,22 @@ public class MapMenuManager : MonoBehaviour {
         activePlayerNameText.text = TurnsManager.Instance.GetActivePlayer().GivenName;
     }
 
+    void FocusOnAStartingCity(Faction playerFaction)
+    {
+        // get starting city by faction
+        City startingCity = ObjectsManager.Instance.GetStartingCityByFaction(playerFaction);
+        // verify if this faction has starting city on a map = it is not null
+        if (startingCity != null)
+        {
+            // Set camera focus on a starting city
+            Camera.main.GetComponent<CameraController>().SetCameraFocus(startingCity.LMapCity);
+        }
+        else
+        {
+            Debug.LogWarning("No starting city for " + playerFaction + " faction.");
+        }
+    }
+
     public void ExecutePreTurnActions(GamePlayer nextPlayer)
     {
         // Get map focus panel
@@ -491,24 +507,20 @@ public class MapMenuManager : MonoBehaviour {
                 }
                 else
                 {
-                    Debug.LogWarning("Failed to find focused game object type");
+                    Debug.LogWarning("Failed to find focused game object type. Fallback to focusing on a starting City");
+                    FocusOnAStartingCity(nextPlayer.Faction);
                 }
+            }
+            else
+            {
+                Debug.LogWarning("Fallback to focusing on a starting City");
+                FocusOnAStartingCity(nextPlayer.Faction);
+
             }
         }
         else
         {
-            // get starting city by faction
-            City startingCity = ObjectsManager.Instance.GetStartingCityByFaction(nextPlayer.Faction);
-            // verify if this faction has starting city on a map = it is not null
-            if (startingCity != null)
-            {
-                // Set camera focus on a starting city
-                Camera.main.GetComponent<CameraController>().SetCameraFocus(startingCity.LMapCity);
-            }
-            else
-            {
-                Debug.LogWarning("No starting city for " + nextPlayer.Faction + " faction.");
-            }
+            FocusOnAStartingCity(nextPlayer.Faction);
         }
         // update active player name
         UpdateActivePlayerNameOnMapUI();
