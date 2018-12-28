@@ -29,6 +29,12 @@ public class ChooseYourFirstHero : MonoBehaviour {
     InputField playerNameInputField;
     [SerializeField]
     int unitTemplateHeight;
+    [SerializeField]
+    LoadingScreen loadingScreen;
+    [SerializeField]
+    StartGameConfig startGameConfig;
+    [SerializeField]
+    Prolog prolog;
 
 
     City GetCityByTypeAndFaction(CityType cityType, Faction faction)
@@ -334,8 +340,10 @@ public class ChooseYourFirstHero : MonoBehaviour {
         }
     }
 
-    public void HireFirstHero()
+    IEnumerator StartGame()
     {
+        // skip all actions until next frame
+        yield return null;
         // enable main menu panel (it was disabled by ChooseChapter)
         MainMenuManager.Instance.MainMenuPanel.SetActive(true);
         // Disable Choose Chapter menu
@@ -358,9 +366,27 @@ public class ChooseYourFirstHero : MonoBehaviour {
         TurnsManager.Instance.GetActivePlayer().PlayerData.playerUniqueAbilityData.playerUniqueAbility = uniqueAbilitiesToggleGroup.GetSelectedToggle().GetComponent<UniqueAbilitySelector>().UniqueAbilityConfig.playerUniqueAbility;
         // GetSelectedUnitType and Get Chosen race starting city and hire first hero
         transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>(true).HireUnit(null, GetSelectedUnitType(), false, ObjectsManager.Instance.GetStartingCityByFaction(selectedFaction));
-        // Deactivate Choose your first hero menu
-        SetActive(false);
+        // Wait a bit
+        yield return new WaitForSeconds(startGameConfig.startingScreenExplicitDelaySeconds);
+        // Unblock mouse input
+        InputBlocker.Instance.SetActive(false);
+        // Deactivate Loading screen
+        loadingScreen.SetActive(false);
         // Activate Prolog
-        transform.root.Find("MiscUI").GetComponentInChildren<Prolog>(true).SetActive(true, ChapterManager.Instance.ActiveChapter.ChapterData);
+        prolog.SetActive(true, ChapterManager.Instance.ActiveChapter.ChapterData);
+        // [Should be last] Deactivate (this) Choose your first hero menu
+        SetActive(false);
+    }
+
+    public void HireFirstHero()
+    {
+        // activate Starting Game loading screen
+        loadingScreen.SetActive(true, startGameConfig.startingGameTextString);
+        // Bring loading screen to front
+        loadingScreen.transform.SetAsLastSibling();
+        // Block mouse input
+        InputBlocker.Instance.SetActive(true);
+        // Start to load a game
+        StartCoroutine(StartGame());
     }
 }

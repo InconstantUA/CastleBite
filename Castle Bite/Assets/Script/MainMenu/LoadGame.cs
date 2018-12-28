@@ -24,8 +24,6 @@ public class LoadGame : MonoBehaviour
     //[SerializeField]
     //GameObject heroPartyOnMapTemplate;
     [SerializeField]
-    int loadWaitTimeSeconds;
-    [SerializeField]
     GameObject loadButton;
     [SerializeField]
     GameObject deleteButton;
@@ -35,6 +33,8 @@ public class LoadGame : MonoBehaviour
     SavesMenu savesMenu;
     [SerializeField]
     LoadingScreen loadingScreen;
+    [SerializeField]
+    LoadGameConfig loadGameConfig;
 
     string fullFilePath;
     TextToggle selectedToggle;
@@ -311,7 +311,7 @@ public class LoadGame : MonoBehaviour
         // Bring loading screen to front
         loadingScreen.transform.SetAsLastSibling();
         // Wait a bit
-        yield return new WaitForSeconds(loadWaitTimeSeconds);
+        yield return new WaitForSeconds(loadGameConfig.loadingScreenExplicitDelaySeconds);
         // Unblock mouse input
         InputBlocker.Instance.SetActive(false);
         // Deactivate Loading screen
@@ -349,7 +349,7 @@ public class LoadGame : MonoBehaviour
         // Close file
         file.Close();
         // Activate Loading screen
-        loadingScreen.SetActive(true);
+        loadingScreen.SetActive(true, loadGameConfig.loadingGameTextString);
         // Block mouse input
         InputBlocker.Instance.SetActive(true);
         // We use coroutine to make sure that all objects are removed before new objects are created and to show some animation

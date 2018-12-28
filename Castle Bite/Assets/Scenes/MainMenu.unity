@@ -3581,12 +3581,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuButton: {fileID: 501636663}
-  loadWaitTimeSeconds: 2
   loadButton: {fileID: 457043948}
   deleteButton: {fileID: 760575897}
   backButton: {fileID: 1381217180}
   savesMenu: {fileID: 689556674}
   loadingScreen: {fileID: 1195473688}
+  loadGameConfig: {fileID: 11400000, guid: 066fb9f7326dc4740a4cef5dc727c5a2, type: 2}
 --- !u!1 &103284473
 GameObject:
   m_ObjectHideFlags: 0
@@ -3960,6 +3960,9 @@ MonoBehaviour:
   factionSpecificAbilityPressedColor: {r: 0, g: 0.5019608, b: 1, a: 1}
   playerNameInputField: {fileID: 941036743}
   unitTemplateHeight: 48
+  loadingScreen: {fileID: 1195473688}
+  startGameConfig: {fileID: 11400000, guid: 03b713dcb59973d4baa36a3f835fd547, type: 2}
+  prolog: {fileID: 1517272800}
 --- !u!114 &107089515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57575,7 +57578,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Continue
+  m_Text: Start
 --- !u!222 &942176037
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -71297,6 +71300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c337bf42a078cfa4d8d7c490456bc14c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadingScreenText: {fileID: 185103798}
 --- !u!114 &1195473689
 MonoBehaviour:
   m_ObjectHideFlags: 0
