@@ -21,6 +21,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 100
   unitBaseHealthMax: 70
   unitHealthMaxIncrementOnLevelUp: 15
+  unitHealthMaxIncrementOnStatsUpgrade: 15
   unitHealthRegenPercent: 10
   unitResistances: []
   unitAbility: 8

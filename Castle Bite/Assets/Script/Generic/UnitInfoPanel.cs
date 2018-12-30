@@ -68,7 +68,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Fill in unit level
         transform.Find("Panel/UnitLevel/Value").GetComponent<Text>().text = partyUnit.UnitLevel.ToString();
         // Fill in unit current and experience required to reach next level
-        transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.UnitExperience.ToString() + "/" + partyUnit.UnitExperienceRequiredToReachNewLevel.ToString();
+        transform.Find("Panel/UnitExperience/Value").GetComponent<Text>().text = partyUnit.UnitExperience.ToString() + "/" + partyUnit.UnitExperienceRequiredToReachNextLevel.ToString();
         // Verify if unit is leader
         if (partyUnit.IsLeader)
         {
@@ -299,7 +299,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //  get stats upgrade count during current upgrade session
             int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
             float baseRegenMultiplier = (float)partyUnit.UnitHealthRegenPercent / 100f;
-            return (int)Math.Floor(partyUnit.UnitHealthMaxIncrementOnLevelUp * statsUpgradeCount * baseRegenMultiplier);
+            return (int)Math.Floor(partyUnit.UnitHealthMaxIncrementOnStatsUpgrade * statsUpgradeCount * baseRegenMultiplier);
         }
         else
         {
@@ -416,7 +416,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             //  get stats upgrade count during current upgrade session
             int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
-            return partyUnit.UnitHealthMaxIncrementOnLevelUp * statsUpgradeCount;
+            return partyUnit.UnitHealthMaxIncrementOnStatsUpgrade * statsUpgradeCount;
         }
         else
         {
@@ -541,8 +541,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                         // add skill resistance to string
                         resistance += skillBonusPreviewStyleStart + "+" + skillResistance + skillBonusPreviewStyleEnd;
                     }
-                    // get skill resistance
-                    int itemsResistance = partyUnit.GetUnitResistanceItemsBonus(source);
+                    // get item resistance
+                    int itemsResistance = partyUnit.GetUnitResistanceItemsBonusBySource(source);
                     // verify if skill resistance is higher than 0
                     if (itemsResistance > 0)
                     {
@@ -594,13 +594,13 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // display effective value
         attributeText.text = partyUnit.GetEffectiveInitiative().ToString();
         // verify if base value does not equal to effective value
-        if (partyUnit.GetEffectiveInitiative() != partyUnit.UnitInitiative)
+        if (partyUnit.GetEffectiveInitiative() != partyUnit.UnitBaseInitiative)
         {
             // Display how effective value is calculated
             // open brackets
             attributeText.text += "(";
             // set base unit move points without bonuses
-            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitInitiative.ToString() + baseStatPreviewStyleEnd;
+            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitBaseInitiative.ToString() + baseStatPreviewStyleEnd;
             // get and add skill bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetInitiativeSkillBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
             // get and add bonus from items to text

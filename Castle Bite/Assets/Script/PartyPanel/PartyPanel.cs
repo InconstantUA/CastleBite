@@ -1328,7 +1328,7 @@ public class PartyPanel : MonoBehaviour {
                             // compare initiative with other unit, if it was found
                             if (unitWithHighestInitiative)
                             {
-                                if (unitUI.LPartyUnit.UnitInitiative > unitWithHighestInitiative.LPartyUnit.UnitInitiative)
+                                if (unitUI.LPartyUnit.GetEffectiveInitiative() > unitWithHighestInitiative.LPartyUnit.GetEffectiveInitiative())
                                 {
                                     // found unit with highest initiative, update unitWithHighestInitiative variable
                                     unitWithHighestInitiative = unitUI;
@@ -2765,7 +2765,7 @@ public class PartyPanel : MonoBehaviour {
                         // verify if unit has not reached new level
                         Text infoPanel = unitUI.GetUnitInfoPanelText();
                         Text statusPanel = unitUI.GetUnitStatusText();
-                        if (newUnitExperienceValue < unitUI.LPartyUnit.UnitExperienceRequiredToReachNewLevel)
+                        if (newUnitExperienceValue < unitUI.LPartyUnit.UnitExperienceRequiredToReachNextLevel)
                         {
                             // unit has not reached new level
                             // just update hist current experience value

@@ -21,6 +21,7 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 125
   unitBaseHealthMax: 50
   unitHealthMaxIncrementOnLevelUp: 15
+  unitHealthMaxIncrementOnStatsUpgrade: 15
   unitHealthRegenPercent: 10
   unitResistances:
   - source: 7
@@ -40,7 +41,7 @@ MonoBehaviour:
   classIsUpgradable: 0
   requiresUnitType: 0
   unlocksUnitTypes: 
-  upgradeCost: 0
+  upgradeCost: 2
   movePointsMax: 12
   movePointsIncrementOnLevelUp: 5
   scoutingRange: 5

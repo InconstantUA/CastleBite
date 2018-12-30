@@ -69,7 +69,7 @@ public enum UnitPowerSource : int
 }
 
 [Serializable]
-public struct Resistance
+public class Resistance
 {
     public UnitPowerSource source;
     public int percent;
@@ -329,16 +329,16 @@ public class PartyUnitData : System.Object
     // Level and experience
     public int unitLevel;
     public int unitExperience;
-    public int unitExperienceRequiredToReachNewLevel;
-    public int unitExperienceReward;
-    public int unitExperienceRewardIncrementOnLevelUp;
+    // public int unitExperienceRequiredToReachNewLevel;
+    // public int unitExperienceReward;
+    // public int unitExperienceRewardIncrementOnLevelUp;
     // Defensive attributes
     public int unitHealthCurr;
-    public int unitHealthMax;
-    public int unitHealthMaxIncrementOnLevelUp;
-    public int unitHealthRegenPercent;
-    public int unitDefense;
-    public Resistance[] unitResistances;
+    // public int unitHealthMax;
+    // public int unitHealthMaxIncrementOnLevelUp;
+    // public int unitHealthRegenPercent;
+    // public int unitDefense;
+    // public Resistance[] unitResistances;
     // Offensive attributes
     public UnitAbility unitAbility;
     public int unitPower;
@@ -350,14 +350,14 @@ public class PartyUnitData : System.Object
     // Unique power modifiers
     public List<UniquePowerModifier> uniquePowerModifiers;
     // Misc Description
-    public string unitRole;
-    public string unitBriefDescription;
-    public string unitFullDescription;
+    // public string unitRole;
+    // public string unitBriefDescription;
+    // public string unitFullDescription;
     // Misc hire and edit unit attributes
-    public int unitCost;
-    public UnitSize unitSize;
-    public bool isInterpartyMovable;
-    public bool isDismissable;
+    // public int unitCost;
+    // public UnitSize unitSize;
+    // public bool isInterpartyMovable;
+    // public bool isDismissable;
     // Unit statuses and [de]buffs
     public UnitStatus unitStatus;
     public UnitDebuff[] unitDebuffs;
@@ -365,19 +365,24 @@ public class PartyUnitData : System.Object
     // For Upgrade
     public int unitUpgradePoints;
     public int unitStatPoints;
-    public bool classIsUpgradable;
+    // public bool classIsUpgradable;
     public int unitClassPoints;
-    public bool canLearnSkills;
+    // public bool canLearnSkills;
     public int unitSkillPoints;
-    // For class upgrade
-    public UnitType requiresUnitType;
-    public UnitType[] unlocksUnitTypes;
-    public int upgradeCost;
+    // For Stats upgrade
+    // Stats-upgrade Dependant attributes:
+    //  Max Health
+    //  Primary Ability Power
+    //  Skill-based Unique Power Modifiers
     public int statsUpgradesCount;
+    // For class upgrade
+    //public UnitType requiresUnitType;
+    //public UnitType[] unlocksUnitTypes;
+    //public int upgradeCost;
     // Misc attributes for map
     public int movePointsCurrent;
-    public int movePointsMax;
-    public int scoutingRange;
+    // public int movePointsMax;
+    // public int scoutingRange;
     // Skills
     // Note: if this array initialization changes, then remimport all Units prefabs and other prefabs which use units prefabs:
     //  (Project Assets -> Prefabs -> Units)
@@ -460,6 +465,7 @@ public class PartyUnit : MonoBehaviour {
     // Data which will be saved later
     [SerializeField]
     PartyUnitData partyUnitData;
+    PartyUnitConfig partyUnitConfig; // init on Awake
 
     // Misc Battle attributes
     private bool hasMoved = false;
@@ -1105,19 +1111,19 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetInitiativeSkillBonus()
     {
-        // return 0;
+        // get skill level multiplied by 15
         return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Initiative).currentSkillLevel * 15;
     }
 
     public int GetInitiativeItemsBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Initiative, UnitInitiative);
+        return GetGenericStatItemBonus(UnitStat.Initiative, UnitBaseInitiative);
     }
 
     public int GetEffectiveInitiative()
     {
         // get and return sum of default scouting range plus skill bonus
-        return UnitInitiative + GetInitiativeSkillBonus() + GetInitiativeItemsBonus();
+        return UnitBaseInitiative + GetInitiativeSkillBonus() + GetInitiativeItemsBonus();
     }
 
     public int GetUnitHealthRegenPerDay()
@@ -1177,7 +1183,7 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public int GetUnitResistanceItemsBonus(UnitPowerSource source)
+    public int GetUnitResistanceItemsBonusBySource(UnitPowerSource source)
     {
         switch (source)
         {
@@ -1194,6 +1200,7 @@ public class PartyUnit : MonoBehaviour {
             case UnitPowerSource.Earth:
             case UnitPowerSource.Life:
             case UnitPowerSource.Physical:
+                Debug.LogWarning("Not implemented resistance source: " + source);
                 return 0;
             default:
                 Debug.LogError("Unknown source " + source.ToString());
@@ -1203,23 +1210,24 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetUnitBaseResistance(UnitPowerSource source)
     {
-        // verify if unit has this base resistance
-        foreach (Resistance resistance in UnitResistances)
+        // Get Resistance from config
+        Resistance resistance = Array.Find(UnitBaseResistances, e => e.source == source);
+        // Verify if unit has this resistance = value is not null
+        if (resistance != null)
         {
-            // verify if there is resistance with the same name
-            if (resistance.source == source)
-            {
-                // return resistance percent
-                return resistance.percent;
-            }
+            return resistance.percent;
         }
-        return 0;
+        else
+        {
+            // no resistance = 0
+            return 0;
+        }
     }
 
     public int GetUnitEffectiveResistance(UnitPowerSource source)
     {
         // get and return effective resistance
-        return GetUnitBaseResistance(source) + GetUnitResistanceSkillBonus(source) + GetUnitResistanceItemsBonus(source);
+        return GetUnitBaseResistance(source) + GetUnitResistanceSkillBonus(source) + GetUnitResistanceItemsBonusBySource(source);
     }
 
     bool ApplyActiveUPM(UniquePowerModifier uniquePowerModifier, bool doPreview = false)
@@ -1863,7 +1871,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // return partyUnitData.unitName;
             // search for display name in config
-            return Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType).unitDisplayName;
+            return PartyUnitConfig.unitDisplayName;
         }
     }
 
@@ -1899,7 +1907,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.unitLeadership;
             // search for base leadership in config
-            return Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType).unitLeadership;
+            return PartyUnitConfig.unitLeadership;
         }
 
         //set
@@ -1947,44 +1955,50 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public int UnitExperienceRequiredToReachNewLevel
+    public int UnitExperienceRequiredToReachNextLevel
     {
         get
         {
-            return partyUnitData.unitExperienceRequiredToReachNewLevel;
+            //return partyUnitData.unitExperienceRequiredToReachNewLevel;
+            // Experience required to reach next level depends on the current unit level
+            // Call for a function which calculates it
+            return PartyUnitConfig.GetUnitExperienceRequiredToReachNextLevel(UnitLevel);
         }
 
-        set
-        {
-            partyUnitData.unitExperienceRequiredToReachNewLevel = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitExperienceRequiredToReachNewLevel = value;
+        //}
     }
 
     public int UnitExperienceReward
     {
         get
         {
-            return partyUnitData.unitExperienceReward;
+            //return partyUnitData.unitExperienceReward;
+            // Experience reward depends on the current unit level
+            // Call for a function which calculates it
+            return PartyUnitConfig.GetUnitExperienceReward(UnitLevel);
         }
 
-        set
-        {
-            partyUnitData.unitExperienceReward = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitExperienceReward = value;
+        //}
     }
 
-    public int UnitExperienceRewardIncrementOnLevelUp
-    {
-        get
-        {
-            return partyUnitData.unitExperienceRewardIncrementOnLevelUp;
-        }
+    //public int UnitExperienceRewardIncrementOnLevelUp
+    //{
+    //    get
+    //    {
+    //        return partyUnitData.unitExperienceRewardIncrementOnLevelUp;
+    //    }
 
-        set
-        {
-            partyUnitData.unitExperienceRewardIncrementOnLevelUp = value;
-        }
-    }
+    //    set
+    //    {
+    //        partyUnitData.unitExperienceRewardIncrementOnLevelUp = value;
+    //    }
+    //}
 
     public int UnitHealthCurr
     {
@@ -2005,67 +2019,77 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.unitHealthMax;
+            //return partyUnitData.unitHealthMax;
+            // Max Health depends on the current stats upgrades count
+            // Call for a function which calculates it
+            return PartyUnitConfig.GetUnitMaxHealth(StatsUpgradesCount);
         }
 
-        set
-        {
-            partyUnitData.unitHealthMax = value;
-            // trigger event
-            EventsAdmin.Instance.IHasChanged(this, new HealthMax());
-        }
+        //set
+        //{
+        //    partyUnitData.unitHealthMax = value;
+        //}
     }
 
-    public int UnitHealthMaxIncrementOnLevelUp
+    public int UnitHealthMaxIncrementOnStatsUpgrade
     {
         get
         {
-            return partyUnitData.unitHealthMaxIncrementOnLevelUp;
+            //return partyUnitData.unitHealthMaxIncrementOnLevelUp;
+            // Get data from config
+            return PartyUnitConfig.unitHealthMaxIncrementOnStatsUpgrade;
         }
 
-        set
-        {
-            partyUnitData.unitHealthMaxIncrementOnLevelUp = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitHealthMaxIncrementOnLevelUp = value;
+        //}
     }
 
     public int UnitHealthRegenPercent
     {
         get
         {
-            return partyUnitData.unitHealthRegenPercent;
+            //return partyUnitData.unitHealthRegenPercent;
+            // Get data from config
+            return PartyUnitConfig.unitHealthRegenPercent;
         }
 
-        set
-        {
-            partyUnitData.unitHealthRegenPercent = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitHealthRegenPercent = value;
+        //}
     }
 
     public int UnitDefense
     {
         get
         {
-            return partyUnitData.unitDefense;
+            //return partyUnitData.unitDefense;
+            // Defense != Physical resistance
+            // Defense is all around protection agains all sources
+            // Get it from config
+            return partyUnitConfig.unitDefense;
         }
 
-        set
-        {
-            partyUnitData.unitDefense = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitDefense = value;
+        //}
     }
 
-    public Resistance[] UnitResistances
+    public Resistance[] UnitBaseResistances
     {
         get
         {
-            return partyUnitData.unitResistances;
+            // Get Resistances from config
+            return PartyUnitConfig.unitResistances;
         }
 
-        set
-        {
-            partyUnitData.unitResistances = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitResistances = value;
+        //}
     }
 
     public UnitAbility UnitAbility
@@ -2146,108 +2170,124 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public int UnitInitiative
+    public int UnitBaseInitiative
     {
         get
         {
-            return partyUnitData.unitInitiative;
+            //return partyUnitData.unitInitiative;
+            // Get it from config
+            return PartyUnitConfig.unitInitiative;
         }
 
-        set
-        {
-            partyUnitData.unitInitiative = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitInitiative = value;
+        //}
     }
 
     public string UnitRole
     {
         get
         {
-            return partyUnitData.unitRole;
+            //return partyUnitData.unitRole;
+            // Get it from config
+            return partyUnitConfig.unitRole;
         }
 
-        set
-        {
-            partyUnitData.unitRole = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitRole = value;
+        //}
     }
 
     public string UnitBriefDescription
     {
         get
         {
-            return partyUnitData.unitBriefDescription;
+            //return partyUnitData.unitBriefDescription;
+            // Get it from config
+            return partyUnitConfig.unitBriefDescription;
         }
 
-        set
-        {
-            partyUnitData.unitBriefDescription = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitBriefDescription = value;
+        //}
     }
 
     public string UnitFullDescription
     {
         get
         {
-            return partyUnitData.unitFullDescription;
+            // return partyUnitData.unitFullDescription;
+            // Get it from config
+            return partyUnitConfig.unitFullDescription;
         }
 
-        set
-        {
-            partyUnitData.unitFullDescription = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitFullDescription = value;
+        //}
     }
 
     public int UnitCost
     {
         get
         {
-            return partyUnitData.unitCost;
+            //return partyUnitData.unitCost;
+            // Get it from config
+            return partyUnitConfig.unitCost;
         }
 
-        set
-        {
-            partyUnitData.unitCost = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitCost = value;
+        //}
     }
 
     public UnitSize UnitSize
     {
         get
         {
-            return partyUnitData.unitSize;
+            //return partyUnitData.unitSize;
+            // Get it from config
+            return partyUnitConfig.unitSize;
         }
 
-        set
-        {
-            partyUnitData.unitSize = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitSize = value;
+        //}
     }
 
     public bool IsInterpartyMovable
     {
         get
         {
-            return partyUnitData.isInterpartyMovable;
+            //return partyUnitData.isInterpartyMovable;
+            // Get it from config
+            return partyUnitConfig.isInterpartyMovable;
         }
 
-        set
-        {
-            partyUnitData.isInterpartyMovable = value;
-        }
+        //set
+        //{
+        //    partyUnitData.isInterpartyMovable = value;
+        //}
     }
 
     public bool IsDismissable
     {
         get
         {
-            return partyUnitData.isDismissable;
+            //return partyUnitData.isDismissable;
+            // Get it from config
+            return partyUnitConfig.isDismissable;
         }
 
-        set
-        {
-            partyUnitData.isDismissable = value;
-        }
+        //set
+        //{
+        //    partyUnitData.isDismissable = value;
+        //}
     }
 
     public UnitStatus UnitStatus
@@ -2319,13 +2359,15 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.classIsUpgradable;
+            //return partyUnitData.classIsUpgradable;
+            // Get it from config
+            return partyUnitConfig.classIsUpgradable;
         }
 
-        set
-        {
-            partyUnitData.classIsUpgradable = value;
-        }
+        //set
+        //{
+        //    partyUnitData.classIsUpgradable = value;
+        //}
     }
 
     public int UnitClassPoints
@@ -2345,13 +2387,15 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.canLearnSkills;
+            // return partyUnitData.canLearnSkills;
+            // Get it from config
+            return partyUnitConfig.canLearnSkills;
         }
 
-        set
-        {
-            partyUnitData.canLearnSkills = value;
-        }
+        //set
+        //{
+        //    partyUnitData.canLearnSkills = value;
+        //}
     }
 
     public int UnitSkillPoints
@@ -2371,39 +2415,45 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.requiresUnitType;
+            //return partyUnitData.requiresUnitType;
+            // Get it from config
+            return partyUnitConfig.requiresUnitType;
         }
 
-        set
-        {
-            partyUnitData.requiresUnitType = value;
-        }
+        //set
+        //{
+        //    partyUnitData.requiresUnitType = value;
+        //}
     }
 
     public UnitType[] UnlocksUnitTypes
     {
         get
         {
-            return partyUnitData.unlocksUnitTypes;
+            //return partyUnitData.unlocksUnitTypes;
+            // Get it from config
+            return partyUnitConfig.unlocksUnitTypes;
         }
 
-        set
-        {
-            partyUnitData.unlocksUnitTypes = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unlocksUnitTypes = value;
+        //}
     }
 
     public int UpgradeCost
     {
         get
         {
-            return partyUnitData.upgradeCost;
+            //return partyUnitData.upgradeCost;
+            // Get it from config
+            return partyUnitConfig.upgradeCost;
         }
 
-        set
-        {
-            partyUnitData.upgradeCost = value;
-        }
+        //set
+        //{
+        //    partyUnitData.upgradeCost = value;
+        //}
     }
 
     public int StatsUpgradesCount
@@ -2416,6 +2466,8 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.statsUpgradesCount = value;
+            // trigger events for all stats-dependant attributes
+            EventsAdmin.Instance.IHasChanged(this, new HealthMax());
         }
     }
 
@@ -2436,26 +2488,30 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.movePointsMax;
+            //return partyUnitData.movePointsMax;
+            // Get it from config
+            return partyUnitConfig.movePointsMax;
         }
 
-        set
-        {
-            partyUnitData.movePointsMax = value;
-        }
+        //set
+        //{
+        //    partyUnitData.movePointsMax = value;
+        //}
     }
 
     public int ScoutingRange
     {
         get
         {
-            return partyUnitData.scoutingRange;
+            //return partyUnitData.scoutingRange;
+            // Get it from config
+            return partyUnitConfig.scoutingRange;
         }
 
-        set
-        {
-            partyUnitData.scoutingRange = value;
-        }
+        //set
+        //{
+        //    partyUnitData.scoutingRange = value;
+        //}
     }
 
     public UnitSkillData[] UnitSkillsData
@@ -2537,6 +2593,19 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData = value;
+        }
+    }
+
+    public PartyUnitConfig PartyUnitConfig
+    {
+        get
+        {
+            if (partyUnitConfig == null)
+            {
+                // link config
+                partyUnitConfig = Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType);
+            }
+            return partyUnitConfig;
         }
     }
 }

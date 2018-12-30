@@ -171,7 +171,7 @@ public class HeroParty : MonoBehaviour {
                     // compare initiative with other unit, if it was found
                     if (unitWithHighestInitiative != null)
                     {
-                        if (partyUnit.UnitInitiative > unitWithHighestInitiative.UnitInitiative)
+                        if (partyUnit.GetEffectiveInitiative() > unitWithHighestInitiative.GetEffectiveInitiative())
                         {
                             // found unit with highest initiative, update unitWithHighestInitiative variable
                             unitWithHighestInitiative = partyUnit;

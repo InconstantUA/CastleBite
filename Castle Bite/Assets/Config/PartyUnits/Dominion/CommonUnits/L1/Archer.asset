@@ -21,8 +21,11 @@ MonoBehaviour:
   unitExperienceRewardIncrementOnLevelUp: 100
   unitBaseHealthMax: 60
   unitHealthMaxIncrementOnLevelUp: 15
+  unitHealthMaxIncrementOnStatsUpgrade: 15
   unitHealthRegenPercent: 10
-  unitResistances: []
+  unitResistances:
+  - source: 0
+    percent: 0
   unitAbility: 12
   unitInitiative: 60
   unitRole: Dealing damage from a long range

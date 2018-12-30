@@ -606,12 +606,12 @@ public class BattleScreen : MonoBehaviour {
         if (playerNextUnitUI && enemyNextUnitUI)
         {
             // both parties still have units to move
-            if (playerNextUnitUI.LPartyUnit.UnitInitiative > enemyNextUnitUI.LPartyUnit.UnitInitiative)
+            if (playerNextUnitUI.LPartyUnit.UnitBaseInitiative > enemyNextUnitUI.LPartyUnit.UnitBaseInitiative)
             {
                 // player has higher initiative
                 return playerNextUnitUI;
             }
-            else if (playerNextUnitUI.LPartyUnit.UnitInitiative == enemyNextUnitUI.LPartyUnit.UnitInitiative)
+            else if (playerNextUnitUI.LPartyUnit.UnitBaseInitiative == enemyNextUnitUI.LPartyUnit.UnitBaseInitiative)
             {
                 // player and enemy has equal initiative
                 // randomly choose between player and enemy units

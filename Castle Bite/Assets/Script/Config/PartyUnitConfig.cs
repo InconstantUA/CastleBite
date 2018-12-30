@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "PartyUnitConfig", menuName = "Config/PartyUnit")]
 public class PartyUnitConfig : ScriptableObject
@@ -13,16 +14,23 @@ public class PartyUnitConfig : ScriptableObject
     // Level and experience
     public int unitBaseExperienceRequiredToReachNewLevel;
     public int unitExperienceRequiredToReachNewLevelIncrementOnLevelUp;
+    //() public int GetUnitExperienceRequiredToReachNextLevel(int currentUnitLevel);
     public int unitBaseExperienceReward; // experience reward on 1st level
     public int unitExperienceRewardIncrementOnLevelUp;
+    //() public int GetUnitExperienceReward(int currentUnitLevel);
     // Defensive attributes
+    // All-around defense, applied before any other resistances are applied.
+    public int unitDefense;
     //-public int unitHealthMax;
     public int unitBaseHealthMax; // max health on 1st level
-    //+() public int GetUnitHealthMax() - get health based on lvl
-    public int unitHealthMaxIncrementOnLevelUp;
+    //() public int GetUnitMaxHealth(StatsUpgradesCount) - get health based on number of stats upgrades
+    [FormerlySerializedAs("unitHealthMaxIncrementOnStatsUpgrade")]
+    // public int unitHealthMaxIncrementOnLevelUp;
+    // [FormerlySerializedAs("unitHealthMaxIncrementOnLevelUp")]
+    public int unitHealthMaxIncrementOnStatsUpgrade;
+    // [FormerlySerializedAs("unitHealthMaxIncrementOnStatsUpgrade")]
+    // public int unitHealthMaxIncrementOnStatsUpgradeNew;
     public int unitHealthRegenPercent;
-    //-public int unitDefense;
-    //+add physical resistance instead
     public Resistance[] unitResistances;
     // Offensive attributes
     public UnitAbility unitAbility;
@@ -61,4 +69,20 @@ public class PartyUnitConfig : ScriptableObject
     // UI attributes
 
     // Unit Equipment
+
+    // Functions
+    public int GetUnitExperienceRequiredToReachNextLevel(int currentUnitLevel)
+    {
+        return unitBaseExperienceRequiredToReachNewLevel + unitExperienceRequiredToReachNewLevelIncrementOnLevelUp * currentUnitLevel;
+    }
+
+    public int GetUnitExperienceReward(int currentUnitLevel)
+    {
+        return unitBaseExperienceReward + unitExperienceRewardIncrementOnLevelUp * currentUnitLevel;
+    }
+
+    public int GetUnitMaxHealth(int statsUpgradesCount)
+    {
+        return unitBaseHealthMax + unitHealthMaxIncrementOnStatsUpgrade * statsUpgradesCount;
+    }
 }

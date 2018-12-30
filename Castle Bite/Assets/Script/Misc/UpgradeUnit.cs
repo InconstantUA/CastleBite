@@ -230,8 +230,9 @@ public class UpgradeUnit : MonoBehaviour {
     void UpgradeHealth()
     {
         // upgrade health in unit object
-        focusedPartyUnit.UnitHealthCurr = (focusedPartyUnit.UnitHealthCurr + focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
-        focusedPartyUnit.UnitHealthMax = (focusedPartyUnit.UnitHealthMax + focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
+        focusedPartyUnit.UnitHealthCurr = (focusedPartyUnit.UnitHealthCurr + focusedPartyUnit.UnitHealthMaxIncrementOnStatsUpgrade);
+        // Max health is calculated upon Get
+        // focusedPartyUnit.UnitHealthMax = (focusedPartyUnit.UnitHealthMax + focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
         // upgrade health in unit Info UI
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitHealthInfo(focusedPartyUnit);
         //UpdateHealthInfo();
@@ -240,8 +241,9 @@ public class UpgradeUnit : MonoBehaviour {
     void DowngradeHealth()
     {
         // downgrade health in unit object
-        focusedPartyUnit.UnitHealthCurr = (focusedPartyUnit.UnitHealthCurr - focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
-        focusedPartyUnit.UnitHealthMax = (focusedPartyUnit.UnitHealthMax - focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
+        focusedPartyUnit.UnitHealthCurr = (focusedPartyUnit.UnitHealthCurr - focusedPartyUnit.UnitHealthMaxIncrementOnStatsUpgrade);
+        // Max health is calculated upon Get
+        // focusedPartyUnit.UnitHealthMax = (focusedPartyUnit.UnitHealthMax - focusedPartyUnit.UnitHealthMaxIncrementOnLevelUp);
         // upgrade health in unit Info UI
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitHealthInfo(focusedPartyUnit);
         //UpdateHealthInfo();
