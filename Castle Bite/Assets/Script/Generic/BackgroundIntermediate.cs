@@ -50,7 +50,7 @@ public class BackgroundIntermediate : MonoBehaviour
             // set background image transparency
             backgroundImage.color = new Color32(currentColor32.r, currentColor32.g, currentColor32.b, colorAlpha);
             // activate background image
-            Debug.Log("Activate " + backgroundImage.name + " background");
+            // Debug.Log("Activate " + backgroundImage.name + " background");
             backgroundImage.gameObject.SetActive(doActivate);
         }
         else

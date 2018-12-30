@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
-  m_Name: Offence
+  m_Name: Absolute Reflexes
   m_EditorClassIdentifier: 
-  unitSkill: 1
-  skillDisplayName: Offence
+  unitSkill: 12
+  skillDisplayName: Absolute Reflexes
   maxSkillLevel: 3
   requiredHeroLevel: 2
   levelUpEveryXHeroLevels: 2
-  description: 'Increase hero attack power by 15% multiplied by skill level.
+  description: 'Increase hero initiative by 15 points multiplied by skill level.
 
     Maximum level: 3.
 

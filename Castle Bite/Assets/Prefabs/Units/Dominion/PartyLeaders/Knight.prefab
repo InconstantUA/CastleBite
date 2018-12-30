@@ -1,21 +1,11 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &100100000
-Prefab:
-  m_ObjectHideFlags: 1
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications: []
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1737202263520784}
-  m_IsPrefabAsset: 1
 --- !u!1 &1737202263520784
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 224364017913245646}
@@ -27,11 +17,31 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!224 &224364017913245646
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1737202263520784}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &114844794765295986
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1737202263520784}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -100,60 +110,33 @@ MonoBehaviour:
     movePointsCurrent: 10
     movePointsMax: 10
     scoutingRange: 5
-    unitSkills:
-    - mName: 0
-      mLevel:
-        mCurrent: 0
-    - mName: 1
-      mLevel:
-        mCurrent: 0
-    - mName: 2
-      mLevel:
-        mCurrent: 0
-    - mName: 3
-      mLevel:
-        mCurrent: 0
-    - mName: 4
-      mLevel:
-        mCurrent: 0
-    - mName: 5
-      mLevel:
-        mCurrent: 0
-    - mName: 8
-      mLevel:
-        mCurrent: 0
-    - mName: 7
-      mLevel:
-        mCurrent: 0
-    - mName: 6
-      mLevel:
-        mCurrent: 0
-    - mName: 9
-      mLevel:
-        mCurrent: 0
-    - mName: 10
-      mLevel:
-        mCurrent: 0
-    - mName: 11
-      mLevel:
-        mCurrent: 0
-    unitCellAddress: 
+    unitSkillsData:
+    - unitSkill: 0
+      currentSkillLevel: 0
+    - unitSkill: 12
+      currentSkillLevel: 0
+    - unitSkill: 1
+      currentSkillLevel: 0
+    - unitSkill: 2
+      currentSkillLevel: 0
+    - unitSkill: 3
+      currentSkillLevel: 0
+    - unitSkill: 4
+      currentSkillLevel: 0
+    - unitSkill: 5
+      currentSkillLevel: 0
+    - unitSkill: 8
+      currentSkillLevel: 0
+    - unitSkill: 7
+      currentSkillLevel: 0
+    - unitSkill: 6
+      currentSkillLevel: 0
+    - unitSkill: 9
+      currentSkillLevel: 0
+    - unitSkill: 10
+      currentSkillLevel: 0
+    - unitSkill: 11
+      currentSkillLevel: 0
+    unitPPRow: 0
+    unitPPCell: 0
     unitIventory: []
---- !u!224 &224364017913245646
-RectTransform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1737202263520784}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}

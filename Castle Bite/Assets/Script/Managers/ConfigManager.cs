@@ -17,6 +17,8 @@ public class ConfigManager : MonoBehaviour
     UnitSkillConfig[] unitSkillConfigs;
     [SerializeField]
     GameSaveConfig gameSaveConfig;
+    [SerializeField]
+    PartyUnitConfig[] partyUnitConfigs;
 
     void Awake()
     {
@@ -80,6 +82,19 @@ public class ConfigManager : MonoBehaviour
         set
         {
             gameSaveConfig = value;
+        }
+    }
+
+    public PartyUnitConfig[] PartyUnitConfigs
+    {
+        get
+        {
+            return partyUnitConfigs;
+        }
+
+        set
+        {
+            partyUnitConfigs = value;
         }
     }
 }

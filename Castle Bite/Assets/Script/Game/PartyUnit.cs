@@ -56,7 +56,7 @@ public enum UnitAbility
 [Serializable]
 public enum UnitPowerSource : int
 {
-    Physical,   // Attack with metal weapons
+    Physical,   // Example: attack with metal weapons
     Water,
     Fire,
     Earth,
@@ -122,7 +122,7 @@ public enum UnitBuff : int
 public enum UnitSkill
 {
     Leadership,
-    Offence,
+    Offense,
     Defense,
     Pathfinding,
     Scouting,
@@ -132,7 +132,8 @@ public enum UnitSkill
     WaterResistance,
     MindResistance,
     ShardAura,
-    LifelessContinuation
+    LifelessContinuation,
+    Initiative
 }
 
 [Serializable]
@@ -279,17 +280,17 @@ public enum ModifierCalculatedHow
 }
 
 [Serializable]
-public enum ModifierAppliedHow
-{
-    Active,
-    Passive
-}
-
-[Serializable]
 public enum ModifierAppliedTo
 {
     CurrentStat,
     MaxStat
+}
+
+[Serializable]
+public enum ModifierAppliedHow
+{
+    Active,
+    Passive
 }
 
 [Serializable]
@@ -319,11 +320,11 @@ public class UnitStatusModifier : System.Object
 public class PartyUnitData : System.Object
 {
     // Misc attributes
-    public string unitName;
+    // public string unitName;
     public UnitType unitType;
     // Leader attributes
     public bool isLeader;
-    public int unitLeadership;
+    // public int unitLeadership;
     public string givenName;
     // Level and experience
     public int unitLevel;
@@ -378,6 +379,10 @@ public class PartyUnitData : System.Object
     public int movePointsMax;
     public int scoutingRange;
     // Skills
+    // Note: if this array initialization changes, then remimport all Units prefabs and other prefabs which use units prefabs:
+    //  (Project Assets -> Prefabs -> Units)
+    //  (Project Assets -> Prefabs -> Chapters)
+    //  Make sure that there is no units who are not inheriting from prefab in the Chapter
     public UnitSkillData[] unitSkillsData = new UnitSkillData[]
     {
         new UnitSkillData(
@@ -385,7 +390,11 @@ public class PartyUnitData : System.Object
             0
         ),
         new UnitSkillData(
-            UnitSkill.Offence,
+            UnitSkill.Initiative,
+            0
+        ),
+        new UnitSkillData(
+            UnitSkill.Offense,
             0
         ),
         new UnitSkillData(
@@ -428,123 +437,6 @@ public class PartyUnitData : System.Object
             UnitSkill.LifelessContinuation,
             0
             )
-        //new UnitSkillData(
-        //    UnitSkill.Leadership,
-        //    "Leadership",
-        //    0, 3,
-        //    3, 2,
-        //    "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
-        //    + "\r\n" + "Maximum level: 3."
-        //    //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.Offence,
-        //    "Offence",
-        //    0, 3,
-        //    2, 2,
-        //    "Increase hero attack power by 15% multiplied by skill level."
-        //    + "\r\n" + "Maximum level: 3."
-        //    //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.Defense,
-        //    "Defense",
-        //    0, 3,
-        //    2, 2,
-        //    "Increase hero defense from all sources by adding 10 defense points multiplied by skill level to current hero defense value."
-        //    + "\r\n" + "Maximum level: 3."
-        //    //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.Pathfinding,
-        //    "Pathfinding",
-        //    0, 3,
-        //    2, 1,
-        //    "Increase hero move points by 50% multiplied by skill level."
-        //    + "\r\n" + "Maximum level: 3."
-        //    //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.Scouting,
-        //    "Scouting",
-        //    0, 3,
-        //    2, 1,
-        //    "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
-        //    + "\r\n" + "Maximum level: 3."
-        //    //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.Healing,
-        //    "Healing",
-        //    0, 2,
-        //    2, 3,
-        //    "Increase hero and its party members daily healing rate by 15% from total health multiplied by skill level."
-        //    + "\r\n" + "Maximum level: 2."
-        //    //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.WaterResistance,
-        //    "Water Resistance",
-        //    0, 2,
-        //    5, 5,
-        //    "Increase hero change to resist Water-based attacks, for example Chill."
-        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-        //    + "\r\n" + "Maximum level: 2."
-        //    //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.FireResistance,
-        //    "Fire Resistance",
-        //    0, 2,
-        //    5, 5,
-        //    "Increase hero change to resist Fire-based attacks, for example Burning."
-        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-        //    + "\r\n" + "Maximum level: 2."
-        //    //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.DeathResistance,
-        //    "Death Resistance",
-        //    0, 2,
-        //    5, 5,
-        //    "Increase hero change to resist Death-based attacks, for example Poison."
-        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-        //    + "\r\n" + "Maximum level: 2."
-        //    //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.MindResistance,
-        //    "Mind Resistance",
-        //    0, 2,
-        //    7, 7,
-        //    "Increase hero change to resist Mind-based attacks, for example paralyze."
-        //    + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-        //    + "\r\n" + "Maximum level: 2."
-        //    //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.ShardAura,
-        //    "Shard Aura",
-        //    0, 3,
-        //    8, 5,
-        //    "Allow hero to use shards which emit different aura based on the shard type."
-        //    + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
-        //    + "\r\n" + "Each level increases shard's base aura bonus by 100%."
-        //    + "\r\n" + "Maximum level: 3."
-        //    //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-        //),
-        //new UnitSkillData(
-        //    UnitSkill.LifelessContinuation,
-        //    "Lifeless Continuation",
-        //    0, 1,
-        //    9, 0,
-        //    "Allow hero to continue battle after death."
-        //    + "\r\n" + "After death all debuffs are removed and hero enters spirit form with half of the normal health and physical damage immunity. "
-        //    + "Hero can be resurected by friendly party unit or by using blood stone during the battle. "
-        //    + "If not resurected before the end of the battle hero dies without gainig experience."
-        //    + "\r\n" + "Maximum level: 1."
-        //    //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-        //)
     };
     // UI attributes
     public PartyPanel.Row unitPPRow;  // used during game save and load and when party UI is displayed
@@ -571,131 +463,6 @@ public class PartyUnit : MonoBehaviour {
 
     // Misc Battle attributes
     private bool hasMoved = false;
-
-    //void Reset()
-    //{
-    //    Debug.Log("Reset to default values");
-    //    partyUnitData.unitSkills = new UnitSkill[]
-    //    {
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.Leadership,
-    //        "Leadership",
-    //        0, 3,
-    //        3, 2,
-    //        "Allows hero to have 1 multiplied by skill level additional unit(s) in his party."
-    //        + "\r\n" + "Maximum level: 3."
-    //        //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.Offence,
-    //        "Offence",
-    //        0, 3,
-    //        2, 2,
-    //        "Increase hero attack power by 15% multiplied by skill level."
-    //        + "\r\n" + "Maximum level: 3."
-    //        //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.Defense,
-    //        "Defense",
-    //        0, 3,
-    //        2, 2,
-    //        "Increase hero defense from all sources by adding 10 defense points multiplied by skill level to current hero defense value."
-    //        + "\r\n" + "Maximum level: 3."
-    //        //+ "\r\n" + "2nd and higher skill levels can be learned after 2 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.Pathfinding,
-    //        "Pathfinding",
-    //        0, 3,
-    //        2, 1,
-    //        "Increase hero move points by 50% multiplied by skill level."
-    //        + "\r\n" + "Maximum level: 3."
-    //        //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.Scouting,
-    //        "Scouting",
-    //        0, 3,
-    //        2, 1,
-    //        "Increase hero scouting range in the fog of war by 1 tile multiplied by skill level."
-    //        + "\r\n" + "Maximum level: 3."
-    //        //+ "\r\n" + "2nd and higher skill levels can be learned one each hero level up."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.Healing,
-    //        "Healing",
-    //        0, 2,
-    //        2, 3,
-    //        "Increase hero and its party members daily healing rate by 15% from total health multiplied by skill level."
-    //        + "\r\n" + "Maximum level: 2."
-    //        //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.WaterResistance,
-    //        "Water Resistance",
-    //        0, 2,
-    //        5, 5,
-    //        "Increase hero change to resist Water-based attacks, for example Chill."
-    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-    //        + "\r\n" + "Maximum level: 2."
-    //        //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.FireResistance,
-    //        "Fire Resistance",
-    //        0, 2,
-    //        5, 5,
-    //        "Increase hero change to resist Fire-based attacks, for example Burning."
-    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-    //        + "\r\n" + "Maximum level: 2."
-    //        //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.DeathResistance,
-    //        "Death Resistance",
-    //        0, 2,
-    //        5, 5,
-    //        "Increase hero change to resist Death-based attacks, for example Poison."
-    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-    //        + "\r\n" + "Maximum level: 2."
-    //        //+ "\r\n" + "2nd skill level can be learned after 5 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.MindResistance,
-    //        "Mind Resistance",
-    //        0, 2,
-    //        7, 7,
-    //        "Increase hero change to resist Mind-based attacks, for example paralyze."
-    //        + "\r\n" + "Chance to resist on the first skill level is 50%. Grants complete immunity on the 2nd level."
-    //        + "\r\n" + "Maximum level: 2."
-    //        //+ "\r\n" + "2nd skill level can be learned after 7 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.ShardAura,
-    //        "Shard Aura",
-    //        0, 3,
-    //        8, 5,
-    //        "Allow hero to use shards which emit different aura based on the shard type."
-    //        + "\r\n" + "Earth shard - defence, Sun shard - offence, Lighting shard - initiative."
-    //        + "\r\n" + "Each level increases shards aura bonus by 5."
-    //        + "\r\n" + "Maximum level: 3."
-    //        //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-    //    ),
-    //    new UnitSkill(
-    //        UnitSkill.SkillName.LifelessContinuation,
-    //        "Lifeless Continuation",
-    //        0, 1,
-    //        9, 0,
-    //        "Allow hero to continue battle after death."
-    //        + "\r\n" + "After death all debuffs are removed and hero enters spirit form with half of the normal health and physical damage immunity. "
-    //        + "Hero can be resurected by friendly party unit or by using blood stone during the battle. "
-    //        + "If not resurected before the end of the battle hero dies without gainig experience."
-    //        + "\r\n" + "Maximum level: 1."
-    //        //+ "\r\n" + "2nd skill level can be learned after 3 hero level ups."
-    //    )
-    //    };
-    //}
 
     void InitUnitBuffs()
     {
@@ -1146,7 +913,7 @@ public class PartyUnit : MonoBehaviour {
         if (skill == null)
         {
             // get local party unit skill
-            skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Offence);
+            skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Offense);
         }
         return (int)Math.Round(UnitPower * skill.currentSkillLevel * 0.15f);
     }
@@ -1338,8 +1105,8 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetInitiativeSkillBonus()
     {
-        Debug.Log("Not implemented: GetInitiativeSkillBonus");
-        return 0;
+        // return 0;
+        return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Initiative).currentSkillLevel * 15;
     }
 
     public int GetInitiativeItemsBonus()
@@ -1591,51 +1358,136 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    bool ApplyUSMToMaxStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
+    //bool ApplyUSMToMaxStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
+    //{
+    //    Debug.LogWarning("Apply unit stat modifier");
+    //    // init resistance var
+    //    Resistance resistance;
+    //    // 
+    //    switch (unitStatModifier.unitStat)
+    //    {
+    //        case UnitStat.Leadership:
+    //            // verify if unit is a party leader 
+    //            if (IsLeader)
+    //            {
+    //                if (!doPreview)
+    //                    UnitLeadership += GetUSMStatBonus(unitStatModifier, UnitLeadership);
+    //                // return usm can be applied as result;
+    //                return true;
+    //            }
+    //            // this is not applicable to non-leaders
+    //            return false;
+    //        case UnitStat.Health:
+    //            if (!doPreview)
+    //                UnitHealthMax += GetUSMStatBonus(unitStatModifier, UnitHealthMax);
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.Defense:
+    //            if (!doPreview)
+    //                UnitDefense += GetUSMStatBonus(unitStatModifier, UnitDefense);
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.Power:
+    //            if (!doPreview)
+    //                UnitPower += GetUSMStatBonus(unitStatModifier, UnitPower);
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.Initiative:
+    //            if (!doPreview)
+    //                UnitInitiative += GetUSMStatBonus(unitStatModifier, UnitInitiative);
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.MovePoints:
+    //            // verify if unit is a party leader 
+    //            if (IsLeader)
+    //            {
+    //                if (!doPreview)
+    //                    MovePointsMax += GetUSMStatBonus(unitStatModifier, MovePointsMax);
+    //                // return usm can be applied as result;
+    //                return true;
+    //            }
+    //            // this is not applicable to non-leaders
+    //            return false;
+    //        case UnitStat.ScoutingRange:
+    //            // verify if unit is a party leader 
+    //            if (IsLeader)
+    //            {
+    //                if (!doPreview)
+    //                    ScoutingRange += GetUSMStatBonus(unitStatModifier, ScoutingRange);
+    //                // return usm can be applied as result;
+    //                return true;
+    //            }
+    //            // this is not applicable to non-leaders
+    //            return false;
+    //        case UnitStat.DeathResistance:
+    //            if (!doPreview)
+    //            {
+    //                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Death);
+    //                resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            }
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.FireResistance:
+    //            if (!doPreview)
+    //            {
+    //                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Fire);
+    //                resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            }
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.WaterResistance:
+    //            if (!doPreview)
+    //            {
+    //                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Water);
+    //                resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            }
+    //            // return usm can be applied as result;
+    //            return true;
+    //        case UnitStat.MindResistance:
+    //            if (!doPreview)
+    //            {
+    //                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Mind);
+    //                resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            }
+    //            // return usm can be applied as result;
+    //            return true;
+    //        default:
+    //            Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
+    //            // by default item is not applicable
+    //            return false;
+    //    }
+    //}
+
+    bool VerifyIfUSMCanBeAppliedToMaxStatValue(UnitStatModifier unitStatModifier)
     {
-        Debug.LogWarning("Apply unit stat modifier");
-        // init resistance var
-        Resistance resistance;
-        // 
+        Debug.Log("Verify if unit stat modifier can be applied to max stat");
         switch (unitStatModifier.unitStat)
         {
             case UnitStat.Leadership:
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
-                    if (!doPreview)
-                        UnitLeadership += GetUSMStatBonus(unitStatModifier, UnitLeadership);
                     // return usm can be applied as result;
                     return true;
                 }
                 // this is not applicable to non-leaders
                 return false;
             case UnitStat.Health:
-                if (!doPreview)
-                    UnitHealthMax += GetUSMStatBonus(unitStatModifier, UnitHealthMax);
                 // return usm can be applied as result;
                 return true;
             case UnitStat.Defense:
-                if (!doPreview)
-                    UnitDefense += GetUSMStatBonus(unitStatModifier, UnitDefense);
                 // return usm can be applied as result;
                 return true;
             case UnitStat.Power:
-                if (!doPreview)
-                    UnitPower += GetUSMStatBonus(unitStatModifier, UnitPower);
                 // return usm can be applied as result;
                 return true;
             case UnitStat.Initiative:
-                if (!doPreview)
-                    UnitInitiative += GetUSMStatBonus(unitStatModifier, UnitInitiative);
                 // return usm can be applied as result;
                 return true;
             case UnitStat.MovePoints:
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
-                    if (!doPreview)
-                        MovePointsMax += GetUSMStatBonus(unitStatModifier, MovePointsMax);
                     // return usm can be applied as result;
                     return true;
                 }
@@ -1645,43 +1497,21 @@ public class PartyUnit : MonoBehaviour {
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
-                    if (!doPreview)
-                        ScoutingRange += GetUSMStatBonus(unitStatModifier, ScoutingRange);
                     // return usm can be applied as result;
                     return true;
                 }
                 // this is not applicable to non-leaders
                 return false;
             case UnitStat.DeathResistance:
-                if (!doPreview)
-                {
-                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Death);
-                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                }
                 // return usm can be applied as result;
                 return true;
             case UnitStat.FireResistance:
-                if (!doPreview)
-                {
-                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Fire);
-                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                }
                 // return usm can be applied as result;
                 return true;
             case UnitStat.WaterResistance:
-                if (!doPreview)
-                {
-                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Water);
-                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                }
                 // return usm can be applied as result;
                 return true;
             case UnitStat.MindResistance:
-                if (!doPreview)
-                {
-                    resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Mind);
-                    resistance.percent += GetUSMStatBonus(unitStatModifier, resistance.percent);
-                }
                 // return usm can be applied as result;
                 return true;
             default:
@@ -1708,57 +1538,57 @@ public class PartyUnit : MonoBehaviour {
         return null;
     }
 
-    public void RemoveUSMEffectOnMaxStatValue(UnitStatModifier unitStatModifier)
-    {
-        Debug.Log("Remove USM's effect on max stat value");
-        // init resistance var
-        Resistance resistance;
-        // 
-        switch (unitStatModifier.unitStat)
-        {
-            case UnitStat.Leadership:
-                UnitLeadership += GetUSMStatBonus(unitStatModifier, UnitLeadership);
-                break;
-            case UnitStat.Health:
-                UnitHealthMax -= GetUSMStatBonus(unitStatModifier, UnitHealthMax);
-                break;
-            case UnitStat.Defense:
-                UnitDefense -= GetUSMStatBonus(unitStatModifier, UnitDefense);
-                break;
-            case UnitStat.Power:
-                UnitPower -= GetUSMStatBonus(unitStatModifier, UnitPower);
-                break;
-            case UnitStat.Initiative:
-                UnitInitiative -= GetUSMStatBonus(unitStatModifier, UnitInitiative);
-                break;
-            case UnitStat.MovePoints:
-                MovePointsMax -= GetUSMStatBonus(unitStatModifier, MovePointsMax);
-                break;
-            case UnitStat.ScoutingRange:
-                ScoutingRange -= GetUSMStatBonus(unitStatModifier, ScoutingRange);
-                break;
-            case UnitStat.DeathResistance:
-                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Death);
-                resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
-                break;
-            case UnitStat.FireResistance:
-                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Fire);
-                resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
-                break;
-            case UnitStat.WaterResistance:
-                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Water);
-                resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
-                break;
-            case UnitStat.MindResistance:
-                resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Mind);
-                resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
-                break;
-            default:
-                Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
-                // by default item is not applicable
-                break;
-        }
-    }
+    //public void RemoveUSMEffectOnMaxStatValue(UnitStatModifier unitStatModifier)
+    //{
+    //    Debug.Log("Remove USM's effect on max stat value");
+    //    // init resistance var
+    //    Resistance resistance;
+    //    // 
+    //    switch (unitStatModifier.unitStat)
+    //    {
+    //        case UnitStat.Leadership:
+    //            UnitLeadership -= GetUSMStatBonus(unitStatModifier, UnitLeadership);
+    //            break;
+    //        case UnitStat.Health:
+    //            UnitHealthMax -= GetUSMStatBonus(unitStatModifier, UnitHealthMax);
+    //            break;
+    //        case UnitStat.Defense:
+    //            UnitDefense -= GetUSMStatBonus(unitStatModifier, UnitDefense);
+    //            break;
+    //        case UnitStat.Power:
+    //            UnitPower -= GetUSMStatBonus(unitStatModifier, UnitPower);
+    //            break;
+    //        case UnitStat.Initiative:
+    //            UnitInitiative -= GetUSMStatBonus(unitStatModifier, UnitInitiative);
+    //            break;
+    //        case UnitStat.MovePoints:
+    //            MovePointsMax -= GetUSMStatBonus(unitStatModifier, MovePointsMax);
+    //            break;
+    //        case UnitStat.ScoutingRange:
+    //            ScoutingRange -= GetUSMStatBonus(unitStatModifier, ScoutingRange);
+    //            break;
+    //        case UnitStat.DeathResistance:
+    //            resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Death);
+    //            resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            break;
+    //        case UnitStat.FireResistance:
+    //            resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Fire);
+    //            resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            break;
+    //        case UnitStat.WaterResistance:
+    //            resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Water);
+    //            resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            break;
+    //        case UnitStat.MindResistance:
+    //            resistance = Array.Find(UnitResistances, element => element.source == UnitPowerSource.Mind);
+    //            resistance.percent -= GetUSMStatBonus(unitStatModifier, resistance.percent);
+    //            break;
+    //        default:
+    //            Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
+    //            // by default item is not applicable
+    //            break;
+    //    }
+    //}
 
     bool MatchScope(ModifierScope modifierScope)
     {
@@ -1918,7 +1748,7 @@ public class PartyUnit : MonoBehaviour {
                     else if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.MaxStat)
                     {
                         // apply usm, without actually applying it, because it will be applied passively
-                        bool modifierCanBeApplied = ApplyUSMToMaxStatValue(inventoryItem.UnitStatModifiers[i], true);
+                        bool modifierCanBeApplied = VerifyIfUSMCanBeAppliedToMaxStatValue(inventoryItem.UnitStatModifiers[i]);
                         // if at least one usm is applicable, then set applicable flag to true
                         if (modifierCanBeApplied)
                             isApplicable = true;
@@ -2031,12 +1861,9 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.unitName;
-        }
-
-        set
-        {
-            partyUnitData.unitName = value;
+            // return partyUnitData.unitName;
+            // search for display name in config
+            return Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType).unitDisplayName;
         }
     }
 
@@ -2070,13 +1897,15 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.unitLeadership;
+            //return partyUnitData.unitLeadership;
+            // search for base leadership in config
+            return Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType).unitLeadership;
         }
 
-        set
-        {
-            partyUnitData.unitLeadership = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitLeadership = value;
+        //}
     }
 
     public string GivenName

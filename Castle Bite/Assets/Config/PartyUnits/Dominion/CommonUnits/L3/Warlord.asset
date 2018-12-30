@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5b82db5daccc3f429c25b2dacf0d942, type: 3}
+  m_Name: Warlord
+  m_EditorClassIdentifier: 
+  unitType: 21
+  unitDisplayName: Warlord
+  unitLeadership: 0
+  unitBaseExperienceRequiredToReachNewLevel: 850
+  unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 150
+  unitBaseExperienceReward: 380
+  unitExperienceRewardIncrementOnLevelUp: 190
+  unitBaseHealthMax: 260
+  unitHealthMaxIncrementOnLevelUp: 60
+  unitHealthRegenPercent: 15
+  unitResistances:
+  - source: 0
+    percent: 15
+  unitAbility: 11
+  unitInitiative: 50
+  unitRole: Role
+  unitBriefDescription: Brief description
+  unitFullDescription: Full description
+  unitCost: 800
+  unitSize: 0
+  isInterpartyMovable: 1
+  isDismissable: 1
+  canLearnSkills: 0
+  classIsUpgradable: 1
+  requiresUnitType: 18
+  unlocksUnitTypes: 17000000
+  upgradeCost: 800
+  movePointsMax: 0
+  movePointsIncrementOnLevelUp: 0
+  scoutingRange: 0

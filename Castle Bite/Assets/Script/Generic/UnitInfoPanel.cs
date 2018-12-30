@@ -618,7 +618,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 // update normal values
                 SetUnitLeadershipInfo(partyUnit);
                 break;
-            case UnitSkill.Offence:
+            case UnitSkill.Offense:
                 //SetUnitPowerInfo(partyUnit, learnedSkill);
                 SetUnitPowerInfo(partyUnit);
                 break;

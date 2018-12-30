@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5b82db5daccc3f429c25b2dacf0d942, type: 3}
+  m_Name: Cyclop
+  m_EditorClassIdentifier: 
+  unitType: 15
+  unitDisplayName: Cyclop
+  unitLeadership: 0
+  unitBaseExperienceRequiredToReachNewLevel: 800
+  unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 100
+  unitBaseExperienceReward: 350
+  unitExperienceRewardIncrementOnLevelUp: 150
+  unitBaseHealthMax: 180
+  unitHealthMaxIncrementOnLevelUp: 35
+  unitHealthRegenPercent: 15
+  unitResistances: []
+  unitAbility: 0
+  unitInitiative: 45
+  unitRole: Role
+  unitBriefDescription: Brief description
+  unitFullDescription: Full description
+  unitCost: 850
+  unitSize: 1
+  isInterpartyMovable: 1
+  isDismissable: 1
+  canLearnSkills: 0
+  classIsUpgradable: 0
+  requiresUnitType: 0
+  unlocksUnitTypes: 
+  upgradeCost: 850
+  movePointsMax: 0
+  movePointsIncrementOnLevelUp: 0
+  scoutingRange: 0

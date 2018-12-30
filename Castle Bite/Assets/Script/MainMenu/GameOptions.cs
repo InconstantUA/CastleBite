@@ -24,7 +24,7 @@ public class GameOptions : MonoBehaviour {
                 doAutoSave = value;
                 // save options to PlayerPrefs
                 PlayerPrefs.SetInt("DoAutoSave", value); // 0 - disable, 1 - enable
-                Debug.Log("Save doAutoSave [" + value.ToString() + "] value");
+                //Debug.Log("Save doAutoSave [" + value.ToString() + "] value");
             }
         }
 
@@ -102,8 +102,8 @@ public class GameOptions : MonoBehaviour {
         // load options from PlayerPrefs (Note: addressing ConfigManager via GetComponent<ConfigManager>(), because it may be not instantiated yet, if referenced via static Instance)
         gameOpt.DoAutoSave = PlayerPrefs.GetInt("DoAutoSave", GetComponent<ConfigManager>().GameSaveConfig.doAutoSave); // for default values load options from Config
         gameOpt.LastAutoSavesToKeep = PlayerPrefs.GetInt("LastAutoSavesToKeep", GetComponent<ConfigManager>().GameSaveConfig.lastAutoSavesToKeep); // for default values load options from Config
-        Debug.LogWarning("Do autosave: " + gameOpt.DoAutoSave);
-        Debug.LogWarning("Do LastAutoSavesToKeep: " + gameOpt.LastAutoSavesToKeep);
+        //Debug.LogWarning("Do autosave: " + gameOpt.DoAutoSave);
+        //Debug.LogWarning("Do LastAutoSavesToKeep: " + gameOpt.LastAutoSavesToKeep);
     }
 
 }

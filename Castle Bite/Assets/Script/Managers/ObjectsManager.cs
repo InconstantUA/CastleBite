@@ -277,7 +277,7 @@ public class ObjectsManager : MonoBehaviour {
         // verify if there are units in party
         if (partyData.partyUnitsData.Length >= 1)
         {
-            Debug.Log("Creating " + partyData.partyUnitsData[0].unitName + " party");
+            Debug.Log("Creating " + partyData.partyUnitsData[0].unitType + " party");
         } else
         {
             // empty can be only garnizon in non-capital city

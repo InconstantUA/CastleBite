@@ -333,6 +333,8 @@ public class LoadGame : MonoBehaviour
 
     IEnumerator RemoveCurrentWorld()
     {
+        // skip first frame
+        yield return null;
         World.Instance.RemoveCurrentChapter();
         yield return null;
     }
