@@ -3,6 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Display multi-select popup for Flags enum correctly.
+/// </summary>
+public class EnumFlagAttribute : PropertyAttribute
+{
+}
+
+[Serializable]
+[Flags]
+public enum HeroEquipmentSlots
+{
+    None        = 0,
+    Shard       = 1 << 1,
+    Head        = 1 << 2,
+    Neck        = 1 << 3,
+    RightHand   = 1 << 4,
+    LeftHand    = 1 << 5,
+    Chest       = 1 << 6,
+    BeltSlot1   = 1 << 7,
+    BeltSlot2   = 1 << 8,
+    Boots       = 1 << 9
+}
+
 [Serializable]
 public enum HeroEquipmentSlot
 {
@@ -19,11 +42,37 @@ public enum HeroEquipmentSlot
 }
 
 [Serializable]
+public enum InventoryItemType
+{
+    BigHealingPotion,
+    FlaskOfWellWater,
+    PotionOfFortification,
+    ScrollOfResurection,
+    SmallHealingPoition,
+    StrengthPotion,
+    AegisOfImmortal,
+    AmuletOfFireResistance,
+    BoneArmor,
+    BootsOfSpeed,
+    CloackOfAgility,
+    EagleEyeHelmet,
+    GeneralHelmet,
+    MaskOfMadness,
+    ShardOfFristStrike,
+    ShardOfProtection,
+    SwordOfDespair,
+    VampireOrb
+}
+
+[Serializable]
 public class InventoryItemData : System.Object
 {
+    public InventoryItemType inventoryItemType;
+    public InventoryItemConfig inventoryItemConfig;
     public string itemName;
     public int itemValue;
     public HeroEquipmentSlot[] compatibleEquipmentSlots;
+    private List<UnitStatModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
     public List<UnitStatModifier> unitStatModifiers;
     public List<UniquePowerModifier> uniquePowerModifiers;
     public List<UnitStatusModifier> unitStatusModifiers; // there should not be more than 1 status modifier, because it does not make sense, because only one status can be active at a time

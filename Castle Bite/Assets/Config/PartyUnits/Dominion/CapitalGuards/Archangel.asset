@@ -15,12 +15,12 @@ MonoBehaviour:
   unitType: 1
   unitDisplayName: Capital Guard
   unitLeadership: 5
-  unitBaseExperienceRequiredToReachNewLevel: 0
+  unitBaseExperienceRequiredToReachNewLevel: 9999
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 0
   unitBaseExperienceReward: 9999
   unitExperienceRewardIncrementOnLevelUp: 1111
+  unitDefense: 0
   unitBaseHealthMax: 1100
-  unitHealthMaxIncrementOnLevelUp: 300
   unitHealthMaxIncrementOnStatsUpgrade: 300
   unitHealthRegenPercent: 15
   unitResistances:

@@ -13,6 +13,7 @@ public class UniqueAbilityConfig : ScriptableObject
     public int level;
     public int currentLearningPoints;
     public UnitStatModifier unitStatModifier;
+    public UnitStatModifierConfig unitStatModifierConfig; // duration left is not applicable
 
     public int GetLearningPointsRequiredToReachNextLevel ()
     {

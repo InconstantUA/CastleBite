@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "UnitSkill", menuName = "Config/Unit Skill")]
+[CreateAssetMenu(fileName = "UnitSkill", menuName = "Config/Unit/Skill")]
 public class UnitSkillConfig : ScriptableObject
 {
     public UnitSkill unitSkill;
@@ -12,4 +12,5 @@ public class UnitSkillConfig : ScriptableObject
     public int levelUpEveryXHeroLevels; // skill can be learned only after this number of levels has passed
     [TextArea]
     public string description;
+    public UnitStatModifierConfig unitStatModifierConfig;
 }

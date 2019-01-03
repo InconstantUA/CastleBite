@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "PartyUnitConfig", menuName = "Config/PartyUnit")]
+[CreateAssetMenu(fileName = "PartyUnitConfig", menuName = "Config/Unit/General")]
 public class PartyUnitConfig : ScriptableObject
 {
     // Misc attributes
@@ -20,7 +20,7 @@ public class PartyUnitConfig : ScriptableObject
     //() public int GetUnitExperienceReward(int currentUnitLevel);
     // Defensive attributes
     // All-around defense, applied before any other resistances are applied.
-    public int unitDefense;
+    public int unitBaseDefense;
     //-public int unitHealthMax;
     public int unitBaseHealthMax; // max health on 1st level
     //() public int GetUnitMaxHealth(StatsUpgradesCount) - get health based on number of stats upgrades

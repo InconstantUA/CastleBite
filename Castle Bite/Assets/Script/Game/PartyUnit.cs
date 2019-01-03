@@ -99,6 +99,16 @@ public enum UnitStatus
     Dead
 }
 
+[Serializable, Flags]
+public enum UnitStatuses
+{
+    Active      = 1 << 1, // not Dead and not Escaped = can fight
+    Waiting     = 1 << 2,
+    Escaping    = 1 << 3,
+    Escaped     = 1 << 4,
+    Dead        = 1 << 5
+}
+
 [Serializable]
 public enum UnitDebuff : int
 {
@@ -294,6 +304,13 @@ public enum ModifierAppliedHow
 }
 
 [Serializable]
+public enum UnitStatModifierType
+{
+    Heal50,
+    Heal200
+}
+
+[Serializable]
 public class UnitStatModifier : System.Object
 {
     public UnitStat unitStat;
@@ -304,8 +321,15 @@ public class UnitStatModifier : System.Object
     public ModifierCalculatedHow modifierCalculatedHow;
     public ModifierAppliedHow modifierAppliedHow;
     public int duration;
-    public int durationLeft;
+    public int durationLeft; // to be moved to data
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
+}
+
+[Serializable]
+public class UnitStatModifierData : System.Object
+{
+    public UnitStatModifierType unitStatModifier;
+    public int durationLeft; // it is reset when USM is applied
 }
 
 [Serializable]
@@ -342,7 +366,7 @@ public class PartyUnitData : System.Object
     // Offensive attributes
     public UnitAbility unitAbility;
     public int unitPower;
-    public int unitPowerIncrementOnLevelUp;
+    public int unitPowerIncrementOnLevelUp; // OnStatsUpgrade
     public UnitPowerSource unitPowerSource;
     public UnitPowerDistance unitPowerDistance;
     public UnitPowerScope unitPowerScope;
@@ -448,6 +472,8 @@ public class PartyUnitData : System.Object
     public PartyPanel.Cell unitPPCell;  // used during game save and load and when party UI is displayed
     // Unit Equipment
     public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
+    // All active stat modifiers inherited from used items
+    private List<UnitStatModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
 }
 
 // For events admin
@@ -2069,7 +2095,7 @@ public class PartyUnit : MonoBehaviour {
             // Defense != Physical resistance
             // Defense is all around protection agains all sources
             // Get it from config
-            return partyUnitConfig.unitDefense;
+            return partyUnitConfig.unitBaseDefense;
         }
 
         //set
