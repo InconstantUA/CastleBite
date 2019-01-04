@@ -71811,6 +71811,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 57987e829ccf85346b13102d3fb6bc2f, type: 2}
   - {fileID: 11400000, guid: 503498c8217bb1445ba44bae97536027, type: 2}
   - {fileID: 11400000, guid: 7bca2c260876f0e4b9edd8a82d5ad889, type: 2}
+  inventoryItemConfigs:
+  - {fileID: 11400000, guid: ce090447c67a3a9468409e35b3957447, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0

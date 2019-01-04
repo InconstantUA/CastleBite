@@ -299,15 +299,76 @@ public enum ModifierAppliedTo
 [Serializable]
 public enum ModifierAppliedHow
 {
-    Active,
-    Passive
+    Active, // Potions, scrolls, weapon with active modifiers (paralise)
+    Passive // Equipment: armor, boots, weapon with passive modifiers
 }
 
 [Serializable]
 public enum UnitStatModifierType
 {
-    Heal50,
-    Heal200
+    // Healh-base stats 1-9
+    Resurect1                       =   10001,
+    HealthCurrAdd50                 =   20050,
+    HealthCurrAdd100                =   20100,
+    HealthCurrAdd200                =   20200,
+    HealthCurrAdd400                =   20400,
+    HealthMaxAdd5Percent            =   30005,
+    HealthMaxAdd15Percent           =   30015,
+    HealthMaxAdd30Percent           =   30030,
+    HealthMaxAdd50Percent           =   30050,
+    HealthCurrSubtract50            =   40050,
+    HealthCurrSubtract20Over2Rounds =   42020,
+    // Defense-base stats 10-19
+    DefenseAdd5 =  100005,
+    DefenseAdd15                    =  100015,
+    DefenseAdd30                    =  100030,
+    DefenseAdd50                    =  100050,
+    DefenseSubtract5                =  110005,
+    DefenseSubtract15               =  110015,
+    DefenseSubtract30               =  110030,
+    // Power-base stats 20-29
+    PowerAdd5Percent                =  200005,
+    PowerAdd15Percent               =  200015,
+    PowerAdd30Percent               =  200030,
+    PowerAdd50Percent               =  200050,
+    PowerSubtract5Percent           =  210005,
+    PowerSubtract15Percent          =  210015,
+    PowerSubtract30Percent          =  210030,
+    // Initiative-based stats 30-39
+    Inititative5Percent             =  300005,
+    Inititative15Percent            =  300015,
+    Inititative30Percent            =  300030,
+    Inititative50Percent            =  300050,
+    // Initiative-based stats 40-49
+    MovePointsCurr50Percent         =  400050,
+    MovePointsCurr100Percent        =  400100,
+    MovePointsMax50Percent          =  410050,
+    MovePointsMax70Percent          =  410070,
+    MovePointsMax100Percent         =  410100,
+    // ScoutingRange-based stats 50-59
+    Scouting1                       =  500001,
+    Scouting3                       =  500003,
+    Scouting5                       =  500005,
+    Scouting7                       =  500007,
+    // Leadership-based stats 60-69
+    Leadership1                     =  600001,
+    Leadership3                     =  600003,
+    Leadership5                     =  600005,
+    // Resistance-based stats 100-199
+    WaterResistance50               = 1000050,
+    WaterResistance100              = 1000100,
+    FireResistance50                = 1100050,
+    FireResistance100               = 1100100,
+    EarthResistance50               = 1200050,
+    EarthResistance100              = 1200100,
+    WindResistance50                = 1300050,
+    WindResistance100               = 1300100,
+    DeathResistance50               = 1400050,
+    DeathResistance100              = 1400100,
+    PureResistance50                = 1500050,
+    PureResistance100               = 1500100,
+    MindResistance50                = 1600050,
+    MindResistance100               = 1600100
 }
 
 [Serializable]
@@ -1711,7 +1772,7 @@ public class PartyUnit : MonoBehaviour {
         //List<int> usmIDsTobeRemoved = new List<int>();
         // init is applicable by default with false, if at least one modifier is applicable it should reset this flag to true
         bool isApplicable = false;
-        // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items are not stackable
+        // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items may be not stackable
         // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, that is why we do not do this additional check against partly-leader-equipped items
         if ((GetUnitItemByName(inventoryItem.ItemName) != null)
             // and that item is not stackable

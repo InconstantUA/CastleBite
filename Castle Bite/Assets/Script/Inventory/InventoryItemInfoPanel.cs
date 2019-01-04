@@ -35,7 +35,7 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
         // set item name
         transform.Find("ItemName").GetComponent<Text>().text = inventoryItem.ItemName;
         // set item cost
-        transform.Find("ItemCost/Value").GetComponent<Text>().text = inventoryItem.ItemValue.ToString();
+        transform.Find("ItemCost/Value").GetComponent<Text>().text = inventoryItem.ItemCost.ToString();
         // Get Max usages UI tranform
         Transform maxUsagesUI = transform.Find("MaxUsages");
         // verify if item has usages

@@ -47,14 +47,14 @@ public enum InventoryItemType
     BigHealingPotion,
     FlaskOfWellWater,
     PotionOfFortification,
-    ScrollOfResurection,
+    ScrollOfResurrection,
     SmallHealingPoition,
     StrengthPotion,
     AegisOfImmortal,
     AmuletOfFireResistance,
     BoneArmor,
     BootsOfSpeed,
-    CloackOfAgility,
+    CloakOfAgility,
     EagleEyeHelmet,
     GeneralHelmet,
     MaskOfMadness,
@@ -68,18 +68,18 @@ public enum InventoryItemType
 public class InventoryItemData : System.Object
 {
     public InventoryItemType inventoryItemType;
-    public InventoryItemConfig inventoryItemConfig;
-    public string itemName;
-    public int itemValue;
-    public HeroEquipmentSlot[] compatibleEquipmentSlots;
+    // public InventoryItemConfig inventoryItemConfig;
+    public string itemName; // config
+    public int itemValue; // config
+    public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
     private List<UnitStatModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
-    public List<UnitStatModifier> unitStatModifiers;
-    public List<UniquePowerModifier> uniquePowerModifiers;
-    public List<UnitStatusModifier> unitStatusModifiers; // there should not be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
-    public HeroEquipmentSlot heroEquipmentSlot = HeroEquipmentSlot.None;
-    public int maxUsagesCount;
-    public int leftUsagesCount;
-    public bool itemIsStackable = false; // item effects can be re-applied using item of the same type
+    public List<UnitStatModifier> unitStatModifiers; // config
+    public List<UniquePowerModifier> uniquePowerModifiers; // config
+    public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there should not be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
+    public HeroEquipmentSlot heroEquipmentSlot = HeroEquipmentSlot.None; // serializable data of equipped/unequipped item
+    public int maxUsagesCount; // config
+    public int leftUsagesCount; // serializable
+    public bool itemIsStackable = false; // config // item effects can be re-applied using item of the same type
     // item location is determined by the parent object ID and it is saved and loaded together with parent object data, that is why no need to save it here
     // possible locations: equipped on the hero, in party inventory, lying on the map
 }
@@ -87,6 +87,7 @@ public class InventoryItemData : System.Object
 public class InventoryItem : MonoBehaviour {
     [SerializeField]
     InventoryItemData inventoryItemData;
+    InventoryItemConfig inventoryItemConfig; // initialized on usage
 
     public string GetUsagesInfo()
     {
@@ -315,6 +316,20 @@ public class InventoryItem : MonoBehaviour {
 
     #region Properties
 
+    public InventoryItemConfig InventoryItemConfig
+    {
+        get
+        {
+            // verify if config is not null
+            if (inventoryItemConfig == null)
+            {
+                // get item config from configs manager by item type
+                inventoryItemConfig = Array.Find(ConfigManager.Instance.InventoryItemConfigs, e => e.inventoryItemType == InventoryItemType);
+            }
+            return inventoryItemConfig;
+        }
+    }
+
     public InventoryItemData InventoryItemData
     {
         get
@@ -328,30 +343,45 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
+    public InventoryItemType InventoryItemType
+    {
+        get
+        {
+            return inventoryItemData.inventoryItemType;
+        }
+
+        set
+        {
+            inventoryItemData.inventoryItemType = value;
+        }
+    }
+
     public string ItemName
     {
         get
         {
-            return inventoryItemData.itemName;
+            //return inventoryItemData.itemName;
+            return InventoryItemConfig.itemDisplayName;
         }
 
-        set
-        {
-            inventoryItemData.itemName = value;
-        }
+        //set
+        //{
+        //    inventoryItemData.itemName = value;
+        //}
     }
 
-    public int ItemValue
+    public int ItemCost
     {
         get
         {
-            return inventoryItemData.itemValue;
+            //return inventoryItemData.itemValue;
+            return InventoryItemConfig.itemCost;
         }
 
-        set
-        {
-            inventoryItemData.itemValue = value;
-        }
+        //set
+        //{
+        //    inventoryItemData.itemValue = value;
+        //}
     }
 
     public HeroEquipmentSlot[] CompatibleEquipmentSlots
