@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 16
+    inventoryItemType: 2420
     itemName: Sword of Despair
     itemValue: 250
     compatibleEquipmentSlots: 0300000004000000

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 13
+    inventoryItemType: 2203
     itemName: Mask of Madness
     itemValue: 50
     compatibleEquipmentSlots: 01000000

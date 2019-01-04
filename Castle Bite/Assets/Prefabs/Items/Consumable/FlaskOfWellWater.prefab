@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 1
+    inventoryItemType: 1401
     itemName: Flask of Well Water
     itemValue: 50
     compatibleEquipmentSlots: 0600000007000000

@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 15
+    inventoryItemType: 2102
     itemName: Shard of Protection
     itemValue: 100
     compatibleEquipmentSlots: 00000000

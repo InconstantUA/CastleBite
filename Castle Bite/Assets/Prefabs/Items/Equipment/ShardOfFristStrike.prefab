@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 14
+    inventoryItemType: 2101
     itemName: Shard of First Strike
     itemValue: 100
     compatibleEquipmentSlots: 00000000

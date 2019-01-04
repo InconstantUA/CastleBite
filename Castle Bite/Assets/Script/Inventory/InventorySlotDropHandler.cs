@@ -12,7 +12,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     [SerializeField]
     Mode slotMode;
     [SerializeField]
-    HeroEquipmentSlot equipmentSlot;
+    HeroEquipmentSlots equipmentSlot;
     bool isDroppable = true;
 
     public Mode SlotMode
@@ -23,7 +23,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
         }
     }
 
-    public HeroEquipmentSlot EquipmentSlot
+    public HeroEquipmentSlots EquipmentSlot
     {
         get
         {
@@ -181,21 +181,21 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
                     if (Mode.HeroEquipment == slotMode)
                     {
                         // change item position parameter
-                        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot = equipmentSlot;
+                        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = equipmentSlot;
                         // update unit info UI
                         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
                     }
                     else
                     {
                         // change item position parameter
-                        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot = HeroEquipmentSlot.None;
+                        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;
                     }
                 }
                 // verify if we are in battle screen mode
                 else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
                 {
                     // take equipment slot parameter from item
-                    equipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HeroEquipmentSlot;
+                    equipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
                 }
                 else
                 {

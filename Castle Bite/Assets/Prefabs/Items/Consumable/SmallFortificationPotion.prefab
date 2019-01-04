@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1852649590237252
+--- !u!1 &1290609217331188
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 224477882871899502}
-  - component: {fileID: 114273019850989704}
+  - component: {fileID: 224871333375375478}
+  - component: {fileID: 114350596187490962}
   m_Layer: 5
-  m_Name: StrengthPotion
+  m_Name: PotionOfFortification
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &224477882871899502
+--- !u!224 &224871333375375478
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852649590237252}
+  m_GameObject: {fileID: 1290609217331188}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -36,33 +36,33 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &114273019850989704
+--- !u!114 &114350596187490962
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1852649590237252}
+  m_GameObject: {fileID: 1290609217331188}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ddf364261061824aa7c000d3ad874b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 5
-    itemName: Strength Potion
-    itemValue: 50
+    inventoryItemType: 1201
+    itemName: Small Fortification Potion
+    itemValue: 1000
     compatibleEquipmentSlots: 0600000007000000
     unitStatModifiers:
-    - unitStat: 3
+    - unitStat: 1
       modifierAppliedTo: 1
       modifierScope: 1
-      modifierPower: 10
+      modifierPower: 15
       skillPowerMultiplier: 1
-      modifierCalculatedHow: 0
+      modifierCalculatedHow: 2
       modifierAppliedHow: 0
-      duration: 1
-      durationLeft: 1
+      duration: -1
+      durationLeft: -1
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []

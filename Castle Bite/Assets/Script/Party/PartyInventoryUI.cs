@@ -19,7 +19,7 @@ public class PartyInventoryUI : MonoBehaviour {
         if (setCurrentItemEquipmentSlot && inventoryItem != null)
         {
             // set the same slot type as item had in the past, this is needed for battle screen
-            newSlot.EquipmentSlot = inventoryItem.HeroEquipmentSlot;
+            newSlot.EquipmentSlot = inventoryItem.CurrentHeroEquipmentSlot;
         }
         return newSlot;
     }
@@ -70,7 +70,7 @@ public class PartyInventoryUI : MonoBehaviour {
                 if (inventoryItem != null)
                 {
                     // verify if item is in hero eqipment slot
-                    if (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.None)
+                    if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
                     {
                         // increment items count
                         numberOfItems += 1;
@@ -145,7 +145,7 @@ public class PartyInventoryUI : MonoBehaviour {
                 if (inventoryItem != null)
                 {
                     // verify if item is in hero eqipment slot
-                    if (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.None)
+                    if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
                     {
                         SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
                     }

@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Bone Armor
   m_EditorClassIdentifier: 
-  inventoryItemType: 8
+  inventoryItemType: 2501
   itemDisplayName: Bone Armor
   itemCost: 3000
   compatibleEquipmentSlots: 64
   unitStatModifierConfigs:
   - {fileID: 11400000, guid: 8727e79654fafeb41b903c098cb15323, type: 2}
+  - {fileID: 11400000, guid: 6813f710709470043bc439e5f438bd5c, type: 2}
   modifierAppliedHow: 1
   maxUsagesCount: 0
   itemIsStackable: 0

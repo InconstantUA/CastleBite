@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 6
+    inventoryItemType: 2401
     itemName: Aegis of Immortal
     itemValue: 500
     compatibleEquipmentSlots: 04000000

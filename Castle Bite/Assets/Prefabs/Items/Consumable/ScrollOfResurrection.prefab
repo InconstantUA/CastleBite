@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 3
+    inventoryItemType: 1100
     itemName: Scroll of Resurection
     itemValue: 50
     compatibleEquipmentSlots: 0600000007000000

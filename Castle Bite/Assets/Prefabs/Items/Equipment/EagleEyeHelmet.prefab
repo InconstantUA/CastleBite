@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 11
+    inventoryItemType: 2201
     itemName: Eagle Eye Helmet
     itemValue: 50
     compatibleEquipmentSlots: 01000000

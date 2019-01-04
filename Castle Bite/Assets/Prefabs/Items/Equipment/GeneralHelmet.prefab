@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 12
+    inventoryItemType: 2202
     itemName: General Helmet
     itemValue: 500
     compatibleEquipmentSlots: 01000000

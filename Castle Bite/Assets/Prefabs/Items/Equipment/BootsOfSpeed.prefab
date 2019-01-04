@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 9
+    inventoryItemType: 2601
     itemName: Boots of Speed
     itemValue: 30
     compatibleEquipmentSlots: 08000000

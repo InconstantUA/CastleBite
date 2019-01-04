@@ -49,9 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 4
-    inventoryItemConfig: {fileID: 11400000, guid: ce090447c67a3a9468409e35b3957447,
-      type: 2}
+    inventoryItemType: 1101
     itemName: Small Healing Poition
     itemValue: 20
     compatibleEquipmentSlots: 0600000007000000

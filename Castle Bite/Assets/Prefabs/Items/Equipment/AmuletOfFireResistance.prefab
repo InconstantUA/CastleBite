@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 7
+    inventoryItemType: 2302
     itemName: Amulet of Fire Resistance
     itemValue: 300
     compatibleEquipmentSlots: 02000000

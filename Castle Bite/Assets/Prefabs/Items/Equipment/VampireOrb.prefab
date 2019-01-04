@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 17
+    inventoryItemType: 2430
     itemName: Vampire Orb
     itemValue: 2500
     compatibleEquipmentSlots: 0600000007000000

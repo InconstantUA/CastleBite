@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Flask of Well Water
   m_EditorClassIdentifier: 
-  inventoryItemType: 1
+  inventoryItemType: 1401
   itemDisplayName: Flask of Well Water
   itemCost: 70
   compatibleEquipmentSlots: 384

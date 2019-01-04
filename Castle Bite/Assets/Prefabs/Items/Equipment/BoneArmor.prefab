@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 8
+    inventoryItemType: 2501
     itemName: Bone Armor
     itemValue: 150
     compatibleEquipmentSlots: 05000000

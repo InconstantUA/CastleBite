@@ -23,45 +23,65 @@ public enum HeroEquipmentSlots
     Chest       = 1 << 6,
     BeltSlot1   = 1 << 7,
     BeltSlot2   = 1 << 8,
-    Boots       = 1 << 9
+    Boots       = 1 << 9,
+    // commonly used variants
+    BeltSlots   = BeltSlot1 | BeltSlot2
 }
 
-[Serializable]
-public enum HeroEquipmentSlot
-{
-    Shard,
-    Head,
-    Neck,
-    RightHand,
-    LeftHand,
-    Chest,
-    BeltSlot1,
-    BeltSlot2,
-    Boots,
-    None
-}
+//[Serializable]
+//public enum HeroEquipmentSlot
+//{
+//    Shard,
+//    Head,
+//    Neck,
+//    RightHand,
+//    LeftHand,
+//    Chest,
+//    BeltSlot1,
+//    BeltSlot2,
+//    Boots,
+//    None
+//}
 
 [Serializable]
 public enum InventoryItemType
 {
-    BigHealingPotion,
-    FlaskOfWellWater,
-    PotionOfFortification,
-    ScrollOfResurrection,
-    SmallHealingPoition,
-    StrengthPotion,
-    AegisOfImmortal,
-    AmuletOfFireResistance,
-    BoneArmor,
-    BootsOfSpeed,
-    CloakOfAgility,
-    EagleEyeHelmet,
-    GeneralHelmet,
-    MaskOfMadness,
-    ShardOfFristStrike,
-    ShardOfProtection,
-    SwordOfDespair,
-    VampireOrb
+    // 1 Consumable BeltSlot1/2
+    //  100-199 Health
+    ScrollOfResurrection        =   1100,
+    SmallHealingPoition         =   1101,
+    MedumHealingPoition         =   1102,
+    BigHealingPotion            =   1103,
+    SuperHealingPotion          =   1104,
+    //  200-299 Defense
+    SmallFortificationPotion    =   1201,
+    //  300-399 Power
+    SmallStrengthPotion         =   1301,
+    //  400-499 Initiative
+    //  500-599 Move Points
+    FlaskOfWellWater            =   1401,
+    // 2 Equipment
+    //  100-199 Shard
+    ShardOfFristStrike          =   2101,
+    ShardOfProtection           =   2102,
+    //  200-299 Head
+    EagleEyeHelmet              =   2201,
+    GeneralHelmet               =   2202,
+    MaskOfMadness               =   2203,
+    //  300-399 Neck
+    CloakOfAgility              =   2301,
+    AmuletOfFireResistance      =   2302,
+    //  400-499 Left/Right hand
+    //      Protective  1-9
+    AegisOfImmortal             =   2401,
+    //      Attacking   20-29
+    SwordOfDespair              =   2420,
+    //      Orbs        30-39
+    VampireOrb                  =   2430,
+    //  500-599 Chest
+    BoneArmor                   =   2501,
+    //  600-699 Boots
+    BootsOfSpeed                =   2601
 }
 
 [Serializable]
@@ -69,17 +89,17 @@ public class InventoryItemData : System.Object
 {
     public InventoryItemType inventoryItemType;
     // public InventoryItemConfig inventoryItemConfig;
-    public string itemName; // config
-    public int itemValue; // config
-    public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
+    // public string itemName; // config
+    // public int itemValue; // config
+    // public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
     private List<UnitStatModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
     public List<UnitStatModifier> unitStatModifiers; // config
     public List<UniquePowerModifier> uniquePowerModifiers; // config
-    public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there should not be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
-    public HeroEquipmentSlot heroEquipmentSlot = HeroEquipmentSlot.None; // serializable data of equipped/unequipped item
-    public int maxUsagesCount; // config
+    public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there shouldn't be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
+    public HeroEquipmentSlots currentHeroEquipmentSlot = HeroEquipmentSlots.None; // serializable data of equipped/unequipped item
+    // public int maxUsagesCount; // config
     public int leftUsagesCount; // serializable
-    public bool itemIsStackable = false; // config // item effects can be re-applied using item of the same type
+    // public bool itemIsStackable = false; // config // item effects can be re-applied using item of the same type
     // item location is determined by the parent object ID and it is saved and loaded together with parent object data, that is why no need to save it here
     // possible locations: equipped on the hero, in party inventory, lying on the map
 }
@@ -87,7 +107,7 @@ public class InventoryItemData : System.Object
 public class InventoryItem : MonoBehaviour {
     [SerializeField]
     InventoryItemData inventoryItemData;
-    InventoryItemConfig inventoryItemConfig; // initialized on usage
+    InventoryItemConfig inventoryItemConfig; // initialized on first access
 
     public string GetUsagesInfo()
     {
@@ -384,30 +404,38 @@ public class InventoryItem : MonoBehaviour {
         //}
     }
 
-    public HeroEquipmentSlot[] CompatibleEquipmentSlots
+    public HeroEquipmentSlots CompatibleEquipmentSlots
     {
         get
         {
-            return inventoryItemData.compatibleEquipmentSlots;
-        }
-
-        set
-        {
-            inventoryItemData.compatibleEquipmentSlots = value;
+            return InventoryItemConfig.compatibleEquipmentSlots;
         }
     }
+    //public HeroEquipmentSlot[] CompatibleEquipmentSlots
+    //{
+    //    get
+    //    {
+    //        return inventoryItemData.compatibleEquipmentSlots;
+    //    }
+
+    //    set
+    //    {
+    //        inventoryItemData.compatibleEquipmentSlots = value;
+    //    }
+    //}
 
     public int MaxUsagesCount
     {
         get
         {
-            return inventoryItemData.maxUsagesCount;
+            //return inventoryItemData.maxUsagesCount;
+            return InventoryItemConfig.maxUsagesCount;
         }
 
-        set
-        {
-            inventoryItemData.maxUsagesCount = value;
-        }
+        //set
+        //{
+        //    inventoryItemData.maxUsagesCount = value;
+        //}
     }
 
     public List<UniquePowerModifier> UniquePowerModifiers
@@ -449,16 +477,28 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
-    public HeroEquipmentSlot HeroEquipmentSlot
+    //public HeroEquipmentSlot CurrentHeroEquipmentSlot
+    //{
+    //    get
+    //    {
+    //        return inventoryItemData.heroEquipmentSlot;
+    //    }
+
+    //    set
+    //    {
+    //        inventoryItemData.heroEquipmentSlot = value;
+    //    }
+    //}
+    public HeroEquipmentSlots CurrentHeroEquipmentSlot
     {
         get
         {
-            return inventoryItemData.heroEquipmentSlot;
+            return inventoryItemData.currentHeroEquipmentSlot;
         }
 
         set
         {
-            inventoryItemData.heroEquipmentSlot = value;
+            inventoryItemData.currentHeroEquipmentSlot = value;
         }
     }
 
@@ -466,13 +506,14 @@ public class InventoryItem : MonoBehaviour {
     {
         get
         {
-            return inventoryItemData.itemIsStackable;
+            //return inventoryItemData.itemIsStackable;
+            return InventoryItemConfig.itemIsStackable;
         }
 
-        set
-        {
-            inventoryItemData.itemIsStackable = value;
-        }
+        //set
+        //{
+        //    inventoryItemData.itemIsStackable = value;
+        //}
     }
 
     public List<UnitStatusModifier> UnitStatusModifiers

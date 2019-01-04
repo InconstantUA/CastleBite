@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Small Healing Potion
   m_EditorClassIdentifier: 
-  inventoryItemType: 4
+  inventoryItemType: 1101
   itemDisplayName: Small Healing Potion
   itemCost: 100
   compatibleEquipmentSlots: 384

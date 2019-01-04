@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 10
+    inventoryItemType: 2301
     itemName: Cloack of Agility
     itemValue: 70
     compatibleEquipmentSlots: 05000000

@@ -28,7 +28,7 @@ public class HeroEquipment : MonoBehaviour {
         }
     }
 
-    InventorySlotDropHandler GetEquipmentSlotByType(HeroEquipmentSlot heroEquipmentSlot)
+    InventorySlotDropHandler GetEquipmentSlotByType(HeroEquipmentSlots heroEquipmentSlot)
     {
         // loop through all equipment slots
         foreach(InventorySlotDropHandler inventorySlotDropHandler in GetComponentsInChildren<InventorySlotDropHandler>(true))
@@ -51,7 +51,7 @@ public class HeroEquipment : MonoBehaviour {
         if (inventoryItem != null)
         {
             // create drag handler and slotTransform
-            InventoryItemDragHandler dragHandler = Instantiate(inventoryItemDragHandlerTemplate, GetEquipmentSlotByType(inventoryItem.HeroEquipmentSlot).transform).GetComponent<InventoryItemDragHandler>();
+            InventoryItemDragHandler dragHandler = Instantiate(inventoryItemDragHandlerTemplate, GetEquipmentSlotByType(inventoryItem.CurrentHeroEquipmentSlot).transform).GetComponent<InventoryItemDragHandler>();
             // link item to drag handler
             dragHandler.LInventoryItem = inventoryItem;
             // set item name in UI
@@ -70,7 +70,7 @@ public class HeroEquipment : MonoBehaviour {
         foreach(InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
         {
             // verify if item has equipment slot assigned to it
-            if (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.None)
+            if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
             {
                 // set item representation in equipment UI
                 SetItemRepresentationInEquipmentUI(inventoryItem);
@@ -130,35 +130,40 @@ public class HeroEquipment : MonoBehaviour {
                 isCompatible = false;
                 // reset is droppable flag
                 isDroppable = false;
-                // loop through all compatible slots types
-                foreach (HeroEquipmentSlot slotType in InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots)
+                //// loop through all compatible slots types
+                //foreach (HeroEquipmentSlot slotType in InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots)
+                //{
+                //    // verify if equipment slot is compatible
+                //    if (slot.EquipmentSlot == slotType)
+                //    {
+                // verify if equipment slot is compatible
+                if ((InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots & slot.EquipmentSlot) == slot.EquipmentSlot)
                 {
-                    // verify if equipment slot is compatible
-                    if (slot.EquipmentSlot == slotType)
+                    // verify if this is shard slot
+                    if (slot.EquipmentSlot == HeroEquipmentSlots.Shard)
                     {
-                        // verify if this is shard slot
-                        if (slotType == HeroEquipmentSlot.Shard)
-                        {
-                            // for shard slot we need to verify if party leader has skill at least 1st level
-                            if (Array.Find(lPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel >= 1)
-                            {
-                                // set compatible flag
-                                isCompatible = true;
-                            } else
-                            {
-                                // set not compatible flag
-                                isCompatible = false;
-                            }
-                        }
-                        else
+                        // for shard slot we need to verify if party leader has skill at least 1st level
+                        if (Array.Find(lPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel >= 1)
                         {
                             // set compatible flag
                             isCompatible = true;
                         }
-                        // exit loop
-                        break;
+                        else
+                        {
+                            // set not compatible flag
+                            isCompatible = false;
+                        }
+                    }
+                    else
+                    {
+                        // set compatible flag
+                        isCompatible = true;
                     }
                 }
+                //        // exit loop
+                //        break;
+                //    }
+                //}
                 // verify if slot is compatible
                 if (isCompatible)
                 {

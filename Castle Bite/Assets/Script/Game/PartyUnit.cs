@@ -339,7 +339,7 @@ public enum UnitStatModifierType
     Inititative15Percent            =  300015,
     Inititative30Percent            =  300030,
     Inititative50Percent            =  300050,
-    // Initiative-based stats 40-49
+    // MovePoints-based stats 40-49
     MovePointsCurr50Percent         =  400050,
     MovePointsCurr100Percent        =  400100,
     MovePointsMax50Percent          =  410050,
@@ -1030,8 +1030,9 @@ public class PartyUnit : MonoBehaviour {
         foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
         {
             // verify if item is not in belt
-            if (   (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
-                && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
+            //if (   (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
+            //    && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
+            if ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
             {
                 // verify if item gives required stat bonus
                 // loop through item stat modifiers
@@ -1043,7 +1044,7 @@ public class PartyUnit : MonoBehaviour {
                         //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                         //Debug.Log("Verify non-stackable USMs from the same item");
                         // verify if this is shard slot item
-                        if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                        if ((inventoryItem.CurrentHeroEquipmentSlot & HeroEquipmentSlots.Shard) == HeroEquipmentSlots.Shard)
                         {
                             // apply skill modifier to USMs power
                             usm.skillPowerMultiplier = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel;
@@ -1071,8 +1072,9 @@ public class PartyUnit : MonoBehaviour {
                     foreach (InventoryItem inventoryItem in partyLeader.GetComponentsInChildren<InventoryItem>())
                     {
                         // verify if item is not for belt
-                        if ((inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
-                            && (inventoryItem.HeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
+                        //if ((inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlot.BeltSlot1)
+                        //    && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlot.BeltSlot2))
+                        if ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
                         {
                             // verify if item gives stat bonus
                             // loop through item stat modifiers
@@ -1084,7 +1086,8 @@ public class PartyUnit : MonoBehaviour {
                                     //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                                     //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
                                     // verify if this is shard slot item
-                                    if (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                                    //if (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlot.Shard)
+                                    if ((inventoryItem.CurrentHeroEquipmentSlot & HeroEquipmentSlots.Shard) == HeroEquipmentSlots.Shard)
                                     {
                                         // apply skill modifier to USMs power
                                         usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel;
@@ -1778,7 +1781,7 @@ public class PartyUnit : MonoBehaviour {
             // and that item is not stackable
             && (!inventoryItem.ItemIsStackable)
             // and that item is not in equipment slot
-            && (inventoryItem.HeroEquipmentSlot == HeroEquipmentSlot.None))
+            && (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None))
         {
             // unit already has this item
             // verify if item is stackable
