@@ -3,13 +3,12 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
+// Note: this functionality has been moved to GameEvent
 public class EventsManager : MonoBehaviour
 {
-
     private Dictionary<GameEvent, List<EventsListener>> eventsDictionary;
 
     private static EventsManager eventsManager;
-
     public static EventsManager Instance
     {
         get
@@ -27,7 +26,6 @@ public class EventsManager : MonoBehaviour
                     eventsManager.Init();
                 }
             }
-
             return eventsManager;
         }
     }

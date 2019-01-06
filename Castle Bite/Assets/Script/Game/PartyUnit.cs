@@ -2406,8 +2406,8 @@ public class PartyUnit : MonoBehaviour {
             // set party unit which is rising event
             // UnitEvents.unitStatus.HasChanged.partyUnit = this;
             // rise an event
-            // UnitEvents.unitStatus.HasChanged.Raise();
-            EventsManager.TriggerEvent(UnitEvents.unitStatus.HasChanged, gameObject);
+            UnitEvents.unitStatus.HasChanged.Raise(gameObject);
+            // EventsManager.TriggerEvent(UnitEvents.unitStatus.HasChanged, gameObject);
         }
     }
 

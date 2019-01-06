@@ -50,8 +50,8 @@ public class EventsListener : MonoBehaviour
         foreach (EventAndAction eventAndAction in eventsAndActions)
         {
             // Register this event listener in defined GameEvent
-            EventsManager.StartListening(eventAndAction.gameEvent, this);
-            // eventAndAction.gameEvent.RegisterEventsListener(this);
+            // EventsManager.StartListening(eventAndAction.gameEvent, this);
+            eventAndAction.gameEvent.RegisterEventsListener(this);
         }
     }
 
@@ -61,8 +61,8 @@ public class EventsListener : MonoBehaviour
         foreach (EventAndAction eventAndAction in eventsAndActions)
         {
             // Deregister this event listener in defined GameEvent
-            EventsManager.StopListening(eventAndAction.gameEvent, this);
-            // eventAndAction.gameEvent.DeRegisterEventsListener(this);
+            // EventsManager.StopListening(eventAndAction.gameEvent, this);
+            eventAndAction.gameEvent.DeRegisterEventsListener(this);
         }
     }
 
