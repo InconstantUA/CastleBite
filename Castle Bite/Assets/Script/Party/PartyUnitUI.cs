@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -185,51 +186,87 @@ public class PartyUnitUI : MonoBehaviour {
         infoPanelTxt.color = defaultUnitStatusColor;
     }
 
-    public void SetUnitStatus(UnitStatus value)
+
+    //public void SetUnitStatus(UnitStatus unitStatus)
+    //{
+    //    Debug.Log("Set unit " + LPartyUnit.UnitName + " status " + unitStatus.ToString());
+    //    LPartyUnit.UnitStatus = unitStatus;
+    //    //// get new UI color according ot unit status
+    //    //Color32 newUIColor;
+    //    //// set dead in status
+    //    //string statusString;
+    //    //switch (value)
+    //    //{
+    //    //    case UnitStatus.Active:
+    //    //        newUIColor = new Color32(160, 160, 160, 255);
+    //    //        statusString = "";
+    //    //        break;
+    //    //    case UnitStatus.Waiting:
+    //    //        newUIColor = new Color32(96, 96, 96, 96);
+    //    //        statusString = "Waiting";
+    //    //        break;
+    //    //    case UnitStatus.Escaping:
+    //    //        newUIColor = new Color32(96, 96, 96, 255);
+    //    //        statusString = "Escaping";
+    //    //        break;
+    //    //    case UnitStatus.Escaped:
+    //    //        newUIColor = new Color32(64, 64, 64, 255);
+    //    //        statusString = "Escaped";
+    //    //        // clear unit buffs and debuffs
+    //    //        RemoveAllBuffsAndDebuffs();
+    //    //        break;
+    //    //    case UnitStatus.Dead:
+    //    //        newUIColor = new Color32(64, 64, 64, 255);
+    //    //        statusString = "Dead";
+    //    //        // clear unit buffs and debuffs
+    //    //        RemoveAllBuffsAndDebuffs();
+    //    //        break;
+    //    //    default:
+    //    //        Debug.LogError("Unknown status " + value.ToString());
+    //    //        newUIColor = Color.red;
+    //    //        statusString = "Error";
+    //    //        break;
+    //    //}
+    //    // Get Unit status config
+    //    UnitStatusConfig unitStatusConfig = Array.Find(ConfigManager.Instance.UnitStatusConfigs, e => e.unitStatus == LPartyUnit.UnitStatus);
+    //    // Set UI colors and text according to the configu
+    //    // Set status text color
+    //    GetUnitStatusText().color = unitStatusConfig.statusTextColor;
+    //    // Set status text
+    //    GetUnitStatusText().text = unitStatusConfig.statusDisplayName;
+    //    // Set current health color
+    //    GetUnitCurrentHealthText().color = unitStatusConfig.currentHealthTextColor;
+    //    // Set max health color
+    //    GetUnitMaxHealthText().color = unitStatusConfig.maxHealthTextColor;
+    //    // Set canvas color
+    //    GetUnitCanvasText().color = unitStatusConfig.unitCanvasTextColor;
+    //}
+
+    public void OnPartyUnitStatusChange(PartyUnit changedPartyUnit)
     {
-        Debug.Log("Set unit " + LPartyUnit.UnitName + " status " + value.ToString());
-        LPartyUnit.UnitStatus = value;
-        // get new UI color according ot unit status
-        Color32 newUIColor;
-        // set dead in status
-        string statusString;
-        switch (value)
+        // verify if changed party unit is the same as current
+        if (changedPartyUnit == LPartyUnit)
         {
-            case UnitStatus.Active:
-                newUIColor = new Color32(160, 160, 160, 255);
-                statusString = "";
-                break;
-            case UnitStatus.Waiting:
-                newUIColor = new Color32(96, 96, 96, 96);
-                statusString = "Waiting";
-                break;
-            case UnitStatus.Escaping:
-                newUIColor = new Color32(96, 96, 96, 255);
-                statusString = "Escaping";
-                break;
-            case UnitStatus.Escaped:
-                newUIColor = new Color32(64, 64, 64, 255);
-                statusString = "Escaped";
-                // clear unit buffs and debuffs
-                RemoveAllBuffsAndDebuffs();
-                break;
-            case UnitStatus.Dead:
-                newUIColor = new Color32(64, 64, 64, 255);
-                statusString = "Dead";
-                // clear unit buffs and debuffs
-                RemoveAllBuffsAndDebuffs();
-                break;
-            default:
-                Debug.LogError("Unknown status " + value.ToString());
-                newUIColor = Color.red;
-                statusString = "Error";
-                break;
+            SetUnitStatus();
         }
-        GetUnitCurrentHealthText().color = newUIColor;
-        GetUnitMaxHealthText().color = newUIColor;
-        GetUnitCanvasText().color = newUIColor;
-        GetUnitStatusText().color = newUIColor;
-        GetUnitStatusText().text = statusString;
+    }
+
+    public void SetUnitStatus()
+    {
+        Debug.Log("Set unit " + LPartyUnit.UnitName + " status " + LPartyUnit.UnitStatus.ToString() + " in UI");
+        // Get Unit status config
+        UnitStatusConfig unitStatusConfig = Array.Find(ConfigManager.Instance.UnitStatusConfigs, e => e.unitStatus == LPartyUnit.UnitStatus);
+        // Set UI colors and text according to the configu
+        // Set status text color
+        GetUnitStatusText().color = unitStatusConfig.statusTextColor;
+        // Set status text
+        GetUnitStatusText().text = unitStatusConfig.statusDisplayName;
+        // Set current health color
+        GetUnitCurrentHealthText().color = unitStatusConfig.currentHealthTextColor;
+        // Set max health color
+        GetUnitMaxHealthText().color = unitStatusConfig.maxHealthTextColor;
+        // Set canvas color
+        GetUnitCanvasText().color = unitStatusConfig.unitCanvasTextColor;
     }
 
     #endregion Unit Status and (De)Buffs
@@ -297,7 +334,7 @@ public class PartyUnitUI : MonoBehaviour {
         // Set unit health
         UpdateUnitHealthInfo();
         // Set unit status
-        SetUnitStatus(LPartyUnit.UnitStatus);
+        SetUnitStatus();
     }
 
     #region Unit Br Canvas
@@ -343,7 +380,7 @@ public class PartyUnitUI : MonoBehaviour {
         if (0 == healthAfterDamage)
         {
             // set unit is dead attribute
-            SetUnitStatus(UnitStatus.Dead);
+            LPartyUnit.UnitStatus = UnitStatus.Dead;
         }
         // display damage dealt in info panel
         Text infoPanel = GetUnitInfoPanelText();

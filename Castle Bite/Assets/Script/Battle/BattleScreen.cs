@@ -689,7 +689,7 @@ public class BattleScreen : MonoBehaviour {
                 break;
             case UnitStatus.Waiting:
                 // Activate unit
-                ActiveUnitUI.SetUnitStatus(UnitStatus.Active);
+                ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Active;
                 break;
             case UnitStatus.Escaping:
                 break;
@@ -735,7 +735,7 @@ public class BattleScreen : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.25f);
         ActiveUnitUI.LPartyUnit.HasMoved = true;
-        ActiveUnitUI.SetUnitStatus(UnitStatus.Escaped);
+        ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Escaped;
         // This unit can't act any more
         // Skip post-move actions and Activate next unit
         canActivate = ActivateNextUnit();

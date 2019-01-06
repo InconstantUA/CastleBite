@@ -1784,7 +1784,6 @@ public class PartyUnit : MonoBehaviour {
             && (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None))
         {
             // unit already has this item
-            // verify if item is stackable
             Debug.LogWarning("Unit already has " + inventoryItem.name + " item or its bonuses applied. The same item cannot be applied or consumed again.");
             // same item cannot be applied once again
             isApplicable = false;
@@ -2380,6 +2379,20 @@ public class PartyUnit : MonoBehaviour {
         //}
     }
 
+    UnitEventsConfig unitEvents;
+    public UnitEventsConfig UnitEvents
+    {
+        get
+        {
+            if (unitEvents == null)
+            {
+                // get events from config
+                unitEvents = ConfigManager.Instance.UnitEventsConfig;
+            }
+            return unitEvents;
+        }
+    }
+
     public UnitStatus UnitStatus
     {
         get
@@ -2390,6 +2403,11 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.unitStatus = value;
+            // set party unit which is rising event
+            // UnitEvents.unitStatus.HasChanged.partyUnit = this;
+            // rise an event
+            // UnitEvents.unitStatus.HasChanged.Raise();
+            EventsManager.TriggerEvent(UnitEvents.unitStatus.HasChanged, gameObject);
         }
     }
 

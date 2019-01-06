@@ -13,9 +13,13 @@ public class PartyUnitEvent : UnityEvent<PartyUnit>
 {
 }
 
+[System.Serializable]
+public class EventWithTriggeredObjectReference : UnityEvent<System.Object>
+{
+}
+
 public class EventsAdmin : MonoBehaviour {
     public static EventsAdmin Instance { get; private set; }
-
     private void Awake()
     {
         Instance = this;

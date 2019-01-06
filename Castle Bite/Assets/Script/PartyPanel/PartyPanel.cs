@@ -2306,7 +2306,7 @@ public class PartyPanel : MonoBehaviour {
                 // Clear status in UI, because it is not in exceptions list
                 partyUnitUI.ClearPartyUnitStatusUI();
                 // Reset status in unit
-                partyUnitUI.SetUnitStatus(UnitStatus.Active);
+                partyUnitUI.LPartyUnit.UnitStatus = UnitStatus.Active;
             }
         }
         //foreach (Row horisontalPanel in horisontalPanels)
