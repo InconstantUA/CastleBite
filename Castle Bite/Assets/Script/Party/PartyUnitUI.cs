@@ -25,7 +25,7 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    void OnCurrentHealthChanged(PartyUnit partyUnit)
+    public void OnCurrentHealthChanged(PartyUnit partyUnit)
     {
         // verify if party unit is this
         if (partyUnit == LPartyUnit)
@@ -34,7 +34,7 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    void OnMaxHealthChanged(PartyUnit partyUnit)
+    public void OnMaxHealthChanged(PartyUnit partyUnit)
     {
         // verify if party unit is this
         if (partyUnit == LPartyUnit)
@@ -54,8 +54,8 @@ public class PartyUnitUI : MonoBehaviour {
         // Set required PartyUnit handlers
         SetPartyUnitHandlersActive(true);
         // register for unit health events changes
-        EventsAdmin.Instance.OnPartyUnitHealthCurrentChanged.AddListener(OnCurrentHealthChanged);
-        EventsAdmin.Instance.OnPartyUnitHealthMaxChanged.AddListener(OnMaxHealthChanged);
+        //EventsAdmin.Instance.OnPartyUnitHealthCurrentChanged.AddListener(OnCurrentHealthChanged);
+        //EventsAdmin.Instance.OnPartyUnitHealthMaxChanged.AddListener(OnMaxHealthChanged);
     }
 
     void OnDisable()
@@ -63,8 +63,8 @@ public class PartyUnitUI : MonoBehaviour {
         // Remove required PartyUnit handlers
         SetPartyUnitHandlersActive(false);
         // unregister from unit health events changes
-        EventsAdmin.Instance.OnPartyUnitHealthCurrentChanged.RemoveListener(OnCurrentHealthChanged);
-        EventsAdmin.Instance.OnPartyUnitHealthMaxChanged.RemoveListener(OnMaxHealthChanged);
+        //EventsAdmin.Instance.OnPartyUnitHealthCurrentChanged.RemoveListener(OnCurrentHealthChanged);
+        //EventsAdmin.Instance.OnPartyUnitHealthMaxChanged.RemoveListener(OnMaxHealthChanged);
     }
 
     void OnTransformChildrenChanged()

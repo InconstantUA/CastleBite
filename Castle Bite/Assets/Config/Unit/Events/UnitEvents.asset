@@ -14,3 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitStatus:
     HasChanged: {fileID: 11400000, guid: c1989a83e02eed844881c97c744a129a, type: 2}
+  unitHealthCurr:
+    HasChanged: {fileID: 11400000, guid: 6035039c5ce6b154a81575af8089d97e, type: 2}
+  unitHealthMax:
+    HasChanged: {fileID: 11400000, guid: 7aeb2af3bfefb5b4c9c6350c2260f968, type: 2}

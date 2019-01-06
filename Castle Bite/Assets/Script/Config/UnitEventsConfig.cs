@@ -13,4 +13,6 @@ public class UnitPropertyEvents
 public class UnitEventsConfig : ScriptableObject
 {
     public UnitPropertyEvents unitStatus;
+    public UnitPropertyEvents unitHealthCurr;
+    public UnitPropertyEvents unitHealthMax;
 }

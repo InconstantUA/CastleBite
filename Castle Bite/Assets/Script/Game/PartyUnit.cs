@@ -2099,8 +2099,10 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.unitHealthCurr = value;
-            // trigger event
-            EventsAdmin.Instance.IHasChanged(this, new HealthCurrent());
+            // rise an event
+            UnitEvents.unitHealthCurr.HasChanged.Raise(gameObject);
+            //// trigger event
+            //EventsAdmin.Instance.IHasChanged(this, new HealthCurrent());
         }
     }
 
@@ -2575,7 +2577,8 @@ public class PartyUnit : MonoBehaviour {
         {
             partyUnitData.statsUpgradesCount = value;
             // trigger events for all stats-dependant attributes
-            EventsAdmin.Instance.IHasChanged(this, new HealthMax());
+            // EventsAdmin.Instance.IHasChanged(this, new HealthMax());
+            UnitEvents.unitHealthMax.HasChanged.Raise(gameObject);
         }
     }
 

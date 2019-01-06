@@ -13,10 +13,10 @@ public class PartyUnitEvent : UnityEvent<PartyUnit>
 {
 }
 
-[System.Serializable]
-public class EventWithTriggeredObjectReference : UnityEvent<System.Object>
-{
-}
+//[System.Serializable]
+//public class EventWithTriggeredObjectReference : UnityEvent<System.Object>
+//{
+//}
 
 public class EventsAdmin : MonoBehaviour {
     public static EventsAdmin Instance { get; private set; }
@@ -32,10 +32,10 @@ public class EventsAdmin : MonoBehaviour {
     public UnityEvent OnPlayerGoldHasChanged;
     // on player mana changed event
     public UnityEvent OnPlayerManaHasChanged;
-    // on party unit health current changed event
-    public PartyUnitEvent OnPartyUnitHealthCurrentChanged;
-    // on party unit health max changed event
-    public PartyUnitEvent OnPartyUnitHealthMaxChanged;
+    //// on party unit health current changed event
+    //public PartyUnitEvent OnPartyUnitHealthCurrentChanged;
+    //// on party unit health max changed event
+    //public PartyUnitEvent OnPartyUnitHealthMaxChanged;
 
     // For city faction changes
     // This function is Triggered when city faction parameter is set
@@ -59,18 +59,18 @@ public class EventsAdmin : MonoBehaviour {
         OnPlayerManaHasChanged.Invoke();
     }
 
-    // For player current health changes
-    public void IHasChanged(PartyUnit partyUnit, HealthCurrent healthCurrent)
-    {
-        Debug.Log(partyUnit.UnitName + " unit current health has changed");
-        OnPartyUnitHealthCurrentChanged.Invoke(partyUnit);
-    }
+    //// For unit current health changes
+    //public void IHasChanged(PartyUnit partyUnit, HealthCurrent healthCurrent)
+    //{
+    //    Debug.Log(partyUnit.UnitName + " unit current health has changed");
+    //    OnPartyUnitHealthCurrentChanged.Invoke(partyUnit);
+    //}
 
-    // For player max health changes
-    public void IHasChanged(PartyUnit partyUnit, HealthMax healthMax)
-    {
-        Debug.Log(partyUnit.UnitName + " unit max health has changed");
-        OnPartyUnitHealthMaxChanged.Invoke(partyUnit);
-    }
+    //// For unit max health changes
+    //public void IHasChanged(PartyUnit partyUnit, HealthMax healthMax)
+    //{
+    //    Debug.Log(partyUnit.UnitName + " unit max health has changed");
+    //    OnPartyUnitHealthMaxChanged.Invoke(partyUnit);
+    //}
 
 }
