@@ -77,7 +77,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 srcPartyUnitUI.LPartyUnit.transform.SetParent(dstHeroParty.transform);
             }
             // Change unit's address
-            srcPartyUnitUI.LPartyUnit.UnitPPRow = srcPartyUnitUI.GetUnitRow().GetComponent<PartyPanelRow>().Row;
+            srcPartyUnitUI.LPartyUnit.UnitPPRow = srcPartyUnitUI.GetUnitRow().Row;
             srcPartyUnitUI.LPartyUnit.UnitPPCell = srcPartyUnitUI.GetUnitCell().GetComponent<PartyPanelCell>().Cell;
         }
         //  verfy that unit canvas is present, dst cell may be free
@@ -92,7 +92,7 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
                 dstPartyUnitUI.LPartyUnit.transform.SetParent(srcHeroParty.transform);
             }
             // Change unit's address
-            dstPartyUnitUI.LPartyUnit.UnitPPRow = dstPartyUnitUI.GetUnitRow().GetComponent<PartyPanelRow>().Row;
+            dstPartyUnitUI.LPartyUnit.UnitPPRow = dstPartyUnitUI.GetUnitRow().Row;
             dstPartyUnitUI.LPartyUnit.UnitPPCell = dstPartyUnitUI.GetUnitCell().GetComponent<PartyPanelCell>().Cell;
         }
     }

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92021bc43e45234a835733f2a75c825, type: 3}
+  m_Name: EscapingUI
+  m_EditorClassIdentifier: 
+  unitStatus: 2
+  statusDisplayName: Escaping
+  statusTextColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
+  currentHealthTextColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
+  maxHealthTextColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
+  unitCanvasTextColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
+  onTryToResurectFriendlyMessage: Cannot resurect alive units.
+  onTryToResurectEnemyMessage: Cannot resurect alive and enemy units.
+  onTryToHealFriendlyWithFullHealthMessage: Heal is not applicable to units with full
+    health.
+  onTryToHealFriendlyWithNotFullHealthMessage: 
+  onTryToHealEnemyMessage: Cannot heal enemy units.
+  onTryToAttackFriendlyMessage: Cannot attack friendly units.
+  onTryToAttackNonBlockedEnemyMessage: 
+  onTryToAttackEnemyIfMeleAttackerIsBlockedByFriendlyFrontRowUnitsMessage: Active
+    unit has mele attack range and can attack only adjacent units. At this moment
+    it is blocked by front row party members and cannot attack this enemy unit.
+  onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByFriendlyUnitsInFrontRowMessage: This
+    enemy unit cannot be targeted, because it is protected by units in a front row.
+  onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitAboveMessage: This unit
+    cannot be targeted by mele attack. It is protected by unit above.
+  onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitBelowMessage: This unit
+    cannot be targeted by mele attack. It is protected by unit below.

@@ -71739,16 +71739,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  OnPartyUnitHealthCurrentChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-  OnPartyUnitHealthMaxChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
 --- !u!114 &1201476887
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71845,6 +71835,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80fc7c909437ea845a09f1603be6a774, type: 2}
   - {fileID: 11400000, guid: fb0ab0a6570a06641a28c1d4b2aee86f, type: 2}
   unitStatusConfigs:
+  - {fileID: 11400000, guid: d083152947b1e2749b31fbe94f0de756, type: 2}
+  - {fileID: 11400000, guid: 82c777e72dd65dd4fb7112c9d1d57f9a, type: 2}
+  - {fileID: 11400000, guid: 2b8276f46f968804ba21533c25551681, type: 2}
+  - {fileID: 11400000, guid: c801e697a8646bf44977f8c90e8a36a3, type: 2}
+  - {fileID: 11400000, guid: 1bd5ce4365308134782ea88744f2a3b7, type: 2}
+  unitStatusUIConfigs:
   - {fileID: 11400000, guid: 1d3c2afc80429914687576beecc8ba9e, type: 2}
   - {fileID: 11400000, guid: 9402ac324b3e6c140aca07b8360132e5, type: 2}
   - {fileID: 11400000, guid: f97590b4b79273e42972079fd23ecb8f, type: 2}

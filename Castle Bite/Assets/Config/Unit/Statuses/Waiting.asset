@@ -9,12 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c92021bc43e45234a835733f2a75c825, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a9cce172fb79374eb54dfa67d133a18, type: 3}
   m_Name: Waiting
   m_EditorClassIdentifier: 
   unitStatus: 1
-  statusDisplayName: Waiting
-  statusTextColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 1}
-  currentHealthTextColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
-  maxHealthTextColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
-  unitCanvasTextColor: {r: 0.37647063, g: 0.37647063, b: 0.37647063, a: 1}
+  canBeResurectedFriendly: 0
+  canBeResurectedEnemy: 0
+  canBeHealedFriendlyWitFullHealth: 0
+  canBeHealedFriendlyWithNotFullHealth: 1
+  canBeHealedEnemy: 0
+  canBeGivenATurnInBattle: 1
+  canBeAttackedIfFriendly: 0
+  canBeAttackedIfEnemyAndBlocked: 0
+  canBeAttackedIfEnemyAndNotBlocked: 1

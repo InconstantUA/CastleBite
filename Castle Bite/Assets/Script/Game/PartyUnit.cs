@@ -553,6 +553,7 @@ public class PartyUnit : MonoBehaviour {
     [SerializeField]
     PartyUnitData partyUnitData;
     PartyUnitConfig partyUnitConfig; // init on Awake
+    UnitStatusConfig unitStatusConfig;
 
     // Misc Battle attributes
     private bool hasMoved = false;
@@ -1954,6 +1955,25 @@ public class PartyUnit : MonoBehaviour {
     }
 
     #region Attributes accessors
+    public UnitStatusConfig UnitStatusConfig
+    {
+        get
+        {
+            if (unitStatusConfig == null)
+            {
+                // get config from Configs Manager
+                unitStatusConfig = Array.Find(ConfigManager.Instance.UnitStatusConfigs, e => e.unitStatus == UnitStatus);
+            }
+            return unitStatusConfig;
+        }
+
+        set
+        {
+            // normally used to reset status to null;
+            unitStatusConfig = value;
+        }
+    }
+
     public string UnitName
     {
         get
@@ -2405,6 +2425,8 @@ public class PartyUnit : MonoBehaviour {
         set
         {
             partyUnitData.unitStatus = value;
+            // Reset previous unit status config
+            UnitStatusConfig = null;
             // set party unit which is rising event
             // UnitEvents.unitStatus.HasChanged.partyUnit = this;
             // rise an event

@@ -24,6 +24,8 @@ public class ConfigManager : MonoBehaviour
     [SerializeField]
     UnitStatusConfig[] unitStatusConfigs;
     [SerializeField]
+    UnitStatusUIConfig[] unitStatusUIConfigs;
+    [SerializeField]
     UnitEventsConfig unitEventsConfig;
 
     void Awake()
@@ -117,16 +119,16 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
-    public UnitStatusConfig[] UnitStatusConfigs
+    public UnitStatusUIConfig[] UnitStatusUIConfigs
     {
         get
         {
-            return unitStatusConfigs;
+            return unitStatusUIConfigs;
         }
 
         set
         {
-            unitStatusConfigs = value;
+            unitStatusUIConfigs = value;
         }
     }
 
@@ -140,6 +142,19 @@ public class ConfigManager : MonoBehaviour
         set
         {
             unitEventsConfig = value;
+        }
+    }
+
+    public UnitStatusConfig[] UnitStatusConfigs
+    {
+        get
+        {
+            return unitStatusConfigs;
+        }
+
+        set
+        {
+            unitStatusConfigs = value;
         }
     }
 }

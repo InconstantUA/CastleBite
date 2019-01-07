@@ -123,10 +123,10 @@ public class PartyUnitUI : MonoBehaviour {
         return transform.parent.parent;
     }
 
-    public Transform GetUnitRow()
+    public PartyPanelRow GetUnitRow()
     {
         // structure: 3[Top/Middle/Bottom]Row-2UnitCell[Front/Back/Wide]-1UnitSlot-UnitCanvas(this with link to Unit)
-        return transform.parent.parent.parent;
+        return transform.parent.parent.parent.GetComponent<PartyPanelRow>();
     }
 
     #region Unit Info Panel
@@ -254,19 +254,20 @@ public class PartyUnitUI : MonoBehaviour {
     public void SetUnitStatus()
     {
         Debug.Log("Set unit " + LPartyUnit.UnitName + " status " + LPartyUnit.UnitStatus.ToString() + " in UI");
-        // Get Unit status config
-        UnitStatusConfig unitStatusConfig = Array.Find(ConfigManager.Instance.UnitStatusConfigs, e => e.unitStatus == LPartyUnit.UnitStatus);
+        // Reset previously fetched unit status config, because it has changed
+        // After reset on next get UnitStatusUIConfig call new config will be fetched according to new status
+        UnitStatusUIConfig = null;
         // Set UI colors and text according to the configu
         // Set status text color
-        GetUnitStatusText().color = unitStatusConfig.statusTextColor;
+        GetUnitStatusText().color = UnitStatusUIConfig.statusTextColor;
         // Set status text
-        GetUnitStatusText().text = unitStatusConfig.statusDisplayName;
+        GetUnitStatusText().text = UnitStatusUIConfig.statusDisplayName;
         // Set current health color
-        GetUnitCurrentHealthText().color = unitStatusConfig.currentHealthTextColor;
+        GetUnitCurrentHealthText().color = UnitStatusUIConfig.currentHealthTextColor;
         // Set max health color
-        GetUnitMaxHealthText().color = unitStatusConfig.maxHealthTextColor;
+        GetUnitMaxHealthText().color = UnitStatusUIConfig.maxHealthTextColor;
         // Set canvas color
-        GetUnitCanvasText().color = unitStatusConfig.unitCanvasTextColor;
+        GetUnitCanvasText().color = UnitStatusUIConfig.unitCanvasTextColor;
     }
 
     #endregion Unit Status and (De)Buffs
@@ -598,4 +599,29 @@ public class PartyUnitUI : MonoBehaviour {
         }
 
     }
+
+    #region Properties
+    UnitStatusUIConfig unitStatusUIConfig;
+    public UnitStatusUIConfig UnitStatusUIConfig
+    {
+        get
+        {
+            // verify if unit status UI config is not initialized yet
+            if (unitStatusUIConfig == null)
+            {
+                // Get and set Unit status UI config
+                unitStatusUIConfig = Array.Find(ConfigManager.Instance.UnitStatusUIConfigs, e => e.unitStatus == LPartyUnit.UnitStatus);
+            }
+            return unitStatusUIConfig;
+            //// Get fresh unit status config, because Linked Party Unit may change and its status may change too
+            //return Array.Find(ConfigManager.Instance.UnitStatusUIConfigs, e => e.unitStatus == LPartyUnit.UnitStatus);
+        }
+
+        set
+        {
+            unitStatusUIConfig = value;
+        }
+    }
+
+    #endregion Properties
 }
