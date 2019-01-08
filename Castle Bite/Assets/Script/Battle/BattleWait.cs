@@ -74,7 +74,7 @@ public class BattleWait : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         // set unit is waiting status
         battleScreen.ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Waiting;
         // execute wait animation
-        battleScreen.GetQueue().Run(Wait());
+        battleScreen.Queue.Run(Wait());
         // activate next unit
         battleScreen.ActivateNextUnit();
     }

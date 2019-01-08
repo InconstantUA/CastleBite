@@ -10,10 +10,8 @@ public class BattleScreen : MonoBehaviour {
 
     // save active unit parent, because active unit may change
     Transform activeUnitParent;
-
-    bool battleHasEnded;
-    bool canActivate = false; // if it is possible to activate next unit
-    //bool queueIsActive;
+    // bool canActivate = false; // if it is possible to activate next unit
+    public bool BattleHasEnded { get; private set; }
 
     CoroutineQueue queue;
 
@@ -26,18 +24,7 @@ public class BattleScreen : MonoBehaviour {
     };
     TurnPhase turnPhase;
 
-    //public PartyUnit ActiveUnit
-    //{
-    //    get
-    //    {
-    //        return activeUnitParent.GetComponentInChildren<PartyUnit>();
-    //    }
 
-    //    set
-    //    {
-    //        activeUnitParent = value.transform.parent;
-    //    }
-    //}
     public PartyUnitUI ActiveUnitUI
     {
         get
@@ -48,6 +35,20 @@ public class BattleScreen : MonoBehaviour {
         set
         {
             activeUnitParent = value.transform;
+        }
+    }
+
+    public CoroutineQueue Queue
+    {
+        get
+        {
+            // verify if queue is not initiated == null
+            if (queue == null)
+            {
+                // Create a coroutine queue that can run max 1 coroutine at once
+                queue = new CoroutineQueue(1, StartCoroutine);
+            }
+            return queue;
         }
     }
 
@@ -66,17 +67,11 @@ public class BattleScreen : MonoBehaviour {
         return enemyPartyPanel;
     }
 
-    public bool GetBattleHasEnded()
-    {
-        return battleHasEnded;
-    }
 
 
 
     // Use this for initialization
     void Awake() {
-        // Create a coroutine queue that can run max 1 coroutine at once
-        queue = new CoroutineQueue(1, StartCoroutine);
         battleAI = GetComponent<BattleAI>();
     }
 
@@ -179,15 +174,12 @@ public class BattleScreen : MonoBehaviour {
         // set if party can escape based on its original position
         playerHeroParty.CanEscapeFromBattle = CanEscape(playerHeroParty.PreBattleParentTr);
         enemyHeroParty.CanEscapeFromBattle = CanEscape(enemyHeroParty.PreBattleParentTr);
-        //// Get parties leaders
-        //PartyUnit playerPartyLeader = playerHeroParty.GetPartyLeader();
-        //PartyUnit enemyPartyLeader = enemyHeroParty.GetPartyLeader();
         // Activate Hero parties UIs upfront so that PartyLeaders UIs are created
         playerHeroPartyUI.gameObject.SetActive(true);
         enemyHeroPartyUI.gameObject.SetActive(true);
-        // assign party leader to left focus panel
+        // assign party leader to the left focus panel
         transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerHeroPartyUI.GetPartyLeaderUI().gameObject;
-        // activate left Focus panel
+        // assign party leader to the right focus panel
         transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyHeroPartyUI.GetPartyLeaderUI().gameObject;
         // Activate all needed UI at once
         SetCommonBattleUIActive(true);
@@ -198,8 +190,6 @@ public class BattleScreen : MonoBehaviour {
         // .. do it automatically in future, based on ...
         playerPartyPanel.IsAIControlled = false;
         enemyPartyPanel.IsAIControlled = false;
-        // Set turn phase to main phase
-        SetTurnPhase(TurnPhase.Main);
         // start turn based battle
         StartBattle();
     }
@@ -275,20 +265,18 @@ public class BattleScreen : MonoBehaviour {
     void StartBattle()
     {
         //Debug.Log("StartBattle");
-        // set battle has started
-        battleHasEnded = false;
-        // deactivate hero edit click and drag handler
-        //playerPartyPanel.SetOnEditClickHandler(false);
-        //enemyPartyPanel.SetOnEditClickHandler(false);
-        // activate battle click handler, which will react on clicks
-        //playerPartyPanel.SetOnBattleClickHandler(true);
-        //enemyPartyPanel.SetOnBattleClickHandler(true);
-        // do battle until some party wins or other party flee
-        if (!StartTurn())
-        {
-            // it is not possible to start new turn
-            queue.Run(EndBattle());
-        }
+        // Set turn phase to main phase
+        SetTurnPhase(TurnPhase.Main);
+        // set battle has ended to false
+        BattleHasEnded = false;
+        // Start turn
+        StartTurn();
+        //// do battle until some party wins or other party flee
+        //if (!StartTurn())
+        //{
+        //    // it is not possible to start new turn
+        //    Queue.Run(EndBattle());
+        //}
     }
 
     //MapManager GetMapManager()
@@ -445,7 +433,7 @@ public class BattleScreen : MonoBehaviour {
     {
         Debug.Log("EndBattle");
         // set battle has ended
-        battleHasEnded = true;
+        BattleHasEnded = true;
         // Remove highlight from active unit
         ActiveUnitUI.HighlightActiveUnitInBattle(false);
         // Set exit button variable
@@ -526,7 +514,7 @@ public class BattleScreen : MonoBehaviour {
     void SetTurnPhase(TurnPhase newPhase)
     {
         // Todo: Consider just unsing bool, if there will be no other phases
-        // act based on the previous phase value
+        // act based on the previous (current) phase value
         switch (turnPhase)
         {
             case TurnPhase.Main:
@@ -568,40 +556,56 @@ public class BattleScreen : MonoBehaviour {
         turnPhase = newPhase;
     }
 
-    bool StartTurn()
+    //void StartTurn()
+    //{
+    //    //Debug.Log("StartTurn");
+    //    //bool canStart = false;
+    //    // Verify if battle has not ended yet, if there are still units which can fight on both sides
+    //    if (CanContinueBattle())
+    //    {
+    //        // Reset hasMoved flag on all units, so they can now move again;
+    //        ResetHasMovedFlag();
+    //        // Reset turn phase to main
+    //        SetTurnPhase(TurnPhase.Main);
+    //        // loop through all units according to their initiative
+    //        // Activate unit with the highest initiative
+    //        ActivateNextUnit();
+    //        //canStart = ActivateNextUnit();
+    //    }
+    //    else
+    //    {
+    //        Queue.Run(EndBattle());
+    //    }
+    //    //return canStart;
+    //}
+
+    void StartTurn()
     {
-        //Debug.Log("StartTurn");
-        bool canStart = false;
-        // Verify if battle has not ended yet, if there are still units which can fight on both sides
-        if (CanContinueBattle())
-        {
-            // Reset hasMoved flag on all units, so they can now move again;
-            ResetHasMovedFlag();
-            // Reset turn phase to main
-            SetTurnPhase(TurnPhase.Main);
-            // loop through all units according to their initiative
-            // Activate unit with the highest initiative
-            canStart = ActivateNextUnit();
-        }
-        return canStart;
+        // Reset hasMoved flag on all units, so they can now move again;
+        ResetHasMovedFlag();
+        // Reset turn phase to main
+        SetTurnPhase(TurnPhase.Main);
+        // Activate unit with the highest initiative
+        ActivateNextUnit();
     }
 
     bool CanContinueBattle()
     {
-        bool canContinue = false;
         // verify if there are units in both parties that can fight
         if (playerPartyPanel.CanFight() && enemyPartyPanel.CanFight())
         {
-            canContinue = true;
+            // can continue battle
+            return true;
         }
-        return canContinue;
+        // cannot continue battle
+        return false;
     }
 
     PartyUnitUI FindNextUnit()
     {
         // Find unit with the highest initiative, which can still move during this turn in battle
-        PartyUnitUI playerNextUnitUI = playerPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
-        PartyUnitUI enemyNextUnitUI = enemyPartyPanel.GetActiveUnitWithHighestInitiative(turnPhase);
+        PartyUnitUI playerNextUnitUI = playerPartyPanel.GetActiveUnitUIWithHighestInitiative(turnPhase);
+        PartyUnitUI enemyNextUnitUI = enemyPartyPanel.GetActiveUnitUIWithHighestInitiative(turnPhase);
         // verify if player and enemy has more units to move
         if (playerNextUnitUI && enemyNextUnitUI)
         {
@@ -682,23 +686,22 @@ public class BattleScreen : MonoBehaviour {
         enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
         // Highlight next unit
         // If unit had waiting status in the past, then reset it back to active
-        UnitStatus unitStatus = ActiveUnitUI.LPartyUnit.UnitStatus;
-        switch (unitStatus)
+        switch (ActiveUnitUI.LPartyUnit.UnitStatus)
         {
-            case UnitStatus.Active:
-                break;
             case UnitStatus.Waiting:
-                // Activate unit
+                // Change unit status to Active
                 ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Active;
                 break;
+            case UnitStatus.Active:
             case UnitStatus.Escaping:
+                // nothing to do here
                 break;
             case UnitStatus.Dead:
             case UnitStatus.Escaped:
-                Debug.LogError("This status [" + unitStatus.ToString() + "] should not be here.");
+                Debug.LogError("Unit with [" + ActiveUnitUI.LPartyUnit.UnitStatus + "] status should not get turn.");
                 break;
             default:
-                Debug.LogError("Unknown unit status " + unitStatus.ToString());
+                Debug.LogError("Unknown unit status " + ActiveUnitUI.LPartyUnit.UnitStatus);
                 break;
         }
         //yield return null;
@@ -738,14 +741,15 @@ public class BattleScreen : MonoBehaviour {
         ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Escaped;
         // This unit can't act any more
         // Skip post-move actions and Activate next unit
-        canActivate = ActivateNextUnit();
+        // canActivate = ActivateNextUnit();
+        ActivateNextUnit();
         yield return new WaitForSeconds(0.25f);
     }
 
     public void SetHighlight()
     {
-        queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
-        queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+        Queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+        Queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
     }
 
     IEnumerator ActivateUnit()
@@ -769,24 +773,26 @@ public class BattleScreen : MonoBehaviour {
                 if (ActiveUnitUI.GetUnitPartyPanel().IsAIControlled)
                 {
                     // give control to battle AI
-                    queue.Run(battleAI.Act());
+                    Queue.Run(battleAI.Act());
                 }
                 else
                 {
                     // wait for user to act
                 }
-                canActivate = true;
+                // canActivate = true;
                 break;
             case UnitStatus.Escaping:
                 // If there were debuffs applied and unit has survived,
                 // then unit may escape now
                 // Escape unit
-                queue.Run(EscapeUnit());
+                Queue.Run(EscapeUnit());
                 break;
             case UnitStatus.Dead:
                 // This unit can't act any more
+                // This can happen here due to applied debuffs
                 // Skip post-move actions and Activate next unit
-                canActivate = ActivateNextUnit();
+                // canActivate = ActivateNextUnit();
+                ActivateNextUnit();
                 break;
             case UnitStatus.Waiting:
             case UnitStatus.Escaped:
@@ -816,7 +822,7 @@ public class BattleScreen : MonoBehaviour {
             // deactivate flee button
             SetBattleControlButtonActive("Retreat", false);
         }
-        // rest all party inventory panels to disabled state
+        // reset all party inventory panels to disabled state
         transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(false);
         transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(false);
         // verify if active unit is party leader
@@ -832,14 +838,45 @@ public class BattleScreen : MonoBehaviour {
         UpdateBattleControlPanelAccordingToUnitPossibilities();
         ExecutePreActivateActions();
         ProcessBuffsAndDebuffs();
-        queue.Run(ActivateUnit());
+        Queue.Run(ActivateUnit());
         yield return null;
     }
 
-    public bool ActivateNextUnit()
+    //public bool ActivateNextUnit()
+    //{
+    //    //Debug.Log("ActivateNextUnit");
+    //    canActivate = false;
+    //    if (CanContinueBattle())
+    //    {
+    //        // find next unit, which can act in the battle
+    //        PartyUnitUI nextUnitUI = FindNextUnit();
+    //        //Debug.Log("Next unit is " + nextUnit);
+    //        if (nextUnitUI)
+    //        {
+    //            // found next unit
+    //            // save it for later needs
+    //            ActiveUnitUI = nextUnitUI;
+    //            // activate it
+    //            Queue.Run(NextUnit());
+    //            canActivate = true;
+    //        }
+    //        else
+    //        {
+    //            // no other units can be activated
+    //            // go the next turn
+    //            canActivate = StartTurn();
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Queue.Run(EndBattle());
+    //    }
+    //    return canActivate;
+    //}
+
+    public void ActivateNextUnit()
     {
         //Debug.Log("ActivateNextUnit");
-        canActivate = false;
         if (CanContinueBattle())
         {
             // find next unit, which can act in the battle
@@ -851,34 +888,19 @@ public class BattleScreen : MonoBehaviour {
                 // save it for later needs
                 ActiveUnitUI = nextUnitUI;
                 // activate it
-                queue.Run(NextUnit());
-                canActivate = true;
+                Queue.Run(NextUnit());
             }
             else
             {
                 // no other units can be activated
-                // go the next turn
-                canActivate = StartTurn();
+                // start next turn
+                StartTurn();
             }
         }
         else
         {
-            queue.Run(EndBattle());
+            Queue.Run(EndBattle());
         }
-        return canActivate;
     }
 
-    //public PartyUnit GetActiveUnit()
-    //{
-    //    return ActiveUnit;
-    //}
-
-    public CoroutineQueue GetQueue()
-    {
-        return queue;
-    }
-
-    // Update is called once per frame
-    //void Update () {
-    //}
 }

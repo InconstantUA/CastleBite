@@ -102,7 +102,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     public void SetActiveAdvance(bool doActivate)
     {
-        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
+        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
         if (doActivate)
         {
             gameObject.SetActive(true);

@@ -261,6 +261,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lPartyUnit: {fileID: 0}
+  unitStatusText: {fileID: 114254004623441420}
+  unitInfoPanelText: {fileID: 114833909699515418}
   defaultUnitStatusColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   defaultUnitInfoColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
 --- !u!114 &6385399037125348161

@@ -819,7 +819,7 @@ public class EditPartyScreen : MonoBehaviour {
                     // verify if we need to activate
                     if (activate
                         // Verify if city capacity is enough
-                        && (LCity.GetUnitsCapacity() > garnizonUI.LHeroParty.GetNumberOfPresentUnits())
+                        && (LCity.GetUnitsCapacity() > garnizonUI.LHeroParty.GetLeadershipConsumedByPartyUnits())
                         // verify if drop slot doesn't have an !active! unit in it
                         && (!unitSlot.GetComponentInChildren<PartyUnitUI>(false))
                         // verify if wide cell is not active = occupied in the same row

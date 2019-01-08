@@ -18,7 +18,8 @@ MonoBehaviour:
   canBeHealedFriendlyWitFullHealth: 0
   canBeHealedFriendlyWithNotFullHealth: 1
   canBeHealedEnemy: 0
-  canBeGivenATurnInBattle: 1
+  canBeGivenATurnInBattleDuringMainPhase: 1
+  canBeGivenATurnInBattleDuringPostWaitPhase: 0
   canBeAttackedIfFriendly: 0
   canBeAttackedIfEnemyAndBlocked: 0
   canBeAttackedIfEnemyAndNotBlocked: 1

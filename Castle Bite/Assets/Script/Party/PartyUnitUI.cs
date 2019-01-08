@@ -8,6 +8,10 @@ public class PartyUnitUI : MonoBehaviour {
     [SerializeField]
     PartyUnit lPartyUnit;
     [SerializeField]
+    Text unitStatusText;
+    [SerializeField]
+    Text unitInfoPanelText;
+    [SerializeField]
     Color defaultUnitStatusColor;
     [SerializeField]
     Color defaultUnitInfoColor;
@@ -130,36 +134,40 @@ public class PartyUnitUI : MonoBehaviour {
     }
 
     #region Unit Info Panel
-
-    public Text GetUnitInfoPanelText()
+    public Text UnitInfoPanelText
     {
-        return transform.Find("InfoPanel").GetComponent<Text>();
+        get
+        {
+            // return transform.Find("InfoPanel").GetComponent<Text>();
+            return unitInfoPanelText;
+        }
     }
 
     // Note: animation should be identical to the function with the same name in PartyPanel
     public void FadeUnitCellInfo(float alpha)
     {
-        Text infoPanel = GetUnitInfoPanelText();
-        Color c = infoPanel.color;
+        Color c = UnitInfoPanelText.color;
         c.a = alpha;
-        infoPanel.color = c;
+        UnitInfoPanelText.color = c;
     }
 
     public void ClearUnitInfoPanel()
     {
         //Color32 defaultColor = new Color32(180, 180, 180, 255);
-        Text infoPanelTxt = GetUnitInfoPanelText();
-        infoPanelTxt.text = "";
-        infoPanelTxt.color = defaultUnitInfoColor;
+        UnitInfoPanelText.text = "";
+        UnitInfoPanelText.color = defaultUnitInfoColor;
     }
 
     #endregion Unit Info Panel
 
     #region Unit Status and (De)Buffs
-
-    public Text GetUnitStatusText()
+    public Text UnitStatusText
     {
-        return transform.Find("UnitStatus").GetComponent<Text>();
+        get
+        {
+            return unitStatusText;
+            //return transform.Find("UnitStatus").GetComponent<Text>();
+        }
     }
 
     public Transform GetUnitBuffsPanel()
@@ -181,9 +189,8 @@ public class PartyUnitUI : MonoBehaviour {
     public void ClearPartyUnitStatusUI()
     {
         //Color32 defaultColor = new Color32(180, 180, 180, 255);
-        Text infoPanelTxt = GetUnitStatusText();
-        infoPanelTxt.text = "";
-        infoPanelTxt.color = defaultUnitStatusColor;
+        UnitStatusText.text = "";
+        UnitStatusText.color = defaultUnitStatusColor;
     }
 
 
@@ -259,9 +266,9 @@ public class PartyUnitUI : MonoBehaviour {
         UnitStatusUIConfig = null;
         // Set UI colors and text according to the configu
         // Set status text color
-        GetUnitStatusText().color = UnitStatusUIConfig.statusTextColor;
+        UnitStatusText.color = UnitStatusUIConfig.statusTextColor;
         // Set status text
-        GetUnitStatusText().text = UnitStatusUIConfig.statusDisplayName;
+        UnitStatusText.text = UnitStatusUIConfig.statusDisplayName;
         // Set current health color
         GetUnitCurrentHealthText().color = UnitStatusUIConfig.currentHealthTextColor;
         // Set max health color
@@ -384,9 +391,8 @@ public class PartyUnitUI : MonoBehaviour {
             LPartyUnit.UnitStatus = UnitStatus.Dead;
         }
         // display damage dealt in info panel
-        Text infoPanel = GetUnitInfoPanelText();
-        infoPanel.text = "-" + damageDealt + " health";
-        infoPanel.color = Color.red;
+        UnitInfoPanelText.text = "-" + damageDealt + " health";
+        UnitInfoPanelText.color = Color.red;
     }
 
     public void RemoveAllBuffs()
@@ -458,7 +464,7 @@ public class PartyUnitUI : MonoBehaviour {
             // as long as we cannot initiate all debuffs at the same time
             // we add debuffs to the queue and they will be triggered one after another
             // CoroutineQueue queue = unitDebuffsUI.GetQueue();
-            CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
+            CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
             //if (queue == null)
             //{
             //    Debug.LogError("No queue");

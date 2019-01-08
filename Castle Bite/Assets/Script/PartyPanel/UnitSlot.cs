@@ -407,7 +407,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         BattleScreen battleScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>();
         // Verify if battle has not ended
-        if (!battleScreen.GetBattleHasEnded())
+        if (!battleScreen.BattleHasEnded)
         {
             //Debug.Log("UnitSlot ActOnClick in Battle screen");
             // act based on the previously set by SetOnClickAction by PartyPanel conditions
@@ -417,7 +417,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 // GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
                 GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
                 // set unit has moved flag
-                battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = (true);
+                battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = true;
                 // activate next unit
                 battleScreen.ActivateNextUnit();
             }

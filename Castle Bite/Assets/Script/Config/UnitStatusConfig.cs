@@ -17,7 +17,10 @@ public class UnitStatusConfig : ScriptableObject
     bool canBeHealedFriendlyWithNotFullHealth;
     [SerializeField]
     bool canBeHealedEnemy;
-    public bool canBeGivenATurnInBattle;
+    [SerializeField]
+    bool canBeGivenATurnInBattleDuringMainPhase;
+    [SerializeField]
+    bool canBeGivenATurnInBattleDuringPostWaitPhase;
     [SerializeField]
     [ReadOnly]
     bool canBeAttackedIfFriendly = false;
@@ -26,6 +29,26 @@ public class UnitStatusConfig : ScriptableObject
     bool canBeAttackedIfEnemyAndBlocked = false;
     [SerializeField]
     bool canBeAttackedIfEnemyAndNotBlocked;
+
+    public bool GetCanBeGivenATurnInBattle()
+    {
+        // return true if unit can be given a turn in batle during main or post-wait phase
+       return canBeGivenATurnInBattleDuringMainPhase || canBeGivenATurnInBattleDuringPostWaitPhase;
+    }
+
+    public bool GetCanBeGivenATurnInBattle(BattleScreen.TurnPhase turnPhase)
+    {
+        switch (turnPhase)
+        {
+            case BattleScreen.TurnPhase.Main:
+                return canBeGivenATurnInBattleDuringMainPhase;
+            case BattleScreen.TurnPhase.PostWait:
+                return canBeGivenATurnInBattleDuringPostWaitPhase;
+            default:
+                Debug.LogError("Unknown turn phase: " + turnPhase);
+                return false;
+        }
+    }
 
     public bool GetCanBeResurected(bool isFriendly)
     {

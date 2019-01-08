@@ -218,25 +218,36 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    int GetCurrentNumberOfUnitsInParty(PartyUnit partyUnit)
+    int GetLeadershipConsumedByPartyUnitsExcludingLeader(PartyUnit partyUnit)
     {
+        // get unit party
+        HeroParty heroParty = partyUnit.GetUnitParty();
         // verify if unit is member of party
-        // structure 5PartyPanel-4Row-3Cell-2UnitSlot-1UnitCanvas-Unit
-        PartyPanel partyPanel = null;
-        if (partyUnit.transform.parent)
-            if (partyUnit.transform.parent.parent)
-                if (partyUnit.transform.parent.parent.parent)
-                    if (partyUnit.transform.parent.parent.parent.parent)
-                        if (partyUnit.transform.parent.parent.parent.parent.parent)
-                            partyPanel = partyUnit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
-        if (partyPanel != null)
+        if (heroParty != null)
         {
-            return partyPanel.GetNumberOfPresentUnits() - 1;
+            Debug.LogWarning("!!Convert UnitSize to class!!");
+            return heroParty.GetLeadershipConsumedByPartyUnits() - (int)heroParty.GetPartyLeader().UnitSize - 1;
         }
         else
         {
             return 0;
         }
+        //// structure 5PartyPanel-4Row-3Cell-2UnitSlot-1UnitCanvas-Unit
+        //PartyPanel partyPanel = null;
+        //if (partyUnit.transform.parent)
+        //    if (partyUnit.transform.parent.parent)
+        //        if (partyUnit.transform.parent.parent.parent)
+        //            if (partyUnit.transform.parent.parent.parent.parent)
+        //                if (partyUnit.transform.parent.parent.parent.parent.parent)
+        //                    partyPanel = partyUnit.transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        //if (partyPanel != null)
+        //{
+        //    return partyPanel.GetNumberOfPresentUnits() - 1;
+        //}
+        //else
+        //{
+        //    return 0;
+        //}
     }
 
     void SetUnitLeadershipInfo(PartyUnit partyUnit)
@@ -245,7 +256,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // get attribute text
         Text attributeText = transform.Find("Panel/LeaderAttributes/Values/Leadership").GetComponent<Text>();
         // set current and max leadership
-        attributeText.text = GetCurrentNumberOfUnitsInParty(partyUnit).ToString() + "/" + partyUnit.GetEffectiveLeadership().ToString();
+        attributeText.text = GetLeadershipConsumedByPartyUnitsExcludingLeader(partyUnit).ToString() + "/" + partyUnit.GetEffectiveLeadership().ToString();
         // verify if base leadership does not equal to effective leadership
         if (partyUnit.GetEffectiveLeadership() != partyUnit.UnitLeadership)
         {

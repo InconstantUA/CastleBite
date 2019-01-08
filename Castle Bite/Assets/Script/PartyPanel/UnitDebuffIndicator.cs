@@ -159,6 +159,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         {
             // all debuffs should be already removed by SetUnitStatus(status)
             // Unit cannot move any more
+            // And even if it will be resurected, then his cannot move during this turn
             dstUnitUI.LPartyUnit.HasMoved = true;
             // Fade unit cell info
             for (float f = 1f; f >= 0; f -= 0.1f)
@@ -193,7 +194,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     // uniquePowerModifier parameter is optional on deactivation
     public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier = null)
     {
-        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).GetQueue();
+        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
         if (doActivate)
         {
             // Activate object

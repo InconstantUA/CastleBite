@@ -153,20 +153,22 @@ public class HeroParty : MonoBehaviour {
             //  - unit has not escaped from the battle
             if (!partyUnit.HasMoved)
             {
-                // during main phase check for Active units
-                bool doProceed = false;
-                if ((BattleScreen.TurnPhase.Main == turnPhase)
-                    && ((partyUnit.UnitStatus == UnitStatus.Active)
-                       || (partyUnit.UnitStatus == UnitStatus.Escaping)))
-                {
-                    doProceed = true;
-                }
-                // during post wait phase check for units which are in Waiting status
-                if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (partyUnit.UnitStatus == UnitStatus.Waiting))
-                {
-                    doProceed = true;
-                }
-                if (doProceed)
+                //// during main phase check for Active units
+                //bool doProceed = false;
+                //if ((BattleScreen.TurnPhase.Main == turnPhase)
+                //    && ((partyUnit.UnitStatus == UnitStatus.Active)
+                //       || (partyUnit.UnitStatus == UnitStatus.Escaping)))
+                //{
+                //    doProceed = true;
+                //}
+                //// during post wait phase check for units which are in Waiting status
+                //if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (partyUnit.UnitStatus == UnitStatus.Waiting))
+                //{
+                //    doProceed = true;
+                //}
+                //if (doProceed)
+                // verify if unit can be given turn in battle based on its status and turn phase
+                if (partyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle(turnPhase))
                 {
                     // compare initiative with other unit, if it was found
                     if (unitWithHighestInitiative != null)
@@ -217,24 +219,24 @@ public class HeroParty : MonoBehaviour {
         return address;
     }
 
-    public int GetNumberOfPresentUnits()
+    public int GetLeadershipConsumedByPartyUnits()
     {
-        int unitsNumber = 0;
+        int consumedLeadership = 0;
         foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
         {
             // if this is double unit, then count is as +2
             if (partyUnit.UnitSize == UnitSize.Double)
             {
                 // double unit
-                unitsNumber += 2;
+                consumedLeadership += 2;
             }
             else
             {
                 // single unit
-                unitsNumber += 1;
+                consumedLeadership += 1;
             }
         }
-        return unitsNumber;
+        return consumedLeadership;
     }
 
     public PartyUnit GetPartyLeader()

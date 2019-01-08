@@ -76,7 +76,7 @@ public class BattleRetreat : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         // set unit has moved flag
         battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = true;
         // execute wait animation
-        battleScreen.GetQueue().Run(StartRetreating());
+        battleScreen.Queue.Run(StartRetreating());
         // activate next unit
         battleScreen.ActivateNextUnit();
     }
