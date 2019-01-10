@@ -53,7 +53,7 @@ public class SaveGame : MonoBehaviour {
     {
         foreach (City city in cities)
         {
-            // save city ID
+            // save city ID (it is used during restore to map hero parties to cities, where they were located)
             city.CityID = city.gameObject.GetInstanceID();
             // save city position
             //city.CityData.cityMapPosition = city.GetCityMapPosition();
