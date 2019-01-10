@@ -136,4 +136,9 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             SetDisabledStatus();
         }
     }
+
+    public void TriggerEvent(GameEvent gameEvent)
+    {
+        gameEvent.Raise();
+    }
 }

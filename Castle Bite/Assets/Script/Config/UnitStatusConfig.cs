@@ -36,13 +36,13 @@ public class UnitStatusConfig : ScriptableObject
        return canBeGivenATurnInBattleDuringMainPhase || canBeGivenATurnInBattleDuringPostWaitPhase;
     }
 
-    public bool GetCanBeGivenATurnInBattle(BattleScreen.TurnPhase turnPhase)
+    public bool GetCanBeGivenATurnInBattle(BattleTurnPhase turnPhase)
     {
         switch (turnPhase)
         {
-            case BattleScreen.TurnPhase.Main:
+            case BattleTurnPhase.Main:
                 return canBeGivenATurnInBattleDuringMainPhase;
-            case BattleScreen.TurnPhase.PostWait:
+            case BattleTurnPhase.PostWait:
                 return canBeGivenATurnInBattleDuringPostWaitPhase;
             default:
                 Debug.LogError("Unknown turn phase: " + turnPhase);

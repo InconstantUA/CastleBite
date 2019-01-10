@@ -230,6 +230,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
         else
         {
+            Debug.Log("Unit without party");
             return 0;
         }
         //// structure 5PartyPanel-4Row-3Cell-2UnitSlot-1UnitCanvas-Unit

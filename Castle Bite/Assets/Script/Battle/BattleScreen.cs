@@ -2,7 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BattleTurnPhase
+{
+    Main,       // moving all units
+    PostWait    // moving units which activated Wait before hand
+};
+
 public class BattleScreen : MonoBehaviour {
+    [SerializeField]
+    GameEvent battleHasStarted;
+    [SerializeField]
+    GameEvent battleHasEnded;
+    [SerializeField]
+    GameEvent battleEnterMainPhase;
+    [SerializeField]
+    GameEvent battleEnterPostWaitPhase;
+    [SerializeField]
+    GameEvent onActiveUnitChange;
+    [SerializeField]
+    GameEvent battleScreenEnable;
+    [SerializeField]
+    GameEvent battleScreenDisable;
+
     //[SerializeField]
     //MapManager mapManager;
     PartyPanel playerPartyPanel;
@@ -17,13 +38,10 @@ public class BattleScreen : MonoBehaviour {
 
     BattleAI battleAI;
 
-    public enum TurnPhase
-    {
-        Main,       // moving all units
-        PostWait    // moving units which activated Wait before hand
-    };
-    TurnPhase turnPhase;
+    BattleTurnPhase battleTurnPhase;
 
+    public enum ExitOption { FleePlayer, FleeEnemy, DestroyPlayer, DestroyEnemy, EnterCity };
+    ExitOption exitOption;
 
     public PartyUnitUI ActiveUnitUI
     {
@@ -35,6 +53,8 @@ public class BattleScreen : MonoBehaviour {
         set
         {
             activeUnitParent = value.transform;
+            // trigger event on active unit change
+            onActiveUnitChange.Raise(value.LPartyUnit.gameObject);
         }
     }
 
@@ -52,9 +72,71 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
-    public TurnPhase GetTurnPhase()
+    public BattleTurnPhase BattleTurnPhase
     {
-        return turnPhase;
+        get
+        {
+            return battleTurnPhase;
+        }
+
+        private set
+        {
+            //// Todo: Consider just unsing bool, if there will be no other phases
+            //// act based on the previous (current) phase value
+            //switch (turnPhase)
+            //{
+            //    case TurnPhase.Main:
+            //        switch (newPhase)
+            //        {
+            //            case TurnPhase.Main:
+            //                // this can happen on the start of the battle
+            //                // Debug.LogError("Phase is already " + newPhase.ToString());
+            //                break;
+            //            case TurnPhase.PostWait:
+            //                // Deactivate Wait button
+            //                SetBattleControlButtonActive("Wait", false);
+            //                break;
+            //            default:
+            //                Debug.LogError("Unknown newPhase" + newPhase.ToString());
+            //                break;
+            //        }
+            //        break;
+            //    case TurnPhase.PostWait:
+            //        switch (newPhase)
+            //        {
+            //            case TurnPhase.Main:
+            //                // Enable Wait button again
+            //                SetBattleControlButtonActive("Wait", true);
+            //                break;
+            //            case TurnPhase.PostWait:
+            //                Debug.LogError("Phase is already " + newPhase.ToString());
+            //                break;
+            //            default:
+            //                Debug.LogError("Unknown newPhase" + newPhase.ToString());
+            //                break;
+            //        }
+            //        break;
+            //    default:
+            //        Debug.LogError("Unknown turnPhase" + turnPhase.ToString());
+            //        break;
+            //}
+            switch (value)
+            {
+                case BattleTurnPhase.Main:
+                    // Trigger enter main turn phase event
+                    battleEnterMainPhase.Raise();
+                    break;
+                case BattleTurnPhase.PostWait:
+                    // Trigger enter post-wait phase event
+                    battleEnterPostWaitPhase.Raise();
+                    break;
+                default:
+                    Debug.LogError("Unknown newPhase" + value.ToString());
+                    break;
+            }
+            // set turn phase
+            battleTurnPhase = value;
+        }
     }
 
     public PartyPanel GetPlayerPartyPanel()
@@ -66,9 +148,6 @@ public class BattleScreen : MonoBehaviour {
     {
         return enemyPartyPanel;
     }
-
-
-
 
     // Use this for initialization
     void Awake() {
@@ -103,33 +182,35 @@ public class BattleScreen : MonoBehaviour {
 
     void OnDisable()
     {
+        // trigger event
+        battleScreenDisable.Raise();
         SetCommonBattleUIActive(false);
     }
 
-    void SetBattleControlButtonActive(string buttonName, bool doActivate)
-    {
-        transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/" + buttonName).gameObject.SetActive(doActivate);
-    }
+    //void SetBattleControlButtonActive(string buttonName, bool doActivate)
+    //{
+    //    transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/" + buttonName).gameObject.SetActive(doActivate);
+    //}
 
-    void SetBattleControlsActive(bool doActivate)
-    {
-        SetBattleControlButtonActive("Defend", doActivate);
-        SetBattleControlButtonActive("Wait", doActivate);
-        SetBattleControlButtonActive("Retreat", doActivate);
-        SetBattleControlButtonActive("AutoBattle", doActivate);
-        SetBattleControlButtonActive("InstantResolve", doActivate);
-        // transform.root.Find("MiscUI/BottomControlPanel/MiddleControls").gameObject.SetActive(doActivate);
-    }
+    //void SetBattleControlsActive(bool doActivate)
+    //{
+    //    // SetBattleControlButtonActive("Defend", doActivate);
+    //    SetBattleControlButtonActive("Wait", doActivate);
+    //    SetBattleControlButtonActive("Retreat", doActivate);
+    //    SetBattleControlButtonActive("AutoBattle", doActivate);
+    //    SetBattleControlButtonActive("InstantResolve", doActivate);
+    //    // transform.root.Find("MiscUI/BottomControlPanel/MiddleControls").gameObject.SetActive(doActivate);
+    //}
 
-    void SetBattleExitButtonActive(bool doActivate)
-    {
-        transform.root.Find("MiscUI/BottomControlPanel/RightControls/BattleExit").gameObject.SetActive(doActivate);
-    }
+    //void SetBattleExitButtonActive(bool doActivate)
+    //{
+    //    transform.root.Find("MiscUI/BottomControlPanel/RightControls/BattleExit").gameObject.SetActive(doActivate);
+    //}
 
-    BattleExit GetBattleExitButton()
-    {
-        return transform.root.Find("MiscUI/BottomControlPanel/RightControls/BattleExit").GetComponent<BattleExit>();
-    }
+    //BattleExit GetBattleExitButton()
+    //{
+    //    return transform.root.Find("MiscUI/BottomControlPanel/RightControls/BattleExit").GetComponent<BattleExit>();
+    //}
 
     void SetCommonBattleUIActive(bool doActivate)
     {
@@ -146,14 +227,14 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/RightFocus").gameObject.SetActive(doActivate);
         // Activate/Deactivate city controls
         //transform.root.Find("MiscUI/BottomControlPanel").gameObject.SetActive(doActivate);
-        SetBattleControlsActive(doActivate);
+        // SetBattleControlsActive(doActivate);
         //SetBattleControlButtonActive("Defend", doActivate);
         //SetBattleControlButtonActive("Wait", doActivate);
         //SetBattleControlButtonActive("Retreat", doActivate);
         //SetBattleControlButtonActive("AutoBattle", doActivate);
         //SetBattleControlButtonActive("InstantResolve", doActivate);
         // Always Deactivate Exit button
-        SetBattleExitButtonActive(false);
+        //SetBattleExitButtonActive(false);
     }
 
     void EnterBattleCommon(HeroParty playerHeroParty, HeroParty enemyHeroParty)
@@ -181,6 +262,8 @@ public class BattleScreen : MonoBehaviour {
         transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerHeroPartyUI.GetPartyLeaderUI().gameObject;
         // assign party leader to the right focus panel
         transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyHeroPartyUI.GetPartyLeaderUI().gameObject;
+        // trigger battle screen enable event
+        battleScreenEnable.Raise();
         // Activate all needed UI at once
         SetCommonBattleUIActive(true);
         // Get parties panels
@@ -212,7 +295,7 @@ public class BattleScreen : MonoBehaviour {
             // enemy hero is protecting city
             // battle place is on a city gates
             // verify if there are units which can fight, because it is possible that player left only dead units in party
-            if (enemyHeroParty.GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
+            if (enemyHeroParty.HasUnitsWhichCanFight())
             {
                 return enemyHeroParty;
             }
@@ -227,7 +310,7 @@ public class BattleScreen : MonoBehaviour {
         enemyHeroParty = enemyCityOnMap.LCity.GetHeroPartyByMode(PartyMode.Garnizon);
         // verify if there are units in party protecting this city, which can fight
         // it is possible that city is not protected, because all units are dead
-        if (enemyHeroParty.GetActiveUnitWithHighestInitiative(TurnPhase.Main) != null)
+        if (enemyHeroParty.HasUnitsWhichCanFight())
         {
             return enemyHeroParty;
         }
@@ -265,10 +348,10 @@ public class BattleScreen : MonoBehaviour {
     void StartBattle()
     {
         //Debug.Log("StartBattle");
-        // Set turn phase to main phase
-        SetTurnPhase(TurnPhase.Main);
         // set battle has ended to false
         BattleHasEnded = false;
+        // trigger start battle event
+        battleHasStarted.Raise();
         // Start turn
         StartTurn();
         //// do battle until some party wins or other party flee
@@ -434,14 +517,15 @@ public class BattleScreen : MonoBehaviour {
         Debug.Log("EndBattle");
         // set battle has ended
         BattleHasEnded = true;
+        battleHasEnded.Raise();
         // Remove highlight from active unit
         ActiveUnitUI.HighlightActiveUnitInBattle(false);
-        // Set exit button variable
-        BattleExit exitButton = GetBattleExitButton();
-        // Activate exit battle button;
-        exitButton.gameObject.SetActive(true);
+        //// Set exit button variable
+        //BattleExit exitButton = GetBattleExitButton();
+        //// Activate exit battle button;
+        //exitButton.gameObject.SetActive(true);
         // Deactivate all other battle buttons;
-        SetBattleControlsActive(false);
+        // SetBattleControlsActive(false);
         // Check who win battle
         if (!playerPartyPanel.CanFight())
         {
@@ -452,7 +536,7 @@ public class BattleScreen : MonoBehaviour {
             {
                 Debug.Log("Player has escaped battle");
                 // On exit: move it 2 tiles away from other party
-                exitButton.SetExitOption(BattleExit.ExitOption.FleePlayer);
+                exitOption = ExitOption.FleePlayer;
             }
             else
             {
@@ -460,7 +544,7 @@ public class BattleScreen : MonoBehaviour {
                 // verify if battle was with city Garnizon:
                 // .. this is not needed here because city garnizon cannot initiate fight
                 // On exit: destroy player party
-                exitButton.SetExitOption(BattleExit.ExitOption.DestroyPlayer);
+                exitOption = ExitOption.DestroyPlayer;
             }
             // Show how much experience was earned by enemy party
             enemyPartyPanel.GrantAndShowExperienceGained(playerPartyPanel);
@@ -473,7 +557,7 @@ public class BattleScreen : MonoBehaviour {
             {
                 Debug.Log("Enemy has escaped battle");
                 // On exit: move it 2 tiles away from other party
-                exitButton.SetExitOption(BattleExit.ExitOption.FleeEnemy);
+                exitOption = ExitOption.FleeEnemy;
             }
             else
             {
@@ -483,12 +567,12 @@ public class BattleScreen : MonoBehaviour {
                 {
                     // On exit: enter city
                     Debug.Log("Enter city on exit");
-                    exitButton.SetExitOption(BattleExit.ExitOption.EnterCity);
+                    exitOption = ExitOption.EnterCity;
                 }
                 else if (enemyPartyPanel.GetHeroParty().PartyMode == PartyMode.Party)
                 {
                     // On exit: destroy enemy party
-                    exitButton.SetExitOption(BattleExit.ExitOption.DestroyEnemy);
+                    exitOption = ExitOption.DestroyEnemy;
                 }
                 else
                 {
@@ -509,51 +593,6 @@ public class BattleScreen : MonoBehaviour {
         // Reset hasMoved flag on all units, so they can now move again;
         playerPartyPanel.ResetHasMovedFlag();
         enemyPartyPanel.ResetHasMovedFlag();
-    }
-
-    void SetTurnPhase(TurnPhase newPhase)
-    {
-        // Todo: Consider just unsing bool, if there will be no other phases
-        // act based on the previous (current) phase value
-        switch (turnPhase)
-        {
-            case TurnPhase.Main:
-                switch (newPhase)
-                {
-                    case TurnPhase.Main:
-                        // this can happen on the start of the battle
-                        // Debug.LogError("Phase is already " + newPhase.ToString());
-                        break;
-                    case TurnPhase.PostWait:
-                        // Deactivate Wait button
-                        SetBattleControlButtonActive("Wait", false);
-                        break;
-                    default:
-                        Debug.LogError("Unknown newPhase" + newPhase.ToString());
-                        break;
-                }
-                break;
-            case TurnPhase.PostWait:
-                switch (newPhase)
-                {
-                    case TurnPhase.Main:
-                        // Enable Wait button again
-                        SetBattleControlButtonActive("Wait", true);
-                        break;
-                    case TurnPhase.PostWait:
-                        Debug.LogError("Phase is already " + newPhase.ToString());
-                        break;
-                    default:
-                        Debug.LogError("Unknown newPhase" + newPhase.ToString());
-                        break;
-                }
-                break;
-            default:
-                Debug.LogError("Unknown turnPhase" + turnPhase.ToString());
-                break;
-        }
-        // set turn phase
-        turnPhase = newPhase;
     }
 
     //void StartTurn()
@@ -584,7 +623,7 @@ public class BattleScreen : MonoBehaviour {
         // Reset hasMoved flag on all units, so they can now move again;
         ResetHasMovedFlag();
         // Reset turn phase to main
-        SetTurnPhase(TurnPhase.Main);
+        BattleTurnPhase = BattleTurnPhase.Main;
         // Activate unit with the highest initiative
         ActivateNextUnit();
     }
@@ -601,41 +640,47 @@ public class BattleScreen : MonoBehaviour {
         return false;
     }
 
+    PartyUnitUI GetPartyUnitUIWithHighestInitiative(PartyUnitUI partyUnitUI1, PartyUnitUI partyUnitUI2)
+    {
+        if (partyUnitUI1.LPartyUnit.GetEffectiveInitiative() > partyUnitUI2.LPartyUnit.GetEffectiveInitiative())
+        {
+            // player has higher initiative
+            return partyUnitUI1;
+        }
+        else if (partyUnitUI1.LPartyUnit.GetEffectiveInitiative() == partyUnitUI2.LPartyUnit.GetEffectiveInitiative())
+        {
+            // player and enemy has equal initiative
+            // randomly choose between player and enemy units
+            // Random.value resturns a value between 0 and 1, 
+            // so by shifting 0.5 you could also modify the probability of the two numbers.
+            if (UnityEngine.Random.value < 0.5f)
+            {
+                return partyUnitUI1;
+            }
+            else
+            {
+                return partyUnitUI2;
+            }
+        }
+        else
+        {
+            // enemy has higher initiative
+            return partyUnitUI2;
+        }
+    }
+
     PartyUnitUI FindNextUnit()
     {
         // Find unit with the highest initiative, which can still move during this turn in battle
-        PartyUnitUI playerNextUnitUI = playerPartyPanel.GetActiveUnitUIWithHighestInitiative(turnPhase);
-        PartyUnitUI enemyNextUnitUI = enemyPartyPanel.GetActiveUnitUIWithHighestInitiative(turnPhase);
+        PartyUnitUI playerNextUnitUI = playerPartyPanel.GetActiveUnitUIWithHighestInitiativeWhichHasNotMoved(BattleTurnPhase);
+        PartyUnitUI enemyNextUnitUI = enemyPartyPanel.GetActiveUnitUIWithHighestInitiativeWhichHasNotMoved(BattleTurnPhase);
         // verify if player and enemy has more units to move
         if (playerNextUnitUI && enemyNextUnitUI)
         {
             // both parties still have units to move
-            if (playerNextUnitUI.LPartyUnit.UnitBaseInitiative > enemyNextUnitUI.LPartyUnit.UnitBaseInitiative)
-            {
-                // player has higher initiative
-                return playerNextUnitUI;
-            }
-            else if (playerNextUnitUI.LPartyUnit.UnitBaseInitiative == enemyNextUnitUI.LPartyUnit.UnitBaseInitiative)
-            {
-                // player and enemy has equal initiative
-                // randomly choose between player and enemy units
-                // Random.value resturns a value between 0 and 1, 
-                // so by shifting 0.5 you could also modify the probability of the two numbers.
-                if (Random.value < 0.5f)
-                {
-                    return playerNextUnitUI;
-                }
-                else
-                {
-                    return enemyNextUnitUI;
-                }
-            }
-            else
-            {
-                // enemy has higher initiative
-                return enemyNextUnitUI;
-            }
-        } else
+            return GetPartyUnitUIWithHighestInitiative(playerNextUnitUI, enemyNextUnitUI);
+        }
+        else
         {
             // some parties do not have units to move
             // find which party has and which does not have
@@ -651,10 +696,10 @@ public class BattleScreen : MonoBehaviour {
             {
                 // no any pary has units to move
                 // verify current phase
-                if (TurnPhase.Main == turnPhase)
+                if (BattleTurnPhase.Main == BattleTurnPhase)
                 {
                     // do the same check but for units, which are in waiting status
-                    SetTurnPhase(TurnPhase.PostWait);
+                    BattleTurnPhase = BattleTurnPhase.PostWait;
                     return FindNextUnit();
                 } else
                 {
@@ -811,17 +856,18 @@ public class BattleScreen : MonoBehaviour {
 
     void UpdateBattleControlPanelAccordingToUnitPossibilities()
     {
-        // verify if party can flee
-        if (ActiveUnitUI.LPartyUnit.GetUnitParty().CanEscapeFromBattle)
-        {
-            // activate flee button
-            SetBattleControlButtonActive("Retreat", true);
-        }
-        else
-        {
-            // deactivate flee button
-            SetBattleControlButtonActive("Retreat", false);
-        }
+        // replaced with event
+        //verify if party can flee
+        //if (ActiveUnitUI.LPartyUnit.GetUnitParty().CanEscapeFromBattle)
+        //{
+        //    // activate flee button
+        //    SetBattleControlButtonActive("Retreat", true);
+        //}
+        //else
+        //{
+        //    // deactivate flee button
+        //    SetBattleControlButtonActive("Retreat", false);
+        //}
         // reset all party inventory panels to disabled state
         transform.root.Find("MiscUI/LeftHeroParty/PartyInventory").gameObject.SetActive(false);
         transform.root.Find("MiscUI/RightHeroParty/PartyInventory").gameObject.SetActive(false);
@@ -833,8 +879,10 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
-    IEnumerator NextUnit()
+    IEnumerator SetNextUnitActive(PartyUnitUI nextUnitUI)
     {
+        // save it for later needs
+        ActiveUnitUI = nextUnitUI;
         UpdateBattleControlPanelAccordingToUnitPossibilities();
         ExecutePreActivateActions();
         ProcessBuffsAndDebuffs();
@@ -885,10 +933,8 @@ public class BattleScreen : MonoBehaviour {
             if (nextUnitUI)
             {
                 // found next unit
-                // save it for later needs
-                ActiveUnitUI = nextUnitUI;
                 // activate it
-                Queue.Run(NextUnit());
+                Queue.Run(SetNextUnitActive(nextUnitUI));
             }
             else
             {
@@ -903,4 +949,91 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
+    void Proceed()
+    {
+        // set unit has moved flag
+        ActiveUnitUI.LPartyUnit.HasMoved = true;
+        // activate next unit
+        ActivateNextUnit();
+    }
+
+    // Used in Editor in BattleScreen
+    public void OnDefend()
+    {
+        Debug.Log("OnDefend");
+        // Get active unit party panel
+        PartyPanel partyPanel = ActiveUnitUI.GetUnitPartyPanel();
+        // Apply defense stance status
+        partyPanel.SetUnitDefenseBuffActive(ActiveUnitUI, true);
+        // proceed with default post-move actions
+        Proceed();
+    }
+
+    IEnumerator ReatreatingAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+    }
+
+    public void OnRetreat()
+    {
+        Debug.Log("OnRetreat");
+        // set unit is escaping status
+        ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Escaping;
+        // execute animation
+        Queue.Run(ReatreatingAnimation());
+        // proceed with default post-move actions
+        Proceed();
+    }
+
+    IEnumerator WaitingAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+    }
+
+    public void OnWait()
+    {
+        Debug.Log("OnWait");
+        // set unit is waiting status
+        ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Waiting;
+        // execute wait animation
+        Queue.Run(WaitingAnimation());
+        // activate next unit without setting hasMoved flag
+        ActivateNextUnit();
+    }
+
+    public void OnInstantResolve()
+    {
+        Debug.Log("OnInstantResolve");
+    }
+
+    public void OnAuto()
+    {
+        Debug.Log("OnAuto");
+    }
+
+    public void OnExit()
+    {
+        Debug.Log("OnExit");
+        switch (exitOption)
+        {
+            case ExitOption.DestroyPlayer:
+                DestroyPlayer();
+                break;
+            case ExitOption.DestroyEnemy:
+                DestroyEnemy();
+                break;
+            case ExitOption.FleePlayer:
+                FleePlayer();
+                break;
+            case ExitOption.FleeEnemy:
+                FleeEnemy();
+                break;
+            case ExitOption.EnterCity:
+                CaptureAndEnterCity();
+                break;
+            default:
+                Debug.LogError("Unknown exit option.");
+                break;
+        }
+    }
 }

@@ -76,7 +76,14 @@ public class EventsListener : MonoBehaviour
             if (raisedGameEvent == eventsAndActions[i].gameEvent)
             {
                 // Uncomment the line below for debugging the event listens and other details
-                Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name);
+                if (gameObject != null)
+                {
+                    Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name);
+                }
+                else
+                {
+                    Debug.Log("Called Event named: " + eventsAndActions[i].name);
+                }
                 eventsAndActions[i].Invoke(gameObject);
             }
         }

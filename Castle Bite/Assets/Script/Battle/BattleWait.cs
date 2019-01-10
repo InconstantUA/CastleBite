@@ -7,7 +7,7 @@ using UnityEngine.UI;
 // Button in our case is not visible, only text is visible
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
-[RequireComponent(typeof(Button))]
+// [RequireComponent(typeof(Button))]
 public class BattleWait : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     Text txt;

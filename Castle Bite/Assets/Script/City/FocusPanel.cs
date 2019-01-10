@@ -112,7 +112,8 @@ public class FocusPanel : MonoBehaviour {
         if (city != null)
         {
             //Debug.Log("City is not null");
-            transform.Find("CityFocus/UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+            // transform.Find("CityFocus/UnitsValue").GetComponent<Text>().text = city.GetNumberOfPresentUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
+            transform.Find("CityFocus/UnitsValue").GetComponent<Text>().text = city.GetHeroPartyByMode(PartyMode.Garnizon).GetLeadershipConsumedByPartyUnits().ToString() + "/" + city.GetUnitsCapacity().ToString();
         }
     }
 

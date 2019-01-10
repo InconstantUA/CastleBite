@@ -25,6 +25,13 @@ public class BattleMove
 
 public class BattleAI : MonoBehaviour {
 
+    [SerializeField]
+    GameEvent onDefendEvent;
+    [SerializeField]
+    GameEvent onRetreatEvent;
+    [SerializeField]
+    GameEvent onWaitEvent;
+
     BattleScreen battleScreen;
 
     void Awake()
@@ -46,7 +53,7 @@ public class BattleAI : MonoBehaviour {
         }
         // verify if it is possible to wait
         // this is only possible if hero did not wait yet = TurnPhase does not equal PostWait
-        if (battleScreen.GetTurnPhase() != BattleScreen.TurnPhase.PostWait)
+        if (battleScreen.BattleTurnPhase!= BattleTurnPhase.PostWait)
         {
             // add wait option
             battleMoves.Add(new BattleMove(BattleMove.Option.Wait));
@@ -97,15 +104,21 @@ public class BattleAI : MonoBehaviour {
                 break;
             case BattleMove.Option.Defend:
                 // simulate button click
-                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleDefend>().ActOnClick();
+                // transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleDefend>().ActOnClick();
+                // trigger Event
+                onDefendEvent.Raise();
                 break;
             case BattleMove.Option.Flee:
                 // simulate button click
-                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleRetreat>().ActOnClick();
+                // transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleRetreat>().ActOnClick();
+                // trigger Event
+                onRetreatEvent.Raise();
                 break;
             case BattleMove.Option.Wait:
                 // simulate button click
-                transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleWait>().ActOnClick();
+                // transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleWait>().ActOnClick();
+                // trigger Event
+                onWaitEvent.Raise();
                 break;
             default:
                 Debug.LogError("Unknown battle move option");

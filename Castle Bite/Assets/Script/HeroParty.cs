@@ -141,53 +141,19 @@ public class HeroParty : MonoBehaviour {
         }
     }
 
-    // todo: fix duplicate function in PartyPanel
-    public PartyUnit GetActiveUnitWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
+    public bool HasUnitsWhichCanFight()
     {
-        PartyUnit unitWithHighestInitiative = null;
+        // loop through all units in party
         foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
         {
-            // verify if 
-            //  - unit has moved or not
-            //  - unit is alive
-            //  - unit has not escaped from the battle
-            if (!partyUnit.HasMoved)
+            // verify if unit can be given turn in battle based on its status
+            if (partyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
             {
-                //// during main phase check for Active units
-                //bool doProceed = false;
-                //if ((BattleScreen.TurnPhase.Main == turnPhase)
-                //    && ((partyUnit.UnitStatus == UnitStatus.Active)
-                //       || (partyUnit.UnitStatus == UnitStatus.Escaping)))
-                //{
-                //    doProceed = true;
-                //}
-                //// during post wait phase check for units which are in Waiting status
-                //if ((BattleScreen.TurnPhase.PostWait == turnPhase) && (partyUnit.UnitStatus == UnitStatus.Waiting))
-                //{
-                //    doProceed = true;
-                //}
-                //if (doProceed)
-                // verify if unit can be given turn in battle based on its status and turn phase
-                if (partyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle(turnPhase))
-                {
-                    // compare initiative with other unit, if it was found
-                    if (unitWithHighestInitiative != null)
-                    {
-                        if (partyUnit.GetEffectiveInitiative() > unitWithHighestInitiative.GetEffectiveInitiative())
-                        {
-                            // found unit with highest initiative, update unitWithHighestInitiative variable
-                            unitWithHighestInitiative = partyUnit;
-                        }
-                    }
-                    else
-                    {
-                        // no other unit found yet, assume that this unit has the highest initiative
-                        unitWithHighestInitiative = partyUnit;
-                    }
-                }
+                return true;
             }
         }
-        return unitWithHighestInitiative;
+        // not found units which can fight
+        return false;
     }
 
     public void RemoveDeadPartyUnits()

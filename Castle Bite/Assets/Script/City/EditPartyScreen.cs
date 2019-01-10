@@ -723,7 +723,7 @@ public class EditPartyScreen : MonoBehaviour {
         PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
         // get PartyUnit
         PartyUnit partyUnit = unitUI.LPartyUnit;
-        // Get Unit size
+        // Get Unit size, because unit is going to be destroyed
         UnitSize unitSize = partyUnit.UnitSize;
         // Get Party Unit HeroParty
         //HeroParty heroParty = partyUnit.GetComponentInParent<HeroParty>();

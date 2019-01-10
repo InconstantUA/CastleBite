@@ -1390,7 +1390,7 @@ public class PartyPanel : MonoBehaviour {
     //    return unitWithHighestInitiative;
     //}
 
-    public PartyUnitUI GetActiveUnitUIWithHighestInitiative(BattleScreen.TurnPhase turnPhase)
+    public PartyUnitUI GetActiveUnitUIWithHighestInitiativeWhichHasNotMoved(BattleTurnPhase turnPhase)
     {
         PartyUnitUI unitUIWithHighestInitiative = null;
         foreach(PartyUnitUI partyUnitUI in GetComponentsInChildren<PartyUnitUI>())
@@ -1412,6 +1412,21 @@ public class PartyPanel : MonoBehaviour {
                         {
                             // found unit with highest initiative, update unitWithHighestInitiative variable
                             unitUIWithHighestInitiative = partyUnitUI;
+                        }
+                        else if (partyUnitUI.LPartyUnit.GetEffectiveInitiative() == unitUIWithHighestInitiative.LPartyUnit.GetEffectiveInitiative())
+                        {
+                            // equal initiative
+                            // randomly choose between units
+                            // Random.value resturns a value between 0 and 1, 
+                            // so by shifting 0.5 you could also modify the probability of the two numbers.
+                            if (UnityEngine.Random.value < 0.5f)
+                            {
+                                return partyUnitUI;
+                            }
+                            else
+                            {
+                                return unitUIWithHighestInitiative;
+                            }
                         }
                     }
                     else

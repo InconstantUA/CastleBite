@@ -9,7 +9,7 @@ using UnityEngine.UI;
 // We set alpha in button properties to 0
 // Later, before assigning button colors to the text we reset transprancy to 1(255)
 [RequireComponent(typeof(Button))]
-public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
     Text unitName;
     Button unitSlot;
@@ -25,6 +25,7 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     bool isAllowedToApplyPowerToThisUnit = false;
     string errorMessage = "Error message";
 
+    UnityEvent onClick = new UnityEvent();
 
     private void Awake()
     {
@@ -49,6 +50,14 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // Highlight button, if needed by triggering on point enter
             OnPointerEnter(null);
         }
+    }
+
+    public void SetOnClick(UnityAction unityAction)
+    {
+        // remove all previous listeners
+        onClick.RemoveAllListeners();
+        // set new listener
+        onClick.AddListener(unityAction);
     }
 
     #region Button controls
@@ -87,13 +96,27 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // on left mouse click
             // Debug.LogWarning("OnPointerUp");
             SetHighlightedStatus();
-            ActOnClick();
         }
         else if (Input.GetMouseButtonUp(1))
         {
             // on right mouse click
             // deactivate unit info
             transform.root.Find("MiscUI/UnitInfoPanel").gameObject.SetActive(false);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        // trigger registered via Unity editor functions
+        if (Input.GetMouseButtonUp(0))
+        {
+            // on left mouse click
+            SetHighlightedStatus();
+            ActOnClick();
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            // on right mouse click
         }
     }
 
@@ -445,6 +468,10 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         // verify if Battle screen is active
         else if (uiManager.GetComponentInChildren<BattleScreen>(false) != null)
         {
+            if (onClick.GetPersistentEventCount() > 0)
+            {
+                onClick.Invoke();
+            }
             ActOnBattleScreenClick();
         }
         // verify if PartiesInfoPanel is active

@@ -40,6 +40,9 @@ public class City : MonoBehaviour {
     CityData cityData;
     [SerializeField]
     MapCity lMapCity;
+    [SerializeField]
+    GameEvent cityLevelUpEvent;
+
 
     // to be moved to other class
     // City view state is required to effectively change between different states
@@ -55,7 +58,7 @@ public class City : MonoBehaviour {
     // If hero leaves city, the we should return city state o NoHeroIn
     // and activate hire hero button
 
-    
+
     public int GetCityDefense()
     {
         int bonus = 0;
@@ -81,24 +84,24 @@ public class City : MonoBehaviour {
         return CityLevelCurrent;
     }
 
-    public int GetNumberOfPresentUnits()
-    {
-        int value = 0;
-        // loop through all units in city garnizon
-        foreach (PartyUnit partyUnit in GetHeroPartyByMode(PartyMode.Garnizon).GetComponentsInChildren<PartyUnit>())
-        {
-            // verify unit size
-            if (partyUnit.UnitSize == UnitSize.Double)
-            {
-                value += 2;
-            }
-            else
-            {
-                value += 1;
-            }
-        }
-        return value;
-    }
+    //public int GetNumberOfPresentUnits()
+    //{
+    //    int value = 0;
+    //    // loop through all units in city garnizon
+    //    foreach (PartyUnit partyUnit in GetHeroPartyByMode(PartyMode.Garnizon).GetComponentsInChildren<PartyUnit>())
+    //    {
+    //        // verify unit size
+    //        if (partyUnit.UnitSize == UnitSize.Double)
+    //        {
+    //            value += 2;
+    //        }
+    //        else
+    //        {
+    //            value += 1;
+    //        }
+    //    }
+    //    return value;
+    //}
 
     public HeroParty GetHeroPartyByMode(PartyMode partyMode)
     {
@@ -229,6 +232,8 @@ public class City : MonoBehaviour {
         set
         {
             cityData.cityLevelCurrent = value;
+            // trigger city level up event
+            cityLevelUpEvent.Raise();
         }
     }
 
