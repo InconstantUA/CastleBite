@@ -257,7 +257,7 @@ public class ObjectsManager : MonoBehaviour {
         return newPartyOnMap;
     }
 
-    City GetCityByID(int cityID)
+    City GetCityByID(CityID cityID)
     {
         // loop through all cites
         foreach(City city in transform.Find("Map/Cities").GetComponentsInChildren<City>())
@@ -289,7 +289,7 @@ public class ObjectsManager : MonoBehaviour {
         Transform newHeroPartyParentTransform;
         // create hero party from tempalte in required location: City or UI address
         // verify if party was in city
-        if (partyData.linkedCityID != -1)
+        if (partyData.linkedCityID != CityID.None)
         {
             // get parent transform by city ID
             newHeroPartyParentTransform = GetCityByID(partyData.linkedCityID).transform;
@@ -323,7 +323,7 @@ public class ObjectsManager : MonoBehaviour {
             // create party on map
             MapHero newMapHero = CreatePartyOnMap(newHeroParty, partyData);
             // verify if party has linked city
-            if (partyData.linkedCityID != -1)
+            if (partyData.linkedCityID != CityID.None)
             {
                 // get city by city ID
                 MapCity mapCity = GetCityByID(partyData.linkedCityID).LMapCity;

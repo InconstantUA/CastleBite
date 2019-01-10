@@ -54,7 +54,7 @@ public class SaveGame : MonoBehaviour {
         foreach (City city in cities)
         {
             // save city ID (it is used during restore to map hero parties to cities, where they were located)
-            city.CityID = city.gameObject.GetInstanceID();
+            //city.CityID = city.gameObject.GetInstanceID();
             // save city position
             //city.CityData.cityMapPosition = city.GetCityMapPosition();
             city.CityData.cityMapCoordinates = MapManager.Instance.GetCoordinatesByWorldPosition(city.LMapCity.transform.position);
@@ -72,13 +72,15 @@ public class SaveGame : MonoBehaviour {
             {
                 // party is linked to a city
                 // set linked city ID
-                heroParty.PartyData.linkedCityID = heroParty.transform.parent.GetComponent<City>().gameObject.GetInstanceID();
+                heroParty.PartyData.linkedCityID = heroParty.transform.parent.GetComponent<City>().CityID;
                 // set UI address to null, because it is not needed any more, if party is linked to the city
                 heroParty.PartyData.partyUIAddress = null;
             }
             else
             {
                 // party is not linked to a city
+                // reset linked city ID
+                heroParty.PartyData.linkedCityID = CityID.None;
                 // get party UI address
                 string partyUIAddress = heroParty.GetPartyUIAddress();
                 // set party UI address

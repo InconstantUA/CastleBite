@@ -11,9 +11,19 @@ public enum CityType {
 };
 
 [Serializable]
+public enum CityID
+{
+    None,
+    Stormberg,
+    Zrurrugh,
+    SintJoris,
+    Nartley
+}
+
+[Serializable]
 public class CityData
 {
-    public int cityID = -1;
+    public CityID cityID;
     //public int linkedPartyID = -1;
     //public int linkedGarnizonID = -1;
     public Faction cityFaction;
@@ -276,17 +286,17 @@ public class City : MonoBehaviour {
         }
     }
 
-    public int CityID
+    public CityID CityID
     {
         get
         {
             return cityData.cityID;
         }
 
-        set
-        {
-            cityData.cityID = value;
-        }
+        //set
+        //{
+        //    cityData.cityID = value;
+        //}
     }
 
     public int IsStarting

@@ -14,7 +14,7 @@ public enum PartyMode
 public class PartyData : System.Object
 {
     public int partyID = -1;
-    public int linkedCityID = -1;
+    public CityID linkedCityID;
     public Faction faction;
     public PartyMode partyMode;
     // public PositionOnMap partyMapPosition;
@@ -293,7 +293,7 @@ public class HeroParty : MonoBehaviour {
         }
     }
 
-    public int LinkedCityID
+    public CityID LinkedCityID
     {
         get
         {
