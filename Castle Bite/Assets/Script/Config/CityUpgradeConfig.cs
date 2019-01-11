@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CityUpgradeConfig", menuName = "Config/City Upgrade Config")]
+[CreateAssetMenu(fileName = "CityUpgradeConfig", menuName = "Config/City/Upgrade Config")]
 public class CityUpgradeConfig : ScriptableObject
 {
     public int minCityLevel = 1;

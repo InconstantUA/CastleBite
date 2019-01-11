@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ConfigManager : MonoBehaviour
@@ -27,6 +28,8 @@ public class ConfigManager : MonoBehaviour
     UnitStatusUIConfig[] unitStatusUIConfigs;
     [SerializeField]
     UnitEventsConfig unitEventsConfig;
+    [SerializeField]
+    CityConfig[] cityConfigs;
 
     void Awake()
     {
@@ -155,6 +158,28 @@ public class ConfigManager : MonoBehaviour
         set
         {
             unitStatusConfigs = value;
+        }
+    }
+
+    public CityConfig[] CityConfigs
+    {
+        get
+        {
+            return cityConfigs;
+        }
+
+        set
+        {
+            cityConfigs = value;
+        }
+    }
+
+    public CityConfig this[CityID cityID]
+    {
+        get
+        {
+            return cityConfigs.First(c => c.cityID == cityID);
+            // return Array.Find(cityConfigs, c => c.cityID == cityID);
         }
     }
 }

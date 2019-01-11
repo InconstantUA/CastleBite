@@ -354,7 +354,7 @@ public class GamePlayer : MonoBehaviour {
         foreach(City city in ObjectsManager.Instance.GetComponentsInChildren<City>(true))
         {
             // verify if city belongs to the player's faction
-            if (city.CityFaction == Faction)
+            if (city.CityCurrentFaction == Faction)
             {
                 totalGoldIncomePerDay += city.GoldIncomePerDay;
             }
@@ -371,7 +371,7 @@ public class GamePlayer : MonoBehaviour {
         foreach (City city in ObjectsManager.Instance.GetComponentsInChildren<City>(true))
         {
             // verify if city belongs to the player's faction
-            if (city.CityFaction == Faction)
+            if (city.CityCurrentFaction == Faction)
             {
                 totalManaIncomePerDay += city.ManaIncomePerDay;
             }

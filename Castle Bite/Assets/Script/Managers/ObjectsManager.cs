@@ -153,14 +153,14 @@ public class ObjectsManager : MonoBehaviour {
         // activate city label on map
         newCityOnMapLabel.gameObject.SetActive(true);
         // set color according to the player color preference
-        newCityOnMap.SetColor(GetPlayerByFaction(city.CityFaction).PlayerColor);
+        newCityOnMap.SetColor(GetPlayerByFaction(city.CityCurrentFaction).PlayerColor);
         // activate city on map
         newCityOnMap.gameObject.SetActive(true);
     }
 
     public void CreateCity(CityData cityData)
     {
-        Debug.Log("Creating " + cityData.cityName + " city");
+        Debug.Log("Creating " + cityData.cityID + " city");
         // get parent Transform
         Transform citiesParentTransform = transform.Find("Map/Cities");
         // create city from tempalte
@@ -483,7 +483,7 @@ public class ObjectsManager : MonoBehaviour {
         foreach (City city in GetComponentsInChildren<City>())
         {
             // verify if city faction match players faction and that it is starting city
-            if ((city.CityFaction == faction) && (city.IsStarting == 1))
+            if ((city.CityCurrentFaction == faction) && (city.IsStarting == 1))
             {
                 return city;
             }

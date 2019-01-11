@@ -20,7 +20,7 @@ public class PlayerCitiesInfoPanel : MonoBehaviour
             foreach (City city in ObjectsManager.Instance.GetComponentsInChildren<City>(true))
             {
                 // verify if city belongs to the player's faction
-                if (city.CityFaction == activePlayerFaction)
+                if (city.CityCurrentFaction == activePlayerFaction)
                 {
                     // create and activate city info 
                     Instantiate(playerCityInfoTemplate, playerCitiesListTransform).GetComponent<PlayerCityInfo>().SetActive(city);

@@ -72156,6 +72156,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eafb04d01f8975146b04090ed3855ba2, type: 2}
   - {fileID: 11400000, guid: 1152510238b0d2e468641a04b5cd10bb, type: 2}
   unitEventsConfig: {fileID: 11400000, guid: 7f98160c10787d2498653d11ba752cdf, type: 2}
+  cityConfigs:
+  - {fileID: 11400000, guid: af145cbe9351b064c95a1764fd658d16, type: 2}
+  - {fileID: 11400000, guid: 0c66ea0e7b9eb494f83e706a247b25c6, type: 2}
+  - {fileID: 11400000, guid: a2c3098cc26fdfc41a5b8693aded46a2, type: 2}
+  - {fileID: 11400000, guid: 0b978686e80e481499de304841bab00a, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35198c5efc6d78547b6663b60a932330, type: 3}
+  m_Name: Zrurrugh
+  m_EditorClassIdentifier: 
+  cityID: 2
+  cityStartingFaction: 1
+  cityType: 1
+  cityName: Zrurrugh
+  cityDescription: Greenskins capital
+  cityLevelMax: 6
+  hireablePartyLeaders: 0c00000019000000
+  hireableCommonUnits: 0d000000100000000e0000000f000000
+  isStarting: 1
+  goldIncomePerDay: -1
+  manaIncomePerDay: -1

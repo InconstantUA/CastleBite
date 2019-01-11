@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35198c5efc6d78547b6663b60a932330, type: 3}
+  m_Name: SintJoris
+  m_EditorClassIdentifier: 
+  cityID: 3
+  cityStartingFaction: 0
+  cityType: 0
+  cityName: SintJoris
+  cityDescription: City
+  cityLevelMax: 5
+  hireablePartyLeaders: 0200000003000000040000000500000006000000
+  hireableCommonUnits: 070000000b00000008000000090000000a000000
+  isStarting: 0

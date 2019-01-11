@@ -684,7 +684,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // verify if city is friendly
             HeroParty party = GetUnitParty();
-            if (city.CityFaction == party.Faction)
+            if (city.CityCurrentFaction == party.Faction)
             {
                 return city.GetCityDefense();
             }
@@ -2180,7 +2180,7 @@ public class PartyUnit : MonoBehaviour {
             // Defense != Physical resistance
             // Defense is all around protection agains all sources
             // Get it from config
-            return partyUnitConfig.unitBaseDefense;
+            return PartyUnitConfig.unitBaseDefense;
         }
 
         //set
@@ -2302,7 +2302,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.unitRole;
             // Get it from config
-            return partyUnitConfig.unitRole;
+            return PartyUnitConfig.unitRole;
         }
 
         //set
@@ -2317,7 +2317,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.unitBriefDescription;
             // Get it from config
-            return partyUnitConfig.unitBriefDescription;
+            return PartyUnitConfig.unitBriefDescription;
         }
 
         //set
@@ -2332,7 +2332,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // return partyUnitData.unitFullDescription;
             // Get it from config
-            return partyUnitConfig.unitFullDescription;
+            return PartyUnitConfig.unitFullDescription;
         }
 
         //set
@@ -2347,7 +2347,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.unitCost;
             // Get it from config
-            return partyUnitConfig.unitCost;
+            return PartyUnitConfig.unitCost;
         }
 
         //set
@@ -2362,7 +2362,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.unitSize;
             // Get it from config
-            return partyUnitConfig.unitSize;
+            return PartyUnitConfig.unitSize;
         }
 
         //set
@@ -2377,7 +2377,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.isInterpartyMovable;
             // Get it from config
-            return partyUnitConfig.isInterpartyMovable;
+            return PartyUnitConfig.isInterpartyMovable;
         }
 
         //set
@@ -2392,7 +2392,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.isDismissable;
             // Get it from config
-            return partyUnitConfig.isDismissable;
+            return PartyUnitConfig.isDismissable;
         }
 
         //set
@@ -2493,7 +2493,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.classIsUpgradable;
             // Get it from config
-            return partyUnitConfig.classIsUpgradable;
+            return PartyUnitConfig.classIsUpgradable;
         }
 
         //set
@@ -2521,7 +2521,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // return partyUnitData.canLearnSkills;
             // Get it from config
-            return partyUnitConfig.canLearnSkills;
+            return PartyUnitConfig.canLearnSkills;
         }
 
         //set
@@ -2549,7 +2549,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.requiresUnitType;
             // Get it from config
-            return partyUnitConfig.requiresUnitType;
+            return PartyUnitConfig.requiresUnitType;
         }
 
         //set
@@ -2564,7 +2564,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.unlocksUnitTypes;
             // Get it from config
-            return partyUnitConfig.unlocksUnitTypes;
+            return PartyUnitConfig.unlocksUnitTypes;
         }
 
         //set
@@ -2579,7 +2579,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.upgradeCost;
             // Get it from config
-            return partyUnitConfig.upgradeCost;
+            return PartyUnitConfig.upgradeCost;
         }
 
         //set
@@ -2623,7 +2623,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.movePointsMax;
             // Get it from config
-            return partyUnitConfig.movePointsMax;
+            return PartyUnitConfig.movePointsMax;
         }
 
         //set
@@ -2638,7 +2638,7 @@ public class PartyUnit : MonoBehaviour {
         {
             //return partyUnitData.scoutingRange;
             // Get it from config
-            return partyUnitConfig.scoutingRange;
+            return PartyUnitConfig.scoutingRange;
         }
 
         //set

@@ -100,7 +100,7 @@ public class UnitHirePanel : MonoBehaviour
                 }
                 else
                 {
-                    SetUnitCharacteristic("Cost", unitToHire.UnitLeadership.ToString());
+                    SetUnitCharacteristic("Cost", unitToHire.UnitCost.ToString());
                     // SetUnitCharacteristic("Ability", unitToHire.UnitAbility.ToString());
                     SetUnitCharacteristic("Size", unitToHire.UnitSize.ToString());
                     SetUnitCharacteristic("Role", unitToHire.UnitRole);

@@ -26,21 +26,21 @@ public class CityData
     public CityID cityID;
     //public int linkedPartyID = -1;
     //public int linkedGarnizonID = -1;
-    public Faction cityFaction;
-    public CityType cityType;
-    public string cityName;
-    public string cityDescription;
+    public Faction cityCurrentFaction;
+    // public CityType cityType;
+    // public string cityName;
+    // public string cityDescription;
     public int cityLevelCurrent = 1;
-    public int cityLevelMax = 5;
+    // public int cityLevelMax = 5;
     public UnitType[] hireablePartyLeaders;
     public UnitType[] hireableCommonUnits;
-    //public PositionOnMap cityMapPosition;   // used only during load and save
+    // public PositionOnMap cityMapPosition;   // used only during load and save
     public MapCoordinates cityMapCoordinates;   // used only during load and save
-    public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
-    // Normally this is taken from CityUpgradeConfig, but can be overwritten here, if not -1
-    public int goldIncomePerDay = -1;
-    // Normally this is taken from CityUpgradeConfig, but can be overwritten here, if not -1
-    public int manaIncomePerDay = -1;
+    // public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
+    // Normally this is taken from CityUpgradeConfig, but you can apply custom bonus or penalty
+    public int goldIncomePerDayModifier = 0;
+    // Normally this is taken from CityUpgradeConfig, but you can apply custom bonus or penalty
+    public int manaIncomePerDayModifier = 0;
 }
 
 public class City : MonoBehaviour {
@@ -53,6 +53,7 @@ public class City : MonoBehaviour {
     [SerializeField]
     GameEvent cityLevelUpEvent;
 
+    CityConfig cityConfig;
 
     // to be moved to other class
     // City view state is required to effectively change between different states
@@ -169,22 +170,22 @@ public class City : MonoBehaviour {
     //}
 
     #region City Properties
-    public Faction CityFaction
+    public Faction CityCurrentFaction
     {
         get
         {
-            return cityData.cityFaction;
+            return cityData.cityCurrentFaction;
         }
 
         set
         {
             // verify if city faction is not the same
-            if (cityData.cityFaction != value)
+            if (cityData.cityCurrentFaction != value)
             {
                 // save old city faction value
-                Faction oldValue = cityData.cityFaction;
+                Faction oldValue = cityData.cityCurrentFaction;
                 // set new city faction
-                cityData.cityFaction = value;
+                cityData.cityCurrentFaction = value;
                 // change city on map color to the new color
                 lMapCity.SetColor(ObjectsManager.Instance.GetPlayerByFaction(value).PlayerColor);
                 // trigger event
@@ -193,43 +194,57 @@ public class City : MonoBehaviour {
         }
     }
 
+    public Faction CityStartingFaction
+    {
+        get
+        {
+            return CityConfig.cityStartingFaction;
+        }
+    }
+
     public CityType CityType
     {
         get
         {
-            return cityData.cityType;
+            // return cityData.cityType;
+            // get data from config
+            return CityConfig.cityType;
         }
 
-        set
-        {
-            cityData.cityType = value;
-        }
+        //set
+        //{
+        //    cityData.cityType = value;
+        //}
     }
 
     public string CityName
     {
         get
         {
-            return cityData.cityName;
+            // return cityData.cityName;
+            // get data from config
+            return CityConfig.cityName;
         }
 
-        set
-        {
-            cityData.cityName = value;
-        }
+        //set
+        //{
+        //    cityData.cityName = value;
+        //}
     }
 
     public string CityDescription
     {
         get
         {
-            return cityData.cityDescription;
+            // return cityData.cityDescription;
+            // get data from config
+            return CityConfig.cityDescription;
         }
 
-        set
-        {
-            cityData.cityDescription = value;
-        }
+        //set
+        //{
+        //    cityData.cityDescription = value;
+        //}
     }
 
     public int CityLevelCurrent
@@ -251,13 +266,15 @@ public class City : MonoBehaviour {
     {
         get
         {
-            return cityData.cityLevelMax;
+            // return cityData.cityLevelMax;
+            // get data from config
+            return CityConfig.cityLevelMax;
         }
 
-        set
-        {
-            cityData.cityLevelMax = value;
-        }
+        //set
+        //{
+        //    cityData.cityLevelMax = value;
+        //}
     }
 
     public UnitType[] HireablePartyLeaders
@@ -303,59 +320,43 @@ public class City : MonoBehaviour {
     {
         get
         {
-            return cityData.isStarting;
+            // return cityData.isStarting;
+            // get data from config
+            return CityConfig.isStarting;
         }
 
-        set
-        {
-            cityData.isStarting = value;
-        }
+        //set
+        //{
+        //    cityData.isStarting = value;
+        //}
     }
 
     public int GoldIncomePerDay
     {
         get
         {
-            // verify if it is not overwritten
-            if (cityData.goldIncomePerDay == -1)
-            {
-                // get data from config based on the city level
-                return ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[CityLevelCurrent];
-            }
-            else
-            {
-                // return overwritten value
-                return cityData.goldIncomePerDay;
-            }
+            // get data from config based on the city level
+            return ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[CityLevelCurrent] + cityData.goldIncomePerDayModifier;
         }
 
-        set
-        {
-            cityData.goldIncomePerDay = value;
-        }
+        //set
+        //{
+        //    cityData.goldIncomePerDay = value;
+        //}
     }
 
     public int ManaIncomePerDay
     {
         get
         {
-            // verify if it is not overwritten
-            if (cityData.manaIncomePerDay == -1)
-            {
-                // get data from config based on the city level
-                return ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[CityLevelCurrent];
-            }
-            else
-            {
-                // return overwritten value
-                return cityData.manaIncomePerDay;
-            }
+            // get data from config based on the city level
+            return ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[CityLevelCurrent] + cityData.manaIncomePerDayModifier;
         }
 
-        set
-        {
-            cityData.manaIncomePerDay = value;
-        }
+        //set
+        //{
+        //    cityData.manaIncomePerDay = value;
+        //}
     }
 
     //public int LinkedPartyID
@@ -407,6 +408,22 @@ public class City : MonoBehaviour {
         set
         {
             cityData = value;
+        }
+    }
+
+    public CityConfig CityConfig
+    {
+        get
+        {
+            // verify if cityConfig is not set yet
+            if (cityConfig == null)
+            {
+                // get config from manager
+                // cityConfig = ConfigManager.Instance[CityID];
+                cityConfig = Array.Find(ConfigManager.Instance.CityConfigs, e => e.cityID == CityID);
+            }
+            // return city config
+            return cityConfig;
         }
     }
     #endregion City Properties

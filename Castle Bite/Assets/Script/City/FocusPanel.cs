@@ -260,18 +260,18 @@ public class FocusPanel : MonoBehaviour {
         {
             // upgrade city level
             city.CityLevelCurrent += 1;
-            // verify if city has custom starting gold income
-            if (city.CityData.goldIncomePerDay != -1)
-            {
-                // upgrade custom income by the difference between levels
-                city.CityData.goldIncomePerDay += (ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[city.CityLevelCurrent] - ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[city.CityLevelCurrent - 1]);
-            }
-            // verify if city has custom starting mana income
-            if (city.CityData.manaIncomePerDay != -1)
-            {
-                // upgrade custom income by the difference between levels
-                city.CityData.manaIncomePerDay += (ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[city.CityLevelCurrent] - ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[city.CityLevelCurrent - 1]);
-            }
+            //// verify if city has custom starting gold income
+            //if (city.CityData.goldIncomePerDay != -1)
+            //{
+            //    // upgrade custom income by the difference between levels
+            //    city.CityData.goldIncomePerDay += (ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[city.CityLevelCurrent] - ConfigManager.Instance.CityUpgradeConfig.cityGoldIncomePerCityLevel[city.CityLevelCurrent - 1]);
+            //}
+            //// verify if city has custom starting mana income
+            //if (city.CityData.manaIncomePerDay != -1)
+            //{
+            //    // upgrade custom income by the difference between levels
+            //    city.CityData.manaIncomePerDay += (ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[city.CityLevelCurrent] - ConfigManager.Instance.CityUpgradeConfig.cityManaIncomePerCityLevel[city.CityLevelCurrent - 1]);
+            //}
             // reinit city info panel
             SetCityInformation();
         }

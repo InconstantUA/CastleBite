@@ -41,7 +41,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
     {
         foreach (City city in ObjectsManager.Instance.transform.Find("Map/Cities").GetComponentsInChildren<City>())
         {
-            if (city.CityType == cityType && city.CityFaction == faction)
+            if (city.CityType == cityType && city.CityCurrentFaction == faction)
             {
                 return city;
             }

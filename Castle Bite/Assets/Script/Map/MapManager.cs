@@ -727,7 +727,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     if (mapObject.GetComponent<MapCity>() != null)
                     {
                         // verify if city has the same faction as the active player (belongs to active player)
-                        if (mapObject.GetComponent<MapCity>().LCity.CityFaction == activePlayer.Faction)
+                        if (mapObject.GetComponent<MapCity>().LCity.CityCurrentFaction == activePlayer.Faction)
                         // verify if city is not occupied
                         // Todo: fix bug when trying to pass through occupied city
                         {
@@ -1047,7 +1047,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     if (mapCity)
                                     {
                                         // check relationships with active player
-                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityCurrentFaction);
                                         switch (relationships)
                                         {
                                             case Relationships.State.SameFaction:
@@ -1111,7 +1111,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                                     if (mapCity)
                                     {
                                         // check relationships with active player
-                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                                        Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityCurrentFaction);
                                         switch (relationships)
                                         {
                                             case Relationships.State.SameFaction:
@@ -1645,7 +1645,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             else if (mapCity)
             {
                 // check relationships with active player
-                relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityCurrentFaction);
             }
             else if (mapItem)
             {
@@ -2902,7 +2902,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         Debug.Log("Move(): it is map city");
                         // check relationships with moving party faction
                         //Relationships.State relationships = Relationships.Instance.GetRelationships(player.Faction, mapCity.LinkedCityTr.GetComponent<City>().Faction);
-                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapCity.LCity.CityFaction);
+                        Relationships.State relationships = Relationships.Instance.GetRelationships(selectedHeroFaction, mapCity.LCity.CityCurrentFaction);
                         switch (relationships)
                         {
                             case Relationships.State.SameFaction:
@@ -3145,7 +3145,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             // verify if this is player's city
                             City city = mapCity.LCity;
-                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityFaction)
+                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityCurrentFaction)
                             {
                                 // highlighted city belongs to player
                                 // change cursor to selection hand
@@ -3267,7 +3267,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             //Debug.Log("Enter city box " + mapCity.name);
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityCurrentFaction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -3291,7 +3291,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             Debug.Log("Enter city label box " + mapCity.name);
                             // check relationships with active player
-                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityFaction);
+                            Relationships.State relationships = Relationships.Instance.GetRelationships(TurnsManager.Instance.GetActivePlayer().Faction, mapCity.LCity.CityCurrentFaction);
                             switch (relationships)
                             {
                                 case Relationships.State.SameFaction:
@@ -3342,7 +3342,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                         {
                             // verify if this is player's city
                             City city = mapCity.LCity;
-                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityFaction)
+                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityCurrentFaction)
                             {
                                 // highlighted city belongs to player
                                 // Verify if it is the same city as already selected
@@ -3666,7 +3666,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             }
                             City city = mapCity.LCity;
                             // verify if this is player's city
-                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityFaction)
+                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityCurrentFaction)
                             {
                                 // highlighted city belongs to player
                                 // select this city
@@ -3719,7 +3719,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             mapCity = mapCityViaLabel.MapObject.GetComponent<MapCity>();
                             City city = mapCity.LCity;
                             // verify if this is player's city
-                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityFaction)
+                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityCurrentFaction)
                             {
                                 // highlighted city belongs to player
                                 // select this city instead of previously selected city
@@ -3859,7 +3859,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                             }
                             City city = mapCity.LCity;
                             // verify if this is player's city
-                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityFaction)
+                            if (TurnsManager.Instance.GetActivePlayer().Faction == city.CityCurrentFaction)
                             {
                                 // Debug.LogWarning("1");
                                 // highlighted city belongs to player
@@ -3960,7 +3960,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // get city tile coordintates
             Vector2Int cityTileCoords = GetTileByWorldPosition(mapCity.transform.position);
             // verify map city faction
-            if (mapCity.LCity.CityFaction == faction)
+            if (mapCity.LCity.CityCurrentFaction == faction)
             {
                 // set city tile passable for active player
                 mapTiles[cityTileCoords.x, cityTileCoords.y].Terra.TerraIsPassable = true;
@@ -4016,7 +4016,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         foreach (MapCity mapCity in mapCitiesParentTransformOnMap.GetComponentsInChildren<MapCity>())
         {
             // check if faction is the same as for the active player
-            if (mapCity.LCity.CityFaction == activePlayer.Faction)
+            if (mapCity.LCity.CityCurrentFaction == activePlayer.Faction)
             {
                 // change text color
                 mapCity.SetColor(color);

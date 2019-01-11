@@ -93,7 +93,7 @@ public class ChapterManager : MonoBehaviour {
             GamePlayer player = TurnsManager.Instance.GetActivePlayer();
             // verify if city has been captured by human player
             // .. I assume that game is in single player game mode, where there is only one human player and all others are AI players
-            if ((city.CityFaction == player.Faction) && (PlayerType.Human == player.PlayerType))
+            if ((city.CityCurrentFaction == player.Faction) && (PlayerType.Human == player.PlayerType))
             {
                 activeChapter.ChapterData.goalTargetCityCaptured = true;
                 Debug.Log("Target city has been captured by player");

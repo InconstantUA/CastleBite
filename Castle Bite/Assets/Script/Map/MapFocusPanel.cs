@@ -242,7 +242,7 @@ public class MapFocusPanel : MonoBehaviour {
         // verify cityType
         if (mapCity.LCity.CityType == CityType.Capital)
         {
-            additionalInfo = mapCity.LCity.CityFaction.ToString() +  " Captial";
+            additionalInfo = mapCity.LCity.CityCurrentFaction.ToString() +  " Captial";
         } else
         {
             additionalInfo = "City";
@@ -294,7 +294,7 @@ public class MapFocusPanel : MonoBehaviour {
         foreach (MapCity mapCity in MapManager.Instance.GetComponentsInChildren<MapCity>(true))
         {
             // verify if city belongs to the active player
-            if (mapCity.LCity.CityFaction == activePlayer.Faction)
+            if (mapCity.LCity.CityCurrentFaction == activePlayer.Faction)
             {
                 // return map city
                 return mapCity;
@@ -394,7 +394,7 @@ public class MapFocusPanel : MonoBehaviour {
         foreach (MapCity mCity in MapManager.Instance.GetComponentsInChildren<MapCity>())
         {
             // verify if faction is the same
-            if (mapCity.LCity.CityFaction == mCity.LCity.CityFaction)
+            if (mapCity.LCity.CityCurrentFaction == mCity.LCity.CityCurrentFaction)
             {
                 mapCitiesList.Add(mCity);
             }
