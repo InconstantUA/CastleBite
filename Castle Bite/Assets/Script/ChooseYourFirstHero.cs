@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ChooseYourFirstHero : MonoBehaviour {
-    [SerializeField]
-    UnitType[] dominionFactionSelectableUnits;
-    [SerializeField]
-    UnitType[] greenskinFactionSelectableUnits;
-    [SerializeField]
-    UnitType[] undeadFactionSelectableUnits;
+    //[SerializeField]
+    //UnitType[] dominionFactionSelectableUnits;
+    //[SerializeField]
+    //UnitType[] greenskinFactionSelectableUnits;
+    //[SerializeField]
+    //UnitType[] undeadFactionSelectableUnits;
     [SerializeField]
     FactionSelectionGroup factionSelectionGroup;
     [SerializeField]
@@ -58,28 +58,28 @@ public class ChooseYourFirstHero : MonoBehaviour {
             // Get currently active Faction
             faction = factionSelectionGroup.GetSelectedFaction();
         }
-        // get higherable unit types
-        UnitType[] highrableUnitTypes = null;
-        switch (faction)
-        {
-            case Faction.Dominion:
-                highrableUnitTypes = dominionFactionSelectableUnits;
-                break;
-            case Faction.Greenskin:
-                highrableUnitTypes = greenskinFactionSelectableUnits;
-                break;
-            case Faction.Undead:
-                highrableUnitTypes = undeadFactionSelectableUnits;
-                break;
-            default:
-                Debug.LogError("Unknown faction " + faction);
-                break;
-        }
         Debug.Log("Set faction to " + faction);
+        // get higherable unit types
+        //UnitType[] highrableUnitTypes = null;
+        //switch (faction)
+        //{
+        //    case Faction.Dominion:
+        //        highrableUnitTypes = dominionFactionSelectableUnits;
+        //        break;
+        //    case Faction.Greenskin:
+        //        highrableUnitTypes = greenskinFactionSelectableUnits;
+        //        break;
+        //    case Faction.Undead:
+        //        highrableUnitTypes = undeadFactionSelectableUnits;
+        //        break;
+        //    default:
+        //        Debug.LogError("Unknown faction " + faction);
+        //        break;
+        //}
         // Get hire unit menu
         // HireUnitGeneric hireUnitGeneric = transform.root.Find("MiscUI").GetComponentInChildren<HireUnitGeneric>(true);
         // activate hire unit menu
-        hireUnitGeneric.SetActive(highrableUnitTypes, null, UnitHirePanel.Mode.FirstUnit, unitTemplateHeight);
+        hireUnitGeneric.SetActive(ConfigManager.Instance[faction].hireablePartyLeaders, null, UnitHirePanel.Mode.FirstUnit, unitTemplateHeight);
         //// Deactivate standard hire unit button
         //transform.root.Find("MiscUI/BottomControlPanel/MiddleControls/HireUnitBtn").gameObject.SetActive(false);
         //// Deactivate standard close hire unit menu button
@@ -165,12 +165,17 @@ public class ChooseYourFirstHero : MonoBehaviour {
         }
         else
         {
-            // loop through all abilities in UI
-            foreach(Transform t in uniqueAbilitiesToggleGroup.transform)
-            {
-                // remove toggle
-                Destroy(t.gameObject);
-            }
+            // remove all previus abilities
+            RecycleBin.RecycleChildrenOf(uniqueAbilitiesToggleGroup.gameObject);
+            //// loop through all abilities in UI
+            //foreach(Transform t in uniqueAbilitiesToggleGroup.transform)
+            //{
+            //    // move toggle to recycle bin and destroy it (move is required, because actual destroy is being done at the end of the frame,
+            //    // but we need to preselect new toggle on reset SetUniqueAbilitiesActive(false/true)
+            //    t.SetParent(RecycleBin.Instance.transform);
+            //    Debug.Log("Destroy " + t.name);
+            //    Destroy(t.gameObject);
+            //}
         }
     }
 
@@ -269,18 +274,18 @@ public class ChooseYourFirstHero : MonoBehaviour {
         return null;
     }
 
-    PlayerUniqueAbility GetSelectedUniqueAbility()
-    {
-        // Get selected toggle
-        Toggle selectedToggle = GetSelectedToggle();
-        // verify if toggle is is selected
-        if (selectedToggle != null)
-        {
-            return selectedToggle.GetComponent<ChooseAbility>().ability;
-        }
-        // Return hardcore by default
-        return PlayerUniqueAbility.Hardcore;
-    }
+    //PlayerUniqueAbility GetSelectedUniqueAbility()
+    //{
+    //    // Get selected toggle
+    //    Toggle selectedToggle = GetSelectedToggle();
+    //    // verify if toggle is is selected
+    //    if (selectedToggle != null)
+    //    {
+    //        return selectedToggle.GetComponent<ChooseAbility>().ability;
+    //    }
+    //    // Return hardcore by default
+    //    return PlayerUniqueAbility.Hardcore;
+    //}
 
     UnitType GetSelectedUnitType()
     {

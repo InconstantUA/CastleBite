@@ -16,8 +16,8 @@ public class CityConfig : ScriptableObject
     public string cityName;
     public string cityDescription;
     public int cityLevelMax = 5;
-    public UnitType[] hireablePartyLeaders;
-    public UnitType[] hireableCommonUnits;
+    //public UnitType[] hireablePartyLeaders;
+    //public UnitType[] hireableCommonUnits;
     public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
     // This is taken from CityUpgradeConfig:
     //public int goldIncomePerDay = -1;

@@ -3803,9 +3803,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c504464ae9228d42a421f9a827f8175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dominionFactionSelectableUnits: 0200000003000000040000000500000006000000
-  greenskinFactionSelectableUnits: 0c0000001000000019000000
-  undeadFactionSelectableUnits: 1a0000001b0000001c0000001d0000001e000000
   factionSelectionGroup: {fileID: 712500270}
   hireUnitGeneric: {fileID: 1538723448}
   uniqueAbilitiesToggleGroup: {fileID: 792928406}
@@ -13183,15 +13180,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 203311387}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -90}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1713389793}
-  m_RootOrder: 5
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 400, y: 300}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &203311389
@@ -72161,6 +72158,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0c66ea0e7b9eb494f83e706a247b25c6, type: 2}
   - {fileID: 11400000, guid: a2c3098cc26fdfc41a5b8693aded46a2, type: 2}
   - {fileID: 11400000, guid: 0b978686e80e481499de304841bab00a, type: 2}
+  factionConfigs:
+  - {fileID: 11400000, guid: 5d0fb10363dd2014b9054dc5bc13d925, type: 2}
+  - {fileID: 11400000, guid: 99bc819b3c758b04ea031e8c7defc9eb, type: 2}
+  - {fileID: 11400000, guid: 32fcb984774fd944796cbf333bd2f8e5, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97128,7 +97129,6 @@ RectTransform:
   - {fileID: 164374030}
   - {fileID: 637408235}
   - {fileID: 1344182552}
-  - {fileID: 203311388}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

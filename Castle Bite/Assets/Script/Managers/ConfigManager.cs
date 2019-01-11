@@ -30,6 +30,8 @@ public class ConfigManager : MonoBehaviour
     UnitEventsConfig unitEventsConfig;
     [SerializeField]
     CityConfig[] cityConfigs;
+    [SerializeField]
+    FactionConfig[] factionConfigs;
 
     void Awake()
     {
@@ -171,6 +173,27 @@ public class ConfigManager : MonoBehaviour
         set
         {
             cityConfigs = value;
+        }
+    }
+
+    public FactionConfig[] FactionConfigs
+    {
+        get
+        {
+            return factionConfigs;
+        }
+
+        set
+        {
+            factionConfigs = value;
+        }
+    }
+
+    public FactionConfig this[Faction faction]
+    {
+        get
+        {
+            return factionConfigs.First(c => c.faction == faction);
         }
     }
 

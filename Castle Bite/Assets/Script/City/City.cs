@@ -32,8 +32,8 @@ public class CityData
     // public string cityDescription;
     public int cityLevelCurrent = 1;
     // public int cityLevelMax = 5;
-    public UnitType[] hireablePartyLeaders;
-    public UnitType[] hireableCommonUnits;
+    // public UnitType[] hireablePartyLeaders;
+    // public UnitType[] hireableCommonUnits;
     // public PositionOnMap cityMapPosition;   // used only during load and save
     public MapCoordinates cityMapCoordinates;   // used only during load and save
     // public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
@@ -54,6 +54,7 @@ public class City : MonoBehaviour {
     GameEvent cityLevelUpEvent;
 
     CityConfig cityConfig;
+    FactionConfig factionConfig;
 
     // to be moved to other class
     // City view state is required to effectively change between different states
@@ -182,6 +183,8 @@ public class City : MonoBehaviour {
             // verify if city faction is not the same
             if (cityData.cityCurrentFaction != value)
             {
+                // reset faction config, so it is updated on next Get request
+                factionConfig = null;
                 // save old city faction value
                 Faction oldValue = cityData.cityCurrentFaction;
                 // set new city faction
@@ -277,30 +280,47 @@ public class City : MonoBehaviour {
         //}
     }
 
+    public FactionConfig FactionConfig
+    {
+        get
+        {
+            // verify if faction config has not been set yet
+            if (factionConfig == null)
+            {
+                // get config from manager
+                factionConfig = Array.Find(ConfigManager.Instance.FactionConfigs, c => c.faction == CityCurrentFaction);
+            }
+            // return faction config;
+            return factionConfig;
+        }
+    }
+
     public UnitType[] HireablePartyLeaders
     {
         get
         {
-            return cityData.hireablePartyLeaders;
+            // return cityData.hireablePartyLeaders;
+            return FactionConfig.hireablePartyLeaders;
         }
 
-        set
-        {
-            cityData.hireablePartyLeaders = value;
-        }
+        //set
+        //{
+        //    cityData.hireablePartyLeaders = value;
+        //}
     }
 
     public UnitType[] HireableCommonUnits
     {
         get
         {
-            return cityData.hireableCommonUnits;
+            // return cityData.hireableCommonUnits;
+            return FactionConfig.hireableCommonUnits;
         }
 
-        set
-        {
-            cityData.hireableCommonUnits = value;
-        }
+        //set
+        //{
+        //    cityData.hireableCommonUnits = value;
+        //}
     }
 
     public CityID CityID

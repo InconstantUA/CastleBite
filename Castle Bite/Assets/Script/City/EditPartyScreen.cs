@@ -731,13 +731,15 @@ public class EditPartyScreen : MonoBehaviour {
         Transform unitCell = unitSlot.transform.parent;
         PartyPanel partyPanel = GetUnitsParentPartyPanel(unitCell);
         // 2 and put it to recycle bin, because otherwise PartyPanel.GetNumberOfPresentUnits() will return wrong number of units, because object is actually destroyed after Update()
-        unitUI.transform.SetParent(transform.root.GetComponentInChildren<RecycleBin>().transform);
+        // unitUI.transform.SetParent(transform.root.GetComponentInChildren<RecycleBin>().transform);
         // 3 destory unit canvas, where it is linked to
-        Destroy(unitUI.gameObject);
+        // Destroy(unitUI.gameObject);
         // 4 and put it to recycle bin, because otherwise city.GetNumberOfPresentUnits() will return wrong number of units, because object is actually destroyed after Update()
-        partyUnit.transform.SetParent(transform.root.GetComponentInChildren<RecycleBin>().transform);
+        // partyUnit.transform.SetParent(transform.root.GetComponentInChildren<RecycleBin>().transform);
         // 5 and destory party unit itself
-        Destroy(partyUnit.gameObject);
+        // Destroy(partyUnit.gameObject);
+        RecycleBin.Recycle(unitUI.gameObject);
+        RecycleBin.Recycle(partyUnit.gameObject);
         // Update party panel
         // act based on the unit size
         if (unitSize == UnitSize.Single)
