@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Scroll of Resurrection
   m_EditorClassIdentifier: 
   inventoryItemType: 1100
+  inventoryItemID: 1100
   itemDisplayName: Scroll of Resurrection
   itemCost: 300
   compatibleEquipmentSlots: 384

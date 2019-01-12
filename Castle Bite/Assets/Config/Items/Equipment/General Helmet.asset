@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: General Helmet
   m_EditorClassIdentifier: 
   inventoryItemType: 2202
+  inventoryItemID: 2202
   itemDisplayName: General Helmet
   itemCost: 2000
   compatibleEquipmentSlots: 4

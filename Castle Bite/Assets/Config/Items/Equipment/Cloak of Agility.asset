@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Cloak of Agility
   m_EditorClassIdentifier: 
   inventoryItemType: 2301
+  inventoryItemID: 2301
   itemDisplayName: Cloak of Agility
   itemCost: 1800
   compatibleEquipmentSlots: 8

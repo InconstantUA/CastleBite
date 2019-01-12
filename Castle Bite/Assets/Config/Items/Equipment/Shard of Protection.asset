@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Shard of Protection
   m_EditorClassIdentifier: 
   inventoryItemType: 2102
+  inventoryItemID: 2102
   itemDisplayName: Shard of Protection
   itemCost: 7500
   compatibleEquipmentSlots: 2

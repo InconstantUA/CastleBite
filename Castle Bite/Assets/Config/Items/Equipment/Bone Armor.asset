@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bone Armor
   m_EditorClassIdentifier: 
   inventoryItemType: 2501
+  inventoryItemID: 2501
   itemDisplayName: Bone Armor
   itemCost: 3000
   compatibleEquipmentSlots: 64

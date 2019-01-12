@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Small Fortification Potion
   m_EditorClassIdentifier: 
   inventoryItemType: 1201
+  inventoryItemID: 1201
   itemDisplayName: Small Fortification Potion
   itemCost: 500
   compatibleEquipmentSlots: 384

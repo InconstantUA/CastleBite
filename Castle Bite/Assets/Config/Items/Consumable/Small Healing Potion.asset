@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Small Healing Potion
   m_EditorClassIdentifier: 
   inventoryItemType: 1101
+  inventoryItemID: 1104
   itemDisplayName: Small Healing Potion
   itemCost: 100
   compatibleEquipmentSlots: 384

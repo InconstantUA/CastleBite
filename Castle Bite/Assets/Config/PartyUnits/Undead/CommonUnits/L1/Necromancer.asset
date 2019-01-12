@@ -19,14 +19,15 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 50
   unitBaseExperienceReward: 100
   unitExperienceRewardIncrementOnLevelUp: 100
+  unitBaseDefense: 0
   unitBaseHealthMax: 40
-  unitHealthMaxIncrementOnLevelUp: 10
   unitHealthMaxIncrementOnStatsUpgrade: 10
   unitHealthRegenPercent: 10
   unitResistances:
   - source: 1
     percent: 20
   unitAbility: 16
+  unitAbilityID: 16
   unitInitiative: 10
   unitRole: Dealing magical damage to entire enemy party
   unitBriefDescription: Brief description

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Small Strength Potion
   m_EditorClassIdentifier: 
   inventoryItemType: 1301
+  inventoryItemID: 1301
   itemDisplayName: Small Strength Potion
   itemCost: 0
   compatibleEquipmentSlots: 384

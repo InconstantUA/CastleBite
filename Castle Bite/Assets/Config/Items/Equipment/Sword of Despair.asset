@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Sword of Despair
   m_EditorClassIdentifier: 
   inventoryItemType: 2420
+  inventoryItemID: 2420
   itemDisplayName: Sword of Despair
   itemCost: 5000
   compatibleEquipmentSlots: 48

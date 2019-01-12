@@ -5,7 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Config/Inventory/Item")]
 public class InventoryItemConfig : ScriptableObject
 {
-    public InventoryItemType inventoryItemType;
+    // public InventoryItemID inventoryItemType;
+    public InventoryItemID inventoryItemID;
     public string itemDisplayName;
     public int itemCost;
     [EnumFlag]

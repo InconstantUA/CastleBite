@@ -44,8 +44,9 @@ public enum HeroEquipmentSlots
 //}
 
 [Serializable]
-public enum InventoryItemType
+public enum InventoryItemID
 {
+    None                        =   0,
     // 1 Consumable BeltSlot1/2
     //  100-199 Health
     ScrollOfResurrection        =   1100,
@@ -87,7 +88,8 @@ public enum InventoryItemType
 [Serializable]
 public class InventoryItemData : System.Object
 {
-    public InventoryItemType inventoryItemType;
+    // public InventoryItemID inventoryItemType;
+    public InventoryItemID inventoryItemID;
     // public InventoryItemConfig inventoryItemConfig;
     // public string itemName; // config
     // public int itemValue; // config
@@ -344,7 +346,7 @@ public class InventoryItem : MonoBehaviour {
             if (inventoryItemConfig == null)
             {
                 // get item config from configs manager by item type
-                inventoryItemConfig = Array.Find(ConfigManager.Instance.InventoryItemConfigs, e => e.inventoryItemType == InventoryItemType);
+                inventoryItemConfig = Array.Find(ConfigManager.Instance.InventoryItemConfigs, e => e.inventoryItemID == InventoryItemID);
             }
             return inventoryItemConfig;
         }
@@ -363,16 +365,16 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
-    public InventoryItemType InventoryItemType
+    public InventoryItemID InventoryItemID
     {
         get
         {
-            return inventoryItemData.inventoryItemType;
+            return inventoryItemData.inventoryItemID;
         }
 
         set
         {
-            inventoryItemData.inventoryItemType = value;
+            inventoryItemData.inventoryItemID = value;
         }
     }
 

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DeathResistance50
   m_EditorClassIdentifier: 
   unitStatModifierType: 1400050
+  unitStatModifierID: 1400050
   unitStat: 8
   modifierAppliedTo: 1
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
+  powerSource: 9

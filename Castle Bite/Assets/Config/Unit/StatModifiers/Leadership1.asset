@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Leadership1
   m_EditorClassIdentifier: 
   unitStatModifierType: 600001
+  unitStatModifierID: 600001
   unitStat: 0
   modifierAppliedTo: 0
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
+  powerSource: 9

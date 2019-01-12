@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 1401
-    itemName: Flask of Well Water
-    itemValue: 50
-    compatibleEquipmentSlots: 0600000007000000
+    inventoryItemID: 1401
     unitStatModifiers:
     - unitStat: 5
       modifierAppliedTo: 0
@@ -66,7 +64,5 @@ MonoBehaviour:
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: 2
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: 2
-    itemIsStackable: 0

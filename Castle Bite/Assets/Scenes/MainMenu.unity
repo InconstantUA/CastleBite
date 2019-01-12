@@ -72162,6 +72162,27 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5d0fb10363dd2014b9054dc5bc13d925, type: 2}
   - {fileID: 11400000, guid: 99bc819b3c758b04ea031e8c7defc9eb, type: 2}
   - {fileID: 11400000, guid: 32fcb984774fd944796cbf333bd2f8e5, type: 2}
+  unitAbilityConfigs:
+  - {fileID: 11400000, guid: dd5da803c6d41bd42b4e3b3d91287b70, type: 2}
+  - {fileID: 11400000, guid: 51f0b73709f632143af3e4bf5ff03312, type: 2}
+  - {fileID: 11400000, guid: 64b8438171393e245920df90973f2940, type: 2}
+  - {fileID: 11400000, guid: 15d123a5e19b9874088ad45d10ebb7e0, type: 2}
+  - {fileID: 11400000, guid: d191836b82d14ed42b01f5a0e90cef6c, type: 2}
+  - {fileID: 11400000, guid: 7746753461f80ba468171fe5dd1153e5, type: 2}
+  - {fileID: 11400000, guid: f565c931a8173f54bb230302baf938ed, type: 2}
+  - {fileID: 11400000, guid: 3a38c5b76b0201f4c9b8c5b4c5e2f514, type: 2}
+  - {fileID: 11400000, guid: ca80c1347b0ba284782f112ba92c344f, type: 2}
+  - {fileID: 11400000, guid: e24af85e5d5d2974fac17d2b19189bcb, type: 2}
+  - {fileID: 11400000, guid: 5d772738baea35b40a02e51a43821740, type: 2}
+  - {fileID: 11400000, guid: 12a2357588ff3964b95ee5b64fbc44e3, type: 2}
+  - {fileID: 11400000, guid: 2a741c791e8e012468c334f11086e147, type: 2}
+  - {fileID: 11400000, guid: 653bd98595375cd4b8bba6e40c1df3c8, type: 2}
+  - {fileID: 11400000, guid: 13328695c1099ad4988f7f9819d66fae, type: 2}
+  - {fileID: 11400000, guid: 341b9d1494cf0a5479103bb01359924f, type: 2}
+  - {fileID: 11400000, guid: 3e962aca7d4461042ac90dc5248b0439, type: 2}
+  - {fileID: 11400000, guid: 399d624b2a4615745bbc6adef8ebe20a, type: 2}
+  - {fileID: 11400000, guid: 9b6f780ad0d8168409995b2487a1637b, type: 2}
+  - {fileID: 11400000, guid: 345101b2a0686824f949a8785f5f6c26, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117129,6 +117150,16 @@ PrefabInstance:
         type: 3}
       propertyPath: playerData.achievements.Array.data[0].additionalDetails
       value: Captured Sint Joris city
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062369055879165603, guid: 022a26fd571a22f4e85bf61377129370,
+        type: 3}
+      propertyPath: inventoryItemData.inventoryItemID
+      value: 1100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062369056029202055, guid: 022a26fd571a22f4e85bf61377129370,
+        type: 3}
+      propertyPath: inventoryItemData.inventoryItemID
+      value: 1103
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1062369057281542972, guid: 022a26fd571a22f4e85bf61377129370, type: 3}

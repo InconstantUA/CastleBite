@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 2203
-    itemName: Mask of Madness
-    itemValue: 50
-    compatibleEquipmentSlots: 01000000
+    inventoryItemID: 2203
     unitStatModifiers:
     - unitStat: 3
       modifierAppliedTo: 1
@@ -66,7 +64,5 @@ MonoBehaviour:
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: 0
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: 0
-    itemIsStackable: 0

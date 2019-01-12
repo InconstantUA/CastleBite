@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Eagle Eye Helmet
   m_EditorClassIdentifier: 
   inventoryItemType: 2201
+  inventoryItemID: 2201
   itemDisplayName: Eagle Eye Helmet
   itemCost: 1000
   compatibleEquipmentSlots: 4

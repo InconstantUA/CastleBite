@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Vampire Orb
   m_EditorClassIdentifier: 
   inventoryItemType: 2430
+  inventoryItemID: 2430
   itemDisplayName: Vampire Orb
   itemCost: 2500
   compatibleEquipmentSlots: 48

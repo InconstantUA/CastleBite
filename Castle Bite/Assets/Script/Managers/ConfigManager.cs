@@ -32,6 +32,8 @@ public class ConfigManager : MonoBehaviour
     CityConfig[] cityConfigs;
     [SerializeField]
     FactionConfig[] factionConfigs;
+    [SerializeField]
+    UnitAbilityConfig[] unitAbilityConfigs;
 
     void Awake()
     {
@@ -203,6 +205,14 @@ public class ConfigManager : MonoBehaviour
         {
             return cityConfigs.First(c => c.cityID == cityID);
             // return Array.Find(cityConfigs, c => c.cityID == cityID);
+        }
+    }
+
+    public UnitAbilityConfig this[UnitAbilityID unitAbility]
+    {
+        get
+        {
+            return unitAbilityConfigs.First(e => e.unitAbilityID == unitAbility);
         }
     }
 }

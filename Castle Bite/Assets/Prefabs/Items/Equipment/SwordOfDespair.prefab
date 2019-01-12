@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 2420
-    itemName: Sword of Despair
-    itemValue: 250
-    compatibleEquipmentSlots: 0300000004000000
+    inventoryItemID: 2420
     unitStatModifiers:
     - unitStat: 3
       modifierAppliedTo: 1
@@ -80,7 +78,5 @@ MonoBehaviour:
       skillPowerMultiplier: 1
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: -1
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: -1
-    itemIsStackable: 0

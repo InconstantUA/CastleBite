@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefenseAdd50
   m_EditorClassIdentifier: 
   unitStatModifierType: 100050
+  unitStatModifierID: 100050
   unitStat: 2
   modifierAppliedTo: 1
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
+  powerSource: 9

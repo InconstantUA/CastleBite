@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 224477882871899502}
   - component: {fileID: 114273019850989704}
   m_Layer: 5
-  m_Name: StrengthPotion
+  m_Name: SmallStrengthPotion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 1301
-    itemName: Small Strength Potion
-    itemValue: 50
-    compatibleEquipmentSlots: 0600000007000000
+    inventoryItemID: 1301
     unitStatModifiers:
     - unitStat: 3
       modifierAppliedTo: 1
@@ -66,7 +64,5 @@ MonoBehaviour:
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: 1
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: 1
-    itemIsStackable: 0

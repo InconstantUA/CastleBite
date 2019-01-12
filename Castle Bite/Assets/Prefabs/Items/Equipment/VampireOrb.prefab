@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 2430
-    itemName: Vampire Orb
-    itemValue: 2500
-    compatibleEquipmentSlots: 0600000007000000
+    inventoryItemID: 2430
     unitStatModifiers:
     - unitStat: 1
       modifierAppliedTo: 0
@@ -76,7 +74,5 @@ MonoBehaviour:
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: -1
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: -1
-    itemIsStackable: 0

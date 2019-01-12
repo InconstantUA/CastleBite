@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FireResistance50
   m_EditorClassIdentifier: 
   unitStatModifierType: 1100050
+  unitStatModifierID: 1100050
   unitStat: 9
   modifierAppliedTo: 1
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
+  powerSource: 9

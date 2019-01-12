@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Big Healing Potion
   m_EditorClassIdentifier: 
   inventoryItemType: 1103
+  inventoryItemID: 1103
   itemDisplayName: Big Healing Potion
   itemCost: 400
   compatibleEquipmentSlots: 384

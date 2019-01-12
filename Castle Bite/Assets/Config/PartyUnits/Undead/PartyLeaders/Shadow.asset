@@ -19,12 +19,13 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 200
   unitBaseExperienceReward: 200
   unitExperienceRewardIncrementOnLevelUp: 100
+  unitBaseDefense: 0
   unitBaseHealthMax: 70
-  unitHealthMaxIncrementOnLevelUp: 15
   unitHealthMaxIncrementOnStatsUpgrade: 15
   unitHealthRegenPercent: 10
   unitResistances: []
   unitAbility: 8
+  unitAbilityID: 8
   unitInitiative: 70
   unitRole: Scouting and special operations under cover
   unitBriefDescription: Brief description

@@ -19,14 +19,15 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 50
   unitBaseExperienceReward: 100
   unitExperienceRewardIncrementOnLevelUp: 100
+  unitBaseDefense: 0
   unitBaseHealthMax: 120
-  unitHealthMaxIncrementOnLevelUp: 10
   unitHealthMaxIncrementOnStatsUpgrade: 10
   unitHealthRegenPercent: 10
   unitResistances:
   - source: 0
     percent: 10
   unitAbility: 11
+  unitAbilityID: 11
   unitInitiative: 50
   unitRole: Mele attacks and protection of weak units
   unitBriefDescription: Brief description

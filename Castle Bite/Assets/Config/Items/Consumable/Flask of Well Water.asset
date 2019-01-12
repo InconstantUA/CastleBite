@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Flask of Well Water
   m_EditorClassIdentifier: 
   inventoryItemType: 1401
+  inventoryItemID: 1401
   itemDisplayName: Flask of Well Water
   itemCost: 70
   compatibleEquipmentSlots: 384

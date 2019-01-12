@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: HealthCurrAdd100
   m_EditorClassIdentifier: 
   unitStatModifierType: 20100
+  unitStatModifierID: 20100
   unitStat: 1
   modifierAppliedTo: 0
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: 14
+  powerSource: 9

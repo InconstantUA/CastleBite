@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Aegis of Immortal
   m_EditorClassIdentifier: 
   inventoryItemType: 2401
+  inventoryItemID: 2401
   itemDisplayName: Aegis of Immortal
   itemCost: 5000
   compatibleEquipmentSlots: 48

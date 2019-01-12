@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Mask of Madness
   m_EditorClassIdentifier: 
   inventoryItemType: 2203
+  inventoryItemID: 2203
   itemDisplayName: Mask of Madness
   itemCost: 1500
   compatibleEquipmentSlots: 4

@@ -480,7 +480,7 @@ public class EditPartyScreen : MonoBehaviour {
         {
             // Single unit size
             // verify if hired unit is mele or ranged
-            if (hiredUnitTemplate.UnitPowerDistance == UnitPowerDistance.Mele)
+            if (hiredUnitTemplate.UnitAbilityPowerDistance == UnitAbilityRange.Mele)
             {
                 // Place mele units in front row
                 return PartyPanel.Cell.Front;

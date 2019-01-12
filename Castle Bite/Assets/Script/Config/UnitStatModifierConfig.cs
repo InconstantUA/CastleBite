@@ -5,14 +5,23 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Config/Unit/StatModifier")]
 public class UnitStatModifierConfig : ScriptableObject
 {
-    public UnitStatModifierType unitStatModifierType; // used in UnitStatModifierData, which is used when modifier is applied to other units from unit ability, for example: paralyze
+    // instead of creating unit stat modifier (USM) ID for each config we reference USM via its container
+    // example:
+    //  itemID,          USM[index]inList
+    //  unitAbilityID,   USM[index]inList
+    //  unitsSkillID,    USM[index]inList
+    //public UnitStatModifierID unitStatModifierID; // used in UnitStatModifierData, which is used when modifier is applied to other units from unit ability, for example: paralyze
     public UnitStat unitStat;
-    public ModifierAppliedTo modifierAppliedTo;
-    public ModifierScope modifierScope;
+    public ModifierAppliedTo modifierAppliedTo; // current/max stat
+    public ModifierScope modifierScope; // self, party, friendly, enemy, ..
     public int modifierPower;
-    public int skillPowerMultiplier = 1;
-    public ModifierCalculatedHow modifierCalculatedHow;
+    public ModifierCalculatedHow modifierCalculatedHow; // add, mult, percent
     public int duration;
     [EnumFlag]
     public UnitStatuses canBeAppliedToTheUnitsWithStatuses;
+    public PowerSource powerSource = PowerSource.None; // required for: Unit Ability, consumable damaging Items
+    // For UnitAbility:
+    public int powerIncrementOnStatsUpgrade;
+    // For UnitSkill
+    public int skillPowerMultiplier = 1; // consider removing this parameter
 }

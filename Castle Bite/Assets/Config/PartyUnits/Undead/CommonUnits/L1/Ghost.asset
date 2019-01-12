@@ -19,8 +19,8 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 50
   unitBaseExperienceReward: 100
   unitExperienceRewardIncrementOnLevelUp: 100
+  unitBaseDefense: 0
   unitBaseHealthMax: 45
-  unitHealthMaxIncrementOnLevelUp: 15
   unitHealthMaxIncrementOnStatsUpgrade: 15
   unitHealthRegenPercent: 10
   unitResistances:
@@ -29,6 +29,7 @@ MonoBehaviour:
   - source: 7
     percent: 10
   unitAbility: 13
+  unitAbilityID: 13
   unitInitiative: 10
   unitRole: Healing friendly units
   unitBriefDescription: Brief description

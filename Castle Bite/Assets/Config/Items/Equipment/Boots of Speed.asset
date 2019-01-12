@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Boots of Speed
   m_EditorClassIdentifier: 
   inventoryItemType: 2601
+  inventoryItemID: 2601
   itemDisplayName: Boots of Speed
   itemCost: 1500
   compatibleEquipmentSlots: 512

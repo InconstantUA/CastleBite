@@ -19,7 +19,7 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 0
   unitBaseExperienceReward: 9999
   unitExperienceRewardIncrementOnLevelUp: 1111
-  unitDefense: 0
+  unitBaseDefense: 0
   unitBaseHealthMax: 1100
   unitHealthMaxIncrementOnStatsUpgrade: 300
   unitHealthRegenPercent: 15
@@ -37,6 +37,7 @@ MonoBehaviour:
   - source: 6
     percent: 50
   unitAbility: 5
+  unitAbilityID: 5
   unitInitiative: 80
   unitRole: Protect Dominion Capital
   unitBriefDescription: Lahabiel was sent by Highfather to protect Dominion Capital

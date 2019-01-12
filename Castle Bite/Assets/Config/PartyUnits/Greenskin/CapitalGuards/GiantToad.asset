@@ -19,8 +19,8 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 0
   unitBaseExperienceReward: 9999
   unitExperienceRewardIncrementOnLevelUp: 1111
+  unitBaseDefense: 0
   unitBaseHealthMax: 2500
-  unitHealthMaxIncrementOnLevelUp: 800
   unitHealthMaxIncrementOnStatsUpgrade: 800
   unitHealthRegenPercent: 25
   unitResistances:
@@ -29,6 +29,7 @@ MonoBehaviour:
   - source: 1
     percent: 50
   unitAbility: 17
+  unitAbilityID: 17
   unitInitiative: 15
   unitRole: Protect Greenskins Capital
   unitBriefDescription: Feeded by Orcs to protect Greenskins Capital

@@ -19,14 +19,15 @@ MonoBehaviour:
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 50
   unitBaseExperienceReward: 650
   unitExperienceRewardIncrementOnLevelUp: 325
+  unitBaseDefense: 0
   unitBaseHealthMax: 320
-  unitHealthMaxIncrementOnLevelUp: 70
   unitHealthMaxIncrementOnStatsUpgrade: 70
   unitHealthRegenPercent: 20
   unitResistances:
   - source: 0
     percent: 20
   unitAbility: 11
+  unitAbilityID: 11
   unitInitiative: 50
   unitRole: Role
   unitBriefDescription: Brief description

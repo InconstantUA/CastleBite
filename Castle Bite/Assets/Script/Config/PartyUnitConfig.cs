@@ -33,7 +33,8 @@ public class PartyUnitConfig : ScriptableObject
     public int unitHealthRegenPercent;
     public Resistance[] unitResistances;
     // Offensive attributes
-    public UnitAbility unitAbility;
+    // public UnitAbilityID unitAbility;
+    public UnitAbilityID unitAbilityID;
     //-public int unitPower;
     //-public int unitPowerIncrementOnLevelUp;
     //-public UnitPowerSource unitPowerSource;

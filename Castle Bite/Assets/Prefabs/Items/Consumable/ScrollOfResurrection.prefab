@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 1100
-    itemName: Scroll of Resurection
-    itemValue: 50
-    compatibleEquipmentSlots: 0600000007000000
+    inventoryItemID: 1100
     unitStatModifiers:
     - unitStat: 1
       modifierAppliedTo: 0
@@ -69,7 +67,5 @@ MonoBehaviour:
     - modifierScope: 1
       modifierSetStatus: 0
       canBeAppliedToTheUnitsWithStatuses: 04000000
-    heroEquipmentSlot: 9
-    maxUsagesCount: 1
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: 1
-    itemIsStackable: 0

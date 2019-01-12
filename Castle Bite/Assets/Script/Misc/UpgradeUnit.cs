@@ -264,7 +264,7 @@ public class UpgradeUnit : MonoBehaviour {
     void UpgradeAbilityPower()
     {
         // upgrade Ability Power in unit object
-        focusedPartyUnit.UnitPower = (focusedPartyUnit.UnitPower + focusedPartyUnit.UnitPowerIncrementOnLevelUp);
+        // focusedPartyUnit.UnitAbilityCurrentPower = (focusedPartyUnit.UnitAbilityCurrentPower + focusedPartyUnit.UnitPowerIncrementOnStatsUpgrade);
         // upgrade Ability Power in unit Info UI
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitPowerInfo(focusedPartyUnit);
         //UpdateAbilityPowerInfo();
@@ -273,7 +273,7 @@ public class UpgradeUnit : MonoBehaviour {
     void DowngradeAbilityPower()
     {
         // downgrade Ability Power in unit object
-        focusedPartyUnit.UnitPower = (focusedPartyUnit.UnitPower - focusedPartyUnit.UnitPowerIncrementOnLevelUp);
+        // focusedPartyUnit.UnitAbilityCurrentPower = (focusedPartyUnit.UnitAbilityCurrentPower - focusedPartyUnit.UnitPowerIncrementOnStatsUpgrade);
         // upgrade Ability Power in unit Info UI
         transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUnitPowerInfo(focusedPartyUnit);
         //UpdateAbilityPowerInfo();

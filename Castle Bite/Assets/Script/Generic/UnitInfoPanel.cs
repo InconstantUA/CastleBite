@@ -116,15 +116,15 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Fill in unit initiative
         SetUnitInitiativeInfo(partyUnit);
         // Fill in unit ability
-        transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.UnitAbility.ToString();
+        transform.Find("Panel/UnitAbility/Name").GetComponent<Text>().text = partyUnit.UnitAbilityID.ToString();
         // Fill in unit power
         SetUnitPowerInfo(partyUnit);
         // Fill in unit power source
-        transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.UnitPowerSource.ToString();
+        transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.UnitAbilityPowerSource.ToString();
         // Fill in unit distance
-        transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitPowerDistance.ToString();
+        transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitAbilityPowerDistance.ToString();
         // Fill in unit power scope
-        transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.UnitPowerScope.ToString();
+        transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.UnitAbilityPowerScope.ToString();
         // Fill in information about unique power modifiers
         FillInUniquePowerModifiersInformation(partyUnit);
         // Fill in description
@@ -293,7 +293,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             //  get stats upgrade count during current upgrade session
             int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
-            return partyUnit.UnitPowerIncrementOnLevelUp * statsUpgradeCount;
+            return partyUnit.UnitPowerIncrementOnStatsUpgrade * statsUpgradeCount;
         }
         else
         {
@@ -323,23 +323,25 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         // Get power text
         Text powerText = transform.Find("Panel/AbilityParameters/Power").GetComponent<Text>();
-        // Display effective power
-        powerText.text = partyUnit.GetUnitEffectivePower().ToString();
-        // get base power
-        int basePower = partyUnit.UnitPower - GetStatsPowerBonus(partyUnit);
+        // Get party unit effective power value
+        int effectivePower = partyUnit.GetUnitEffectivePower();
+        // Display effective power absolute value
+        powerText.text = Math.Abs(effectivePower).ToString();
+        // get base power value
+        int basePower = partyUnit.UnitAbilityCurrentPower - GetStatsPowerBonus(partyUnit);
         // verify if effective power does not equal to base power
-        if (partyUnit.GetUnitEffectivePower() != basePower)
+        if (effectivePower != basePower)
         {
             // Display additional modifiers between brackets
             powerText.text += "(";
             // set default unit power without bonuses (without just upgraded stats power bonus)
-            powerText.text += baseStatPreviewStyleStart + basePower.ToString() + baseStatPreviewStyleEnd;
+            powerText.text += baseStatPreviewStyleStart + Math.Abs(basePower).ToString() + baseStatPreviewStyleEnd;
             // get and add stats power bonus if it is present
-            AddBonusInfoToText(powerText, GetStatsPowerBonus(partyUnit), statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
+            AddBonusInfoToText(powerText, Math.Abs(GetStatsPowerBonus(partyUnit)), statsBonusPreviewStyleStart, statsBonusPreviewStyleEnd);
             // get and add offence skill bonus to text
-            AddBonusInfoToText(powerText, partyUnit.GetOffenceSkillPowerBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
+            AddBonusInfoToText(powerText, Math.Abs(partyUnit.GetOffenceSkillPowerBonus()), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
             // get and add items bonus to the text
-            AddBonusInfoToText(powerText, partyUnit.GetItemsPowerBonus(), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
+            AddBonusInfoToText(powerText, Math.Abs(partyUnit.GetItemsPowerBonus()), itemBonusPreviewStyleStart, itemBonusPreviewStyleEnd);
             // close brackets
             powerText.text += ")";
         }
@@ -515,12 +517,12 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // initialise resistances string
         string resistances = "";
         string resistance = "";
-        UnitPowerSource source; // source = resistance
+        PowerSource source; // source = resistance
         bool firstResistanceInAString = true;
         // loop throug all power sources and find if unit has resistances
-        for (int i = 0; i < (int)UnitPowerSource.None; i++) // None is the last element
+        for (int i = 0; i < (int)PowerSource.None; i++) // None is the last element
         {
-            source = (UnitPowerSource)i;
+            source = (PowerSource)i;
             // get effective resistance
             int effectiveResistance = partyUnit.GetUnitEffectiveResistance(source);
             // verify if effective resistance is higher than 0 and it is not equal to base resistance 

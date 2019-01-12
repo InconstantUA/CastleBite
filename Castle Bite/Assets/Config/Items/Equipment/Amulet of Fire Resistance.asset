@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Amulet of Fire Resistance
   m_EditorClassIdentifier: 
   inventoryItemType: 2302
+  inventoryItemID: 2302
   itemDisplayName: Amulet of Fire Resistance
   itemCost: 1500
   compatibleEquipmentSlots: 8

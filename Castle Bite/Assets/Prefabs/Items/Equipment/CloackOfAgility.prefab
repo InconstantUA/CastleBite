@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 2301
-    itemName: Cloack of Agility
-    itemValue: 70
-    compatibleEquipmentSlots: 05000000
+    inventoryItemID: 2301
     unitStatModifiers:
     - unitStat: 4
       modifierAppliedTo: 1
@@ -66,7 +64,5 @@ MonoBehaviour:
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: 0
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: 0
-    itemIsStackable: 0

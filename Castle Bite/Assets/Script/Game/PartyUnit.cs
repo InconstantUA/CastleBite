@@ -27,8 +27,9 @@ public enum UnitSize
     Double
 };
 
+
 [Serializable]
-public enum UnitAbility
+public enum UnitAbilityID
 {
     ThrowRock,          // Greenskin Cyclop
     StompWithFoot,      // Greenskin Ogre
@@ -54,7 +55,7 @@ public enum UnitAbility
 };
 
 [Serializable]
-public enum UnitPowerSource : int
+public enum PowerSource : int
 {
     Physical,   // Example: attack with metal weapons
     Water,
@@ -71,23 +72,23 @@ public enum UnitPowerSource : int
 [Serializable]
 public class Resistance
 {
-    public UnitPowerSource source;
+    public PowerSource source;
     public int percent;
 }
 
 [Serializable]
-public enum UnitPowerDistance
+public enum UnitAbilityRange
 {
     Mele,
     Ranged
 }
 
-[Serializable]
-public enum UnitPowerScope
-{
-    OneUnit,
-    EntireParty
-}
+//[Serializable]
+//public enum UnitPowerScope
+//{
+//    OneUnit,
+//    EntireParty
+//}
 
 [Serializable]
 public enum UnitStatus
@@ -238,7 +239,7 @@ public class UniquePowerModifier
     public int upmDuration;
     public int upmChance;
     public int upmChanceIncrementOnLevelUp;
-    public UnitPowerSource upmSource;
+    public PowerSource upmSource;
     public ModifierOrigin upmOrigin;
     public ModifierAppliedHow modifierApplied;
     public int upmDurationLeft;
@@ -303,73 +304,89 @@ public enum ModifierAppliedHow
     Passive // Equipment: armor, boots, weapon with passive modifiers
 }
 
-[Serializable]
-public enum UnitStatModifierType
-{
-    // Healh-base stats 1-9
-    Resurect1                       =   10001,
-    HealthCurrAdd50                 =   20050,
-    HealthCurrAdd100                =   20100,
-    HealthCurrAdd200                =   20200,
-    HealthCurrAdd400                =   20400,
-    HealthMaxAdd5Percent            =   30005,
-    HealthMaxAdd15Percent           =   30015,
-    HealthMaxAdd30Percent           =   30030,
-    HealthMaxAdd50Percent           =   30050,
-    HealthCurrSubtract50            =   40050,
-    HealthCurrSubtract20Over2Rounds =   42020,
-    // Defense-base stats 10-19
-    DefenseAdd5 =  100005,
-    DefenseAdd15                    =  100015,
-    DefenseAdd30                    =  100030,
-    DefenseAdd50                    =  100050,
-    DefenseSubtract5                =  110005,
-    DefenseSubtract15               =  110015,
-    DefenseSubtract30               =  110030,
-    // Power-base stats 20-29
-    PowerAdd5Percent                =  200005,
-    PowerAdd15Percent               =  200015,
-    PowerAdd30Percent               =  200030,
-    PowerAdd50Percent               =  200050,
-    PowerSubtract5Percent           =  210005,
-    PowerSubtract15Percent          =  210015,
-    PowerSubtract30Percent          =  210030,
-    // Initiative-based stats 30-39
-    Inititative5Percent             =  300005,
-    Inititative15Percent            =  300015,
-    Inititative30Percent            =  300030,
-    Inititative50Percent            =  300050,
-    // MovePoints-based stats 40-49
-    MovePointsCurr50Percent         =  400050,
-    MovePointsCurr100Percent        =  400100,
-    MovePointsMax50Percent          =  410050,
-    MovePointsMax70Percent          =  410070,
-    MovePointsMax100Percent         =  410100,
-    // ScoutingRange-based stats 50-59
-    Scouting1                       =  500001,
-    Scouting3                       =  500003,
-    Scouting5                       =  500005,
-    Scouting7                       =  500007,
-    // Leadership-based stats 60-69
-    Leadership1                     =  600001,
-    Leadership3                     =  600003,
-    Leadership5                     =  600005,
-    // Resistance-based stats 100-199
-    WaterResistance50               = 1000050,
-    WaterResistance100              = 1000100,
-    FireResistance50                = 1100050,
-    FireResistance100               = 1100100,
-    EarthResistance50               = 1200050,
-    EarthResistance100              = 1200100,
-    WindResistance50                = 1300050,
-    WindResistance100               = 1300100,
-    DeathResistance50               = 1400050,
-    DeathResistance100              = 1400100,
-    PureResistance50                = 1500050,
-    PureResistance100               = 1500100,
-    MindResistance50                = 1600050,
-    MindResistance100               = 1600100
-}
+//[Serializable]
+//public enum UnitStatModifierID
+//{
+//    // Defense-base stats 10-19
+//    DefenseAdd5                     =  100005,
+//    DefenseAdd15                    =  100015,
+//    DefenseAdd30                    =  100030,
+//    DefenseAdd50                    =  100050,
+//    DefenseSubtract5                =  110005,
+//    DefenseSubtract15               =  110015,
+//    DefenseSubtract30               =  110030,
+//    // Power-base stats 20-29
+//    PowerAdd5Percent                =  200005,
+//    PowerAdd15Percent               =  200015,
+//    PowerAdd30Percent               =  200030,
+//    PowerAdd50Percent               =  200050,
+//    PowerSubtract5Percent           =  210005,
+//    PowerSubtract15Percent          =  210015,
+//    PowerSubtract30Percent          =  210030,
+//    // Initiative-based stats 30-39
+//    Inititative5Percent             =  300005,
+//    Inititative15Percent            =  300015,
+//    Inititative30Percent            =  300030,
+//    Inititative50Percent            =  300050,
+//    // MovePoints-based stats 40-49
+//    MovePointsCurr50Percent         =  400050,
+//    MovePointsCurr100Percent        =  400100,
+//    MovePointsMax50Percent          =  410050,
+//    MovePointsMax70Percent          =  410070,
+//    MovePointsMax100Percent         =  410100,
+//    // ScoutingRange-based stats 50-59
+//    Scouting1                       =  500001,
+//    Scouting3                       =  500003,
+//    Scouting5                       =  500005,
+//    Scouting7                       =  500007,
+//    // Leadership-based stats 60-69
+//    Leadership1                     =  600001,
+//    Leadership3                     =  600003,
+//    Leadership5                     =  600005,
+//    // Resistance-based stats 100-199
+//    WaterResistance50               = 1000050,
+//    WaterResistance100              = 1000100,
+//    FireResistance50                = 1100050,
+//    FireResistance100               = 1100100,
+//    EarthResistance50               = 1200050,
+//    EarthResistance100              = 1200100,
+//    WindResistance50                = 1300050,
+//    WindResistance100               = 1300100,
+//    DeathResistance50               = 1400050,
+//    DeathResistance100              = 1400100,
+//    PureResistance50                = 1500050,
+//    PureResistance100               = 1500100,
+//    MindResistance50                = 1600050,
+//    MindResistance100               = 1600100,
+//    // Healh-base stats 200-400
+//    Resurect1                       = 2000001,
+//    HealthCurrAdd                   = 2100000,
+//    HealthCurrAdd50                 = 50    + HealthCurrAdd,
+//    HealthCurrAdd100                = 100   + HealthCurrAdd,
+//    HealthCurrAdd200                = 200   + HealthCurrAdd,
+//    HealthCurrAdd400                = 400   + HealthCurrAdd,
+//    HealthMaxAddPercent             = 2200000,
+//    HealthMaxAdd5Percent            = 5     + HealthMaxAddPercent,
+//    HealthMaxAdd15Percent           = 15    + HealthMaxAddPercent,
+//    HealthMaxAdd30Percent           = 30    + HealthMaxAddPercent,
+//    HealthMaxAdd50Percent           = 50    + HealthMaxAddPercent,
+//    HealthCurrSubtract              = 2300000,
+//  //SourceNone                      =   00000,
+//    SourcePhysical                  =   10000,
+//    SourceWater                     =   20000,
+//    SourceFire                      =   30000,
+//    SourceEarth                     =   40000,
+//    SourceWind                      =   50000,
+//    SourceDeath                     =   60000,
+//    SourcePure                      =   70000,
+//    SourceMind                      =   80000,
+//    HealthCurrSubtract50Physcal     = 50    + HealthCurrSubtract    + SourcePhysical,
+//  //DurationInstant                 =    0000,
+//    Duration1Round                  =    1000,
+//    Duration2Rounds                 =    2000,
+//    HealthCurrSubtract20Over2Rounds = 20    + HealthCurrSubtract    + SourceDeath,
+//    Last                            = 9999999
+//}
 
 [Serializable]
 public class UnitStatModifier : System.Object
@@ -387,9 +404,16 @@ public class UnitStatModifier : System.Object
 }
 
 [Serializable]
+public class UnitStatModifierID : System.Object
+{
+    public InventoryItemID inventoryItemID = InventoryItemID.None;
+    public int unitStatModifierIndexInAList = 0;
+}
+
+[Serializable]
 public class UnitStatModifierData : System.Object
 {
-    public UnitStatModifierType unitStatModifier;
+    public UnitStatModifierID unitStatModifierID;
     public int durationLeft; // it is reset when USM is applied
 }
 
@@ -425,12 +449,12 @@ public class PartyUnitData : System.Object
     // public int unitDefense;
     // public Resistance[] unitResistances;
     // Offensive attributes
-    public UnitAbility unitAbility;
-    public int unitPower;
-    public int unitPowerIncrementOnLevelUp; // OnStatsUpgrade
-    public UnitPowerSource unitPowerSource;
-    public UnitPowerDistance unitPowerDistance;
-    public UnitPowerScope unitPowerScope;
+    // public UnitAbility unitAbility;
+    // public int unitPower;
+    // public int unitPowerIncrementOnLevelUp; // OnStatsUpgrade
+    // public UnitPowerSource unitPowerSource;
+    // public UnitPowerDistance unitPowerDistance;
+    // public UnitPowerScope unitPowerScope;
     public int unitInitiative = 10;
     // Unique power modifiers
     public List<UniquePowerModifier> uniquePowerModifiers;
@@ -554,6 +578,7 @@ public class PartyUnit : MonoBehaviour {
     PartyUnitData partyUnitData;
     PartyUnitConfig partyUnitConfig; // init on Awake
     UnitStatusConfig unitStatusConfig;
+    UnitAbilityConfig unitAbilityConfig; // init on first Get
 
     // Misc Battle attributes
     private bool hasMoved = false;
@@ -816,7 +841,7 @@ public class PartyUnit : MonoBehaviour {
     public int GetAbilityDamageDealt(PartyUnit activeBattleUnit)
     {
         int damageDealt = 0;
-        int srcUnitDamage = activeBattleUnit.UnitPower;
+        int srcUnitDamage = activeBattleUnit.UnitAbilityCurrentPower;
         int dstUnitDefense = GetEffectiveDefense();
         // calculate damage dealt
         damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefense)) / 100f));
@@ -1009,18 +1034,18 @@ public class PartyUnit : MonoBehaviour {
             // get local party unit skill
             skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Offense);
         }
-        return (int)Math.Round(UnitPower * skill.currentSkillLevel * 0.15f);
+        return (int)Math.Round(UnitAbilityCurrentPower * skill.currentSkillLevel * 0.15f);
     }
 
     public int GetItemsPowerBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Power, UnitPower);
+        return GetGenericStatItemBonus(UnitStat.Power, UnitAbilityCurrentPower);
     }
 
     public int GetUnitEffectivePower()
     {
         // get unit power plus skill bonus
-        return UnitPower + GetOffenceSkillPowerBonus() + GetItemsPowerBonus();
+        return UnitAbilityCurrentPower + GetOffenceSkillPowerBonus() + GetItemsPowerBonus();
     }
 
     List<UnitStatModifier> GetItemUnitStatModifierByStat(UnitStat unitStat)
@@ -1250,23 +1275,23 @@ public class PartyUnit : MonoBehaviour {
         return (int)Math.Floor((float)GetUnitEffectiveMaxHealth() * GetUnitEffectiveHealthRegen());
     }
 
-    public int GetUnitResistanceSkillBonus(UnitPowerSource source)
+    public int GetUnitResistanceSkillBonus(PowerSource source)
     {
         switch (source)
         {
-            case UnitPowerSource.Death:
+            case PowerSource.Death:
                 return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.DeathResistance).currentSkillLevel * 50;
-            case UnitPowerSource.Fire:
+            case PowerSource.Fire:
                 return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.FireResistance).currentSkillLevel * 50;
-            case UnitPowerSource.Mind:
+            case PowerSource.Mind:
                 return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.MindResistance).currentSkillLevel * 50;
-            case UnitPowerSource.Water:
+            case PowerSource.Water:
                 return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.WaterResistance).currentSkillLevel * 50;
-            case UnitPowerSource.Wind:
-            case UnitPowerSource.Pure:
-            case UnitPowerSource.Earth:
-            case UnitPowerSource.Life:
-            case UnitPowerSource.Physical:
+            case PowerSource.Wind:
+            case PowerSource.Pure:
+            case PowerSource.Earth:
+            case PowerSource.Life:
+            case PowerSource.Physical:
                 return 0;
             default:
                 Debug.LogError("Unknown source " + source.ToString());
@@ -1274,23 +1299,23 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public int GetUnitResistanceItemsBonusBySource(UnitPowerSource source)
+    public int GetUnitResistanceItemsBonusBySource(PowerSource source)
     {
         switch (source)
         {
-            case UnitPowerSource.Death:
+            case PowerSource.Death:
                 return GetGenericStatItemBonus(UnitStat.DeathResistance, GetUnitBaseResistance(source));
-            case UnitPowerSource.Fire:
+            case PowerSource.Fire:
                 return GetGenericStatItemBonus(UnitStat.FireResistance, GetUnitBaseResistance(source));
-            case UnitPowerSource.Mind:
+            case PowerSource.Mind:
                 return GetGenericStatItemBonus(UnitStat.MindResistance, GetUnitBaseResistance(source));
-            case UnitPowerSource.Water:
+            case PowerSource.Water:
                 return GetGenericStatItemBonus(UnitStat.WaterResistance, GetUnitBaseResistance(source));
-            case UnitPowerSource.Wind:
-            case UnitPowerSource.Pure:
-            case UnitPowerSource.Earth:
-            case UnitPowerSource.Life:
-            case UnitPowerSource.Physical:
+            case PowerSource.Wind:
+            case PowerSource.Pure:
+            case PowerSource.Earth:
+            case PowerSource.Life:
+            case PowerSource.Physical:
                 Debug.LogWarning("Not implemented resistance source: " + source);
                 return 0;
             default:
@@ -1299,7 +1324,7 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public int GetUnitBaseResistance(UnitPowerSource source)
+    public int GetUnitBaseResistance(PowerSource source)
     {
         // Get Resistance from config
         Resistance resistance = Array.Find(UnitBaseResistances, e => e.source == source);
@@ -1315,7 +1340,7 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public int GetUnitEffectiveResistance(UnitPowerSource source)
+    public int GetUnitEffectiveResistance(PowerSource source)
     {
         // get and return effective resistance
         return GetUnitBaseResistance(source) + GetUnitResistanceSkillBonus(source) + GetUnitResistanceItemsBonusBySource(source);
@@ -2203,82 +2228,124 @@ public class PartyUnit : MonoBehaviour {
         //}
     }
 
-    public UnitAbility UnitAbility
+    public UnitAbilityConfig UnitAbilityConfig
     {
         get
         {
-            return partyUnitData.unitAbility;
-        }
-
-        set
-        {
-            partyUnitData.unitAbility = value;
+            // verify if unit ability config is not defined yet
+            if (unitAbilityConfig == null)
+            {
+                // set it from config based on ability defined in party unit config
+                unitAbilityConfig = ConfigManager.Instance[UnitAbilityID];
+            }
+            // return ability config
+            return unitAbilityConfig;
         }
     }
 
-    public int UnitPower
+    public UnitAbilityID UnitAbilityID
     {
         get
         {
-            return partyUnitData.unitPower;
+            // return partyUnitData.unitAbility;
+            // get ability from party unit config
+            return PartyUnitConfig.unitAbilityID;
         }
 
-        set
+        //set
+        //{
+        //    partyUnitData.unitAbility = value;
+        //}
+    }
+
+    public int UnitAbilityStartingPower
+    {
+        get
         {
-            partyUnitData.unitPower = value;
+            // return partyUnitData.unitPower;
+            // get ability power from unit stat modifier in ability config
+            // todo: take into account all modifiers, not only the first one
+            return UnitAbilityConfig.unitStatModifierConfigs[0].modifierPower;
         }
     }
 
-    public int UnitPowerIncrementOnLevelUp
+    public int UnitPowerIncrementOnStatsUpgrade
     {
         get
         {
-            return partyUnitData.unitPowerIncrementOnLevelUp;
+            // return partyUnitData.unitPowerIncrementOnLevelUp;
+            // get unit power increment on stats upgrade from config
+            // todo: take into account all modifiers, not only the first one
+            return UnitAbilityConfig.unitStatModifierConfigs[0].powerIncrementOnStatsUpgrade;
         }
 
-        set
-        {
-            partyUnitData.unitPowerIncrementOnLevelUp = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitPowerIncrementOnLevelUp = value;
+        //}
     }
 
-    public UnitPowerSource UnitPowerSource
+    public int UnitAbilityCurrentPower
     {
         get
         {
-            return partyUnitData.unitPowerSource;
+            // return partyUnitData.unitPower;
+            // calculate ability power based on unit base power
+            return UnitAbilityStartingPower +
+            // add stats upgrade count multiplied by power increment on stats upgrade
+            UnitPowerIncrementOnStatsUpgrade * StatsUpgradesCount;
         }
 
-        set
-        {
-            partyUnitData.unitPowerSource = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitPower = value;
+        //}
     }
 
-    public UnitPowerDistance UnitPowerDistance
+    public PowerSource UnitAbilityPowerSource
     {
         get
         {
-            return partyUnitData.unitPowerDistance;
+            // return partyUnitData.unitPowerSource;
+            // Get it from unit ability config
+            // todo: take into account all modifiers, not only the first one
+            return UnitAbilityConfig.unitStatModifierConfigs[0].powerSource;
         }
 
-        set
-        {
-            partyUnitData.unitPowerDistance = value;
-        }
+        //set
+        //{
+        //    partyUnitData.unitPowerSource = value;
+        //}
     }
 
-    public UnitPowerScope UnitPowerScope
+    public UnitAbilityRange UnitAbilityPowerDistance
     {
         get
         {
-            return partyUnitData.unitPowerScope;
+            // return partyUnitData.unitPowerDistance;
+            // Get it from unit ability config
+            return UnitAbilityConfig.unitAbilityRange;
         }
 
-        set
+        //set
+        //{
+        //    partyUnitData.unitPowerDistance = value;
+        //}
+    }
+
+    public ModifierScope UnitAbilityPowerScope
+    {
+        get
         {
-            partyUnitData.unitPowerScope = value;
+            // return partyUnitData.unitPowerScope;
+            // Get it from unit ability config
+            return UnitAbilityConfig.unitStatModifierConfigs[0].modifierScope;
         }
+
+        //set
+        //{
+        //    partyUnitData.unitPowerScope = value;
+        //}
     }
 
     public int UnitBaseInitiative

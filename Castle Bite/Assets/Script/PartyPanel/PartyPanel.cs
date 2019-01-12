@@ -2324,39 +2324,39 @@ public class PartyPanel : MonoBehaviour {
         //}
         // defined below how actions applied to the friendly and enemy units
         // based on the active unit powers
-        switch (unitToActivateUI.LPartyUnit.UnitAbility)
+        switch (unitToActivateUI.LPartyUnit.UnitAbilityID)
         {
             // Helping or buf powers
-            case UnitAbility.HealingWord:
-            case UnitAbility.HealingSong:
+            case UnitAbilityID.HealingWord:
+            case UnitAbilityID.HealingSong:
                 PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
                 break;
-            case UnitAbility.Resurect:
+            case UnitAbilityID.Resurect:
                 PrepareBattleFieldForResurectPower(activeUnitIsFromThisParty);
                 break;
             // Mele attack powers
-            case UnitAbility.BlowWithGreatSword:
-            case UnitAbility.BlowWithMaul:
-            case UnitAbility.CutWithAxe:
-            case UnitAbility.CutWithDagger:
-            case UnitAbility.SlashWithSword:
-            case UnitAbility.StabWithDagger:
-            case UnitAbility.StompWithFoot:
+            case UnitAbilityID.BlowWithGreatSword:
+            case UnitAbilityID.BlowWithMaul:
+            case UnitAbilityID.CutWithAxe:
+            case UnitAbilityID.CutWithDagger:
+            case UnitAbilityID.SlashWithSword:
+            case UnitAbilityID.StabWithDagger:
+            case UnitAbilityID.StompWithFoot:
                 PrepareBattleFieldForMelePower(activeUnitIsFromThisParty);
                 break;
             // Ranged attack powers
-            case UnitAbility.ShootWithBow:
-            case UnitAbility.ShootWithCompoudBow:
-            case UnitAbility.ThrowSpear:
-            case UnitAbility.ThrowRock:
+            case UnitAbilityID.ShootWithBow:
+            case UnitAbilityID.ShootWithCompoudBow:
+            case UnitAbilityID.ThrowSpear:
+            case UnitAbilityID.ThrowRock:
                 PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
                 break;
             // Magic (including pure or whole-party) attack powers
-            case UnitAbility.CastChainLightning:
-            case UnitAbility.CastLightningStorm:
-            case UnitAbility.HolyWord:
-            case UnitAbility.EarthShatteringLeap:
-            case UnitAbility.Malediction:
+            case UnitAbilityID.CastChainLightning:
+            case UnitAbilityID.CastLightningStorm:
+            case UnitAbilityID.HolyWord:
+            case UnitAbilityID.EarthShatteringLeap:
+            case UnitAbilityID.Malediction:
                 PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
                 break;
             default:
@@ -2447,7 +2447,7 @@ public class PartyPanel : MonoBehaviour {
     {
         Debug.Log("ApplyHealPowerToSingleUnit");
         // heal destination unit
-        int healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthCurr + activeBattleUnitUI.LPartyUnit.UnitPower;
+        int healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthCurr + activeBattleUnitUI.LPartyUnit.UnitAbilityCurrentPower;
         // make sure that we do not heal to more than maximum health
         if (healthAfterHeal > dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth())
         {
@@ -2458,7 +2458,7 @@ public class PartyPanel : MonoBehaviour {
         Text currentHealth = dstUnitUI.GetUnitCurrentHealthText();
         currentHealth.text = healthAfterHeal.ToString();
         // update info panel
-        dstUnitUI.UnitInfoPanelText.text = "+" + activeBattleUnitUI.LPartyUnit.UnitPower.ToString();
+        dstUnitUI.UnitInfoPanelText.text = "+" + activeBattleUnitUI.LPartyUnit.UnitAbilityCurrentPower.ToString();
         dstUnitUI.UnitInfoPanelText.color = Color.green;
     }
 
@@ -2781,39 +2781,39 @@ public class PartyPanel : MonoBehaviour {
         if (dstUnitUI)
         {
             //Debug.Log(activeBattleUnit.UnitName + " acting upon " + dstUnit.UnitName + " or whole party");
-            switch (activeBattleUnitUI.LPartyUnit.UnitAbility)
+            switch (activeBattleUnitUI.LPartyUnit.UnitAbilityID)
             {
                 // Helping or buf powers
-                case UnitAbility.HealingWord:
+                case UnitAbilityID.HealingWord:
                     ApplyHealPowerToSingleUnit(dstUnitUI);
                     break;
-                case UnitAbility.HealingSong:
+                case UnitAbilityID.HealingSong:
                     ApplyHealPowerToMultipleUnits();
                     break;
-                case UnitAbility.Resurect:
+                case UnitAbilityID.Resurect:
                     ApplyResurectPower(dstUnitUI);
                     break;
                 // Mele attack powers
-                case UnitAbility.BlowWithGreatSword:
-                case UnitAbility.BlowWithMaul:
-                case UnitAbility.CutWithAxe:
-                case UnitAbility.CutWithDagger:
-                case UnitAbility.SlashWithSword:
-                case UnitAbility.StabWithDagger:
-                case UnitAbility.StompWithFoot:
+                case UnitAbilityID.BlowWithGreatSword:
+                case UnitAbilityID.BlowWithMaul:
+                case UnitAbilityID.CutWithAxe:
+                case UnitAbilityID.CutWithDagger:
+                case UnitAbilityID.SlashWithSword:
+                case UnitAbilityID.StabWithDagger:
+                case UnitAbilityID.StompWithFoot:
                 // Ranged attack powers
-                case UnitAbility.ShootWithBow:
-                case UnitAbility.ShootWithCompoudBow:
-                case UnitAbility.ThrowSpear:
-                case UnitAbility.ThrowRock:
+                case UnitAbilityID.ShootWithBow:
+                case UnitAbilityID.ShootWithCompoudBow:
+                case UnitAbilityID.ThrowSpear:
+                case UnitAbilityID.ThrowRock:
                     ApplyDestructivePowerToSingleUnitUI(dstUnitUI);
                     break;
                 // Magic (including pure or whole-party) attack powers
-                case UnitAbility.CastChainLightning:
-                case UnitAbility.CastLightningStorm:
-                case UnitAbility.HolyWord:
-                case UnitAbility.EarthShatteringLeap:
-                case UnitAbility.Malediction:
+                case UnitAbilityID.CastChainLightning:
+                case UnitAbilityID.CastLightningStorm:
+                case UnitAbilityID.HolyWord:
+                case UnitAbilityID.EarthShatteringLeap:
+                case UnitAbilityID.Malediction:
                     ApplyDestructivePowerToMultipleUnits();
                     break;
                 default:
@@ -2825,18 +2825,18 @@ public class PartyPanel : MonoBehaviour {
         {
             // in case of magic power - apply it to all units in enemy party
             Debug.Log(activeBattleUnitUI.LPartyUnit.UnitName + " acting upon whole party");
-            switch (activeBattleUnitUI.LPartyUnit.UnitAbility)
+            switch (activeBattleUnitUI.LPartyUnit.UnitAbilityID)
             {
                 // Helping or buf powers
-                case UnitAbility.HealingSong:
+                case UnitAbilityID.HealingSong:
                     ApplyHealPowerToMultipleUnits();
                     break;
                 // Magic (including pure or whole-party) attack powers
-                case UnitAbility.CastChainLightning:
-                case UnitAbility.CastLightningStorm:
-                case UnitAbility.HolyWord:
-                case UnitAbility.EarthShatteringLeap:
-                case UnitAbility.Malediction:
+                case UnitAbilityID.CastChainLightning:
+                case UnitAbilityID.CastLightningStorm:
+                case UnitAbilityID.HolyWord:
+                case UnitAbilityID.EarthShatteringLeap:
+                case UnitAbilityID.Malediction:
                     ApplyDestructivePowerToMultipleUnits();
                     break;
                 default:

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Shard of First Strike
   m_EditorClassIdentifier: 
   inventoryItemType: 2101
+  inventoryItemID: 2101
   itemDisplayName: Shard of First Strike
   itemCost: 7500
   compatibleEquipmentSlots: 2

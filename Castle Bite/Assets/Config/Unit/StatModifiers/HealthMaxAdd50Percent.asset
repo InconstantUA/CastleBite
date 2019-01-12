@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: HealthMaxAdd50Percent
   m_EditorClassIdentifier: 
   unitStatModifierType: 30050
+  unitStatModifierID: 30050
   unitStat: 1
   modifierAppliedTo: 1
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 2
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
+  powerSource: 9

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Inititative30Percent
   m_EditorClassIdentifier: 
   unitStatModifierType: 300030
+  unitStatModifierID: 300030
   unitStat: 4
   modifierAppliedTo: 1
   modifierScope: 0
@@ -21,3 +22,4 @@ MonoBehaviour:
   modifierCalculatedHow: 2
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
+  powerSource: 9

@@ -50,9 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryItemData:
     inventoryItemType: 2202
-    itemName: General Helmet
-    itemValue: 500
-    compatibleEquipmentSlots: 01000000
+    inventoryItemID: 2202
     unitStatModifiers:
     - unitStat: 0
       modifierAppliedTo: 1
@@ -66,7 +64,5 @@ MonoBehaviour:
       canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
     uniquePowerModifiers: []
     unitStatusModifiers: []
-    heroEquipmentSlot: 9
-    maxUsagesCount: 0
+    currentHeroEquipmentSlot: 0
     leftUsagesCount: 0
-    itemIsStackable: 0
