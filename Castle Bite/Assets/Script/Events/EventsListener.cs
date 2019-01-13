@@ -5,12 +5,29 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
+public class PartyUnitEvent : UnityEvent<PartyUnit>
+{
+}
+
+[System.Serializable]
+public class PartyUnitHealthHasChangedEvent : UnityEvent<PartyUnit, int>
+{
+}
+
+[System.Serializable]
+public class UnitPowerModifierEvent : UnityEvent<PartyUnit, UnitPowerModifier>
+{
+}
+
+[System.Serializable]
 public class EventAndAction
 {
     public string name;
     public GameEvent gameEvent;
     public UnityEvent genericAction;
     public PartyUnitEvent partyUnitEvent;
+    public PartyUnitHealthHasChangedEvent partyUnitHealthHasChangedEvent;
+    public UnitPowerModifierEvent unitPowerModifierEvent;
     //public EventWithTriggeredObjectReference eventWithTriggeredObjectReference;
 
     public void Invoke(GameObject gameObject = null)
@@ -25,7 +42,7 @@ public class EventAndAction
         // Check if at least 1 object is listening for the event
         if (partyUnitEvent.GetPersistentEventCount() >= 1)
         {
-            Debug.LogWarning("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " unit");
+            // Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " unit");
             partyUnitEvent.Invoke(gameObject.GetComponent<PartyUnit>());
         }
         //// Check if at least 1 object is listening for the event
@@ -35,6 +52,26 @@ public class EventAndAction
         //    // partyUnitEvent.Invoke(gameEvent.partyUnit);
         //    eventWithTriggeredObjectReference.Invoke(gameEvent.partyUnit);
         //}
+    }
+
+    public void Invoke(GameObject gameObject, int difference)
+    {
+        // Check if at least 1 object is listening for the event
+        if (partyUnitHealthHasChangedEvent.GetPersistentEventCount() >= 1)
+        {
+            // Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " unit, difference is " + difference);
+            partyUnitHealthHasChangedEvent.Invoke(gameObject.GetComponent<PartyUnit>(), difference);
+        }
+    }
+
+    public void Invoke(GameObject gameObject, ScriptableObject scriptableObject)
+    {
+        // Check if at least 1 object is listening for the event
+        if (unitPowerModifierEvent.GetPersistentEventCount() >= 1)
+        {
+            // Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " and " + scriptableObject.name + " scriptable object");
+            unitPowerModifierEvent.Invoke(gameObject.GetComponent<PartyUnit>(), (UnitPowerModifier)scriptableObject);
+        }
     }
 }
 
@@ -78,13 +115,43 @@ public class EventsListener : MonoBehaviour
                 // Uncomment the line below for debugging the event listens and other details
                 if (gameObject != null)
                 {
-                    Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name);
+                    // Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name);
                 }
                 else
                 {
-                    Debug.Log("Called Event named: " + eventsAndActions[i].name);
+                    // Debug.Log("Called Event named: " + eventsAndActions[i].name);
                 }
                 eventsAndActions[i].Invoke(gameObject);
+            }
+        }
+    }
+
+    public void ActOnEvent(GameEvent raisedGameEvent, GameObject gameObject, int difference)
+    {
+        // loop from the lately registered to the earlier registered events
+        for (int i = eventsAndActions.Count - 1; i >= 0; i--)
+        {
+            // Check if this is raised GameEvent
+            if (raisedGameEvent == eventsAndActions[i].gameEvent)
+            {
+                // Uncomment the line below for debugging the event listens and other details
+                //Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name + ", difference is " + difference);
+                eventsAndActions[i].Invoke(gameObject, difference);
+            }
+        }
+    }
+
+    public void ActOnEvent(GameEvent raisedGameEvent, GameObject gameObject, ScriptableObject scriptableObject)
+    {
+        // loop from the lately registered to the earlier registered events
+        for (int i = eventsAndActions.Count - 1; i >= 0; i--)
+        {
+            // Check if this is raised GameEvent
+            if (raisedGameEvent == eventsAndActions[i].gameEvent)
+            {
+                // Uncomment the line below for debugging the event listens and other details
+                // Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name + " and on ScriptableObject: " + scriptableObject.name);
+                eventsAndActions[i].Invoke(gameObject, scriptableObject);
             }
         }
     }

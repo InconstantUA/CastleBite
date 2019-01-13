@@ -10,7 +10,11 @@ public class UnitAbilityConfig : ScriptableObject
     public string abilityDisplayName;
     public string abilityDescription;
     public UnitAbilityRange unitAbilityRange;
-    // public PowerSource powerSource;
+    //public PowerSource powerSource;
     //public UnitPowerScope unitPowerScope;
-    public List<UnitStatModifierConfig> unitStatModifierConfigs;
+    // main ability power
+    public UnitStatModifierConfig unitStatModifierConfig;
+    // additional ability powers
+    public List<UnitPowerConfig> unitPowerConfigs;
+    public List<UnitPowerModifier> unitPowerModifiers;
 }

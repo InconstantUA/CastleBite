@@ -423,6 +423,7 @@ public class ObjectsManager : MonoBehaviour {
         // set item data
         inventoryItem.InventoryItemData = inventoryItemData;
         // rename it
+        // Debug.Log("Renaming " + inventoryItemData.inventoryItemID + " inventory item object");
         inventoryItem.gameObject.name = inventoryItem.ItemName;
         // return item
         return inventoryItem;

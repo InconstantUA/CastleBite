@@ -49,90 +49,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: Vampire
     unitType: 27
     isLeader: 1
-    unitLeadership: 3
-    givenName: Lagelas
+    givenName: Draco
     unitLevel: 1
     unitExperience: 0
-    unitExperienceRequiredToReachNewLevel: 200
-    unitExperienceReward: 100
-    unitExperienceRewardIncrementOnLevelUp: 100
     unitHealthCurr: 80
-    unitHealthMax: 80
-    unitHealthMaxIncrementOnLevelUp: 20
-    unitHealthRegenPercent: 10
-    unitDefense: 0
-    unitResistances: []
-    unitAbility: 7
-    unitPower: 50
-    unitPowerIncrementOnLevelUp: 10
-    unitPowerSource: 0
-    unitPowerDistance: 1
-    unitPowerScope: 0
     unitInitiative: 50
     uniquePowerModifiers: []
-    unitRole: Dealing damage from a long range
-    unitBriefDescription: Brief description
-    unitFullDescription: Full description
-    unitCost: 600
-    unitSize: 0
-    isInterpartyMovable: 0
-    isDismissable: 1
     unitStatus: 0
     unitDebuffs: 
     unitBuffs: 
     unitUpgradePoints: 0
     unitStatPoints: 0
-    classIsUpgradable: 0
     unitClassPoints: 0
-    canLearnSkills: 1
     unitSkillPoints: 0
-    requiresUnitType: 0
-    unlocksUnitTypes: 
-    upgradeCost: 200
     statsUpgradesCount: 0
     movePointsCurrent: 16
-    movePointsMax: 16
-    scoutingRange: 7
-    unitSkills:
-    - mName: 0
-      mLevel:
-        mCurrent: 0
-    - mName: 1
-      mLevel:
-        mCurrent: 0
-    - mName: 2
-      mLevel:
-        mCurrent: 0
-    - mName: 3
-      mLevel:
-        mCurrent: 0
-    - mName: 4
-      mLevel:
-        mCurrent: 0
-    - mName: 5
-      mLevel:
-        mCurrent: 0
-    - mName: 8
-      mLevel:
-        mCurrent: 0
-    - mName: 7
-      mLevel:
-        mCurrent: 0
-    - mName: 6
-      mLevel:
-        mCurrent: 0
-    - mName: 9
-      mLevel:
-        mCurrent: 0
-    - mName: 10
-      mLevel:
-        mCurrent: 0
-    - mName: 11
-      mLevel:
-        mCurrent: 0
+    unitSkillsData:
+    - unitSkill: 0
+      currentSkillLevel: 0
+    - unitSkill: 12
+      currentSkillLevel: 0
+    - unitSkill: 1
+      currentSkillLevel: 0
+    - unitSkill: 2
+      currentSkillLevel: 0
+    - unitSkill: 3
+      currentSkillLevel: 0
+    - unitSkill: 4
+      currentSkillLevel: 0
+    - unitSkill: 5
+      currentSkillLevel: 0
+    - unitSkill: 8
+      currentSkillLevel: 0
+    - unitSkill: 7
+      currentSkillLevel: 0
+    - unitSkill: 6
+      currentSkillLevel: 0
+    - unitSkill: 9
+      currentSkillLevel: 0
+    - unitSkill: 10
+      currentSkillLevel: 0
+    - unitSkill: 11
+      currentSkillLevel: 0
     unitPPRow: 0
     unitPPCell: 0
     unitIventory: []

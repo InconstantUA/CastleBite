@@ -16,5 +16,7 @@ MonoBehaviour:
   abilityDisplayName: Healing Song
   abilityDescription: Description
   unitAbilityRange: 1
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c, type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c,
+    type: 2}
+  unitPowerConfigs: []
+  unitPowerModifierConfigs: []

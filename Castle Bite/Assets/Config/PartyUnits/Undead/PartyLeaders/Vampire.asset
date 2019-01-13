@@ -24,8 +24,7 @@ MonoBehaviour:
   unitHealthMaxIncrementOnStatsUpgrade: 30
   unitHealthRegenPercent: 10
   unitResistances: []
-  unitAbility: 7
-  unitAbilityID: 7
+  unitAbilityID: 20
   unitInitiative: 70
   unitRole: Dealing damage from a long range
   unitBriefDescription: Brief description

@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 097778ca80c2d084ba86c16195b1a9f1, type: 3}
+  m_Name: LifeLeech
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 5211f2719b444b4469e7b53a1d4b1ed8, type: 2}
+  unitPowerModifierConfig: {fileID: 11400000, guid: 2f40c25bbdd019c49912d9b10d40ef81,
+    type: 2}
+  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}

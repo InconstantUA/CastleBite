@@ -16,5 +16,7 @@ MonoBehaviour:
   abilityDisplayName: Shoot With Bow
   abilityDescription: Description
   unitAbilityRange: 1
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd, type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
+    type: 2}
+  unitPowerConfigs: []
+  unitPowerModifierConfigs: []

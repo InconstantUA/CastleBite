@@ -122,7 +122,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Fill in unit power source
         transform.Find("Panel/AbilityParameters/Source").GetComponent<Text>().text = partyUnit.UnitAbilityPowerSource.ToString();
         // Fill in unit distance
-        transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitAbilityPowerDistance.ToString();
+        transform.Find("Panel/AbilityParameters/Distance").GetComponent<Text>().text = partyUnit.UnitAbilityRange.ToString();
         // Fill in unit power scope
         transform.Find("Panel/AbilityParameters/Scope").GetComponent<Text>().text = partyUnit.UnitAbilityPowerScope.ToString();
         // Fill in information about unique power modifiers

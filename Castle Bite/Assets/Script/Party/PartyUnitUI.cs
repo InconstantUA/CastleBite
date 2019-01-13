@@ -29,24 +29,6 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void OnCurrentHealthChanged(PartyUnit partyUnit)
-    {
-        // verify if party unit is this
-        if (partyUnit == LPartyUnit)
-        {
-            UpdateUnitCurrentHealthInfo();
-        }
-    }
-
-    public void OnMaxHealthChanged(PartyUnit partyUnit)
-    {
-        // verify if party unit is this
-        if (partyUnit == LPartyUnit)
-        {
-            UpdateUnitMaxHealthInfo();
-        }
-    }
-
     void OnEnable()
     {
         // verify if party unit is set
@@ -249,15 +231,6 @@ public class PartyUnitUI : MonoBehaviour {
     //    GetUnitCanvasText().color = unitStatusConfig.unitCanvasTextColor;
     //}
 
-    public void OnPartyUnitStatusChange(PartyUnit changedPartyUnit)
-    {
-        // verify if changed party unit is the same as current
-        if (changedPartyUnit == LPartyUnit)
-        {
-            SetUnitStatus();
-        }
-    }
-
     public void SetUnitStatus()
     {
         Debug.Log("Set unit " + LPartyUnit.UnitName + " status " + LPartyUnit.UnitStatus.ToString() + " in UI");
@@ -299,13 +272,13 @@ public class PartyUnitUI : MonoBehaviour {
 
     void UpdateUnitCurrentHealthInfo()
     {
-        Debug.Log("Upgrading " + LPartyUnit.UnitName + " unit current health");
+        Debug.Log("Updating " + LPartyUnit.UnitName + " unit current health");
         transform.Find("HPPanel/HPcurr").GetComponent<Text>().text = LPartyUnit.UnitHealthCurr.ToString();
     }
 
     void UpdateUnitMaxHealthInfo()
     {
-        Debug.Log("Upgrading " + LPartyUnit.UnitName + " unit max health");
+        Debug.Log("Updating " + LPartyUnit.UnitName + " unit max health");
         transform.Find("HPPanel/HPmax").GetComponent<Text>().text = LPartyUnit.GetUnitEffectiveMaxHealth().ToString();
     }
 
@@ -374,7 +347,7 @@ public class PartyUnitUI : MonoBehaviour {
 
     public void ApplyDestructiveAbility(int damageDealt)
     {
-        int healthAfterDamage = LPartyUnit.UnitHealthCurr - damageDealt;
+        int healthAfterDamage = LPartyUnit.UnitHealthCurr + damageDealt; // Note: damageDealt is negative normally
         // make sure that we do not set health less then 0
         if (healthAfterDamage <= 0)
         {
@@ -391,7 +364,7 @@ public class PartyUnitUI : MonoBehaviour {
             LPartyUnit.UnitStatus = UnitStatus.Dead;
         }
         // display damage dealt in info panel
-        UnitInfoPanelText.text = "-" + damageDealt + " health";
+        UnitInfoPanelText.text = damageDealt.ToString() + " health";
         UnitInfoPanelText.color = Color.red;
     }
 
@@ -605,6 +578,64 @@ public class PartyUnitUI : MonoBehaviour {
         }
 
     }
+
+    #region Events Actions
+    // called in UI in EventsListener
+    public void OnPartyUnitStatusChange(PartyUnit changedPartyUnit)
+    {
+        // verify if changed party unit is the same as current
+        if (changedPartyUnit == LPartyUnit)
+        {
+            SetUnitStatus();
+        }
+    }
+
+    public void OnCurrentHealthChanged(PartyUnit partyUnit, int difference)
+    {
+        // verify if party unit is this
+        if (partyUnit == LPartyUnit)
+        {
+            // Update unit current health info
+            UpdateUnitCurrentHealthInfo();
+            // verify if difference is > 0
+            if (difference > 0)
+            {
+                // set "+" symbol
+                UnitInfoPanelText.text = "+";
+            }
+            else
+            {
+                // reset current text
+                UnitInfoPanelText.text = "";
+            }
+            // Display difference in info panel
+            UnitInfoPanelText.text += difference.ToString();
+            // set text color transparent, so that animation, if it is available, it will take care of the rest
+            UnitInfoPanelText.color = new Color(Color.gray.r, Color.gray.g, Color.gray.b, 0);
+        }
+    }
+
+    public void OnMaxHealthChanged(PartyUnit partyUnit)
+    {
+        // verify if party unit is this
+        if (partyUnit == LPartyUnit)
+        {
+            UpdateUnitMaxHealthInfo();
+        }
+    }
+
+    public void OnUnitPowerModifierApply(PartyUnit appliedToPartyUnit, UnitPowerModifier unitPowerModifier)
+    {
+        // verify if party unit to which modifier has been applied is the same as current
+        if (appliedToPartyUnit == LPartyUnit)
+        {
+            // get battle screen queue
+            CoroutineQueue coroutineQueue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+            // display unit power modifier animation
+            unitPowerModifier.textAnimation.Run(UnitInfoPanelText, coroutineQueue);
+        }
+    }
+    #endregion Events Actions
 
     #region Properties
     UnitStatusUIConfig unitStatusUIConfig;

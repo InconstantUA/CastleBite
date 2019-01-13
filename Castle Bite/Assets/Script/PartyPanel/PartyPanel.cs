@@ -2349,6 +2349,7 @@ public class PartyPanel : MonoBehaviour {
             case UnitAbilityID.ShootWithCompoudBow:
             case UnitAbilityID.ThrowSpear:
             case UnitAbilityID.ThrowRock:
+            case UnitAbilityID.DrainLife:
                 PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
                 break;
             // Magic (including pure or whole-party) attack powers
@@ -2649,10 +2650,28 @@ public class PartyPanel : MonoBehaviour {
         //}
         //yield return null;
     }
-    
-        void ApplyDestructivePowerToSingleUnitUI(PartyUnitUI dstUnitUI)
+
+    void ApplyUnitPowerModifiersToSingleUnit(PartyUnitUI dstUnitUI)
+    {
+        // get active unit
+        PartyUnit activeUnit = activeBattleUnitUI.LPartyUnit;
+        // get destination unit
+        PartyUnit destinationUnit = dstUnitUI.LPartyUnit;
+        // loop through all Unit Power Modifiers
+        foreach (UnitPowerModifier unitPowerModifier in activeUnit.UnitAbilityConfig.unitPowerModifiers)
+        {
+            // get unit PowerModifier
+            unitPowerModifier.Apply(activeUnit, destinationUnit);
+        }
+    }
+
+    void ApplyDestructivePowerToSingleUnitUI(PartyUnitUI dstUnitUI)
     {
         //Debug.Log("ApplyDestructivePowerToSingleUnit");
+        // Note: order is important
+        // ApplyUnitPowerModifiersToSingleUnit - in case of LifeLeech, we need to get unit health before main ability bein applied, 
+        // because if unit has 35 life left and vampire has 60 damange, then on attack he will heal itself for 35 life, not for 60
+        ApplyUnitPowerModifiersToSingleUnit(dstUnitUI);
         dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetAbilityDamageDealt(activeBattleUnitUI.LPartyUnit));
         ApplyUniquePowerModifiersToSingleUnit(dstUnitUI);
     }
@@ -2669,14 +2688,18 @@ public class PartyPanel : MonoBehaviour {
             {
                 // the same debuff is already applied
                 // reset its counter to max
-                UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
-                if (unitDebuffIndicator)
+                // .. fix, verify if it is there
+                if (debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()))
                 {
-                    unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
-                }
-                else
-                {
-                    Debug.LogError("No unitDebuffIndicator");
+                    UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
+                    if (unitDebuffIndicator)
+                    {
+                        unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
+                    }
+                    else
+                    {
+                        Debug.LogError("No unitDebuffIndicator");
+                    }
                 }
             }
             else
@@ -2806,6 +2829,7 @@ public class PartyPanel : MonoBehaviour {
                 case UnitAbilityID.ShootWithCompoudBow:
                 case UnitAbilityID.ThrowSpear:
                 case UnitAbilityID.ThrowRock:
+                case UnitAbilityID.DrainLife:
                     ApplyDestructivePowerToSingleUnitUI(dstUnitUI);
                     break;
                 // Magic (including pure or whole-party) attack powers

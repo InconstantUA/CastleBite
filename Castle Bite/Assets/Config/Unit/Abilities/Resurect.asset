@@ -16,5 +16,7 @@ MonoBehaviour:
   abilityDisplayName: Resurect
   abilityDescription: Description
   unitAbilityRange: 1
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: a9f6ebe6c4ed9314b9782d164c7a1486, type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: a9f6ebe6c4ed9314b9782d164c7a1486,
+    type: 2}
+  unitPowerConfigs: []
+  unitPowerModifierConfigs: []

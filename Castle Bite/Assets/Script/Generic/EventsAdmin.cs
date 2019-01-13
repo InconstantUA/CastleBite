@@ -8,11 +8,6 @@ public class CityCaptureEvent : UnityEvent<City>
 {
 }
 
-[System.Serializable]
-public class PartyUnitEvent : UnityEvent<PartyUnit>
-{
-}
-
 //[System.Serializable]
 //public class EventWithTriggeredObjectReference : UnityEvent<System.Object>
 //{

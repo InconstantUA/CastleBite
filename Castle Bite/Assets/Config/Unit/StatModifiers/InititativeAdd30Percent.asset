@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 141e49ccbd374384d8600cf455f9cc80, type: 3}
-  m_Name: Inititative5Percent
+  m_Name: InititativeAdd30Percent
   m_EditorClassIdentifier: 
-  unitStatModifierType: 300005
-  unitStatModifierID: 300005
   unitStat: 4
   modifierAppliedTo: 1
   modifierScope: 0
-  modifierPower: 5
-  skillPowerMultiplier: 1
+  modifierPower: 30
   modifierCalculatedHow: 2
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: -1
   powerSource: 9
+  powerIncrementOnStatsUpgrade: 0
+  skillPowerMultiplier: 1

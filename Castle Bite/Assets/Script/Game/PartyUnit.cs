@@ -51,6 +51,7 @@ public enum UnitAbilityID
     EarthShatteringLeap,// Greenskin Bombul captial guard
     Malediction,        // Greenskin Orc shaman
     LastCall,           // Undead Hades capital guard
+    DrainLife,          // Undead Vampire
     None
 };
 
@@ -227,6 +228,7 @@ public enum ModifierScope
     AllPlayerUnits
 }
 
+
 [Serializable]
 public class UniquePowerModifier
 {
@@ -240,9 +242,9 @@ public class UniquePowerModifier
     public int upmChance;
     public int upmChanceIncrementOnLevelUp;
     public PowerSource upmSource;
-    public ModifierOrigin upmOrigin;
+    public ModifierOrigin upmOrigin; // data
     public ModifierAppliedHow modifierApplied;
-    public int upmDurationLeft;
+    public int upmDurationLeft; // data
     public int skillPowerMultiplier = 1;
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
 
@@ -841,7 +843,7 @@ public class PartyUnit : MonoBehaviour {
     public int GetAbilityDamageDealt(PartyUnit activeBattleUnit)
     {
         int damageDealt = 0;
-        int srcUnitDamage = activeBattleUnit.UnitAbilityCurrentPower;
+        int srcUnitDamage = activeBattleUnit.GetUnitEffectivePower();
         int dstUnitDefense = GetEffectiveDefense();
         // calculate damage dealt
         damageDealt = (int)Math.Round((((float)srcUnitDamage * (100f - (float)dstUnitDefense)) / 100f));
@@ -2143,9 +2145,21 @@ public class PartyUnit : MonoBehaviour {
 
         set
         {
+            // save previous health value
+            int previousHealth = partyUnitData.unitHealthCurr;
+            // set current health
             partyUnitData.unitHealthCurr = value;
+            // verify if current health is not higher than the maximum
+            if (partyUnitData.unitHealthCurr > GetUnitEffectiveMaxHealth())
+            {
+                // reset it to max
+                partyUnitData.unitHealthCurr = GetUnitEffectiveMaxHealth();
+            }
+            // get the difference
+            int difference = partyUnitData.unitHealthCurr - previousHealth;
             // rise an event
-            UnitEvents.unitHealthCurr.HasChanged.Raise(gameObject);
+            // UnitEvents.unitHealthCurr.HasChanged.Raise(gameObject);
+            UnitEvents.unitHealthCurr.HasChanged.Raise(gameObject, difference);
             //// trigger event
             //EventsAdmin.Instance.IHasChanged(this, new HealthCurrent());
         }
@@ -2265,7 +2279,7 @@ public class PartyUnit : MonoBehaviour {
             // return partyUnitData.unitPower;
             // get ability power from unit stat modifier in ability config
             // todo: take into account all modifiers, not only the first one
-            return UnitAbilityConfig.unitStatModifierConfigs[0].modifierPower;
+            return UnitAbilityConfig.unitStatModifierConfig.modifierPower;
         }
     }
 
@@ -2276,7 +2290,7 @@ public class PartyUnit : MonoBehaviour {
             // return partyUnitData.unitPowerIncrementOnLevelUp;
             // get unit power increment on stats upgrade from config
             // todo: take into account all modifiers, not only the first one
-            return UnitAbilityConfig.unitStatModifierConfigs[0].powerIncrementOnStatsUpgrade;
+            return UnitAbilityConfig.unitStatModifierConfig.powerIncrementOnStatsUpgrade;
         }
 
         //set
@@ -2309,7 +2323,7 @@ public class PartyUnit : MonoBehaviour {
             // return partyUnitData.unitPowerSource;
             // Get it from unit ability config
             // todo: take into account all modifiers, not only the first one
-            return UnitAbilityConfig.unitStatModifierConfigs[0].powerSource;
+            return UnitAbilityConfig.unitStatModifierConfig.powerSource;
         }
 
         //set
@@ -2318,7 +2332,7 @@ public class PartyUnit : MonoBehaviour {
         //}
     }
 
-    public UnitAbilityRange UnitAbilityPowerDistance
+    public UnitAbilityRange UnitAbilityRange
     {
         get
         {
@@ -2339,7 +2353,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // return partyUnitData.unitPowerScope;
             // Get it from unit ability config
-            return UnitAbilityConfig.unitStatModifierConfigs[0].modifierScope;
+            return UnitAbilityConfig.unitStatModifierConfig.modifierScope;
         }
 
         //set
