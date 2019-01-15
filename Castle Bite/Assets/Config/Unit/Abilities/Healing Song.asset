@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Healing Song
   m_EditorClassIdentifier: 
   unitAbilityID: 14
+  unitAbility: {fileID: 11400000, guid: 59370b0577a69e24092a52077a47c63c, type: 2}
   abilityDisplayName: Healing Song
   abilityDescription: Description
   unitAbilityRange: 1
   unitStatModifierConfig: {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c,
     type: 2}
-  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}
   unitPowerConfigs: []
   unitPowerModifiers: []

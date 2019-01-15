@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Resurect
   m_EditorClassIdentifier: 
   unitAbilityID: 9
+  unitAbility: {fileID: 11400000, guid: 59370b0577a69e24092a52077a47c63c, type: 2}
   abilityDisplayName: Resurect
   abilityDescription: Description
   unitAbilityRange: 1
   unitStatModifierConfig: {fileID: 11400000, guid: a9f6ebe6c4ed9314b9782d164c7a1486,
     type: 2}
-  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}
   unitPowerConfigs: []
   unitPowerModifiers: []

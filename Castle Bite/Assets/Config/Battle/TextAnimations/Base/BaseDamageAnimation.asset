@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df6b2f15c7e1181449feacd17f088253, type: 3}
-  m_Name: DamageAnimation
+  m_Script: {fileID: 11500000, guid: 97fb4ece9c1ccde4eaaaddd6f49c0188, type: 3}
+  m_Name: BaseDamageAnimation
   m_EditorClassIdentifier: 
   textAnimationConfig: {fileID: 11400000, guid: 33b2a7d72ee5a534f989c3937e217979,
     type: 2}

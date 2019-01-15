@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df6b2f15c7e1181449feacd17f088253, type: 3}
-  m_Name: HealAnimation
+  m_Script: {fileID: 11500000, guid: 0ec21f0e04e5d3447aea7b4d97ee4d9d, type: 3}
+  m_Name: Base Healing Unit Ability
   m_EditorClassIdentifier: 
-  textAnimationConfig: {fileID: 11400000, guid: 8eadc86131df0e444812dc3cd538cc62,
-    type: 2}
+  gameEvent: {fileID: 11400000, guid: 893b9adf6300d9240a54ce78145b3e8e, type: 2}
+  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Last Call
   m_EditorClassIdentifier: 
   unitAbilityID: 19
+  unitAbility: {fileID: 11400000, guid: cd7640ed16802be468eeccf2cfceaaf4, type: 2}
   abilityDisplayName: Last Call
   abilityDescription: Description
   unitAbilityRange: 1
   unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
     type: 2}
-  textAnimation: {fileID: 11400000, guid: 3ccadf9bbb84ddb458e6caeac974b475, type: 2}
   unitPowerConfigs: []
   unitPowerModifiers: []
