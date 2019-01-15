@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "LifeLeechApply", menuName = "Config/Unit/PowerModifiers/LifeLeech")]
+[CreateAssetMenu(fileName = "LifeLeech", menuName = "Config/Unit/PowerModifiers/LifeLeech")]
 public class LifeLeech : UnitPowerModifier
 {
     public override void Apply(PartyUnit activeUnit, PartyUnit destinationUnit)

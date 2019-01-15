@@ -194,7 +194,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     // uniquePowerModifier parameter is optional on deactivation
     public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier = null)
     {
-        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+        // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
         if (doActivate)
         {
             // Activate object
@@ -204,7 +204,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             // Fill in additionalInfo
             FillInAdditionalInfo(uniquePowerModifier);
             // Start animation
-            queue.Run(FadeBackground());
+            CoroutineQueueManager.Run(FadeBackground());
             //StartCoroutine("FadeBackground");
             // reset currentDuration
             CurrentDuration = TotalDuration;
@@ -212,7 +212,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         else
         {
             // fade away foreground text and at the end of fade destroy buff
-            queue.Run(FadeForegroundAndDestroyBuff());
+            CoroutineQueueManager.Run(FadeForegroundAndDestroyBuff());
             //StartCoroutine("FadeForegroundAndDestroyBuff");
         }
     }

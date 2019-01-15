@@ -4221,6 +4221,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Battle Has Ended
     gameEvent: {fileID: 11400000, guid: 16b920e2e7743e843aea572ee807e29c, type: 2}
     genericAction:
@@ -4309,6 +4314,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Battle Enter Main Phase
     gameEvent: {fileID: 11400000, guid: d20914eeecebf854d88dec98361afe93, type: 2}
     genericAction:
@@ -4341,6 +4351,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   - name: On Battle Enter Post Wait Phase
     gameEvent: {fileID: 11400000, guid: 3fad157dab3b7b941a99f2af7269bdb1, type: 2}
@@ -4375,6 +4390,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Battle Active Unit Change
     gameEvent: {fileID: 11400000, guid: c76bbeb61f51c624d9ff88be242a44c7, type: 2}
     genericAction:
@@ -4408,6 +4428,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Battle Screen Enable
     gameEvent: {fileID: 11400000, guid: 3565c8de4941aeb488ff45f28d5cf322, type: 2}
     genericAction:
@@ -4429,6 +4454,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   - name: On Battle Screen Disable
     gameEvent: {fileID: 11400000, guid: 1c5d75504bbeeff43a3471b0265295e0, type: 2}
@@ -4462,6 +4492,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
 --- !u!1 &112491310
 GameObject:
@@ -53229,6 +53264,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Defend
     gameEvent: {fileID: 11400000, guid: bedab61578e938b48b3b24ac88653cef, type: 2}
     genericAction:
@@ -53261,6 +53301,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   - name: On Exit
     gameEvent: {fileID: 11400000, guid: eb6e55d9d55e5a44d985b5bdeaedff90, type: 2}
@@ -53295,6 +53340,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Instant Resolve
     gameEvent: {fileID: 11400000, guid: a8b6ff17353d649408d3c25a43184e4a, type: 2}
     genericAction:
@@ -53327,6 +53377,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   - name: On Retreat
     gameEvent: {fileID: 11400000, guid: e3b039cfd26a81f4190efffa5cd9d958, type: 2}
@@ -53361,6 +53416,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: On Wait
     gameEvent: {fileID: 11400000, guid: 745f29fad574b4a4796774f03e04317f, type: 2}
     genericAction:
@@ -53393,6 +53453,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
 --- !u!1 &782961447
 GameObject:
@@ -71997,6 +72062,7 @@ GameObject:
   - component: {fileID: 1201476884}
   - component: {fileID: 1201476889}
   - component: {fileID: 1201476881}
+  - component: {fileID: 1201476891}
   - component: {fileID: 1201476887}
   - component: {fileID: 1201476890}
   - component: {fileID: 1201476883}
@@ -72369,6 +72435,18 @@ MonoBehaviour:
   - achievement: 2
     citiesCaptured: 1
     isCapital: 1
+--- !u!114 &1201476891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201476879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d4f72c013bc114d901d8736fe084bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1202189342
 GameObject:
   m_ObjectHideFlags: 0
@@ -91114,6 +91192,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
 --- !u!1 &1546959152
 GameObject:

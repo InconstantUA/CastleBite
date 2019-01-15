@@ -2155,6 +2155,18 @@ public class PartyUnit : MonoBehaviour {
                 // reset it to max
                 partyUnitData.unitHealthCurr = GetUnitEffectiveMaxHealth();
             }
+            // verify if current health is lower then 0
+            if (partyUnitData.unitHealthCurr < 0)
+            {
+                // reset it to 0
+                partyUnitData.unitHealthCurr = 0;
+            }
+            // verify if unit is dead
+            if (0 == partyUnitData.unitHealthCurr)
+            {
+                // set unit is dead attribute
+                UnitStatus = UnitStatus.Dead;
+            }
             // get the difference
             int difference = partyUnitData.unitHealthCurr - previousHealth;
             // rise an event

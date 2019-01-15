@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f3b87e790f57ed408213c1f936ab717, type: 3}
-  m_Name: HealAnimationConfig
+  m_Script: {fileID: 11500000, guid: 1f4572ddee1dc3f4f9b528683cb6b63a, type: 3}
+  m_Name: DrainLifeCoroutineGroupID
   m_EditorClassIdentifier: 
-  textColor: {r: 0, g: 1, b: 0, a: 1}
-  duration: 1.5

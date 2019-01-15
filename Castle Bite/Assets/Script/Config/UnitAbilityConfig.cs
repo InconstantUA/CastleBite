@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 public class UnitAbilityConfig : ScriptableObject
 {
     public UnitAbilityID unitAbilityID;
+    public UnitAbility unitAbility;
     public string abilityDisplayName;
     public string abilityDescription;
     public UnitAbilityRange unitAbilityRange;

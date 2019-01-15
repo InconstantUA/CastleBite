@@ -20,6 +20,11 @@ public class UnitPowerModifierEvent : UnityEvent<PartyUnit, UnitPowerModifier>
 }
 
 [System.Serializable]
+public class UnitAbilityEvent : UnityEvent<PartyUnit, UnitAbility>
+{
+}
+
+[System.Serializable]
 public class EventAndAction
 {
     public string name;
@@ -28,6 +33,7 @@ public class EventAndAction
     public PartyUnitEvent partyUnitEvent;
     public PartyUnitHealthHasChangedEvent partyUnitHealthHasChangedEvent;
     public UnitPowerModifierEvent unitPowerModifierEvent;
+    public UnitAbilityEvent unitAbilityEvent;
     //public EventWithTriggeredObjectReference eventWithTriggeredObjectReference;
 
     public void Invoke(GameObject gameObject = null)
@@ -71,6 +77,12 @@ public class EventAndAction
         {
             // Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " and " + scriptableObject.name + " scriptable object");
             unitPowerModifierEvent.Invoke(gameObject.GetComponent<PartyUnit>(), (UnitPowerModifier)scriptableObject);
+        }
+        // Check if at least 1 object is listening for the event
+        if (unitAbilityEvent.GetPersistentEventCount() >= 1)
+        {
+            Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " and " + scriptableObject.name + " ability");
+            unitAbilityEvent.Invoke(gameObject.GetComponent<PartyUnit>(), (UnitAbility)scriptableObject);
         }
     }
 }
@@ -150,9 +162,24 @@ public class EventsListener : MonoBehaviour
             if (raisedGameEvent == eventsAndActions[i].gameEvent)
             {
                 // Uncomment the line below for debugging the event listens and other details
-                // Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name + " and on ScriptableObject: " + scriptableObject.name);
+                Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name + " and on ScriptableObject: " + scriptableObject.name);
                 eventsAndActions[i].Invoke(gameObject, scriptableObject);
             }
         }
     }
+
+    //public void ActOnEvent(GameEvent raisedGameEvent, GameObject gameObject, UnitAbilityID unitAbilityID)
+    //{
+    //    // loop from the lately registered to the earlier registered events
+    //    for (int i = eventsAndActions.Count - 1; i >= 0; i--)
+    //    {
+    //        // Check if this is raised GameEvent
+    //        if (raisedGameEvent == eventsAndActions[i].gameEvent)
+    //        {
+    //            // Uncomment the line below for debugging the event listens and other details
+    //            Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name + " and UnitAbilityID: " + unitAbilityID);
+    //            eventsAndActions[i].Invoke(gameObject, unitAbilityID);
+    //        }
+    //    }
+    //}
 }

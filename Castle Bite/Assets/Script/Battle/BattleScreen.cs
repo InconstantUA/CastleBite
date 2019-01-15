@@ -793,8 +793,8 @@ public class BattleScreen : MonoBehaviour {
 
     public void SetHighlight()
     {
-        Queue.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
-        Queue.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+        CoroutineQueueManager.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+        CoroutineQueueManager.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
     }
 
     IEnumerator ActivateUnit()
@@ -818,7 +818,7 @@ public class BattleScreen : MonoBehaviour {
                 if (ActiveUnitUI.GetUnitPartyPanel().IsAIControlled)
                 {
                     // give control to battle AI
-                    Queue.Run(battleAI.Act());
+                    CoroutineQueueManager.Run(battleAI.Act());
                 }
                 else
                 {
@@ -830,7 +830,7 @@ public class BattleScreen : MonoBehaviour {
                 // If there were debuffs applied and unit has survived,
                 // then unit may escape now
                 // Escape unit
-                Queue.Run(EscapeUnit());
+                CoroutineQueueManager.Run(EscapeUnit());
                 break;
             case UnitStatus.Dead:
                 // This unit can't act any more
@@ -886,7 +886,7 @@ public class BattleScreen : MonoBehaviour {
         UpdateBattleControlPanelAccordingToUnitPossibilities();
         ExecutePreActivateActions();
         ProcessBuffsAndDebuffs();
-        Queue.Run(ActivateUnit());
+        CoroutineQueueManager.Run(ActivateUnit());
         yield return null;
     }
 
@@ -934,7 +934,7 @@ public class BattleScreen : MonoBehaviour {
             {
                 // found next unit
                 // activate it
-                Queue.Run(SetNextUnitActive(nextUnitUI));
+                CoroutineQueueManager.Run(SetNextUnitActive(nextUnitUI));
             }
             else
             {
@@ -945,7 +945,7 @@ public class BattleScreen : MonoBehaviour {
         }
         else
         {
-            Queue.Run(EndBattle());
+            CoroutineQueueManager.Run(EndBattle());
         }
     }
 
@@ -980,7 +980,7 @@ public class BattleScreen : MonoBehaviour {
         // set unit is escaping status
         ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Escaping;
         // execute animation
-        Queue.Run(ReatreatingAnimation());
+        CoroutineQueueManager.Run(ReatreatingAnimation());
         // proceed with default post-move actions
         Proceed();
     }
@@ -996,7 +996,7 @@ public class BattleScreen : MonoBehaviour {
         // set unit is waiting status
         ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Waiting;
         // execute wait animation
-        Queue.Run(WaitingAnimation());
+        CoroutineQueueManager.Run(WaitingAnimation());
         // activate next unit without setting hasMoved flag
         ActivateNextUnit();
     }

@@ -437,7 +437,7 @@ public class PartyUnitUI : MonoBehaviour {
             // as long as we cannot initiate all debuffs at the same time
             // we add debuffs to the queue and they will be triggered one after another
             // CoroutineQueue queue = unitDebuffsUI.GetQueue();
-            CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+            // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
             //if (queue == null)
             //{
             //    Debug.LogError("No queue");
@@ -451,7 +451,7 @@ public class PartyUnitUI : MonoBehaviour {
             //{
             //    Debug.LogError("No coroutine");
             //}
-            queue.Run(coroutine);
+            CoroutineQueueManager.Run(coroutine);
             // Trigger debuff against player
             // Decrement buff current duration
             debuffIndicator.DecrementCurrentDuration();
@@ -624,15 +624,25 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
+    public void OnAbilityApply(PartyUnit appliedToPartyUnit, UnitAbility unitAbility)
+    {
+        // verify if party unit to which modifier has been applied is the same as current
+        if (appliedToPartyUnit == LPartyUnit)
+        {
+            unitAbility.textAnimation.Run(UnitInfoPanelText);
+        }
+    }
+
     public void OnUnitPowerModifierApply(PartyUnit appliedToPartyUnit, UnitPowerModifier unitPowerModifier)
     {
         // verify if party unit to which modifier has been applied is the same as current
         if (appliedToPartyUnit == LPartyUnit)
         {
             // get battle screen queue
-            CoroutineQueue coroutineQueue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+            //CoroutineQueue coroutineQueue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
             // display unit power modifier animation
-            unitPowerModifier.textAnimation.Run(UnitInfoPanelText, coroutineQueue);
+            //unitPowerModifier.textAnimation.Run(UnitInfoPanelText, coroutineQueue);
+            unitPowerModifier.textAnimation.Run(UnitInfoPanelText);
         }
     }
     #endregion Events Actions

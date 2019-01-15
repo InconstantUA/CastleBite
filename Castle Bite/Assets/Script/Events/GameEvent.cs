@@ -74,4 +74,14 @@ public class GameEvent : ScriptableObject
             eventsListeners[i].ActOnEvent(this, gameObject, scriptableObject);
         }
     }
+
+    //public void Raise(GameObject gameObject, UnitAbilityID unitAbilityID)
+    //{
+    //    // Loop through all registered listeners
+    //    for (int i = eventsListeners.Count - 1; i >= 0; i--)
+    //    {
+    //        // Initiate actions on event listener
+    //        eventsListeners[i].ActOnEvent(this, gameObject, unitAbilityID);
+    //    }
+    //}
 }

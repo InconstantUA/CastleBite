@@ -66,7 +66,9 @@ public class CoroutineQueue
         if (numActive < maxActive)
         {
             // Debug.Log("Run " + coroutine.ToString());
+            // create new coroutine runner
             var runner = CoroutineRunner(coroutine);
+            // run new coroutine
             coroutineStarter(runner);
         }
         else
@@ -84,11 +86,19 @@ public class CoroutineQueue
     /// <param name="coroutine">Coroutine to run</param>
     private IEnumerator CoroutineRunner(IEnumerator coroutine)
     {
+        // increment number of active coroutines
         numActive++;
+        // Run coroutine manually. This way we can be notified when the coroutine is finished
+        // Coroutines are just an IEnumerator so it’s easy to loop over them and yield return their values:
+        // Each time we call MoveNext the user’s coroutine is resumed and a bool is returned to indicate if it yielded anything. 
+        // If it did, we can get it from the Current property. 
+        // This means that the while loop basically just runs the user’s coroutine and yields all its values.
         while (coroutine.MoveNext())
         {
             yield return coroutine.Current;
         }
+        // coroutine is finished
+        // decrement number of active coroutines
         numActive--;
         if (queue.Count > 0)
         {

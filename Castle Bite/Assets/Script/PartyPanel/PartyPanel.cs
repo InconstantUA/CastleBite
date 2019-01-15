@@ -2660,9 +2660,15 @@ public class PartyPanel : MonoBehaviour {
         // loop through all Unit Power Modifiers
         foreach (UnitPowerModifier unitPowerModifier in activeUnit.UnitAbilityConfig.unitPowerModifiers)
         {
-            // get unit PowerModifier
+            // get and apply unit PowerModifier
             unitPowerModifier.Apply(activeUnit, destinationUnit);
         }
+    }
+
+    void ApplyUnitAbility(PartyUnitUI dstUnitUI)
+    {
+        // apply unit ability
+        activeBattleUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.Apply(activeBattleUnitUI.LPartyUnit, dstUnitUI.LPartyUnit);
     }
 
     void ApplyDestructivePowerToSingleUnitUI(PartyUnitUI dstUnitUI)
@@ -2672,7 +2678,8 @@ public class PartyPanel : MonoBehaviour {
         // ApplyUnitPowerModifiersToSingleUnit - in case of LifeLeech, we need to get unit health before main ability bein applied, 
         // because if unit has 35 life left and vampire has 60 damange, then on attack he will heal itself for 35 life, not for 60
         ApplyUnitPowerModifiersToSingleUnit(dstUnitUI);
-        dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetAbilityDamageDealt(activeBattleUnitUI.LPartyUnit));
+        ApplyUnitAbility(dstUnitUI);
+        // dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetAbilityDamageDealt(activeBattleUnitUI.LPartyUnit));
         ApplyUniquePowerModifiersToSingleUnit(dstUnitUI);
     }
 
@@ -2869,8 +2876,8 @@ public class PartyPanel : MonoBehaviour {
             }
         }
         // Gradually fade away unit cell information
-        CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
-        queue.Run(FadeUnitCellInfo());
+        // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+        // CoroutineQueueManager.Run(FadeUnitsCellInfo());
         // StartCoroutine("FadeUnitCellInfo");
     }
 
@@ -3142,7 +3149,7 @@ public class PartyPanel : MonoBehaviour {
     }
 
     // Note: animation should be identical to the function with the same name in PartyUnit
-    IEnumerator FadeUnitCellInfo()
+    IEnumerator FadeUnitsCellInfo()
     {
         // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
@@ -3159,22 +3166,6 @@ public class PartyPanel : MonoBehaviour {
                 c.a = f;
                 partyUnitUI.UnitInfoPanelText.color = c;
             }
-            //foreach (Row horisontalPanel in horisontalPanels)
-            //{
-            //    foreach (Cell cell in cells)
-            //    {
-            //        // verify if slot has an unit in it
-            //        Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
-            //        if (unitSlot.childCount > 0)
-            //        {
-            //            // change infoPanel transparancy
-            //            Text infoPanel = unitSlot.GetComponentInChildren<PartyUnitUI>().GetUnitInfoPanelText();
-            //            Color c = infoPanel.color;
-            //            c.a = f;
-            //            infoPanel.color = c;
-            //        }
-            //    }
-            //}
             yield return new WaitForSeconds(.1f);
         }
         // Unblock mouse input

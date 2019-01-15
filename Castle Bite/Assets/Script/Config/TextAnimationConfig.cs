@@ -7,4 +7,5 @@ public class TextAnimationConfig : ScriptableObject
 {
     public Color textColor;
     public float duration;
+    public CoroutineGroupID coroutineGroupID;
 }

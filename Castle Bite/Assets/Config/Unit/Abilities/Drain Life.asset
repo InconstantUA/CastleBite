@@ -9,15 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
+  m_Script: {fileID: 11500000, guid: b8ebc9b3efb8d314380064ed503da553, type: 3}
   m_Name: Drain Life
   m_EditorClassIdentifier: 
-  unitAbilityID: 20
-  abilityDisplayName: Drain Life
-  abilityDescription: Description
-  unitAbilityRange: 1
-  unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
-    type: 2}
-  unitPowerConfigs: []
-  unitPowerModifiers:
-  - {fileID: 11400000, guid: ba83c0ff63588be4ebe6530ae4a036ec, type: 2}
+  gameEvent: {fileID: 11400000, guid: 893b9adf6300d9240a54ce78145b3e8e, type: 2}
+  textAnimation: {fileID: 11400000, guid: 806fdd29a8490d444a845dd74ad51575, type: 2}

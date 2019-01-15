@@ -18,5 +18,6 @@ MonoBehaviour:
   unitAbilityRange: 1
   unitStatModifierConfig: {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c,
     type: 2}
+  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}
   unitPowerConfigs: []
-  unitPowerModifierConfigs: []
+  unitPowerModifiers: []

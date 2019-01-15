@@ -15,4 +15,4 @@ MonoBehaviour:
   gameEvent: {fileID: 11400000, guid: 5211f2719b444b4469e7b53a1d4b1ed8, type: 2}
   unitPowerModifierConfig: {fileID: 11400000, guid: 2f40c25bbdd019c49912d9b10d40ef81,
     type: 2}
-  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}
+  textAnimation: {fileID: 11400000, guid: 447afff3077491749aac2e1628edf477, type: 2}
