@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e49ccbd374384d8600cf455f9cc80, type: 3}
   m_Name: PowerAdd5Percent
   m_EditorClassIdentifier: 
-  unitStatModifierType: 200005
-  unitStatModifierID: 200005
   unitStat: 3
   modifierAppliedTo: 1
   modifierScope: 0
   modifierPower: 5
-  skillPowerMultiplier: 1
   modifierCalculatedHow: 2
   duration: 0
-  canBeAppliedToTheUnitsWithStatuses: -1
+  canBeAppliedToTheUnitsWithStatuses: 0000000001000000020000000300000004000000
   powerSource: 9
+  powerIncrementOnStatsUpgrade: 0
+  skillPowerMultiplier: 1

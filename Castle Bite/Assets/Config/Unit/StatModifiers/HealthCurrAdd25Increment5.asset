@@ -18,7 +18,7 @@ MonoBehaviour:
   modifierPower: 25
   modifierCalculatedHow: 0
   duration: 0
-  canBeAppliedToTheUnitsWithStatuses: 14
-  powerSource: 9
+  canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
+  powerSource: 5
   powerIncrementOnStatsUpgrade: 5
   skillPowerMultiplier: 1

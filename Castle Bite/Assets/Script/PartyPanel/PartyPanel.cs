@@ -2329,6 +2329,7 @@ public class PartyPanel : MonoBehaviour {
             // Helping or buf powers
             case UnitAbilityID.HealingWord:
             case UnitAbilityID.HealingSong:
+            case UnitAbilityID.SacrificingEcho:
                 PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
                 break;
             case UnitAbilityID.Resurect:
@@ -2444,28 +2445,50 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    void ApplyHealPowerToSingleUnit(PartyUnitUI dstUnitUI)
+    void ApplyHealingPowerToSingleUnit(PartyUnitUI dstUnitUI)
     {
         Debug.Log("ApplyHealPowerToSingleUnit");
-        // heal destination unit
-        int healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthCurr + activeBattleUnitUI.LPartyUnit.UnitAbilityCurrentPower;
-        // make sure that we do not heal to more than maximum health
-        if (healthAfterHeal > dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth())
-        {
-            healthAfterHeal = dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth();
-        }
-        dstUnitUI.LPartyUnit.UnitHealthCurr = (healthAfterHeal);
-        // update current health in UI
-        Text currentHealth = dstUnitUI.GetUnitCurrentHealthText();
-        currentHealth.text = healthAfterHeal.ToString();
-        // update info panel
-        dstUnitUI.UnitInfoPanelText.text = "+" + activeBattleUnitUI.LPartyUnit.UnitAbilityCurrentPower.ToString();
-        dstUnitUI.UnitInfoPanelText.color = Color.green;
+        //// heal destination unit
+        //int healthAfterHeal = dstUnitUI.LPartyUnit.UnitHealthCurr + activeBattleUnitUI.LPartyUnit.UnitAbilityCurrentPower;
+        //// make sure that we do not heal to more than maximum health
+        //if (healthAfterHeal > dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth())
+        //{
+        //    healthAfterHeal = dstUnitUI.LPartyUnit.GetUnitEffectiveMaxHealth();
+        //}
+        //dstUnitUI.LPartyUnit.UnitHealthCurr = (healthAfterHeal);
+        //// update current health in UI
+        //Text currentHealth = dstUnitUI.GetUnitCurrentHealthText();
+        //currentHealth.text = healthAfterHeal.ToString();
+        //// update info panel
+        //dstUnitUI.UnitInfoPanelText.text = "+" + activeBattleUnitUI.LPartyUnit.UnitAbilityCurrentPower.ToString();
+        //dstUnitUI.UnitInfoPanelText.color = Color.green;
+        ApplyUnitAbility(dstUnitUI);
     }
 
-    void ApplyHealPowerToMultipleUnits()
+    void ApplyHealingPowerToMultipleUnits()
     {
         Debug.Log("ApplyHealPowerToMultipleUnits");
+        // get all alive units in enemy party and apply damage to them
+        // find enemy party based on activeBattleUnit
+        // structure: 7BattleScreen-6Party-5PartyPanel-4[Top/Middle/Bottom]-3[Front/Back/Wide]cell-2UnitSlot-1UnitCanvas-activeBattleUnit
+        HeroParty activeBattleUnitParty = activeBattleUnitUI.LPartyUnit.GetUnitParty(); //.transform.parent.parent.parent.parent.parent.parent;
+        // find party which does not match activeBattleUnit Party
+        foreach (HeroPartyUI heroPartyUI in transform.root.GetComponentInChildren<UIManager>().GetComponentsInChildren<HeroPartyUI>())
+        {
+            // verify if this is the same (friendly) hero party where active unit is lcoated
+            if (heroPartyUI.LHeroParty.gameObject.GetInstanceID() == activeBattleUnitParty.gameObject.GetInstanceID())
+            {
+                // heal all party members to which ability is applicable
+                foreach (PartyUnitUI partyUnitUI in GetComponentsInChildren<PartyUnitUI>())
+                {
+                    // verify if ability is applicable
+                    if (partyUnitUI.LPartyUnit.UnitAbilityConfig.isApplicableToUnit(partyUnitUI.LPartyUnit))
+                    {
+                        ApplyHealingPowerToSingleUnit(partyUnitUI);
+                    }
+                }
+            }
+        }
     }
 
     void ApplyResurectPower(PartyUnitUI dstUnitUI)
@@ -2815,10 +2838,11 @@ public class PartyPanel : MonoBehaviour {
             {
                 // Helping or buf powers
                 case UnitAbilityID.HealingWord:
-                    ApplyHealPowerToSingleUnit(dstUnitUI);
+                    ApplyHealingPowerToSingleUnit(dstUnitUI);
                     break;
                 case UnitAbilityID.HealingSong:
-                    ApplyHealPowerToMultipleUnits();
+                case UnitAbilityID.SacrificingEcho:
+                    ApplyHealingPowerToMultipleUnits();
                     break;
                 case UnitAbilityID.Resurect:
                     ApplyResurectPower(dstUnitUI);
@@ -2860,7 +2884,8 @@ public class PartyPanel : MonoBehaviour {
             {
                 // Helping or buf powers
                 case UnitAbilityID.HealingSong:
-                    ApplyHealPowerToMultipleUnits();
+                case UnitAbilityID.SacrificingEcho:
+                    ApplyHealingPowerToMultipleUnits();
                     break;
                 // Magic (including pure or whole-party) attack powers
                 case UnitAbilityID.CastChainLightning:

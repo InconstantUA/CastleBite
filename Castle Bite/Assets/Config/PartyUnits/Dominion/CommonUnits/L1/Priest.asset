@@ -28,7 +28,6 @@ MonoBehaviour:
     percent: 10
   - source: 7
     percent: 10
-  unitAbility: 13
   unitAbilityID: 13
   unitInitiative: 10
   unitRole: Healing friendly units
@@ -41,7 +40,7 @@ MonoBehaviour:
   canLearnSkills: 0
   classIsUpgradable: 1
   requiresUnitType: 0
-  unlocksUnitTypes: 
+  unlocksUnitTypes: 26000000
   upgradeCost: 200
   movePointsMax: 0
   movePointsIncrementOnLevelUp: 0

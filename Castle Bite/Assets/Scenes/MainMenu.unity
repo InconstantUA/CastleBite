@@ -72316,6 +72316,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 57987e829ccf85346b13102d3fb6bc2f, type: 2}
   - {fileID: 11400000, guid: 503498c8217bb1445ba44bae97536027, type: 2}
   - {fileID: 11400000, guid: 7bca2c260876f0e4b9edd8a82d5ad889, type: 2}
+  - {fileID: 11400000, guid: f467e4db79df0e44b84e002d53277387, type: 2}
+  - {fileID: 11400000, guid: 67e3467a36a203a43b141c4f1ede1eed, type: 2}
   inventoryItemConfigs:
   - {fileID: 11400000, guid: ce090447c67a3a9468409e35b3957447, type: 2}
   - {fileID: 11400000, guid: d70dae3b66c9f31479590b159ba1f5bb, type: 2}
@@ -72380,6 +72382,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9b6f780ad0d8168409995b2487a1637b, type: 2}
   - {fileID: 11400000, guid: 345101b2a0686824f949a8785f5f6c26, type: 2}
   - {fileID: 11400000, guid: 9e06f444e3e2bb540a8555cb64008664, type: 2}
+  - {fileID: 11400000, guid: 3a38c5b76b0201f4c9b8c5b4c5e2f514, type: 2}
+  - {fileID: 11400000, guid: 35a19388d78f8264596cd97a751d1d88, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ public enum UnitType
     Hades, // Undead Capital guard
     Skeleton, Nighthaunt, Necromancer, Ghost, Abomination, // Undead common units
     Megara, // Storyline hero
+    Elder, // Dominion, mass heal
+    Ancient, // Dominion, resurect and mass heal
     Unknown
 };
 
@@ -45,13 +47,14 @@ public enum UnitAbilityID
     SlashWithSword,     // Dominion Swordsman
     ShootWithBow,       // Dominion Archer
     HealingWord,        // Dominion Priest
-    HealingSong,        // Dominion ?
+    HealingSong,        // Dominion Elder
     BlowWithMaul,       // Dominion Colossus
     CastChainLightning, // Dominion Mage
     EarthShatteringLeap,// Greenskin Bombul captial guard
     Malediction,        // Greenskin Orc shaman
     LastCall,           // Undead Hades capital guard
     DrainLife,          // Undead Vampire
+    SacrificingEcho,    // Dominion Ancient
     None
 };
 
@@ -457,7 +460,7 @@ public class PartyUnitData : System.Object
     // public UnitPowerSource unitPowerSource;
     // public UnitPowerDistance unitPowerDistance;
     // public UnitPowerScope unitPowerScope;
-    public int unitInitiative = 10;
+    // public int unitInitiative = 10;
     // Unique power modifiers
     public List<UniquePowerModifier> uniquePowerModifiers;
     // Misc Description

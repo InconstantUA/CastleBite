@@ -17,8 +17,8 @@ public class UnitStatModifierConfig : ScriptableObject
     public int modifierPower;
     public ModifierCalculatedHow modifierCalculatedHow; // add, mult, percent
     public int duration;
-    [EnumFlag]
-    public UnitStatuses canBeAppliedToTheUnitsWithStatuses;
+    // [EnumFlag]
+    public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
     public PowerSource powerSource = PowerSource.None; // required for: Unit Ability, consumable damaging Items
     // For UnitAbility:
     public int powerIncrementOnStatsUpgrade;

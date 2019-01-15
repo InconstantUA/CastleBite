@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141e49ccbd374384d8600cf455f9cc80, type: 3}
   m_Name: HealthCurrAdd50
   m_EditorClassIdentifier: 
-  unitStatModifierType: 20050
-  unitStatModifierID: 20050
   unitStat: 1
   modifierAppliedTo: 0
   modifierScope: 0
   modifierPower: 50
-  skillPowerMultiplier: 1
   modifierCalculatedHow: 0
   duration: 0
-  canBeAppliedToTheUnitsWithStatuses: 14
-  powerSource: 9
+  canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
+  powerSource: 5
+  powerIncrementOnStatsUpgrade: 0
+  skillPowerMultiplier: 1

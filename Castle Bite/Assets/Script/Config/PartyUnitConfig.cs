@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-[CreateAssetMenu(fileName = "PartyUnitConfig", menuName = "Config/Unit/General")]
+[CreateAssetMenu(fileName = "PartyUnitConfig", menuName = "Config/Unit/UnitConfig")]
 public class PartyUnitConfig : ScriptableObject
 {
     // Misc attributes

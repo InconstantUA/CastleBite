@@ -11,11 +11,11 @@ public class BaseHealingUnitAbility : UnitAbility
         int healAmount = activeUnit.GetUnitEffectivePower();
         // Heal destination unit
         Debug.Log("Heal " + destinationUnit.UnitName + " for " + healAmount + " health");
-        activeUnit.UnitHealthCurr += healAmount;
+        destinationUnit.UnitHealthCurr += healAmount;
         // verify if event has been set
         if (gameEvent != null)
         {
-            gameEvent.Raise(activeUnit.gameObject, this);
+            gameEvent.Raise(destinationUnit.gameObject, this);
         }
     }
 }

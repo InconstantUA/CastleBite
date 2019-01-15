@@ -610,7 +610,7 @@ public class PartyUnitUI : MonoBehaviour {
             }
             // Display difference in info panel
             UnitInfoPanelText.text += difference.ToString();
-            // set text color transparent, so that animation, if it is available, it will take care of the rest
+            // set text color transparent, so that animation, if it is available, will take care of the rest
             UnitInfoPanelText.color = new Color(Color.gray.r, Color.gray.g, Color.gray.b, 0);
         }
     }
