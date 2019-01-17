@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitAbilityID: 18
   unitAbility: {fileID: 11400000, guid: cd7640ed16802be468eeccf2cfceaaf4, type: 2}
+  unitAbilityTypes: 4
   abilityDisplayName: Malediction
   abilityDescription: Description
   unitAbilityRange: 1

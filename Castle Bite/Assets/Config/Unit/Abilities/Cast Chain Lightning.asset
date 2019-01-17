@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
   m_Name: Cast Chain Lightning
   m_EditorClassIdentifier: 
-  unitAbilityID: 16
-  unitAbility: {fileID: 11400000, guid: dac24f57290a20c42bb3db864cd2edf5, type: 2}
   abilityDisplayName: Cast Chain Lightning
   abilityDescription: Description
+  unitAbilityID: 16
+  unitAbility: {fileID: 11400000, guid: dac24f57290a20c42bb3db864cd2edf5, type: 2}
+  unitAbilityTypes: 4
   unitAbilityRange: 1
+  isMassScopeAbility: 1
   unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
     type: 2}
   unitPowerConfigs: []

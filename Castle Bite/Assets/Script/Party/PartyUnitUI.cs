@@ -336,7 +336,7 @@ public class PartyUnitUI : MonoBehaviour {
         else
         {
             //Debug.Log(" Remove highlight from active unit in battle");
-            highlightColor = Color.grey;
+            highlightColor = new Color32 (32, 32, 32, 255);
         }
         // highlight unit canvas with required color
         Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
@@ -630,6 +630,40 @@ public class PartyUnitUI : MonoBehaviour {
         if (appliedToPartyUnit == LPartyUnit)
         {
             unitAbility.textAnimation.Run(UnitInfoPanelText);
+        }
+    }
+
+    public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI dstPartyUnitUI)
+    {
+        // verify if party unit to which modifier has been applied is the same as current
+        if ((dstPartyUnitUI == this) ||
+            // verify if ability is applicable to the slot where this unit UI is located (this is set as preparation when new active unit is set)
+            // and this is mass ability
+            (GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit) && srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.isMassScopeAbility)
+        {
+            // apply source unit power modifiers
+            // loop through all Unit Power Modifiers
+            foreach (UnitPowerModifier unitPowerModifier in srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitPowerModifiers)
+            {
+                // get and apply unit PowerModifier
+                unitPowerModifier.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
+            }
+            // apply source unit ability to party unit linked to this UI
+            srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
+            // run text animation
+            srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.textAnimation.Run(UnitInfoPanelText);
+        }
+        // verify if it is source unit
+        else if (srcPartyUnitUI == this)
+        {
+            // don't make any changes, keep it highlighted
+        }
+        else
+        {
+            // clear unit info panel
+            ClearUnitInfoPanel();
+            // remove highlight
+            GetUnitCell().Find("Br").GetComponent<Text>().color = new Color32(32, 32, 32, 255);
         }
     }
 

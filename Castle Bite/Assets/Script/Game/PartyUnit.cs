@@ -58,6 +58,14 @@ public enum UnitAbilityID
     None
 };
 
+[Serializable, Flags]
+public enum UnitAbilityTypes
+{
+    Healing     = 1 << 1,
+    Damaging    = 1 << 2,
+    Resurecting = 1 << 3
+}
+
 [Serializable]
 public enum PowerSource : int
 {
@@ -104,15 +112,15 @@ public enum UnitStatus
     Dead
 }
 
-[Serializable, Flags]
-public enum UnitStatuses
-{
-    Active      = 1 << 1, // not Dead and not Escaped = can fight
-    Waiting     = 1 << 2,
-    Escaping    = 1 << 3,
-    Escaped     = 1 << 4,
-    Dead        = 1 << 5
-}
+//[Serializable, Flags]
+//public enum UnitStatuses
+//{
+//    Active      = 1 << 1, // not Dead and not Escaped = can fight
+//    Waiting     = 1 << 2,
+//    Escaping    = 1 << 3,
+//    Escaped     = 1 << 4,
+//    Dead        = 1 << 5
+//}
 
 [Serializable]
 public enum UnitDebuff : int
@@ -2169,6 +2177,12 @@ public class PartyUnit : MonoBehaviour {
             {
                 // set unit is dead attribute
                 UnitStatus = UnitStatus.Dead;
+            }
+            // verify if unit has been resurected
+            if (0 == previousHealth)
+            {
+                // remove unit is dead attribute
+                UnitStatus = UnitStatus.Active;
             }
             // get the difference
             int difference = partyUnitData.unitHealthCurr - previousHealth;

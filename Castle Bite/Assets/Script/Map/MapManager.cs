@@ -2665,7 +2665,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         //transform.root.Find("MapScreen").gameObject.SetActive(false);
         // unblock input
         // InputBlocker inputBlocker = gameRoot.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         yield return null;
     }
 
@@ -2718,7 +2718,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         SetMode(Mode.Browse);
         yield return new WaitForSeconds(0.5f);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         // Exit coroutine
         yield return null;
     }
@@ -2841,7 +2841,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             SetMode(Mode.Animation);
             // Block mouse input
             // InputBlocker inputBlocker = gameRoot.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-            InputBlocker.Instance.SetActive(true);
+            InputBlocker.SetActive(true);
             // initialize break move condition
             bool breakMove = false;
             MapCity enterCity = null;
@@ -3039,7 +3039,7 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 // exit animation mode and enter browse mode
                 SetMode(Mode.Browse);
                 // Unblock mouse input
-                InputBlocker.Instance.SetActive(false);
+                InputBlocker.SetActive(false);
             }
         }
         // Remove path highlight

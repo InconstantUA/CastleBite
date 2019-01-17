@@ -658,11 +658,11 @@ public class EditPartyScreen : MonoBehaviour {
     {
         // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Wait for all animations to finish
         yield return new WaitForSeconds(0.51f);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         // Deactivate this screen
         gameObject.SetActive(false);
         // activate map screen

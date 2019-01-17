@@ -73,7 +73,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
     {
         // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Fade
         for (float f = 1f; f >= 0; f -= 0.1f)
         {
@@ -83,7 +83,7 @@ public class UnitBuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpH
             yield return new WaitForSeconds(.05f);
         }
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
     }
 
     IEnumerator FadeForegroundAndDestroyBuff()

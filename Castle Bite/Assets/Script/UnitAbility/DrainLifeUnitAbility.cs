@@ -12,10 +12,10 @@ public class DrainLifeUnitAbility: UnitAbility
         // Apply damage dealt to the destination unit
         Debug.Log("Deal " + Math.Abs(damageDealt) + " damage to " + destinationUnit.UnitName);
         destinationUnit.UnitHealthCurr += damageDealt; // damageDealt is negative
-        // verify if event has been set
-        if (gameEvent != null)
-        {
-            gameEvent.Raise(destinationUnit.gameObject, this);
-        }
+        //// verify if event has been set
+        //if (gameEvent != null)
+        //{
+        //    gameEvent.Raise(destinationUnit.gameObject, this);
+        //}
     }
 }

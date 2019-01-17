@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
   m_Name: Healing Song
   m_EditorClassIdentifier: 
-  unitAbilityID: 14
-  unitAbility: {fileID: 11400000, guid: 81a4c26f4ff0c97478941c6658ce9484, type: 2}
   abilityDisplayName: Healing Song
   abilityDescription: Description
+  unitAbilityID: 14
+  unitAbility: {fileID: 11400000, guid: 81a4c26f4ff0c97478941c6658ce9484, type: 2}
+  unitAbilityTypes: 2
   unitAbilityRange: 1
+  isMassScopeAbility: 1
   unitStatModifierConfig: {fileID: 11400000, guid: 0e7811b69252b3744a059655c9c27f88,
     type: 2}
   unitPowerConfigs: []

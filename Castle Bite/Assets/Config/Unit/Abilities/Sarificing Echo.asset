@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
   m_Name: Sarificing Echo
   m_EditorClassIdentifier: 
-  unitAbilityID: 21
-  unitAbility: {fileID: 11400000, guid: 81a4c26f4ff0c97478941c6658ce9484, type: 2}
   abilityDisplayName: Sacrificing Echo
   abilityDescription: Mass Heal and Resurect
+  unitAbilityID: 21
+  unitAbility: {fileID: 11400000, guid: 81a4c26f4ff0c97478941c6658ce9484, type: 2}
+  unitAbilityTypes: 10
   unitAbilityRange: 1
+  isMassScopeAbility: 1
   unitStatModifierConfig: {fileID: 11400000, guid: 43259196ca4630a4da407ba1f33c4a15,
     type: 2}
   unitPowerConfigs: []

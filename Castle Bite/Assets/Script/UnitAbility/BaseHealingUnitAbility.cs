@@ -12,10 +12,10 @@ public class BaseHealingUnitAbility : UnitAbility
         // Heal destination unit
         Debug.Log("Heal " + destinationUnit.UnitName + " for " + healAmount + " health");
         destinationUnit.UnitHealthCurr += healAmount;
-        // verify if event has been set
-        if (gameEvent != null)
-        {
-            gameEvent.Raise(destinationUnit.gameObject, this);
-        }
+        //// verify if event has been set
+        //if (gameEvent != null)
+        //{
+        //    gameEvent.Raise(destinationUnit.gameObject, this);
+        //}
     }
 }

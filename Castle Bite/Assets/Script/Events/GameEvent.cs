@@ -75,6 +75,16 @@ public class GameEvent : ScriptableObject
         }
     }
 
+    public void Raise(GameObject gameObject1, GameObject gameObject2)
+    {
+        // Loop through all registered listeners
+        for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        {
+            // Initiate actions on event listener
+            eventsListeners[i].ActOnEvent(this, gameObject1, gameObject2);
+        }
+    }
+
     //public void Raise(GameObject gameObject, UnitAbilityID unitAbilityID)
     //{
     //    // Loop through all registered listeners

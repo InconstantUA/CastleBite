@@ -313,7 +313,7 @@ public class LoadGame : MonoBehaviour
         // Wait a bit
         yield return new WaitForSeconds(loadGameConfig.loadingScreenExplicitDelaySeconds);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         // Deactivate Loading screen
         loadingScreen.SetActive(false);
     }
@@ -353,7 +353,7 @@ public class LoadGame : MonoBehaviour
         // Activate Loading screen
         loadingScreen.SetActive(true, loadGameConfig.loadingGameTextString);
         // Block mouse input
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // We use coroutine to make sure that all objects are removed before new objects are created and to show some animation
         // remove current world
         ChapterManager.Instance.CoroutineQueue.Run(RemoveCurrentWorld());

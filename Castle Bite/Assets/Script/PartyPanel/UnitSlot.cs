@@ -437,7 +437,10 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (isAllowedToApplyPowerToThisUnit)
             {
                 // it is allowed to apply powers to the unit in this cell
+                // Block mouse input
+                InputBlocker.SetActive(true);
                 // GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+                // apply powers to the target unit(s)
                 GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
                 // set unit has moved flag
                 battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = true;

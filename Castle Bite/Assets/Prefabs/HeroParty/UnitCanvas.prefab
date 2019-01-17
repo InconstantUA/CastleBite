@@ -327,6 +327,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
   - name: Unit Health Current Has Changed
     gameEvent: {fileID: 11400000, guid: 6035039c5ce6b154a81575af8089d97e, type: 2}
     genericAction:
@@ -364,6 +369,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   - name: Unit Health Max Has Changed
     gameEvent: {fileID: 11400000, guid: 7aeb2af3bfefb5b4c9c6350c2260f968, type: 2}
@@ -403,8 +413,13 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-  - name: Apply Unit Ability
-    gameEvent: {fileID: 11400000, guid: 893b9adf6300d9240a54ce78145b3e8e, type: 2}
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+  - name: Apply Unit Ability Unit UI to Unit UI
+    gameEvent: {fileID: 11400000, guid: e56ca734c44aad44e99467b3841dd0c3, type: 2}
     genericAction:
       m_PersistentCalls:
         m_Calls: []
@@ -427,9 +442,14 @@ MonoBehaviour:
         PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 114938818029723712}
-          m_MethodName: OnAbilityApply
+          m_MethodName: OnApplyAbilityFromUnitUIToUnitUI
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -439,7 +459,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
   - name: Apply Unit Power Modifier
     gameEvent: {fileID: 11400000, guid: 5211f2719b444b4469e7b53a1d4b1ed8, type: 2}
@@ -478,6 +498,11 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls: []
       m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
 --- !u!1 &1318166734491180
 GameObject:

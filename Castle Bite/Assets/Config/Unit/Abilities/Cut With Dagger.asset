@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitAbilityID: 3
   unitAbility: {fileID: 11400000, guid: cd7640ed16802be468eeccf2cfceaaf4, type: 2}
+  unitAbilityTypes: 4
   abilityDisplayName: Cut With Dagger
   abilityDescription: Description
   unitAbilityRange: 0

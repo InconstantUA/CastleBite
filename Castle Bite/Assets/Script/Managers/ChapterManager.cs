@@ -217,7 +217,7 @@ public class ChapterManager : MonoBehaviour {
         // Set waiting cursor
         CursorController.Instance.SetBlockInputCursor();
         // Activate input blocker
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Remove world map
         World.Instance.RemoveCurrentChapter();
         // Deactivate loading screen after clean
@@ -227,7 +227,7 @@ public class ChapterManager : MonoBehaviour {
         // Set normal cursor
         CursorController.Instance.SetNormalCursor();
         // Disable input blocker
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
     }
 
     public void EndCurrentGame()

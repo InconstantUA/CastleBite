@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InputBlocker : MonoBehaviour {
 
-    public static InputBlocker Instance { get; private set; }
+    private static InputBlocker Instance { get; set; }
 
     void Awake()
     {
@@ -14,7 +14,7 @@ public class InputBlocker : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void SetActive(bool doActivate)
+    public static void SetActive(bool doActivate)
     {
         // get mouse cursor controller
         // CursorController cursorController = CursorController.Instance;
@@ -29,7 +29,7 @@ public class InputBlocker : MonoBehaviour {
             CursorController.Instance.SetNormalCursor();
         }
         // Activate or deactivate input blocker
-        gameObject.SetActive(doActivate);
+        Instance.gameObject.SetActive(doActivate);
     }
 
 }

@@ -585,6 +585,8 @@ public class BattleScreen : MonoBehaviour {
         // Remove all buffs and debuffs
         enemyPartyPanel.RemoveAllBuffsAndDebuffs();
         playerPartyPanel.RemoveAllBuffsAndDebuffs();
+        // unblock input
+        InputBlocker.SetActive(false);
         yield return null;
     }
 
@@ -720,9 +722,7 @@ public class BattleScreen : MonoBehaviour {
     void ExecutePreActivateActions()
     {
         //Debug.Log("ExecutePreActivateActions");
-        // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(true);
         //// Set Queue is active flag
         //queueIsActive = true;
         // Highlight it and reset all other highlights
@@ -731,24 +731,29 @@ public class BattleScreen : MonoBehaviour {
         enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
         // Highlight next unit
         // If unit had waiting status in the past, then reset it back to active
-        switch (ActiveUnitUI.LPartyUnit.UnitStatus)
+        if (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Waiting)
         {
-            case UnitStatus.Waiting:
-                // Change unit status to Active
-                ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Active;
-                break;
-            case UnitStatus.Active:
-            case UnitStatus.Escaping:
-                // nothing to do here
-                break;
-            case UnitStatus.Dead:
-            case UnitStatus.Escaped:
-                Debug.LogError("Unit with [" + ActiveUnitUI.LPartyUnit.UnitStatus + "] status should not get turn.");
-                break;
-            default:
-                Debug.LogError("Unknown unit status " + ActiveUnitUI.LPartyUnit.UnitStatus);
-                break;
+            // Change unit status to Active
+            ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Active;
         }
+        //switch (ActiveUnitUI.LPartyUnit.UnitStatus)
+        //{
+        //    case UnitStatus.Waiting:
+        //        // Change unit status to Active
+        //        ActiveUnitUI.LPartyUnit.UnitStatus = UnitStatus.Active;
+        //        break;
+        //    case UnitStatus.Active:
+        //    case UnitStatus.Escaping:
+        //        // nothing to do here
+        //        break;
+        //    case UnitStatus.Dead:
+        //    case UnitStatus.Escaped:
+        //        Debug.LogError("Unit with [" + ActiveUnitUI.LPartyUnit.UnitStatus + "] status should not get turn.");
+        //        break;
+        //    default:
+        //        Debug.LogError("Unknown unit status " + ActiveUnitUI.LPartyUnit.UnitStatus);
+        //        break;
+        //}
         //yield return null;
     }
 
@@ -849,7 +854,7 @@ public class BattleScreen : MonoBehaviour {
         }
         // Unblock mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         Debug.Log("Unit has been activated");
         yield return null;
     }

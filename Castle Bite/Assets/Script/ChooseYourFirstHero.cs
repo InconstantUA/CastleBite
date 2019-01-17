@@ -374,7 +374,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Wait a bit
         yield return new WaitForSeconds(startGameConfig.startingScreenExplicitDelaySeconds);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         // Deactivate Loading screen
         loadingScreen.SetActive(false);
         // Activate Prolog
@@ -390,7 +390,7 @@ public class ChooseYourFirstHero : MonoBehaviour {
         // Bring loading screen to front
         loadingScreen.transform.SetAsLastSibling();
         // Block mouse input
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Start to load a game
         StartCoroutine(StartGame());
     }

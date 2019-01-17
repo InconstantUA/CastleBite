@@ -314,12 +314,12 @@ public class MapMenuManager : MonoBehaviour {
         mapCity.DimmLabel();
         // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Wait for all animations to finish
         // this depends on the labelDimTimeout parameter in MapObject, we add additional 0.1f just in case
         yield return new WaitForSeconds(mapCity.GetComponent<MapObject>().LabelDimTimeout + 0.1f);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         // map manager change to browse mode back
         // . - this is done by OnDisable() automatically in MapManager
         //MapManager mapManager = transform.parent.GetComponent<MapManager>();
@@ -346,12 +346,12 @@ public class MapMenuManager : MonoBehaviour {
         }
         // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Wait for all animations to finish
         // this depends on the labelDimTimeout parameter in MapObject, we add additional 0.1f just in case
         yield return new WaitForSeconds(mapHero.GetComponent<MapObject>().LabelDimTimeout + 0.1f);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
         // Deactivate map manager with map
         MapManager.Instance.gameObject.SetActive(false);
         // Deactivate this map menu

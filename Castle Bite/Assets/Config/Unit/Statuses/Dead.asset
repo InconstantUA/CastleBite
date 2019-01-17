@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Dead
   m_EditorClassIdentifier: 
   unitStatus: 4
-  canBeResurectedFriendly: 0
+  canBeResurectedFriendly: 1
   canBeResurectedEnemy: 0
   canBeHealedFriendlyWitFullHealth: 0
   canBeHealedFriendlyWithNotFullHealth: 0
   canBeHealedEnemy: 0
-  canBeGivenATurnInBattle: 0
+  canBeGivenATurnInBattleDuringMainPhase: 0
+  canBeGivenATurnInBattleDuringPostWaitPhase: 0
   canBeAttackedIfFriendly: 0
-  canBeAttackedIfEnemy: 0
+  canBeAttackedIfEnemyAndBlocked: 0
+  canBeAttackedIfEnemyAndNotBlocked: 0

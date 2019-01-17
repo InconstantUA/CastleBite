@@ -54,7 +54,7 @@ MonoBehaviour:
     givenName: 
     unitLevel: 2
     unitExperience: 0
-    unitHealthCurr: 95
+    unitHealthCurr: 90
     uniquePowerModifiers: []
     unitStatus: 0
     unitDebuffs: 

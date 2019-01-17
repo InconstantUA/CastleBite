@@ -32,6 +32,6 @@ MonoBehaviour:
   onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByFriendlyUnitsInFrontRowMessage: This
     enemy unit cannot be targeted, because it is protected by units in a front row.
   onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitAboveMessage: This unit
-    cannot be targeted by mele attack. It is protected by unit above.
+    cannot be targeted by mele attack. It is protected by friendly party member.
   onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitBelowMessage: This unit
-    cannot be targeted by mele attack. It is protected by unit below.
+    cannot be targeted by mele attack. It is protected by friendly party member.

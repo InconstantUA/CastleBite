@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitAbilityID: 9
   unitAbility: {fileID: 11400000, guid: 59370b0577a69e24092a52077a47c63c, type: 2}
+  unitAbilityTypes: 8
   abilityDisplayName: Resurect
   abilityDescription: Description
   unitAbilityRange: 1

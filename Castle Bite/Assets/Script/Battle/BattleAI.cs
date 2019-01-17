@@ -130,7 +130,7 @@ public class BattleAI : MonoBehaviour {
     {
         // Block mouse input
         // InputBlocker inputBlocker = transform.root.Find("MiscUI/InputBlocker").GetComponent<InputBlocker>();
-        InputBlocker.Instance.SetActive(true);
+        InputBlocker.SetActive(true);
         // Wait for animation
         yield return new WaitForSeconds(0.25f);
         // Get all possible moves
@@ -162,6 +162,6 @@ public class BattleAI : MonoBehaviour {
         // Wait for animation
         yield return new WaitForSeconds(0.25f);
         // Unblock mouse input
-        InputBlocker.Instance.SetActive(false);
+        InputBlocker.SetActive(false);
     }
 }

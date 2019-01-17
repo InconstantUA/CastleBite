@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameEvent: {fileID: 11400000, guid: 893b9adf6300d9240a54ce78145b3e8e, type: 2}
   textAnimation: {fileID: 11400000, guid: 4017be63f3f46c94091204ca6cdeba4f, type: 2}
+  abilityIsApplicableColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
+  abilityNotApplicableColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
