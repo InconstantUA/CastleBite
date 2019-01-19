@@ -192,19 +192,21 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
 
 
-    public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus)
+    public void SetUniquePowerModifiersPreview(int modifierID, int currentPower, int basePower, int powerBonus)
     {
         //Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/Modifier" + modifierID.ToString());
         Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/ListOfUniquePowerModifiers/Grid").GetChild(modifierID);
         if (0 == powerBonus)
         {
             // do not display + info
-            modifier.Find("Power").GetComponent<Text>().text = power.ToString();
+            modifier.Find("Power").GetComponent<Text>().text = Math.Abs(currentPower).ToString();
         }
         else
         {
             // display + bonus info
-            modifier.Find("Power").GetComponent<Text>().text = power.ToString() + "(" + statsBonusPreviewStyleStart + "+" + powerBonus.ToString() + statsBonusPreviewStyleEnd + ")";
+            modifier.Find("Power").GetComponent<Text>().text = Math.Abs(currentPower) + "(" + 
+                baseStatPreviewStyleStart + basePower.ToString() + baseStatPreviewStyleEnd +
+                statsBonusPreviewStyleStart + "+" + powerBonus.ToString() + statsBonusPreviewStyleEnd + ")";
         }
     }
 
@@ -654,11 +656,11 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
-    void AddUPMInfo(Transform upmsListGrid, UniquePowerModifier uniquePowerModifier)
+    void AddUPMInfo (PartyUnit partyUnit, Transform upmsListGrid, UniquePowerModifierConfig uniquePowerModifier)
     {
         Transform upmTransform = Instantiate(uniquePowerModifierUITemplate, upmsListGrid).transform;
         upmTransform.Find("Name").GetComponent<Text>().text = uniquePowerModifier.DisplayName;
-        upmTransform.Find("Power").GetComponent<Text>().text = Math.Abs(uniquePowerModifier.UpmPower).ToString();
+        upmTransform.Find("Power").GetComponent<Text>().text = Math.Abs(uniquePowerModifier.GetUpmCurrentPower(partyUnit.StatsUpgradesCount)).ToString();
         upmTransform.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.UpmDurationMax.ToString();
         // verify if duration left if is at least 1 day (which normally means that it will expire after upmDurationLeft days)
         if (uniquePowerModifier.upmDurationLeft >= 1)
@@ -697,16 +699,16 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
     {
         // get party unit Unique power modifiers
-        List<UniquePowerModifier> unitUniquePowerModifiers = partyUnit.UniquePowerModifiers;
+        List<UniquePowerModifierConfig> unitUniquePowerModifiers = partyUnit.UniquePowerModifiers;
         // get items unique power modifiers
         // init list
-        List<UniquePowerModifier> itemsUniquePowerModifiers = new List<UniquePowerModifier>();
+        List<UniquePowerModifierConfig> itemsUniquePowerModifiers = new List<UniquePowerModifierConfig>();
         // loop through all items owned by this unit
         // ! we assume that there are no items, whith UPMs which are owned by party leader and have entire party scope
         foreach (InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
         {
             // loop through all UPMs in the item
-            foreach (UniquePowerModifier upm in inventoryItem.UniquePowerModifiers)
+            foreach (UniquePowerModifierConfig upm in inventoryItem.UniquePowerModifiers)
             {
                 // add upm from item to the list
                 itemsUniquePowerModifiers.Add(upm);
@@ -727,16 +729,16 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 Destroy(childTransform.gameObject);
             }
             // Loop through all unit's UPMs
-            foreach(UniquePowerModifier upm in unitUniquePowerModifiers)
+            foreach(UniquePowerModifierConfig upm in unitUniquePowerModifiers)
             {
                 // Add required UPMs info in UI
-                AddUPMInfo(upmsListGrid, upm);
+                AddUPMInfo(partyUnit, upmsListGrid, upm);
             }
             // Loop through all items' UPMs
-            foreach (UniquePowerModifier upm in itemsUniquePowerModifiers)
+            foreach (UniquePowerModifierConfig upm in itemsUniquePowerModifiers)
             {
                 // Add required UPMs info in UI
-                AddUPMInfo(upmsListGrid, upm);
+                AddUPMInfo(partyUnit, upmsListGrid, upm);
             }
             //// Activate and fill in or deactivate power modifiers
             //for (int i = 1; i <= 4; i++)

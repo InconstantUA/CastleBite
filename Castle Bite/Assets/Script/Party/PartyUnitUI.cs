@@ -633,7 +633,7 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void SetUnitDebuffActive(UniquePowerModifier uniquePowerModifier, bool doActivate)
+    public void SetUnitDebuffActive(UniquePowerModifierConfig uniquePowerModifier, bool doActivate)
     {
         // get unit debuffs panel
         Transform debuffsPanel = GetUnitDebuffsPanel();
@@ -671,7 +671,7 @@ public class PartyUnitUI : MonoBehaviour {
                 Debug.Log("Applying " + uniquePowerModifier.upmAppliedDebuff.ToString() + " debuff");
                 Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
                 // activate buff
-                newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier);
+                newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier, LPartyUnit);
                 // rename it so it can be later found by name
                 newDebuff.name = uniquePowerModifier.upmAppliedDebuff.ToString();
             }
@@ -704,10 +704,17 @@ public class PartyUnitUI : MonoBehaviour {
             // run text animation
             srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.textAnimation.Run(UnitInfoPanelText);
             // apply unit additional powers
-            foreach (UniquePowerModifier uniquePowerModifier in srcPartyUnitUI.LPartyUnit.UniquePowerModifiers)
+            for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifiers.Count; i++)
             {
-                SetUnitDebuffActive(uniquePowerModifier, true);
-                // ApplyUniquePowerModifierToSingleUnit(dstUnit, uniquePowerModifier);
+                SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifiers[i], true);
+                // set unique power modifier ID
+                UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+                {
+                    unitAbilityID = srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbilityID,
+                    uniquePowerModifierConfigIndex = i,
+                    modifierOrigin = ModifierOrigin.UnitAbility
+                };
+                srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifiers[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
             }
         }
         // verify if it is source unit

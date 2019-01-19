@@ -284,12 +284,13 @@ public class UpgradeUnit : MonoBehaviour {
     void UpdateUniquePowerModifiersInfo()
     {
         //transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().FillInUniquePowerModifiersInformation(focusedPartyUnit);
-        List<UniquePowerModifier> uniquePowerModifiers = focusedPartyUnit.UniquePowerModifiers;
+        List<UniquePowerModifierConfig> uniquePowerModifiers = focusedPartyUnit.UniquePowerModifiers;
         for (int i = 0; i < uniquePowerModifiers.Count; i++)
         {
             transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUniquePowerModifiersPreview(
                 i,
-                uniquePowerModifiers[i].UpmPower,
+                uniquePowerModifiers[i].GetUpmCurrentPower(focusedPartyUnit.StatsUpgradesCount),
+                uniquePowerModifiers[i].UpmBasePower,
                 uniquePowerModifiers[i].UpmPowerIncrementOnLevelUp * statsUpgradeCount
             );
         }
@@ -297,22 +298,22 @@ public class UpgradeUnit : MonoBehaviour {
 
     void UpgradeUniquePowerModifiers()
     {
-        // upgrade Unique power modifier object
-        foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
-        {
-            upm.UpmPower += upm.UpmPowerIncrementOnLevelUp;
-        }
+        //// upgrade Unique power modifier object
+        //foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
+        //{
+        //    upm.UpmBasePower += upm.UpmPowerIncrementOnLevelUp;
+        //}
         // upgrade Unique power modifier Info UI
         UpdateUniquePowerModifiersInfo();
     }
 
     void DowngradeUniquePowerModifiers()
     {
-        // downgrade Unique power modifier object
-        foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
-        {
-            upm.UpmPower -= upm.UpmPowerIncrementOnLevelUp;
-        }
+        //// downgrade Unique power modifier object
+        //foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
+        //{
+        //    upm.UpmBasePower -= upm.UpmPowerIncrementOnLevelUp;
+        //}
         // upgrade Unique power modifier Info UI
         UpdateUniquePowerModifiersInfo();
     }

@@ -94,9 +94,9 @@ public class InventoryItemData : System.Object
     // public string itemName; // config
     // public int itemValue; // config
     // public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
-    private List<UnitStatModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
+    private List<UniquePowerModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
     public List<UnitStatModifier> unitStatModifiers; // config
-    public List<UniquePowerModifier> uniquePowerModifiers; // config
+    public List<UniquePowerModifierConfig> uniquePowerModifiers; // config
     public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there shouldn't be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
     public HeroEquipmentSlots currentHeroEquipmentSlot = HeroEquipmentSlots.None; // serializable data of equipped/unequipped item
     // public int maxUsagesCount; // config
@@ -159,7 +159,7 @@ public class InventoryItem : MonoBehaviour {
     public bool HasActiveUniquePowerModifiers()
     {
         // loop though all unique power modifiers
-        foreach (UniquePowerModifier upm in UniquePowerModifiers)
+        foreach (UniquePowerModifierConfig upm in UniquePowerModifiers)
         {
             // verify if usm is applied actively
             if (upm.modifierApplied == ModifierAppliedHow.Active)
@@ -173,7 +173,7 @@ public class InventoryItem : MonoBehaviour {
     public bool HasPassiveUPMs()
     {
         // loop though all unique power modifier
-        foreach (UniquePowerModifier upm in UniquePowerModifiers)
+        foreach (UniquePowerModifierConfig upm in UniquePowerModifiers)
         {
             // verify if upm does not have instant duration
             if (upm.modifierApplied == ModifierAppliedHow.Passive)
@@ -282,7 +282,7 @@ public class InventoryItem : MonoBehaviour {
             }
         }
         // loop though all unique power modifier
-        foreach (UniquePowerModifier upm in UniquePowerModifiers)
+        foreach (UniquePowerModifierConfig upm in UniquePowerModifiers)
         {
             // verify if usm has non-permanent duration
             if (upm.UpmDurationMax >= 0)
@@ -440,7 +440,7 @@ public class InventoryItem : MonoBehaviour {
         //}
     }
 
-    public List<UniquePowerModifier> UniquePowerModifiers
+    public List<UniquePowerModifierConfig> UniquePowerModifiers
     {
         get
         {
@@ -530,6 +530,8 @@ public class InventoryItem : MonoBehaviour {
             inventoryItemData.unitStatusModifiers = value;
         }
     }
+
+
     #endregion Properties
 
 }

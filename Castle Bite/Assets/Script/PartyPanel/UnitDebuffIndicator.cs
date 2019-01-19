@@ -19,7 +19,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     Text symbol;
     AdditionalInfo additionalInfo;
     Image backgroundImage;
-    UniquePowerModifier appliedUniquePowerModifier;
+    UniquePowerModifierConfig appliedUniquePowerModifier;
 
     public int CurrentDuration
     {
@@ -171,13 +171,13 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         }
     }
 
-    void FillInAdditionalInfo(UniquePowerModifier uniquePowerModifier)
+    void FillInAdditionalInfo(UniquePowerModifierConfig uniquePowerModifier, PartyUnit partyUnit)
     {
         string[] infoLines = additionalInfo.GetLines();
         // line 1(0 index in array) already filled in in prefab
         // fill in next lines
         infoLines[1] = "Damage type: " + uniquePowerModifier.UpmSource.ToString();
-        infoLines[2] = "Damage dealt: " + Math.Abs(uniquePowerModifier.UpmPower).ToString();
+        infoLines[2] = "Damage dealt: " + Math.Abs(uniquePowerModifier.GetUpmCurrentPower(partyUnit.StatsUpgradesCount)).ToString();
         if (uniquePowerModifier.UpmDurationMax >= 2)
         {
             // duration is 2 or more
@@ -193,7 +193,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
     }
 
     // uniquePowerModifier parameter is optional on deactivation
-    public void SetActiveAdvance(bool doActivate, UniquePowerModifier uniquePowerModifier = null)
+    public void SetActiveAdvance(bool doActivate, UniquePowerModifierConfig uniquePowerModifier = null, PartyUnit partyUnit = null)
     {
         // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
         if (doActivate)
@@ -203,7 +203,7 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
             // Save appliedUniquePowerModifier
             appliedUniquePowerModifier = uniquePowerModifier;
             // Fill in additionalInfo
-            FillInAdditionalInfo(uniquePowerModifier);
+            FillInAdditionalInfo(uniquePowerModifier, partyUnit);
             // Start animation
             CoroutineQueueManager.Run(FadeBackground());
             //StartCoroutine("FadeBackground");

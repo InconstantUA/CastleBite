@@ -17,7 +17,7 @@ MonoBehaviour:
   modifierScope: 3
   modifierPower: -20
   modifierCalculatedHow: 0
-  duration: 0
+  duration: 2
   canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
   powerSource: 6
   powerIncrementOnStatsUpgrade: 0

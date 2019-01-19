@@ -224,8 +224,8 @@ public class UnitSkillData
 [Serializable]
 public enum ModifierOrigin
 {
-    Talent,
-    Artifact
+    UnitAbility,
+    Item
 }
 
 [Serializable]
@@ -239,116 +239,21 @@ public enum ModifierScope
     AllPlayerUnits
 }
 
+[Serializable]
+public class UniquePowerModifierID : System.Object
+{
+    public InventoryItemID inventoryItemID = InventoryItemID.None;
+    public UnitAbilityID unitAbilityID = UnitAbilityID.None;
+    public int uniquePowerModifierConfigIndex = 0;
+    public ModifierOrigin modifierOrigin;
+}
 
 [Serializable]
-public class UniquePowerModifier
+public class UniquePowerModifierData : System.Object
 {
-    [SerializeField]
-    private string displayName;
-    [SerializeField]
-    private string description;
-    [SerializeField]
-    private UnitStatModifierConfig unitStatModifierConfig;
-    // define possible origins (who is the source of unique power modifier)
-    // private ModifierScope modifierScope;
-    public UnitBuff upmAppliedBuff;
-    public UnitDebuff upmAppliedDebuff;
-    // private int upmPower;
-    // private int upmPowerIncrementOnLevelUp;
-    // private int upmDuration;
-    // private PowerSource upmSource;
-    public ModifierOrigin upmOrigin; // data
-    public ModifierAppliedHow modifierApplied;  // active/passive
-    public int upmDurationLeft; // data
-    // public int skillPowerMultiplier = 1;
-    // private UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
-
-    public ModifierScope ModifierScope
-    {
-        get
-        {
-            return unitStatModifierConfig.modifierScope;
-        }
-    }
-
-    public int UpmPower
-    {
-        get
-        {
-            return unitStatModifierConfig.modifierPower;
-        }
-
-        set
-        {
-            unitStatModifierConfig.modifierPower = value;
-        }
-    }
-
-    public int UpmPowerIncrementOnLevelUp
-    {
-        get
-        {
-            return unitStatModifierConfig.powerIncrementOnStatsUpgrade;
-        }
-    }
-
-    public int UpmDurationMax
-    {
-        get
-        {
-            return unitStatModifierConfig.duration;
-        }
-    }
-
-    public PowerSource UpmSource
-    {
-        get
-        {
-            return unitStatModifierConfig.powerSource;
-        }
-    }
-
-    public UnitStatus[] CanBeAppliedToTheUnitsWithStatuses
-    {
-        get
-        {
-            return unitStatModifierConfig.canBeAppliedToTheUnitsWithStatuses;
-        }
-    }
-
-    public string DisplayName
-    {
-        get
-        {
-            return displayName;
-        }
-    }
-
-    public string Description
-    {
-        get
-        {
-            return description;
-        }
-    }
-
-    //public string GetDisplayName()
-    //{
-    //    switch (upmAppliedDebuff)
-    //    {
-    //        case UnitDebuff.Burned:
-    //            return "Burn";
-    //        case UnitDebuff.Chilled:
-    //            return "Chill";
-    //        case UnitDebuff.Paralyzed:
-    //            return "Paralyze";
-    //        case UnitDebuff.Poisoned:
-    //            return "Poison";
-    //        default:
-    //            Debug.LogError("Unknown debuf");
-    //            return "Error";
-    //    }
-    //}
+    public UniquePowerModifierID uniquePowerModifierID;
+    public int durationLeft; // it is reset when USM is applied
+    public int currentPower;
 }
 
 [Serializable]
@@ -487,20 +392,6 @@ public class UnitStatModifier : System.Object
     public int duration;
     public int durationLeft; // to be moved to data
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
-}
-
-[Serializable]
-public class UnitStatModifierID : System.Object
-{
-    public InventoryItemID inventoryItemID = InventoryItemID.None;
-    public int unitStatModifierIndexInAList = 0;
-}
-
-[Serializable]
-public class UnitStatModifierData : System.Object
-{
-    public UnitStatModifierID unitStatModifierID;
-    public int durationLeft; // it is reset when USM is applied
 }
 
 [Serializable]
@@ -643,8 +534,8 @@ public class PartyUnitData : System.Object
     public PartyPanel.Cell unitPPCell;  // used during game save and load and when party UI is displayed
     // Unit Equipment
     public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
-    // All active stat modifiers inherited from used items
-    private List<UnitStatModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
+    // All active stat modifiers inherited from used items or applied abilities (this is required for game save / restore)
+    public List<UniquePowerModifierData> uniquePowerModifiersData;
 }
 
 // For events admin
@@ -934,9 +825,23 @@ public class PartyUnit : MonoBehaviour {
         return damageDealt;
     }
 
-    public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
+    public int GetDebuffDamageDealt(UniquePowerModifierConfig appliedUniquePowerModifier)
     {
-        return appliedUniquePowerModifier.UpmPower;
+        Debug.LogWarning("Fix it: calculate current uniquepowermodifier power based on the active (source) unit statsupgradescount");
+        // init damage dealt
+        int damageDealt = 0;
+        // get resistance multiplier
+        float resistanceMultiplier = (100 - GetUnitEffectiveResistance(appliedUniquePowerModifier.UpmSource)) / 100;
+        // verify if resistance multiplier is not less than 0
+        if (resistanceMultiplier < 0)
+        {
+            // reset it to 0
+            resistanceMultiplier = 0;
+        }
+        // get damage dealt based on the current upm power and destination unit restistance to the upm power source;
+        damageDealt = Mathf.RoundToInt((float)appliedUniquePowerModifier.UpmBasePower * resistanceMultiplier);
+        // return result
+        return damageDealt;
     }
 
     //// Note: animation should be identical to the function with the same name in PartyPanel
@@ -1432,7 +1337,7 @@ public class PartyUnit : MonoBehaviour {
         return GetUnitBaseResistance(source) + GetUnitResistanceSkillBonus(source) + GetUnitResistanceItemsBonusBySource(source);
     }
 
-    bool ApplyActiveUPM(UniquePowerModifier uniquePowerModifier, bool doPreview = false)
+    bool ApplyActiveUPM(UniquePowerModifierConfig uniquePowerModifier, bool doPreview = false)
     {
         Debug.LogWarning("Apply unique power modifier with instant duration to the enemy");
         return false;
@@ -2843,7 +2748,7 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public List<UniquePowerModifier> UniquePowerModifiers
+    public List<UniquePowerModifierConfig> UniquePowerModifiers
     {
         get
         {
@@ -2923,6 +2828,14 @@ public class PartyUnit : MonoBehaviour {
                 partyUnitConfig = Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType);
             }
             return partyUnitConfig;
+        }
+    }
+
+    public List<UniquePowerModifierData> UniquePowerModifiersData
+    {
+        get
+        {
+            return partyUnitData.uniquePowerModifiersData;
         }
     }
 }
