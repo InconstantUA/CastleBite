@@ -192,7 +192,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
 
 
-    public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus, int chance, int chanceBonus)
+    public void SetUniquePowerModifiersPreview(int modifierID, int power, int powerBonus)
     {
         //Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/Modifier" + modifierID.ToString());
         Transform modifier = transform.Find("Panel/UniquePowerModifiersTable/ListOfUniquePowerModifiers/Grid").GetChild(modifierID);
@@ -205,16 +205,6 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         {
             // display + bonus info
             modifier.Find("Power").GetComponent<Text>().text = power.ToString() + "(" + statsBonusPreviewStyleStart + "+" + powerBonus.ToString() + statsBonusPreviewStyleEnd + ")";
-        }
-        if (0 == chanceBonus)
-        {
-            // do not display + info
-            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString();
-        }
-        else
-        {
-            // display + bonus info
-            modifier.Find("Chance").GetComponent<Text>().text = chance.ToString() + "(" + statsBonusPreviewStyleStart + "+" + chanceBonus.ToString() + statsBonusPreviewStyleEnd + ")";
         }
     }
 
@@ -667,16 +657,15 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     void AddUPMInfo(Transform upmsListGrid, UniquePowerModifier uniquePowerModifier)
     {
         Transform upmTransform = Instantiate(uniquePowerModifierUITemplate, upmsListGrid).transform;
-        upmTransform.Find("Name").GetComponent<Text>().text = uniquePowerModifier.GetDisplayName();
-        upmTransform.Find("Power").GetComponent<Text>().text = uniquePowerModifier.upmPower.ToString();
-        upmTransform.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.upmDuration.ToString();
+        upmTransform.Find("Name").GetComponent<Text>().text = uniquePowerModifier.DisplayName;
+        upmTransform.Find("Power").GetComponent<Text>().text = Math.Abs(uniquePowerModifier.UpmPower).ToString();
+        upmTransform.Find("Duration").GetComponent<Text>().text = uniquePowerModifier.UpmDurationMax.ToString();
         // verify if duration left if is at least 1 day (which normally means that it will expire after upmDurationLeft days)
         if (uniquePowerModifier.upmDurationLeft >= 1)
         {
             upmTransform.Find("Duration").GetComponent<Text>().text += " e" + uniquePowerModifier.upmDurationLeft.ToString() + "d";
         }
-        upmTransform.Find("Chance").GetComponent<Text>().text = uniquePowerModifier.upmChance.ToString();
-        upmTransform.Find("Source").GetComponent<Text>().text = uniquePowerModifier.upmSource.ToString();
+        upmTransform.Find("Source").GetComponent<Text>().text = uniquePowerModifier.UpmSource.ToString();
         upmTransform.Find("Origin").GetComponent<Text>().text = uniquePowerModifier.upmOrigin.ToString();
     }
 

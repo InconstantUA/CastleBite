@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System;
 
 public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -175,19 +176,19 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
         string[] infoLines = additionalInfo.GetLines();
         // line 1(0 index in array) already filled in in prefab
         // fill in next lines
-        infoLines[1] = "Damage type: " + uniquePowerModifier.upmSource.ToString();
-        infoLines[2] = "Damage dealt: " + uniquePowerModifier.upmPower.ToString();
-        if (uniquePowerModifier.upmDuration >= 2)
+        infoLines[1] = "Damage type: " + uniquePowerModifier.UpmSource.ToString();
+        infoLines[2] = "Damage dealt: " + Math.Abs(uniquePowerModifier.UpmPower).ToString();
+        if (uniquePowerModifier.UpmDurationMax >= 2)
         {
             // duration is 2 or more
             // add s in turns word
-            infoLines[3] = "Duration: " + uniquePowerModifier.upmDuration.ToString() + " turns";
+            infoLines[3] = "Duration: " + uniquePowerModifier.UpmDurationMax.ToString() + " turns";
         }
         else
         {
             // when duration is 1 turn
             // do not add s in turn word
-            infoLines[3] = "Duration: " + uniquePowerModifier.upmDuration.ToString() + " turn";
+            infoLines[3] = "Duration: " + uniquePowerModifier.UpmDurationMax.ToString() + " turn";
         }
     }
 

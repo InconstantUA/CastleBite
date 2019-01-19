@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
 {
@@ -157,11 +158,11 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
                 // create new row in the table from template
                 Transform newUPMTransform = Instantiate(uniquePowerModifierItemInfoTemplate, upmsListGrid).transform;
                 // set values
-                newUPMTransform.Find("Name").GetComponent<Text>().text = upm.GetDisplayName();
-                newUPMTransform.Find("Power").GetComponent<Text>().text = upm.upmPower.ToString();
-                newUPMTransform.Find("Duration").GetComponent<Text>().text = upm.upmDuration.ToString();
-                newUPMTransform.Find("Chance").GetComponent<Text>().text = upm.upmChance.ToString() + "%";
-                newUPMTransform.Find("Source").GetComponent<Text>().text = upm.upmSource.ToString();
+                newUPMTransform.Find("Name").GetComponent<Text>().text = upm.DisplayName;
+                newUPMTransform.Find("Power").GetComponent<Text>().text = Math.Abs(upm.UpmPower).ToString();
+                newUPMTransform.Find("Duration").GetComponent<Text>().text = upm.UpmDurationMax.ToString();
+                // newUPMTransform.Find("Chance").GetComponent<Text>().text = "rmv";
+                newUPMTransform.Find("Source").GetComponent<Text>().text = upm.UpmSource.ToString();
             }
         }
         else

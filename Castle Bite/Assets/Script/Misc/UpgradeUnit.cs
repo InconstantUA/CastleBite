@@ -289,10 +289,8 @@ public class UpgradeUnit : MonoBehaviour {
         {
             transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUniquePowerModifiersPreview(
                 i,
-                uniquePowerModifiers[i].upmPower,
-                uniquePowerModifiers[i].upmPowerIncrementOnLevelUp * statsUpgradeCount,
-                uniquePowerModifiers[i].upmChance,
-                uniquePowerModifiers[i].upmChanceIncrementOnLevelUp * statsUpgradeCount
+                uniquePowerModifiers[i].UpmPower,
+                uniquePowerModifiers[i].UpmPowerIncrementOnLevelUp * statsUpgradeCount
             );
         }
     }
@@ -302,8 +300,7 @@ public class UpgradeUnit : MonoBehaviour {
         // upgrade Unique power modifier object
         foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
         {
-            upm.upmPower += upm.upmPowerIncrementOnLevelUp;
-            upm.upmChance += upm.upmChanceIncrementOnLevelUp;
+            upm.UpmPower += upm.UpmPowerIncrementOnLevelUp;
         }
         // upgrade Unique power modifier Info UI
         UpdateUniquePowerModifiersInfo();
@@ -314,8 +311,7 @@ public class UpgradeUnit : MonoBehaviour {
         // downgrade Unique power modifier object
         foreach (UniquePowerModifier upm in focusedPartyUnit.UniquePowerModifiers)
         {
-            upm.upmPower -= upm.upmPowerIncrementOnLevelUp;
-            upm.upmChance -= upm.upmChanceIncrementOnLevelUp;
+            upm.UpmPower -= upm.UpmPowerIncrementOnLevelUp;
         }
         // upgrade Unique power modifier Info UI
         UpdateUniquePowerModifiersInfo();

@@ -2,7 +2,7 @@
 
 public abstract class UnitAbility : ScriptableObject
 {
-    public GameEvent gameEvent;
+    //public GameEvent gameEvent;
     public TextAnimation textAnimation;
     public Color abilityIsApplicableColor;
     public Color abilityNotApplicableColor;

@@ -18,22 +18,25 @@ public class UnitAbilityConfig : ScriptableObject
     //public UnitPowerScope unitPowerScope;
     // main ability power
     public UnitStatModifierConfig unitStatModifierConfig;
+    // main ability modifier
+    public List<UnitPowerModifier> unitPowerModifiers;
     // additional ability powers
     public List<UnitPowerConfig> unitPowerConfigs;
-    public List<UnitPowerModifier> unitPowerModifiers;
+    // Unique power modifiers
+    public List<UniquePowerModifier> uniquePowerModifiers;
 
-    public bool IsApplicableToUnit(PartyUnit partyUnit)
-    {
-        // loop through all applicable statuses in unitStatModifierConfig
-        foreach (UnitStatus unitStatus in unitStatModifierConfig.canBeAppliedToTheUnitsWithStatuses)
-        {
-            // verify if unit status match
-            if (partyUnit.UnitStatus == unitStatus)
-            {
-                return true;
-            }
-        }
-        // if no one status matches, then return false
-        return false;
-    }
+    //public bool IsApplicableToUnit(PartyUnit partyUnit)
+    //{
+    //    // loop through all applicable statuses in unitStatModifierConfig
+    //    foreach (UnitStatus unitStatus in unitStatModifierConfig.canBeAppliedToTheUnitsWithStatuses)
+    //    {
+    //        // verify if unit status match
+    //        if (partyUnit.UnitStatus == unitStatus)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    // if no one status matches, then return false
+    //    return false;
+    //}
 }

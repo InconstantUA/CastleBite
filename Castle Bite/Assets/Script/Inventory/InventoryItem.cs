@@ -226,7 +226,7 @@ public class InventoryItem : MonoBehaviour {
         for (int i = UniquePowerModifiers.Count - 1; i >= 0; i--)
         {
             // verify if usm duration is 0 (instant upm) or duration left is 0
-            if ((UniquePowerModifiers[i].upmDuration == 0) || (UniquePowerModifiers[i].upmDurationLeft == 0))
+            if ((UniquePowerModifiers[i].UpmDurationMax == 0) || (UniquePowerModifiers[i].upmDurationLeft == 0))
             {
                 UniquePowerModifiers.RemoveAt(i);
             }
@@ -285,7 +285,7 @@ public class InventoryItem : MonoBehaviour {
         foreach (UniquePowerModifier upm in UniquePowerModifiers)
         {
             // verify if usm has non-permanent duration
-            if (upm.upmDuration >= 0)
+            if (upm.UpmDurationMax >= 0)
             {
                 // decrement duration left
                 upm.upmDurationLeft -= 1;

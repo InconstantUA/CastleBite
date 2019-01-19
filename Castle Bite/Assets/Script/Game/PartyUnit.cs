@@ -243,39 +243,112 @@ public enum ModifierScope
 [Serializable]
 public class UniquePowerModifier
 {
+    [SerializeField]
+    private string displayName;
+    [SerializeField]
+    private string description;
+    [SerializeField]
+    private UnitStatModifierConfig unitStatModifierConfig;
     // define possible origins (who is the source of unique power modifier)
-    public ModifierScope modifierScope;
+    // private ModifierScope modifierScope;
     public UnitBuff upmAppliedBuff;
     public UnitDebuff upmAppliedDebuff;
-    public int upmPower;
-    public int upmPowerIncrementOnLevelUp;
-    public int upmDuration;
-    public int upmChance;
-    public int upmChanceIncrementOnLevelUp;
-    public PowerSource upmSource;
+    // private int upmPower;
+    // private int upmPowerIncrementOnLevelUp;
+    // private int upmDuration;
+    // private PowerSource upmSource;
     public ModifierOrigin upmOrigin; // data
-    public ModifierAppliedHow modifierApplied;
+    public ModifierAppliedHow modifierApplied;  // active/passive
     public int upmDurationLeft; // data
-    public int skillPowerMultiplier = 1;
-    public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
+    // public int skillPowerMultiplier = 1;
+    // private UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
 
-    public string GetDisplayName()
+    public ModifierScope ModifierScope
     {
-        switch (upmAppliedDebuff)
+        get
         {
-            case UnitDebuff.Burned:
-                return "Burn";
-            case UnitDebuff.Chilled:
-                return "Chill";
-            case UnitDebuff.Paralyzed:
-                return "Paralyze";
-            case UnitDebuff.Poisoned:
-                return "Poison";
-            default:
-                Debug.LogError("Unknown debuf");
-                return "Error";
+            return unitStatModifierConfig.modifierScope;
         }
     }
+
+    public int UpmPower
+    {
+        get
+        {
+            return unitStatModifierConfig.modifierPower;
+        }
+
+        set
+        {
+            unitStatModifierConfig.modifierPower = value;
+        }
+    }
+
+    public int UpmPowerIncrementOnLevelUp
+    {
+        get
+        {
+            return unitStatModifierConfig.powerIncrementOnStatsUpgrade;
+        }
+    }
+
+    public int UpmDurationMax
+    {
+        get
+        {
+            return unitStatModifierConfig.duration;
+        }
+    }
+
+    public PowerSource UpmSource
+    {
+        get
+        {
+            return unitStatModifierConfig.powerSource;
+        }
+    }
+
+    public UnitStatus[] CanBeAppliedToTheUnitsWithStatuses
+    {
+        get
+        {
+            return unitStatModifierConfig.canBeAppliedToTheUnitsWithStatuses;
+        }
+    }
+
+    public string DisplayName
+    {
+        get
+        {
+            return displayName;
+        }
+    }
+
+    public string Description
+    {
+        get
+        {
+            return description;
+        }
+    }
+
+    //public string GetDisplayName()
+    //{
+    //    switch (upmAppliedDebuff)
+    //    {
+    //        case UnitDebuff.Burned:
+    //            return "Burn";
+    //        case UnitDebuff.Chilled:
+    //            return "Chill";
+    //        case UnitDebuff.Paralyzed:
+    //            return "Paralyze";
+    //        case UnitDebuff.Poisoned:
+    //            return "Poison";
+    //        default:
+    //            Debug.LogError("Unknown debuf");
+    //            return "Error";
+    //    }
+    //}
 }
 
 [Serializable]
@@ -470,7 +543,7 @@ public class PartyUnitData : System.Object
     // public UnitPowerScope unitPowerScope;
     // public int unitInitiative = 10;
     // Unique power modifiers
-    public List<UniquePowerModifier> uniquePowerModifiers;
+    // public List<UniquePowerModifier> uniquePowerModifiers;
     // Misc Description
     // public string unitRole;
     // public string unitBriefDescription;
@@ -863,7 +936,7 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetDebuffDamageDealt(UniquePowerModifier appliedUniquePowerModifier)
     {
-        return appliedUniquePowerModifier.upmPower;
+        return appliedUniquePowerModifier.UpmPower;
     }
 
     //// Note: animation should be identical to the function with the same name in PartyPanel
@@ -1836,9 +1909,9 @@ public class PartyUnit : MonoBehaviour {
                 // verify if this is active modifier
                 if ((inventoryItem.UniquePowerModifiers[i].modifierApplied == ModifierAppliedHow.Active)
                 // verify if UPM required statuses match current unit status
-                && (MatchStatuses(inventoryItem.UniquePowerModifiers[i].canBeAppliedToTheUnitsWithStatuses))
+                && (MatchStatuses(inventoryItem.UniquePowerModifiers[i].CanBeAppliedToTheUnitsWithStatuses))
                 // verify if UPM scope matches
-                && (MatchScope(inventoryItem.UniquePowerModifiers[i].modifierScope)))
+                && (MatchScope(inventoryItem.UniquePowerModifiers[i].ModifierScope)))
                 {
                     // upm has instant one-time effect
 
@@ -2774,13 +2847,14 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            return partyUnitData.uniquePowerModifiers;
+            //return partyUnitData.uniquePowerModifiers;
+            return UnitAbilityConfig.uniquePowerModifiers;
         }
 
-        set
-        {
-            partyUnitData.uniquePowerModifiers = value;
-        }
+        //set
+        //{
+        //    partyUnitData.uniquePowerModifiers = value;
+        //}
     }
 
     public PartyPanel.Row UnitPPRow

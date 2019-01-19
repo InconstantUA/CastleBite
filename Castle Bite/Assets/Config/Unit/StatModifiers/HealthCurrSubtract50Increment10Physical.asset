@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 141e49ccbd374384d8600cf455f9cc80, type: 3}
-  m_Name: HealthCurrSubtract20Over2Rounds
+  m_Name: HealthCurrSubtract50Increment10Physical
   m_EditorClassIdentifier: 
   unitStat: 1
   modifierAppliedTo: 0
   modifierScope: 3
-  modifierPower: -20
+  modifierPower: -50
   modifierCalculatedHow: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
-  powerSource: 6
-  powerIncrementOnStatsUpgrade: 0
+  powerSource: 0
+  powerIncrementOnStatsUpgrade: -10
   skillPowerMultiplier: 1
