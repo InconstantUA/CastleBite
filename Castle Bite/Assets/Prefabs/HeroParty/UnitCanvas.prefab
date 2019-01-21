@@ -269,6 +269,8 @@ MonoBehaviour:
   upmDebuffsParentTranform: {fileID: 224061981920879210}
   uniquePowerModifierStatusIconTemplate: {fileID: 134165084207668413, guid: 63836e3058cd6cf468711089c07d4eba,
     type: 3}
+  uniquePowerModifierHasBeenRemovedEvent: {fileID: 11400000, guid: 170e875f6c3f6044aa3908cb99f3c871,
+    type: 2}
 --- !u!114 &6385399037125348161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -774,6 +776,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnLeftMouseButtonDown:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnLeftMouseButtonUp:
+    m_PersistentCalls:
+      m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   OnRightMouseButtonDown:
@@ -1410,6 +1422,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnLeftMouseButtonDown:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnLeftMouseButtonUp:
+    m_PersistentCalls:
+      m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   OnRightMouseButtonDown:

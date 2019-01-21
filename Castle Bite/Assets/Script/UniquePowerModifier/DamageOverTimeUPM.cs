@@ -12,9 +12,15 @@ public class DamageOverTimeUPM : UniquePowerModifier
     // event for UI when UPM duration has been reset to max
     [SerializeField]
     GameEvent uniquePowerModifierDurationHasBeenResetToMaxEvent;
+    // event for UI when UPM duration has been changed
+    [SerializeField]
+    GameEvent uniquePowerModifierDurationHasChangedEvent;
     // event for UI when UPM power has been changed
     [SerializeField]
     GameEvent uniquePowerModifierPowerHasBeenChangedEvent;
+    // event for UI when UPM has been triggered
+    [SerializeField]
+    GameEvent uniquePowerModifierHasBeenTriggeredEvent;
 
     public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
@@ -58,6 +64,20 @@ public class DamageOverTimeUPM : UniquePowerModifier
             // raise an event
             uniquePowerModifierDataHasBeenAddedEvent.Raise(dstPartyUnit.gameObject);
         }
+    }
+
+    public override void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
+    {
+        Debug.Log("Trigger " + uniquePowerModifierData.GetOriginDisplayName() + " UPM");
+        // Apply DoT (UPM) current power as damage to destination unit
+        dstPartyUnit.UnitHealthCurr += uniquePowerModifierData.CurrentPower; // current power is negative if it is damage dealing ability
+        // Decrement DoT current duration
+        uniquePowerModifierData.DurationLeft -= 1;
+        // note: order is important. Trigger should be last, because it may also remove UPM status icon
+        // Trigger on duration changed event
+        uniquePowerModifierDurationHasChangedEvent.Raise(uniquePowerModifierData);
+        // Trigger on UPM has been triggered
+        uniquePowerModifierHasBeenTriggeredEvent.Raise(uniquePowerModifierData);
     }
 
 }

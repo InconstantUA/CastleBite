@@ -699,7 +699,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public void FillInUniquePowerModifiersInformation(PartyUnit partyUnit)
     {
         // get party unit Unique power modifiers
-        List<UniquePowerModifierConfig> unitUniquePowerModifiers = partyUnit.UniquePowerModifiers;
+        List<UniquePowerModifierConfig> unitUniquePowerModifierConfigs = partyUnit.UniquePowerModifierConfigs;
         // get items unique power modifiers
         // init list
         List<UniquePowerModifierConfig> itemsUniquePowerModifiers = new List<UniquePowerModifierConfig>();
@@ -717,7 +717,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // get upms table
         Transform uniquePowerModifiersTable = transform.Find("Panel/UniquePowerModifiersTable");
         // verify if number of total unique power modifiers is more than 0
-        if ((unitUniquePowerModifiers.Count + itemsUniquePowerModifiers.Count) > 0)
+        if ((unitUniquePowerModifierConfigs.Count + itemsUniquePowerModifiers.Count) > 0)
         {
             // Activate unique power modifiers table
             uniquePowerModifiersTable.gameObject.SetActive(true);
@@ -729,7 +729,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
                 Destroy(childTransform.gameObject);
             }
             // Loop through all unit's UPMs
-            foreach(UniquePowerModifierConfig upm in unitUniquePowerModifiers)
+            foreach(UniquePowerModifierConfig upm in unitUniquePowerModifierConfigs)
             {
                 // Add required UPMs info in UI
                 AddUPMInfo(partyUnit, upmsListGrid, upm);

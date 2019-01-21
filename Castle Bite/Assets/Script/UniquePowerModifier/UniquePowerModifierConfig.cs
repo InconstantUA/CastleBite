@@ -41,6 +41,11 @@ public class UniquePowerModifierConfig : ScriptableObject
         uniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
     }
 
+    public void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
+    {
+        uniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
+    }
+
     public ModifierScope ModifierScope
     {
         get

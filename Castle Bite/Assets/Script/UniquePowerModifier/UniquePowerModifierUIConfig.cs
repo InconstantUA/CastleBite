@@ -11,4 +11,5 @@ public class UniquePowerModifierUIConfig : ScriptableObject
     public Color statusIconTextPressedColor;
     public Color statusIconTextDisabledColor;
     public Color statusIconBackgroundColor;
+    public TextAnimation onTriggerTextAnimation;
 }

@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: ChillUIConfig
   m_EditorClassIdentifier: 
   symbol: C
-  statusIconTextNormalColor: {r: 0.745283, g: 0.14413491, b: 0.14413491, a: 1}
-  statusIconTextHighlightedColor: {r: 0.8679245, g: 0.36436453, b: 0.36436453, a: 1}
-  statusIconTextPressedColor: {r: 0.9716981, g: 0.6004361, b: 0.6004361, a: 1}
+  statusIconTextNormalColor: {r: 0.3372549, g: 0.6117647, b: 0.83921576, a: 1}
+  statusIconTextHighlightedColor: {r: 0.8470589, g: 0.3137255, b: 0.3137255, a: 1}
+  statusIconTextPressedColor: {r: 0.86274517, g: 0.86274517, b: 0.86274517, a: 1}
   statusIconTextDisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
-  statusIconBackgroundColor: {r: 0.3372549, g: 0.6117647, b: 0.83921576, a: 1}
+  statusIconBackgroundColor: {r: 0.3372549, g: 0.6117647, b: 0.83921576, a: 0.2509804}
+  onTriggerTextAnimation: {fileID: 11400000, guid: e7ca77a4a946b194ea79248c93834a74,
+    type: 2}

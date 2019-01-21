@@ -15,4 +15,5 @@ public class UnitEventsConfig : ScriptableObject
     public UnitPropertyEvents unitStatus;
     public UnitPropertyEvents unitHealthCurr;
     public UnitPropertyEvents unitHealthMax;
+    public GameEvent uniquePowerModifierHasBeenRemovedEvent;
 }

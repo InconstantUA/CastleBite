@@ -246,12 +246,12 @@ public class UniquePowerModifierID : System.Object
     public UnitAbilityID unitAbilityID = UnitAbilityID.None;
     public int uniquePowerModifierConfigIndex = 0;
     public ModifierOrigin modifierOrigin;
+    public int destinationGameObjectID; // this is not required for serialization, but required to uniquely identify UniquePowerModifierID among other similar UniquePowerModifiers which are applied by the same source
 
     public static bool operator ==(UniquePowerModifierID upmID1, UniquePowerModifierID upmID2)
     {
 
         return Comparison(upmID1, upmID2);
-
     }
 
     public static bool operator !=(UniquePowerModifierID upmID1, UniquePowerModifierID upmID2)
@@ -289,7 +289,9 @@ public class UniquePowerModifierID : System.Object
             // compare index
             && (upmID1.uniquePowerModifierConfigIndex == upmID2.uniquePowerModifierConfigIndex)
             // compare origin
-            && (upmID1.modifierOrigin == upmID2.modifierOrigin))
+            && (upmID1.modifierOrigin == upmID2.modifierOrigin)
+            // compare destination game object id
+            && (upmID1.destinationGameObjectID == upmID2.destinationGameObjectID))
         {
             // all match
             return true;
@@ -315,6 +317,7 @@ public class UniquePowerModifierID : System.Object
             hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, unitAbilityID) ? unitAbilityID.GetHashCode() : 0);
             hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, uniquePowerModifierConfigIndex) ? uniquePowerModifierConfigIndex.GetHashCode() : 0);
             hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, modifierOrigin) ? modifierOrigin.GetHashCode() : 0);
+            hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, destinationGameObjectID) ? modifierOrigin.GetHashCode() : 0);
             return hash;
         }
     }
@@ -718,6 +721,10 @@ public class PartyUnit : MonoBehaviour {
     // Data which will be saved later
     [SerializeField]
     PartyUnitData partyUnitData;
+    // event for UI when UPM has been removed
+    [SerializeField]
+    GameEvent uniquePowerModifierHasBeenRemovedEvent;
+
 
     PartyUnitConfig partyUnitConfig; // init on Awake
     UnitStatusConfig unitStatusConfig;
@@ -2321,6 +2328,15 @@ public class PartyUnit : MonoBehaviour {
             {
                 // set unit is dead attribute
                 UnitStatus = UnitStatus.Dead;
+                // remove all applied unit's buffs and debuffs
+                // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
+                for (int i = UniquePowerModifiersData.Count - 1; i >= 0; i--)
+                {
+                    // trigger UPM removed event
+                    UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(UniquePowerModifiersData[i]);
+                    // remove it from the list
+                    UniquePowerModifiersData.RemoveAt(i);
+                }
             }
             // verify if unit has been resurected
             if (0 == previousHealth)
@@ -2914,7 +2930,7 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public List<UniquePowerModifierConfig> UniquePowerModifiers
+    public List<UniquePowerModifierConfig> UniquePowerModifierConfigs
     {
         get
         {

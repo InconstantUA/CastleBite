@@ -20,8 +20,6 @@ public class UnitAbilityConfig : ScriptableObject
     public UnitStatModifierConfig unitStatModifierConfig;
     // main ability modifier
     public List<UnitPowerModifier> unitPowerModifiers;
-    // additional ability powers
-    public List<UnitPowerConfig> unitPowerConfigs;
     // Unique power modifiers
     public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
 

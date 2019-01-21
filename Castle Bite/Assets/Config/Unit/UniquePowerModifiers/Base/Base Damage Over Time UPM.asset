@@ -16,5 +16,9 @@ MonoBehaviour:
     type: 2}
   uniquePowerModifierDurationHasBeenResetToMaxEvent: {fileID: 11400000, guid: 3192e014b421d72499cc8ad48b4637c0,
     type: 2}
+  uniquePowerModifierDurationHasChangedEvent: {fileID: 11400000, guid: 245e733259c7aca4ea54922c9f87148a,
+    type: 2}
   uniquePowerModifierPowerHasBeenChangedEvent: {fileID: 11400000, guid: 18af5da8d2e9a814d952f28965205c0b,
+    type: 2}
+  uniquePowerModifierHasBeenTriggeredEvent: {fileID: 11400000, guid: 9999136f13559534295ed89a37bcd474,
     type: 2}

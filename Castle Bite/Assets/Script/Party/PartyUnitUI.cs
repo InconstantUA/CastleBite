@@ -21,6 +21,9 @@ public class PartyUnitUI : MonoBehaviour {
     Transform upmDebuffsParentTranform;
     [SerializeField]
     UniquePowerModifierStatusIcon uniquePowerModifierStatusIconTemplate;
+    //// event for UI when UPM has been removed
+    //[SerializeField]
+    //GameEvent uniquePowerModifierHasBeenRemovedEvent;
 
     public PartyUnit LPartyUnit
     {
@@ -435,32 +438,61 @@ public class PartyUnitUI : MonoBehaviour {
     public void TriggerAppliedDebuffs()
     {
         //Debug.Log("TriggerAppliedDebuffs");
-        UnitDebuffIndicator[] debuffsIndicators = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
-        //UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
-        foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
+        //UnitDebuffIndicator[] debuffsIndicators = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
+        ////UnitDebuffsUI unitDebuffsUI = unit.GetUnitDebuffsPanel().GetComponent<UnitDebuffsUI>();
+        //foreach (UnitDebuffIndicator debuffIndicator in debuffsIndicators)
+        //{
+        //    Debug.Log(name);
+        //    // as long as we cannot initiate all debuffs at the same time
+        //    // we add debuffs to the queue and they will be triggered one after another
+        //    // CoroutineQueue queue = unitDebuffsUI.GetQueue();
+        //    // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+        //    //if (queue == null)
+        //    //{
+        //    //    Debug.LogError("No queue");
+        //    //}
+        //    //if (debuffIndicator == null)
+        //    //{
+        //    //    Debug.LogError("No debuffIndicator");
+        //    //}
+        //    IEnumerator coroutine = debuffIndicator.TriggerDebuff(this);
+        //    //if (coroutine == null)
+        //    //{
+        //    //    Debug.LogError("No coroutine");
+        //    //}
+        //    CoroutineQueueManager.Run(coroutine);
+        //    // Trigger debuff against player
+        //    // Decrement buff current duration
+        //    debuffIndicator.DecrementCurrentDuration();
+        //}
+        // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
+        for (int i = LPartyUnit.UniquePowerModifiersData.Count - 1; i >= 0; i--)
         {
-            Debug.Log(name);
-            // as long as we cannot initiate all debuffs at the same time
-            // we add debuffs to the queue and they will be triggered one after another
-            // CoroutineQueue queue = unitDebuffsUI.GetQueue();
-            // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
-            //if (queue == null)
-            //{
-            //    Debug.LogError("No queue");
-            //}
-            //if (debuffIndicator == null)
-            //{
-            //    Debug.LogError("No debuffIndicator");
-            //}
-            IEnumerator coroutine = debuffIndicator.TriggerDebuff(this);
-            //if (coroutine == null)
-            //{
-            //    Debug.LogError("No coroutine");
-            //}
-            CoroutineQueueManager.Run(coroutine);
-            // Trigger debuff against player
-            // Decrement buff current duration
-            debuffIndicator.DecrementCurrentDuration();
+            // Gget UPM text animation config upfront, because UPMdata mabe removed if unit is dead after Trigger
+            TextAnimation upmTextAnimation = LPartyUnit.UniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierUIConfig.onTriggerTextAnimation;
+            // Trigger UPM
+            LPartyUnit.UniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.UniquePowerModifiersData[i]);
+            // trigger animation to display damage done
+            upmTextAnimation.Run(UnitInfoPanelText);
+            // verify if unit is still alive
+            if (LPartyUnit.UnitStatus != UnitStatus.Dead)
+            {
+                // verify if UPM duration left is 0 or unit is dead
+                if (LPartyUnit.UniquePowerModifiersData[i].DurationLeft == 0)
+                {
+                    // UPM has expired
+                    // trigger UPM removed event
+                    LPartyUnit.UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
+                    // remove it from the list
+                    LPartyUnit.UniquePowerModifiersData.RemoveAt(i);
+                }
+            }
+            else
+            {
+                // all UPMs data already should be removed in party unit UnitHealthCurr property
+                // exit this loop
+                break;
+            }
         }
     }
 
@@ -671,56 +703,56 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void SetUnitDebuffActive(UniquePowerModifierConfig uniquePowerModifier, bool doActivate)
-    {
-        // get unit debuffs panel
-        Transform debuffsPanel = GetUnitDebuffsPanel();
-        if (doActivate)
-        {
-            // verify if unit already has this debuf
-            if (uniquePowerModifier.upmAppliedDebuff == LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff])
-            {
-                // the same debuff is already applied
-                // reset its counter to max
-                // .. fix, verify if it is there
-                if (debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()))
-                {
-                    UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
-                    if (unitDebuffIndicator)
-                    {
-                        unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
-                    }
-                    else
-                    {
-                        Debug.LogError("No unitDebuffIndicator");
-                    }
-                }
-            }
-            else
-            {
-                // debuff is not applied yet
-                // add debuff to unit
-                //Debug.Log(((int)UnitBuff.DefenseStance).ToString());
-                //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-                LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = uniquePowerModifier.upmAppliedDebuff;
-                // create debuff by duplicating from template
-                // Note: debuff name in template should be the same as in AppliedDebuff
-                Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.upmAppliedDebuff.ToString());
-                Debug.Log("Applying " + uniquePowerModifier.upmAppliedDebuff.ToString() + " debuff");
-                Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
-                // activate buff
-                newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier, LPartyUnit);
-                // rename it so it can be later found by name
-                newDebuff.name = uniquePowerModifier.upmAppliedDebuff.ToString();
-            }
-        }
-        else
-        {
-            // remove buff
-            LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = UnitDebuff.None;
-            Destroy(debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).gameObject);
-        }
-    }
+    //public void SetUnitDebuffActive(UniquePowerModifierConfig uniquePowerModifier, bool doActivate)
+    //{
+    //    // get unit debuffs panel
+    //    Transform debuffsPanel = GetUnitDebuffsPanel();
+    //    if (doActivate)
+    //    {
+    //        // verify if unit already has this debuf
+    //        if (uniquePowerModifier.upmAppliedDebuff == LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff])
+    //        {
+    //            // the same debuff is already applied
+    //            // reset its counter to max
+    //            // .. fix, verify if it is there
+    //            if (debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()))
+    //            {
+    //                UnitDebuffIndicator unitDebuffIndicator = debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).GetComponent<UnitDebuffIndicator>();
+    //                if (unitDebuffIndicator)
+    //                {
+    //                    unitDebuffIndicator.CurrentDuration = unitDebuffIndicator.TotalDuration;
+    //                }
+    //                else
+    //                {
+    //                    Debug.LogError("No unitDebuffIndicator");
+    //                }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            // debuff is not applied yet
+    //            // add debuff to unit
+    //            //Debug.Log(((int)UnitBuff.DefenseStance).ToString());
+    //            //Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
+    //            LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = uniquePowerModifier.upmAppliedDebuff;
+    //            // create debuff by duplicating from template
+    //            // Note: debuff name in template should be the same as in AppliedDebuff
+    //            Transform debuffTemplate = transform.root.Find("Templates/UI/Debuffs/" + uniquePowerModifier.upmAppliedDebuff.ToString());
+    //            Debug.Log("Applying " + uniquePowerModifier.upmAppliedDebuff.ToString() + " debuff");
+    //            Transform newDebuff = Instantiate(debuffTemplate, debuffsPanel);
+    //            // activate buff
+    //            newDebuff.GetComponent<UnitDebuffIndicator>().SetActiveAdvance(true, uniquePowerModifier, LPartyUnit);
+    //            // rename it so it can be later found by name
+    //            newDebuff.name = uniquePowerModifier.upmAppliedDebuff.ToString();
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // remove buff
+    //        LPartyUnit.UnitDebuffs[(int)uniquePowerModifier.upmAppliedDebuff] = UnitDebuff.None;
+    //        Destroy(debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).gameObject);
+    //    }
+    //}
 
     public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI dstPartyUnitUI)
     {
@@ -741,18 +773,23 @@ public class PartyUnitUI : MonoBehaviour {
             srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
             // run text animation
             srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.textAnimation.Run(UnitInfoPanelText);
-            // apply unit additional powers
-            for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs.Count; i++)
+            // verify if unit can still participate in battle (is not dead after main ability apply, if it is damaging)
+            if (dstPartyUnitUI.LPartyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
             {
-                SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i], true);
-                // set unique power modifier ID
-                UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+                // apply unit unique power modifiers (buffs and debuffs)
+                for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs.Count; i++)
                 {
-                    unitAbilityID = srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbilityID,
-                    uniquePowerModifierConfigIndex = i,
-                    modifierOrigin = ModifierOrigin.UnitAbility
-                };
-                srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+                    // SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i], true);
+                    // set unique power modifier ID
+                    UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+                    {
+                        unitAbilityID = srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbilityID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.UnitAbility,
+                        destinationGameObjectID = dstPartyUnitUI.gameObject.GetInstanceID()
+                    };
+                    srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+                }
             }
         }
         // verify if it is source unit
