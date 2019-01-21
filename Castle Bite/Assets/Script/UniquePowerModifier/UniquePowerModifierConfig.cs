@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum UniquePowerModifierType
+{
+    Buff,
+    Debuff
+}
+
 [CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Config")]
 public class UniquePowerModifierConfig : ScriptableObject
 {
@@ -17,15 +23,18 @@ public class UniquePowerModifierConfig : ScriptableObject
     // private ModifierScope modifierScope;
     public UnitBuff upmAppliedBuff;
     public UnitDebuff upmAppliedDebuff;
+    public UniquePowerModifierType uniquePowerModifierType;
     // private int upmPower;
     // private int upmPowerIncrementOnLevelUp;
     // private int upmDuration;
     // private PowerSource upmSource;
-    public ModifierOrigin upmOrigin; // data
-    public ModifierAppliedHow modifierApplied;  // active/passive
-    public int upmDurationLeft; // data
+    public ModifierOrigin upmOrigin; // ?TODO: move to data
+    public ModifierAppliedHow modifierApplied;  // ? consider removing active/passive
+    public int upmDurationLeft; // TODO: move to data
     // public int skillPowerMultiplier = 1;
     // private UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
+    [SerializeField]
+    private UniquePowerModifierUIConfig uniquePowerModifierUIConfig;
 
     public void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
     {
@@ -99,6 +108,14 @@ public class UniquePowerModifierConfig : ScriptableObject
         get
         {
             return description;
+        }
+    }
+
+    public UniquePowerModifierUIConfig UniquePowerModifierUIConfig
+    {
+        get
+        {
+            return uniquePowerModifierUIConfig;
         }
     }
 

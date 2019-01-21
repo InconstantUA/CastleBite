@@ -265,6 +265,10 @@ MonoBehaviour:
   unitInfoPanelText: {fileID: 114833909699515418}
   defaultUnitStatusColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   defaultUnitInfoColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
+  upmBuffsParentTranform: {fileID: 224598544885911400}
+  upmDebuffsParentTranform: {fileID: 224061981920879210}
+  uniquePowerModifierStatusIconTemplate: {fileID: 134165084207668413, guid: 63836e3058cd6cf468711089c07d4eba,
+    type: 3}
 --- !u!114 &6385399037125348161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +336,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   - name: Unit Health Current Has Changed
     gameEvent: {fileID: 11400000, guid: 6035039c5ce6b154a81575af8089d97e, type: 2}
     genericAction:
@@ -375,6 +384,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   - name: Unit Health Max Has Changed
     gameEvent: {fileID: 11400000, guid: 7aeb2af3bfefb5b4c9c6350c2260f968, type: 2}
     genericAction:
@@ -418,6 +432,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   - name: Apply Unit Ability Unit UI to Unit UI
     gameEvent: {fileID: 11400000, guid: e56ca734c44aad44e99467b3841dd0c3, type: 2}
     genericAction:
@@ -461,6 +480,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   - name: Apply Unit Power Modifier
     gameEvent: {fileID: 11400000, guid: 5211f2719b444b4469e7b53a1d4b1ed8, type: 2}
     genericAction:
@@ -504,6 +528,59 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: UPM Data Has Been Added
+    gameEvent: {fileID: 11400000, guid: 9b2c4948f393789408a528ee15395380, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 114938818029723712}
+          m_MethodName: OnUniquePowerModifierDataHasBeenAdded
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1318166734491180
 GameObject:
   m_ObjectHideFlags: 0

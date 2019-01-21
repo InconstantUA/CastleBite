@@ -246,14 +246,179 @@ public class UniquePowerModifierID : System.Object
     public UnitAbilityID unitAbilityID = UnitAbilityID.None;
     public int uniquePowerModifierConfigIndex = 0;
     public ModifierOrigin modifierOrigin;
+
+    public static bool operator ==(UniquePowerModifierID upmID1, UniquePowerModifierID upmID2)
+    {
+
+        return Comparison(upmID1, upmID2);
+
+    }
+
+    public static bool operator !=(UniquePowerModifierID upmID1, UniquePowerModifierID upmID2)
+    {
+
+        return Comparison(upmID1, upmID2);
+
+    }
+
+    public override bool Equals(object obj)
+    {
+
+        if (!(obj is UniquePowerModifierID)) return false;
+
+        return this == (UniquePowerModifierID)obj;
+
+    }
+
+    public static bool Comparison(UniquePowerModifierID upmID1, UniquePowerModifierID upmID2)
+    {
+        // Check if both IDs are null
+        if (System.Object.ReferenceEquals(null, upmID1) && System.Object.ReferenceEquals(null, upmID2))
+        {
+            return true;
+        }
+        // Check if one of the IDs is null
+        if (System.Object.ReferenceEquals(null, upmID1) || System.Object.ReferenceEquals(null, upmID2))
+        {
+            return false;
+        }
+        // compare inventory item id
+        if ((upmID1.inventoryItemID == upmID2.inventoryItemID)
+            // compare ability id
+            && (upmID1.unitAbilityID == upmID2.unitAbilityID)
+            // compare index
+            && (upmID1.uniquePowerModifierConfigIndex == upmID2.uniquePowerModifierConfigIndex)
+            // compare origin
+            && (upmID1.modifierOrigin == upmID2.modifierOrigin))
+        {
+            // all match
+            return true;
+        }
+        else
+        {
+            // some not match
+            return false;
+        }
+    }
+
+    // (C) http://www.loganfranken.com/blog/692/overriding-equals-in-c-part-2/
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            // Choose large primes to avoid hashing collisions
+            const int HashingBase = (int)2166136261;
+            const int HashingMultiplier = 16777619;
+
+            int hash = HashingBase;
+            hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, inventoryItemID) ? inventoryItemID.GetHashCode() : 0);
+            hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, unitAbilityID) ? unitAbilityID.GetHashCode() : 0);
+            hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, uniquePowerModifierConfigIndex) ? uniquePowerModifierConfigIndex.GetHashCode() : 0);
+            hash = (hash * HashingMultiplier) ^ (!System.Object.ReferenceEquals(null, modifierOrigin) ? modifierOrigin.GetHashCode() : 0);
+            return hash;
+        }
+    }
+
+    public override string ToString()
+    {
+        string myString = "";
+        if (inventoryItemID != InventoryItemID.None)
+        {
+            myString += inventoryItemID.ToString();
+        }
+        else if (unitAbilityID != UnitAbilityID.None)
+        {
+            myString += unitAbilityID.ToString();
+        }
+        return "UPM origin is " + myString + "(" + modifierOrigin.ToString() + ") and index is " + uniquePowerModifierConfigIndex.ToString();
+    }
 }
 
 [Serializable]
 public class UniquePowerModifierData : System.Object
 {
-    public UniquePowerModifierID uniquePowerModifierID;
-    public int durationLeft; // it is reset when USM is applied
-    public int currentPower;
+    private UniquePowerModifierID uniquePowerModifierID;
+    private int durationLeft; // it is reset when USM is applied
+    private int currentPower;
+
+    public UniquePowerModifierID UniquePowerModifierID
+    {
+        get
+        {
+            return uniquePowerModifierID;
+        }
+
+        set
+        {
+            uniquePowerModifierID = value;
+        }
+    }
+
+    public int DurationLeft
+    {
+        get
+        {
+            return durationLeft;
+        }
+
+        set
+        {
+            durationLeft = value;
+        }
+    }
+
+    public int CurrentPower
+    {
+        get
+        {
+            return currentPower;
+        }
+
+        set
+        {
+            currentPower = value;
+        }
+    }
+
+    public UniquePowerModifierConfig GetUniquePowerModifierConfig()
+    {
+        if (UniquePowerModifierID.inventoryItemID != InventoryItemID.None)
+        {
+            // get and return config from config manager by item ID and UPM index in that item
+            return ConfigManager.Instance[UniquePowerModifierID.inventoryItemID].uniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+        }
+        else if (UniquePowerModifierID.unitAbilityID != UnitAbilityID.None)
+        {
+            // get and return config from config manager by ability ID and UPM index in that ability
+            return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+        }
+        else
+        {
+            // this should not happen
+            Debug.LogError("Unhandled exception");
+            return null;
+        }
+    }
+
+    public string GetOriginDisplayName()
+    {
+        if (UniquePowerModifierID.inventoryItemID != InventoryItemID.None)
+        {
+            // get and return config from config manager by item ID and UPM index in that item
+            return ConfigManager.Instance[UniquePowerModifierID.inventoryItemID].itemDisplayName;
+        }
+        else if (UniquePowerModifierID.unitAbilityID != UnitAbilityID.None)
+        {
+            // get and return config from config manager by ability ID and UPM index in that ability
+            return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].abilityDisplayName;
+        }
+        else
+        {
+            // this should not happen
+            Debug.LogError("Unhandled exception");
+            return null;
+        }
+    }
 }
 
 [Serializable]
@@ -553,6 +718,7 @@ public class PartyUnit : MonoBehaviour {
     // Data which will be saved later
     [SerializeField]
     PartyUnitData partyUnitData;
+
     PartyUnitConfig partyUnitConfig; // init on Awake
     UnitStatusConfig unitStatusConfig;
     UnitAbilityConfig unitAbilityConfig; // init on first Get
@@ -2753,7 +2919,7 @@ public class PartyUnit : MonoBehaviour {
         get
         {
             //return partyUnitData.uniquePowerModifiers;
-            return UnitAbilityConfig.uniquePowerModifiers;
+            return UnitAbilityConfig.uniquePowerModifierConfigs;
         }
 
         //set
@@ -2830,6 +2996,30 @@ public class PartyUnit : MonoBehaviour {
             return partyUnitConfig;
         }
     }
+
+    //public void AddUPMData(UniquePowerModifierData uniquePowerModifierData)
+    //{
+    //    partyUnitData.uniquePowerModifiersData.Add(uniquePowerModifierData);
+    //    uniquePowerModifierDataAdd.Raise(this, uniquePowerModifierData);
+    //}
+
+    //public void RemoveUPMData(UniquePowerModifierData uniquePowerModifierData)
+    //{
+    //    partyUnitData.uniquePowerModifiersData.Remove(uniquePowerModifierData);
+    //    uniquePowerModifierDataRemove.Raise(this, uniquePowerModifierData);
+    //}
+
+    //// (c) https://stackoverflow.com/questions/3052991/forbid-public-add-and-delete-for-a-listt
+    //public IEnumerable<UniquePowerModifierData> UniquePowerModifiersData
+    //{
+    //    get
+    //    {
+    //        // dont' return reference to a full list to prevent uncontrolled additions and removals
+    //        // because we want to rise an event on this for UI
+    //        // return partyUnitData.uniquePowerModifiersData;
+    //        foreach (var uniquePowerModifierData in partyUnitData.uniquePowerModifiersData) yield return uniquePowerModifierData;
+    //    }
+    //}
 
     public List<UniquePowerModifierData> UniquePowerModifiersData
     {

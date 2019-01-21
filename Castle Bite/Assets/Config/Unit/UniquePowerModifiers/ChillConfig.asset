@@ -20,6 +20,9 @@ MonoBehaviour:
     type: 2}
   upmAppliedBuff: 0
   upmAppliedDebuff: 3
+  uniquePowerModifierType: 1
   upmOrigin: 0
   modifierApplied: 0
   upmDurationLeft: 2
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: fb48d9d91de54154cbb2eed602af924b,
+    type: 2}

@@ -19,10 +19,64 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     Color disabledColor;
     // create event, which later can be configured in Unity Editor
     public UnityEvent OnClick;
+    public UnityEvent OnLeftMouseButtonDown;
+    public UnityEvent OnLeftMouseButtonUp;
     public UnityEvent OnRightMouseButtonDown;
     public UnityEvent OnRightMouseButtonUp;
     public UnityEvent OnMouseEnter;
     public UnityEvent OnMouseExit;
+
+    public Color NormalColor
+    {
+        get
+        {
+            return normalColor;
+        }
+
+        set
+        {
+            normalColor = value;
+        }
+    }
+
+    public Color HighlightedColor
+    {
+        get
+        {
+            return highlightedColor;
+        }
+
+        set
+        {
+            highlightedColor = value;
+        }
+    }
+
+    public Color PressedColor
+    {
+        get
+        {
+            return pressedColor;
+        }
+
+        set
+        {
+            pressedColor = value;
+        }
+    }
+
+    public Color DisabledColor
+    {
+        get
+        {
+            return disabledColor;
+        }
+
+        set
+        {
+            disabledColor = value;
+        }
+    }
 
     void Start()
     {
@@ -49,6 +103,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             {
                 // on left mouse
                 SetPressedStatus();
+                OnLeftMouseButtonDown.Invoke();
             }
             else if (Input.GetMouseButtonDown(1))
             {
@@ -66,6 +121,7 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             if (Input.GetMouseButtonUp(0))
             {
                 // on left mouse
+                OnLeftMouseButtonUp.Invoke();
             }
             else if (Input.GetMouseButtonUp(1))
             {

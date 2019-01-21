@@ -12,3 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42184343ec1210e4fb607a04568acf71, type: 3}
   m_Name: Base Damage Over Time UPM
   m_EditorClassIdentifier: 
+  uniquePowerModifierDataHasBeenAddedEvent: {fileID: 11400000, guid: 9b2c4948f393789408a528ee15395380,
+    type: 2}
+  uniquePowerModifierDurationHasBeenResetToMaxEvent: {fileID: 11400000, guid: 3192e014b421d72499cc8ad48b4637c0,
+    type: 2}
+  uniquePowerModifierPowerHasBeenChangedEvent: {fileID: 11400000, guid: 18af5da8d2e9a814d952f28965205c0b,
+    type: 2}

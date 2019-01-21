@@ -215,4 +215,12 @@ public class ConfigManager : MonoBehaviour
             return unitAbilityConfigs.First(e => e.unitAbilityID == unitAbility);
         }
     }
+
+    public InventoryItemConfig this[InventoryItemID inventoryItemID]
+    {
+        get
+        {
+            return inventoryItemConfigs.First(e => e.inventoryItemID == inventoryItemID);
+        }
+    }
 }

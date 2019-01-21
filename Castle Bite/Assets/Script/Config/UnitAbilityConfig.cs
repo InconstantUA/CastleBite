@@ -23,7 +23,7 @@ public class UnitAbilityConfig : ScriptableObject
     // additional ability powers
     public List<UnitPowerConfig> unitPowerConfigs;
     // Unique power modifiers
-    public List<UniquePowerModifierConfig> uniquePowerModifiers;
+    public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
 
     //public bool IsApplicableToUnit(PartyUnit partyUnit)
     //{

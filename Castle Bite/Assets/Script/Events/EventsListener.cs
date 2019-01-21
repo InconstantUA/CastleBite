@@ -30,6 +30,11 @@ public class UnitUIToUnitUIEvent : UnityEvent<PartyUnitUI, PartyUnitUI>
 }
 
 [System.Serializable]
+public class UniquePowerModifierDataEvent : UnityEvent<UniquePowerModifierData>
+{
+}
+
+[System.Serializable]
 public class EventAndAction
 {
     public string name;
@@ -40,6 +45,7 @@ public class EventAndAction
     public UnitPowerModifierEvent unitPowerModifierEvent;
     public UnitAbilityEvent unitAbilityEvent;
     public UnitUIToUnitUIEvent unitToUnitEvent;
+    public UniquePowerModifierDataEvent uniquePowerModifierDataEvent;
     //public EventWithTriggeredObjectReference eventWithTriggeredObjectReference;
 
     public void Invoke(GameObject gameObject = null)
@@ -64,6 +70,16 @@ public class EventAndAction
         //    // partyUnitEvent.Invoke(gameEvent.partyUnit);
         //    eventWithTriggeredObjectReference.Invoke(gameEvent.partyUnit);
         //}
+    }
+
+    public void Invoke(System.Object systemObject)
+    {
+        // Check if at least 1 object is listening for the event
+        if (uniquePowerModifierDataEvent.GetPersistentEventCount() >= 1)
+        {
+            Debug.Log("Invoking event for " + ((UniquePowerModifierData)systemObject).UniquePowerModifierID.ToString());
+            uniquePowerModifierDataEvent.Invoke((UniquePowerModifierData)systemObject);
+        }
     }
 
     public void Invoke(GameObject gameObject, int difference)
@@ -101,6 +117,7 @@ public class EventAndAction
             unitToUnitEvent.Invoke(gameObject1.GetComponent<PartyUnitUI>(), gameObject2.GetComponent<PartyUnitUI>());
         }
     }
+
 }
 
 public class EventsListener : MonoBehaviour
@@ -150,6 +167,28 @@ public class EventsListener : MonoBehaviour
                     // Debug.Log("Called Event named: " + eventsAndActions[i].name);
                 }
                 eventsAndActions[i].Invoke(gameObject);
+            }
+        }
+    }
+
+    public void ActOnEvent(GameEvent raisedGameEvent, System.Object systemObject)
+    {
+        // loop from the lately registered to the earlier registered events
+        for (int i = eventsAndActions.Count - 1; i >= 0; i--)
+        {
+            // Check if this is raised GameEvent
+            if (raisedGameEvent == eventsAndActions[i].gameEvent)
+            {
+                // Uncomment the line below for debugging the event listens and other details
+                if (systemObject != null)
+                {
+                    // Debug.Log("Called Event named: " + eventsAndActions[i].name + " on GameObject: " + gameObject.name);
+                }
+                else
+                {
+                    // Debug.Log("Called Event named: " + eventsAndActions[i].name);
+                }
+                eventsAndActions[i].Invoke(systemObject);
             }
         }
     }

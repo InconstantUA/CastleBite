@@ -15,6 +15,12 @@ public class PartyUnitUI : MonoBehaviour {
     Color defaultUnitStatusColor;
     [SerializeField]
     Color defaultUnitInfoColor;
+    [SerializeField]
+    Transform upmBuffsParentTranform;
+    [SerializeField]
+    Transform upmDebuffsParentTranform;
+    [SerializeField]
+    UniquePowerModifierStatusIcon uniquePowerModifierStatusIconTemplate;
 
     public PartyUnit LPartyUnit
     {
@@ -633,6 +639,38 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
+    public void OnUniquePowerModifierDataHasBeenAdded(PartyUnit partyUnit)
+    {
+        // verify if this is the same party unit
+        if (partyUnit == LPartyUnit)
+        {
+            Debug.Log("Add new UPM");
+            // get added UPM (get last UPM from the list)
+            UniquePowerModifierData uniquePowerModifierData = partyUnit.UniquePowerModifiersData[partyUnit.UniquePowerModifiersData.Count - 1];
+            // init parent transform
+            Transform upmStatusIconParent;
+            // verify if UPM is buff or debuff
+            if (uniquePowerModifierData.GetUniquePowerModifierConfig().uniquePowerModifierType == UniquePowerModifierType.Buff)
+            {
+                upmStatusIconParent = upmBuffsParentTranform;
+            }
+            else if (uniquePowerModifierData.GetUniquePowerModifierConfig().uniquePowerModifierType == UniquePowerModifierType.Debuff)
+            {
+                upmStatusIconParent = upmDebuffsParentTranform;
+            }
+            else
+            {
+                Debug.LogError("Unhandled condition");
+                // set it to debuffs
+                upmStatusIconParent = upmDebuffsParentTranform;
+            }
+            // create UI for added UPM based on UPM config
+            UniquePowerModifierStatusIcon uniquePowerModifierStatusIcon = Instantiate(uniquePowerModifierStatusIconTemplate.gameObject, upmStatusIconParent).GetComponent<UniquePowerModifierStatusIcon>();
+            // activate new UPM
+            uniquePowerModifierStatusIcon.SetActive(uniquePowerModifierData);
+        }
+    }
+
     public void SetUnitDebuffActive(UniquePowerModifierConfig uniquePowerModifier, bool doActivate)
     {
         // get unit debuffs panel
@@ -704,9 +742,9 @@ public class PartyUnitUI : MonoBehaviour {
             // run text animation
             srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.textAnimation.Run(UnitInfoPanelText);
             // apply unit additional powers
-            for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifiers.Count; i++)
+            for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs.Count; i++)
             {
-                SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifiers[i], true);
+                SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i], true);
                 // set unique power modifier ID
                 UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
                 {
@@ -714,7 +752,7 @@ public class PartyUnitUI : MonoBehaviour {
                     uniquePowerModifierConfigIndex = i,
                     modifierOrigin = ModifierOrigin.UnitAbility
                 };
-                srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifiers[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+                srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
             }
         }
         // verify if it is source unit
