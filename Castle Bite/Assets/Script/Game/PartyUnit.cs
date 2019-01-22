@@ -55,6 +55,7 @@ public enum UnitAbilityID
     LastCall,           // Undead Hades capital guard
     DrainLife,          // Undead Vampire
     SacrificingEcho,    // Dominion Ancient
+    DefensiveStance,            // Default defense stance ability
     None
 };
 
@@ -224,7 +225,7 @@ public class UnitSkillData
 [Serializable]
 public enum ModifierOrigin
 {
-    UnitAbility,
+    Ability,
     Item
 }
 
@@ -721,9 +722,9 @@ public class PartyUnit : MonoBehaviour {
     // Data which will be saved later
     [SerializeField]
     PartyUnitData partyUnitData;
-    // event for UI when UPM has been removed
-    [SerializeField]
-    GameEvent uniquePowerModifierHasBeenRemovedEvent;
+    //// event for UI when UPM has been removed
+    //[SerializeField]
+    //GameEvent uniquePowerModifierHasBeenRemovedEvent;
 
 
     PartyUnitConfig partyUnitConfig; // init on Awake
@@ -875,31 +876,42 @@ public class PartyUnit : MonoBehaviour {
         return skill.currentSkillLevel * 10;
     }
 
-    public float GetStatusDefenseBonus()
+    public float GetDefensiveStanceBonus()
     {
-        // Applied Multiplicatively
-        // verify if buffs array is not null
-        if (UnitBuffs != null)
+        //// Applied Multiplicatively
+        //// verify if buffs array is not null
+        //if (UnitBuffs != null)
+        //{
+        //    //Debug.Log(UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
+        //    // verify if buffs array was initialized properly
+        //    if (UnitBuffs.Length != (int)UnitBuff.ArrSize)
+        //    {
+        //        // initialize buffs array
+        //        InitUnitBuffs();
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.LogError("Unit buffs array is null");
+        //}
+        //// verify if unit has defense stance buff
+        //if (UnitBuff.DefenseStance == UnitBuffs[(int)UnitBuff.DefenseStance])
+        //{
+        //    // reduce damage by half
+        //    return 0.5f;
+        //}
+        // verify if defensive stance ability Unique Power Modifier is applied
+        // search for DefensiveStance in applied UPMs data
+        UniquePowerModifierData defensiveStanceUPMData = UniquePowerModifiersData.Find(e => e.UniquePowerModifierID.unitAbilityID == UnitAbilityID.DefensiveStance);
+        // verify if UPM for DefensiveStance ability is found
+        if (defensiveStanceUPMData != null)
         {
-            //Debug.Log(UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
-            // verify if buffs array was initialized properly
-            if (UnitBuffs.Length != (int)UnitBuff.ArrSize)
-            {
-                // initialize buffs array
-                InitUnitBuffs();
-            }
+            // get bonus
+            // .. todo fix to calculate the value based on unit stat ModifierCalculatedHow
+            return (float)defensiveStanceUPMData.CurrentPower / 100f;
         }
-        else
-        {
-            Debug.LogError("Unit buffs array is null");
-        }
-        // verify if unit has defense stance buff
-        if (UnitBuff.DefenseStance == UnitBuffs[(int)UnitBuff.DefenseStance])
-        {
-            // reduce damage by half
-            return 0.5f;
-        }
-        return 0f; // no impact on defense
+        // default: no impact on defense
+        return 0f; 
     }
 
     public int GetTotalAdditiveDefense()
@@ -915,9 +927,7 @@ public class PartyUnit : MonoBehaviour {
         // apply city defense modifier
         totalDefense += cityDefenseModifier;
         // Get items modifier
-        // no items yet, skip
-        // ..
-        int itemsDefenseModifier = 0;
+        int itemsDefenseModifier = GetItemsDefenseBonus();
         // apply items defense modifier
         totalDefense += itemsDefenseModifier;
         // Get skills modifier
@@ -936,16 +946,12 @@ public class PartyUnit : MonoBehaviour {
     public int GetEffectiveDefense()
     {
         // ADDITIVE
-        int totalDefense = GetTotalAdditiveDefense();
+        int totalAdditiveDefense = GetTotalAdditiveDefense();
         // MULTIPLICATIVE
         // Get additional defense mondifiers:
-        // Get status modifiers, example: defense stance buff
-        float statusModifier = GetStatusDefenseBonus();
         // Apply status modifier;
-        int restDamagePercent = 100 - totalDefense;
-        int totalDefenseWithModifiers = totalDefense + (int)Math.Round(restDamagePercent * statusModifier);
-        // apply items bonus
-        totalDefenseWithModifiers += GetItemsDefenseBonus();
+        int restDamagePercent = 100 - totalAdditiveDefense;
+        int totalDefenseWithModifiers = totalAdditiveDefense + (int)Math.Round(restDamagePercent * GetDefensiveStanceBonus());
         // Return result
         return totalDefenseWithModifiers;
     }
@@ -1985,7 +1991,7 @@ public class PartyUnit : MonoBehaviour {
             for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
             {
                 // verify if this is active modifier
-                if ((inventoryItem.UniquePowerModifiers[i].modifierApplied == ModifierAppliedHow.Active)
+                if ((inventoryItem.UniquePowerModifiers[i].modifierAppliedHow == ModifierAppliedHow.Active)
                 // verify if UPM required statuses match current unit status
                 && (MatchStatuses(inventoryItem.UniquePowerModifiers[i].CanBeAppliedToTheUnitsWithStatuses))
                 // verify if UPM scope matches
@@ -2119,22 +2125,31 @@ public class PartyUnit : MonoBehaviour {
         return UnitHealthMax + GetItemsHealthBonus();
     }
 
+    public void ApplyDailyHealthRegen()
+    {
+        // verify if unit is not dead
+        if (UnitStatus != UnitStatus.Dead)
+        {
+            // verify if health is not max already
+            if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
+            {
+                // apply daily health regen
+                // Note: this should be done before taking control
+                UnitHealthCurr += GetUnitEffectiveHealthRegenPerDay();
+                // verify if health is not higher than max
+                if (UnitHealthCurr > GetUnitEffectiveMaxHealth())
+                {
+                    // reset current health to max
+                    UnitHealthCurr = GetUnitEffectiveMaxHealth();
+                }
+            }
+        }
+    }
+
     public void ExecutePreTurnActions()
     {
         // apply daily heal to all party members
-        // verify if health is not max already
-        if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
-        {
-            // apply daily health regen
-            // Note: this should be done before taking control
-            UnitHealthCurr += GetUnitEffectiveHealthRegenPerDay();
-            // verify if health is not higher than max
-            if (UnitHealthCurr > GetUnitEffectiveMaxHealth())
-            {
-                // reset current health to max
-                UnitHealthCurr = GetUnitEffectiveMaxHealth();
-            }
-        }
+        ApplyDailyHealthRegen();
         // .. decrement daily buffs
         // loop through all items and verify if it has expired
         foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
@@ -2328,15 +2343,6 @@ public class PartyUnit : MonoBehaviour {
             {
                 // set unit is dead attribute
                 UnitStatus = UnitStatus.Dead;
-                // remove all applied unit's buffs and debuffs
-                // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
-                for (int i = UniquePowerModifiersData.Count - 1; i >= 0; i--)
-                {
-                    // trigger UPM removed event
-                    UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(UniquePowerModifiersData[i]);
-                    // remove it from the list
-                    UniquePowerModifiersData.RemoveAt(i);
-                }
             }
             // verify if unit has been resurected
             if (0 == previousHealth)
@@ -2685,6 +2691,19 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
+    public void RemoveAppliedUnitUniquePowerModifiers()
+    {
+        // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
+        for (int i = UniquePowerModifiersData.Count - 1; i >= 0; i--)
+        {
+            // trigger UPM removed event
+            //UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(UniquePowerModifiersData[i]);
+            UniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(UniquePowerModifiersData[i]);
+            // remove it from the list
+            UniquePowerModifiersData.RemoveAt(i);
+        }
+    }
+
     public UnitStatus UnitStatus
     {
         get
@@ -2697,6 +2716,12 @@ public class PartyUnit : MonoBehaviour {
             partyUnitData.unitStatus = value;
             // Reset previous unit status config
             UnitStatusConfig = null;
+            // verify if new status is Dead or Escaped
+            if (UnitStatus == UnitStatus.Dead || UnitStatus == UnitStatus.Escaped)
+            {
+                // remove all applied unit's buffs and debuffs
+                RemoveAppliedUnitUniquePowerModifiers();
+            }
             // set party unit which is rising event
             // UnitEvents.unitStatus.HasChanged.partyUnit = this;
             // rise an event

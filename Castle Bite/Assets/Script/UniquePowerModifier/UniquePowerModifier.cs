@@ -4,6 +4,17 @@ using UnityEngine;
 
 public abstract class UniquePowerModifier : ScriptableObject
 {
+    [SerializeField]
+    UniquePowerModifierEvents events;
+
+    public UniquePowerModifierEvents Events
+    {
+        get
+        {
+            return events;
+        }
+    }
+
     public abstract void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID);
     public abstract void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData);
 }

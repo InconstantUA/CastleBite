@@ -3,6 +3,8 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// This script is probably not used
+
 // Use the same colors as defined for the button but for the text
 // Button in our case is not visible, only text is visible
 // We set alpha in button properties to 0
@@ -81,7 +83,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         // Apply defense stance status
         // Get active unit party panel
         PartyPanel partyPanel = activeUnitUI.GetUnitPartyPanel();
-        partyPanel.SetUnitDefenseBuffActive(activeUnitUI, true);
+        //partyPanel.SetUnitDefenseBuffActive(activeUnitUI);
         Proceed();
     }
 

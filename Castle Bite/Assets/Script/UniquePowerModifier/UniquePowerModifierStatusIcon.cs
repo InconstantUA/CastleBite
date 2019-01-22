@@ -267,7 +267,7 @@ public class UniquePowerModifierStatusIcon : MonoBehaviour
             additionalInfo = new string[] {
                 "Power: " + Math.Abs(uniquePowerModifierData.CurrentPower),
                 "Duration: " + uniquePowerModifierData.DurationLeft + "/" + uniquePowerModifierConfig.UpmDurationMax,
-                "Origin: " + uniquePowerModifierData.GetOriginDisplayName() + " " + uniquePowerModifierConfig.upmOrigin
+                "Origin: " + uniquePowerModifierData.GetOriginDisplayName() + " " + uniquePowerModifierData.UniquePowerModifierID.modifierOrigin
             }
         };
     }

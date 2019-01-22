@@ -2991,30 +2991,30 @@ public class PartyPanel : MonoBehaviour {
         // StartCoroutine("FadeUnitCellInfo");
     }
 
-    public void SetUnitDefenseBuffActive(PartyUnitUI partyUnitUI, bool doActivate)
-    {
-        // get unit buffs panel
-        Transform buffsPanel = partyUnitUI.GetUnitBuffsPanel();
-        if (doActivate)
-        {
-            // add buff to unit
-            // Debug.Log(((int)UnitBuff.DefenseStance).ToString());
-            // Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
-            partyUnitUI.LPartyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.DefenseStance;
-            // create buff by duplicating from template
-            Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defense");
-            Transform defenseBuff = Instantiate(buffTemplate, buffsPanel);
-            // activate buff
-            defenseBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance(true);
-            // rename it so it can be later found by name
-            defenseBuff.name = "Defense";
-        } else
-        {
-            // remove buff
-            partyUnitUI.LPartyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.None;
-            Destroy(buffsPanel.Find("Defense").gameObject);
-        }
-    }
+    //public void SetUnitDefenseBuffActive(PartyUnitUI partyUnitUI)
+    //{
+    //    // get unit buffs panel
+    //    Transform buffsPanel = partyUnitUI.GetUnitBuffsPanel();
+    //    if (doActivate)
+    //    {
+    //        // add buff to unit
+    //        // Debug.Log(((int)UnitBuff.DefenseStance).ToString());
+    //        // Debug.Log(partyUnit.GetUnitBuffs().Length.ToString());
+    //        partyUnitUI.LPartyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.DefenseStance;
+    //        // create buff by duplicating from template
+    //        Transform buffTemplate = transform.root.Find("Templates/UI/Buffs/Defense");
+    //        Transform defenseBuff = Instantiate(buffTemplate, buffsPanel);
+    //        // activate buff
+    //        defenseBuff.GetComponent<UnitBuffIndicator>().SetActiveAdvance(true);
+    //        // rename it so it can be later found by name
+    //        defenseBuff.name = "Defense";
+    //    } else
+    //    {
+    //        // remove buff
+    //        partyUnitUI.LPartyUnit.UnitBuffs[(int)UnitBuff.DefenseStance] = UnitBuff.None;
+    //        Destroy(buffsPanel.Find("Defense").gameObject);
+    //    }
+    //}
 
     public bool HasEscapedBattle()
     {

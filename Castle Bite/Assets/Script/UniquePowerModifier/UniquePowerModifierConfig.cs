@@ -21,15 +21,15 @@ public class UniquePowerModifierConfig : ScriptableObject
     private UnitStatModifierConfig unitStatModifierConfig;
     // define possible origins (who is the source of unique power modifier)
     // private ModifierScope modifierScope;
-    public UnitBuff upmAppliedBuff;
-    public UnitDebuff upmAppliedDebuff;
+    //public UnitBuff upmAppliedBuff;
+    //public UnitDebuff upmAppliedDebuff;
     public UniquePowerModifierType uniquePowerModifierType;
     // private int upmPower;
     // private int upmPowerIncrementOnLevelUp;
     // private int upmDuration;
     // private PowerSource upmSource;
-    public ModifierOrigin upmOrigin; // ?TODO: move to data
-    public ModifierAppliedHow modifierApplied;  // ? consider removing active/passive
+    //public ModifierOrigin upmOrigin; // ?TODO: move to data
+    public ModifierAppliedHow modifierAppliedHow;  // active (example: heal over time buff) or passive (example: defense buff)
     public int upmDurationLeft; // TODO: move to data
     // public int skillPowerMultiplier = 1;
     // private UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
@@ -38,12 +38,12 @@ public class UniquePowerModifierConfig : ScriptableObject
 
     public void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
     {
-        uniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
+        UniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
     }
 
     public void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
     {
-        uniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
+        UniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
     }
 
     public ModifierScope ModifierScope
@@ -121,6 +121,14 @@ public class UniquePowerModifierConfig : ScriptableObject
         get
         {
             return uniquePowerModifierUIConfig;
+        }
+    }
+
+    public UniquePowerModifier UniquePowerModifier
+    {
+        get
+        {
+            return uniquePowerModifier;
         }
     }
 

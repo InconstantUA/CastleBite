@@ -73346,6 +73346,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9e06f444e3e2bb540a8555cb64008664, type: 2}
   - {fileID: 11400000, guid: 3a38c5b76b0201f4c9b8c5b4c5e2f514, type: 2}
   - {fileID: 11400000, guid: 35a19388d78f8264596cd97a751d1d88, type: 2}
+  - {fileID: 11400000, guid: 97387eb1903314f4f844f57474336533, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -104963,7 +104964,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1916181419}
   m_Layer: 5
-  m_Name: Debuffs
+  m_Name: Debuffs-rm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

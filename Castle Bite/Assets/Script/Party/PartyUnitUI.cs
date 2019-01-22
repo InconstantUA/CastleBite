@@ -21,6 +21,8 @@ public class PartyUnitUI : MonoBehaviour {
     Transform upmDebuffsParentTranform;
     [SerializeField]
     UniquePowerModifierStatusIcon uniquePowerModifierStatusIconTemplate;
+    [SerializeField]
+    UniquePowerModifierConfig defenseUniquePowerModifierConfig;
     //// event for UI when UPM has been removed
     //[SerializeField]
     //GameEvent uniquePowerModifierHasBeenRemovedEvent;
@@ -354,28 +356,28 @@ public class PartyUnitUI : MonoBehaviour {
     #endregion Unit Br Canvas
 
 
-    public void ApplyDestructiveAbility(int damageDealt)
-    {
-        int healthAfterDamage = LPartyUnit.UnitHealthCurr + damageDealt; // Note: damageDealt is negative normally
-        // make sure that we do not set health less then 0
-        if (healthAfterDamage <= 0)
-        {
-            healthAfterDamage = 0;
-        }
-        LPartyUnit.UnitHealthCurr = healthAfterDamage;
-        // update current health in UI
-        Text currentHealth = GetUnitCurrentHealthText();
-        currentHealth.text = healthAfterDamage.ToString();
-        // verify if unit is dead
-        if (0 == healthAfterDamage)
-        {
-            // set unit is dead attribute
-            LPartyUnit.UnitStatus = UnitStatus.Dead;
-        }
-        // display damage dealt in info panel
-        UnitInfoPanelText.text = damageDealt.ToString() + " health";
-        UnitInfoPanelText.color = Color.red;
-    }
+    //public void ApplyDestructiveAbility(int damageDealt)
+    //{
+    //    int healthAfterDamage = LPartyUnit.UnitHealthCurr + damageDealt; // Note: damageDealt is negative normally
+    //    // make sure that we do not set health less then 0
+    //    if (healthAfterDamage <= 0)
+    //    {
+    //        healthAfterDamage = 0;
+    //    }
+    //    LPartyUnit.UnitHealthCurr = healthAfterDamage;
+    //    // update current health in UI
+    //    Text currentHealth = GetUnitCurrentHealthText();
+    //    currentHealth.text = healthAfterDamage.ToString();
+    //    // verify if unit is dead
+    //    if (0 == healthAfterDamage)
+    //    {
+    //        // set unit is dead attribute
+    //        LPartyUnit.UnitStatus = UnitStatus.Dead;
+    //    }
+    //    // display damage dealt in info panel
+    //    UnitInfoPanelText.text = damageDealt.ToString() + " health";
+    //    UnitInfoPanelText.color = Color.red;
+    //}
 
     public void RemoveAllBuffs()
     {
@@ -393,25 +395,26 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void RemoveAllDebuffs()
-    {
-        // in unit properties
-        for (int i = 0; i < LPartyUnit.UnitDebuffs.Length; i++)
-        {
-            LPartyUnit.UnitDebuffs[i] = UnitDebuff.None;
-        }
-        // in UI
-        UnitDebuffIndicator[] allDebuffs = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
-        foreach (UnitDebuffIndicator buff in allDebuffs)
-        {
-            Destroy(buff.gameObject);
-        }
-    }
+    //public void RemoveAllDebuffs()
+    //{
+    //    // in unit properties
+    //    for (int i = 0; i < LPartyUnit.UnitDebuffs.Length; i++)
+    //    {
+    //        LPartyUnit.UnitDebuffs[i] = UnitDebuff.None;
+    //    }
+    //    // in UI
+    //    UnitDebuffIndicator[] allDebuffs = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
+    //    foreach (UnitDebuffIndicator buff in allDebuffs)
+    //    {
+    //        Destroy(buff.gameObject);
+    //    }
+    //}
 
     public void RemoveAllBuffsAndDebuffs()
     {
         RemoveAllBuffs();
-        RemoveAllDebuffs();
+        // RemoveAllDebuffs();
+        LPartyUnit.RemoveAppliedUnitUniquePowerModifiers();
     }
 
     public void DeactivateExpiredBuffs()
@@ -435,7 +438,7 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void TriggerAppliedDebuffs()
+    public void TriggerAppliedUniquePowerModifiers()
     {
         //Debug.Log("TriggerAppliedDebuffs");
         //UnitDebuffIndicator[] debuffsIndicators = GetUnitDebuffsPanel().GetComponentsInChildren<UnitDebuffIndicator>();
@@ -482,7 +485,8 @@ public class PartyUnitUI : MonoBehaviour {
                 {
                     // UPM has expired
                     // trigger UPM removed event
-                    LPartyUnit.UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
+                    //LPartyUnit.UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
+                    LPartyUnit.UniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
                     // remove it from the list
                     LPartyUnit.UniquePowerModifiersData.RemoveAt(i);
                 }
@@ -753,6 +757,19 @@ public class PartyUnitUI : MonoBehaviour {
     //        Destroy(debuffsPanel.Find(uniquePowerModifier.upmAppliedDebuff.ToString()).gameObject);
     //    }
     //}
+    public void SetDefenseBuffActive()
+    {
+        // set unique power modifier ID
+        UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+        {
+            unitAbilityID = UnitAbilityID.DefensiveStance,
+            uniquePowerModifierConfigIndex = 0,
+            modifierOrigin = ModifierOrigin.Ability,
+            destinationGameObjectID = gameObject.GetInstanceID()
+        };
+        // get defensive stance UPM configuration form manager and apply it to self
+        ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
+    }
 
     public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI dstPartyUnitUI)
     {
@@ -785,7 +802,7 @@ public class PartyUnitUI : MonoBehaviour {
                     {
                         unitAbilityID = srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbilityID,
                         uniquePowerModifierConfigIndex = i,
-                        modifierOrigin = ModifierOrigin.UnitAbility,
+                        modifierOrigin = ModifierOrigin.Ability,
                         destinationGameObjectID = dstPartyUnitUI.gameObject.GetInstanceID()
                     };
                     srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);

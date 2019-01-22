@@ -779,7 +779,7 @@ public class BattleScreen : MonoBehaviour {
             // Verify if unit has debuffs which should be applied, example: poison
             // Deactivate debuffs which has expired, example: poison duration may last 2 turns
             // This is checked and done after debuff trigger
-            ActiveUnitUI.TriggerAppliedDebuffs();
+            ActiveUnitUI.TriggerAppliedUniquePowerModifiers();
         }
         //yield return null;
     }
@@ -967,9 +967,10 @@ public class BattleScreen : MonoBehaviour {
     {
         Debug.Log("OnDefend");
         // Get active unit party panel
-        PartyPanel partyPanel = ActiveUnitUI.GetUnitPartyPanel();
+        //PartyPanel partyPanel = ActiveUnitUI.GetUnitPartyPanel();
         // Apply defense stance status
-        partyPanel.SetUnitDefenseBuffActive(ActiveUnitUI, true);
+        //partyPanel.SetUnitDefenseBuffActive(ActiveUnitUI);
+        ActiveUnitUI.SetDefenseBuffActive();
         // proceed with default post-move actions
         Proceed();
     }

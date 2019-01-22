@@ -126,50 +126,50 @@ public class UnitDebuffIndicator : MonoBehaviour, IPointerDownHandler, IPointerU
 
 
 
-    public IEnumerator TriggerDebuff(PartyUnitUI dstUnitUI)
-    {
-        // Trigger debuff within unit
-        dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
-        // Proceed if unit is still alive
-        if (UnitStatus.Dead != dstUnitUI.LPartyUnit.UnitStatus)
-        {
-            // reset background image color to be visible
-            Color cx = backgroundImage.color;
-            cx.a = 1;
-            backgroundImage.color = cx;
-            // trigger animation
-            for (float f = 1f; f >= 0; f -= 0.1f)
-            {
-                Color c = backgroundImage.color;
-                c.a = f;
-                backgroundImage.color = c;
-                dstUnitUI.FadeUnitCellInfo(f);
-                yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
-            }
-            // Verify if it has timed out;
-            if (GetCurrentDuration() == 0)
-            {
-                // buff has timed out
-                // deactivate it (it will be destroyed at the end of animation)
-                SetActiveAdvance(false);
-                // deactivate it in unit properties too
-                dstUnitUI.LPartyUnit.UnitDebuffs[(int)GetUnitDebuff()] = UnitDebuff.None;
-            }
-        }
-        else
-        {
-            // all debuffs should be already removed by SetUnitStatus(status)
-            // Unit cannot move any more
-            // And even if it will be resurected, then his cannot move during this turn
-            dstUnitUI.LPartyUnit.HasMoved = true;
-            // Fade unit cell info
-            for (float f = 1f; f >= 0; f -= 0.1f)
-            {
-                dstUnitUI.FadeUnitCellInfo(f);
-                yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
-            }
-        }
-    }
+    //public IEnumerator TriggerDebuff(PartyUnitUI dstUnitUI)
+    //{
+    //    // Trigger debuff within unit
+    //    dstUnitUI.ApplyDestructiveAbility(dstUnitUI.LPartyUnit.GetDebuffDamageDealt(appliedUniquePowerModifier));
+    //    // Proceed if unit is still alive
+    //    if (UnitStatus.Dead != dstUnitUI.LPartyUnit.UnitStatus)
+    //    {
+    //        // reset background image color to be visible
+    //        Color cx = backgroundImage.color;
+    //        cx.a = 1;
+    //        backgroundImage.color = cx;
+    //        // trigger animation
+    //        for (float f = 1f; f >= 0; f -= 0.1f)
+    //        {
+    //            Color c = backgroundImage.color;
+    //            c.a = f;
+    //            backgroundImage.color = c;
+    //            dstUnitUI.FadeUnitCellInfo(f);
+    //            yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
+    //        }
+    //        // Verify if it has timed out;
+    //        if (GetCurrentDuration() == 0)
+    //        {
+    //            // buff has timed out
+    //            // deactivate it (it will be destroyed at the end of animation)
+    //            SetActiveAdvance(false);
+    //            // deactivate it in unit properties too
+    //            dstUnitUI.LPartyUnit.UnitDebuffs[(int)GetUnitDebuff()] = UnitDebuff.None;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // all debuffs should be already removed by SetUnitStatus(status)
+    //        // Unit cannot move any more
+    //        // And even if it will be resurected, then his cannot move during this turn
+    //        dstUnitUI.LPartyUnit.HasMoved = true;
+    //        // Fade unit cell info
+    //        for (float f = 1f; f >= 0; f -= 0.1f)
+    //        {
+    //            dstUnitUI.FadeUnitCellInfo(f);
+    //            yield return new WaitForSeconds(.1f); // note: timing should be the same as for FadeUnitCellInfo function
+    //        }
+    //    }
+    //}
 
     void FillInAdditionalInfo(UniquePowerModifierConfig uniquePowerModifier, PartyUnit partyUnit)
     {
