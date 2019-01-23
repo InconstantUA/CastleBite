@@ -500,6 +500,10 @@ public class EditPartyScreen : MonoBehaviour {
         // Set new unit cell address
         newPartyUnit.PartyUnitData.unitPPRow = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitPPRow();
         newPartyUnit.PartyUnitData.unitPPCell = destinationUnitSlotTransform.GetComponent<UnitSlot>().GetUnitPPCell();
+        // Reset new unit current health to max
+        newPartyUnit.ResetCurrentHealth();
+        // Reset new unit current move points to max
+        newPartyUnit.ResetCurrentMovePointsNumber();
         // take gold from player
         TurnsManager.Instance.GetActivePlayer().TotalGold -= hiredUnitTemplate.UnitCost;
         if (doCreateUI)

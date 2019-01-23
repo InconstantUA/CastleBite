@@ -379,21 +379,21 @@ public class PartyUnitUI : MonoBehaviour {
     //    UnitInfoPanelText.color = Color.red;
     //}
 
-    public void RemoveAllBuffs()
-    {
-        //Debug.Log("RemoveAllBuffs");
-        // in unit properties
-        for (int i = 0; i < LPartyUnit.UnitBuffs.Length; i++)
-        {
-            LPartyUnit.UnitBuffs[i] = UnitBuff.None;
-        }
-        // in UI
-        UnitBuffIndicator[] allBuffs = GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
-        foreach (UnitBuffIndicator buff in allBuffs)
-        {
-            Destroy(buff.gameObject);
-        }
-    }
+    //public void RemoveAllBuffs()
+    //{
+    //    //Debug.Log("RemoveAllBuffs");
+    //    // in unit properties
+    //    for (int i = 0; i < LPartyUnit.UnitBuffs.Length; i++)
+    //    {
+    //        LPartyUnit.UnitBuffs[i] = UnitBuff.None;
+    //    }
+    //    // in UI
+    //    UnitBuffIndicator[] allBuffs = GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
+    //    foreach (UnitBuffIndicator buff in allBuffs)
+    //    {
+    //        Destroy(buff.gameObject);
+    //    }
+    //}
 
     //public void RemoveAllDebuffs()
     //{
@@ -412,31 +412,31 @@ public class PartyUnitUI : MonoBehaviour {
 
     public void RemoveAllBuffsAndDebuffs()
     {
-        RemoveAllBuffs();
+        // RemoveAllBuffs();
         // RemoveAllDebuffs();
-        LPartyUnit.RemoveAppliedUnitUniquePowerModifiers();
+        LPartyUnit.RemoveAppliedUnitUniquePowerModifiers(); // process both buffs and debuffs
     }
 
-    public void DeactivateExpiredBuffs()
-    {
-        // Deactivate expired buffs in UI
-        // PartyUnit unit = GetComponent<PartyUnit>();
-        UnitBuffIndicator[] buffsUI = GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
-        foreach (UnitBuffIndicator buffUI in buffsUI)
-        {
-            // First decrement buff current duration
-            buffUI.DecrementCurrentDuration();
-            // Verify if it has timed out;
-            if (buffUI.GetCurrentDuration() == 0)
-            {
-                // buff has timed out
-                // deactivate it (it will be destroyed at the end of animation)
-                buffUI.SetActiveAdvance(false);
-                // deactivate it in unit properties too
-                LPartyUnit.UnitBuffs[(int)buffUI.GetUnitBuff()] = UnitBuff.None;
-            }
-        }
-    }
+    //public void DeactivateExpiredBuffs()
+    //{
+    //    // Deactivate expired buffs in UI
+    //    // PartyUnit unit = GetComponent<PartyUnit>();
+    //    UnitBuffIndicator[] buffsUI = GetUnitBuffsPanel().GetComponentsInChildren<UnitBuffIndicator>();
+    //    foreach (UnitBuffIndicator buffUI in buffsUI)
+    //    {
+    //        // First decrement buff current duration
+    //        buffUI.DecrementCurrentDuration();
+    //        // Verify if it has timed out;
+    //        if (buffUI.GetCurrentDuration() == 0)
+    //        {
+    //            // buff has timed out
+    //            // deactivate it (it will be destroyed at the end of animation)
+    //            buffUI.SetActiveAdvance(false);
+    //            // deactivate it in unit properties too
+    //            LPartyUnit.UnitBuffs[(int)buffUI.GetUnitBuff()] = UnitBuff.None;
+    //        }
+    //    }
+    //}
 
     public void TriggerAppliedUniquePowerModifiers()
     {

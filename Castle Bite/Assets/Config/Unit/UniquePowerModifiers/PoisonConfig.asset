@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: PoisonConfig
+  m_EditorClassIdentifier: 
+  displayName: Poison
+  description: Deals death-based damage over time
+  uniquePowerModifier: {fileID: 11400000, guid: cd0de2ec50a98094a9f639ca7da9f827,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: ef7b4e1f96a3c224c8ea0d05881e321e,
+    type: 2}
+  uniquePowerModifierType: 1
+  modifierAppliedHow: 0
+  upmDurationLeft: 2
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: aeefea8864b4ced49a7aff408e9fb239,
+    type: 2}

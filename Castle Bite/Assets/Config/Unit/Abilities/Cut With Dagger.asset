@@ -12,13 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
   m_Name: Cut With Dagger
   m_EditorClassIdentifier: 
+  abilityDisplayName: Cut With Dagger
+  abilityDescription: Description
   unitAbilityID: 3
   unitAbility: {fileID: 11400000, guid: cd7640ed16802be468eeccf2cfceaaf4, type: 2}
   unitAbilityTypes: 4
-  abilityDisplayName: Cut With Dagger
-  abilityDescription: Description
   unitAbilityRange: 0
+  isMassScopeAbility: 0
   unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
     type: 2}
-  unitPowerConfigs: []
   unitPowerModifiers: []
+  uniquePowerModifierConfigs:
+  - {fileID: 11400000, guid: 45b534f3b3a9c7c41a0e1ed1fcb57146, type: 2}

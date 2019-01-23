@@ -94,7 +94,7 @@ public class InventoryItemData : System.Object
     // public string itemName; // config
     // public int itemValue; // config
     // public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
-    private List<UniquePowerModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
+    public List<UniquePowerModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
     public List<UnitStatModifier> unitStatModifiers; // config
     public List<UniquePowerModifierConfig> uniquePowerModifiers; // config
     public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there shouldn't be more than 1 status modifier, because it does not make sense, because only one status can be active at a time

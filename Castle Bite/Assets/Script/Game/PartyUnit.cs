@@ -341,9 +341,10 @@ public class UniquePowerModifierID : System.Object
 [Serializable]
 public class UniquePowerModifierData : System.Object
 {
-    private UniquePowerModifierID uniquePowerModifierID;
-    private int durationLeft; // it is reset when USM is applied
-    private int currentPower;
+    // values should be public to be serialized by Instantiate for Backup (clone) party unit to work without writing your own clone function
+    public UniquePowerModifierID uniquePowerModifierID;
+    public int durationLeft; // it is reset when USM is applied
+    public int currentPower;
 
     public UniquePowerModifierID UniquePowerModifierID
     {
@@ -615,8 +616,8 @@ public class PartyUnitData : System.Object
     // public bool isDismissable;
     // Unit statuses and [de]buffs
     public UnitStatus unitStatus;
-    public UnitDebuff[] unitDebuffs;
-    public UnitBuff[] unitBuffs;
+    //public UnitDebuff[] unitDebuffs;
+    //public UnitBuff[] unitBuffs;
     // For Upgrade
     public int unitUpgradePoints;
     public int unitStatPoints;
@@ -705,6 +706,35 @@ public class PartyUnitData : System.Object
     public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
     // All active stat modifiers inherited from used items or applied abilities (this is required for game save / restore)
     public List<UniquePowerModifierData> uniquePowerModifiersData;
+
+    // update this on fields changes
+    // this is a function to restore original values on Cancel(ation) of PartyUnit Upgrade
+    public void CancelUpgrade(PartyUnitData backupPartyUnitData)
+    {
+        // copy every property, which is not the reference-type (not the class)
+        unitType = backupPartyUnitData.unitType;
+        isLeader = backupPartyUnitData.isLeader;
+        givenName = backupPartyUnitData.givenName;
+        unitLevel = backupPartyUnitData.unitLevel;
+        unitExperience = backupPartyUnitData.unitExperience;
+        unitHealthCurr = backupPartyUnitData.unitHealthCurr;
+        unitStatus = backupPartyUnitData.unitStatus;
+        unitUpgradePoints = backupPartyUnitData.unitUpgradePoints;
+        unitStatPoints = backupPartyUnitData.unitStatPoints;
+        unitClassPoints = backupPartyUnitData.unitClassPoints;
+        unitSkillPoints = backupPartyUnitData.unitSkillPoints;
+        statsUpgradesCount = backupPartyUnitData.statsUpgradesCount;
+        movePointsCurrent = backupPartyUnitData.movePointsCurrent;
+        // we assume that array size and members position doesn't change
+        for (int i = 0; i < unitSkillsData.Length; i++)
+        {
+            unitSkillsData[i].currentSkillLevel = backupPartyUnitData.unitSkillsData[i].currentSkillLevel;
+        }
+        unitPPRow = backupPartyUnitData.unitPPRow;
+        unitPPCell = backupPartyUnitData.unitPPCell;
+        //List<InventoryItemData> unitIventory; // type: reference and this should not change on upgrade
+        //List<UniquePowerModifierData> uniquePowerModifiersData // type: reference and this should not change on upgrade
+    }
 }
 
 // For events admin
@@ -734,30 +764,30 @@ public class PartyUnit : MonoBehaviour {
     // Misc Battle attributes
     private bool hasMoved = false;
 
-    void InitUnitBuffs()
-    {
-        UnitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
-        for (int i = 0; i < (int)UnitBuff.ArrSize; i++)
-        {
-            UnitBuffs[i] = UnitBuff.None;
-        }
-    }
+    //void InitUnitBuffs()
+    //{
+    //    UnitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+    //    for (int i = 0; i < (int)UnitBuff.ArrSize; i++)
+    //    {
+    //        UnitBuffs[i] = UnitBuff.None;
+    //    }
+    //}
 
-    void InitUnitDebuffs()
-    {
-        UnitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
-        for (int i = 0; i < (int)UnitDebuff.ArrSize; i++)
-        {
-            UnitDebuffs[i] = UnitDebuff.None;
-        }
-    }
+    //void InitUnitDebuffs()
+    //{
+    //    UnitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
+    //    for (int i = 0; i < (int)UnitDebuff.ArrSize; i++)
+    //    {
+    //        UnitDebuffs[i] = UnitDebuff.None;
+    //    }
+    //}
 
-    private void Awake()
-    {
-        InitUnitBuffs();
-        InitUnitDebuffs();
-        //Debug.Log("Awake " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
-    }
+    //private void Awake()
+    //{
+    //    InitUnitBuffs();
+    //    InitUnitDebuffs();
+    //    //Debug.Log("Awake " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
+    //}
 
     private void Start()
     {
@@ -2313,6 +2343,12 @@ public class PartyUnit : MonoBehaviour {
     //    }
     //}
 
+    public void ResetCurrentHealth()
+    {
+        // we do it in a separate function to not trigger all logic when unit health is being set
+        partyUnitData.unitHealthCurr = GetUnitEffectiveMaxHealth();
+    }
+
     public int UnitHealthCurr
     {
         get
@@ -2730,31 +2766,31 @@ public class PartyUnit : MonoBehaviour {
         }
     }
 
-    public UnitDebuff[] UnitDebuffs
-    {
-        get
-        {
-            return partyUnitData.unitDebuffs;
-        }
+    //public UnitDebuff[] UnitDebuffs
+    //{
+    //    get
+    //    {
+    //        return partyUnitData.unitDebuffs;
+    //    }
 
-        set
-        {
-            partyUnitData.unitDebuffs = value;
-        }
-    }
+    //    set
+    //    {
+    //        partyUnitData.unitDebuffs = value;
+    //    }
+    //}
 
-    public UnitBuff[] UnitBuffs
-    {
-        get
-        {
-            return partyUnitData.unitBuffs;
-        }
+    //public UnitBuff[] UnitBuffs
+    //{
+    //    get
+    //    {
+    //        return partyUnitData.unitBuffs;
+    //    }
 
-        set
-        {
-            partyUnitData.unitBuffs = value;
-        }
-    }
+    //    set
+    //    {
+    //        partyUnitData.unitBuffs = value;
+    //    }
+    //}
 
     public int UnitUpgradePoints
     {
@@ -2897,6 +2933,11 @@ public class PartyUnit : MonoBehaviour {
             // EventsAdmin.Instance.IHasChanged(this, new HealthMax());
             UnitEvents.unitHealthMax.HasChanged.Raise(gameObject);
         }
+    }
+
+    public void ResetCurrentMovePointsNumber()
+    {
+        partyUnitData.movePointsCurrent = MovePointsMax;
     }
 
     public int MovePointsCurrent

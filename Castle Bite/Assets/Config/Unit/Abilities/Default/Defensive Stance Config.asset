@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
   m_Name: Defensive Stance Config
   m_EditorClassIdentifier: 
-  abilityDisplayName: Blow With Great Sword
-  abilityDescription: Description
+  abilityDisplayName: Defensive Stance
+  abilityDescription: Reduces incoming damage by half
   unitAbilityID: 22
   unitAbility: {fileID: 11400000, guid: f07207b9f2fc14440baa9189ab6e5862, type: 2}
   unitAbilityTypes: 0

@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: ChillConfig
   m_EditorClassIdentifier: 
   displayName: Chill
-  description: Description
+  description: Deals water-based damage over time
   uniquePowerModifier: {fileID: 11400000, guid: cd0de2ec50a98094a9f639ca7da9f827,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: ced41e94aea2a1941bdb835790c1e623,
     type: 2}
   uniquePowerModifierType: 1
-  modifierApplied: 0
+  modifierAppliedHow: 0
   upmDurationLeft: 2
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: fb48d9d91de54154cbb2eed602af924b,
     type: 2}

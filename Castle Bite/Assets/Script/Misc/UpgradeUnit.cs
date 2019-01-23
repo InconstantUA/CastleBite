@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UpgradeUnit : MonoBehaviour {
 
     GameObject unitBackupGameObject;
-    PartyUnitUI focusedPartyUnitUI;
+    //PartyUnitUI focusedPartyUnitUI;
     PartyUnit focusedPartyUnit;
     //UnitInfoPanel unitInfoPanel;
     int statsUpgradeCount;
@@ -1388,40 +1388,44 @@ public class UpgradeUnit : MonoBehaviour {
 
     void Backup()
     {
+        // Note: to make it work all properties on the copied object (which you need) has to be public and classes has to be serializable
         // clone object
         unitBackupGameObject = Instantiate(focusedPartyUnit.gameObject, transform.root.Find("Backup"));
         // copy name of the focused game object to backup game object
         unitBackupGameObject.name = focusedPartyUnit.gameObject.name;
-        // copy skills current levels
-        UnitSkillData[] unitSkillsData = unitBackupGameObject.GetComponent<PartyUnit>().UnitSkillsData;
-        foreach (UnitSkillData unitSkillData in focusedPartyUnit.UnitSkillsData)
-        {
-            // copy skill level
-            Array.Find(unitSkillsData, element => element.unitSkill == unitSkillData.unitSkill).currentSkillLevel = unitSkillData.currentSkillLevel;
-            // Array.Find(unitSkillsData, element => element.unitSkill == unitSkillData.unitSkill).mLevel.mMax = unitSkillData.mLevel.mMax;
-        }
-        // copy buffs and defbuffs
-        UnitBuff[] buffs = unitBackupGameObject.GetComponent<PartyUnit>().UnitBuffs;
-        for (int i = 0; i < focusedPartyUnit.UnitBuffs.Length; i++)
-        {
-            buffs[i] = focusedPartyUnit.UnitBuffs[i];
-        }
-        UnitDebuff[] debuffs = unitBackupGameObject.GetComponent<PartyUnit>().UnitDebuffs;
-        for (int i = 0; i < focusedPartyUnit.UnitDebuffs.Length; i++)
-        {
-            debuffs[i] = focusedPartyUnit.UnitDebuffs[i];
-        }
+        //// copy skills current levels
+        //UnitSkillData[] unitSkillsData = unitBackupGameObject.GetComponent<PartyUnit>().UnitSkillsData;
+        //foreach (UnitSkillData unitSkillData in focusedPartyUnit.UnitSkillsData)
+        //{
+        //    // copy skill level
+        //    Array.Find(unitSkillsData, element => element.unitSkill == unitSkillData.unitSkill).currentSkillLevel = unitSkillData.currentSkillLevel;
+        //    // Array.Find(unitSkillsData, element => element.unitSkill == unitSkillData.unitSkill).mLevel.mMax = unitSkillData.mLevel.mMax;
+        //}
+        //// copy buffs and defbuffs
+        //UnitBuff[] buffs = unitBackupGameObject.GetComponent<PartyUnit>().UnitBuffs;
+        //for (int i = 0; i < focusedPartyUnit.UnitBuffs.Length; i++)
+        //{
+        //    buffs[i] = focusedPartyUnit.UnitBuffs[i];
+        //}
+        //UnitDebuff[] debuffs = unitBackupGameObject.GetComponent<PartyUnit>().UnitDebuffs;
+        //for (int i = 0; i < focusedPartyUnit.UnitDebuffs.Length; i++)
+        //{
+        //    debuffs[i] = focusedPartyUnit.UnitDebuffs[i];
+        //}
+        // copy applied unique power modifiers
     }
 
-    void RestoreBackup()
-    {
-        // get parent game object
-        Transform parentGameObjectTr = focusedPartyUnit.transform.parent;
-        // change parent of backuped object
-        unitBackupGameObject.transform.SetParent(parentGameObjectTr);
-        // change link in PartyUnit UI to backuped object
-        focusedPartyUnitUI.LPartyUnit = unitBackupGameObject.GetComponent<PartyUnit>();
-    }
+    //void RestoreBackup()
+    //{
+    //    // This is not good approach, because it breaks the references
+    //    // (for example UniquePowerModifierStatusIcon has the reference to UniquePowerModifierData and when you replace the object that reference becomes null, which breaks the logic in functions)
+    //    // get parent game object
+    //    Transform parentGameObjectTr = focusedPartyUnit.transform.parent;
+    //    // change parent of backuped object
+    //    unitBackupGameObject.transform.SetParent(parentGameObjectTr);
+    //    // change link in PartyUnit UI to backuped object
+    //    focusedPartyUnitUI.LPartyUnit = unitBackupGameObject.GetComponent<PartyUnit>();
+    //}
 
     void CleanBackup()
     {
@@ -1452,7 +1456,7 @@ public class UpgradeUnit : MonoBehaviour {
         upgradedToClasses = new List<UnitType>();
         learnedSkills = new List<UnitSkillData>();
         // Save link to Party unit for later use
-        focusedPartyUnitUI = partyUnitUI;
+        //focusedPartyUnitUI = partyUnitUI;
         focusedPartyUnit = partyUnitUI.LPartyUnit;
         // Save backup of party unit component
         Backup();
@@ -1507,11 +1511,13 @@ public class UpgradeUnit : MonoBehaviour {
     public void Cancel()
     {
         Debug.Log("Cancel");
-        // revert changes back
-        // restore backup of unit
-        RestoreBackup();
-        // destroy current PartyUnit component
-        Destroy(focusedPartyUnit.gameObject);
+        //// revert changes back
+        //// restore backup of unit
+        //RestoreBackup();
+        //// destroy current PartyUnit component
+        //Destroy(focusedPartyUnit.gameObject);
+        // restore relevant fields from the backup
+        focusedPartyUnit.PartyUnitData.CancelUpgrade(unitBackupGameObject.GetComponent<PartyUnit>().PartyUnitData);
         // close upgrade unit window
         gameObject.SetActive(false);
     }
