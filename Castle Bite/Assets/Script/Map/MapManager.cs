@@ -2698,7 +2698,6 @@ public class MapManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         queue.Run(EnterBattleCommonEnd());
     }
 
-
     IEnumerator PickupItem(MapItemsContainer mapItem)
     {
         Debug.Log("Pick up item");
