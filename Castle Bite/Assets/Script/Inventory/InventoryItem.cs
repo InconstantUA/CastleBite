@@ -473,12 +473,12 @@ public class InventoryItem : MonoBehaviour {
     {
         get
         {
-            return inventoryItemConfig.uniquePowerModifierConfigs;
+            return InventoryItemConfig.uniquePowerModifierConfigs;
         }
 
         set
         {
-            inventoryItemConfig.uniquePowerModifierConfigs = value;
+            InventoryItemConfig.uniquePowerModifierConfigs = value;
         }
     }
 

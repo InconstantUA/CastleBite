@@ -613,6 +613,8 @@ public class UnitStatData : System.Object
     public int currentValue;
 }
 
+
+
 [Serializable]
 public class PartyUnitData : System.Object
 {
@@ -786,6 +788,11 @@ public class PartyUnitData : System.Object
         for (int i = 0; i < unitSkillsData.Length; i++)
         {
             unitSkillsData[i].currentSkillLevel = backupPartyUnitData.unitSkillsData[i].currentSkillLevel;
+        }
+        // we assume that array size and members position doesn't change
+        for (int i = 0; i < unitStatsData.Length; i++)
+        {
+            unitStatsData[i].currentValue = backupPartyUnitData.unitStatsData[i].currentValue;
         }
         unitPPRow = backupPartyUnitData.unitPPRow;
         unitPPCell = backupPartyUnitData.unitPPCell;
@@ -972,10 +979,11 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetSkillDefenseBonus()
     {
-        // get skill from partyUnit
-        UnitSkillData skill = GetUnitSkillData(UnitSkillID.Defense); // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Defense);
-        // get bonus based on fact that 1 skill level = 10 defense
-        return skill.currentSkillLevel * 10;
+        return GetSameStatUPMsBonusesValue(GetSkillsSelfBonusesForStat(UnitStatID.Defense));
+        //// get skill from partyUnit
+        //UnitSkillData skill = GetUnitSkillData(UnitSkillID.Defense); // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Defense);
+        //// get bonus based on fact that 1 skill level = 10 defense
+        //return skill.currentSkillLevel * 10;
     }
 
     public float GetDefensiveStanceBonus()
@@ -1021,7 +1029,7 @@ public class PartyUnit : MonoBehaviour {
         // init with 0
         int totalDefense = 0;
         // Get base defense
-        int baseDefense = UnitDefense;
+        int baseDefense = UnitBaseDefense;
         // apply base defense
         totalDefense += baseDefense;
         // Verify if unit is in a friendly city and get city defense modifier
@@ -1042,7 +1050,7 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetItemsDefenseBonus()
     {
-        return GetGenericStatItemBonus(UnitStatID.Defense, UnitDefense);
+        return GetGenericStatItemBonus(UnitStatID.Defense, UnitBaseDefense);
     }
 
     //public UnitSkillData this[UnitSkillID unitSkillID]
@@ -1068,84 +1076,63 @@ public class PartyUnit : MonoBehaviour {
         {
             allBonuses.AddRange(parentCity.GetPropagatedBonuses(this));
         }
-        else
-        {
-            Debug.Log("========== no parent city");
-        }
+        //else
+        //{
+        //    Debug.Log("========== no parent city");
+        //}
         // return updated list of all bonuses
         return allBonuses;
     }
 
-
-    public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
+    public List<UniquePowerModifierData> GetSkillsSelfBonusesForStat(UnitStatID unitStatID)
     {
         // init list of UPMs data
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
-        // Find all UPMs, which are propagated by this party unit (normally this is party leader)
-        // Those can be UPMs from:
-        //  - unit ability
-        //  - item
-        //  - unit skill
-        // loop through the list of all UPMs in unit ability
-        for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
+        // loop through all unit skills
+        foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
         {
-            // verify if UPM is passive
-            if ( (UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
-                // verify if UPM relationships requirements are met
-                && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
-                // verify if dst party unit hass mass scope
-                && (UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty) )
+            // verify if skill has been learned
+            if (unitSkillData.currentSkillLevel > 0)
             {
-                // create and add UPM data to the list
-                upmsData.Add(new UniquePowerModifierData
+                // get skill config
+                UnitSkillConfig unitSkillConfig = ConfigManager.Instance[unitSkillData.unitSkill];
+                // loop through all UPMs in skill config
+                for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
                 {
-                    uniquePowerModifierID = new UniquePowerModifierID
-                    {
-                        unitAbilityID = UnitAbilityID,
-                        uniquePowerModifierConfigIndex = i,
-                        modifierOrigin = ModifierOrigin.Ability,
-                        destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
-                    },
-                    durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
-                    currentPower = UniquePowerModifierConfigs[i].UpmBasePower
-                });
-            }
-        }
-        // loop through all equipped items
-        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
-        {
-            // verify if item is not in belt
-            if ( ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
-                // verify if item is not consumed (slot is none)
-                && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None) )
-            {
-                // loop through the list of all UPMs in the item
-                for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
-                {
-                    // verify if UPM is passive
-                    if ( (inventoryItem.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                    // verify if stat matches
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifiedUnitStatID == unitStatID)
+                        // verify if UPM is passive
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
                         // verify if UPM relationships requirements are met
-                        && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this))
                         // verify if dst party unit hass mass scope
-                        && (inventoryItem.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty) )
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.Self))
                     {
                         // create and add UPM data to the list
                         upmsData.Add(new UniquePowerModifierData
                         {
                             uniquePowerModifierID = new UniquePowerModifierID
                             {
-                                inventoryItemID = inventoryItem.InventoryItemID,
+                                unitSkillID = unitSkillConfig.unitSkillID,
                                 uniquePowerModifierConfigIndex = i,
-                                modifierOrigin = ModifierOrigin.Item,
-                                destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                                modifierOrigin = ModifierOrigin.Skill,
+                                destinationGameObjectID = gameObject.GetInstanceID()
                             },
-                            durationLeft = inventoryItem.UniquePowerModifierConfigs[i].UpmDurationMax,
-                            currentPower = inventoryItem.UniquePowerModifierConfigs[i].UpmBasePower
+                            durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
+                            currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
                         });
                     }
                 }
             }
         }
+        // return the list with UPMs data
+        return upmsData;
+    }
+
+    public List<UniquePowerModifierData> GetSkillsPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        // init list of UPMs data
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
         // loop through all unit skills
         foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
         {
@@ -1175,12 +1162,131 @@ public class PartyUnit : MonoBehaviour {
                                 destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
                             },
                             durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
-                            currentPower = unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower
+                            currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
                         });
                     }
                 }
             }
         }
+        // return the list with UPMs data
+        return upmsData;
+    }
+
+    public List<UniquePowerModifierData> GetItemsPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        // init list of UPMs data
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // init current power variable
+        int currentPower;
+        // loop through all equipped items
+        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        {
+            // verify if item is not in belt
+            if (((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
+                // verify if item is not consumed (slot is none)
+                && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None))
+            {
+                // loop through the list of all UPMs in the item
+                for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
+                {
+                    // verify if UPM is passive
+                    if ((inventoryItem.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                        // verify if UPM relationships requirements are met
+                        && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                        // verify if dst party unit hass mass scope
+                        && (inventoryItem.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty))
+                    {
+                        // verify if UPM is associated with a skill
+                        if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
+                        {
+                            currentPower = UniquePowerModifierConfigs[i].UpmBasePower;
+                        }
+                        else
+                        {
+                            // get current power multiplied by this party unit skill level * multiplied by skill multiplier defined in config
+                            currentPower = Mathf.RoundToInt(UniquePowerModifierConfigs[i].UpmBasePower * GetUnitSkillData(inventoryItem.UniquePowerModifierConfigs[i].AssociatedUnitSkillID).currentSkillLevel * inventoryItem.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier);
+                        }
+                        // create and add UPM data to the list
+                        upmsData.Add(new UniquePowerModifierData
+                        {
+                            uniquePowerModifierID = new UniquePowerModifierID
+                            {
+                                inventoryItemID = inventoryItem.InventoryItemID,
+                                uniquePowerModifierConfigIndex = i,
+                                modifierOrigin = ModifierOrigin.Item,
+                                destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                            },
+                            durationLeft = inventoryItem.UniquePowerModifierConfigs[i].UpmDurationMax,
+                            currentPower = currentPower
+                        });
+                    }
+                }
+            }
+        }
+        // return the list with UPMs data
+        return upmsData;
+    }
+
+    public List<UniquePowerModifierData> GetAbilityPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        // init list of UPMs data
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // init current power variable
+        int currentPower;
+        // loop through the list of all UPMs in unit ability
+        for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
+        {
+            // verify if UPM is passive
+            if ((UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                // verify if UPM relationships requirements are met
+                && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                // verify if dst party unit hass mass scope
+                && (UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty))
+            {
+                // verify if UPM is associated with a skill
+                if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
+                {
+                    currentPower = UniquePowerModifierConfigs[i].UpmBasePower;
+                }
+                else
+                {
+                    // get current power multiplied by this party unit skill level * multiplied by skill multiplier defined in config
+                    currentPower = Mathf.RoundToInt(UniquePowerModifierConfigs[i].UpmBasePower * GetUnitSkillData(UniquePowerModifierConfigs[i].AssociatedUnitSkillID).currentSkillLevel * UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier);
+                }
+                // create and add UPM data to the list
+                upmsData.Add(new UniquePowerModifierData
+                {
+                    uniquePowerModifierID = new UniquePowerModifierID
+                    {
+                        unitAbilityID = UnitAbilityID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.Ability,
+                        destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                    },
+                    durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
+                    currentPower = currentPower
+                });
+            }
+        }
+        // return the list with UPMs data
+        return upmsData;
+    }
+
+    public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        // init list of UPMs data
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // Find all UPMs, which are propagated by this party unit (normally this is party leader)
+        // Those can be UPMs from:
+        //  - unit ability
+        //  - item
+        //  - unit skill
+        // add ability bonuses
+        upmsData.AddRange(GetAbilityPropagatedBonuses(dstPartyUnit));
+        // add items bonuses
+        upmsData.AddRange(GetItemsPropagatedBonuses(dstPartyUnit));
+        // add skills bonuses
+        upmsData.AddRange(GetSkillsPropagatedBonuses(dstPartyUnit));
         // return the list with UPMs data
         return upmsData;
     }
@@ -1265,7 +1371,7 @@ public class PartyUnit : MonoBehaviour {
                                 destinationGameObjectID = gameObject.GetInstanceID()
                             },
                             durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
-                            currentPower = unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower
+                            currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
                         });
                     }
                 }
@@ -1324,31 +1430,30 @@ public class PartyUnit : MonoBehaviour {
         return allBonuses;
     }
 
-    Dictionary<UnitStatID, UnitStatData> statsData = new Dictionary<UnitStatID, UnitStatData>(); // to prevent searching through array each time
-    Dictionary<UnitStatID, UnitStatConfig> statConfigs = new Dictionary<UnitStatID, UnitStatConfig>(); // to prevent searching through array each time
-
+    Dictionary<UnitStatID, UnitStatData> statsDataCache = new Dictionary<UnitStatID, UnitStatData>(); // to prevent searching through array each time
     public UnitStatData GetStatData(UnitStatID unitStatID)
     {
         // verify if statsData is not set
-        if (!statsData.ContainsKey(unitStatID))
+        if (!statsDataCache.ContainsKey(unitStatID))
         {
             // int key
-            statsData[unitStatID] = Array.Find(PartyUnitData.unitStatsData, e => e.unitStatID == unitStatID);
+            statsDataCache[unitStatID] = Array.Find(PartyUnitData.unitStatsData, e => e.unitStatID == unitStatID);
         }
         // return
-        return statsData[unitStatID];
+        return statsDataCache[unitStatID];
     }
 
+    Dictionary<UnitStatID, UnitStatConfig> statConfigsCache = new Dictionary<UnitStatID, UnitStatConfig>(); // to prevent searching through array each time
     public UnitStatConfig GetStatConfig(UnitStatID unitStatID)
     {
         // verify if statsData is not set
-        if (!statConfigs.ContainsKey(unitStatID))
+        if (!statConfigsCache.ContainsKey(unitStatID))
         {
             // int key
-            statConfigs[unitStatID] = Array.Find(PartyUnitConfig.unitStatConfigs, e => e.unitStatID == unitStatID);
+            statConfigsCache[unitStatID] = Array.Find(PartyUnitConfig.unitStatConfigs, e => e.unitStatID == unitStatID);
         }
         // return
-        return statConfigs[unitStatID];
+        return statConfigsCache[unitStatID];
     }
 
     public int GetBaseStatValue(UnitStatID unitStatID)
@@ -1356,10 +1461,19 @@ public class PartyUnit : MonoBehaviour {
         return GetStatConfig(unitStatID).baseValue;
     }
 
-    public int GetStatModifierPowerValueByCalculationType(UnitStatID unitStatID, List<UniquePowerModifierData> allBonuses, ModifierCalculatedHow modifierCalculatedHow)
+    public float GetStatModifierPowerValueByCalculationType(UnitStatID unitStatID, List<UniquePowerModifierData> allBonuses, ModifierCalculatedHow modifierCalculatedHow)
     {
         // int result
-        int result = 0;
+        float result;
+        // verify if this is multiplier to all
+        if (modifierCalculatedHow == ModifierCalculatedHow.PercentToAll)
+        {
+            result = 1f; // because it will be multiplied
+        }
+        else
+        {
+            result = 0f;
+        }
         // predefine variable used in a loop
         UniquePowerModifierConfig uniquePowerModifierConfig;
         // loop through all bonuses
@@ -1372,18 +1486,20 @@ public class PartyUnit : MonoBehaviour {
                 // verify if upm is of required calculation type
                 && (uniquePowerModifierConfig.ModifierCalculatedHow == modifierCalculatedHow) )
             {
-                // add matching UPM power to result
-                result += uniquePowerModifierData.CurrentPower;
+                // verify if this is multiplier to all
+                if (modifierCalculatedHow == ModifierCalculatedHow.PercentToAll)
+                {
+                    // multiply matching UPM power to result
+                    result *= (100f - (float)uniquePowerModifierData.CurrentPower) / 100f;
+                }
+                else
+                {
+                    // add matching UPM power to result
+                    result += uniquePowerModifierData.CurrentPower;
+                }
             }
         }
         // return result
-        return result;
-    }
-
-    public int GetTotalAdditiveStatBonus(UnitStatID unitStatID)
-    {
-        // init result
-        int result = 0;
         return result;
     }
 
@@ -1392,15 +1508,58 @@ public class PartyUnit : MonoBehaviour {
         // get all passive bonuses
         List<UniquePowerModifierData> allBonuses = GetAllBonuses();
         // get base stat value
-        int baseStat = GetBaseStatValue(unitStatID);
+        float baseStat = GetBaseStatValue(unitStatID);
         // get total percent to base stat modifiers power
-        int percentToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToBase);
+        float percentToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToBase);
         // get total additive to base stat modifiers power
-        int additiveToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.Additively);
+        float additiveToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.Additively);
         // get total percent to all stat modifiers power
-        int percentToAll = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToAll);
+        float toAllMultiplier = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToAll);
         // return result based on the formula below
-        return ((baseStat * (100 + percentToBase) / 100) + additiveToBase) * (100 + percentToAll) / 100;
+        return Mathf.RoundToInt(((baseStat * (100f + percentToBase) / 100f) + additiveToBase) * toAllMultiplier);
+    }
+
+    public int GetSameStatUPMsBonusesValue(List<UniquePowerModifierData> upmBonuses)
+    {
+        // verify if list is not empty
+        if (upmBonuses.Count >= 1)
+        {
+            // init statID from the first upm in a list (assume that all UPMs are for the same stat)
+            UnitStatID unitStatID = upmBonuses[0].GetUniquePowerModifierConfig().ModifiedUnitStatID;
+            // get all passive bonuses
+            List<UniquePowerModifierData> allBonuses = GetAllBonuses();
+            // get base stat value
+            float baseStat = GetBaseStatValue(unitStatID);
+            // get total percent to base stat modifiers power
+            float percentToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToBase);
+            // get total additive to base stat modifiers power
+            float additiveToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.Additively);
+            // get total percent to all stat modifiers power
+            float toAllMultiplier = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToAll);
+            // get total percent to base stat modifiers power
+            float upmPercentToBase = GetStatModifierPowerValueByCalculationType(unitStatID, upmBonuses, ModifierCalculatedHow.PercentToBase);
+            // get total additive to base stat modifiers power
+            float upmAdditiveToBase = GetStatModifierPowerValueByCalculationType(unitStatID, upmBonuses, ModifierCalculatedHow.Additively);
+            // get total percent to all stat modifiers power
+            float upmToAllMultiplier = GetStatModifierPowerValueByCalculationType(unitStatID, upmBonuses, ModifierCalculatedHow.PercentToAll);
+            // Get effective bonus value
+            float effectiveBonusValue = Mathf.RoundToInt(((baseStat * (100f + percentToBase) / 100f) + additiveToBase) * toAllMultiplier);
+            // Get effective bonus value without UPM bonuses
+            float effectiveBonusValueWithoutUPMBonuses = ((baseStat * (100f + percentToBase - upmPercentToBase) / 100f) + additiveToBase - upmAdditiveToBase) * toAllMultiplier / upmToAllMultiplier;
+            // return difference between effecitive bonuse with and without UPM
+            return Mathf.RoundToInt(effectiveBonusValue - effectiveBonusValueWithoutUPMBonuses);
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public int GetUPMBonusValue(UniquePowerModifierData uniquePowerModifierData)
+    {
+        // create upmBonuses list (just to be able to call the same functions)
+        List<UniquePowerModifierData> upmBonuses = new List<UniquePowerModifierData> { uniquePowerModifierData };
+        return GetSameStatUPMsBonusesValue(upmBonuses);
     }
 
     public int GetEffectiveDefense()
@@ -2885,7 +3044,7 @@ public class PartyUnit : MonoBehaviour {
         //}
     }
 
-    public int UnitDefense
+    public int UnitBaseDefense
     {
         get
         {

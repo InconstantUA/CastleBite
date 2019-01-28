@@ -46,6 +46,22 @@ public class UniquePowerModifierConfig : ScriptableObject
         UniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
     }
 
+    public UnitSkillID AssociatedUnitSkillID
+    {
+        get
+        {
+            return unitStatModifierConfig.associatedUnitSkillID;
+        }
+    }
+
+    public float AssociatedUnitSkillPowerMultiplier
+    {
+        get
+        {
+            return unitStatModifierConfig.associatedUnitSkillLevelMultiplier;
+        }
+    }
+
     public ModifierCalculatedHow ModifierCalculatedHow
     {
         get

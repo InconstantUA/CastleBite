@@ -26,5 +26,5 @@ public class UnitStatModifierConfig : ScriptableObject
     public int powerIncrementOnStatsUpgrade;
     // For UnitSkill
     public UnitSkillID associatedUnitSkillID = UnitSkillID.None;
-    public int associatedUnitSkillPowerMultiplier = 1;
+    public float associatedUnitSkillLevelMultiplier;
 }

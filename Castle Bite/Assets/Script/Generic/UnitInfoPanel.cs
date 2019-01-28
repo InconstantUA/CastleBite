@@ -346,13 +346,13 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // display effective defense
         attributeText.text = partyUnit.GetEffectiveDefense().ToString();
         // verify if base unit defense does not equal to effective defense
-        if (partyUnit.GetEffectiveDefense() != partyUnit.UnitDefense)
+        if (partyUnit.GetEffectiveDefense() != partyUnit.UnitBaseDefense)
         {
             // Display how defense is calculated
             // open brackets
             attributeText.text += "(";
             // set base unit defense without bonuses
-            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitDefense.ToString() + baseStatPreviewStyleEnd;
+            attributeText.text += baseStatPreviewStyleStart + partyUnit.UnitBaseDefense.ToString() + baseStatPreviewStyleEnd;
             // get and add defense skill bonus to text
             AddBonusInfoToText(attributeText, partyUnit.GetSkillDefenseBonus(), skillBonusPreviewStyleStart, skillBonusPreviewStyleEnd);
             // get and add items bonus

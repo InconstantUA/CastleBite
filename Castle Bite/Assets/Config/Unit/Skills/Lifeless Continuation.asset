@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
+  m_Name: Lifeless Continuation
+  m_EditorClassIdentifier: 
+  unitSkillID: 11
+  skillDisplayName: Lifeless Continuation
+  maxSkillLevel: 1
+  requiredHeroLevel: 9
+  levelUpEveryXHeroLevels: 0
+  description: "Allow hero to continue battle after death.\nAfter death all debuffs
+    are removed and hero enters spirit form with half of the normal health and physical
+    damage immunity.\r\nHero can be resurrected by friendly party unit or by using
+    blood stone during the battle.\r\nIf not resurrected before the end of the battle
+    hero dies without gaining experience.\r\nMaximum level: 1.\r\n2nd skill level
+    can be learned after 3 hero level ups."
+  uniquePowerModifierConfigs: []

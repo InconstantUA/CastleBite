@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
+  m_Name: Scouting
+  m_EditorClassIdentifier: 
+  unitSkillID: 4
+  skillDisplayName: Scouting
+  maxSkillLevel: 3
+  requiredHeroLevel: 2
+  levelUpEveryXHeroLevels: 1
+  description: 'Increase hero scouting range in the fog of war by 1 tile multiplied
+    by skill level.
+
+    Maximum level: 3.
+
+    2nd and higher skill levels can be learned one each hero level up.'
+  uniquePowerModifierConfigs: []
