@@ -469,26 +469,26 @@ public class PartyUnitUI : MonoBehaviour {
         //    debuffIndicator.DecrementCurrentDuration();
         //}
         // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
-        for (int i = LPartyUnit.UniquePowerModifiersData.Count - 1; i >= 0; i--)
+        for (int i = LPartyUnit.AppliedUniquePowerModifiersData.Count - 1; i >= 0; i--)
         {
             // Gget UPM text animation config upfront, because UPMdata mabe removed if unit is dead after Trigger
-            TextAnimation upmTextAnimation = LPartyUnit.UniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierUIConfig.onTriggerTextAnimation;
+            TextAnimation upmTextAnimation = LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierUIConfig.onTriggerTextAnimation;
             // Trigger UPM
-            LPartyUnit.UniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.UniquePowerModifiersData[i]);
+            LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.AppliedUniquePowerModifiersData[i]);
             // trigger animation to display damage done
             upmTextAnimation.Run(UnitInfoPanelText);
             // verify if unit is still alive
             if (LPartyUnit.UnitStatus != UnitStatus.Dead)
             {
                 // verify if UPM duration left is 0 or unit is dead
-                if (LPartyUnit.UniquePowerModifiersData[i].DurationLeft == 0)
+                if (LPartyUnit.AppliedUniquePowerModifiersData[i].DurationLeft == 0)
                 {
                     // UPM has expired
                     // trigger UPM removed event
                     //LPartyUnit.UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
-                    LPartyUnit.UniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
+                    LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(LPartyUnit.AppliedUniquePowerModifiersData[i]);
                     // remove it from the list
-                    LPartyUnit.UniquePowerModifiersData.RemoveAt(i);
+                    LPartyUnit.AppliedUniquePowerModifiersData.RemoveAt(i);
                 }
             }
             else
@@ -682,7 +682,7 @@ public class PartyUnitUI : MonoBehaviour {
         {
             Debug.Log("Add new UPM");
             // get added UPM (get last UPM from the list)
-            UniquePowerModifierData uniquePowerModifierData = partyUnit.UniquePowerModifiersData[partyUnit.UniquePowerModifiersData.Count - 1];
+            UniquePowerModifierData uniquePowerModifierData = partyUnit.AppliedUniquePowerModifiersData[partyUnit.AppliedUniquePowerModifiersData.Count - 1];
             // init parent transform
             Transform upmStatusIconParent;
             // verify if UPM is buff or debuff

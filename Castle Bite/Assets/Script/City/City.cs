@@ -81,6 +81,43 @@ public class City : MonoBehaviour {
         return (CityLevelCurrent * 5) + bonus;
     }
 
+    public List<UniquePowerModifierConfig> UniquePowerModifierConfigs
+    {
+        get
+        {
+            return CityConfig.UniquePowerModifierConfigs;
+        }
+    }
+
+    public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        Debug.Log("GetPropagatedBonuses " + CityConfig.cityName);
+        // by default city gives only defense bonus to all units inside
+        // init list of UPMs data
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // loop through all unique powe modifier configs
+        // we assume that it is only one UPM in the list (defense)
+        for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
+        {
+            Debug.Log("city upm " + UniquePowerModifierConfigs[i].DisplayName);
+            // create new UPM data based on UPM config and destination party unit
+            upmsData.Add(new UniquePowerModifierData {
+                uniquePowerModifierID = new UniquePowerModifierID
+                {
+                    cityID = cityData.cityID,
+                    uniquePowerModifierConfigIndex = i,
+                    modifierOrigin = ModifierOrigin.City,
+                    destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+
+                },
+                durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax, // normally duration type is permanent, so this value is not relevant
+                currentPower = GetCityDefense() // this is exceptional when we don't inherit value from UPM config, because logic for defense power is not easy to set via Unit Stat Modifier
+            });
+        }
+        // return the list with UPMs data
+        return upmsData;
+    }
+
     public int GetHealPerDay()
     {
         int bonus = 0;

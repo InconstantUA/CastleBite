@@ -49,67 +49,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   partyUnitData:
-    unitName: Knight
     unitType: 2
     isLeader: 1
-    unitLeadership: 3
     givenName: Ares
     unitLevel: 20
     unitExperience: 0
-    unitExperienceRequiredToReachNewLevel: 200
-    unitExperienceReward: 100
-    unitExperienceRewardIncrementOnLevelUp: 100
     unitHealthCurr: 200
-    unitHealthMax: 200
-    unitHealthMaxIncrementOnLevelUp: 50
-    unitHealthRegenPercent: 10
-    unitDefense: 0
-    unitResistances: []
-    unitAbility: 11
-    unitPower: 50
-    unitPowerIncrementOnLevelUp: 10
-    unitPowerSource: 0
-    unitPowerDistance: 0
-    unitPowerScope: 0
-    unitInitiative: 50
-    uniquePowerModifiers:
-    - modifierScope: 0
-      upmAppliedBuff: 0
-      upmAppliedDebuff: 3
-      upmPower: 20
-      upmPowerIncrementOnLevelUp: 5
-      upmDuration: 2
-      upmChance: 80
-      upmChanceIncrementOnLevelUp: 3
-      upmSource: 1
-      upmOrigin: 0
-      modifierApplied: 0
-      upmDurationLeft: 0
-      skillPowerMultiplier: 1
-      canBeAppliedToTheUnitsWithStatuses: 
-    unitRole: Defense and melee damage dealing
-    unitBriefDescription: Brief description
-    unitFullDescription: Full description
-    unitCost: 600
-    unitSize: 0
-    isInterpartyMovable: 0
-    isDismissable: 1
     unitStatus: 0
-    unitDebuffs: 
-    unitBuffs: 
     unitUpgradePoints: 20
     unitStatPoints: 0
-    classIsUpgradable: 0
     unitClassPoints: 0
-    canLearnSkills: 1
     unitSkillPoints: 0
-    requiresUnitType: 0
-    unlocksUnitTypes: 
-    upgradeCost: 200
     statsUpgradesCount: 0
     movePointsCurrent: 10
-    movePointsMax: 10
-    scoutingRange: 5
     unitSkillsData:
     - unitSkill: 0
       currentSkillLevel: 0
@@ -137,6 +89,28 @@ MonoBehaviour:
       currentSkillLevel: 0
     - unitSkill: 11
       currentSkillLevel: 0
+    - unitSkill: 13
+      currentSkillLevel: 0
+    unitStatsData:
+    - unitStatID: 0
+      currentValue: 0
+    - unitStatID: 4
+      currentValue: 0
+    - unitStatID: 2
+      currentValue: 0
+    - unitStatID: 5
+      currentValue: 0
+    - unitStatID: 6
+      currentValue: 0
+    - unitStatID: 8
+      currentValue: 0
+    - unitStatID: 9
+      currentValue: 0
+    - unitStatID: 11
+      currentValue: 0
+    - unitStatID: 10
+      currentValue: 0
     unitPPRow: 0
     unitPPCell: 0
     unitIventory: []
+    appliedUniquePowerModifiersData: []

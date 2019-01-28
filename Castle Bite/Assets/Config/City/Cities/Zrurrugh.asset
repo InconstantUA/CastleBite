@@ -18,8 +18,6 @@ MonoBehaviour:
   cityName: Zrurrugh
   cityDescription: Greenskins capital
   cityLevelMax: 6
-  hireablePartyLeaders: 0c00000019000000
-  hireableCommonUnits: 0d000000100000000e0000000f000000
   isStarting: 1
-  goldIncomePerDay: -1
-  manaIncomePerDay: -1
+  defenseBuffUniquePowerModifierConfig: {fileID: 11400000, guid: 147a256147057bd448edf6c053656f70,
+    type: 2}

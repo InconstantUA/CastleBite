@@ -103,11 +103,11 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
                         // add power value
                         powerText += usm.modifierPower.ToString();
                         break;
-                    case ModifierCalculatedHow.Multiplicatively:
-                        powerText = "x" + usm.modifierPower.ToString();
+                    case ModifierCalculatedHow.PercentToBase:
+                        powerText = "+" + usm.modifierPower.ToString() + "% to base";
                         break;
-                    case ModifierCalculatedHow.Percent:
-                        powerText = usm.modifierPower.ToString() + "%";
+                    case ModifierCalculatedHow.PercentToAll:
+                        powerText = "+" + usm.modifierPower.ToString() + "% to total";
                         break;
                     default:
                         Debug.LogError("Do not know how to apply modifier power");
@@ -141,7 +141,7 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
         // Get unique power modifiers table UI
         Transform upmsTableUI = transform.Find("Modifiers/UniquePowerModifiersTable");
         // verify if item has unique power modifiers
-        if (inventoryItem.UniquePowerModifiers.Count >= 1)
+        if (inventoryItem.UniquePowerModifierConfigs.Count >= 1)
         {
             // enable upms info UI
             upmsTableUI.gameObject.SetActive(true);
@@ -153,7 +153,7 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
                 Destroy(childTransform.gameObject);
             }
             // set item's unique power modifiers
-            foreach (UniquePowerModifierConfig upm in inventoryItem.UniquePowerModifiers)
+            foreach (UniquePowerModifierConfig upm in inventoryItem.UniquePowerModifierConfigs)
             {
                 // create new row in the table from template
                 Transform newUPMTransform = Instantiate(uniquePowerModifierItemInfoTemplate, upmsListGrid).transform;

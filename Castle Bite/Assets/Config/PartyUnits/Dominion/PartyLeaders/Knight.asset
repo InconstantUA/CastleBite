@@ -26,7 +26,6 @@ MonoBehaviour:
   unitResistances:
   - source: 0
     percent: 10
-  unitAbility: 6
   unitAbilityID: 6
   unitInitiative: 60
   unitRole: Defense and close range damage dealing
@@ -44,3 +43,31 @@ MonoBehaviour:
   movePointsMax: 14
   movePointsIncrementOnLevelUp: 6
   scoutingRange: 5
+  unitStatConfigs:
+  - unitStatID: 0
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 4
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 2
+    baseValue: 5
+    baseValueIncrement: 0
+  - unitStatID: 5
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 6
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 8
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 9
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 11
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 10
+    baseValue: 0
+    baseValueIncrement: 0

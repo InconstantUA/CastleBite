@@ -143,7 +143,7 @@ public class HeroEquipment : MonoBehaviour {
                     if (slot.EquipmentSlot == HeroEquipmentSlots.Shard)
                     {
                         // for shard slot we need to verify if party leader has skill at least 1st level
-                        if (Array.Find(lPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel >= 1)
+                        if (Array.Find(lPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkillID.ShardAura).currentSkillLevel >= 1)
                         {
                             // set compatible flag
                             isCompatible = true;

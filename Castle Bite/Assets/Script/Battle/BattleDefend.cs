@@ -82,7 +82,7 @@ public class BattleDefend : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         PartyUnitUI activeUnitUI = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>().ActiveUnitUI;
         // Apply defense stance status
         // Get active unit party panel
-        PartyPanel partyPanel = activeUnitUI.GetUnitPartyPanel();
+        //PartyPanel partyPanel = activeUnitUI.GetUnitPartyPanel();
         //partyPanel.SetUnitDefenseBuffActive(activeUnitUI);
         Proceed();
     }

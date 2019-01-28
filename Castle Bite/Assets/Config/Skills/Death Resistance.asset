@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
   m_Name: Death Resistance
   m_EditorClassIdentifier: 
-  unitSkill: 6
+  unitSkillID: 6
   skillDisplayName: Death Resistance
   maxSkillLevel: 2
   requiredHeroLevel: 5
@@ -25,3 +25,4 @@ MonoBehaviour:
     Maximum level: 2.
 
     2nd skill level can be learned after 5 hero level ups.'
+  uniquePowerModifierConfigs: []

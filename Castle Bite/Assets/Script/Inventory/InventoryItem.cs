@@ -96,7 +96,7 @@ public class InventoryItemData : System.Object
     // public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
     public List<UniquePowerModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
     public List<UnitStatModifier> unitStatModifiers; // config
-    public List<UniquePowerModifierConfig> uniquePowerModifiers; // config
+    public List<UniquePowerModifierConfig> uniquePowerModifierConfigs; // config
     public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there shouldn't be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
     public HeroEquipmentSlots currentHeroEquipmentSlot = HeroEquipmentSlots.None; // serializable data of equipped/unequipped item
     // public int maxUsagesCount; // config
@@ -159,7 +159,7 @@ public class InventoryItem : MonoBehaviour {
     public bool HasActiveUniquePowerModifiers()
     {
         // loop though all unique power modifiers
-        foreach (UniquePowerModifierConfig upm in UniquePowerModifiers)
+        foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
         {
             // verify if usm is applied actively
             if (upm.modifierAppliedHow == ModifierAppliedHow.Active)
@@ -173,7 +173,7 @@ public class InventoryItem : MonoBehaviour {
     public bool HasPassiveUPMs()
     {
         // loop though all unique power modifier
-        foreach (UniquePowerModifierConfig upm in UniquePowerModifiers)
+        foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
         {
             // verify if upm does not have instant duration
             if (upm.modifierAppliedHow == ModifierAppliedHow.Passive)
@@ -223,12 +223,12 @@ public class InventoryItem : MonoBehaviour {
 
     public void RemoveExpiredUPMs()
     {
-        for (int i = UniquePowerModifiers.Count - 1; i >= 0; i--)
+        for (int i = UniquePowerModifierConfigs.Count - 1; i >= 0; i--)
         {
             // verify if usm duration is 0 (instant upm) or duration left is 0
-            if ((UniquePowerModifiers[i].UpmDurationMax == 0) || (UniquePowerModifiers[i].upmDurationLeft == 0))
+            if ((UniquePowerModifierConfigs[i].UpmDurationMax == 0) || (UniquePowerModifierConfigs[i].upmDurationLeft == 0))
             {
-                UniquePowerModifiers.RemoveAt(i);
+                UniquePowerModifierConfigs.RemoveAt(i);
             }
         }
     }
@@ -282,7 +282,7 @@ public class InventoryItem : MonoBehaviour {
             }
         }
         // loop though all unique power modifier
-        foreach (UniquePowerModifierConfig upm in UniquePowerModifiers)
+        foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
         {
             // verify if usm has non-permanent duration
             if (upm.UpmDurationMax >= 0)
@@ -334,6 +334,35 @@ public class InventoryItem : MonoBehaviour {
         DecrementModifiersDuration();
         RemoveExpiredModifiers();
         SelfDestroyIfExpired();
+    }
+
+    public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        // init upms data list
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // loop through the list of all UPMs in the item
+        for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
+        {
+            // verify if UPM is passive
+            if ((UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive))
+            {
+                // create and add UPM data to the list
+                upmsData.Add(new UniquePowerModifierData
+                {
+                    uniquePowerModifierID = new UniquePowerModifierID
+                    {
+                        inventoryItemID = InventoryItemID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.Item,
+                        destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                    },
+                    durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
+                    currentPower = UniquePowerModifierConfigs[i].UpmBasePower
+                });
+            }
+        }
+        // return result
+        return upmsData;
     }
 
     #region Properties
@@ -440,16 +469,16 @@ public class InventoryItem : MonoBehaviour {
         //}
     }
 
-    public List<UniquePowerModifierConfig> UniquePowerModifiers
+    public List<UniquePowerModifierConfig> UniquePowerModifierConfigs
     {
         get
         {
-            return inventoryItemData.uniquePowerModifiers;
+            return inventoryItemConfig.uniquePowerModifierConfigs;
         }
 
         set
         {
-            inventoryItemData.uniquePowerModifiers = value;
+            inventoryItemConfig.uniquePowerModifierConfigs = value;
         }
     }
 

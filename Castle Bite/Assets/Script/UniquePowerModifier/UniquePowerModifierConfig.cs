@@ -46,12 +46,79 @@ public class UniquePowerModifierConfig : ScriptableObject
         UniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
     }
 
+    public ModifierCalculatedHow ModifierCalculatedHow
+    {
+        get
+        {
+            return unitStatModifierConfig.modifierCalculatedHow;
+        }
+    }
+
     public ModifierScope ModifierScope
     {
         get
         {
             return unitStatModifierConfig.modifierScope;
         }
+    }
+
+    public UnitStatID ModifiedUnitStatID
+    {
+        get
+        {
+            return unitStatModifierConfig.unitStat;
+        }
+    }
+
+    public bool MatchScope(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
+    {
+        // Match
+        switch (ModifierScope)
+        {
+            case ModifierScope.Self:
+                // verify if source and destination party units are the same
+                if (srcPartyUnitUPMOwner.GetInstanceID() == dstPartyUnit.GetInstanceID())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            case ModifierScope.SingleUnit:
+            case ModifierScope.EntireParty:
+            case ModifierScope.AllPlayerUnits:
+                Debug.LogError("Finish this function logic implementation");
+                return true;
+            default:
+                Debug.LogError("Unknown modifier scope: " + ModifierScope.ToString());
+                return false;
+        }
+    }
+
+    public Relationships.State[] RequiredRelationships
+    {
+        get
+        {
+            return unitStatModifierConfig.requiredRelationships;
+        }
+    }
+
+    public bool MatchRelationships(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
+    {
+        // get relationships
+        Relationships.State relationships = Relationships.Instance.GetRelationships(srcPartyUnitUPMOwner.GetUnitParty().Faction, dstPartyUnit.GetUnitParty().Faction);
+        // loop through all required relationships
+        foreach(Relationships.State relation in RequiredRelationships)
+        {
+            // verify if relationships match
+            if (relation == relationships)
+            {
+                return true;
+            }
+        }
+        // if none of required relations match return false
+        return false;
     }
 
     public int UpmBasePower

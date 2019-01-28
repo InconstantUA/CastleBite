@@ -55,7 +55,7 @@ public enum UnitAbilityID
     LastCall,           // Undead Hades capital guard
     DrainLife,          // Undead Vampire
     SacrificingEcho,    // Dominion Ancient
-    DefensiveStance,            // Default defense stance ability
+    DefensiveStance,    // Default defense stance ability
     None
 };
 
@@ -123,27 +123,27 @@ public enum UnitStatus
 //    Dead        = 1 << 5
 //}
 
-[Serializable]
-public enum UnitDebuff : int
-{
-    None,
-    Poisoned,
-    Burned,
-    Chilled,
-    Paralyzed,
-    ArrSize
-}
+//[Serializable]
+//public enum UnitDebuff : int
+//{
+//    None,
+//    Poisoned,
+//    Burned,
+//    Chilled,
+//    Paralyzed,
+//    ArrSize
+//}
+
+//[Serializable]
+//public enum UnitBuff : int
+//{
+//    None,
+//    DefenseStance,
+//    ArrSize // for dynamic resizing of UnitBuffs array
+//}
 
 [Serializable]
-public enum UnitBuff : int
-{
-    None,
-    DefenseStance,
-    ArrSize // for dynamic resizing of UnitBuffs array
-}
-
-[Serializable]
-public enum UnitSkill
+public enum UnitSkillID
 {
     Leadership,
     Offense,
@@ -157,13 +157,14 @@ public enum UnitSkill
     MindResistance,
     ShardAura,
     LifelessContinuation,
-    Initiative
+    Initiative,
+    None
 }
 
 [Serializable]
 public class UnitSkillData
 {
-    public UnitSkill unitSkill;
+    public UnitSkillID unitSkill;
     ////[NonSerialized]
     //public string mDisplayName;
     //[Serializable]
@@ -186,9 +187,9 @@ public class UnitSkillData
     //public int levelUpEveryXHeroLevels; // skill can be learned only after this number of levels has passed
     ////[NonSerialized]
     //public string description;
-    public UnitSkillData(UnitSkill unitSkill, int currentSkillLevel)
+    public UnitSkillData(UnitSkillID unitSkillID, int currentSkillLevel)
     {
-        this.unitSkill = unitSkill;
+        this.unitSkill = unitSkillID;
         this.currentSkillLevel = currentSkillLevel;
     }
     //public UnitSkillData(UnitSkill name, string displayName, int currentLevel, int maxLevel, int requiredHeroLevel, int levelUpIncrementStep, string description)
@@ -226,17 +227,18 @@ public class UnitSkillData
 public enum ModifierOrigin
 {
     Ability,
-    Item
+    Item,
+    City,
+    Skill
 }
 
+// note modifier scope shoud be defined from lower to higher scope, because it impacts further logics
 [Serializable]
 public enum ModifierScope
 {
     Self,
-    FriendlyUnit,
-    FriendlyParty,
-    EnemyUnit,
-    EnemyParty,
+    SingleUnit,
+    EntireParty,
     AllPlayerUnits
 }
 
@@ -245,6 +247,8 @@ public class UniquePowerModifierID : System.Object
 {
     public InventoryItemID inventoryItemID = InventoryItemID.None;
     public UnitAbilityID unitAbilityID = UnitAbilityID.None;
+    public CityID cityID = CityID.None;
+    public UnitSkillID unitSkillID;
     public int uniquePowerModifierConfigIndex = 0;
     public ModifierOrigin modifierOrigin;
     public int destinationGameObjectID; // this is not required for serialization, but required to uniquely identify UniquePowerModifierID among other similar UniquePowerModifiers which are applied by the same source
@@ -397,6 +401,16 @@ public class UniquePowerModifierData : System.Object
             // get and return config from config manager by ability ID and UPM index in that ability
             return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
         }
+        else if (UniquePowerModifierID.cityID != CityID.None)
+        {
+            // get and return config from config manager by city ID and UPM index in that ability
+            return ConfigManager.Instance[UniquePowerModifierID.cityID].UniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+        }
+        else if (UniquePowerModifierID.unitSkillID != UnitSkillID.None)
+        {
+            // get and return config from config manager by city ID and UPM index in that ability
+            return ConfigManager.Instance[UniquePowerModifierID.unitSkillID].UniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+        }
         else
         {
             // this should not happen
@@ -417,6 +431,16 @@ public class UniquePowerModifierData : System.Object
             // get and return config from config manager by ability ID and UPM index in that ability
             return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].abilityDisplayName;
         }
+        else if (UniquePowerModifierID.cityID != CityID.None)
+        {
+            // get and return config from config manager by ability ID and UPM index in that ability
+            return ConfigManager.Instance[UniquePowerModifierID.cityID].cityName;
+        }
+        else if (UniquePowerModifierID.unitSkillID != UnitSkillID.None)
+        {
+            // get and return config from config manager by ability ID and UPM index in that ability
+            return ConfigManager.Instance[UniquePowerModifierID.unitSkillID].skillDisplayName;
+        }
         else
         {
             // this should not happen
@@ -427,7 +451,7 @@ public class UniquePowerModifierData : System.Object
 }
 
 [Serializable]
-public enum UnitStat
+public enum UnitStatID
 {
     Leadership,
     Health,
@@ -447,8 +471,8 @@ public enum UnitStat
 public enum ModifierCalculatedHow
 {
     Additively,
-    Multiplicatively,
-    Percent
+    PercentToBase,
+    PercentToAll
 }
 
 [Serializable]
@@ -463,6 +487,16 @@ public enum ModifierAppliedHow
 {
     Active, // Potions, scrolls, weapon with active modifiers (paralise)
     Passive // Equipment: armor, boots, weapon with passive modifiers
+}
+
+[Serializable]
+public enum ModifierDurationType
+{
+    Permananent = 1,
+    RemoveAtBattleEnd = 2,
+    NumberOfBattleTurns = 4,
+    NumberOfGameTurns = 8
+
 }
 
 //[Serializable]
@@ -552,11 +586,11 @@ public enum ModifierAppliedHow
 [Serializable]
 public class UnitStatModifier : System.Object
 {
-    public UnitStat unitStat;
+    public UnitStatID unitStat;
     public ModifierAppliedTo modifierAppliedTo;
     public ModifierScope modifierScope;
     public int modifierPower;
-    public int skillPowerMultiplier = 1;
+    public int skillPowerMultiplier = 1; // move to data
     public ModifierCalculatedHow modifierCalculatedHow;
     public ModifierAppliedHow modifierAppliedHow;
     public int duration;
@@ -570,6 +604,13 @@ public class UnitStatusModifier : System.Object
     public ModifierScope modifierScope;
     public UnitStatus modifierSetStatus;
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
+}
+
+[Serializable]
+public class UnitStatData : System.Object
+{
+    public UnitStatID unitStatID;
+    public int currentValue;
 }
 
 [Serializable]
@@ -647,57 +688,74 @@ public class PartyUnitData : System.Object
     public UnitSkillData[] unitSkillsData = new UnitSkillData[]
     {
         new UnitSkillData(
-            UnitSkill.Leadership,
+            UnitSkillID.Leadership,
             0
         ),
         new UnitSkillData(
-            UnitSkill.Initiative,
+            UnitSkillID.Initiative,
             0
         ),
         new UnitSkillData(
-            UnitSkill.Offense,
+            UnitSkillID.Offense,
             0
         ),
         new UnitSkillData(
-            UnitSkill.Defense,
+            UnitSkillID.Defense,
             0
         ),
         new UnitSkillData(
-            UnitSkill.Pathfinding,
+            UnitSkillID.Pathfinding,
             0
         ),
         new UnitSkillData(
-            UnitSkill.Scouting,
+            UnitSkillID.Scouting,
             0
         ),
         new UnitSkillData(
-            UnitSkill.Healing,
+            UnitSkillID.Healing,
             0
         ),
         new UnitSkillData(
-            UnitSkill.WaterResistance,
+            UnitSkillID.WaterResistance,
             0
         ),
         new UnitSkillData(
-            UnitSkill.FireResistance,
+            UnitSkillID.FireResistance,
             0
         ),
         new UnitSkillData(
-            UnitSkill.DeathResistance,
+            UnitSkillID.DeathResistance,
             0
         ),
         new UnitSkillData(
-            UnitSkill.MindResistance,
+            UnitSkillID.MindResistance,
             0
         ),
         new UnitSkillData(
-            UnitSkill.ShardAura,
+            UnitSkillID.ShardAura,
             0
         ),
         new UnitSkillData(
-            UnitSkill.LifelessContinuation,
+            UnitSkillID.LifelessContinuation,
+            0
+        ),
+        new UnitSkillData(
+            UnitSkillID.None,
             0
             )
+    };
+    // Unit stats data
+    public UnitStatData[] unitStatsData = new UnitStatData[]
+    {
+        new UnitStatData{ unitStatID = UnitStatID.Leadership },
+        new UnitStatData{ unitStatID = UnitStatID.Initiative },
+        new UnitStatData{ unitStatID = UnitStatID.Defense },
+        new UnitStatData{ unitStatID = UnitStatID.MovePoints },
+        new UnitStatData{ unitStatID = UnitStatID.ScoutingRange },
+        new UnitStatData{ unitStatID = UnitStatID.DeathResistance },
+        new UnitStatData{ unitStatID = UnitStatID.FireResistance },
+        new UnitStatData{ unitStatID = UnitStatID.MindResistance },
+        new UnitStatData{ unitStatID = UnitStatID.WaterResistance }
     };
     // UI attributes
     public PartyPanel.Row unitPPRow;  // used during game save and load and when party UI is displayed
@@ -705,8 +763,7 @@ public class PartyUnitData : System.Object
     // Unit Equipment
     public List<InventoryItemData> unitIventory; // information saved and loaded during game save and load, during game running phase all data can be retrieved from the child items of the party leader unit
     // All active stat modifiers inherited from used items or applied abilities (this is required for game save / restore)
-    public List<UniquePowerModifierData> uniquePowerModifiersData;
-
+    public List<UniquePowerModifierData> appliedUniquePowerModifiersData;
     // update this on fields changes
     // this is a function to restore original values on Cancel(ation) of PartyUnit Upgrade
     public void CancelUpgrade(PartyUnitData backupPartyUnitData)
@@ -898,10 +955,25 @@ public class PartyUnit : MonoBehaviour {
         return 0;
     }
 
+    Dictionary<UnitSkillID, UnitSkillData> unitSkills = new Dictionary<UnitSkillID, UnitSkillData>(); // to prevent searches in array
+
+    public UnitSkillData GetUnitSkillData(UnitSkillID unitSkillID)
+    {
+        Debug.Log("Unit skill id is " + unitSkillID);
+        // verify if unitSkills dictionary required key has not been set yet
+        if (!unitSkills.ContainsKey(unitSkillID))
+        {
+            // set the key and value from UnitSkillsData
+            unitSkills[unitSkillID] = Array.Find(UnitSkillsData, element => element.unitSkill == unitSkillID);
+        }
+        // return reference to unit skill data
+        return unitSkills[unitSkillID];
+    }
+
     public int GetSkillDefenseBonus()
     {
         // get skill from partyUnit
-        UnitSkillData skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Defense);
+        UnitSkillData skill = GetUnitSkillData(UnitSkillID.Defense); // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Defense);
         // get bonus based on fact that 1 skill level = 10 defense
         return skill.currentSkillLevel * 10;
     }
@@ -932,7 +1004,7 @@ public class PartyUnit : MonoBehaviour {
         //}
         // verify if defensive stance ability Unique Power Modifier is applied
         // search for DefensiveStance in applied UPMs data
-        UniquePowerModifierData defensiveStanceUPMData = UniquePowerModifiersData.Find(e => e.UniquePowerModifierID.unitAbilityID == UnitAbilityID.DefensiveStance);
+        UniquePowerModifierData defensiveStanceUPMData = AppliedUniquePowerModifiersData.Find(e => e.UniquePowerModifierID.unitAbilityID == UnitAbilityID.DefensiveStance);
         // verify if UPM for DefensiveStance ability is found
         if (defensiveStanceUPMData != null)
         {
@@ -970,20 +1042,379 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetItemsDefenseBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Defense, UnitDefense);
+        return GetGenericStatItemBonus(UnitStatID.Defense, UnitDefense);
+    }
+
+    //public UnitSkillData this[UnitSkillID unitSkillID]
+    //{
+    //    get
+    //    {
+    //        return Array.Find(UnitSkillsData, e => e.unitSkillID == unitSkillID);
+    //    }
+    //}
+
+    public int GetEffectiveBonusValue(int value, UnitSkillID unitSkillID = UnitSkillID.None, float unitSkillMultiplier = 1)
+    {
+        // get skill bonus for defined stat
+        return Mathf.CeilToInt(value * unitSkillMultiplier * (1 + GetUnitSkillData(unitSkillID).currentSkillLevel));
+    }
+
+    public List<UniquePowerModifierData> AddBonusesPropagatedbyCity(List<UniquePowerModifierData> allBonuses)
+    {
+        // try to get city in a parent
+        City parentCity = GetComponentInParent<City>();
+        // verify if unit is in city (parent city != null)
+        if (parentCity != null)
+        {
+            allBonuses.AddRange(parentCity.GetPropagatedBonuses(this));
+        }
+        else
+        {
+            Debug.Log("========== no parent city");
+        }
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+
+    public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
+    {
+        // init list of UPMs data
+        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // Find all UPMs, which are propagated by this party unit (normally this is party leader)
+        // Those can be UPMs from:
+        //  - unit ability
+        //  - item
+        //  - unit skill
+        // loop through the list of all UPMs in unit ability
+        for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
+        {
+            // verify if UPM is passive
+            if ( (UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                // verify if UPM relationships requirements are met
+                && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                // verify if dst party unit hass mass scope
+                && (UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty) )
+            {
+                // create and add UPM data to the list
+                upmsData.Add(new UniquePowerModifierData
+                {
+                    uniquePowerModifierID = new UniquePowerModifierID
+                    {
+                        unitAbilityID = UnitAbilityID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.Ability,
+                        destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                    },
+                    durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
+                    currentPower = UniquePowerModifierConfigs[i].UpmBasePower
+                });
+            }
+        }
+        // loop through all equipped items
+        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        {
+            // verify if item is not in belt
+            if ( ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
+                // verify if item is not consumed (slot is none)
+                && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None) )
+            {
+                // loop through the list of all UPMs in the item
+                for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
+                {
+                    // verify if UPM is passive
+                    if ( (inventoryItem.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                        // verify if UPM relationships requirements are met
+                        && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                        // verify if dst party unit hass mass scope
+                        && (inventoryItem.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty) )
+                    {
+                        // create and add UPM data to the list
+                        upmsData.Add(new UniquePowerModifierData
+                        {
+                            uniquePowerModifierID = new UniquePowerModifierID
+                            {
+                                inventoryItemID = inventoryItem.InventoryItemID,
+                                uniquePowerModifierConfigIndex = i,
+                                modifierOrigin = ModifierOrigin.Item,
+                                destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                            },
+                            durationLeft = inventoryItem.UniquePowerModifierConfigs[i].UpmDurationMax,
+                            currentPower = inventoryItem.UniquePowerModifierConfigs[i].UpmBasePower
+                        });
+                    }
+                }
+            }
+        }
+        // loop through all unit skills
+        foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
+        {
+            // verify if skill has been learned
+            if (unitSkillData.currentSkillLevel > 0)
+            {
+                // get skill config
+                UnitSkillConfig unitSkillConfig = ConfigManager.Instance[unitSkillData.unitSkill];
+                // loop through all UPMs in skill config
+                for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
+                {
+                    // verify if UPM is passive
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                        // verify if UPM relationships requirements are met
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                        // verify if dst party unit hass mass scope
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty))
+                    {
+                        // create and add UPM data to the list
+                        upmsData.Add(new UniquePowerModifierData
+                        {
+                            uniquePowerModifierID = new UniquePowerModifierID
+                            {
+                                unitSkillID = unitSkillConfig.unitSkillID,
+                                uniquePowerModifierConfigIndex = i,
+                                modifierOrigin = ModifierOrigin.Skill,
+                                destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                            },
+                            durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
+                            currentPower = unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower
+                        });
+                    }
+                }
+            }
+        }
+        // return the list with UPMs data
+        return upmsData;
+    }
+
+    public List<UniquePowerModifierData> AddBonusesPropagatedbyPartyLeader(List<UniquePowerModifierData> allBonuses)
+    {
+        // try to get party
+        HeroParty heroParty = GetComponentInParent<HeroParty>();
+        // verify if we have hero party
+        if (heroParty != null)
+        {
+            // try to get party leader
+            PartyUnit partyLeader = heroParty.GetPartyLeader();
+            // verify if unit is in city (parent city != null)
+            if (partyLeader != null)
+            {
+                allBonuses.AddRange(partyLeader.GetPropagatedBonuses(this));
+            }
+        }
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+    public List<UniquePowerModifierData> AddBonusesFromEquippedItems(List<UniquePowerModifierData> allBonuses)
+    {
+        // loop through all equipped items
+        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        {
+            // verify if item is not in belt
+            if ( ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
+                // verify if item is not consumed (slot is none)
+                && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None) )
+            {
+                allBonuses.AddRange(inventoryItem.GetPropagatedBonuses(this));
+            }
+        }
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+    public List<UniquePowerModifierData> AddBonusesFromConsumedItems(List<UniquePowerModifierData> allBonuses)
+    {
+        // loop through all equipped items
+        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        {
+            // verify if item is has been consumed (slot is none)
+            if (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None)
+            {
+                allBonuses.AddRange(inventoryItem.GetPropagatedBonuses(this));
+            }
+        }
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+    public List<UniquePowerModifierData> AddBonusesFromLearnedSkills(List<UniquePowerModifierData> allBonuses)
+    {
+        // loop through all unit skills
+        foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
+        {
+            // verify if skill has been learned
+            if (unitSkillData.currentSkillLevel > 0)
+            {
+                // get skill config
+                UnitSkillConfig unitSkillConfig = ConfigManager.Instance[unitSkillData.unitSkill];
+                // loop through all UPMs in skill config
+                for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
+                {
+                    // verify if UPM is passive
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                        // verify if UPM relationships requirements are met
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this)))
+                    {
+                        // create and add UPM data to the list
+                        allBonuses.Add(new UniquePowerModifierData
+                        {
+                            uniquePowerModifierID = new UniquePowerModifierID
+                            {
+                                unitSkillID = unitSkillConfig.unitSkillID,
+                                uniquePowerModifierConfigIndex = i,
+                                modifierOrigin = ModifierOrigin.Skill,
+                                destinationGameObjectID = gameObject.GetInstanceID()
+                            },
+                            durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
+                            currentPower = unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower
+                        });
+                    }
+                }
+            }
+        }
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+    public List<UniquePowerModifierData> AddBonusesFromPlayerUniqueAbility(List<UniquePowerModifierData> allBonuses)
+    {
+        Debug.Log("todo");
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+    public List<UniquePowerModifierData> AddBonusesFromAppliedAbilities(List<UniquePowerModifierData> allBonuses)
+    {
+        foreach (UniquePowerModifierData uniquePowerModifierData in AppliedUniquePowerModifiersData)
+        {
+            // verify if UPM is passive
+            if (uniquePowerModifierData.GetUniquePowerModifierConfig().modifierAppliedHow == ModifierAppliedHow.Passive)
+            {
+                // add data to the list of all bonuses
+                allBonuses.Add(uniquePowerModifierData);
+            }
+        }
+        // return updated list of all bonuses
+        return allBonuses;
+    }
+
+    public List<UniquePowerModifierData> GetAllBonuses()
+    {
+        // init list
+        List<UniquePowerModifierData> allBonuses = new List<UniquePowerModifierData>();
+        // add bonuses propagated by city
+        allBonuses = AddBonusesPropagatedbyCity(allBonuses);
+        // add bonuses propagated by party leader
+        allBonuses = AddBonusesPropagatedbyPartyLeader(allBonuses);
+        // get bonuses from equipped items (normally it is applicable only to party-leader)
+        allBonuses = AddBonusesFromEquippedItems(allBonuses);
+        //get gained bonuses from consumed items
+        allBonuses = AddBonusesFromConsumedItems(allBonuses);
+        // get bonuses from learned skills (normally it is applicable only to party-leader) 
+        allBonuses = AddBonusesFromLearnedSkills(allBonuses);
+        // get gained bonuses from player unique ability
+        allBonuses = AddBonusesFromPlayerUniqueAbility(allBonuses);
+        //get gained bonuses from applied abilities
+        allBonuses = AddBonusesFromAppliedAbilities(allBonuses);
+        // Debug log all bonuses
+        foreach (UniquePowerModifierData uniquePowerModifierData in allBonuses)
+        {
+            Debug.Log("Bonus: " + uniquePowerModifierData.GetOriginDisplayName() + " power: " + uniquePowerModifierData.CurrentPower);
+        }
+        // return result
+        return allBonuses;
+    }
+
+    Dictionary<UnitStatID, UnitStatData> statsData = new Dictionary<UnitStatID, UnitStatData>(); // to prevent searching through array each time
+    Dictionary<UnitStatID, UnitStatConfig> statConfigs = new Dictionary<UnitStatID, UnitStatConfig>(); // to prevent searching through array each time
+
+    public UnitStatData GetStatData(UnitStatID unitStatID)
+    {
+        // verify if statsData is not set
+        if (!statsData.ContainsKey(unitStatID))
+        {
+            // int key
+            statsData[unitStatID] = Array.Find(PartyUnitData.unitStatsData, e => e.unitStatID == unitStatID);
+        }
+        // return
+        return statsData[unitStatID];
+    }
+
+    public UnitStatConfig GetStatConfig(UnitStatID unitStatID)
+    {
+        // verify if statsData is not set
+        if (!statConfigs.ContainsKey(unitStatID))
+        {
+            // int key
+            statConfigs[unitStatID] = Array.Find(PartyUnitConfig.unitStatConfigs, e => e.unitStatID == unitStatID);
+        }
+        // return
+        return statConfigs[unitStatID];
+    }
+
+    public int GetBaseStatValue(UnitStatID unitStatID)
+    {
+        return GetStatConfig(unitStatID).baseValue;
+    }
+
+    public int GetStatModifierPowerValueByCalculationType(UnitStatID unitStatID, List<UniquePowerModifierData> allBonuses, ModifierCalculatedHow modifierCalculatedHow)
+    {
+        // int result
+        int result = 0;
+        // predefine variable used in a loop
+        UniquePowerModifierConfig uniquePowerModifierConfig;
+        // loop through all bonuses
+        foreach (UniquePowerModifierData uniquePowerModifierData in allBonuses)
+        {
+            // get upm config
+            uniquePowerModifierConfig = uniquePowerModifierData.GetUniquePowerModifierConfig();
+            // verify if unique power modifier is applied to required stat
+            if ( (uniquePowerModifierConfig.ModifiedUnitStatID == unitStatID)
+                // verify if upm is of required calculation type
+                && (uniquePowerModifierConfig.ModifierCalculatedHow == modifierCalculatedHow) )
+            {
+                // add matching UPM power to result
+                result += uniquePowerModifierData.CurrentPower;
+            }
+        }
+        // return result
+        return result;
+    }
+
+    public int GetTotalAdditiveStatBonus(UnitStatID unitStatID)
+    {
+        // init result
+        int result = 0;
+        return result;
+    }
+
+    public int GetEffectiveStatValue(UnitStatID unitStatID)
+    {
+        // get all passive bonuses
+        List<UniquePowerModifierData> allBonuses = GetAllBonuses();
+        // get base stat value
+        int baseStat = GetBaseStatValue(unitStatID);
+        // get total percent to base stat modifiers power
+        int percentToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToBase);
+        // get total additive to base stat modifiers power
+        int additiveToBase = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.Additively);
+        // get total percent to all stat modifiers power
+        int percentToAll = GetStatModifierPowerValueByCalculationType(unitStatID, allBonuses, ModifierCalculatedHow.PercentToAll);
+        // return result based on the formula below
+        return ((baseStat * (100 + percentToBase) / 100) + additiveToBase) * (100 + percentToAll) / 100;
     }
 
     public int GetEffectiveDefense()
     {
-        // ADDITIVE
-        int totalAdditiveDefense = GetTotalAdditiveDefense();
-        // MULTIPLICATIVE
-        // Get additional defense mondifiers:
-        // Apply status modifier;
-        int restDamagePercent = 100 - totalAdditiveDefense;
-        int totalDefenseWithModifiers = totalAdditiveDefense + (int)Math.Round(restDamagePercent * GetDefensiveStanceBonus());
-        // Return result
-        return totalDefenseWithModifiers;
+        //// ADDITIVE
+        //int totalAdditiveDefense = GetTotalAdditiveDefense();
+        //// MULTIPLICATIVE
+        //// Get additional defense mondifiers:
+        //// Apply status modifier;
+        //int restDamagePercent = 100 - totalAdditiveDefense;
+        //int totalDefenseWithModifiers = totalAdditiveDefense + (int)Math.Round(restDamagePercent * GetDefensiveStanceBonus());
+        //// Return result
+        //return totalDefenseWithModifiers;
+        return GetEffectiveStatValue(UnitStatID.Defense);
     }
 
     //public void RemoveAllBuffs()
@@ -1232,14 +1663,14 @@ public class PartyUnit : MonoBehaviour {
         if (skill == null)
         {
             // get local party unit skill
-            skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Offense);
+            skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.Offense);
         }
         return (int)Math.Round(UnitAbilityCurrentPower * skill.currentSkillLevel * 0.15f);
     }
 
     public int GetItemsPowerBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Power, UnitAbilityCurrentPower);
+        return GetGenericStatItemBonus(UnitStatID.Power, UnitAbilityCurrentPower);
     }
 
     public int GetUnitEffectivePower()
@@ -1248,7 +1679,7 @@ public class PartyUnit : MonoBehaviour {
         return UnitAbilityCurrentPower + GetOffenceSkillPowerBonus() + GetItemsPowerBonus();
     }
 
-    List<UnitStatModifier> GetItemUnitStatModifierByStat(UnitStat unitStat)
+    List<UnitStatModifier> GetItemUnitStatModifierByStat(UnitStatID unitStat)
     {
         // init list of UnitStatModifier from items, there can be more than one
         List<UnitStatModifier> usmsList = new List<UnitStatModifier>();
@@ -1273,7 +1704,7 @@ public class PartyUnit : MonoBehaviour {
                         if ((inventoryItem.CurrentHeroEquipmentSlot & HeroEquipmentSlots.Shard) == HeroEquipmentSlots.Shard)
                         {
                             // apply skill modifier to USMs power
-                            usm.skillPowerMultiplier = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel;
+                            usm.skillPowerMultiplier = GetUnitSkillData(UnitSkillID.ShardAura).currentSkillLevel; // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.ShardAura).currentSkillLevel;
                         }
                         // add modifier to the list
                         usmsList.Add(usm);
@@ -1306,8 +1737,8 @@ public class PartyUnit : MonoBehaviour {
                             // loop through item stat modifiers
                             foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                             {
-                                // verify if usm applies to the stat and that it has global scope
-                                if ((usm.unitStat == unitStat) && (usm.modifierScope == ModifierScope.FriendlyParty))
+                                // verify if usm applies to the stat and that it has mass scope
+                                if ((usm.unitStat == unitStat) && (usm.modifierScope >= ModifierScope.EntireParty))
                                 {
                                     //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                                     //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
@@ -1316,7 +1747,7 @@ public class PartyUnit : MonoBehaviour {
                                     if ((inventoryItem.CurrentHeroEquipmentSlot & HeroEquipmentSlots.Shard) == HeroEquipmentSlots.Shard)
                                     {
                                         // apply skill modifier to USMs power
-                                        usm.skillPowerMultiplier = Array.Find(partyLeader.UnitSkillsData, element => element.unitSkill == UnitSkill.ShardAura).currentSkillLevel;
+                                        usm.skillPowerMultiplier = GetUnitSkillData(UnitSkillID.ShardAura).currentSkillLevel; // Array.Find(partyLeader.UnitSkillsData, element => element.unitSkillID == UnitSkillID.ShardAura).currentSkillLevel;
                                     }
                                     // add modifier to the list
                                     usmsList.Add(usm);
@@ -1330,7 +1761,7 @@ public class PartyUnit : MonoBehaviour {
         return usmsList;
     }
 
-    int GetGenericStatItemBonus(UnitStat unitStat, int statBaseValue)
+    int GetGenericStatItemBonus(UnitStatID unitStat, int statBaseValue)
     {
         // init bonus value
         int statTotalBonus = 0;
@@ -1348,14 +1779,14 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetLeadershipItemsBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Leadership, UnitLeadership);
+        return GetGenericStatItemBonus(UnitStatID.Leadership, UnitLeadership);
     }
 
     public int GetEffectiveLeadership()
     {
         // get current skill leadership bonus = skill level
-        UnitSkillData skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Leadership);
-        int skillBonus = skill.currentSkillLevel;
+        // UnitSkillData skill = Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Leadership);
+        int skillBonus = GetUnitSkillData(UnitSkillID.Leadership).currentSkillLevel; // .currentSkillLevel;
         // get items bonus
         int itemsBonus = GetLeadershipItemsBonus();
         // return result
@@ -1365,7 +1796,7 @@ public class PartyUnit : MonoBehaviour {
     public float GetPathfindingSkillMultiplier()
     {
         // get current skill level
-        int currentSkillLevel = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Pathfinding).currentSkillLevel;
+        int currentSkillLevel = GetUnitSkillData(UnitSkillID.Pathfinding).currentSkillLevel; // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Pathfinding).currentSkillLevel;
         // get and return bonus multiplier
         return (float)currentSkillLevel * 0.5f;
     }
@@ -1388,19 +1819,19 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetMovePointsItemsBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.MovePoints, MovePointsMax);
+        return GetGenericStatItemBonus(UnitStatID.MovePoints, MovePointsMax);
     }
 
     public int GetScoutingSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
-        return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Scouting).currentSkillLevel;
+        return GetUnitSkillData(UnitSkillID.Scouting).currentSkillLevel; // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Scouting).currentSkillLevel;
     }
 
     public int GetLeadershipSkillBonus()
     {
         // get and return current skill level (= scouting bonus)
-        return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Leadership).currentSkillLevel;
+        return GetUnitSkillData(UnitSkillID.Leadership).currentSkillLevel; // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Leadership).currentSkillLevel;
     }
 
     public int GetEffectiveMaxMovePoints()
@@ -1411,12 +1842,12 @@ public class PartyUnit : MonoBehaviour {
 
     public int GetScoutingPointsItemsBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.ScoutingRange, ScoutingRange);
+        return GetGenericStatItemBonus(UnitStatID.ScoutingRange, ScoutingRange);
     }
 
     public int GetItemsHealthBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Health, UnitHealthMax);
+        return GetGenericStatItemBonus(UnitStatID.Health, UnitHealthMax);
     }
 
     public int GetEffectiveScoutingRange()
@@ -1428,12 +1859,12 @@ public class PartyUnit : MonoBehaviour {
     public int GetInitiativeSkillBonus()
     {
         // get skill level multiplied by 15
-        return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Initiative).currentSkillLevel * 15;
+        return GetUnitSkillData(UnitSkillID.Initiative).currentSkillLevel * 15; ; // Array.Find(UnitSkillsData, element => element.unitSkillID == UnitSkillID.Initiative).currentSkillLevel * 15;
     }
 
     public int GetInitiativeItemsBonus()
     {
-        return GetGenericStatItemBonus(UnitStat.Initiative, UnitBaseInitiative);
+        return GetGenericStatItemBonus(UnitStatID.Initiative, UnitBaseInitiative);
     }
 
     public int GetEffectiveInitiative()
@@ -1450,7 +1881,7 @@ public class PartyUnit : MonoBehaviour {
     public float GetUnitHealSkillHealthRegenModifier()
     {
         // get and return skill current level multiplied by 0.15
-        return (float)Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.Healing).currentSkillLevel * 0.15f;
+        return (float)Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.Healing).currentSkillLevel * 0.15f;
     }
 
     public int GetUnitHealSkillHealthRegenBonusPerDay()
@@ -1480,13 +1911,13 @@ public class PartyUnit : MonoBehaviour {
         switch (source)
         {
             case PowerSource.Death:
-                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.DeathResistance).currentSkillLevel * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.DeathResistance).currentSkillLevel * 50;
             case PowerSource.Fire:
-                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.FireResistance).currentSkillLevel * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.FireResistance).currentSkillLevel * 50;
             case PowerSource.Mind:
-                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.MindResistance).currentSkillLevel * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.MindResistance).currentSkillLevel * 50;
             case PowerSource.Water:
-                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkill.WaterResistance).currentSkillLevel * 50;
+                return Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.WaterResistance).currentSkillLevel * 50;
             case PowerSource.Wind:
             case PowerSource.Pure:
             case PowerSource.Earth:
@@ -1504,13 +1935,13 @@ public class PartyUnit : MonoBehaviour {
         switch (source)
         {
             case PowerSource.Death:
-                return GetGenericStatItemBonus(UnitStat.DeathResistance, GetUnitBaseResistance(source));
+                return GetGenericStatItemBonus(UnitStatID.DeathResistance, GetUnitBaseResistance(source));
             case PowerSource.Fire:
-                return GetGenericStatItemBonus(UnitStat.FireResistance, GetUnitBaseResistance(source));
+                return GetGenericStatItemBonus(UnitStatID.FireResistance, GetUnitBaseResistance(source));
             case PowerSource.Mind:
-                return GetGenericStatItemBonus(UnitStat.MindResistance, GetUnitBaseResistance(source));
+                return GetGenericStatItemBonus(UnitStatID.MindResistance, GetUnitBaseResistance(source));
             case PowerSource.Water:
-                return GetGenericStatItemBonus(UnitStat.WaterResistance, GetUnitBaseResistance(source));
+                return GetGenericStatItemBonus(UnitStatID.WaterResistance, GetUnitBaseResistance(source));
             case PowerSource.Wind:
             case PowerSource.Pure:
             case PowerSource.Earth:
@@ -1559,10 +1990,10 @@ public class PartyUnit : MonoBehaviour {
             case ModifierCalculatedHow.Additively:
                 // increase current value by amout unit stat modifier by power
                 return unitStatModifier.skillPowerMultiplier * unitStatModifier.modifierPower;
-            case ModifierCalculatedHow.Multiplicatively:
+            case ModifierCalculatedHow.PercentToBase:
                 // increase current value by amout of base value multiplied by power
-                return unitStatModifier.skillPowerMultiplier * baseStatMaxValue * unitStatModifier.modifierPower;
-            case ModifierCalculatedHow.Percent:
+                return unitStatModifier.skillPowerMultiplier * baseStatMaxValue * unitStatModifier.modifierPower / 100; // note use float and ceil to int like below
+            case ModifierCalculatedHow.PercentToAll:
                 // increase current value by amout of percent from base value
                 return Mathf.CeilToInt( ((float)unitStatModifier.skillPowerMultiplier * (float)baseStatMaxValue * (float)unitStatModifier.modifierPower) / 100f );
             default:
@@ -1605,11 +2036,11 @@ public class PartyUnit : MonoBehaviour {
         Debug.LogWarning("Apply unit stat modifier");
         switch (unitStatModifier.unitStat)
         {
-            case UnitStat.Leadership:
+            case UnitStatID.Leadership:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.Health:
+            case UnitStatID.Health:
                 // verify if unit health is not max already and if unit is not dead
                 if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
                 {
@@ -1624,19 +2055,19 @@ public class PartyUnit : MonoBehaviour {
                 }
                 // by default item is not applicable
                 return false;
-            case UnitStat.Defense:
+            case UnitStatID.Defense:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.Power:
+            case UnitStatID.Power:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.Initiative:
+            case UnitStatID.Initiative:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.MovePoints:
+            case UnitStatID.MovePoints:
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
@@ -1655,23 +2086,23 @@ public class PartyUnit : MonoBehaviour {
                 }
                 // by default item is not applicable
                 return false;
-            case UnitStat.ScoutingRange:
+            case UnitStatID.ScoutingRange:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.DeathResistance:
+            case UnitStatID.DeathResistance:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.FireResistance:
+            case UnitStatID.FireResistance:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.WaterResistance:
+            case UnitStatID.WaterResistance:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
-            case UnitStat.MindResistance:
+            case UnitStatID.MindResistance:
                 // not applicable for instant unit stat modifier, because it is not consumable unit stat
                 // by default item is not applicable
                 return false;
@@ -1787,7 +2218,7 @@ public class PartyUnit : MonoBehaviour {
         Debug.Log("Verify if unit stat modifier can be applied to max stat");
         switch (unitStatModifier.unitStat)
         {
-            case UnitStat.Leadership:
+            case UnitStatID.Leadership:
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
@@ -1796,19 +2227,19 @@ public class PartyUnit : MonoBehaviour {
                 }
                 // this is not applicable to non-leaders
                 return false;
-            case UnitStat.Health:
+            case UnitStatID.Health:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.Defense:
+            case UnitStatID.Defense:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.Power:
+            case UnitStatID.Power:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.Initiative:
+            case UnitStatID.Initiative:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.MovePoints:
+            case UnitStatID.MovePoints:
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
@@ -1817,7 +2248,7 @@ public class PartyUnit : MonoBehaviour {
                 }
                 // this is not applicable to non-leaders
                 return false;
-            case UnitStat.ScoutingRange:
+            case UnitStatID.ScoutingRange:
                 // verify if unit is a party leader 
                 if (IsLeader)
                 {
@@ -1826,16 +2257,16 @@ public class PartyUnit : MonoBehaviour {
                 }
                 // this is not applicable to non-leaders
                 return false;
-            case UnitStat.DeathResistance:
+            case UnitStatID.DeathResistance:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.FireResistance:
+            case UnitStatID.FireResistance:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.WaterResistance:
+            case UnitStatID.WaterResistance:
                 // return usm can be applied as result;
                 return true;
-            case UnitStat.MindResistance:
+            case UnitStatID.MindResistance:
                 // return usm can be applied as result;
                 return true;
             default:
@@ -1914,75 +2345,87 @@ public class PartyUnit : MonoBehaviour {
     //    }
     //}
 
-    bool MatchScope(ModifierScope modifierScope)
+    bool MatchItemScope(ModifierScope modifierScope)
     {
-        // verify if we are in edit party screen
-        if (UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        switch (modifierScope)
         {
-            switch (modifierScope)
-            {
-                case ModifierScope.Self:
-                case ModifierScope.FriendlyUnit:
-                case ModifierScope.FriendlyParty:
-                    return true;
-                case ModifierScope.EnemyUnit:
-                case ModifierScope.EnemyParty:
-                    return false;
-                default:
-                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
-                    return false;
-            }
+            case ModifierScope.Self:
+            case ModifierScope.SingleUnit:
+            case ModifierScope.EntireParty:
+            case ModifierScope.AllPlayerUnits:
+                return true;
+            default:
+                Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                return false;
         }
-        // verify if we are in battle screen
-        else if (UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
-        {
-            // get party leader who has this item equipped
-            PartyUnit itemWearerLeaderUnit = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.transform.parent.GetComponent<PartyUnit>();
-            switch (modifierScope)
-            {
-                case ModifierScope.Self:
-                    // verify if itemWearerLeaderUnit matches current unit
-                    if (itemWearerLeaderUnit.gameObject.GetInstanceID() == gameObject.GetInstanceID())
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                case ModifierScope.FriendlyUnit:
-                case ModifierScope.FriendlyParty:
-                    // verify if faction matches
-                    if (itemWearerLeaderUnit.GetComponentInParent<HeroParty>().Faction == GetComponentInParent<HeroParty>().Faction)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                case ModifierScope.EnemyUnit:
-                case ModifierScope.EnemyParty:
-                    // verify if faction does not match
-                    if (itemWearerLeaderUnit.GetComponentInParent<HeroParty>().Faction != GetComponentInParent<HeroParty>().Faction)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                default:
-                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
-                    return false;
-            }
-        }
-        else
-        {
-            Debug.LogError("Unknown screen active");
-            // by default return false
-            return false;
-        }
+        // Note: this should be remade:
+        //// verify if we are in edit party screen
+        //if (UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        //{
+        //    switch (modifierScope)
+        //    {
+        //        case ModifierScope.Self:
+        //        case ModifierScope.FriendlyUnit:
+        //        case ModifierScope.FriendlyParty:
+        //            return true;
+        //        case ModifierScope.EnemyUnit:
+        //        case ModifierScope.EnemyParty:
+        //            return false;
+        //        default:
+        //            Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+        //            return false;
+        //    }
+        //}
+        //// verify if we are in battle screen
+        //else if (UIRoot.Instance.transform.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        //{
+        //    // get party leader who has this item equipped
+        //    PartyUnit itemWearerLeaderUnit = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.transform.parent.GetComponent<PartyUnit>();
+        //    switch (modifierScope)
+        //    {
+        //        case ModifierScope.Self:
+        //            // verify if itemWearerLeaderUnit matches current unit
+        //            if (itemWearerLeaderUnit.gameObject.GetInstanceID() == gameObject.GetInstanceID())
+        //            {
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                return false;
+        //            }
+        //        case ModifierScope.FriendlyUnit:
+        //        case ModifierScope.FriendlyParty:
+        //            // verify if faction matches
+        //            if (itemWearerLeaderUnit.GetComponentInParent<HeroParty>().Faction == GetComponentInParent<HeroParty>().Faction)
+        //            {
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                return false;
+        //            }
+        //        case ModifierScope.EnemyUnit:
+        //        case ModifierScope.EnemyParty:
+        //            // verify if faction does not match
+        //            if (itemWearerLeaderUnit.GetComponentInParent<HeroParty>().Faction != GetComponentInParent<HeroParty>().Faction)
+        //            {
+        //                return true;
+        //            }
+        //            else
+        //            {
+        //                return false;
+        //            }
+        //        default:
+        //            Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+        //            return false;
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.LogError("Unknown screen active");
+        //    // by default return false
+        //    return false;
+        //}
     }
 
     // doPreview - use item without actually using it, just verify if item can be used by this unit
@@ -2018,14 +2461,14 @@ public class PartyUnit : MonoBehaviour {
         {
             // unit does not have this item yet or item is stackable, do additional checks
             // consume unique power modifiers
-            for (int i = 0; i < inventoryItem.UniquePowerModifiers.Count; i++)
+            for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
             {
                 // verify if this is active modifier
-                if ((inventoryItem.UniquePowerModifiers[i].modifierAppliedHow == ModifierAppliedHow.Active)
+                if ((inventoryItem.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Active)
                 // verify if UPM required statuses match current unit status
-                && (MatchStatuses(inventoryItem.UniquePowerModifiers[i].CanBeAppliedToTheUnitsWithStatuses))
+                && (MatchStatuses(inventoryItem.UniquePowerModifierConfigs[i].CanBeAppliedToTheUnitsWithStatuses))
                 // verify if UPM scope matches
-                && (MatchScope(inventoryItem.UniquePowerModifiers[i].ModifierScope)))
+                && (MatchItemScope(inventoryItem.UniquePowerModifierConfigs[i].ModifierScope)))
                 {
                     // upm has instant one-time effect
 
@@ -2038,7 +2481,7 @@ public class PartyUnit : MonoBehaviour {
 
                     // verify whether it is applied to base, max or current stat values
                     // apply upm
-                    bool modifierCanBeApplied = ApplyActiveUPM(inventoryItem.UniquePowerModifiers[i], doPreview);
+                    bool modifierCanBeApplied = ApplyActiveUPM(inventoryItem.UniquePowerModifierConfigs[i], doPreview);
                     // if at least one upm is applicable, then set applicable flag to true
                     if (modifierCanBeApplied)
                         isApplicable = true;
@@ -2057,7 +2500,7 @@ public class PartyUnit : MonoBehaviour {
                 // verify if USM required statuses match current unit status
                 && (MatchStatuses(inventoryItem.UnitStatModifiers[i].canBeAppliedToTheUnitsWithStatuses))
                 // verify if USM scope matches
-                && (MatchScope(inventoryItem.UnitStatModifiers[i].modifierScope)))
+                && (MatchItemScope(inventoryItem.UnitStatModifiers[i].modifierScope)))
                 {
                     // verify if usm applies to current stats
                     if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.CurrentStat)
@@ -2106,7 +2549,7 @@ public class PartyUnit : MonoBehaviour {
                 // verify if unit status matches
                 if ((MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
                 // verify if scope matches
-                && (MatchScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
+                && (MatchItemScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
                 {
                     // set is applicable flag
                     isApplicable = true;
@@ -2730,13 +3173,13 @@ public class PartyUnit : MonoBehaviour {
     public void RemoveAppliedUnitUniquePowerModifiers()
     {
         // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
-        for (int i = UniquePowerModifiersData.Count - 1; i >= 0; i--)
+        for (int i = AppliedUniquePowerModifiersData.Count - 1; i >= 0; i--)
         {
             // trigger UPM removed event
             //UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(UniquePowerModifiersData[i]);
-            UniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(UniquePowerModifiersData[i]);
+            AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(AppliedUniquePowerModifiersData[i]);
             // remove it from the list
-            UniquePowerModifiersData.RemoveAt(i);
+            AppliedUniquePowerModifiersData.RemoveAt(i);
         }
     }
 
@@ -3103,11 +3546,11 @@ public class PartyUnit : MonoBehaviour {
     //    }
     //}
 
-    public List<UniquePowerModifierData> UniquePowerModifiersData
+    public List<UniquePowerModifierData> AppliedUniquePowerModifiersData
     {
         get
         {
-            return partyUnitData.uniquePowerModifiersData;
+            return partyUnitData.appliedUniquePowerModifiersData;
         }
     }
 }

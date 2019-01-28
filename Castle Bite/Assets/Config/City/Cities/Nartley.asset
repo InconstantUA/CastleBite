@@ -18,8 +18,6 @@ MonoBehaviour:
   cityName: Nartley
   cityDescription: City
   cityLevelMax: 5
-  hireablePartyLeaders: 1a0000001b0000001c0000001d0000001e000000
-  hireableCommonUnits: 2000000021000000220000002300000024000000
   isStarting: 1
-  goldIncomePerDay: -1
-  manaIncomePerDay: -1
+  defenseBuffUniquePowerModifierConfig: {fileID: 11400000, guid: 147a256147057bd448edf6c053656f70,
+    type: 2}

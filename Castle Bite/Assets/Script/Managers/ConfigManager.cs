@@ -87,6 +87,14 @@ public class ConfigManager : MonoBehaviour
         }
     }
 
+    public UnitSkillConfig this[UnitSkillID unitSkillID]
+    {
+        get
+        {
+            return unitSkillConfigs.First(e => e.unitSkillID == unitSkillID);
+        }
+    }
+
     public GameSaveConfig GameSaveConfig
     {
         get
@@ -223,4 +231,5 @@ public class ConfigManager : MonoBehaviour
             return inventoryItemConfigs.First(e => e.inventoryItemID == inventoryItemID);
         }
     }
+
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
   m_Name: Healing
   m_EditorClassIdentifier: 
-  unitSkill: 5
+  unitSkillID: 5
   skillDisplayName: Healing
   maxSkillLevel: 2
   requiredHeroLevel: 2
@@ -23,3 +23,4 @@ MonoBehaviour:
     Maximum level: 2.
 
     2nd and higher skill levels can be learned after 3 hero level ups.'
+  uniquePowerModifierConfigs: []

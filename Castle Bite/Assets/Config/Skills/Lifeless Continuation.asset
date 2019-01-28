@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6840028478b868649a23411313bc6168, type: 3}
   m_Name: Lifeless Continuation
   m_EditorClassIdentifier: 
-  unitSkill: 11
+  unitSkillID: 11
   skillDisplayName: Lifeless Continuation
   maxSkillLevel: 1
   requiredHeroLevel: 9
@@ -23,3 +23,4 @@ MonoBehaviour:
     blood stone during the battle.\r\nIf not resurrected before the end of the battle
     hero dies without gaining experience.\r\nMaximum level: 1.\r\n2nd skill level
     can be learned after 3 hero level ups."
+  uniquePowerModifierConfigs: []

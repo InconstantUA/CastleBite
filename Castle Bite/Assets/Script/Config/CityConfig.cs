@@ -19,7 +19,29 @@ public class CityConfig : ScriptableObject
     //public UnitType[] hireablePartyLeaders;
     //public UnitType[] hireableCommonUnits;
     public int isStarting; // defines whether this city is a starting city. It is used to place the first highered hero
-    // This is taken from CityUpgradeConfig:
-    //public int goldIncomePerDay = -1;
-    //public int manaIncomePerDay = -1;
+                           // This is taken from CityUpgradeConfig:
+                           //public int goldIncomePerDay = -1;
+                           //public int manaIncomePerDay = -1;
+                           // Unique power modifiers
+    public UniquePowerModifierConfig defenseBuffUniquePowerModifierConfig;
+    private List<UniquePowerModifierConfig> uniquePowerModifierConfigs; // city gives only defense bonus, but this list is needed to standardize the process for UPMs
+    public List<UniquePowerModifierConfig> UniquePowerModifierConfigs // this is just for formality
+    {
+        get
+        {
+            // verify if it has not been initialized yet
+            if (uniquePowerModifierConfigs == null)
+            {
+                // init it with defence UPM
+                uniquePowerModifierConfigs = new List<UniquePowerModifierConfig>();
+            }
+            // verify if defense buff has not been added
+            if (uniquePowerModifierConfigs.Count == 0)
+            {
+                uniquePowerModifierConfigs.Add(defenseBuffUniquePowerModifierConfig);
+                // Debug.LogWarning("============Added defense UPM");
+            };
+            return uniquePowerModifierConfigs;
+        }
+    }
 }

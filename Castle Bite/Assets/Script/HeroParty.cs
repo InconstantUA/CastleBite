@@ -41,18 +41,18 @@ public class HeroParty : MonoBehaviour {
     public bool CanEscapeFromBattle { get; set; }
     public Transform PreBattleParentTr { get; set; }
 
-    public PartyUnit GetHeroPartyLeaderUnit()
-    {
-        foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
-        {
-            // verify if unit is leader
-            if (partyUnit.IsLeader)
-            {
-                return partyUnit;
-            }
-        }
-        return null;
-    }
+    //public PartyUnit GetHeroPartyLeaderUnit()
+    //{
+    //    foreach (PartyUnit partyUnit in GetComponentsInChildren<PartyUnit>())
+    //    {
+    //        // verify if unit is leader
+    //        if (partyUnit.IsLeader)
+    //        {
+    //            return partyUnit;
+    //        }
+    //    }
+    //    return null;
+    //}
 
     //public PositionOnMap GetPartyMapPosition()
     //{

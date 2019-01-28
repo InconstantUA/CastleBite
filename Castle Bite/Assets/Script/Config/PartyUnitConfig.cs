@@ -1,7 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+
+[Serializable]
+public class UnitStatConfig : System.Object
+{
+    public UnitStatID unitStatID;
+    public int baseValue;          // base value
+    public int baseValueIncrement; // increment on level up or stats upgrade
+}
 
 [CreateAssetMenu(fileName = "PartyUnitConfig", menuName = "Config/Unit/UnitConfig")]
 public class PartyUnitConfig : ScriptableObject
@@ -70,6 +79,19 @@ public class PartyUnitConfig : ScriptableObject
     // UI attributes
 
     // Unit Equipment
+
+    public UnitStatConfig[] unitStatConfigs = new UnitStatConfig[]
+    {
+        new UnitStatConfig{ unitStatID = UnitStatID.Leadership },
+        new UnitStatConfig{ unitStatID = UnitStatID.Initiative },
+        new UnitStatConfig{ unitStatID = UnitStatID.Defense },
+        new UnitStatConfig{ unitStatID = UnitStatID.MovePoints },
+        new UnitStatConfig{ unitStatID = UnitStatID.ScoutingRange },
+        new UnitStatConfig{ unitStatID = UnitStatID.DeathResistance },
+        new UnitStatConfig{ unitStatID = UnitStatID.FireResistance },
+        new UnitStatConfig{ unitStatID = UnitStatID.MindResistance },
+        new UnitStatConfig{ unitStatID = UnitStatID.WaterResistance }
+    };
 
     // Functions
     public int GetUnitExperienceRequiredToReachNextLevel(int currentUnitLevel)

@@ -1003,8 +1003,13 @@ public class UpgradeUnit : MonoBehaviour {
 
     void SetSkillUICurrentLevel(Transform skillUI, UnitSkillData unitSkillData)
     {
+        Debug.Log("skill: " + unitSkillData.unitSkill);
+        if (Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill) == null)
+        {
+            Debug.Log("no skill: " + unitSkillData.unitSkill);
+        }
         // set text to level + 1
-        if (unitSkillData.currentSkillLevel == Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).maxSkillLevel)
+        if (unitSkillData.currentSkillLevel == Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill).maxSkillLevel)
         {
             // add (max) to the skill text
             skillUI.Find("SkillLevel").GetComponent<Text>().text = unitSkillData.currentSkillLevel.ToString() + "(max)";
@@ -1018,12 +1023,12 @@ public class UpgradeUnit : MonoBehaviour {
     void SetSkillUIName(Transform skillUI, UnitSkillData unitSkillData)
     {
         // set text to unit name
-        skillUI.Find("SkillName").GetComponent<Text>().text = Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).skillDisplayName;
+        skillUI.Find("SkillName").GetComponent<Text>().text = Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill).skillDisplayName;
     }
 
     int GetSkillRequiredLevel(UnitSkillData unitSkillData)
     {
-        UnitSkillConfig unitSkillConfig = Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill);
+        UnitSkillConfig unitSkillConfig = Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill);
         // act based on the current skill level
         if (0 == unitSkillData.currentSkillLevel)
         {
@@ -1048,7 +1053,7 @@ public class UpgradeUnit : MonoBehaviour {
         // Get text component
         Text levelText = skillUI.Find("RequiredHeroLevel").GetComponent<Text>();
         // verify if skill level is already maximum
-        if (unitSkillData.currentSkillLevel == Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).maxSkillLevel)
+        if (unitSkillData.currentSkillLevel == Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill).maxSkillLevel)
         {
             // set '-' text to represent that hero level is not relevan any more, because maximum skill level was learned
             levelText.text = "-";
@@ -1191,7 +1196,7 @@ public class UpgradeUnit : MonoBehaviour {
         if (focusedPartyUnit.UnitLevel >= GetSkillRequiredLevel(unitSkillData))
         {
             // verify if skill level is not maximum
-            if (unitSkillData.currentSkillLevel < Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).maxSkillLevel)
+            if (unitSkillData.currentSkillLevel < Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill).maxSkillLevel)
             {
                 return true;
             }
@@ -1221,7 +1226,7 @@ public class UpgradeUnit : MonoBehaviour {
     {
         // Get Text button
         skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.RemoveAllListeners();
-        skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowInfo(Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkill == unitSkillData.unitSkill).description); });
+        skillUI.Find("SkillName").GetComponent<TextButton>().OnRightMouseButtonDown.AddListener(delegate { ShowInfo(Array.Find(ConfigManager.Instance.UnitSkillConfigs, e => e.unitSkillID == unitSkillData.unitSkill).description); });
     }
 
     void SetSkillUI(UnitSkillData unitSkillData)

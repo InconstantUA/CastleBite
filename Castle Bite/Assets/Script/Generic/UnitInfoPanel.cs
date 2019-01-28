@@ -620,35 +620,37 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         switch (learnedSkill.unitSkill)
         {
-            case UnitSkill.Leadership:
+            case UnitSkillID.Leadership:
                 // update normal values
                 SetUnitLeadershipInfo(partyUnit);
                 break;
-            case UnitSkill.Offense:
+            case UnitSkillID.Offense:
                 //SetUnitPowerInfo(partyUnit, learnedSkill);
                 SetUnitPowerInfo(partyUnit);
                 break;
-            case UnitSkill.Defense:
+            case UnitSkillID.Defense:
                 SetUnitDefenseInfo(partyUnit);
                 break;
-            case UnitSkill.Pathfinding:
+            case UnitSkillID.Pathfinding:
                 SetUnitMovePointsInfo(partyUnit);
                 break;
-            case UnitSkill.Scouting:
+            case UnitSkillID.Scouting:
                 SetUnitScoutingRangeInfo(partyUnit);
                 break;
-            case UnitSkill.Healing:
+            case UnitSkillID.Healing:
                 SetUnitHealthInfo(partyUnit);
                 break;
-            case UnitSkill.DeathResistance:
-            case UnitSkill.FireResistance:
-            case UnitSkill.WaterResistance:
-            case UnitSkill.MindResistance:
+            case UnitSkillID.DeathResistance:
+            case UnitSkillID.FireResistance:
+            case UnitSkillID.WaterResistance:
+            case UnitSkillID.MindResistance:
                 SetUnitResistancesInfo(partyUnit);
                 break;
-            case UnitSkill.ShardAura:
+            case UnitSkillID.ShardAura:
                 break;
-            case UnitSkill.LifelessContinuation:
+            case UnitSkillID.LifelessContinuation:
+                break;
+            case UnitSkillID.None:
                 break;
             default:
                 Debug.LogError("Unknown skill: " + learnedSkill.unitSkill);
@@ -708,7 +710,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         foreach (InventoryItem inventoryItem in partyUnit.GetComponentsInChildren<InventoryItem>())
         {
             // loop through all UPMs in the item
-            foreach (UniquePowerModifierConfig upm in inventoryItem.UniquePowerModifiers)
+            foreach (UniquePowerModifierConfig upm in inventoryItem.UniquePowerModifierConfigs)
             {
                 // add upm from item to the list
                 itemsUniquePowerModifierConfigs.Add(upm);

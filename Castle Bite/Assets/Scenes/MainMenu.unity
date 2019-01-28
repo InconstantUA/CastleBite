@@ -73237,6 +73237,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9507dc4bb273b0c4199d0321d73427a8, type: 2}
   - {fileID: 11400000, guid: 15d5dcac2f7a3c44eb4efc02e9b903b5, type: 2}
   - {fileID: 11400000, guid: 42f1c26673b3ddc4b96ae10892def60f, type: 2}
+  - {fileID: 11400000, guid: bdd51ffe417450745a3460ec197b2da7, type: 2}
   gameSaveConfig: {fileID: 11400000, guid: 8cd07e04a9c145a4db91af2adb39be06, type: 2}
   partyUnitConfigs:
   - {fileID: 11400000, guid: bb35b8ff226e7b64791e012226564089, type: 2}
@@ -119026,6 +119027,26 @@ PrefabInstance:
         type: 3}
       propertyPath: inventoryItemData.inventoryItemID
       value: 1103
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062369056111686629, guid: 022a26fd571a22f4e85bf61377129370,
+        type: 3}
+      propertyPath: defenceBuffUniquePowerModifierConfig
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062369056418399604, guid: 022a26fd571a22f4e85bf61377129370,
+        type: 3}
+      propertyPath: defenceBuffUniquePowerModifierConfig
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062369056808374084, guid: 022a26fd571a22f4e85bf61377129370,
+        type: 3}
+      propertyPath: defenceBuffUniquePowerModifierConfig
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062369057588125266, guid: 022a26fd571a22f4e85bf61377129370,
+        type: 3}
+      propertyPath: defenceBuffUniquePowerModifierConfig
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1062369057281542972, guid: 022a26fd571a22f4e85bf61377129370, type: 3}

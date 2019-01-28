@@ -36,7 +36,7 @@ public class BaseDamageOverTimeUPM : UniquePowerModifier
             CurrentPower = uniquePowerModifierConfig.GetUpmCurrentPower(srcPartyUnit.StatsUpgradesCount)
         };
         // find upm with the same modifier in the list of upms on destination party unit
-        UniquePowerModifierData sameUPM = dstPartyUnit.UniquePowerModifiersData.Find(e => (e.UniquePowerModifierID == uniquePowerModifierID));
+        UniquePowerModifierData sameUPM = dstPartyUnit.AppliedUniquePowerModifiersData.Find(e => (e.UniquePowerModifierID == uniquePowerModifierID));
         // verify if the same UPM has already been found or applied (not null)
         if (sameUPM != null)
         {
@@ -62,7 +62,7 @@ public class BaseDamageOverTimeUPM : UniquePowerModifier
         else
         {
             // add new upm data to the list of upms on the destination unit
-            dstPartyUnit.UniquePowerModifiersData.Add(upmData);
+            dstPartyUnit.AppliedUniquePowerModifiersData.Add(upmData);
             // raise an event
             //uniquePowerModifierDataHasBeenAddedEvent.Raise(dstPartyUnit.gameObject);
             Events.DataHasBeenAddedEvent.Raise(dstPartyUnit.gameObject);

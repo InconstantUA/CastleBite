@@ -18,6 +18,6 @@ MonoBehaviour:
   cityName: SintJoris
   cityDescription: City
   cityLevelMax: 5
-  hireablePartyLeaders: 0200000003000000040000000500000006000000
-  hireableCommonUnits: 070000000b00000008000000090000000a000000
   isStarting: 0
+  defenseBuffUniquePowerModifierConfig: {fileID: 11400000, guid: 147a256147057bd448edf6c053656f70,
+    type: 2}
