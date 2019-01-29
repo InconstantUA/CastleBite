@@ -23,16 +23,22 @@ public class UniquePowerModifierConfig : ScriptableObject
     // private ModifierScope modifierScope;
     //public UnitBuff upmAppliedBuff;
     //public UnitDebuff upmAppliedDebuff;
-    public UniquePowerModifierType uniquePowerModifierType;
+    [SerializeField]
+    private UniquePowerModifierType uniquePowerModifierType;
     // private int upmPower;
     // private int upmPowerIncrementOnLevelUp;
     // private int upmDuration;
     // private PowerSource upmSource;
     //public ModifierOrigin upmOrigin; // ?TODO: move to data
-    public ModifierAppliedHow modifierAppliedHow;  // active (example: heal over time buff) or passive (example: defense buff)
+    [SerializeField]
+    private ModifierAppliedHow modifierAppliedHow;  // active (example: heal over time buff) or passive (example: defense buff)
     public int upmDurationLeft; // TODO: move to data
     // public int skillPowerMultiplier = 1;
     // private UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
+    //[SerializeField]
+    //private UniquePowerModifierUpdaterConfig
+    [SerializeField]
+    private ModifierConfigUpdater[] modifierConfigUpdaters; // updates UnitStatModifierConfig if defined
     [SerializeField]
     private UniquePowerModifierUIConfig uniquePowerModifierUIConfig;
 
@@ -45,6 +51,83 @@ public class UniquePowerModifierConfig : ScriptableObject
     {
         UniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
     }
+
+    public bool MatchScope(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
+    {
+        // Match
+        switch (ModifierScope)
+        {
+            case ModifierScope.Self:
+                // verify if source and destination party units are the same
+                if (srcPartyUnitUPMOwner.GetInstanceID() == dstPartyUnit.GetInstanceID())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            case ModifierScope.SingleUnit:
+            case ModifierScope.EntireParty:
+            case ModifierScope.AllPlayerUnits:
+                Debug.LogError("Finish this function logic implementation");
+                return true;
+            default:
+                Debug.LogError("Unknown modifier scope: " + ModifierScope.ToString());
+                return false;
+        }
+    }
+
+    public bool MatchRelationships(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
+    {
+        // get relationships
+        Relationships.State relationships = Relationships.Instance.GetRelationships(srcPartyUnitUPMOwner.GetUnitParty().Faction, dstPartyUnit.GetUnitParty().Faction);
+        // loop through all required relationships
+        foreach(Relationships.State relation in RequiredRelationships)
+        {
+            // verify if relationships match
+            if (relation == relationships)
+            {
+                return true;
+            }
+        }
+        // if none of required relations match return false
+        return false;
+    }
+
+
+    UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(PartyUnit srcPartyUnit)
+    {
+        // init updated usmc with the copy of default usmc (note: avoid modification of default usmc)
+        UnitStatModifierConfig updatedUSMC = Instantiate(unitStatModifierConfig);
+        // update usmc
+        foreach (ModifierConfigUpdater modifierConfigUpdater in modifierConfigUpdaters)
+        {
+            updatedUSMC = modifierConfigUpdater.GetUpdatedModifier(updatedUSMC, srcPartyUnit.gameObject);
+        }
+        // return result
+        return updatedUSMC;
+    }
+
+    //public int GetUpmCurrentPower(int unitStatsUpgradeCount)
+    //{
+    //    // calculate current UPM power based on stats upgrade count
+    //    return UpmBasePower + UpmPowerIncrementOnLevelUp * unitStatsUpgradeCount;
+    //}
+
+    public int GetUpmEffectivePower(PartyUnit srcPartyUnit)
+    {
+        // return power after all applied updates
+        return GetUpdatedUnitStatModifierConfig(srcPartyUnit).modifierPower;
+    }
+
+    public int GetUpmPowerDifference(PartyUnit srcPartyUnit)
+    {
+        // return difference between updated usmc power and default usmc power
+        return GetUpmEffectivePower(srcPartyUnit) - unitStatModifierConfig.modifierPower;
+    }
+
+    #region UnitStatModifierConfig properties
 
     public UnitSkillID AssociatedUnitSkillID
     {
@@ -86,55 +169,12 @@ public class UniquePowerModifierConfig : ScriptableObject
         }
     }
 
-    public bool MatchScope(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
-    {
-        // Match
-        switch (ModifierScope)
-        {
-            case ModifierScope.Self:
-                // verify if source and destination party units are the same
-                if (srcPartyUnitUPMOwner.GetInstanceID() == dstPartyUnit.GetInstanceID())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            case ModifierScope.SingleUnit:
-            case ModifierScope.EntireParty:
-            case ModifierScope.AllPlayerUnits:
-                Debug.LogError("Finish this function logic implementation");
-                return true;
-            default:
-                Debug.LogError("Unknown modifier scope: " + ModifierScope.ToString());
-                return false;
-        }
-    }
-
     public Relationships.State[] RequiredRelationships
     {
         get
         {
             return unitStatModifierConfig.requiredRelationships;
         }
-    }
-
-    public bool MatchRelationships(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
-    {
-        // get relationships
-        Relationships.State relationships = Relationships.Instance.GetRelationships(srcPartyUnitUPMOwner.GetUnitParty().Faction, dstPartyUnit.GetUnitParty().Faction);
-        // loop through all required relationships
-        foreach(Relationships.State relation in RequiredRelationships)
-        {
-            // verify if relationships match
-            if (relation == relationships)
-            {
-                return true;
-            }
-        }
-        // if none of required relations match return false
-        return false;
     }
 
     public int UpmBasePower
@@ -145,19 +185,13 @@ public class UniquePowerModifierConfig : ScriptableObject
         }
     }
 
-    public int GetUpmCurrentPower(int unitStatsUpgradeCount)
-    {
-        // calculate current UPM power based on stats upgrade count
-        return UpmBasePower + UpmPowerIncrementOnLevelUp * unitStatsUpgradeCount;
-    }
-
-    public int UpmPowerIncrementOnLevelUp
-    {
-        get
-        {
-            return unitStatModifierConfig.powerIncrementOnStatsUpgrade;
-        }
-    }
+    //public int UpmPowerIncrementOnLevelUp
+    //{
+    //    get
+    //    {
+    //        return unitStatModifierConfig.powerIncrementOnStatsUpgrade;
+    //    }
+    //}
 
     public int UpmDurationMax
     {
@@ -182,6 +216,10 @@ public class UniquePowerModifierConfig : ScriptableObject
             return unitStatModifierConfig.canBeAppliedToTheUnitsWithStatuses;
         }
     }
+
+    #endregion UnitStatModifierConfig properties
+
+    #region Properties
 
     public string DisplayName
     {
@@ -214,6 +252,32 @@ public class UniquePowerModifierConfig : ScriptableObject
             return uniquePowerModifier;
         }
     }
+
+    public UniquePowerModifierType UniquePowerModifierType
+    {
+        get
+        {
+            return uniquePowerModifierType;
+        }
+    }
+
+    public ModifierAppliedHow ModifierAppliedHow
+    {
+        get
+        {
+            return modifierAppliedHow;
+        }
+    }
+
+    public ModifierConfigUpdater[] ModifierConfigUpdaters
+    {
+        get
+        {
+            return modifierConfigUpdaters;
+        }
+    }
+
+    #endregion Properties
 
     //public string GetDisplayName()
     //{

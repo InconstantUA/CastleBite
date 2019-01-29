@@ -162,7 +162,7 @@ public class InventoryItem : MonoBehaviour {
         foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
         {
             // verify if usm is applied actively
-            if (upm.modifierAppliedHow == ModifierAppliedHow.Active)
+            if (upm.ModifierAppliedHow == ModifierAppliedHow.Active)
             {
                 return true;
             }
@@ -176,7 +176,7 @@ public class InventoryItem : MonoBehaviour {
         foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
         {
             // verify if upm does not have instant duration
-            if (upm.modifierAppliedHow == ModifierAppliedHow.Passive)
+            if (upm.ModifierAppliedHow == ModifierAppliedHow.Passive)
             {
                 return true;
             }
@@ -344,7 +344,7 @@ public class InventoryItem : MonoBehaviour {
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
             // verify if UPM is passive
-            if ((UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive))
+            if ((UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive))
             {
                 // create and add UPM data to the list
                 upmsData.Add(new UniquePowerModifierData

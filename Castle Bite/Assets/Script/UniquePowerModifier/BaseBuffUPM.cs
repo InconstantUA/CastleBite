@@ -17,7 +17,8 @@ public class BaseBuffUPM : UniquePowerModifier
             // rest upm duration left to max duration
             DurationLeft = uniquePowerModifierConfig.UpmDurationMax,
             // set upm current power based on source unit stats upgrades count
-            CurrentPower = uniquePowerModifierConfig.GetUpmCurrentPower(srcPartyUnit.StatsUpgradesCount)
+            //CurrentPower = uniquePowerModifierConfig.GetUpmCurrentPower(srcPartyUnit.StatsUpgradesCount)
+            CurrentPower = uniquePowerModifierConfig.GetUpmEffectivePower(srcPartyUnit)
         };
         // find upm with the same modifier in the list of upms on destination party unit
         UniquePowerModifierData sameUPM = dstPartyUnit.AppliedUniquePowerModifiersData.Find(e => (e.UniquePowerModifierID == uniquePowerModifierID));
@@ -59,7 +60,7 @@ public class BaseBuffUPM : UniquePowerModifier
         // get unique power modifier config
         UniquePowerModifierConfig uniquePowerModifierConfig = uniquePowerModifierData.GetUniquePowerModifierConfig();
         // verify if it is active or passive UPM
-        if (uniquePowerModifierConfig.modifierAppliedHow == ModifierAppliedHow.Active)
+        if (uniquePowerModifierConfig.ModifierAppliedHow == ModifierAppliedHow.Active)
         {
             // normally this is somethins which buffs current unit stats, for example: health (heal unit)
             Debug.LogWarning(".. Apply active buff");

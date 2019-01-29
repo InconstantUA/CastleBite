@@ -1102,7 +1102,7 @@ public class PartyUnit : MonoBehaviour {
                     // verify if stat matches
                     if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifiedUnitStatID == unitStatID)
                         // verify if UPM is passive
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this))
                         // verify if dst party unit hass mass scope
@@ -1145,7 +1145,7 @@ public class PartyUnit : MonoBehaviour {
                 for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
                 {
                     // verify if UPM is passive
-                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                         // verify if dst party unit hass mass scope
@@ -1190,7 +1190,7 @@ public class PartyUnit : MonoBehaviour {
                 for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
                 {
                     // verify if UPM is passive
-                    if ((inventoryItem.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                    if ((inventoryItem.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
                         // verify if UPM relationships requirements are met
                         && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                         // verify if dst party unit hass mass scope
@@ -1237,7 +1237,7 @@ public class PartyUnit : MonoBehaviour {
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
             // verify if UPM is passive
-            if ((UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+            if ((UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
                 // verify if UPM relationships requirements are met
                 && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                 // verify if dst party unit hass mass scope
@@ -1356,7 +1356,7 @@ public class PartyUnit : MonoBehaviour {
                 for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
                 {
                     // verify if UPM is passive
-                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Passive)
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this)))
                     {
@@ -1393,7 +1393,7 @@ public class PartyUnit : MonoBehaviour {
         foreach (UniquePowerModifierData uniquePowerModifierData in AppliedUniquePowerModifiersData)
         {
             // verify if UPM is passive
-            if (uniquePowerModifierData.GetUniquePowerModifierConfig().modifierAppliedHow == ModifierAppliedHow.Passive)
+            if (uniquePowerModifierData.GetUniquePowerModifierConfig().ModifierAppliedHow == ModifierAppliedHow.Passive)
             {
                 // add data to the list of all bonuses
                 allBonuses.Add(uniquePowerModifierData);
@@ -2623,7 +2623,7 @@ public class PartyUnit : MonoBehaviour {
             for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
             {
                 // verify if this is active modifier
-                if ((inventoryItem.UniquePowerModifierConfigs[i].modifierAppliedHow == ModifierAppliedHow.Active)
+                if ((inventoryItem.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Active)
                 // verify if UPM required statuses match current unit status
                 && (MatchStatuses(inventoryItem.UniquePowerModifierConfigs[i].CanBeAppliedToTheUnitsWithStatuses))
                 // verify if UPM scope matches
@@ -3105,7 +3105,7 @@ public class PartyUnit : MonoBehaviour {
         //}
     }
 
-    public int UnitAbilityStartingPower
+    public int UnitAbilityBasePower
     {
         get
         {
@@ -3138,7 +3138,7 @@ public class PartyUnit : MonoBehaviour {
         {
             // return partyUnitData.unitPower;
             // calculate ability power based on unit base power
-            return UnitAbilityStartingPower +
+            return UnitAbilityBasePower +
             // add stats upgrade count multiplied by power increment on stats upgrade
             UnitPowerIncrementOnStatsUpgrade * StatsUpgradesCount;
         }

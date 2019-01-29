@@ -24,4 +24,4 @@ MonoBehaviour:
   powerSource: 9
   powerIncrementOnStatsUpgrade: 0
   associatedUnitSkillID: 2
-  associatedUnitSkillPowerMultiplier: 1
+  associatedUnitSkillLevelMultiplier: 1

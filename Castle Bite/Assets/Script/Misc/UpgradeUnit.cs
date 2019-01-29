@@ -289,9 +289,11 @@ public class UpgradeUnit : MonoBehaviour {
         {
             transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().SetUniquePowerModifiersPreview(
                 i,
-                uniquePowerModifierConfigs[i].GetUpmCurrentPower(focusedPartyUnit.StatsUpgradesCount),
+                //uniquePowerModifierConfigs[i].GetUpmCurrentPower(focusedPartyUnit.StatsUpgradesCount),
+                uniquePowerModifierConfigs[i].GetUpmEffectivePower(focusedPartyUnit),
                 uniquePowerModifierConfigs[i].UpmBasePower,
-                uniquePowerModifierConfigs[i].UpmPowerIncrementOnLevelUp * statsUpgradeCount
+                //uniquePowerModifierConfigs[i].UpmPowerIncrementOnLevelUp * statsUpgradeCount
+                uniquePowerModifierConfigs[i].GetUpmPowerDifference(focusedPartyUnit)
             );
         }
     }

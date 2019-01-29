@@ -686,11 +686,11 @@ public class PartyUnitUI : MonoBehaviour {
             // init parent transform
             Transform upmStatusIconParent;
             // verify if UPM is buff or debuff
-            if (uniquePowerModifierData.GetUniquePowerModifierConfig().uniquePowerModifierType == UniquePowerModifierType.Buff)
+            if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierType.Buff)
             {
                 upmStatusIconParent = upmBuffsParentTranform;
             }
-            else if (uniquePowerModifierData.GetUniquePowerModifierConfig().uniquePowerModifierType == UniquePowerModifierType.Debuff)
+            else if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierType.Debuff)
             {
                 upmStatusIconParent = upmDebuffsParentTranform;
             }
