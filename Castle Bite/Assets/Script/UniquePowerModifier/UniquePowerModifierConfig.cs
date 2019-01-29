@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum UniquePowerModifierType
 {
@@ -96,14 +94,14 @@ public class UniquePowerModifierConfig : ScriptableObject
     }
 
 
-    UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(PartyUnit srcPartyUnit)
+    UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(GameObject upmBearer)
     {
         // init updated usmc with the copy of default usmc (note: avoid modification of default usmc)
         UnitStatModifierConfig updatedUSMC = Instantiate(unitStatModifierConfig);
         // update usmc
         foreach (ModifierConfigUpdater modifierConfigUpdater in modifierConfigUpdaters)
         {
-            updatedUSMC = modifierConfigUpdater.GetUpdatedModifier(updatedUSMC, srcPartyUnit.gameObject);
+            updatedUSMC = modifierConfigUpdater.GetUpdatedUSMC(updatedUSMC, upmBearer.gameObject);
         }
         // return result
         return updatedUSMC;
@@ -115,16 +113,16 @@ public class UniquePowerModifierConfig : ScriptableObject
     //    return UpmBasePower + UpmPowerIncrementOnLevelUp * unitStatsUpgradeCount;
     //}
 
-    public int GetUpmEffectivePower(PartyUnit srcPartyUnit)
+    public int GetUpmEffectivePower(GameObject upmBearer)
     {
         // return power after all applied updates
-        return GetUpdatedUnitStatModifierConfig(srcPartyUnit).modifierPower;
+        return GetUpdatedUnitStatModifierConfig(upmBearer).modifierPower;
     }
 
-    public int GetUpmPowerDifference(PartyUnit srcPartyUnit)
+    public int GetUpmPowerDifference(GameObject upmBearer)
     {
         // return difference between updated usmc power and default usmc power
-        return GetUpmEffectivePower(srcPartyUnit) - unitStatModifierConfig.modifierPower;
+        return GetUpmEffectivePower(upmBearer) - unitStatModifierConfig.modifierPower;
     }
 
     #region UnitStatModifierConfig properties

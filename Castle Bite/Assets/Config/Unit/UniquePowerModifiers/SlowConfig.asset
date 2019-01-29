@@ -21,5 +21,7 @@ MonoBehaviour:
   uniquePowerModifierType: 1
   modifierAppliedHow: 1
   upmDurationLeft: 2
+  modifierConfigUpdaters:
+  - {fileID: 11400000, guid: 8544ef3f59f47384cb33a292a8fdacca, type: 2}
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: 14cdb4ce77abf914e9078bd97f9a43ee,
     type: 2}

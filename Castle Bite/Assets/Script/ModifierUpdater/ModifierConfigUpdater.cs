@@ -6,7 +6,7 @@ using UnityEngine;
 public class ModifierConfigUpdater : ScriptableObject
 {
     // default update
-    public virtual UnitStatModifierConfig GetUpdatedModifier(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
+    public virtual UnitStatModifierConfig GetUpdatedUSMC(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
     {
         // by default do not do any changes
         return unitStatModifierConfig;
@@ -15,6 +15,7 @@ public class ModifierConfigUpdater : ScriptableObject
     // default get quantitive bonus of the updater
     public virtual int GetDifference(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
     {
-        return 0;
+        // return difference between updated modifier power and default power
+        return GetUpdatedUSMC(unitStatModifierConfig, gameObject).modifierPower - unitStatModifierConfig.modifierPower;
     }
 }

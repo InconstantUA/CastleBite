@@ -663,7 +663,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         Transform upmTransform = Instantiate(uniquePowerModifierUITemplate, upmsListGrid).transform;
         upmTransform.Find("Name").GetComponent<Text>().text = uniquePowerModifierConfig.DisplayName;
         // upmTransform.Find("Power").GetComponent<Text>().text = Math.Abs(uniquePowerModifierConfig.GetUpmCurrentPower(partyUnit.StatsUpgradesCount)).ToString();
-        upmTransform.Find("Power").GetComponent<Text>().text = Math.Abs(uniquePowerModifierConfig.GetUpmEffectivePower(partyUnit)).ToString();
+        upmTransform.Find("Power").GetComponent<Text>().text = Math.Abs(uniquePowerModifierConfig.GetUpmEffectivePower(partyUnit.gameObject)).ToString();
         upmTransform.Find("Duration").GetComponent<Text>().text = uniquePowerModifierConfig.UpmDurationMax.ToString();
         //// verify if duration left if is at least 1 day (which normally means that it will expire after upmDurationLeft days)
         //if (uniquePowerModifier.upmDurationLeft >= 1)

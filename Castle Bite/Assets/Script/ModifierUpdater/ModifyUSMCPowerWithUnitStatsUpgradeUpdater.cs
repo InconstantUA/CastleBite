@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // base class for modifier updater (used by unique power modifier)
-[CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Updaters/Modify USMC Power With Unit Stats Upgrade")]
+[CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Updaters/Modify USMC Power by x with Unit stats upgrade")]
 public class ModifyUSMCPowerWithUnitStatsUpgradeUpdater : ModifierConfigUpdater
 {
     public int powerIncrementOnStatsUpgrade;
 
     // default update
-    public override UnitStatModifierConfig GetUpdatedModifier(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
+    public override UnitStatModifierConfig GetUpdatedUSMC(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
     {
         // get party unit from gameObject
         PartyUnit partyUnit = gameObject.GetComponent<PartyUnit>();
@@ -30,11 +30,5 @@ public class ModifyUSMCPowerWithUnitStatsUpgradeUpdater : ModifierConfigUpdater
             Debug.LogError("Party Unit reference is null");
         }
         return unitStatModifierConfig;
-    }
-
-    public override int GetDifference(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
-    {
-        // return difference between updated modifier power and default power
-        return GetUpdatedModifier(unitStatModifierConfig, gameObject).modifierPower - unitStatModifierConfig.modifierPower;
     }
 }

@@ -34,7 +34,7 @@ public class BaseDamageOverTimeUPM : UniquePowerModifier
             DurationLeft = uniquePowerModifierConfig.UpmDurationMax,
             // set upm current power based on source unit stats upgrades count and other Updaters
             //CurrentPower = uniquePowerModifierConfig.GetUpmCurrentPower(srcPartyUnit.StatsUpgradesCount)
-            CurrentPower = uniquePowerModifierConfig.GetUpmEffectivePower(srcPartyUnit)
+            CurrentPower = uniquePowerModifierConfig.GetUpmEffectivePower(srcPartyUnit.gameObject)
         };
         // find upm with the same modifier in the list of upms on destination party unit
         UniquePowerModifierData sameUPM = dstPartyUnit.AppliedUniquePowerModifiersData.Find(e => (e.UniquePowerModifierID == uniquePowerModifierID));

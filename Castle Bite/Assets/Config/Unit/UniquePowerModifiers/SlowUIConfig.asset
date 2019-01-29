@@ -18,5 +18,5 @@ MonoBehaviour:
   statusIconTextPressedColor: {r: 0.86274517, g: 0.86274517, b: 0.86274517, a: 1}
   statusIconTextDisabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   statusIconBackgroundColor: {r: 0.3372549, g: 0.6117647, b: 0.83921576, a: 0.2509804}
-  onTriggerTextAnimation: {fileID: 11400000, guid: e7ca77a4a946b194ea79248c93834a74,
+  onTriggerTextAnimation: {fileID: 11400000, guid: d51fdbaeebe33b34891790d563113e97,
     type: 2}
