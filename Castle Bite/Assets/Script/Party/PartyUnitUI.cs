@@ -768,20 +768,21 @@ public class PartyUnitUI : MonoBehaviour {
             destinationGameObjectID = gameObject.GetInstanceID()
         };
         // get defensive stance UPM configuration form manager and apply it to self
-        ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
+        ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].postActionUniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
     }
 
     public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI dstPartyUnitUI)
     {
         // verify if party unit to which modifier has been applied is the same as current
-        if ((dstPartyUnitUI == this) ||
+        if ( (dstPartyUnitUI == this) ||
             // verify if ability is applicable to the slot where this unit UI is located (this is set as preparation when new active unit is set)
             // and this is mass ability
-            (GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit) && srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.isMassScopeAbility)
+            //(GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit) && srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.isMassScopeAbility)
+            ( GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit && (srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig.ModifierScope > ModifierScope.SingleUnit) ) )
         {
             // apply source unit power modifiers
             // loop through all Unit Power Modifiers
-            foreach (UnitPowerModifier unitPowerModifier in srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitPowerModifiers)
+            foreach (UnitPowerModifier unitPowerModifier in srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.preActionUnitPowerModifiers)
             {
                 // get and apply unit PowerModifier
                 unitPowerModifier.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
@@ -794,7 +795,7 @@ public class PartyUnitUI : MonoBehaviour {
             if (dstPartyUnitUI.LPartyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
             {
                 // apply unit unique power modifiers (buffs and debuffs)
-                for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs.Count; i++)
+                for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.postActionUniquePowerModifierConfigs.Count; i++)
                 {
                     // SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i], true);
                     // set unique power modifier ID
@@ -805,7 +806,7 @@ public class PartyUnitUI : MonoBehaviour {
                         modifierOrigin = ModifierOrigin.Ability,
                         destinationGameObjectID = dstPartyUnitUI.gameObject.GetInstanceID()
                     };
-                    srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+                    srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.postActionUniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
                 }
             }
         }

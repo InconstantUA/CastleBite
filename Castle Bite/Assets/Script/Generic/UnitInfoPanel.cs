@@ -279,13 +279,14 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     int GetStatsPowerBonus(PartyUnit partyUnit)
     {
         // get stats upgrade menu
-        UpgradeUnit upgradeUnit = transform.root.Find("MiscUI/UpgradeUnit").GetComponent<UpgradeUnit>();
+        UpgradeUnit upgradeUnitMenu = transform.root.Find("MiscUI/UpgradeUnit").GetComponent<UpgradeUnit>();
         // verify if it is active now
-        if (upgradeUnit.gameObject.activeInHierarchy)
+        if (upgradeUnitMenu.gameObject.activeInHierarchy)
         {
             //  get stats upgrade count during current upgrade session
-            int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
-            return partyUnit.UnitPowerIncrementOnStatsUpgrade * statsUpgradeCount;
+            //int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
+            //return partyUnit.UnitPowerIncrementOnStatsUpgrade * statsUpgradeCount;
+            return partyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmPowerDifference(partyUnit.gameObject);
         }
         else
         {
@@ -320,7 +321,7 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Display effective power absolute value
         powerText.text = Math.Abs(effectivePower).ToString();
         // get base power value
-        int basePower = partyUnit.UnitAbilityCurrentPower - GetStatsPowerBonus(partyUnit);
+        int basePower = partyUnit.UnitAbilityEffectivePower - GetStatsPowerBonus(partyUnit);
         // verify if effective power does not equal to base power
         if (effectivePower != basePower)
         {

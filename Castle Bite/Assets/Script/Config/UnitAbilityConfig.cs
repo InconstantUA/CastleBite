@@ -13,15 +13,17 @@ public class UnitAbilityConfig : ScriptableObject
     [EnumFlag]
     public UnitAbilityTypes unitAbilityTypes;
     public UnitAbilityRange unitAbilityRange;
-    public bool isMassScopeAbility;
+    //public bool isMassScopeAbility;
     //public PowerSource powerSource;
     //public UnitPowerScope unitPowerScope;
-    // main ability power
-    public UnitStatModifierConfig unitStatModifierConfig;
     // main ability modifier
-    public List<UnitPowerModifier> unitPowerModifiers;
+    public List<UnitPowerModifier> preActionUnitPowerModifiers;
+    // main ability power
+    //public UnitStatModifierConfig unitStatModifierConfig;
+    public UniquePowerModifierConfig primaryUniquePowerModifierConfig;
     // Unique power modifiers
-    public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
+    public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
+    //public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
 
     //public bool IsApplicableToUnit(PartyUnit partyUnit)
     //{

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
+  m_Name: Healing Song
+  m_EditorClassIdentifier: 
+  abilityDisplayName: Healing Song
+  abilityDescription: Description
+  unitAbilityID: 14
+  unitAbility: {fileID: 11400000, guid: 81a4c26f4ff0c97478941c6658ce9484, type: 2}
+  unitAbilityTypes: 2
+  unitAbilityRange: 1
+  isMassScopeAbility: 1
+  preActionUnitPowerModifiers: []
+  primaryUniquePowerModifierConfig: {fileID: 11400000, guid: c62f834c8c425e441bba0f0484cf924a,
+    type: 2}
+  postActionUniquePowerModifierConfigs: []

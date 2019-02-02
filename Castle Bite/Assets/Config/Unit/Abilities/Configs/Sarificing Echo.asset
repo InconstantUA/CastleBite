@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
+  m_Name: Sarificing Echo
+  m_EditorClassIdentifier: 
+  abilityDisplayName: Sacrificing Echo
+  abilityDescription: Mass Heal and Resurect
+  unitAbilityID: 21
+  unitAbility: {fileID: 11400000, guid: 81a4c26f4ff0c97478941c6658ce9484, type: 2}
+  unitAbilityTypes: 10
+  unitAbilityRange: 1
+  isMassScopeAbility: 1
+  unitStatModifierConfig: {fileID: 11400000, guid: 43259196ca4630a4da407ba1f33c4a15,
+    type: 2}
+  primaryUniquePowerModifierConfig: {fileID: 11400000, guid: fd43a0641e7e3c9458143376094349d1,
+    type: 2}
+  preActionUnitPowerModifiers: []
+  uniquePowerModifierConfigs: []
+  postActionUniquePowerModifierConfigs: []

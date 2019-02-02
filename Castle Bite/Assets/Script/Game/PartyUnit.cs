@@ -399,7 +399,7 @@ public class UniquePowerModifierData : System.Object
         else if (UniquePowerModifierID.unitAbilityID != UnitAbilityID.None)
         {
             // get and return config from config manager by ability ID and UPM index in that ability
-            return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+            return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].postActionUniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
         }
         else if (UniquePowerModifierID.cityID != CityID.None)
         {
@@ -821,9 +821,9 @@ public class PartyUnit : MonoBehaviour {
     //GameEvent uniquePowerModifierHasBeenRemovedEvent;
 
 
-    PartyUnitConfig partyUnitConfig; // init on Awake
-    UnitStatusConfig unitStatusConfig;
-    UnitAbilityConfig unitAbilityConfig; // init on first Get
+    PartyUnitConfig partyUnitConfigCache; // init on Awake
+    UnitStatusConfig unitStatusConfigCache;
+    UnitAbilityConfig unitAbilityConfigCache; // init on first Get
 
     // Misc Battle attributes
     private bool hasMoved = false;
@@ -853,12 +853,12 @@ public class PartyUnit : MonoBehaviour {
     //    //Debug.Log("Awake " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
     //}
 
-    private void Start()
-    {
-        //unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
-        //UnitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
-        //Debug.Log("Start " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
-    }
+    //private void Start()
+    //{
+    //    //unitDebuffs = new UnitDebuff[(int)UnitDebuff.ArrSize];
+    //    //UnitBuffs = new UnitBuff[(int)UnitBuff.ArrSize];
+    //    //Debug.Log("Start " + UnitName + " " + GivenName + " " + UnitBuffs.Length.ToString());
+    //}
 
     //public Transform GetUnitCell()
     //{
@@ -1824,18 +1824,18 @@ public class PartyUnit : MonoBehaviour {
             // get local party unit skill
             skill = Array.Find(UnitSkillsData, element => element.unitSkill == UnitSkillID.Offense);
         }
-        return (int)Math.Round(UnitAbilityCurrentPower * skill.currentSkillLevel * 0.15f);
+        return (int)Math.Round(UnitAbilityEffectivePower * skill.currentSkillLevel * 0.15f);
     }
 
     public int GetItemsPowerBonus()
     {
-        return GetGenericStatItemBonus(UnitStatID.Power, UnitAbilityCurrentPower);
+        return GetGenericStatItemBonus(UnitStatID.Power, UnitAbilityEffectivePower);
     }
 
     public int GetUnitEffectivePower()
     {
         // get unit power plus skill bonus
-        return UnitAbilityCurrentPower + GetOffenceSkillPowerBonus() + GetItemsPowerBonus();
+        return UnitAbilityEffectivePower + GetOffenceSkillPowerBonus() + GetItemsPowerBonus();
     }
 
     List<UnitStatModifier> GetItemUnitStatModifierByStat(UnitStatID unitStat)
@@ -2795,18 +2795,18 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            if (unitStatusConfig == null)
+            if (unitStatusConfigCache == null)
             {
                 // get config from Configs Manager
-                unitStatusConfig = Array.Find(ConfigManager.Instance.UnitStatusConfigs, e => e.unitStatus == UnitStatus);
+                unitStatusConfigCache = Array.Find(ConfigManager.Instance.UnitStatusConfigs, e => e.unitStatus == UnitStatus);
             }
-            return unitStatusConfig;
+            return unitStatusConfigCache;
         }
 
         set
         {
             // normally used to reset status to null;
-            unitStatusConfig = value;
+            unitStatusConfigCache = value;
         }
     }
 
@@ -3080,13 +3080,13 @@ public class PartyUnit : MonoBehaviour {
         get
         {
             // verify if unit ability config is not defined yet
-            if (unitAbilityConfig == null)
+            if (unitAbilityConfigCache == null)
             {
                 // set it from config based on ability defined in party unit config
-                unitAbilityConfig = ConfigManager.Instance[UnitAbilityID];
+                unitAbilityConfigCache = ConfigManager.Instance[UnitAbilityID];
             }
             // return ability config
-            return unitAbilityConfig;
+            return unitAbilityConfigCache;
         }
     }
 
@@ -3105,42 +3105,45 @@ public class PartyUnit : MonoBehaviour {
         //}
     }
 
-    public int UnitAbilityBasePower
+    //public int UnitAbilityBasePower
+    //{
+    //    get
+    //    {
+    //        // return partyUnitData.unitPower;
+    //        // get ability power from unit stat modifier in ability config
+    //        // todo: take into account all modifiers, not only the first one
+    //        return UnitAbilityConfig.unitStatModifierConfig.modifierPower;
+    //    }
+    //}
+
+    //public int UnitPowerIncrementOnStatsUpgrade
+    //{
+    //    get
+    //    {
+    //        // return partyUnitData.unitPowerIncrementOnLevelUp;
+    //        // get unit power increment on stats upgrade from config
+    //        // todo: take into account all modifiers, not only the first one
+    //        //return UnitAbilityConfig.unitStatModifierConfig.powerIncrementOnStatsUpgrade;
+    //        return UnitAbilityConfig.unitStatModifierConfig.powerIncrementOnStatsUpgrade;
+    //    }
+
+    //    //set
+    //    //{
+    //    //    partyUnitData.unitPowerIncrementOnLevelUp = value;
+    //    //}
+    //}
+
+    public int UnitAbilityEffectivePower
     {
         get
         {
             // return partyUnitData.unitPower;
-            // get ability power from unit stat modifier in ability config
-            // todo: take into account all modifiers, not only the first one
-            return UnitAbilityConfig.unitStatModifierConfig.modifierPower;
-        }
-    }
-
-    public int UnitPowerIncrementOnStatsUpgrade
-    {
-        get
-        {
-            // return partyUnitData.unitPowerIncrementOnLevelUp;
-            // get unit power increment on stats upgrade from config
-            // todo: take into account all modifiers, not only the first one
-            return UnitAbilityConfig.unitStatModifierConfig.powerIncrementOnStatsUpgrade;
-        }
-
-        //set
-        //{
-        //    partyUnitData.unitPowerIncrementOnLevelUp = value;
-        //}
-    }
-
-    public int UnitAbilityCurrentPower
-    {
-        get
-        {
-            // return partyUnitData.unitPower;
-            // calculate ability power based on unit base power
-            return UnitAbilityBasePower +
-            // add stats upgrade count multiplied by power increment on stats upgrade
-            UnitPowerIncrementOnStatsUpgrade * StatsUpgradesCount;
+            //// calculate ability power based on unit base power
+            //// return UnitAbilityBasePower +
+            //return UnitAbilityConfig.unitStatModifierConfig.modifierPower +
+            //// add stats upgrade count multiplied by power increment on stats upgrade
+            //UnitPowerIncrementOnStatsUpgrade* StatsUpgradesCount;
+            return UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmEffectivePower(gameObject);
         }
 
         //set
@@ -3156,7 +3159,8 @@ public class PartyUnit : MonoBehaviour {
             // return partyUnitData.unitPowerSource;
             // Get it from unit ability config
             // todo: take into account all modifiers, not only the first one
-            return UnitAbilityConfig.unitStatModifierConfig.powerSource;
+            //return UnitAbilityConfig.unitStatModifierConfig.powerSource;
+            return UnitAbilityConfig.primaryUniquePowerModifierConfig.UpmSource;
         }
 
         //set
@@ -3186,7 +3190,8 @@ public class PartyUnit : MonoBehaviour {
         {
             // return partyUnitData.unitPowerScope;
             // Get it from unit ability config
-            return UnitAbilityConfig.unitStatModifierConfig.modifierScope;
+            //return UnitAbilityConfig.unitStatModifierConfig.modifierScope;
+            return UnitAbilityConfig.primaryUniquePowerModifierConfig.ModifierScope;
         }
 
         //set
@@ -3603,7 +3608,7 @@ public class PartyUnit : MonoBehaviour {
         get
         {
             //return partyUnitData.uniquePowerModifiers;
-            return UnitAbilityConfig.uniquePowerModifierConfigs;
+            return UnitAbilityConfig.postActionUniquePowerModifierConfigs;
         }
 
         //set
@@ -3672,12 +3677,12 @@ public class PartyUnit : MonoBehaviour {
     {
         get
         {
-            if (partyUnitConfig == null)
+            if (partyUnitConfigCache == null)
             {
                 // link config
-                partyUnitConfig = Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType);
+                partyUnitConfigCache = Array.Find(ConfigManager.Instance.PartyUnitConfigs, e => e.unitType == UnitType);
             }
-            return partyUnitConfig;
+            return partyUnitConfigCache;
         }
     }
 

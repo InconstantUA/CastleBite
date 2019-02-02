@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
+  m_Name: Blow With Great Sword
+  m_EditorClassIdentifier: 
+  abilityDisplayName: Blow With Great Sword
+  abilityDescription: Description
+  unitAbilityID: 6
+  unitAbility: {fileID: 11400000, guid: cd7640ed16802be468eeccf2cfceaaf4, type: 2}
+  unitAbilityTypes: 4
+  unitAbilityRange: 0
+  isMassScopeAbility: 0
+  unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
+    type: 2}
+  primaryUniquePowerModifierConfig: {fileID: 11400000, guid: 4250332ed0f35c4468505a2264cac460,
+    type: 2}
+  preActionUnitPowerModifiers: []
+  uniquePowerModifierConfigs:
+  - {fileID: 11400000, guid: 7654aecef1d9dd140b1cbd3869d8a943, type: 2}
+  - {fileID: 11400000, guid: 23405f9978073394a8cb716deb007e50, type: 2}
+  postActionUniquePowerModifierConfigs:
+  - {fileID: 11400000, guid: 7654aecef1d9dd140b1cbd3869d8a943, type: 2}
+  - {fileID: 11400000, guid: 23405f9978073394a8cb716deb007e50, type: 2}

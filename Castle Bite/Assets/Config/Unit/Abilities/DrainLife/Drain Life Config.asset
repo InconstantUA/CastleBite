@@ -12,14 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
   m_Name: Drain Life Config
   m_EditorClassIdentifier: 
+  abilityDisplayName: Drain Life
+  abilityDescription: Description
   unitAbilityID: 20
   unitAbility: {fileID: 11400000, guid: 8245a0eda76ac5b4fb2f717e9d087bf8, type: 2}
   unitAbilityTypes: 4
-  abilityDisplayName: Drain Life
-  abilityDescription: Description
   unitAbilityRange: 1
+  isMassScopeAbility: 0
   unitStatModifierConfig: {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd,
     type: 2}
-  unitPowerConfigs: []
-  unitPowerModifiers:
+  primaryUniquePowerModifierConfig: {fileID: 11400000, guid: 4250332ed0f35c4468505a2264cac460,
+    type: 2}
+  preActionUnitPowerModifiers:
   - {fileID: 11400000, guid: ba83c0ff63588be4ebe6530ae4a036ec, type: 2}
+  uniquePowerModifierConfigs: []
+  postActionUniquePowerModifierConfigs: []

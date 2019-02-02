@@ -14,11 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitStat: 1
   modifierAppliedTo: 0
-  modifierScope: 0
+  modifierScope: 1
+  requiredRelationships: 
   modifierPower: 1
   modifierCalculatedHow: 0
+  modifierDurationType: 0
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: 04000000
   powerSource: 9
   powerIncrementOnStatsUpgrade: 0
-  skillPowerMultiplier: 1
+  associatedUnitSkillID: 13
+  associatedUnitSkillLevelMultiplier: 0
