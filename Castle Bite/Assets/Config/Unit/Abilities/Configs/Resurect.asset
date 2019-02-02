@@ -18,11 +18,7 @@ MonoBehaviour:
   unitAbility: {fileID: 11400000, guid: 59370b0577a69e24092a52077a47c63c, type: 2}
   unitAbilityTypes: 8
   unitAbilityRange: 1
-  isMassScopeAbility: 0
-  unitStatModifierConfig: {fileID: 11400000, guid: a9f6ebe6c4ed9314b9782d164c7a1486,
-    type: 2}
+  preActionUnitPowerModifiers: []
   primaryUniquePowerModifierConfig: {fileID: 11400000, guid: befc23edffca4144d953f3367e01d0a5,
     type: 2}
-  preActionUnitPowerModifiers: []
-  uniquePowerModifierConfigs: []
   postActionUniquePowerModifierConfigs: []

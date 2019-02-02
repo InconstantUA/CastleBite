@@ -1270,12 +1270,14 @@ public class PartyPanel : MonoBehaviour {
                             if (unit.UseItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
                             {
                                 // highlight it with green
-                                hightlightColor = greenHighlight;
+                                // hightlightColor = greenHighlight;
+                                hightlightColor = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableColor;
                             }
                             else
                             {
                                 // highlight with red
-                                hightlightColor = redHighlight;
+                                // hightlightColor = redHighlight;
+                                hightlightColor = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableColor;
                             }
                         }
                         else

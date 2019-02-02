@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Config/Inventory/Item")]
+[CreateAssetMenu(menuName = "Config/Inventory/Item/Config")]
 public class InventoryItemConfig : ScriptableObject
 {
     // public InventoryItemID inventoryItemType;
@@ -16,4 +16,5 @@ public class InventoryItemConfig : ScriptableObject
     public int maxUsagesCount;
     public bool itemIsStackable = false; // item effects can be combined (added one to each other) by using item of the same type
     public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
+    public InventoryItemUIConfig inventoryItemUIConfig;
 }

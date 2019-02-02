@@ -109,8 +109,9 @@ public class InventoryItemData : System.Object
 public class InventoryItem : MonoBehaviour {
     [SerializeField]
     InventoryItemData inventoryItemData;
-    InventoryItemConfig inventoryItemConfig; // initialized on first access
 
+    InventoryItemConfig inventoryItemConfigChache; // initialized on first access
+    
     public string GetUsagesInfo()
     {
         // verify if max usages count is not unlimited
@@ -372,12 +373,12 @@ public class InventoryItem : MonoBehaviour {
         get
         {
             // verify if config is not null
-            if (inventoryItemConfig == null)
+            if (inventoryItemConfigChache == null)
             {
                 // get item config from configs manager by item type
-                inventoryItemConfig = Array.Find(ConfigManager.Instance.InventoryItemConfigs, e => e.inventoryItemID == InventoryItemID);
+                inventoryItemConfigChache = Array.Find(ConfigManager.Instance.InventoryItemConfigs, e => e.inventoryItemID == InventoryItemID);
             }
-            return inventoryItemConfig;
+            return inventoryItemConfigChache;
         }
     }
 

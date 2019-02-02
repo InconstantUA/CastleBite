@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Scroll of Resurrection
   m_EditorClassIdentifier: 
-  inventoryItemType: 1100
   inventoryItemID: 1100
   itemDisplayName: Scroll of Resurrection
   itemCost: 300
   compatibleEquipmentSlots: 384
   unitStatModifierConfigs:
-  - {fileID: 11400000, guid: a9f6ebe6c4ed9314b9782d164c7a1486, type: 2}
+  - {fileID: 11400000, guid: ac7ea5919283a51469cd744003f6a499, type: 2}
   modifierAppliedHow: 0
   maxUsagesCount: 1
   itemIsStackable: 0
+  uniquePowerModifierConfigs: []
