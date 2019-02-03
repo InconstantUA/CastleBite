@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Config/Inventory/Item/UIConfig")]
 public class InventoryItemUIConfig : ScriptableObject
 {
-    public Color itemIsApplicableColor;
-    public Color itemIsNotApplicableColor;
+    public Color itemIsApplicableForUnitSlotColor;
+    public Color itemIsNotApplicableForUnitSlotColor;
+    public Color itemCanBeEquippedColor;
+    public Color itemIsNotCompatibleWithEquipmentSlotColor;
+    public Color itemPrerequsitesAreNotMetForThisUnitColor;
 }

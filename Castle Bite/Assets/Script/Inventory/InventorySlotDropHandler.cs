@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     public enum Mode
@@ -13,7 +15,13 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     Mode slotMode;
     [SerializeField]
     HeroEquipmentSlots equipmentSlot;
+    [SerializeField]
+    Text canvasText;
+    [SerializeField]
+    Text canvasMessageText;
+    
     bool isDroppable = true;
+    private Color beforeBeginItemDragColor;
 
     public Mode SlotMode
     {
@@ -110,7 +118,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
         // init destination slot variable with this slot
         InventorySlotDropHandler destinationSlot = this;
         // verify if there is no item already in this slot
-        if (transform.childCount > 1)
+        if (GetComponentInChildren<InventoryItemDragHandler>() != null)
         {
             // verify if source is equipment slot and destination is party inventory slot
             if ((srcItemSlot.SlotMode == Mode.HeroEquipment) && (slotMode == Mode.PartyInventory))
@@ -203,6 +211,70 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
                 }
             }
         }
+    }
+
+    public void OnBeginItemDrag()
+    {
+        // save original slot color
+        beforeBeginItemDragColor = canvasText.color;
+        // init isCompatible with this slot item flag
+        bool isCompatible = false;
+        // reset is droppable flag
+        // verify if equipment slot is compatible
+        if ((InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots & EquipmentSlot) == EquipmentSlot)
+        {
+            // verify if this is shard slot
+            if (EquipmentSlot == HeroEquipmentSlots.Shard)
+            {
+                // for shard slot we need to verify if party leader has skill at least 1st level
+                Debug.Log("Todo: generalize this");
+                if (Array.Find(GetComponentInParent<HeroEquipment>().LPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkillID.ShardAura).currentSkillLevel >= 1)
+                {
+                    // set compatible flag
+                    isCompatible = true;
+                }
+                else
+                {
+                    // set highlight color to not the color which indicates that prerequisites are not met
+                    canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemPrerequsitesAreNotMetForThisUnitColor;
+                    // set cavast message
+                    canvasMessageText.text = "Requires " + ConfigManager.Instance[UnitSkillID.ShardAura].skillDisplayName + " skill";
+                }
+            }
+            else
+            {
+                // set compatible flag
+                isCompatible = true;
+            }
+        }
+        else
+        {
+            // set highlight color to not applicable for this equipment slot
+            canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotCompatibleWithEquipmentSlotColor;
+        }
+        // verify if slot is compatible
+        if (isCompatible)
+        {
+            // set droppable flag
+            IsDroppable = true;
+            // set highlight color to applicable
+            canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemCanBeEquippedColor;
+        }
+        else
+        {
+            // unset droppable flag
+            IsDroppable = false;
+        }
+    }
+
+    public void OnEndItemDrag()
+    {
+        // set color in UI
+        canvasText.color = beforeBeginItemDragColor;
+        // reset slot is droppable status
+        IsDroppable = false;
+        // reset canvas message text
+        canvasMessageText.text = "";
     }
 
     //void OnTransformChildrenChanged()

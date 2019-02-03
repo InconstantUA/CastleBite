@@ -278,13 +278,14 @@ public class EditPartyScreen : MonoBehaviour {
                     heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveUnitDrag(doActivate);
                     break;
                 case EditPartyScreenActiveState.ActiveItemDrag:
+                    // replaced with events:
                     // verify if we are not in equipment view mode, when party panel is disabled
-                    if (heroPartyUI.GetComponentInChildren<PartyPanel>())
-                        heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveItemDrag(doActivate);
-                    else if (transform.root.Find("MiscUI").GetComponentInChildren<HeroEquipment>())
-                        transform.root.Find("MiscUI").GetComponentInChildren<HeroEquipment>().SetActiveItemDrag(doActivate);
-                    else
-                        Debug.LogWarning("Unknown condition");
+                    //if (heroPartyUI.GetComponentInChildren<PartyPanel>())
+                    //    heroPartyUI.GetComponentInChildren<PartyPanel>().SetActiveItemDrag(doActivate);
+                    //else if (transform.root.Find("MiscUI").GetComponentInChildren<HeroEquipment>())
+                    //    transform.root.Find("MiscUI").GetComponentInChildren<HeroEquipment>().SetActiveItemDrag(doActivate);
+                    //else
+                    //    Debug.LogWarning("Unknown condition");
                     break;
                 default:
                     Debug.LogError("Unknown condition");
@@ -295,7 +296,9 @@ public class EditPartyScreen : MonoBehaviour {
         // and verify if there is already party in city
         if (transform.GetComponentInParent<UIManager>())
         {
+            // verify if garnizon party is present
             if ((transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Garnizon, false) != null)
+                // verify if there is party which is visiting city
                 && (transform.GetComponentInParent<UIManager>().GetHeroPartyByMode(PartyMode.Party, false) == null))
             {
                 // activate hire hero panel
@@ -328,7 +331,8 @@ public class EditPartyScreen : MonoBehaviour {
                     CursorController.Instance.SetDragUnitCursor();
                     break;
                 case EditPartyScreenActiveState.ActiveItemDrag:
-                    CursorController.Instance.SetGrabHandCursor();
+                    // replaced with event
+                    //CursorController.Instance.SetGrabHandCursor();
                     break;
                 default:
                     Debug.LogError("Unknown condition");
@@ -846,4 +850,19 @@ public class EditPartyScreen : MonoBehaviour {
             }
         }
     }
+
+    public void OnBeginItemDrag()
+    {
+        SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, true);
+        // deactivate hire party unit buttons
+        SetHireUnitPnlButtonActive(false);
+    }
+
+    public void OnEndItemDrag()
+    {
+        SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, false);
+        // activate hire party unit buttons
+        SetHireUnitPnlButtonActive(true);
+    }
+
 }

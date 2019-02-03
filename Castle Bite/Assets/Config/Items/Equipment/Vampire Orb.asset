@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Vampire Orb
   m_EditorClassIdentifier: 
-  inventoryItemType: 2430
   inventoryItemID: 2430
   itemDisplayName: Vampire Orb
   itemCost: 2500
@@ -20,6 +19,9 @@ MonoBehaviour:
   unitStatModifierConfigs:
   - {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd, type: 2}
   - {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c, type: 2}
-  modifierAppliedHow: 1
+  modifierAppliedHow: 0
   maxUsagesCount: 0
   itemIsStackable: 0
+  uniquePowerModifierConfigs: []
+  inventoryItemUIConfig: {fileID: 11400000, guid: 50ae533b1f3724448a5d74b225e98bdb,
+    type: 2}

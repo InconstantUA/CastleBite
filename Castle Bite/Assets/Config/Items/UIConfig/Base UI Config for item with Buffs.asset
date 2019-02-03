@@ -12,5 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd67eaff47099748a2d438c3bce9102, type: 3}
   m_Name: Base UI Config for item with Buffs
   m_EditorClassIdentifier: 
-  itemIsApplicableColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
-  itemIsNotApplicableColor: {r: 0.8470589, g: 0.3137255, b: 0.3137255, a: 1}
+  itemIsApplicableForUnitSlotColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
+  itemIsNotApplicableForUnitSlotColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902,
+    a: 1}
+  itemCanBeEquippedColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
+  itemIsNotCompatibleWithEquipmentSlotColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902,
+    a: 1}
+  itemPrerequsitesAreNotMetForThisUnitColor: {r: 0.8470589, g: 0.3137255, b: 0.3137255,
+    a: 1}

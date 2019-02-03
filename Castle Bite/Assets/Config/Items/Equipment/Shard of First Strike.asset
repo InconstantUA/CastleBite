@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Shard of First Strike
   m_EditorClassIdentifier: 
-  inventoryItemType: 2101
   inventoryItemID: 2101
   itemDisplayName: Shard of First Strike
   itemCost: 7500
@@ -22,3 +21,6 @@ MonoBehaviour:
   modifierAppliedHow: 1
   maxUsagesCount: 0
   itemIsStackable: 0
+  uniquePowerModifierConfigs: []
+  inventoryItemUIConfig: {fileID: 11400000, guid: 76519f64b8b4d134e8ab3f1a2c0a1c41,
+    type: 2}

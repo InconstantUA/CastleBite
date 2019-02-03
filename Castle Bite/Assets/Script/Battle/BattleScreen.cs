@@ -1042,4 +1042,10 @@ public class BattleScreen : MonoBehaviour {
                 break;
         }
     }
+
+    public void OnEndItemDrag()
+    {
+        // Instruct Battle screen to update units highlight
+        SetHighlight();
+    }
 }

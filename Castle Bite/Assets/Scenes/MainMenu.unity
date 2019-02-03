@@ -589,6 +589,7 @@ GameObject:
   - component: {fileID: 9184283}
   - component: {fileID: 9184282}
   - component: {fileID: 9184281}
+  - component: {fileID: 9184284}
   m_Layer: 5
   m_Name: Front
   m_TagString: Untagged
@@ -630,6 +631,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 0
+  canvasText: {fileID: 1154104993}
 --- !u!114 &9184282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,6 +669,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9184279}
   m_CullTransparentMesh: 0
+--- !u!114 &9184284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9184281}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9184281}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &20588450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,6 +1217,85 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &23528114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 23528115}
+  - component: {fileID: 23528117}
+  - component: {fileID: 23528116}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &23528115
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23528114}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1269431320}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &23528116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23528114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &23528117
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 23528114}
+  m_CullTransparentMesh: 0
 --- !u!1 &24116588
 GameObject:
   m_ObjectHideFlags: 0
@@ -2979,6 +3169,85 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82422219}
+  m_CullTransparentMesh: 0
+--- !u!1 &87543777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 87543778}
+  - component: {fileID: 87543780}
+  - component: {fileID: 87543779}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &87543778
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87543777}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 744908778}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &87543779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87543777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &87543780
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87543777}
   m_CullTransparentMesh: 0
 --- !u!1 &88541700
 GameObject:
@@ -5823,6 +6092,7 @@ GameObject:
   - component: {fileID: 143471511}
   - component: {fileID: 143471510}
   - component: {fileID: 143471509}
+  - component: {fileID: 143471512}
   m_Layer: 5
   m_Name: Wide
   m_TagString: Untagged
@@ -5864,6 +6134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 2
+  canvasText: {fileID: 727015528}
 --- !u!114 &143471510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5901,6 +6172,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 143471507}
   m_CullTransparentMesh: 0
+--- !u!114 &143471512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143471507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 143471509}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 143471509}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1001 &145197295
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17773,6 +18153,7 @@ GameObject:
   - component: {fileID: 316495911}
   - component: {fileID: 316495910}
   - component: {fileID: 316495909}
+  - component: {fileID: 316495912}
   m_Layer: 5
   m_Name: Front
   m_TagString: Untagged
@@ -17814,6 +18195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 0
+  canvasText: {fileID: 742017785}
 --- !u!114 &316495910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17851,6 +18233,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 316495907}
   m_CullTransparentMesh: 0
+--- !u!114 &316495912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316495907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 316495909}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 316495909}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &317495344
 GameObject:
   m_ObjectHideFlags: 0
@@ -21267,6 +21758,7 @@ GameObject:
   - component: {fileID: 386724058}
   - component: {fileID: 386724057}
   - component: {fileID: 386724056}
+  - component: {fileID: 386724059}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -21308,6 +21800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 1
+  canvasText: {fileID: 425589038}
 --- !u!114 &386724057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21345,6 +21838,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386724054}
   m_CullTransparentMesh: 0
+--- !u!114 &386724059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386724054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 386724056}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 386724056}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &386848368
 GameObject:
   m_ObjectHideFlags: 0
@@ -30836,6 +31438,85 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464496815}
+  m_CullTransparentMesh: 0
+--- !u!1 &467323101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 467323102}
+  - component: {fileID: 467323104}
+  - component: {fileID: 467323103}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &467323102
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467323101}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1012723756}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &467323103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467323101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &467323104
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467323101}
   m_CullTransparentMesh: 0
 --- !u!1001 &468836900
 PrefabInstance:
@@ -41259,6 +41940,7 @@ GameObject:
   - component: {fileID: 595850583}
   - component: {fileID: 595850582}
   - component: {fileID: 595850581}
+  - component: {fileID: 595850584}
   m_Layer: 5
   m_Name: SlotChest
   m_TagString: Untagged
@@ -41278,6 +41960,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1019581454}
+  - {fileID: 1092349466}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -41300,6 +41983,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 64
+  canvasText: {fileID: 1019581455}
+  canvasMessageText: {fileID: 1092349467}
 --- !u!114 &595850582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41337,6 +42022,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 595850579}
   m_CullTransparentMesh: 0
+--- !u!114 &595850584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595850579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 595850581}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 595850581}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &597194707
 GameObject:
   m_ObjectHideFlags: 0
@@ -43215,6 +44009,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f41ad13f0d5c8554f95c4468e3040bcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &640691637
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 640691638}
+  - component: {fileID: 640691640}
+  - component: {fileID: 640691639}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &640691638
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640691637}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1741239239}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &640691639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640691637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &640691640
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640691637}
+  m_CullTransparentMesh: 0
 --- !u!1 &643119300
 GameObject:
   m_ObjectHideFlags: 0
@@ -44638,6 +45511,7 @@ GameObject:
   - component: {fileID: 683598089}
   - component: {fileID: 683598088}
   - component: {fileID: 683598087}
+  - component: {fileID: 683598090}
   m_Layer: 5
   m_Name: Wide
   m_TagString: Untagged
@@ -44679,6 +45553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 2
+  canvasText: {fileID: 1642572367}
 --- !u!114 &683598088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44716,6 +45591,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683598085}
   m_CullTransparentMesh: 0
+--- !u!114 &683598090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683598085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 683598087}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 683598087}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &686674814
 GameObject:
   m_ObjectHideFlags: 0
@@ -45113,6 +46097,7 @@ GameObject:
   - component: {fileID: 691294557}
   - component: {fileID: 691294556}
   - component: {fileID: 691294555}
+  - component: {fileID: 691294558}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -45155,6 +46140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 1
+  canvasText: {fileID: 1743831994}
 --- !u!114 &691294556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45194,6 +46180,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 691294553}
   m_CullTransparentMesh: 0
+--- !u!114 &691294558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691294553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 691294555}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 691294555}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &691772157
 GameObject:
   m_ObjectHideFlags: 0
@@ -45925,6 +47020,7 @@ GameObject:
   - component: {fileID: 712452596}
   - component: {fileID: 712452595}
   - component: {fileID: 712452594}
+  - component: {fileID: 712452597}
   m_Layer: 5
   m_Name: Front
   m_TagString: Untagged
@@ -45967,6 +47063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 0
+  canvasText: {fileID: 718436251}
 --- !u!114 &712452595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46006,6 +47103,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712452592}
   m_CullTransparentMesh: 0
+--- !u!114 &712452597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712452592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 712452594}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 712452594}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &712500268
 GameObject:
   m_ObjectHideFlags: 0
@@ -47792,6 +48998,7 @@ GameObject:
   - component: {fileID: 744908781}
   - component: {fileID: 744908780}
   - component: {fileID: 744908779}
+  - component: {fileID: 744908782}
   m_Layer: 5
   m_Name: SlotBelt2
   m_TagString: Untagged
@@ -47811,6 +49018,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1867252948}
+  - {fileID: 87543778}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47833,6 +49041,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 256
+  canvasText: {fileID: 1867252949}
+  canvasMessageText: {fileID: 87543779}
 --- !u!114 &744908780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47870,6 +49080,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 744908777}
   m_CullTransparentMesh: 0
+--- !u!114 &744908782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744908777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 744908779}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 744908779}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &747541709
 GameObject:
   m_ObjectHideFlags: 0
@@ -53922,6 +55241,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventsAndActions:
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 779038337}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   - name: On Auto Battle
     gameEvent: {fileID: 11400000, guid: f135acc01068f96489c2185fa73d3457, type: 2}
     genericAction:
@@ -56600,6 +57967,7 @@ GameObject:
   - component: {fileID: 866153530}
   - component: {fileID: 866153529}
   - component: {fileID: 866153528}
+  - component: {fileID: 866153531}
   m_Layer: 5
   m_Name: SlotBelt1
   m_TagString: Untagged
@@ -56619,6 +57987,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1755712674}
+  - {fileID: 1205185314}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -56641,6 +58010,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 128
+  canvasText: {fileID: 1755712675}
+  canvasMessageText: {fileID: 1205185315}
 --- !u!114 &866153529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56678,6 +58049,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 866153526}
   m_CullTransparentMesh: 0
+--- !u!114 &866153531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866153526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 866153528}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 866153528}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &869789952
 GameObject:
   m_ObjectHideFlags: 0
@@ -60900,6 +62380,7 @@ GameObject:
   - component: {fileID: 1009230634}
   - component: {fileID: 1009230633}
   - component: {fileID: 1009230632}
+  - component: {fileID: 1009230635}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -60941,6 +62422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 1
+  canvasText: {fileID: 1709057801}
 --- !u!114 &1009230633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60978,6 +62460,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009230630}
   m_CullTransparentMesh: 0
+--- !u!114 &1009230635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009230630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1009230632}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1009230632}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1012723755
 GameObject:
   m_ObjectHideFlags: 0
@@ -60990,6 +62581,7 @@ GameObject:
   - component: {fileID: 1012723759}
   - component: {fileID: 1012723758}
   - component: {fileID: 1012723757}
+  - component: {fileID: 1012723760}
   m_Layer: 5
   m_Name: SlotFoots
   m_TagString: Untagged
@@ -61009,6 +62601,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1750440495}
+  - {fileID: 467323102}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -61031,6 +62624,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 512
+  canvasText: {fileID: 1750440496}
+  canvasMessageText: {fileID: 467323103}
 --- !u!114 &1012723758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61068,6 +62663,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1012723755}
   m_CullTransparentMesh: 0
+--- !u!114 &1012723760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012723755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1012723757}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1012723757}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1014556901
 GameObject:
   m_ObjectHideFlags: 0
@@ -61802,6 +63506,7 @@ GameObject:
   - component: {fileID: 1022818308}
   - component: {fileID: 1022818307}
   - component: {fileID: 1022818306}
+  - component: {fileID: 1022818309}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -61844,6 +63549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 1
+  canvasText: {fileID: 1993350174}
 --- !u!114 &1022818307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61883,6 +63589,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1022818304}
   m_CullTransparentMesh: 0
+--- !u!114 &1022818309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022818304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1022818306}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1022818306}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1023646913
 GameObject:
   m_ObjectHideFlags: 0
@@ -61969,6 +63784,7 @@ GameObject:
   - component: {fileID: 1026521323}
   - component: {fileID: 1026521322}
   - component: {fileID: 1026521321}
+  - component: {fileID: 1026521324}
   m_Layer: 5
   m_Name: Front
   m_TagString: Untagged
@@ -62010,6 +63826,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 0
+  canvasText: {fileID: 1693501952}
 --- !u!114 &1026521322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62047,6 +63864,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1026521319}
   m_CullTransparentMesh: 0
+--- !u!114 &1026521324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1026521319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1026521321}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1026521321}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!224 &1028438563 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224952783989266610, guid: 780a749d6d14527499f28c37c5aa1f9f,
@@ -68472,6 +70398,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091004952}
   m_CullTransparentMesh: 0
+--- !u!1 &1092349465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1092349466}
+  - component: {fileID: 1092349468}
+  - component: {fileID: 1092349467}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1092349466
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092349465}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 595850580}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1092349467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092349465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1092349468
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1092349465}
+  m_CullTransparentMesh: 0
 --- !u!1 &1092815160
 GameObject:
   m_ObjectHideFlags: 0
@@ -71293,6 +73298,177 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 380, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1153475309
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1153475310}
+  - component: {fileID: 1153475312}
+  - component: {fileID: 1153475311}
+  m_Layer: 5
+  m_Name: Cursor Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1153475310
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153475309}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1201476884}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1153475311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153475309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1153475312}
+          m_MethodName: SetGrabHandCursor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1153475312}
+          m_MethodName: SetNormalCursor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+--- !u!114 &1153475312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1153475309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00395b29a23c0ef48969836f710ea544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalCursor: {fileID: 2800000, guid: b33edc60e2197444fbd5cfb8db01625b, type: 3}
+  dismissUnitCursor: {fileID: 2800000, guid: 11dd3cf3ea8e15b4897358df96b75667, type: 3}
+  healUnitCursor: {fileID: 2800000, guid: 10e19d6a2364cc84c998e43f443dca04, type: 3}
+  resurectUnitCursor: {fileID: 2800000, guid: 59fb61cc8896fe242b82d09fe365f4cd, type: 3}
+  invenotryUnitCursor: {fileID: 2800000, guid: b33edc60e2197444fbd5cfb8db01625b, type: 3}
+  dragUnitCursor: {fileID: 2800000, guid: e1c4749225831724c8a713d397bb8266, type: 3}
+  blockInputCursor: {fileID: 2800000, guid: 57e027108a23fd84fa4c5d2b2588139f, type: 3}
+  selectionHandCursor: {fileID: 2800000, guid: 9a58c80996148994f9d50c985474965d, type: 3}
+  grabHandCursor: {fileID: 2800000, guid: 1490d3036083d2a4682801205dffc9a3, type: 3}
+  openDoorsCursor: {fileID: 2800000, guid: 7658cb5b8e18a3549927c983c78c3f3e, type: 3}
+  editHeroCursor: {fileID: 2800000, guid: 82c724afe5b4485468cc92cbaa019bc9, type: 3}
+  attackCursor: {fileID: 2800000, guid: 361b58fd2d3587d46843631c59b68d2e, type: 3}
+  moveArrowCursor: {fileID: 2800000, guid: 5f6daceccc1348248a5b6f02d4607a02, type: 3}
 --- !u!1 &1154104991
 GameObject:
   m_ObjectHideFlags: 0
@@ -73027,7 +75203,6 @@ GameObject:
   - component: {fileID: 1201476890}
   - component: {fileID: 1201476883}
   - component: {fileID: 1201476882}
-  - component: {fileID: 1201476885}
   - component: {fileID: 1201476880}
   - component: {fileID: 1201476886}
   - component: {fileID: 1201476888}
@@ -73107,7 +75282,8 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1153475310}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -73116,31 +75292,6 @@ RectTransform:
   m_AnchoredPosition: {x: 800, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1201476885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1201476879}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00395b29a23c0ef48969836f710ea544, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  normalCursor: {fileID: 2800000, guid: b33edc60e2197444fbd5cfb8db01625b, type: 3}
-  dismissUnitCursor: {fileID: 2800000, guid: 11dd3cf3ea8e15b4897358df96b75667, type: 3}
-  healUnitCursor: {fileID: 2800000, guid: 10e19d6a2364cc84c998e43f443dca04, type: 3}
-  resurectUnitCursor: {fileID: 2800000, guid: 59fb61cc8896fe242b82d09fe365f4cd, type: 3}
-  invenotryUnitCursor: {fileID: 2800000, guid: b33edc60e2197444fbd5cfb8db01625b, type: 3}
-  dragUnitCursor: {fileID: 2800000, guid: e1c4749225831724c8a713d397bb8266, type: 3}
-  blockInputCursor: {fileID: 2800000, guid: 57e027108a23fd84fa4c5d2b2588139f, type: 3}
-  selectionHandCursor: {fileID: 2800000, guid: 9a58c80996148994f9d50c985474965d, type: 3}
-  grabHandCursor: {fileID: 2800000, guid: 1490d3036083d2a4682801205dffc9a3, type: 3}
-  openDoorsCursor: {fileID: 2800000, guid: 7658cb5b8e18a3549927c983c78c3f3e, type: 3}
-  editHeroCursor: {fileID: 2800000, guid: 82c724afe5b4485468cc92cbaa019bc9, type: 3}
-  attackCursor: {fileID: 2800000, guid: 361b58fd2d3587d46843631c59b68d2e, type: 3}
-  moveArrowCursor: {fileID: 2800000, guid: 5f6daceccc1348248a5b6f02d4607a02, type: 3}
 --- !u!114 &1201476886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73425,6 +75576,7 @@ GameObject:
   - component: {fileID: 1202189346}
   - component: {fileID: 1202189345}
   - component: {fileID: 1202189344}
+  - component: {fileID: 1202189347}
   m_Layer: 5
   m_Name: SlotShard
   m_TagString: Untagged
@@ -73444,6 +75596,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1421367001}
+  - {fileID: 1233794706}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -73466,6 +75619,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 2
+  canvasText: {fileID: 1421367002}
+  canvasMessageText: {fileID: 1233794707}
 --- !u!114 &1202189345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73502,6 +75657,194 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1202189342}
+  m_CullTransparentMesh: 0
+--- !u!114 &1202189347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202189342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1202189344}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1202189344}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+--- !u!1 &1205185313
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1205185314}
+  - component: {fileID: 1205185316}
+  - component: {fileID: 1205185315}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1205185314
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205185313}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 866153527}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1205185315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205185313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1205185316
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205185313}
   m_CullTransparentMesh: 0
 --- !u!1 &1210134028
 GameObject:
@@ -74233,6 +76576,7 @@ GameObject:
   - component: {fileID: 1225718334}
   - component: {fileID: 1225718333}
   - component: {fileID: 1225718332}
+  - component: {fileID: 1225718335}
   m_Layer: 5
   m_Name: Front
   m_TagString: Untagged
@@ -74275,6 +76619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 0
+  canvasText: {fileID: 1543907644}
 --- !u!114 &1225718333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74314,6 +76659,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1225718330}
   m_CullTransparentMesh: 0
+--- !u!114 &1225718335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1225718330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1225718332}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1225718332}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1228859055
 GameObject:
   m_ObjectHideFlags: 0
@@ -74559,6 +77013,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1230833046}
   m_CullTransparentMesh: 0
+--- !u!1 &1233794705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233794706}
+  - component: {fileID: 1233794708}
+  - component: {fileID: 1233794707}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1233794706
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233794705}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1202189343}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1233794707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233794705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1233794708
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233794705}
+  m_CullTransparentMesh: 0
 --- !u!1 &1234533026
 GameObject:
   m_ObjectHideFlags: 0
@@ -74735,6 +77268,7 @@ GameObject:
   - component: {fileID: 1236283081}
   - component: {fileID: 1236283080}
   - component: {fileID: 1236283079}
+  - component: {fileID: 1236283082}
   m_Layer: 5
   m_Name: Front
   m_TagString: Untagged
@@ -74777,6 +77311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 0
+  canvasText: {fileID: 1090656077}
 --- !u!114 &1236283080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74816,6 +77351,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236283077}
   m_CullTransparentMesh: 0
+--- !u!114 &1236283082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236283077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1236283079}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1236283079}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1248616288
 GameObject:
   m_ObjectHideFlags: 0
@@ -76303,6 +78947,7 @@ GameObject:
   - component: {fileID: 1269431323}
   - component: {fileID: 1269431322}
   - component: {fileID: 1269431321}
+  - component: {fileID: 1269431324}
   m_Layer: 5
   m_Name: SlotRightHand
   m_TagString: Untagged
@@ -76322,6 +78967,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2065180295}
+  - {fileID: 23528115}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -76344,6 +78990,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 16
+  canvasText: {fileID: 2065180296}
+  canvasMessageText: {fileID: 23528116}
 --- !u!114 &1269431322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76381,6 +79029,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269431319}
   m_CullTransparentMesh: 0
+--- !u!114 &1269431324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269431319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1269431321}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1269431321}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1269638743
 GameObject:
   m_ObjectHideFlags: 0
@@ -79203,6 +81960,7 @@ GameObject:
   - component: {fileID: 1338337422}
   - component: {fileID: 1338337421}
   - component: {fileID: 1338337420}
+  - component: {fileID: 1338337423}
   m_Layer: 5
   m_Name: Wide
   m_TagString: Untagged
@@ -79244,6 +82002,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 2
+  canvasText: {fileID: 1614421389}
 --- !u!114 &1338337421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79281,6 +82040,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1338337418}
   m_CullTransparentMesh: 0
+--- !u!114 &1338337423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338337418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1338337420}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1338337420}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1338953219
 GameObject:
   m_ObjectHideFlags: 0
@@ -79490,6 +82358,7 @@ GameObject:
   - component: {fileID: 1340841193}
   - component: {fileID: 1340841192}
   - component: {fileID: 1340841191}
+  - component: {fileID: 1340841194}
   m_Layer: 5
   m_Name: SlotHead
   m_TagString: Untagged
@@ -79509,6 +82378,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1637008403}
+  - {fileID: 1491652588}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -79531,6 +82401,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 4
+  canvasText: {fileID: 1637008404}
+  canvasMessageText: {fileID: 1491652589}
 --- !u!114 &1340841192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79568,6 +82440,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340841189}
   m_CullTransparentMesh: 0
+--- !u!114 &1340841194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340841189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1340841191}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1340841191}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1342159006
 GameObject:
   m_ObjectHideFlags: 0
@@ -85806,6 +88787,7 @@ GameObject:
   - component: {fileID: 1378787873}
   - component: {fileID: 1378787872}
   - component: {fileID: 1378787871}
+  - component: {fileID: 1378787874}
   m_Layer: 5
   m_Name: Wide
   m_TagString: Untagged
@@ -85848,6 +88830,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 2
+  canvasText: {fileID: 2018356604}
 --- !u!114 &1378787872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85887,6 +88870,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1378787869}
   m_CullTransparentMesh: 0
+--- !u!114 &1378787874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378787869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1378787871}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1378787871}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1380301823
 GameObject:
   m_ObjectHideFlags: 0
@@ -86398,6 +89490,7 @@ GameObject:
   - component: {fileID: 1388884509}
   - component: {fileID: 1388884508}
   - component: {fileID: 1388884507}
+  - component: {fileID: 1388884510}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -86439,6 +89532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 1
+  canvasText: {fileID: 1743899783}
 --- !u!114 &1388884508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86476,6 +89570,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388884505}
   m_CullTransparentMesh: 0
+--- !u!114 &1388884510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388884505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1388884507}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1388884507}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1392630212
 GameObject:
   m_ObjectHideFlags: 0
@@ -89209,6 +92412,7 @@ GameObject:
   - component: {fileID: 1463814563}
   - component: {fileID: 1463814562}
   - component: {fileID: 1463814561}
+  - component: {fileID: 1463814564}
   m_Layer: 5
   m_Name: Wide
   m_TagString: Untagged
@@ -89251,6 +92455,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 2
+  canvasText: {fileID: 1312837348}
 --- !u!114 &1463814562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89290,6 +92495,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1463814559}
   m_CullTransparentMesh: 0
+--- !u!114 &1463814564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1463814559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1463814561}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1463814561}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1464682447
 GameObject:
   m_ObjectHideFlags: 0
@@ -90085,6 +93399,85 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 990326406}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1491652587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1491652588}
+  - component: {fileID: 1491652590}
+  - component: {fileID: 1491652589}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1491652588
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491652587}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1340841190}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1491652589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491652587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &1491652590
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491652587}
+  m_CullTransparentMesh: 0
 --- !u!1 &1494637403
 GameObject:
   m_ObjectHideFlags: 0
@@ -90253,6 +93646,7 @@ GameObject:
   - component: {fileID: 1502741323}
   - component: {fileID: 1502741322}
   - component: {fileID: 1502741321}
+  - component: {fileID: 1502741324}
   m_Layer: 5
   m_Name: SlotNeck
   m_TagString: Untagged
@@ -90272,6 +93666,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1574897072}
+  - {fileID: 2098913978}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -90294,6 +93689,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 8
+  canvasText: {fileID: 1574897073}
+  canvasMessageText: {fileID: 2098913979}
 --- !u!114 &1502741322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90331,6 +93728,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1502741319}
   m_CullTransparentMesh: 0
+--- !u!114 &1502741324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1502741319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1502741321}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1502741321}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1504737062
 GameObject:
   m_ObjectHideFlags: 0
@@ -92341,6 +95847,102 @@ MonoBehaviour:
         - m_Target: {fileID: 1545636096}
           m_MethodName: SetHireUnitPnlButtonActive
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1545636096}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1545636096}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -94418,6 +98020,7 @@ GameObject:
   - component: {fileID: 1599282680}
   - component: {fileID: 1599282679}
   - component: {fileID: 1599282678}
+  - component: {fileID: 1599282681}
   m_Layer: 5
   m_Name: Wide
   m_TagString: Untagged
@@ -94460,6 +98063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 2
+  canvasText: {fileID: 1399444408}
 --- !u!114 &1599282679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94499,6 +98103,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1599282676}
   m_CullTransparentMesh: 0
+--- !u!114 &1599282681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1599282676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1599282678}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1599282678}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1603480641
 GameObject:
   m_ObjectHideFlags: 0
@@ -99633,6 +103346,7 @@ GameObject:
   - component: {fileID: 1741239242}
   - component: {fileID: 1741239241}
   - component: {fileID: 1741239240}
+  - component: {fileID: 1741239243}
   m_Layer: 5
   m_Name: SlotLeftHand
   m_TagString: Untagged
@@ -99652,6 +103366,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1532783764}
+  - {fileID: 640691638}
   m_Father: {fileID: 1304939627}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -99674,6 +103389,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotMode: 1
   equipmentSlot: 32
+  canvasText: {fileID: 1532783765}
+  canvasMessageText: {fileID: 640691639}
 --- !u!114 &1741239241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99711,6 +103428,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1741239238}
   m_CullTransparentMesh: 0
+--- !u!114 &1741239243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741239238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1741239240}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1741239240}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1001 &1741887152
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115376,6 +119202,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2097463150}
   m_CullTransparentMesh: 0
+--- !u!1 &2098913977
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2098913978}
+  - component: {fileID: 2098913980}
+  - component: {fileID: 2098913979}
+  m_Layer: 5
+  m_Name: MessageText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2098913978
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098913977}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1502741320}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2098913979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098913977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: 350417cd6e898c640aea82f3e535c983, type: 3}
+    m_FontSize: 14
+    m_FontStyle: 1
+    m_BestFit: 0
+    m_MinSize: 1
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &2098913980
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2098913977}
+  m_CullTransparentMesh: 0
 --- !u!1 &2100424826
 GameObject:
   m_ObjectHideFlags: 0
@@ -115470,6 +119375,7 @@ GameObject:
   - component: {fileID: 2108617340}
   - component: {fileID: 2108617339}
   - component: {fileID: 2108617338}
+  - component: {fileID: 2108617341}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -115512,6 +119418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: 1
+  canvasText: {fileID: 394707140}
 --- !u!114 &2108617339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115551,6 +119458,115 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2108617336}
   m_CullTransparentMesh: 0
+--- !u!114 &2108617341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2108617336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: On Begin Item Drag
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2108617338}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On End Item Drag
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2108617338}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &2110741186
 GameObject:
   m_ObjectHideFlags: 0

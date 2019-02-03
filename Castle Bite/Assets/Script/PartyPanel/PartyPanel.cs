@@ -1238,70 +1238,6 @@ public class PartyPanel : MonoBehaviour {
     }
 
 
-    public void SetActiveItemDrag(bool activate)
-    {
-        Debug.LogWarning("SetActiveItemDrag: " + activate.ToString());
-        // verify if item has active modifiers or usages
-        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
-        {
-            Transform unitCell;
-            Transform unitSlot;
-            PartyUnit unit;
-            Color greenHighlight = Color.green;
-            Color redHighlight = Color.red;
-            Color normalColor = new Color(0.5f, 0.5f, 0.5f);
-            Color hightlightColor;
-            // highlight differently cells with and without units
-            foreach (Row horisontalPanel in horisontalPanels)
-            {
-                foreach (Cell cell in cells)
-                {
-                    // verify if slot has an unit in it
-                    unitCell = transform.Find(horisontalPanel + "/" + cell);
-                    unitSlot = unitCell.Find("UnitSlot");
-                    if (unitSlot.childCount > 0)
-                    {
-                        // verify if we need to activate or deactivate highlight
-                        unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                        if (activate)
-                        {
-                            // activate highlight
-                            // try to consume item in preview mode without actually doing anything
-                            if (unit.UseItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
-                            {
-                                // highlight it with green
-                                // hightlightColor = greenHighlight;
-                                hightlightColor = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableColor;
-                            }
-                            else
-                            {
-                                // highlight with red
-                                // hightlightColor = redHighlight;
-                                hightlightColor = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableColor;
-                            }
-                        }
-                        else
-                        {
-                            // deactivate highlight
-                            hightlightColor = normalColor;
-                        }
-                        // Change text box color
-                        unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
-                    }
-                }
-            }
-        }
-        else
-        {
-            // item is not consumable, do not highlight anything
-        }
-        // verify if we are in edit party screen and not in battle screen mode
-        if (transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>() != null)
-        {
-            // and disable/enable hire buttons
-            transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
-        }
-    }
 
     #region For Battle Screen
 
@@ -3285,5 +3221,70 @@ public class PartyPanel : MonoBehaviour {
     //}
 
     #endregion For Battle Screen
+
+    //public void SetActiveItemDrag(bool activate)
+    //{
+    //    Debug.LogWarning("SetActiveItemDrag: " + activate.ToString());
+    //    // verify if item has active modifiers or usages
+    //    if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
+    //    {
+    //        Transform unitCell;
+    //        Transform unitSlot;
+    //        PartyUnit unit;
+    //        Color greenHighlight = Color.green;
+    //        Color redHighlight = Color.red;
+    //        Color normalColor = new Color(0.5f, 0.5f, 0.5f);
+    //        Color hightlightColor;
+    //        // highlight differently cells with and without units
+    //        foreach (Row horisontalPanel in horisontalPanels)
+    //        {
+    //            foreach (Cell cell in cells)
+    //            {
+    //                // verify if slot has an unit in it
+    //                unitCell = transform.Find(horisontalPanel + "/" + cell);
+    //                unitSlot = unitCell.Find("UnitSlot");
+    //                if (unitSlot.childCount > 0)
+    //                {
+    //                    // verify if we need to activate or deactivate highlight
+    //                    unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+    //                    if (activate)
+    //                    {
+    //                        // activate highlight
+    //                        // try to consume item in preview mode without actually doing anything
+    //                        if (unit.UseItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
+    //                        {
+    //                            // highlight it with green
+    //                            // hightlightColor = greenHighlight;
+    //                            hightlightColor = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableColor;
+    //                        }
+    //                        else
+    //                        {
+    //                            // highlight with red
+    //                            // hightlightColor = redHighlight;
+    //                            hightlightColor = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableColor;
+    //                        }
+    //                    }
+    //                    else
+    //                    {
+    //                        // deactivate highlight
+    //                        hightlightColor = normalColor;
+    //                    }
+    //                    // Change text box color
+    //                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // item is not consumable, do not highlight anything
+    //    }
+    //    // verify if we are in edit party screen and not in battle screen mode
+    //    if (transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>() != null)
+    //    {
+    //        // and disable/enable hire buttons
+    //        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().SetHireUnitPnlButtonActive(!activate);
+    //    }
+    //}
 
 }

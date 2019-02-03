@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d83d6a9bad1ba4fa1228f017e1c9c1, type: 3}
   m_Name: Big Healing Potion
   m_EditorClassIdentifier: 
-  inventoryItemType: 1103
   inventoryItemID: 1103
   itemDisplayName: Big Healing Potion
   itemCost: 400
@@ -22,3 +21,6 @@ MonoBehaviour:
   modifierAppliedHow: 0
   maxUsagesCount: 1
   itemIsStackable: 0
+  uniquePowerModifierConfigs: []
+  inventoryItemUIConfig: {fileID: 11400000, guid: 76519f64b8b4d134e8ab3f1a2c0a1c41,
+    type: 2}

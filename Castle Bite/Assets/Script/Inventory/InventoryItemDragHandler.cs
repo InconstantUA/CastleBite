@@ -5,9 +5,15 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+    public static InventoryItemDragHandler itemBeingDragged;
+
     [SerializeField]
     InventoryItem lInventoryItem;
-    public static InventoryItemDragHandler itemBeingDragged;
+    [SerializeField]
+    GameEvent itemBeginDragEvent;
+    [SerializeField]
+    GameEvent itemEndDragEvent;
+    
     //Vector3 startPosition;
     InventorySlotDropHandler itemBeingDraggedSlot;
     Transform outOfMaskParentTransform;
@@ -60,8 +66,10 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
             outOfMaskParentTransform = transform.parent.transform;
             // disable raycasts
             GetComponent<CanvasGroup>().blocksRaycasts = false;
+            // trigger begin item drag event
+            itemBeginDragEvent.Raise();
             // Instruct Edit Party Screen that item is being dragged
-            transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(true).SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, true);
+            // transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(true).SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, true);
         }
     }
 
@@ -78,16 +86,18 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         // verify if user clicked left or right mouse button
         if (Input.GetMouseButtonUp(0))
         {
+            // trigger end drag event
+            itemEndDragEvent.Raise();
             // Instruct Edit Party Screen to disable ActiveItemDrag state (true) because we might be in battle screen mode using item
-            transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(true).SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, false);
+            // transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(true).SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, false);
             // get Battle screen
-            BattleScreen battleScreen = transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false);
+            // BattleScreen battleScreen = transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false);
             // Verify if battle screen is active
-            if (battleScreen != null)
-            {
-                // Instruct Battle screen to update units highlight
-                battleScreen.SetHighlight();
-            }
+            //if (battleScreen != null)
+            //{
+            //    // Instruct Battle screen to update units highlight
+            //    battleScreen.SetHighlight();
+            //}
             // reset item being dragged
             itemBeingDragged = null;
             // enable block raycasts, so item can be dragged again
