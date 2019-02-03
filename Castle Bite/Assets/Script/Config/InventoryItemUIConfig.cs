@@ -6,6 +6,7 @@ using UnityEngine;
 public class InventoryItemUIConfig : ScriptableObject
 {
     public Color itemIsApplicableForUnitSlotColor;
+    public Color itemIsApplicableButNotAdvisedForUnitSlotColor;
     public Color itemIsNotApplicableForUnitSlotColor;
     public Color itemCanBeEquippedColor;
     public Color itemIsNotCompatibleWithEquipmentSlotColor;

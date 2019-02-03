@@ -38,6 +38,10 @@ public class UniquePowerModifierConfig : ScriptableObject
     [SerializeField]
     private ModifierConfigUpdater[] modifierConfigUpdaters; // updates UnitStatModifierConfig if defined
     [SerializeField]
+    private ModifierLimiter[] modifierLimiters; // blocks this upm if limiter condifitions are not met
+    [SerializeField]
+    private ModifierAdviser[] modifierAdvisers; // highlight differently when it is not advised to use UPM in specific situations (example: heal full health unit)
+    [SerializeField]
     private UniquePowerModifierUIConfig uniquePowerModifierUIConfig;
 
     public void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
@@ -93,6 +97,56 @@ public class UniquePowerModifierConfig : ScriptableObject
         return false;
     }
 
+    public bool AreRequirementsMetInContextOf(System.Object srcContext, System.Object dstContext)
+    {
+        // loop through all limiters
+        foreach (ModifierLimiter modifierLimiter in modifierLimiters)
+        {
+            // verify is modifier power is limited
+            if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
+            {
+                // at least one requirement is not met
+                return false;
+            }
+        }
+        // if none of limiter is limiting, then return true
+        return true;
+    }
+
+    public bool IsItAdvisedToActInContextOf(System.Object srcContext, System.Object dstContext)
+    {
+        // loop through all advisers
+        foreach (ModifierAdviser modifierAdviser in modifierAdvisers)
+        {
+            // verify is modifier power is limited
+            if (modifierAdviser.DoAdviseAgainstUPMUsageInContextOf(srcContext, dstContext))
+            {
+                // at least one not advised condition is met
+                // advise against acting in current context
+                return false;
+            }
+        }
+        // if none of advisers conditions are met, advise to act in current context
+        return true;
+    }
+
+    public string GetLimiterMessageInContextOf(System.Object srcContext, System.Object dstContext)
+    {
+        string message = "";
+        // loop through all limiters
+        foreach (ModifierLimiter modifierLimiter in modifierLimiters)
+        {
+            // verify is modifier power is limited
+            if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
+            {
+                Debug.Log(".. Verify and adjust message size. Idea: show full message with pop-up on mouse over.");
+                // at least one requirement is not met
+                return modifierLimiter.OnLimitMessage;
+            }
+        }
+        // return resulting message
+        return message;
+    }
 
     UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(GameObject upmBearer)
     {

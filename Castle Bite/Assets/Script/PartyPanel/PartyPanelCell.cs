@@ -34,17 +34,62 @@ public class PartyPanelCell : MonoBehaviour
             if (partyUnitUI != null)
             {
                 // activate highlight
-                // try to consume item in preview mode without actually doing anything
-                if (partyUnitUI.LPartyUnit.UseItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
+                // get source context 
+                // try to get party unit (assume that during battle unit can only use items which are located in (childs of) this unit game object)
+                // if outside of the battle or if item is dragged from inventiry, then this will result in null
+                System.Object srcContext = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<PartyUnit>();
+                // verify if srcPartyUnit is null
+                if (srcContext == null)
                 {
-                    // item can be applied to this hero, highlight with applicable color
-                    canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                    // context is hero party (item is dragged from inventory)
+                    // get party
+                    HeroParty heroParty = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<HeroParty>();
+                    // verify if party is garnizon type
+                    if (heroParty.PartyMode == PartyMode.Garnizon)
+                    {
+                        // set context to the city
+                        srcContext = heroParty.GetComponentInParent<City>();
+                    }
+                    else
+                    {
+                        // party mode = normal party
+                        // set context to the party leader
+                        srcContext = heroParty.GetPartyLeader();
+                    }
+                }
+                // verify if UPM can be applied to destination unit
+                if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(srcContext, partyUnitUI.LPartyUnit) )
+                {
+                    // verify if it is advised to use this item in this context
+                    if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].IsItAdvisedToActInContextOf(srcContext, partyUnitUI.LPartyUnit))
+                    {
+                        // advised
+                        // item can be applied to this hero, highlight with applicable color
+                        canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                    }
+                    else
+                    {
+                        // not advised
+                        // item can be applied to this hero, highlight with applicable color
+                        canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+                    }
                 }
                 else
                 {
                     // item cannot be applied to this hero, highlight with not applicable color
                     canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
                 }
+                //// try to consume item in preview mode without actually doing anything
+                //if (partyUnitUI.LPartyUnit.UseItem(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, true))
+                //{
+                //    // item can be applied to this hero, highlight with applicable color
+                //    canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                //}
+                //else
+                //{
+                //    // item cannot be applied to this hero, highlight with not applicable color
+                //    canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+                //}
             }
             else
             {

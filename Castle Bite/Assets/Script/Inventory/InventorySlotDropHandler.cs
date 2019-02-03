@@ -223,29 +223,41 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
         // verify if equipment slot is compatible
         if ((InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots & EquipmentSlot) == EquipmentSlot)
         {
-            // verify if this is shard slot
-            if (EquipmentSlot == HeroEquipmentSlots.Shard)
-            {
-                // for shard slot we need to verify if party leader has skill at least 1st level
-                Debug.Log("Todo: generalize this");
-                if (Array.Find(GetComponentInParent<HeroEquipment>().LPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkillID.ShardAura).currentSkillLevel >= 1)
-                {
-                    // set compatible flag
-                    isCompatible = true;
-                }
-                else
-                {
-                    // set highlight color to not the color which indicates that prerequisites are not met
-                    canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemPrerequsitesAreNotMetForThisUnitColor;
-                    // set cavast message
-                    canvasMessageText.text = "Requires " + ConfigManager.Instance[UnitSkillID.ShardAura].skillDisplayName + " skill";
-                }
-            }
-            else
+            // verify item is compatible with hero (all required prerequisites are net)
+            if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit))
             {
                 // set compatible flag
                 isCompatible = true;
             }
+            else
+            {
+                // set cavast message
+                canvasMessageText.text = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].GetLimiterMessageInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit);
+                // set highlight color to not the color which indicates that prerequisites are not met
+                canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemPrerequsitesAreNotMetForThisUnitColor;
+            }
+            //// verify if this is shard slot
+            //if (EquipmentSlot == HeroEquipmentSlots.Shard)
+            //{
+            //    // for shard slot we need to verify if party leader has skill at least 1st level
+            //    if (Array.Find(GetComponentInParent<HeroEquipment>().LPartyUnit.UnitSkillsData, element => element.unitSkill == UnitSkillID.ShardAura).currentSkillLevel >= 1)
+            //    {
+            //        // set compatible flag
+            //        isCompatible = true;
+            //    }
+            //    else
+            //    {
+            //        // set highlight color to not the color which indicates that prerequisites are not met
+            //        canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemPrerequsitesAreNotMetForThisUnitColor;
+            //        // set cavast message
+            //        canvasMessageText.text = "Requires " + ConfigManager.Instance[UnitSkillID.ShardAura].skillDisplayName + " skill";
+            //    }
+            //}
+            //else
+            //{
+            //    // set compatible flag
+            //    isCompatible = true;
+            //}
         }
         else
         {

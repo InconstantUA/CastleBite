@@ -54,6 +54,7 @@ public enum InventoryItemID
     MedumHealingPoition         =   1102,
     BigHealingPotion            =   1103,
     SuperHealingPotion          =   1104,
+    FlameEssence                =   1121,
     //  200-299 Defense
     SmallFortificationPotion    =   1201,
     //  300-399 Power
@@ -129,7 +130,8 @@ public class InventoryItem : MonoBehaviour {
 
     public bool HasActiveModifiers()
     {
-        return (HasActiveStatModifiers() || HasActiveUniquePowerModifiers() || HasActiveStatusModifiers());
+        //return (HasActiveStatModifiers() || HasActiveUniquePowerModifiers() || HasActiveStatusModifiers());
+        return HasActiveUniquePowerModifiers();
     }
 
     public bool HasActiveStatModifiers()

@@ -22,4 +22,7 @@ MonoBehaviour:
   upmDurationLeft: 0
   modifierConfigUpdaters:
   - {fileID: 11400000, guid: 461b6af6ec598fe418be9d34d8e76dc1, type: 2}
+  modifierLimiters: []
+  modifierAdvisers:
+  - {fileID: 11400000, guid: 1a8ae9a862887744bbb53e741180c815, type: 2}
   uniquePowerModifierUIConfig: {fileID: 0}
