@@ -21,6 +21,7 @@ MonoBehaviour:
   modifierAppliedHow: 0
   maxUsagesCount: 1
   itemIsStackable: 0
-  uniquePowerModifierConfigs: []
+  uniquePowerModifierConfigs:
+  - {fileID: 11400000, guid: 392cb6ffee6c7b94fb1d7d44d347f283, type: 2}
   inventoryItemUIConfig: {fileID: 11400000, guid: 76519f64b8b4d134e8ab3f1a2c0a1c41,
     type: 2}

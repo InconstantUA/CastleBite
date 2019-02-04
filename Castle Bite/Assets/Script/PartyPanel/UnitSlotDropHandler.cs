@@ -125,6 +125,11 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         dstW.gameObject.SetActive(!direction);
     }
 
+    [SerializeField]
+    GameEvent itemHasBeenDroppedIntoTheUnitSlotEvent;
+    [SerializeField]
+    GameEvent unitUIHasBeenDroppedIntoTheUnitSlotEvent;
+
     public void OnDrop(PointerEventData eventData)
     {
         // verify if we are in city edit mode and not in hero edit mode
@@ -137,18 +142,22 @@ public class UnitSlotDropHandler : MonoBehaviour, IDropHandler
         // verify if it is item being dragged
         if (InventoryItemDragHandler.itemBeingDragged != null)
         {
-            // verify if there is a unit in the slot
-            if (GetComponentInChildren<PartyUnitUI>() != null)
-            {
-                // try to apply item to the unit
-                GetComponentInChildren<PartyUnitUI>().ActOnItemDrop(InventoryItemDragHandler.itemBeingDragged);
-            }
+            // raise on item drop event (pass this slot as argument)
+            itemHasBeenDroppedIntoTheUnitSlotEvent.Raise(this);
+            //// verify if there is a unit in the slot
+            //if (GetComponentInChildren<PartyUnitUI>() != null)
+            //{
+            //    // try to apply item to the unit
+            //    GetComponentInChildren<PartyUnitUI>().ActOnItemDrop(InventoryItemDragHandler.itemBeingDragged);
+            //}
             // reset cursor to normal
-            CursorController.Instance.SetNormalCursor();
+            // CursorController.Instance.SetNormalCursor();
         }
         // verify if it is party unit being dragged
         else if (UnitDragHandler.unitBeingDraggedUI != null)
         {
+            // raise on unit drop event
+            unitUIHasBeenDroppedIntoTheUnitSlotEvent.Raise(this);
             // act based on the previously set by OnDrag condition
             if (isDropAllowed)
             {

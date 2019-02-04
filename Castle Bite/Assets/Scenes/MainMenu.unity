@@ -700,6 +700,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -748,6 +753,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -1205,6 +1215,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &22804173
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1837,6 +1851,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 1
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &40127379
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4574,6 +4592,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -4677,6 +4700,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -4725,6 +4753,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -4773,6 +4806,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -4810,6 +4848,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls:
@@ -4858,6 +4901,11 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -4906,6 +4954,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -6203,6 +6256,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -6251,6 +6309,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -18264,6 +18327,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -18312,6 +18380,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -21869,6 +21942,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -21917,6 +21995,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -22344,6 +22427,30 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114017565531805550, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f,
+        type: 3}
+      propertyPath: itemHasBeenDroppedIntoTheUnitSlot
+      value: 
+      objectReference: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+        type: 2}
+    - target: {fileID: 114017565531805550, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f,
+        type: 3}
+      propertyPath: unitUIHasBeenDroppedIntoTheUnitSlot
+      value: 
+      objectReference: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+        type: 2}
+    - target: {fileID: 114017565531805550, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f,
+        type: 3}
+      propertyPath: itemHasBeenDroppedIntoTheUnitSlotEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+        type: 2}
+    - target: {fileID: 114017565531805550, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f,
+        type: 3}
+      propertyPath: unitUIHasBeenDroppedIntoTheUnitSlotEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 114381351681138740, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f, type: 3}
@@ -23359,6 +23466,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &406854913
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -24973,6 +25084,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 1
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &443279907
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -32003,6 +32118,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &476455986
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -35443,6 +35562,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &549306788
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -42053,6 +42176,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -42101,6 +42229,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -45622,6 +45755,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -45670,6 +45808,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -46211,6 +46354,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -46259,6 +46407,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -47134,6 +47287,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -47182,6 +47340,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -48713,6 +48876,30 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114507113243550190, guid: 6fc79732f7b0ca141a5b7f4c9f54c040,
+        type: 3}
+      propertyPath: itemHasBeenDroppedIntoTheUnitSlot
+      value: 
+      objectReference: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+        type: 2}
+    - target: {fileID: 114507113243550190, guid: 6fc79732f7b0ca141a5b7f4c9f54c040,
+        type: 3}
+      propertyPath: unitUIHasBeenDroppedIntoTheUnitSlot
+      value: 
+      objectReference: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+        type: 2}
+    - target: {fileID: 114507113243550190, guid: 6fc79732f7b0ca141a5b7f4c9f54c040,
+        type: 3}
+      propertyPath: itemHasBeenDroppedIntoTheUnitSlotEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+        type: 2}
+    - target: {fileID: 114507113243550190, guid: 6fc79732f7b0ca141a5b7f4c9f54c040,
+        type: 3}
+      propertyPath: unitUIHasBeenDroppedIntoTheUnitSlotEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 114855616011388914, guid: 6fc79732f7b0ca141a5b7f4c9f54c040, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6fc79732f7b0ca141a5b7f4c9f54c040, type: 3}
@@ -49111,6 +49298,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -49159,6 +49351,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -50135,6 +50332,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &771718658
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -55259,6 +55460,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55307,6 +55513,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55355,6 +55566,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55403,6 +55619,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55451,6 +55672,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55499,6 +55725,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55547,6 +55778,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -58080,6 +58316,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -58128,6 +58369,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -61188,6 +61434,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 1
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &956820315
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -62491,6 +62741,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -62539,6 +62794,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -62694,6 +62954,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -62742,6 +63007,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -63620,6 +63890,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -63668,6 +63943,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -63895,6 +64175,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -63943,6 +64228,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -71235,6 +71525,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 1
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1107912164
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -73366,6 +73660,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -73414,6 +73713,117 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Item Has Been Dropped Into The Unit Slot Event
+    gameEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1153475312}
+          m_MethodName: SetNormalCursor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Unit UI Has Been Dropped Into The Unit Slot Event
+    gameEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1153475312}
+          m_MethodName: SetNormalCursor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -75690,6 +76100,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -75738,6 +76153,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -76691,6 +77111,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -76739,6 +77164,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -77383,6 +77813,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -77431,6 +77866,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -77940,6 +78380,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1255796320
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -79061,6 +79505,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -79109,6 +79558,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -82072,6 +82526,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -82120,6 +82579,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -82472,6 +82936,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -82520,6 +82989,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -88902,6 +89376,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -88950,6 +89429,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -89602,6 +90086,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -89650,6 +90139,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -90335,6 +90829,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 1
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1404416130
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -90795,6 +91293,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1411541893
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -92527,6 +93029,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -92575,6 +93082,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -93760,6 +94272,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -93808,6 +94325,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -95858,6 +96380,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -95906,6 +96433,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -95954,6 +96486,117 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Item Has Been Dropped Into The Unit Slot Event
+    gameEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1545636096}
+          m_MethodName: OnItemHasBeenDroppedIntoTheUnitSlot
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On UnitUI Has Been Dropped Into The Unit Slot Event
+    gameEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1545636096}
+          m_MethodName: OnUnitUIHasBeenDroppedIntoTheUnitSlot
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -98135,6 +98778,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -98183,6 +98831,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -98571,6 +99224,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1603751578
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -100381,6 +101038,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1655843176
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -103460,6 +104121,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -103508,6 +104174,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -107417,6 +108088,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1871911095
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -107653,6 +108328,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 1
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1875228709
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -116090,6 +116769,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &1996973384
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -119490,6 +120173,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -119538,6 +120226,11 @@ MonoBehaviour:
           m_CallState: 2
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
     partyUnitEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -120556,6 +121249,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSize: 0
+  itemHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4,
+    type: 2}
+  unitUIHasBeenDroppedIntoTheUnitSlotEvent: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+    type: 2}
 --- !u!225 &2124755524
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -5,6 +5,11 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
+public class GenericObjectEvent : UnityEvent<System.Object>
+{
+}
+
+[System.Serializable]
 public class PartyUnitEvent : UnityEvent<PartyUnit>
 {
 }
@@ -40,6 +45,7 @@ public class EventAndAction
     public string name;
     public GameEvent gameEvent;
     public UnityEvent genericAction;
+    public GenericObjectEvent genericObjectEvent;
     public PartyUnitEvent partyUnitEvent;
     public PartyUnitHealthHasChangedEvent partyUnitHealthHasChangedEvent;
     public UnitPowerModifierEvent unitPowerModifierEvent;
@@ -79,6 +85,12 @@ public class EventAndAction
         {
             Debug.Log("Invoking event for " + ((UniquePowerModifierData)systemObject).UniquePowerModifierID.ToString());
             uniquePowerModifierDataEvent.Invoke((UniquePowerModifierData)systemObject);
+        }
+        // Check if at least 1 object is listening for the event
+        if (genericObjectEvent.GetPersistentEventCount() >= 1)
+        {
+            Debug.Log("Invoking generic object event");
+            genericObjectEvent.Invoke(systemObject);
         }
     }
 

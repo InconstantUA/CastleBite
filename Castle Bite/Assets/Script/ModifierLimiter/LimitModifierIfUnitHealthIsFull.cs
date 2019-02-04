@@ -8,6 +8,12 @@ public class LimitModifierIfUnitHealthIsFull : ModifierLimiter
 {
     public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
+        // verify if destination context is of InventorySlotDropHandler type
+        if (dstContext is InventorySlotDropHandler)
+        {
+            // ignore this limiter (don't discard)
+            return false;
+        }
         // get destination context as PartyUnit
         if (dstContext is PartyUnit)
         {

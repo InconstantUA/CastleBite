@@ -2604,7 +2604,8 @@ public class PartyUnit : MonoBehaviour {
         // init is applicable by default with false, if at least one modifier is applicable it should reset this flag to true
         bool isApplicable = false;
         // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items may be not stackable
-        // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, that is why we do not do this additional check against partly-leader-equipped items
+        // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, 
+        // that is why we do not do this additional check against partly-leader-equipped items
         if ((GetUnitItemByName(inventoryItem.ItemName) != null)
             // and that item is not stackable
             && (!inventoryItem.ItemIsStackable)

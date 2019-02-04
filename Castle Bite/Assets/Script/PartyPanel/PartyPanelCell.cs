@@ -28,11 +28,13 @@ public class PartyPanelCell : MonoBehaviour
         // verify if item has active modifiers or usages
         if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
         {
+            Debug.Log("Item has active modifiers");
             // get party unit UI
             PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
             // verify if its not null
             if (partyUnitUI != null)
             {
+                Debug.Log("Found partyUnitUI");
                 // activate highlight
                 // get source context 
                 // try to get party unit (assume that during battle unit can only use items which are located in (childs of) this unit game object)
@@ -60,15 +62,18 @@ public class PartyPanelCell : MonoBehaviour
                 // verify if UPM can be applied to destination unit
                 if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(srcContext, partyUnitUI.LPartyUnit) )
                 {
+                    Debug.Log("Requirements are met");
                     // verify if it is advised to use this item in this context
                     if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].IsItAdvisedToActInContextOf(srcContext, partyUnitUI.LPartyUnit))
                     {
+                        Debug.Log("Advised");
                         // advised
                         // item can be applied to this hero, highlight with applicable color
                         canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
                     }
                     else
                     {
+                        Debug.Log("Not Advised");
                         // not advised
                         // item can be applied to this hero, highlight with applicable color
                         canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
@@ -76,6 +81,7 @@ public class PartyPanelCell : MonoBehaviour
                 }
                 else
                 {
+                    Debug.Log("Requirements are not met");
                     // item cannot be applied to this hero, highlight with not applicable color
                     canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
                 }
@@ -93,12 +99,14 @@ public class PartyPanelCell : MonoBehaviour
             }
             else
             {
+                Debug.Log("no party unit UI");
                 // there is no hero in this slot, highlight with not applicable color
                 canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
             }
         }
         else
         {
+            Debug.Log("Item has no active modifiers");
             // item is not consumable, highlight with not applicable color
             canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
         }

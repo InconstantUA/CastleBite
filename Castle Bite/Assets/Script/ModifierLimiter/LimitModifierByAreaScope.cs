@@ -10,6 +10,12 @@ public class LimitModifierByAreaScope : ModifierLimiter
 
     public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
+        // verify if destination context is of InventorySlotDropHandler type
+        if (dstContext is InventorySlotDropHandler)
+        {
+            // ignore this limiter (don't discard)
+            return false;
+        }
         switch (modifierScope)
         {
             case ModifierScope.Self:

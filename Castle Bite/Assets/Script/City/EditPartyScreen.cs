@@ -865,4 +865,15 @@ public class EditPartyScreen : MonoBehaviour {
         SetHireUnitPnlButtonActive(true);
     }
 
+    public void OnItemHasBeenDroppedIntoTheUnitSlot(System.Object unitSlotDropHandler)
+    {
+        // activate hire unit buttons again, after it was disabled
+        //SetHireUnitPnlButtonActive(true);
+    }
+
+    public void OnUnitUIHasBeenDroppedIntoTheUnitSlot(System.Object unitSlotDropHandler)
+    {
+        // activate hire unit buttons again, after it was disabled
+        SetHireUnitPnlButtonActive(true);
+    }
 }

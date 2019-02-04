@@ -10,6 +10,11 @@ public class LimitModifierByRelationships : ModifierLimiter
 
     Faction GetFaction(System.Object context)
     {
+        // verify if context is not null
+        if (context == null)
+        {
+            return Faction.Unknown;
+        }
         // verify if context is of PartyUnit type
         if (context is PartyUnit)
         {
@@ -51,6 +56,12 @@ public class LimitModifierByRelationships : ModifierLimiter
 
     public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
+        // verify if destination context is of HeroEquipmentSlots type
+        if (dstContext is InventorySlotDropHandler)
+        {
+            // ignore this limiter (don't discard)
+            return false;
+        }
         // get relationships
         Relationships.State relationships = Relationships.Instance.GetRelationships( GetFaction(srcContext), GetFaction(dstContext) );
         // loop through all required relationships
