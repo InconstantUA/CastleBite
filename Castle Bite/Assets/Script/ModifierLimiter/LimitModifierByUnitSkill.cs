@@ -9,8 +9,44 @@ public class LimitModifierByUnitSkill: ModifierLimiter
     public UnitSkillID requiredUnitSkillID;
     public int minRequiredUnitSkillLevel = 1;
 
+    public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
+    {
+        return DoesSourceContextMatch(srcContext) && DoesDestinationContextMatch(dstContext);
+    }
+
+    public bool DoesSourceContextMatch(System.Object srcContext)
+    {
+        if (srcContext == null)
+        {
+            // match
+            return true;
+        }
+        Debug.Log("Source context doesn't match");
+        // doesn't match
+        return false;
+    }
+
+    public bool DoesDestinationContextMatch(System.Object dstContext)
+    {
+        if ( (dstContext is InventorySlotDropHandler) || (dstContext is PartyUnit) )
+        {
+            // match
+            return true;
+        }
+        Debug.Log("Destination context doesn't match");
+        // doesn't match
+        return false;
+    }
+
     public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
+        // verify if source or destination context do not match requirements of this limiter
+        if (!DoesContextMatch(srcContext, dstContext))
+        {
+            // context is not in scope of this limiter
+            // don't limit
+            return false;
+        }
         // init party unit variable (skill bearer)
         PartyUnit partyUnit;
         // verify if destination context is of InventorySlotDropHandler type

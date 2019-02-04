@@ -8,14 +8,49 @@ public class LimitModifierByAreaScope : ModifierLimiter
 {
     public ModifierScope modifierScope;
 
+    public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
+    {
+        return DoesSourceContextMatch(srcContext) && DoesDestinationContextMatch(dstContext);
+    }
+
+    public bool DoesSourceContextMatch(System.Object srcContext)
+    {
+        if (srcContext is PartyUnit)
+        {
+            // match
+            return true;
+        }
+        Debug.Log("Source context doesn't match");
+        // doesn't match
+        return false;
+    }
+
+    public bool DoesDestinationContextMatch(System.Object dstContext)
+    {
+        if ((dstContext is GamePlayer) || (dstContext is HeroParty) || (dstContext is PartyUnit))
+        {
+            // match
+            return true;
+        }
+        Debug.Log("Destination context doesn't match");
+        // doesn't match
+        return false;
+    }
+
     public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
-        // verify if destination context is of InventorySlotDropHandler type
-        if (dstContext is InventorySlotDropHandler)
+        // verify if source or destination context do not match requirements of this limiter
+        if (!DoesContextMatch(srcContext, dstContext))
         {
-            // ignore this limiter (don't discard)
+            // context is not in scope of this limiter
+            // don't limit
             return false;
         }
+        //if (dstContext is InventorySlotDropHandler)
+        //{
+        //    // ignore this limiter (don't discard)
+        //    return false;
+        //}
         switch (modifierScope)
         {
             case ModifierScope.Self:

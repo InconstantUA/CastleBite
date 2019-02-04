@@ -54,14 +54,50 @@ public class LimitModifierByRelationships : ModifierLimiter
         return Faction.Unknown;
     }
 
+    public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
+    {
+        return DoesSourceContextMatch(srcContext) && DoesDestinationContextMatch(dstContext);
+    }
+
+    public bool DoesSourceContextMatch(System.Object srcContext)
+    {
+        if ((srcContext is GamePlayer) || (srcContext is HeroParty) || (srcContext is PartyUnit))
+        {
+            // match
+            return true;
+        }
+        Debug.Log("Source context doesn't match");
+        // doesn't match
+        return false;
+    }
+
+    public bool DoesDestinationContextMatch(System.Object dstContext)
+    {
+        if ((dstContext is GamePlayer) || (dstContext is HeroParty) || (dstContext is PartyUnit))
+        {
+            // match
+            return true;
+        }
+        Debug.Log("Destination context doesn't match");
+        // doesn't match
+        return false;
+    }
+
     public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
-        // verify if destination context is of HeroEquipmentSlots type
-        if (dstContext is InventorySlotDropHandler)
+        // verify if source or destination context do not match requirements of this limiter
+        if (!DoesContextMatch(srcContext, dstContext))
         {
-            // ignore this limiter (don't discard)
+            // context is not in scope of this limiter
+            // don't limit
             return false;
         }
+        //// verify if destination context is of HeroEquipmentSlots type
+        //if (dstContext is InventorySlotDropHandler)
+        //{
+        //    // ignore this limiter (don't discard)
+        //    return false;
+        //}
         // get relationships
         Relationships.State relationships = Relationships.Instance.GetRelationships( GetFaction(srcContext), GetFaction(dstContext) );
         // loop through all required relationships
