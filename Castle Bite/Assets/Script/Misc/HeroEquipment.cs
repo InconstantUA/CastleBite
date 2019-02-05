@@ -28,15 +28,23 @@ public class HeroEquipment : MonoBehaviour {
         }
     }
 
-    InventorySlotDropHandler GetEquipmentSlotByType(HeroEquipmentSlots heroEquipmentSlot)
+    ItemSlotDropHandler GetEquipmentSlotByType(HeroEquipmentSlots heroEquipmentSlot)
     {
         // loop through all equipment slots
-        foreach(InventorySlotDropHandler inventorySlotDropHandler in GetComponentsInChildren<InventorySlotDropHandler>(true))
+        //foreach(ItemSlotDropHandler inventorySlotDropHandler in GetComponentsInChildren<ItemSlotDropHandler>(true))
+        //{
+        //    // verify if inventorySlotDropHandler match required slot
+        //    if (inventorySlotDropHandler.EquipmentSlot == heroEquipmentSlot)
+        //    {
+        //        return inventorySlotDropHandler;
+        //    }
+        //}
+        foreach (EquipmentSlotDropHandler equipmentSlotDropHandler in GetComponentsInChildren<EquipmentSlotDropHandler>(true))
         {
             // verify if inventorySlotDropHandler match required slot
-            if (inventorySlotDropHandler.EquipmentSlot == heroEquipmentSlot)
+            if (equipmentSlotDropHandler.EquipmentSlot == heroEquipmentSlot)
             {
-                return inventorySlotDropHandler;
+                return equipmentSlotDropHandler;
             }
         }
         // this should not happen, because all slot types, except None should be present in hero Equipment

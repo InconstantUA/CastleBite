@@ -5,9 +5,9 @@ using UnityEngine.EventSystems;
 
 public class InventoryPanelDropHandler : MonoBehaviour, IDropHandler
 {
-    InventorySlotDropHandler GetEmptySlot()
+    ItemSlotDropHandler GetEmptySlot()
     {
-        foreach(InventorySlotDropHandler slot in GetComponentsInChildren<InventorySlotDropHandler>())
+        foreach(ItemSlotDropHandler slot in GetComponentsInChildren<ItemSlotDropHandler>())
         {
             // verify if slot is empty
             if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
@@ -28,7 +28,7 @@ public class InventoryPanelDropHandler : MonoBehaviour, IDropHandler
         {
             Debug.Log("Find or create the right slot and put an item into it");
             // Get empty slot
-            InventorySlotDropHandler itemSlot = GetEmptySlot();
+            ItemSlotDropHandler itemSlot = GetEmptySlot();
             // verify if slot is not null
             if (itemSlot == null)
             {
@@ -38,7 +38,7 @@ public class InventoryPanelDropHandler : MonoBehaviour, IDropHandler
                 itemSlot = partyInventoryUI.AddSlot();
             }
             // move item drag handler into slot
-            itemSlot.MoveItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+            itemSlot.MoveItemIntoThisSlot();
         }
     }
 }

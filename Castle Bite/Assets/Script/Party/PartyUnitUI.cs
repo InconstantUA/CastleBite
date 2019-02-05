@@ -589,9 +589,9 @@ public class PartyUnitUI : MonoBehaviour {
                         // move item to the unit, there are still might be non-instant upms and usms
                         inventoryItem.transform.SetParent(LPartyUnit.transform);
                         // Get source item slot transform
-                        InventorySlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
+                        ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
                         // verify if source slot is in party inventory mode
-                        if (srcItemSlot.SlotMode == InventorySlotDropHandler.Mode.PartyInventory)
+                        if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
                         {
                             // Get PartyInventoryUI (before slot is destroyed)
                             PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();

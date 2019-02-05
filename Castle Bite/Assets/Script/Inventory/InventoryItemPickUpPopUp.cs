@@ -8,7 +8,7 @@ public class InventoryItemPickUpPopUp : MonoBehaviour {
     void OnDisable()
     {
         // clean up all item slots in inventory
-        foreach(InventorySlotDropHandler slot in GetComponentsInChildren<InventorySlotDropHandler>())
+        foreach(ItemSlotDropHandler slot in GetComponentsInChildren<ItemSlotDropHandler>())
         {
             Destroy(slot.gameObject);
         }

@@ -871,6 +871,26 @@ public class EditPartyScreen : MonoBehaviour {
         //SetHireUnitPnlButtonActive(true);
     }
 
+    public void OnItemHasBeenDroppedIntoEquipmentSlot(System.Object inventorySlotDropHandler)
+    {
+        // note: this event is handled here, because it should be handled like this only when EditPartyScreen is active
+        // move InventoryItem to the new parent object
+        ((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.transform.SetParent(((ItemSlotDropHandler)inventorySlotDropHandler).GetParentObjectTransform());
+        // change item equipment slot address to the destination slot
+        // InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = ((InventorySlotDropHandler)inventorySlotDropHandler).EquipmentSlot;
+        ((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.CurrentHeroEquipmentSlot = ((ItemSlotDropHandler)inventorySlotDropHandler).EquipmentSlot;
+        // update unit info UI
+        // transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(((InventorySlotDropHandler)inventorySlotDropHandler).GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
+    }
+
+    public void OnItemHasBeenDroppedIntoInventorySlot(System.Object inventorySlotDropHandler)
+    {
+        // note: this event is handled here, because it should be handled like this only when EditPartyScreen is active
+        // change item equipment slot address to none (because this is inventory and not equipment)
+        // InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;
+        ((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;
+    }
+
     public void OnUnitUIHasBeenDroppedIntoTheUnitSlot(System.Object unitSlotDropHandler)
     {
         // activate hire unit buttons again, after it was disabled

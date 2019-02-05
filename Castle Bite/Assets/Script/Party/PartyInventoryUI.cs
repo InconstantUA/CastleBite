@@ -11,10 +11,10 @@ public class PartyInventoryUI : MonoBehaviour {
     [SerializeField]
     Transform inventoryItemsGrid;
 
-    public InventorySlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
+    public ItemSlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
     {
         Debug.Log("Add slot");
-        InventorySlotDropHandler newSlot = Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<InventorySlotDropHandler>();
+        ItemSlotDropHandler newSlot = Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<ItemSlotDropHandler>();
         // verify if we need to set current item equipment slot type to newly create slot
         if (setCurrentItemEquipmentSlot && inventoryItem != null)
         {
@@ -24,7 +24,7 @@ public class PartyInventoryUI : MonoBehaviour {
         return newSlot;
     }
 
-    public InventoryItemDragHandler AddItemDragHandler(InventorySlotDropHandler slot)
+    public InventoryItemDragHandler AddItemDragHandler(ItemSlotDropHandler slot)
     {
         return Instantiate(inventoryItemDragHandlerTemplate, slot.transform).GetComponent<InventoryItemDragHandler>();
     }
@@ -32,7 +32,7 @@ public class PartyInventoryUI : MonoBehaviour {
     public void RemoveAllEmptySlots()
     {
         // loop through all slots in this inventory
-        foreach (InventorySlotDropHandler slot in GetComponentsInChildren<InventorySlotDropHandler>())
+        foreach (ItemSlotDropHandler slot in GetComponentsInChildren<ItemSlotDropHandler>())
         {
             // verify if slot is empty
             if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
@@ -168,7 +168,7 @@ public class PartyInventoryUI : MonoBehaviour {
     void OnDisable()
     {
         // remove all slots with items
-        foreach(InventorySlotDropHandler inventorySlot in GetComponentsInChildren<InventorySlotDropHandler>())
+        foreach(ItemSlotDropHandler inventorySlot in GetComponentsInChildren<ItemSlotDropHandler>())
         {
             Destroy(inventorySlot.gameObject);
         }

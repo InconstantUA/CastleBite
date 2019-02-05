@@ -785,4 +785,11 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
     }
 
+    public void OnItemHasBeenDroppedIntoEquipmentSlot(System.Object inventorySlotDropHandler)
+    {
+        Debug.Log("Update unit info");
+        // update unit info
+        ActivateAdvance(((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInParent<HeroEquipment>().LPartyUnit, Align.Right, false, ContentMode.Short);
+    }
+
 }

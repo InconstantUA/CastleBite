@@ -28,7 +28,7 @@ public class LimitModifierByUnitSkill: ModifierLimiter
 
     public bool DoesDestinationContextMatch(System.Object dstContext)
     {
-        if ( (dstContext is InventorySlotDropHandler) || (dstContext is PartyUnit) )
+        if ( (dstContext is ItemSlotDropHandler) || (dstContext is PartyUnit) )
         {
             // match
             return true;
@@ -50,10 +50,10 @@ public class LimitModifierByUnitSkill: ModifierLimiter
         // init party unit variable (skill bearer)
         PartyUnit partyUnit;
         // verify if destination context is of InventorySlotDropHandler type
-        if (dstContext is InventorySlotDropHandler)
+        if (dstContext is ItemSlotDropHandler)
         {
             // get party unit context from InventorySlotDropHandler
-            partyUnit = ((InventorySlotDropHandler)dstContext).GetComponentInParent<HeroEquipment>().LPartyUnit;
+            partyUnit = ((ItemSlotDropHandler)dstContext).GetComponentInParent<HeroEquipment>().LPartyUnit;
         }
         // verify if destination context is of PartyUnit type
         else if (dstContext is PartyUnit)

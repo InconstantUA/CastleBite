@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 
-public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
+public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
     public enum Mode
     {
         PartyInventory,
@@ -19,7 +19,14 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     Text canvasText;
     [SerializeField]
     Text canvasMessageText;
-    
+    [SerializeField]
+    protected GameEvent itemHasBeenDroppedIntoTheItemSlotEvent;
+    [SerializeField]
+    GameEvent itemHasBeenDroppedIntoEquipmentSlotEvent;
+    [SerializeField]
+    GameEvent itemHasBeenDroppedIntoInventorySlotEvent;
+
+
     bool isDroppable = true;
     private Color beforeBeginItemDragColor;
 
@@ -64,7 +71,7 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
     //    }
     //}
 
-    public Transform GetParentObjectTransform()
+    public virtual Transform GetParentObjectTransform()
     {
         // verify if this hero Equipment or Party inventory slot
         if (slotMode == Mode.HeroEquipment)
@@ -85,40 +92,53 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
         }
     }
 
-    public void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
+    public virtual void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
     {
         // move item being dragged UI into this slot
         itemBeingDragged.transform.SetParent(transform);
         // reset UI position to 0/0/0/0
         itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
         itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
-        // verify if we are in edit party screen
-        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        //// verify if we are in edit party screen
+        //if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        //{
+        //    // move InventoryItem to the new parent object
+        //    itemBeingDragged.LInventoryItem.transform.SetParent(GetParentObjectTransform());
+        //}
+        //// verify if we are in battle screen
+        //else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        //{
+        //    // do not move InventoryItem to the new parent object, because this is item equipped on a hero
+        //}
+        //else
+        //{
+        //    Debug.LogError("Unknonw active screen");
+        //}
+        //Debug.LogError("remove below");
+        // verify if this is hero eqiupment slot
+        if (Mode.HeroEquipment == slotMode)
         {
-            // move InventoryItem to the new parent object
-            itemBeingDragged.LInventoryItem.transform.SetParent(GetParentObjectTransform());
-        }
-        // verify if we are in battle screen
-        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
-        {
-            // do not move InventoryItem to the new parent object, because this is item equipped on a hero
+            //itemHasBeenDroppedIntoEquipmentSlotEvent.Raise(this);
         }
         else
         {
-            Debug.LogError("Unknonw active screen");
+            // Mode.PartyInventory
+            itemHasBeenDroppedIntoInventorySlotEvent.Raise(this);
         }
     }
 
-    public void MoveItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
+    public virtual void MoveItemIntoThisSlot()
     {
         // Get source item slot transform
-        InventorySlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
+        ItemSlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
         // init exchange flag
         bool thisIsExachnge = false;
         // init destination slot variable with this slot
-        InventorySlotDropHandler destinationSlot = this;
+        ItemSlotDropHandler destinationSlot = this;
+        // Get item in this slot
+        InventoryItemDragHandler itemInThisSlot = GetComponentInChildren<InventoryItemDragHandler>();
         // verify if there is no item already in this slot
-        if (GetComponentInChildren<InventoryItemDragHandler>() != null)
+        if (itemInThisSlot != null)
         {
             // verify if source is equipment slot and destination is party inventory slot
             if ((srcItemSlot.SlotMode == Mode.HeroEquipment) && (slotMode == Mode.PartyInventory))
@@ -131,7 +151,13 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
             {
                 thisIsExachnge = true;
                 // Put item from this slot to the slot of the item beind dragged
-                srcItemSlot.PutItemIntoSlot(GetComponentInChildren<InventoryItemDragHandler>());
+                srcItemSlot.PutItemIntoSlot(itemInThisSlot);
+                //// verify if srcItemSlot is equipment slot
+                //if (srcItemSlot.SlotMode == Mode.HeroEquipment)
+                //{
+                //    // change item equipment slot address to the destination slot
+                //    itemInThisSlot.LInventoryItem.CurrentHeroEquipmentSlot = srcItemSlot.EquipmentSlot;
+                //}
             }
             // trigger event
             // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
@@ -152,8 +178,8 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
             }
             // verify if this is equipment slot
             else if ((srcItemSlot.SlotMode == Mode.HeroEquipment)
-                && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null))
             // and that battle screen is active
+                && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null))
             {
                 // remove all empty slots in inventory
                 srcItemSlot.GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
@@ -181,34 +207,44 @@ public class InventorySlotDropHandler : MonoBehaviour, IDropHandler {
             if (isDroppable)
             {
                 // move item into slot
-                MoveItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
-                // verify if we are in edit screen mode
-                if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
-                {
-                    // verify if this is hero eqiupment slot
-                    if (Mode.HeroEquipment == slotMode)
-                    {
-                        // change item position parameter
-                        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = equipmentSlot;
-                        // update unit info UI
-                        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
-                    }
-                    else
-                    {
-                        // change item position parameter
-                        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;
-                    }
-                }
-                // verify if we are in battle screen mode
-                else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
-                {
-                    // take equipment slot parameter from item
-                    equipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
-                }
-                else
-                {
-                    Debug.LogError("Unknown active screen");
-                }
+                MoveItemIntoThisSlot();
+                //// verify if this is hero eqiupment slot
+                //if (Mode.HeroEquipment == slotMode)
+                //{
+                //    itemHasBeenDroppedIntoEquipmentSlotEvent.Raise(this);
+                //}
+                //else
+                //{
+                //    // Mode.PartyInventory
+                //    itemHasBeenDroppedIntoInventorySlotEvent.Raise(this);
+                //}
+                //// verify if we are in edit screen mode
+                //if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+                //{
+                //    // verify if this is hero eqiupment slot
+                //    if (Mode.HeroEquipment == slotMode)
+                //    {
+                //        // change item equipment slot address
+                //        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = equipmentSlot;
+                //        // update unit info UI
+                //        transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
+                //    }
+                //    else
+                //    {
+                //        // change item position parameter
+                //        InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;
+                //    }
+                //}
+                //// verify if we are in battle screen mode
+                //else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+                //{
+                //    // take equipment slot parameter from item (in case if new slot has been created or empty slot has been reused)
+                //    equipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
+                //}
+                //else
+                //{
+                //    Debug.LogError("Unknown active screen");
+                //}
             }
         }
     }

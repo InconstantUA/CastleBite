@@ -1048,4 +1048,19 @@ public class BattleScreen : MonoBehaviour {
         // Instruct Battle screen to update units highlight
         SetHighlight();
     }
+
+    public void OnItemHasBeenDroppedIntoEquipmentSlot(System.Object inventorySlotDropHandler)
+    {
+        // note: this event is handled here, because it should be handled like this only when Battle screen is active
+        // take equipment slot parameter from item (in case if new slot has been created or empty slot has been reused)
+        ((ItemSlotDropHandler)inventorySlotDropHandler).EquipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
+
+    }
+
+    public void OnItemHasBeenDroppedIntoInventorySlot(System.Object inventorySlotDropHandler)
+    {
+        // note: this event is handled here, because it should be handled like this only when Battle screen is active
+        // take equipment slot parameter from item (in case if new slot has been created or empty slot has been reused)
+        ((ItemSlotDropHandler)inventorySlotDropHandler).EquipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
+    }
 }

@@ -15,7 +15,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
     GameEvent itemEndDragEvent;
     
     //Vector3 startPosition;
-    InventorySlotDropHandler itemBeingDraggedSlot;
+    ItemSlotDropHandler itemBeingDraggedSlot;
     Transform outOfMaskParentTransform;
 
     public InventoryItem LInventoryItem
@@ -31,7 +31,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         }
     }
 
-    public InventorySlotDropHandler ItemBeindDraggedSlot
+    public ItemSlotDropHandler ItemBeindDraggedSlot
     {
         get
         {
@@ -59,7 +59,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
             BringItemToFront();
             itemBeingDragged = this;
             //startPosition = transform.position;
-            itemBeingDraggedSlot = GetComponentInParent<InventorySlotDropHandler>();
+            itemBeingDraggedSlot = GetComponentInParent<ItemSlotDropHandler>();
             // change parent outside of Mask, to PartyInventory, so that canvas is not affected by Mask UI component
             // structure 4PartyInventory-3ItemsList-2Grid-1ItemSlot(Drop)-Item(Drag)
             transform.SetParent(transform.parent.parent.parent.parent);
@@ -118,7 +118,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
             {
                 // parent has changed
                 // verify if previous parent was hero eqiupment slot
-                if (InventorySlotDropHandler.Mode.HeroEquipment == itemBeingDraggedSlot.SlotMode)
+                if (ItemSlotDropHandler.Mode.HeroEquipment == itemBeingDraggedSlot.SlotMode)
                 {
                     // update unit info UI
                     transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(itemBeingDraggedSlot.GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);

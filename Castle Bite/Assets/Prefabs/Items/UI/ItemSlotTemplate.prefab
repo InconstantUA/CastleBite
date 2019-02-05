@@ -94,6 +94,10 @@ MonoBehaviour:
   equipmentSlot: 9
   canvasText: {fileID: 114723220706069914}
   canvasMessageText: {fileID: 6838943862796400056}
+  itemHasBeenDroppedIntoEquipmentSlotEvent: {fileID: 11400000, guid: ea2bd5bb30df3074ab77dcdbd3b4f9ae,
+    type: 2}
+  itemHasBeenDroppedIntoInventorySlotEvent: {fileID: 11400000, guid: 93fff7215183db9448b148a3ecb063b1,
+    type: 2}
 --- !u!114 &114550388331913888
 MonoBehaviour:
   m_ObjectHideFlags: 0
