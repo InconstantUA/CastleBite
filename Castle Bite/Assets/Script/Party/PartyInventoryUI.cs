@@ -5,42 +5,80 @@ using UnityEngine.UI;
 
 public class PartyInventoryUI : MonoBehaviour {
     [SerializeField]
-    GameObject inventoryItemDropHandlerTemplate;
+    EquipmentSlotDropHandler equipmentSlotDropHandlerTemplate;
     [SerializeField]
-    GameObject inventoryItemDragHandlerTemplate;
+    InventorySlotDropHandler inventorySlotDropHandlerTemplate;
+    [SerializeField]
+    InventoryItemDragHandler inventoryItemDragHandlerTemplate;
     [SerializeField]
     Transform inventoryItemsGrid;
 
     public ItemSlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
     {
-        Debug.Log("Add slot");
-        ItemSlotDropHandler newSlot = Instantiate(inventoryItemDropHandlerTemplate, inventoryItemsGrid).GetComponent<ItemSlotDropHandler>();
+        // init slot variable
+        ItemSlotDropHandler newSlot;
         // verify if we need to set current item equipment slot type to newly create slot
         if (setCurrentItemEquipmentSlot && inventoryItem != null)
         {
+            Debug.Log("to review: Add ?equipment slot");
+            //newSlot = Instantiate(equipmentSlotDropHandlerTemplate.gameObject, inventoryItemsGrid).GetComponent<ItemSlotDropHandler>();
+            newSlot = Instantiate(inventorySlotDropHandlerTemplate.gameObject, inventoryItemsGrid).GetComponent<ItemSlotDropHandler>();
             // set the same slot type as item had in the past, this is needed for battle screen
             newSlot.EquipmentSlot = inventoryItem.CurrentHeroEquipmentSlot;
+        }
+        else
+        {
+            Debug.Log("Add inventory slot");
+            newSlot = Instantiate(inventorySlotDropHandlerTemplate.gameObject, inventoryItemsGrid).GetComponent<ItemSlotDropHandler>();
         }
         return newSlot;
     }
 
     public InventoryItemDragHandler AddItemDragHandler(ItemSlotDropHandler slot)
     {
-        return Instantiate(inventoryItemDragHandlerTemplate, slot.transform).GetComponent<InventoryItemDragHandler>();
+        return Instantiate(inventoryItemDragHandlerTemplate.gameObject, slot.transform).GetComponent<InventoryItemDragHandler>();
     }
 
     public void RemoveAllEmptySlots()
     {
-        // loop through all slots in this inventory
-        foreach (ItemSlotDropHandler slot in GetComponentsInChildren<ItemSlotDropHandler>())
+        // get all children 1 level below the parent
+        Transform[] children = new Transform[inventoryItemsGrid.transform.childCount];
+        int i = 0;
+        foreach (Transform tempTransform in inventoryItemsGrid.transform)
+        {
+            children[i] = tempTransform;
+            i++;
+        }
+        // loop through all objects in reverse order
+        for (int j = children.Length - 1; j >= 0 ; j--)
         {
             // verify if slot is empty
-            if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
+            if (children[j].GetComponentInChildren<InventoryItemDragHandler>() == null)
             {
                 // Remove slot
-                Destroy(slot.gameObject);
+                RecycleBin.Recycle(children[j].gameObject);
             }
         }
+        //// loop through all slots in this inventory
+        //foreach (InventorySlotDropHandler slot in GetComponentsInChildren<InventorySlotDropHandler>())
+        //{
+        //    // verify if slot is empty
+        //    if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
+        //    {
+        //        // Remove slot
+        //        Destroy(slot.gameObject);
+        //    }
+        //}
+        //// loop through all slots in this inventory
+        //foreach (EquipmentSlotDropHandler slot in GetComponentsInChildren<EquipmentSlotDropHandler>())
+        //{
+        //    // verify if slot is empty
+        //    if (slot.GetComponentInChildren<InventoryItemDragHandler>() == null)
+        //    {
+        //        // Remove slot
+        //        Destroy(slot.gameObject);
+        //    }
+        //}
     }
 
     public void FillInEmptySlots()
@@ -167,10 +205,11 @@ public class PartyInventoryUI : MonoBehaviour {
 
     void OnDisable()
     {
-        // remove all slots with items
-        foreach(ItemSlotDropHandler inventorySlot in GetComponentsInChildren<ItemSlotDropHandler>())
-        {
-            Destroy(inventorySlot.gameObject);
-        }
+        //// remove all slots with items
+        //foreach(ItemSlotDropHandler inventorySlot in GetComponentsInChildren<ItemSlotDropHandler>())
+        //{
+        //    Destroy(inventorySlot.gameObject);
+        //}
+        RecycleBin.RecycleChildrenOf(inventoryItemsGrid.gameObject);
     }
 }

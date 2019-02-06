@@ -117,12 +117,12 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
             else
             {
                 // parent has changed
-                // verify if previous parent was hero eqiupment slot
-                if (ItemSlotDropHandler.Mode.HeroEquipment == itemBeingDraggedSlot.SlotMode)
-                {
-                    // update unit info UI
-                    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(itemBeingDraggedSlot.GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
-                }
+                //// verify if previous parent was hero equipment slot
+                //if (ItemSlotDropHandler.Mode.HeroEquipment == itemBeingDraggedSlot.SlotMode)
+                //{
+                //    // update unit info UI
+                //    transform.root.Find("MiscUI/UnitInfoPanel").GetComponent<UnitInfoPanel>().ActivateAdvance(itemBeingDraggedSlot.GetComponentInParent<HeroEquipment>().LPartyUnit, UnitInfoPanel.Align.Right, false, UnitInfoPanel.ContentMode.Short);
+                //}
             }
         }
         // verify if there is still item linked

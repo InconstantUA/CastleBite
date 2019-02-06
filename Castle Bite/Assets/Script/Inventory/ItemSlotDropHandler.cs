@@ -21,10 +21,10 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
     Text canvasMessageText;
     [SerializeField]
     protected GameEvent itemHasBeenDroppedIntoTheItemSlotEvent;
-    [SerializeField]
-    GameEvent itemHasBeenDroppedIntoEquipmentSlotEvent;
-    [SerializeField]
-    GameEvent itemHasBeenDroppedIntoInventorySlotEvent;
+    //[SerializeField]
+    //GameEvent itemHasBeenDroppedIntoEquipmentSlotEvent;
+    //[SerializeField]
+    //GameEvent itemHasBeenDroppedIntoInventorySlotEvent;
 
 
     bool isDroppable = true;
@@ -92,7 +92,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         }
     }
 
-    public virtual void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
+    public void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
     {
         // move item being dragged UI into this slot
         itemBeingDragged.transform.SetParent(transform);
@@ -116,15 +116,16 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         //}
         //Debug.LogError("remove below");
         // verify if this is hero eqiupment slot
-        if (Mode.HeroEquipment == slotMode)
-        {
-            //itemHasBeenDroppedIntoEquipmentSlotEvent.Raise(this);
-        }
-        else
-        {
-            // Mode.PartyInventory
-            itemHasBeenDroppedIntoInventorySlotEvent.Raise(this);
-        }
+        //if (Mode.HeroEquipment == slotMode)
+        //{
+        //    //itemHasBeenDroppedIntoEquipmentSlotEvent.Raise(this);
+        //}
+        //else
+        //{
+        //    // Mode.PartyInventory
+        //    itemHasBeenDroppedIntoInventorySlotEvent.Raise(this);
+        //}
+        itemHasBeenDroppedIntoTheItemSlotEvent.Raise(this);
     }
 
     public virtual void MoveItemIntoThisSlot()
@@ -134,7 +135,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         // init exchange flag
         bool thisIsExachnge = false;
         // init destination slot variable with this slot
-        ItemSlotDropHandler destinationSlot = this;
+        ItemSlotDropHandler dstItemSlot = this;
         // Get item in this slot
         InventoryItemDragHandler itemInThisSlot = GetComponentInChildren<InventoryItemDragHandler>();
         // verify if there is no item already in this slot
@@ -145,7 +146,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
             {
                 // do not do exchange, just move item into inventory into the new slot
                 // create new slot and set it as destination
-                destinationSlot = GetComponentInParent<PartyInventoryUI>().AddSlot();
+                dstItemSlot = GetComponentInParent<PartyInventoryUI>().AddSlot();
             }
             else
             {
@@ -163,7 +164,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
             // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
         }
         // Put dragged item into slot
-        destinationSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+        dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
         // verify if it was not just simple exchange
         if (!thisIsExachnge)
         {
@@ -187,7 +188,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
                 srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
             }
             // verify if destination slot was changed to the other from this slot
-            if (destinationSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
+            if (dstItemSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
             {
                 // trigger this party inventory reorganisation
                 // remove all empty slots in this inventory
