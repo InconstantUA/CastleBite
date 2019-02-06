@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 using System;
 
 public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
-    public enum Mode
-    {
-        PartyInventory,
-        HeroEquipment
-    }
-    [SerializeField]
-    Mode slotMode;
+    //public enum Mode
+    //{
+    //    PartyInventory,
+    //    HeroEquipment
+    //}
+    //[SerializeField]
+    //Mode slotMode;
     [SerializeField]
     HeroEquipmentSlots equipmentSlot;
     [SerializeField]
@@ -30,13 +30,13 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
     bool isDroppable = true;
     private Color beforeBeginItemDragColor;
 
-    public Mode SlotMode
-    {
-        get
-        {
-            return slotMode;
-        }
-    }
+    //public Mode SlotMode
+    //{
+    //    get
+    //    {
+    //        return slotMode;
+    //    }
+    //}
 
     public HeroEquipmentSlots EquipmentSlot
     {
@@ -318,12 +318,16 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
             // unset droppable flag
             IsDroppable = false;
         }
+        // reset normal button color
+        canvasText.GetComponent<TextButton>().NormalColor = canvasText.color;
     }
 
     public void OnEndItemDrag()
     {
         // set color in UI
         canvasText.color = beforeBeginItemDragColor;
+        // reset normal button color
+        canvasText.GetComponent<TextButton>().NormalColor = canvasText.color;
         // reset slot is droppable status
         IsDroppable = false;
         // reset canvas message text

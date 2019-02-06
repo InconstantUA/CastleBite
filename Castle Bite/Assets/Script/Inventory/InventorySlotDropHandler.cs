@@ -10,6 +10,8 @@ public class InventorySlotDropHandler: ItemSlotDropHandler
     public override Transform GetParentObjectTransform()
     {
         // get HeroParty
+        Debug.Log("My parent is " + transform.parent.name);
+        Debug.Log("My grandparent is " + transform.parent.parent.name);
         return GetComponentInParent<HeroPartyUI>().LHeroParty.transform;
     }
 
@@ -18,7 +20,7 @@ public class InventorySlotDropHandler: ItemSlotDropHandler
         // Get source item slot transform
         ItemSlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
         // init exchange flag
-        bool thisIsExachnge = false;
+        //bool thisIsExachnge = false;
         // init destination slot variable with this slot
         ItemSlotDropHandler dstItemSlot = this;
         // Get item in this slot
@@ -38,7 +40,7 @@ public class InventorySlotDropHandler: ItemSlotDropHandler
             }
             else
             {
-                thisIsExachnge = true;
+                //thisIsExachnge = true;
                 // Put item from this slot to the slot of the item beind dragged
                 srcItemSlot.PutItemIntoSlot(itemInThisSlot);
             }

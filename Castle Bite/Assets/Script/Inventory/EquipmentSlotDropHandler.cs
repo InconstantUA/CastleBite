@@ -20,13 +20,13 @@ public class EquipmentSlotDropHandler : ItemSlotDropHandler
         // Get source item slot transform
         ItemSlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
         // init exchange flag
-        bool thisIsExachnge = false;
+        //bool thisIsExachnge = false;
         // Get item in this slot
         InventoryItemDragHandler itemInThisSlot = GetComponentInChildren<InventoryItemDragHandler>();
         // verify if there is no item already in this slot
         if (itemInThisSlot != null)
         {
-            thisIsExachnge = true;
+            //thisIsExachnge = true;
             // Put item from this slot to the slot of the item beind dragged
             srcItemSlot.PutItemIntoSlot(itemInThisSlot);
         }

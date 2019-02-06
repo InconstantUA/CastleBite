@@ -61,7 +61,7 @@ public class LimitModifierByRelationships : ModifierLimiter
 
     public bool DoesSourceContextMatch(System.Object srcContext)
     {
-        if ((srcContext is GamePlayer) || (srcContext is HeroParty) || (srcContext is PartyUnit))
+        if ((srcContext is GamePlayer) || (srcContext is City) || (srcContext is HeroParty) || (srcContext is PartyUnit))
         {
             // match
             return true;
@@ -73,7 +73,7 @@ public class LimitModifierByRelationships : ModifierLimiter
 
     public bool DoesDestinationContextMatch(System.Object dstContext)
     {
-        if ((dstContext is GamePlayer) || (dstContext is HeroParty) || (dstContext is PartyUnit))
+        if ((dstContext is GamePlayer) || (dstContext is City) || (dstContext is HeroParty) || (dstContext is PartyUnit))
         {
             // match
             return true;

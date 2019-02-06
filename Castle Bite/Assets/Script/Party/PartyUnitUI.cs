@@ -593,6 +593,10 @@ public class PartyUnitUI : MonoBehaviour {
                         // verify if it is not null
                         if (partyInventoryUI != null)
                         {
+                            // Note: inventoryItemDragHandler removal will suppress On End Item Drag event
+                            // .. workaround:
+                            // call on end drag manually before removing item
+                            inventoryItemDragHandler.OnEndDrag(null);
                             // remove item drag handler
                             RecycleBin.Recycle(inventoryItemDragHandler.gameObject);
                             // reorganize inventory UI

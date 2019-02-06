@@ -14,7 +14,15 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField]
     Color highlightedColor;
     [SerializeField]
+    bool scaleHighlightedColorFromNormal = false;
+    [SerializeField]
+    float highlightedColorScale = 1.3f;
+    [SerializeField]
     Color pressedColor;
+    [SerializeField]
+    bool scalePressedColorFromNormal = false;
+    [SerializeField]
+    float pressedColorScale = 1.6f;
     [SerializeField]
     Color disabledColor;
     // create event, which later can be configured in Unity Editor
@@ -162,12 +170,28 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     void SetHighlightedStatus()
     {
-        GetComponent<Text>().color = highlightedColor;
+        if (scaleHighlightedColorFromNormal)
+        {
+            // GetComponent<Text>().color = new Color32((byte)((normalColor.r * 255) + highlightedColorScale), (byte)((normalColor.g * 255) + highlightedColorScale), (byte)((normalColor.b * 255) + highlightedColorScale), (byte)(normalColor.a * 255));
+            GetComponent<Text>().color = new Color(normalColor.r * highlightedColorScale, normalColor.g * highlightedColorScale, normalColor.b * highlightedColorScale, normalColor.a);
+        }
+        else
+        {
+            GetComponent<Text>().color = highlightedColor;
+        }
     }
 
     public void SetPressedStatus()
     {
-        GetComponent<Text>().color = pressedColor;
+        if (scalePressedColorFromNormal)
+        {
+            // GetComponent<Text>().color = new Color32((byte)((normalColor.r * 255) + pressedColorScale), (byte)((normalColor.g * 255) + pressedColorScale), (byte)((normalColor.b * 255) + pressedColorScale), (byte)(normalColor.a * 255));
+            GetComponent<Text>().color = new Color(normalColor.r * pressedColorScale, normalColor.g * pressedColorScale, normalColor.b * pressedColorScale, normalColor.a);
+        }
+        else
+        {
+            GetComponent<Text>().color = pressedColor;
+        }
     }
 
     public void SetNormalStatus()
