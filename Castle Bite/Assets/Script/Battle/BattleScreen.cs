@@ -1045,6 +1045,7 @@ public class BattleScreen : MonoBehaviour {
 
     public void OnEndItemDrag()
     {
+        Debug.LogWarning("OnEndItemDrag");
         // Instruct Battle screen to update units highlight
         SetHighlight();
     }

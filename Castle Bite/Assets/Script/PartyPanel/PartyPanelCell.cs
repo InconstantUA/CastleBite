@@ -24,6 +24,7 @@ public class PartyPanelCell : MonoBehaviour
     {
         Debug.LogWarning("OnBeginItemDrag");
         // save original color
+        Debug.LogWarning("Save original color");
         beforeItemDragColor = canvasText.color;
         // verify if item has active modifiers or usages
         if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
@@ -114,6 +115,7 @@ public class PartyPanelCell : MonoBehaviour
 
     public void OnEndItemDrag()
     {
+        Debug.LogWarning("Restore original color");
         // restore original color
         canvasText.color = beforeItemDragColor;
     }

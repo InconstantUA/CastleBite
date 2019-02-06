@@ -368,6 +368,7 @@ public class InventoryItem : MonoBehaviour {
         return upmsData;
     }
 
+
     #region Properties
 
     public InventoryItemConfig InventoryItemConfig

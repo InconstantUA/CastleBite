@@ -12,6 +12,8 @@ public class PartyInventoryUI : MonoBehaviour {
     InventoryItemDragHandler inventoryItemDragHandlerTemplate;
     [SerializeField]
     Transform inventoryItemsGrid;
+    [SerializeField]
+    int minNumberOfSlots = 3;
 
     public ItemSlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
     {
@@ -81,58 +83,58 @@ public class PartyInventoryUI : MonoBehaviour {
         //}
     }
 
-    public void FillInEmptySlots()
-    {
-        // there should be at least 3 item slots present in UI
-        // .. Change this to list and get only first-level items, non-recursive
-        int numberOfItems = 0;
-        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
-        {
-            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
-            {
-                // verify if this is InventoryItem
-                if (childTransform.GetComponent<InventoryItem>() != null)
-                    // increment items count
-                    numberOfItems += 1;
-            }
-        }
-        // verify if we are in battle screen mode
-        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
-        {
-            // get all usable items from party leader equipment
-            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
-            {
-                // get item
-                InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
-                // verify if there is an item
-                if (inventoryItem != null)
-                {
-                    // verify if item is in hero eqipment slot
-                    if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
-                    {
-                        // increment items count
-                        numberOfItems += 1;
-                    }
-                }
-            }
-        }
-        else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
-        {
-            Debug.Log("Parties info panel is active, probably we are on map. Normally inventory should not be active in this case.");
-        }
-        else
-        {
-            Debug.LogWarning("Unknown active screen");
-        }
-        // get number of empty item slots
-        int emptySlots = 3 - numberOfItems;
-        // create an empty slot for each empty slot
-        for (int i = 0; i < emptySlots; i++)
-        {
-            // create slot in items list
-            AddSlot();
-        }
-    }
+    //public void FillInEmptySlots()
+    //{
+    //    // there should be at least minNumberOfSlots item slots present in UI
+    //    // .. Change this to list and get only first-level items, non-recursive
+    //    int numberOfItems = 0;
+    //    if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+    //    {
+    //        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
+    //        {
+    //            // verify if this is InventoryItem
+    //            if (childTransform.GetComponent<InventoryItem>() != null)
+    //                // increment items count
+    //                numberOfItems += 1;
+    //        }
+    //    }
+    //    // verify if we are in battle screen mode
+    //    else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+    //    {
+    //        // get all usable items from party leader equipment
+    //        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
+    //        {
+    //            // get item
+    //            InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+    //            // verify if there is an item
+    //            if (inventoryItem != null)
+    //            {
+    //                // verify if item is in hero eqipment slot
+    //                if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
+    //                {
+    //                    // increment items count
+    //                    numberOfItems += 1;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
+    //    {
+    //        Debug.Log("Parties info panel is active, probably we are on map. Normally inventory should not be active in this case.");
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Unknown active screen");
+    //    }
+    //    // get number of empty item slots
+    //    int emptySlots = minNumberOfSlots - numberOfItems;
+    //    // create an empty slot for each empty slot
+    //    for (int i = 0; i < emptySlots; i++)
+    //    {
+    //        // create slot in items list
+    //        AddSlot();
+    //    }
+    //}
 
     // on change - check similar function in HeroEquipment class
     public void SetItemRepresentationInInventoryUI(InventoryItem inventoryItem, bool setCurrentItemEquipmentSlot = false)
@@ -169,7 +171,7 @@ public class PartyInventoryUI : MonoBehaviour {
                 SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>());
             }
             // fill in empty slots
-            FillInEmptySlots();
+            //FillInEmptySlots();
         }
         // verify if Battle screen is active
         else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
@@ -190,7 +192,7 @@ public class PartyInventoryUI : MonoBehaviour {
                 }
             }
             // fill in empty slots
-            FillInEmptySlots();
+            //FillInEmptySlots();
         }
         // verify if PartiesInfoPanel is active
         else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
@@ -201,6 +203,7 @@ public class PartyInventoryUI : MonoBehaviour {
         {
             Debug.LogWarning("unknown screen is active");
         }
+        ReorganizeInventoryUI();
     }
 
     void OnDisable()
@@ -212,4 +215,83 @@ public class PartyInventoryUI : MonoBehaviour {
         //}
         RecycleBin.RecycleChildrenOf(inventoryItemsGrid.gameObject);
     }
+
+    public void ReorganizeInventoryUI()
+    {
+        // init empty slots list
+        List<Transform> emptySlots = new List<Transform>();
+        // init number of occupied slots
+        int occupiedSlotsCount = 0;
+        // loop through all slots in a grid
+        foreach (Transform child in inventoryItemsGrid)
+        {
+            // verify if slot is empty
+            if (child.GetComponentInChildren<InventoryItemDragHandler>() == null)
+            {
+                // add new slot to the list of empty slots
+                emptySlots.Add(child);
+            }
+            else
+            {
+                // increment number of occupied slots
+                occupiedSlotsCount += 1;
+            }
+        }
+        // get total number of slots
+        int totalSlots = occupiedSlotsCount + emptySlots.Count;
+        // verify if total number of slots is less than minimum
+        if (totalSlots < minNumberOfSlots)
+        {
+            // add missing slots
+            // get number of empty item slots
+            int emptySlotsCountToAdd = minNumberOfSlots - totalSlots;
+            // create an empty slot for each empty slot
+            for (int i = 0; i < emptySlotsCountToAdd; i++)
+            {
+                // create slot in items list
+                Debug.Log("Add new empty slot");
+                AddSlot();
+            }
+        }
+        // verify if total slots count is higher than min
+        else if (totalSlots > minNumberOfSlots)
+        {
+            int emptySlotsCountToRemove = totalSlots - minNumberOfSlots;
+            // verify if emptySlotsCountToRemove is higher than total number of empty slots
+            if (emptySlotsCountToRemove > emptySlots.Count)
+            {
+                // reset emptySlotsCountToRemove to current number of empty slots
+                emptySlotsCountToRemove = emptySlots.Count;
+            }
+            // Loop through empty slots in reverse order (so the strcture of List is not affected)
+            // start from the emptySlotsCountToRemove
+            for (int i = emptySlotsCountToRemove - 1; i >= 0; i--)
+            {
+                // remove extra empty slot
+                Debug.Log("Remove extra empty slot");
+                RecycleBin.Recycle(emptySlots[i].gameObject);
+                emptySlots.RemoveAt(i);
+            }
+        }
+        // verify if there is at least one occupied slot
+        if (occupiedSlotsCount >= 1)
+        {
+            // move empty slots down
+            foreach(Transform emptySlotTransform in emptySlots)
+            {
+                emptySlotTransform.SetAsLastSibling();
+            }
+        }
+    }
+
+    public void OnItemHasBeenDroppedIntoEquipmentSlot(System.Object inventorySlotDropHandler)
+    {
+        ReorganizeInventoryUI();
+    }
+
+    public void OnItemHasBeenDroppedIntoInventorySlot(System.Object inventorySlotDropHandler)
+    {
+        ReorganizeInventoryUI();
+    }
+
 }

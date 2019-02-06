@@ -588,18 +588,32 @@ public class PartyUnitUI : MonoBehaviour {
                         Debug.Log("Move item to the unit");
                         // move item to the unit, there are still might be non-instant upms and usms
                         inventoryItem.transform.SetParent(LPartyUnit.transform);
-                        // Get source item slot transform
-                        ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
-                        // verify if source slot is in party inventory mode
-                        if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
+                        // Get PartyInventoryUI (before InventoryItemDragHandler is destroyed)
+                        PartyInventoryUI partyInventoryUI = inventoryItemDragHandler.ItemBeindDraggedSlot.GetComponentInParent<PartyInventoryUI>();
+                        // verify if it is not null
+                        if (partyInventoryUI != null)
                         {
-                            // Get PartyInventoryUI (before slot is destroyed)
-                            PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-                            // remove all empty slots in inventory to fill in possible gaps after item consumption
-                            partyInventoryUI.RemoveAllEmptySlots();
-                            // fill in empty slots in inventory;
-                            partyInventoryUI.FillInEmptySlots();
+                            // remove item drag handler
+                            RecycleBin.Recycle(inventoryItemDragHandler.gameObject);
+                            // reorganize inventory UI
+                            partyInventoryUI.ReorganizeInventoryUI();
                         }
+                        else
+                        {
+                            Debug.LogError("Logic error. Probably source slot is not party of PartyInventoryUI, but can be part of Equipment Menu");
+                        }
+                        //// Get source item slot transform
+                        //ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
+                        //// verify if source slot is in party inventory mode
+                        //if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
+                        //{
+                        //    // Get PartyInventoryUI (before slot is destroyed)
+                        //    PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+                        //    // remove all empty slots in inventory to fill in possible gaps after item consumption
+                        //    partyInventoryUI.RemoveAllEmptySlots();
+                        //    // fill in empty slots in inventory;
+                        //    partyInventoryUI.FillInEmptySlots();
+                        //}
                     }
                     else
                     {
@@ -608,7 +622,8 @@ public class PartyUnitUI : MonoBehaviour {
                         // clone item and place it into the unit
                         // so non-instant modifiers can be applied
                         // and assign inventoryItem varible with new inventory item
-                        inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
+                        // inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
+                        inventoryItem = Instantiate(inventoryItem.gameObject, LPartyUnit.transform).GetComponent<InventoryItem>();
                         // old inventory item, which was clonned, will return back to the inventory
                     }
                     // remove expired modifiers from triggered item
@@ -635,6 +650,7 @@ public class PartyUnitUI : MonoBehaviour {
         {
             Debug.Log("Other slot");
         }
+        CursorController.Instance.SetNormalCursor();
     }
 
     #region Events Actions

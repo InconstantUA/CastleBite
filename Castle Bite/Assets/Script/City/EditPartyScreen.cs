@@ -860,6 +860,7 @@ public class EditPartyScreen : MonoBehaviour {
 
     public void OnEndItemDrag()
     {
+        Debug.LogWarning("OnEndItemDrag");
         SetActiveState(EditPartyScreenActiveState.ActiveItemDrag, false);
         // activate hire party unit buttons
         SetHireUnitPnlButtonActive(true);
@@ -871,11 +872,17 @@ public class EditPartyScreen : MonoBehaviour {
         //SetHireUnitPnlButtonActive(true);
     }
 
+    void ChangeItemParent(ItemSlotDropHandler itemSlotDropHandler)
+    {
+        // move InventoryItem to the new parent object
+        itemSlotDropHandler.GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.transform.SetParent(itemSlotDropHandler.GetParentObjectTransform());
+    }
+
     public void OnItemHasBeenDroppedIntoEquipmentSlot(System.Object inventorySlotDropHandler)
     {
         // note: this event is handled here, because it should be handled like this only when EditPartyScreen is active
         // move InventoryItem to the new parent object
-        ((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.transform.SetParent(((ItemSlotDropHandler)inventorySlotDropHandler).GetParentObjectTransform());
+        ChangeItemParent((ItemSlotDropHandler)inventorySlotDropHandler);
         // change item equipment slot address to the destination slot
         // InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = ((InventorySlotDropHandler)inventorySlotDropHandler).EquipmentSlot;
         ((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.CurrentHeroEquipmentSlot = ((ItemSlotDropHandler)inventorySlotDropHandler).EquipmentSlot;
@@ -886,6 +893,8 @@ public class EditPartyScreen : MonoBehaviour {
     public void OnItemHasBeenDroppedIntoInventorySlot(System.Object inventorySlotDropHandler)
     {
         // note: this event is handled here, because it should be handled like this only when EditPartyScreen is active
+        // move InventoryItem to the new parent object
+        ChangeItemParent((ItemSlotDropHandler)inventorySlotDropHandler);
         // change item equipment slot address to none (because this is inventory and not equipment)
         // InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;
         ((ItemSlotDropHandler)inventorySlotDropHandler).GetComponentInChildren<InventoryItemDragHandler>().LInventoryItem.CurrentHeroEquipmentSlot = HeroEquipmentSlots.None;

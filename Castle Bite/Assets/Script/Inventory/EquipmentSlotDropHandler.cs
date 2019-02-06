@@ -32,25 +32,25 @@ public class EquipmentSlotDropHandler : ItemSlotDropHandler
         }
         // Put dragged item into this slot
         PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
-        // verify if it was not exchange between 2 slots (means that we might need to fill in empty slots in source PartyInventoryUI)
-        if (!thisIsExachnge)
-        {
-            // verify if source slot is in party inventory mode
-            if ((srcItemSlot is InventorySlotDropHandler)
-            // OR verify if source slot is equipment slot
-             || ((srcItemSlot is EquipmentSlotDropHandler)
-                // and that battle screen is active
-                && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)))
-            {
-                // .. Optimize
-                // Get source slot PartyInventoryUI (before slot is removed)
-                PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-                // remove all empty slots in inventory
-                partyInventoryUI.RemoveAllEmptySlots();
-                // fill in empty slots in inventory
-                partyInventoryUI.FillInEmptySlots();
-            }
-        }
+        //// verify if it was not exchange between 2 slots (means that we might need to fill in empty slots in source PartyInventoryUI)
+        //if (!thisIsExachnge)
+        //{
+        //    // verify if source slot is in party inventory mode
+        //    if ((srcItemSlot is InventorySlotDropHandler)
+        //    // OR verify if source slot is equipment slot
+        //     || ((srcItemSlot is EquipmentSlotDropHandler)
+        //        // and that battle screen is active
+        //        && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)))
+        //    {
+        //        // .. Optimize
+        //        // Get source slot PartyInventoryUI (before slot is removed)
+        //        PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+        //        // remove all empty slots in inventory
+        //        partyInventoryUI.RemoveAllEmptySlots();
+        //        // fill in empty slots in inventory
+        //        partyInventoryUI.FillInEmptySlots();
+        //    }
+        //}
     }
 
 }

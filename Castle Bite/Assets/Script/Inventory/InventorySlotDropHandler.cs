@@ -45,34 +45,34 @@ public class InventorySlotDropHandler: ItemSlotDropHandler
         }
         // Put dragged item into destination slot
         dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
-        // verify if it was not just simple exchange
-        if (!thisIsExachnge)
-        {
-            // verify if source slot is in party inventory mode
-            if ( (srcItemSlot is InventorySlotDropHandler)
-            // OR verify if source slot is equipment slot
-             || ( (srcItemSlot is EquipmentSlotDropHandler)
-                // and that battle screen is active
-                && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null) ) )
-            {
-                // .. Optimize
-                // Get source slot PartyInventoryUI (before slot is removed)
-                PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-                // remove all empty slots in inventory
-                partyInventoryUI.RemoveAllEmptySlots();
-                // fill in empty slots in inventory
-                partyInventoryUI.FillInEmptySlots();
-            }
-            // verify if destination slot was changed to the other from this slot
-            if (dstItemSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
-            {
-                // trigger this party inventory reorganisation
-                // remove all empty slots in this inventory
-                GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
-                // fill in empty slots in inventory
-                GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
-            }
-        }
+        //// verify if it was not just simple exchange
+        //if (!thisIsExachnge)
+        //{
+        //    // verify if source slot is in party inventory mode
+        //    if ( (srcItemSlot is InventorySlotDropHandler)
+        //    // OR verify if source slot is equipment slot
+        //     || ( (srcItemSlot is EquipmentSlotDropHandler)
+        //        // and that battle screen is active
+        //        && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null) ) )
+        //    {
+        //        // .. Optimize
+        //        // Get source slot PartyInventoryUI (before slot is removed)
+        //        PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+        //        // remove all empty slots in inventory
+        //        partyInventoryUI.RemoveAllEmptySlots();
+        //        // fill in empty slots in inventory
+        //        partyInventoryUI.FillInEmptySlots();
+        //    }
+        //    // verify if destination slot was changed to the other from this slot
+        //    if (dstItemSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
+        //    {
+        //        // trigger this party inventory reorganisation
+        //        // remove all empty slots in this inventory
+        //        GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
+        //        // fill in empty slots in inventory
+        //        GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
+        //    }
+        //}
     }
     
 }

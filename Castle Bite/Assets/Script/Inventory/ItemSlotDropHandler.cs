@@ -73,23 +73,25 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
 
     public virtual Transform GetParentObjectTransform()
     {
-        // verify if this hero Equipment or Party inventory slot
-        if (slotMode == Mode.HeroEquipment)
-        {
-            // item being dragged to the party leader (hero)
-            // get hero (party leader)
-            // structure: 2UnitCanvas[PartyUnitUI->LPartyUnit]-1UnitEquipmentControl-EquipmentButton
-            return GetComponentInParent<HeroEquipment>().LUnitEquipmentButton.transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit.transform;
-        }
-        else if (slotMode == Mode.PartyInventory)
-        {
-            // get HeroParty
-            return GetComponentInParent<HeroPartyUI>().LHeroParty.transform;
-        } else
-        {
-            Debug.LogError("Unknown slot mode: " + slotMode.ToString());
-            return null;
-        }
+        //// verify if this hero Equipment or Party inventory slot
+        //if (slotMode == Mode.HeroEquipment)
+        //{
+        //    // item being dragged to the party leader (hero)
+        //    // get hero (party leader)
+        //    // structure: 2UnitCanvas[PartyUnitUI->LPartyUnit]-1UnitEquipmentControl-EquipmentButton
+        //    return GetComponentInParent<HeroEquipment>().LUnitEquipmentButton.transform.parent.parent.GetComponent<PartyUnitUI>().LPartyUnit.transform;
+        //}
+        //else if (slotMode == Mode.PartyInventory)
+        //{
+        //    // get HeroParty
+        //    return GetComponentInParent<HeroPartyUI>().LHeroParty.transform;
+        //} else
+        //{
+        //    Debug.LogError("Unknown slot mode: " + slotMode.ToString());
+        //    return null;
+        //}
+        Debug.LogError("This function should not be called. Instead call should be made to EquipmentSlotDropHandler or InventorySlotDropHandler");
+        return null;
     }
 
     public void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
@@ -130,73 +132,74 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
 
     public virtual void MoveItemIntoThisSlot()
     {
-        // Get source item slot transform
-        ItemSlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
-        // init exchange flag
-        bool thisIsExachnge = false;
-        // init destination slot variable with this slot
-        ItemSlotDropHandler dstItemSlot = this;
-        // Get item in this slot
-        InventoryItemDragHandler itemInThisSlot = GetComponentInChildren<InventoryItemDragHandler>();
-        // verify if there is no item already in this slot
-        if (itemInThisSlot != null)
-        {
-            // verify if source is equipment slot and destination is party inventory slot
-            if ((srcItemSlot.SlotMode == Mode.HeroEquipment) && (slotMode == Mode.PartyInventory))
-            {
-                // do not do exchange, just move item into inventory into the new slot
-                // create new slot and set it as destination
-                dstItemSlot = GetComponentInParent<PartyInventoryUI>().AddSlot();
-            }
-            else
-            {
-                thisIsExachnge = true;
-                // Put item from this slot to the slot of the item beind dragged
-                srcItemSlot.PutItemIntoSlot(itemInThisSlot);
-                //// verify if srcItemSlot is equipment slot
-                //if (srcItemSlot.SlotMode == Mode.HeroEquipment)
-                //{
-                //    // change item equipment slot address to the destination slot
-                //    itemInThisSlot.LInventoryItem.CurrentHeroEquipmentSlot = srcItemSlot.EquipmentSlot;
-                //}
-            }
-            // trigger event
-            // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
-        }
-        // Put dragged item into slot
-        dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
-        // verify if it was not just simple exchange
-        if (!thisIsExachnge)
-        {
-            // verify if source slot is in party inventory mode
-            if (srcItemSlot.SlotMode == Mode.PartyInventory)
-            {
-                // .. Optimize
-                // remove all empty slots in inventory
-                srcItemSlot.GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
-                // fill in empty slots in inventory
-                srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
-            }
-            // verify if this is equipment slot
-            else if ((srcItemSlot.SlotMode == Mode.HeroEquipment)
-            // and that battle screen is active
-                && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null))
-            {
-                // remove all empty slots in inventory
-                srcItemSlot.GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
-                // fill in empty slots in inventory
-                srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
-            }
-            // verify if destination slot was changed to the other from this slot
-            if (dstItemSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
-            {
-                // trigger this party inventory reorganisation
-                // remove all empty slots in this inventory
-                GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
-                // fill in empty slots in inventory
-                GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
-            }
-        }
+        //// Get source item slot transform
+        //ItemSlotDropHandler srcItemSlot = InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot;
+        //// init exchange flag
+        //bool thisIsExachnge = false;
+        //// init destination slot variable with this slot
+        //ItemSlotDropHandler dstItemSlot = this;
+        //// Get item in this slot
+        //InventoryItemDragHandler itemInThisSlot = GetComponentInChildren<InventoryItemDragHandler>();
+        //// verify if there is no item already in this slot
+        //if (itemInThisSlot != null)
+        //{
+        //    // verify if source is equipment slot and destination is party inventory slot
+        //    if ((srcItemSlot.SlotMode == Mode.HeroEquipment) && (slotMode == Mode.PartyInventory))
+        //    {
+        //        // do not do exchange, just move item into inventory into the new slot
+        //        // create new slot and set it as destination
+        //        dstItemSlot = GetComponentInParent<PartyInventoryUI>().AddSlot();
+        //    }
+        //    else
+        //    {
+        //        thisIsExachnge = true;
+        //        // Put item from this slot to the slot of the item beind dragged
+        //        srcItemSlot.PutItemIntoSlot(itemInThisSlot);
+        //        //// verify if srcItemSlot is equipment slot
+        //        //if (srcItemSlot.SlotMode == Mode.HeroEquipment)
+        //        //{
+        //        //    // change item equipment slot address to the destination slot
+        //        //    itemInThisSlot.LInventoryItem.CurrentHeroEquipmentSlot = srcItemSlot.EquipmentSlot;
+        //        //}
+        //    }
+        //    // trigger event
+        //    // ExecuteEvents.ExecuteHierarchy<IHasChanged>(gameObject, null, (x, y) => x.HasChanged());
+        //}
+        //// Put dragged item into slot
+        //dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+        //// verify if it was not just simple exchange
+        //if (!thisIsExachnge)
+        //{
+        //    // verify if source slot is in party inventory mode
+        //    if (srcItemSlot.SlotMode == Mode.PartyInventory)
+        //    {
+        //        // .. Optimize
+        //        // remove all empty slots in inventory
+        //        srcItemSlot.GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
+        //        // fill in empty slots in inventory
+        //        srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
+        //    }
+        //    // verify if this is equipment slot
+        //    else if ((srcItemSlot.SlotMode == Mode.HeroEquipment)
+        //    // and that battle screen is active
+        //        && (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null))
+        //    {
+        //        // remove all empty slots in inventory
+        //        srcItemSlot.GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
+        //        // fill in empty slots in inventory
+        //        srcItemSlot.GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
+        //    }
+        //    // verify if destination slot was changed to the other from this slot
+        //    if (dstItemSlot.gameObject.GetInstanceID() != gameObject.GetInstanceID())
+        //    {
+        //        // trigger this party inventory reorganisation
+        //        // remove all empty slots in this inventory
+        //        GetComponentInParent<PartyInventoryUI>().RemoveAllEmptySlots();
+        //        // fill in empty slots in inventory
+        //        GetComponentInParent<PartyInventoryUI>().FillInEmptySlots();
+        //    }
+        //}
+        Debug.LogError("This function should not be called. Instead call should be made to EquipmentSlotDropHandler or InventorySlotDropHandler");
     }
 
     public void OnDrop(PointerEventData eventData)
