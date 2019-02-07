@@ -888,6 +888,8 @@ MonoBehaviour:
     type: 3}
   inventoryItemsGrid: {fileID: 355554391}
   minNumberOfSlots: 3
+  partyInventoryUIHasBeenEnabledEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9,
+    type: 2}
 --- !u!114 &20588455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15787,6 +15789,8 @@ MonoBehaviour:
     type: 3}
   inventoryItemsGrid: {fileID: 387593843}
   minNumberOfSlots: 3
+  partyInventoryUIHasBeenEnabledEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9,
+    type: 2}
 --- !u!114 &239616064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55704,6 +55708,59 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: Party Inventory UI Has Been Enabled Event
+    gameEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 779038337}
+          m_MethodName: PartyInventoryUIHasBeenEnabledEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
   - name: On Auto Battle
     gameEvent: {fileID: 11400000, guid: f135acc01068f96489c2185fa73d3457, type: 2}
     genericAction:
@@ -80568,6 +80625,8 @@ MonoBehaviour:
     type: 3}
   inventoryItemsGrid: {fileID: 1405428407}
   minNumberOfSlots: 3
+  partyInventoryUIHasBeenEnabledEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9,
+    type: 2}
 --- !u!114 &1301239867
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95692,6 +95751,59 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: Party Inventory UI Has Been Enabled Event
+    gameEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1545636096}
+          m_MethodName: PartyInventoryUIHasBeenEnabledEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1546959152
 GameObject:
   m_ObjectHideFlags: 0
@@ -107237,7 +107349,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1875767305
 RectTransform:
   m_ObjectHideFlags: 0

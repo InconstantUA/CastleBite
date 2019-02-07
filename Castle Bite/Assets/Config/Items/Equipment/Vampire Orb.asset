@@ -16,10 +16,7 @@ MonoBehaviour:
   itemDisplayName: Vampire Orb
   itemCost: 2500
   compatibleEquipmentSlots: 48
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: 40682fa04ac57654c9f26c06e96de6fd, type: 2}
-  - {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c, type: 2}
-  modifierAppliedHow: 0
+  isUsable: 1
   maxUsagesCount: 0
   itemIsStackable: 0
   uniquePowerModifierConfigs:

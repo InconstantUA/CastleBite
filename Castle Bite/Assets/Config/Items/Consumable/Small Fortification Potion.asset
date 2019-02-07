@@ -16,9 +16,7 @@ MonoBehaviour:
   itemDisplayName: Small Fortification Potion
   itemCost: 500
   compatibleEquipmentSlots: 384
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: 8727e79654fafeb41b903c098cb15323, type: 2}
-  modifierAppliedHow: 0
+  isUsable: 1
   maxUsagesCount: 1
   itemIsStackable: 0
   uniquePowerModifierConfigs: []

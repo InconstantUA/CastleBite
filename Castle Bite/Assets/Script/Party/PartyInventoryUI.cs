@@ -14,6 +14,8 @@ public class PartyInventoryUI : MonoBehaviour {
     Transform inventoryItemsGrid;
     [SerializeField]
     int minNumberOfSlots = 3;
+    [SerializeField]
+    GameEvent partyInventoryUIHasBeenEnabledEvent;
 
     public ItemSlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
     {
@@ -156,53 +158,86 @@ public class PartyInventoryUI : MonoBehaviour {
         }
     }
 
-    void OnEnable()
+    public void DisplayCurrentPartyInventory()
     {
-        // verify if EditPartyScreen is active
-        if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        // activate party inventory information
+        // all items in a party
+        // structure: LeftHeroParty-PartyInventory
+        // create inventory slot and drag handler for each item
+        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
         {
-            // activate party inventory information
-            // all items in a party
-            // structure: LeftHeroParty-PartyInventory
-            // InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
-            // create inventory slot and drag handler for each item
-            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
-            {
-                SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>());
-            }
-            // fill in empty slots
-            //FillInEmptySlots();
+            SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>());
         }
-        // verify if Battle screen is active
-        else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+    }
+
+    public void DisplayHeroEquipmentUsableInventory()
+    {
+        // get all usable items from party leader equipment
+        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
         {
-            // get all usable items from party leader equipment
-            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
+            // get item
+            InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+            // verify if this is an item
+            if (inventoryItem != null)
             {
-                // get item
-                InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
-                // verify if there is an item
-                if (inventoryItem != null)
+                // verify if item is in hero eqipment slot and that it is usable
+                if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None && inventoryItem.IsUsable)
                 {
-                    // verify if item is in hero eqipment slot
-                    if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
-                    {
-                        SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
-                    }
+                    SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
                 }
             }
-            // fill in empty slots
-            //FillInEmptySlots();
         }
-        // verify if PartiesInfoPanel is active
-        else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
-        {
-            Debug.Log("Parties info panel is active, probably we are on map. No need to do anything, because party inventory will be disabled");
-        }
-        else
-        {
-            Debug.LogWarning("unknown screen is active");
-        }
+    }
+
+    void OnEnable()
+    {
+        // raise an event
+        partyInventoryUIHasBeenEnabledEvent.Raise(this);
+        //// verify if EditPartyScreen is active
+        //if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
+        //{
+        //    // activate party inventory information
+        //    // all items in a party
+        //    // structure: LeftHeroParty-PartyInventory
+        //    // InventoryItem[] inventoryItems = GetComponentInParent<HeroPartyUI>().LHeroParty.GetComponentsInChildren<InventoryItem>();
+        //    // create inventory slot and drag handler for each item
+        //    foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.transform)
+        //    {
+        //        SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>());
+        //    }
+        //    // fill in empty slots
+        //    //FillInEmptySlots();
+        //}
+        //// verify if Battle screen is active
+        //else if (transform.root.Find("MiscUI").GetComponentInChildren<BattleScreen>(false) != null)
+        //{
+        //    // get all usable items from party leader equipment
+        //    foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
+        //    {
+        //        // get item
+        //        InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+        //        // verify if there is an item
+        //        if (inventoryItem != null)
+        //        {
+        //            // verify if item is in hero eqipment slot
+        //            if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None)
+        //            {
+        //                SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
+        //            }
+        //        }
+        //    }
+        //    // fill in empty slots
+        //    //FillInEmptySlots();
+        //}
+        //// verify if PartiesInfoPanel is active
+        //else if (transform.root.Find("MiscUI").GetComponentInChildren<PartiesInfoPanel>(false) != null)
+        //{
+        //    Debug.Log("Parties info panel is active, probably we are on map. No need to do anything, because party inventory will be disabled");
+        //}
+        //else
+        //{
+        //    Debug.LogWarning("unknown screen is active");
+        //}
         ReorganizeInventoryUI();
     }
 

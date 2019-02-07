@@ -16,9 +16,7 @@ MonoBehaviour:
   itemDisplayName: Scroll of Resurrection
   itemCost: 300
   compatibleEquipmentSlots: 384
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: ac7ea5919283a51469cd744003f6a499, type: 2}
-  modifierAppliedHow: 0
+  isUsable: 1
   maxUsagesCount: 1
   itemIsStackable: 0
   uniquePowerModifierConfigs:

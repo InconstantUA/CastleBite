@@ -95,10 +95,10 @@ public class InventoryItemData : System.Object
     // public string itemName; // config
     // public int itemValue; // config
     // public HeroEquipmentSlot[] compatibleEquipmentSlots; // config
-    public List<UniquePowerModifierData> unitStatModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
+    public List<UniquePowerModifierData> uniquePowerModifiersData; // this is created when item is being used to calculate duration left, if item is consumable
     public List<UnitStatModifier> unitStatModifiers; // config
-    public List<UniquePowerModifierConfig> uniquePowerModifierConfigs; // config
-    public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there shouldn't be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
+    // public List<UniquePowerModifierConfig> uniquePowerModifierConfigs; // config
+    //public List<UnitStatusModifier> unitStatusModifiers; // should behave based on stats // there shouldn't be more than 1 status modifier, because it does not make sense, because only one status can be active at a time
     public HeroEquipmentSlots currentHeroEquipmentSlot = HeroEquipmentSlots.None; // serializable data of equipped/unequipped item
     // public int maxUsagesCount; // config
     public int leftUsagesCount; // serializable
@@ -134,30 +134,30 @@ public class InventoryItem : MonoBehaviour {
         return HasActiveUniquePowerModifiers();
     }
 
-    public bool HasActiveStatModifiers()
-    {
-        // loop though all unit stat modifiers
-        foreach (UnitStatModifier usm in UnitStatModifiers)
-        {
-            // verify if usm is applied actively
-            if (usm.modifierAppliedHow == ModifierAppliedHow.Active)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //public bool HasActiveStatModifiers()
+    //{
+    //    // loop though all unit stat modifiers
+    //    foreach (UnitStatModifier usm in UnitStatModifiers)
+    //    {
+    //        // verify if usm is applied actively
+    //        if (usm.modifierAppliedHow == ModifierAppliedHow.Active)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
-    public bool HasActiveStatusModifiers()
-    {
-        // all status modifiers are active by default
-        // verify if there is at least one unit status modifier
-        if (UnitStatusModifiers.Count >= 1)
-        {
-            return true;
-        }
-        return false;
-    }
+    //public bool HasActiveStatusModifiers()
+    //{
+    //    // all status modifiers are active by default
+    //    // verify if there is at least one unit status modifier
+    //    if (UnitStatusModifiers.Count >= 1)
+    //    {
+    //        return true;
+    //    }
+    //    return false;
+    //}
 
     public bool HasActiveUniquePowerModifiers()
     {
@@ -473,6 +473,15 @@ public class InventoryItem : MonoBehaviour {
         //}
     }
 
+
+    public bool IsUsable
+    {
+        get
+        {
+            return InventoryItemConfig.isUsable;
+        }
+    }
+
     public List<UniquePowerModifierConfig> UniquePowerModifierConfigs
     {
         get
@@ -551,18 +560,18 @@ public class InventoryItem : MonoBehaviour {
         //}
     }
 
-    public List<UnitStatusModifier> UnitStatusModifiers
-    {
-        get
-        {
-            return inventoryItemData.unitStatusModifiers;
-        }
+    //public List<UnitStatusModifier> UnitStatusModifiers
+    //{
+    //    get
+    //    {
+    //        return inventoryItemData.unitStatusModifiers;
+    //    }
 
-        set
-        {
-            inventoryItemData.unitStatusModifiers = value;
-        }
-    }
+    //    set
+    //    {
+    //        inventoryItemData.unitStatusModifiers = value;
+    //    }
+    //}
 
 
     #endregion Properties

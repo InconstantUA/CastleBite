@@ -16,9 +16,7 @@ MonoBehaviour:
   itemDisplayName: Small Healing Potion
   itemCost: 100
   compatibleEquipmentSlots: 384
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c, type: 2}
-  modifierAppliedHow: 0
+  isUsable: 1
   maxUsagesCount: 1
   itemIsStackable: 0
   uniquePowerModifierConfigs: []

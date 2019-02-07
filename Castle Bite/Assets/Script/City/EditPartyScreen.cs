@@ -905,4 +905,14 @@ public class EditPartyScreen : MonoBehaviour {
         // activate hire unit buttons again, after it was disabled
         SetHireUnitPnlButtonActive(true);
     }
+
+    public void PartyInventoryUIHasBeenEnabledEvent(System.Object partyInventoryUI)
+    {
+        // verify if object type is correct
+        if (partyInventoryUI is PartyInventoryUI)
+        {
+            // display party inventory
+            ((PartyInventoryUI)partyInventoryUI).DisplayCurrentPartyInventory();
+        }
+    }
 }

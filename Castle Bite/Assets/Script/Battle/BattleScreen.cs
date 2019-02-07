@@ -1064,4 +1064,14 @@ public class BattleScreen : MonoBehaviour {
         // take equipment slot parameter from item (in case if new slot has been created or empty slot has been reused)
         ((ItemSlotDropHandler)inventorySlotDropHandler).EquipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
     }
+
+    public void PartyInventoryUIHasBeenEnabledEvent(System.Object partyInventoryUI)
+    {
+        // verify if object type is correct
+        if (partyInventoryUI is PartyInventoryUI)
+        {
+            // display party inventory
+            ((PartyInventoryUI)partyInventoryUI).DisplayHeroEquipmentUsableInventory();
+        }
+    }
 }

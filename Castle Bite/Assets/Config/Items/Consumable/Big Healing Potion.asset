@@ -16,9 +16,7 @@ MonoBehaviour:
   itemDisplayName: Big Healing Potion
   itemCost: 400
   compatibleEquipmentSlots: 384
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: 54b74235b73de1144b48fe7d8dc64e53, type: 2}
-  modifierAppliedHow: 0
+  isUsable: 1
   maxUsagesCount: 1
   itemIsStackable: 0
   uniquePowerModifierConfigs:

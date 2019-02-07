@@ -598,13 +598,13 @@ public class UnitStatModifier : System.Object
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
 }
 
-[Serializable]
-public class UnitStatusModifier : System.Object
-{
-    public ModifierScope modifierScope;
-    public UnitStatus modifierSetStatus;
-    public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
-}
+//[Serializable]
+//public class UnitStatusModifier : System.Object
+//{
+//    public ModifierScope modifierScope;
+//    public UnitStatus modifierSetStatus;
+//    public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
+//}
 
 [Serializable]
 public class UnitStatData : System.Object
@@ -2703,24 +2703,24 @@ public class PartyUnit : MonoBehaviour {
                     // it is applied automatically during calculations (for example damage or defence calculations)
                 }
             }
-            // verify if there are unit status modifiers
-            if (inventoryItem.UnitStatusModifiers.Count >= 1)
-            {
-                // verify if unit status matches
-                if ((MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
-                // verify if scope matches
-                && (MatchItemScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
-                {
-                    // set is applicable flag
-                    isApplicable = true;
-                    // verify if this is not preview
-                    if (!doPreview)
-                    {
-                        // Apply unit Status
-                        UnitStatus = inventoryItem.UnitStatusModifiers[0].modifierSetStatus;
-                    }
-                }
-            }
+            //// verify if there are unit status modifiers
+            //if (inventoryItem.UnitStatusModifiers.Count >= 1)
+            //{
+            //    // verify if unit status matches
+            //    if ((MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
+            //    // verify if scope matches
+            //    && (MatchItemScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
+            //    {
+            //        // set is applicable flag
+            //        isApplicable = true;
+            //        // verify if this is not preview
+            //        if (!doPreview)
+            //        {
+            //            // Apply unit Status
+            //            UnitStatus = inventoryItem.UnitStatusModifiers[0].modifierSetStatus;
+            //        }
+            //    }
+            //}
         }
         // verify if at leats one UPM or USM has been applied
         if (isApplicable)

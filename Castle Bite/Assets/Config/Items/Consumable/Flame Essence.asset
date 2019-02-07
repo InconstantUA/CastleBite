@@ -16,8 +16,7 @@ MonoBehaviour:
   itemDisplayName: Flame Essence
   itemCost: 300
   compatibleEquipmentSlots: 384
-  unitStatModifierConfigs: []
-  modifierAppliedHow: 0
+  isUsable: 1
   maxUsagesCount: 2
   itemIsStackable: 1
   uniquePowerModifierConfigs:
