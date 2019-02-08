@@ -75831,6 +75831,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80fc7c909437ea845a09f1603be6a774, type: 2}
   - {fileID: 11400000, guid: fb0ab0a6570a06641a28c1d4b2aee86f, type: 2}
   - {fileID: 11400000, guid: cfe429465ac674c4d952107e93239253, type: 2}
+  - {fileID: 11400000, guid: 5cd37e1c6608bcb4289162c32fea9acc, type: 2}
   unitStatusConfigs:
   - {fileID: 11400000, guid: d083152947b1e2749b31fbe94f0de756, type: 2}
   - {fileID: 11400000, guid: 82c777e72dd65dd4fb7112c9d1d57f9a, type: 2}

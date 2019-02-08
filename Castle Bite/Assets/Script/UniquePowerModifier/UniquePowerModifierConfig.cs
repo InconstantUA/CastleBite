@@ -3,7 +3,8 @@
 public enum UniquePowerModifierType
 {
     Buff,
-    Debuff
+    Debuff,
+    Summon
 }
 
 [CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Config")]

@@ -16,12 +16,10 @@ MonoBehaviour:
   itemDisplayName: Boots of Speed
   itemCost: 1500
   compatibleEquipmentSlots: 512
-  unitStatModifierConfigs:
-  - {fileID: 11400000, guid: adcdf7e40a745854ebfe99bbd7d6b495, type: 2}
-  modifierAppliedHow: 1
+  isUsable: 0
   maxUsagesCount: 0
   itemIsStackable: 0
   uniquePowerModifierConfigs:
   - {fileID: 11400000, guid: 50a54e3c2c5af404f8eda6cae7e5141d, type: 2}
-  inventoryItemUIConfig: {fileID: 11400000, guid: 76519f64b8b4d134e8ab3f1a2c0a1c41,
+  inventoryItemUIConfig: {fileID: 11400000, guid: cb9a9a66d233ce84b9a64db663fec0da,
     type: 2}

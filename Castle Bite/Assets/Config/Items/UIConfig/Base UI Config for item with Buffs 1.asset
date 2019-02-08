@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd67eaff47099748a2d438c3bce9102, type: 3}
+  m_Name: Base UI Config for item with Buffs 1
+  m_EditorClassIdentifier: 
+  itemIsApplicableForUnitSlotColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
+  itemIsApplicableButNotAdvisedForUnitSlotColor: {r: 0.18082634, g: 0.31132078, b: 0.16006587,
+    a: 1}
+  itemIsNotApplicableForUnitSlotColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902,
+    a: 1}
+  itemCanBeEquippedColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
+  itemIsNotCompatibleWithEquipmentSlotColor: {r: 0.1254902, g: 0.1254902, b: 0.1254902,
+    a: 1}
+  itemPrerequsitesAreNotMetForThisUnitColor: {r: 0.8470589, g: 0.3137255, b: 0.3137255,
+    a: 1}

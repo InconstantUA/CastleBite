@@ -24,5 +24,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f2dadb6115a9e4e43a3f76c4fc7cadea, type: 2}
   modifierLimiters:
   - {fileID: 11400000, guid: a6e82ed03e58e7943a11d11db89c3555, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers: []
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: f9b78fa1bbc01d34eb8cf820c110d3b4,
     type: 2}

@@ -842,7 +842,11 @@ MonoBehaviour:
   interactable: 1
   normalColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   highlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  scaleHighlightedColorFromNormal: 0
+  highlightedColorScale: 1.3
   pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  scalePressedColorFromNormal: 0
+  pressedColorScale: 1.6
   disabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   OnClick:
     m_PersistentCalls:
@@ -1488,7 +1492,11 @@ MonoBehaviour:
   interactable: 1
   normalColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   highlightedColor: {r: 0.8666667, g: 0.8666667, b: 0.8666667, a: 1}
+  scaleHighlightedColorFromNormal: 0
+  highlightedColorScale: 1.3
   pressedColor: {r: 1, g: 1, b: 1, a: 1}
+  scalePressedColorFromNormal: 0
+  pressedColorScale: 1.6
   disabledColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   OnClick:
     m_PersistentCalls:

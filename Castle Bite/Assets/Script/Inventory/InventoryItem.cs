@@ -80,6 +80,8 @@ public enum InventoryItemID
     SwordOfDespair              =   2420,
     //      Orbs        30-39
     VampireOrb                  =   2430,
+    //      Usable      40-49
+    OverseerSkull               =   2440,
     //  500-599 Chest
     BoneArmor                   =   2501,
     //  600-699 Boots

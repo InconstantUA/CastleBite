@@ -25,5 +25,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
   - {fileID: 11400000, guid: 4b2254fc4144bfb458fe2c35e8d6dd33, type: 2}
   - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers: []
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: f9b78fa1bbc01d34eb8cf820c110d3b4,
     type: 2}

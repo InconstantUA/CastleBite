@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Overseer Skull UPM
+  m_EditorClassIdentifier: 
+  displayName: Summon Skeleton
+  description: Summons Skeleton
+  uniquePowerModifier: {fileID: 0}
+  unitStatModifierConfig: {fileID: 11400000, guid: b4f527e4a245edd4ca24faead6403a41,
+    type: 2}
+  uniquePowerModifierType: 2
+  modifierAppliedHow: 0
+  upmDurationLeft: -1
+  modifierConfigUpdaters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: bf6b578d32b2ff142829ec6ad25b33ee, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: f9b78fa1bbc01d34eb8cf820c110d3b4,
+    type: 2}

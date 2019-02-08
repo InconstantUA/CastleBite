@@ -872,6 +872,71 @@ public class PartyUnitUI : MonoBehaviour {
             unitPowerModifier.textAnimation.Run(UnitInfoPanelText);
         }
     }
+
+    System.Object GetSourceContext()
+    {
+        // get source context 
+        // try to get party unit (assume that during battle unit can only use items which are located in (childs of) this unit game object)
+        // if outside of the battle or if item is dragged from inventiry, then this will result in null
+        System.Object srcContext = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<PartyUnit>();
+        // verify if srcPartyUnit is null
+        if (srcContext == null)
+        {
+            // context is hero party (item is dragged from inventory)
+            // get party
+            HeroParty heroParty = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<HeroParty>();
+            // verify if party is garnizon type
+            if (heroParty.PartyMode == PartyMode.Garnizon)
+            {
+                // set context to the city
+                srcContext = heroParty.GetComponentInParent<City>();
+            }
+            else
+            {
+                // party mode = normal party
+                // set context to the party leader
+                srcContext = heroParty.GetPartyLeader();
+            }
+        }
+        // return result
+        return srcContext;
+    }
+
+    public void ActOnBeginItemDrag()
+    {
+        // activate highlight
+        // get source context 
+        System.Object srcContext = GetSourceContext();
+        // get cell
+        PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
+        // verify if UPM can be applied to destination unit
+        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+        {
+            Debug.Log("Requirements are met");
+            // verify if it is advised to use this item in this context
+            if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
+            {
+                Debug.Log("Advised");
+                // advised
+                // item can be applied to this hero, highlight with applicable color
+                partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+            }
+            else
+            {
+                Debug.Log("Not Advised");
+                // not advised
+                // item can be applied to this hero, highlight with applicable color
+                partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+            }
+        }
+        else
+        {
+            Debug.Log("Requirements are not met");
+            // item cannot be applied to this hero, highlight with not applicable color
+            partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+        }
+    }
+
     #endregion Events Actions
 
     #region Properties

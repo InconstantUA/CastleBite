@@ -21,5 +21,5 @@ MonoBehaviour:
   itemIsStackable: 0
   uniquePowerModifierConfigs:
   - {fileID: 11400000, guid: e2a2221775a524044a9a6304d2db7c54, type: 2}
-  inventoryItemUIConfig: {fileID: 11400000, guid: 76519f64b8b4d134e8ab3f1a2c0a1c41,
+  inventoryItemUIConfig: {fileID: 11400000, guid: cb9a9a66d233ce84b9a64db663fec0da,
     type: 2}
