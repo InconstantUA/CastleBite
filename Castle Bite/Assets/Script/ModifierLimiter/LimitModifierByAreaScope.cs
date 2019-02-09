@@ -75,12 +75,23 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 // verify if source context is UnitSlotDropHandler and destination context is of PartyUnit type
                 if (srcContext is UnitSlotDropHandler && dstContext is PartyUnit)
                 {
-                    // make sure that UPM is applied only to destination unit if modifier scope is single unit
-                    // verify if this unit belongs to this unit slot (normally this is the slot to which item has been dropped) (IDs of slots are the same)
-                    if ( ((UnitSlotDropHandler)srcContext).GetInstanceID() == ((PartyUnit)dstContext).GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() )
+                    // get unit UI in slot drop handler
+                    PartyUnitUI partyUnitUI = ((UnitSlotDropHandler)srcContext).GetComponentInChildren<PartyUnitUI>();
+                    // verify if it is not null
+                    if (partyUnitUI != null)
                     {
-                        // don't limit
-                        return false;
+                        // make sure that UPM is applied only to destination unit if modifier scope is single unit
+                        // verify if this unit belongs to this unit slot (normally this is the slot to which item has been dropped) (IDs of units are the same)
+                        if (partyUnitUI.LPartyUnit == (PartyUnit)dstContext)
+                        {
+                            // don't limit
+                            return false;
+                        }
+                        else
+                        {
+                            // limit
+                            return true;
+                        }
                     }
                     else
                     {

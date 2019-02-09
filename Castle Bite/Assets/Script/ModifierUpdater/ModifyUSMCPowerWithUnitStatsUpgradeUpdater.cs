@@ -8,14 +8,23 @@ public class ModifyUSMCPowerWithUnitStatsUpgradeUpdater : ModifierConfigUpdater
 {
     public int powerIncrementOnStatsUpgrade;
 
+    public override bool DoesContextMatch(object context)
+    {
+        return context is PartyUnit;
+    }
+
     // default update
-    public override UnitStatModifierConfig GetUpdatedUSMC(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
+    public override UnitStatModifierConfig GetUpdatedUSMC(UnitStatModifierConfig unitStatModifierConfig, System.Object context)
     {
         // get party unit from gameObject
-        PartyUnit partyUnit = gameObject.GetComponent<PartyUnit>();
+        //PartyUnit partyUnit = context.GetComponent<PartyUnit>();
         // verify if party unit is not null
-        if (partyUnit != null)
+        //if (partyUnit != null)
+        // verify if context match
+        if (DoesContextMatch(context))
         {
+            // init PartyUnit from context
+            PartyUnit partyUnit = (PartyUnit)context;
             // copy current USM config (to not make changes on default one)
             UnitStatModifierConfig newUSMConfig = Instantiate(unitStatModifierConfig);
             // get party unit stats upgrade count
@@ -27,7 +36,8 @@ public class ModifyUSMCPowerWithUnitStatsUpgradeUpdater : ModifierConfigUpdater
         }
         else
         {
-            Debug.LogError("Party Unit reference is null");
+            // Debug.LogError("Party Unit reference is null");
+            Debug.LogError("Context doesn't match");
         }
         return unitStatModifierConfig;
     }

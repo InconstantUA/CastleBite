@@ -3144,7 +3144,7 @@ public class PartyUnit : MonoBehaviour {
             //return UnitAbilityConfig.unitStatModifierConfig.modifierPower +
             //// add stats upgrade count multiplied by power increment on stats upgrade
             //UnitPowerIncrementOnStatsUpgrade* StatsUpgradesCount;
-            return UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmEffectivePower(gameObject);
+            return UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmEffectivePower(this);
         }
 
         //set

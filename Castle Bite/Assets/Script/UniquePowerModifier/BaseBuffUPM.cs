@@ -18,7 +18,7 @@ public class BaseBuffUPM : UniquePowerModifier
             DurationLeft = uniquePowerModifierConfig.UpmDurationMax,
             // set upm current power based on source unit stats upgrades count
             //CurrentPower = uniquePowerModifierConfig.GetUpmCurrentPower(srcPartyUnit.StatsUpgradesCount)
-            CurrentPower = uniquePowerModifierConfig.GetUpmEffectivePower(srcPartyUnit.gameObject)
+            CurrentPower = uniquePowerModifierConfig.GetUpmEffectivePower(srcPartyUnit)
         };
         // find upm with the same modifier in the list of upms on destination party unit
         UniquePowerModifierData sameUPM = dstPartyUnit.AppliedUniquePowerModifiersData.Find(e => (e.UniquePowerModifierID == uniquePowerModifierID));
@@ -52,6 +52,11 @@ public class BaseBuffUPM : UniquePowerModifier
             //uniquePowerModifierDataHasBeenAddedEvent.Raise(dstPartyUnit.gameObject);
             Events.DataHasBeenAddedEvent.Raise(dstPartyUnit.gameObject);
         }
+    }
+
+    public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    {
+        throw new System.NotImplementedException();
     }
 
     public override void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)

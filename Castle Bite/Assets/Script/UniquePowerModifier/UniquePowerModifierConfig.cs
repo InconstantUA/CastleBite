@@ -50,6 +50,11 @@ public class UniquePowerModifierConfig : ScriptableObject
         UniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
     }
 
+    public void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
+    {
+        UniquePowerModifier.Apply(inventoryItem, dstPartyUnit, this, uniquePowerModifierID);
+    }
+
     public void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
     {
         UniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
@@ -149,14 +154,14 @@ public class UniquePowerModifierConfig : ScriptableObject
         return message;
     }
 
-    UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(GameObject upmBearer)
+    UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(System.Object context)
     {
         // init updated usmc with the copy of default usmc (note: avoid modification of default usmc)
         UnitStatModifierConfig updatedUSMC = Instantiate(unitStatModifierConfig);
         // update usmc
         foreach (ModifierConfigUpdater modifierConfigUpdater in modifierConfigUpdaters)
         {
-            updatedUSMC = modifierConfigUpdater.GetUpdatedUSMC(updatedUSMC, upmBearer.gameObject);
+            updatedUSMC = modifierConfigUpdater.GetUpdatedUSMC(updatedUSMC, context);
         }
         // return result
         return updatedUSMC;
@@ -168,16 +173,16 @@ public class UniquePowerModifierConfig : ScriptableObject
     //    return UpmBasePower + UpmPowerIncrementOnLevelUp * unitStatsUpgradeCount;
     //}
 
-    public int GetUpmEffectivePower(GameObject upmBearer)
+    public int GetUpmEffectivePower(System.Object context)
     {
         // return power after all applied updates
-        return GetUpdatedUnitStatModifierConfig(upmBearer).modifierPower;
+        return GetUpdatedUnitStatModifierConfig(context).modifierPower;
     }
 
-    public int GetUpmPowerDifference(GameObject upmBearer)
+    public int GetUpmPowerDifference(System.Object context)
     {
         // return difference between updated usmc power and default usmc power
-        return GetUpmEffectivePower(upmBearer) - unitStatModifierConfig.modifierPower;
+        return GetUpmEffectivePower(context) - unitStatModifierConfig.modifierPower;
     }
 
     #region UnitStatModifierConfig properties

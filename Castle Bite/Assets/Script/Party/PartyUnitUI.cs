@@ -586,104 +586,104 @@ public class PartyUnitUI : MonoBehaviour {
                         modifierOrigin = ModifierOrigin.Item,
                         destinationGameObjectID = this.gameObject.GetInstanceID()
                     };
-                    // .. uncomment
-                    //inventoryItemUPMConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+                    // apply upm
+                    inventoryItemUPMConfigs[i].Apply(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, LPartyUnit, uniquePowerModifierID);
                     // run text animation
-                    //inventoryItemUPMConfigs[i].textAnimation.Run(UnitInfoPanelText);
+                    inventoryItemUPMConfigs[i].UniquePowerModifierUIConfig.onTriggerTextAnimation.Run(UnitInfoPanelText);
                 }
             }
         }
-        // verify if it the slot where item has been dropped is the same where this party unit UI is located
-        if (GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() == unitSlotDropHandler.GetInstanceID())
-        {
-            Debug.Log("Same slot");
-            Debug.Log("Act on Item Drop");
-            InventoryItemDragHandler inventoryItemDragHandler = InventoryItemDragHandler.itemBeingDragged;
-            // get item
-            InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
-            // verify if item has active modifiers or usages
-            if (inventoryItem.HasActiveModifiers())
-            {
-                Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
-                // consume item and verify if it was successfull
-                if (lPartyUnit.UseItem(inventoryItem))
-                {
-                    // successfully consumed item
-                    // update UI based on changed party unit data
-                    UpdateUnitCellInfo();
-                    // item has run out of usages
-                    if (inventoryItem.LeftUsagesCount == 0)
-                    {
-                        // there are no usages left
-                        Debug.Log("Move item to the unit");
-                        // move item to the unit, there are still might be non-instant upms and usms
-                        inventoryItem.transform.SetParent(LPartyUnit.transform);
-                        // Get PartyInventoryUI (before InventoryItemDragHandler is destroyed)
-                        PartyInventoryUI partyInventoryUI = inventoryItemDragHandler.ItemBeindDraggedSlot.GetComponentInParent<PartyInventoryUI>();
-                        // verify if it is not null
-                        if (partyInventoryUI != null)
-                        {
-                            // Note: inventoryItemDragHandler removal will suppress On End Item Drag event
-                            // .. workaround:
-                            // call on end drag manually before removing item
-                            inventoryItemDragHandler.OnEndDrag(null);
-                            // remove item drag handler
-                            RecycleBin.Recycle(inventoryItemDragHandler.gameObject);
-                            // reorganize inventory UI
-                            partyInventoryUI.ReorganizeInventoryUI();
-                        }
-                        else
-                        {
-                            Debug.LogError("Logic error. Probably source slot is not party of PartyInventoryUI, but can be part of Equipment Menu");
-                        }
-                        //// Get source item slot transform
-                        //ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
-                        //// verify if source slot is in party inventory mode
-                        //if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
-                        //{
-                        //    // Get PartyInventoryUI (before slot is destroyed)
-                        //    PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-                        //    // remove all empty slots in inventory to fill in possible gaps after item consumption
-                        //    partyInventoryUI.RemoveAllEmptySlots();
-                        //    // fill in empty slots in inventory;
-                        //    partyInventoryUI.FillInEmptySlots();
-                        //}
-                    }
-                    else
-                    {
-                        // there are still usages left
-                        Debug.Log("Clone item to the unit");
-                        // clone item and place it into the unit
-                        // so non-instant modifiers can be applied
-                        // and assign inventoryItem varible with new inventory item
-                        // inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
-                        inventoryItem = Instantiate(inventoryItem.gameObject, LPartyUnit.transform).GetComponent<InventoryItem>();
-                        // old inventory item, which was clonned, will return back to the inventory
-                    }
-                    // remove expired modifiers from triggered item
-                    // note: don't do this on original modifier config, because it removes UPM from config
-                    // inventoryItem.RemoveExpiredModifiers();
-                    // self-destory item on expire
-                    inventoryItem.SelfDestroyIfExpired();
-                }
-                else
-                {
-                    // item cannot be consumed
-                    // item will return to its original position
-                }
-            }
-            else
-            {
-                // item is not consumable
-                // nothing to do here
-                // item will return to its original position
-                // this type of items should be placed into hero equipment
-            }
-        }
-        else
-        {
-            Debug.Log("Other slot");
-        }
+        //// verify if it the slot where item has been dropped is the same where this party unit UI is located
+        //if (GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() == unitSlotDropHandler.GetInstanceID())
+        //{
+        //    Debug.Log("Same slot");
+        //    Debug.Log("Act on Item Drop");
+        //    InventoryItemDragHandler inventoryItemDragHandler = InventoryItemDragHandler.itemBeingDragged;
+        //    // get item
+        //    InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
+        //    // verify if item has active modifiers or usages
+        //    if (inventoryItem.HasActiveModifiers())
+        //    {
+        //        Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
+        //        // consume item and verify if it was successfull
+        //        if (lPartyUnit.UseItem(inventoryItem))
+        //        {
+        //            // successfully consumed item
+        //            // update UI based on changed party unit data
+        //            UpdateUnitCellInfo();
+        //            // item has run out of usages
+        //            if (inventoryItem.LeftUsagesCount == 0)
+        //            {
+        //                // there are no usages left
+        //                Debug.Log("Move item to the unit");
+        //                // move item to the unit, there are still might be non-instant upms and usms
+        //                inventoryItem.transform.SetParent(LPartyUnit.transform);
+        //                // Get PartyInventoryUI (before InventoryItemDragHandler is destroyed)
+        //                PartyInventoryUI partyInventoryUI = inventoryItemDragHandler.ItemBeindDraggedSlot.GetComponentInParent<PartyInventoryUI>();
+        //                // verify if it is not null
+        //                if (partyInventoryUI != null)
+        //                {
+        //                    // Note: inventoryItemDragHandler removal will suppress On End Item Drag event
+        //                    // .. workaround:
+        //                    // call on end drag manually before removing item
+        //                    inventoryItemDragHandler.OnEndDrag(null);
+        //                    // remove item drag handler
+        //                    RecycleBin.Recycle(inventoryItemDragHandler.gameObject);
+        //                    // reorganize inventory UI
+        //                    partyInventoryUI.ReorganizeInventoryUI();
+        //                }
+        //                else
+        //                {
+        //                    Debug.LogError("Logic error. Probably source slot is not party of PartyInventoryUI, but can be part of Equipment Menu");
+        //                }
+        //                //// Get source item slot transform
+        //                //ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
+        //                //// verify if source slot is in party inventory mode
+        //                //if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
+        //                //{
+        //                //    // Get PartyInventoryUI (before slot is destroyed)
+        //                //    PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+        //                //    // remove all empty slots in inventory to fill in possible gaps after item consumption
+        //                //    partyInventoryUI.RemoveAllEmptySlots();
+        //                //    // fill in empty slots in inventory;
+        //                //    partyInventoryUI.FillInEmptySlots();
+        //                //}
+        //            }
+        //            else
+        //            {
+        //                // there are still usages left
+        //                Debug.Log("Clone item to the unit");
+        //                // clone item and place it into the unit
+        //                // so non-instant modifiers can be applied
+        //                // and assign inventoryItem varible with new inventory item
+        //                // inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
+        //                inventoryItem = Instantiate(inventoryItem.gameObject, LPartyUnit.transform).GetComponent<InventoryItem>();
+        //                // old inventory item, which was clonned, will return back to the inventory
+        //            }
+        //            // remove expired modifiers from triggered item
+        //            // note: don't do this on original modifier config, because it removes UPM from config
+        //            // inventoryItem.RemoveExpiredModifiers();
+        //            // self-destory item on expire
+        //            inventoryItem.SelfDestroyIfExpired();
+        //        }
+        //        else
+        //        {
+        //            // item cannot be consumed
+        //            // item will return to its original position
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // item is not consumable
+        //        // nothing to do here
+        //        // item will return to its original position
+        //        // this type of items should be placed into hero equipment
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.Log("Other slot");
+        //}
         CursorController.Instance.SetNormalCursor();
     }
 

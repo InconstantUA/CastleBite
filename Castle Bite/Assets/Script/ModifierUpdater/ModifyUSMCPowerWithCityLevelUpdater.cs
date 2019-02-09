@@ -8,14 +8,23 @@ public class ModifyUSMCPowerWithCityLevelUpdater : ModifierConfigUpdater
 {
     public int[] powerPerCityLevel = new int[7];
 
-    // default update
-    public override UnitStatModifierConfig GetUpdatedUSMC(UnitStatModifierConfig unitStatModifierConfig, GameObject gameObject)
+    public override bool DoesContextMatch(object context)
     {
-        // get party unit from gameObject
-        City city = gameObject.GetComponent<City>();
+        return context is City;
+    }
+
+    // default update
+    public override UnitStatModifierConfig GetUpdatedUSMC(UnitStatModifierConfig unitStatModifierConfig, System.Object context)
+    {
+        // get city from gameObject
+        //City city = context.GetComponent<City>();
         // verify if party unit is not null
-        if (city != null)
+        //if (city != null)
+        // verify if context match
+        if (DoesContextMatch(context))
         {
+            // init city from context
+            City city = (City)context;
             // copy current USM config (to not make changes on default one)
             UnitStatModifierConfig newUSMConfig = Instantiate(unitStatModifierConfig);
             // verify if city level config has been defined
@@ -33,7 +42,8 @@ public class ModifyUSMCPowerWithCityLevelUpdater : ModifierConfigUpdater
         }
         else
         {
-            Debug.LogError("City reference is null");
+            Debug.Log("Context doesn't match");
+            //Debug.LogError("City reference is null");
         }
         return unitStatModifierConfig;
     }

@@ -112,7 +112,7 @@ public class City : MonoBehaviour {
                 },
                 durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax, // normally duration type is permanent, so this value is not relevant
                 // currentPower = GetCityDefense() // this is exceptional when we don't inherit value from UPM config, because logic for defense power is not easy to set via Unit Stat Modifier
-                currentPower = UniquePowerModifierConfigs[i].GetUpmEffectivePower(this.gameObject) // Updater will take care about current city level
+                currentPower = UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) // Updater will take care about current city level
             });
         }
         // return the list with UPMs data
