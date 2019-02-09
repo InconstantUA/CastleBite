@@ -72123,6 +72123,7 @@ GameObject:
   - component: {fileID: 1125247091}
   - component: {fileID: 1125247090}
   - component: {fileID: 1125247089}
+  - component: {fileID: 1125247092}
   m_Layer: 5
   m_Name: NumberOfLatestSavesToKeep
   m_TagString: Untagged
@@ -72263,6 +72264,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125247087}
   m_CullTransparentMesh: 0
+--- !u!114 &1125247092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125247087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0d62497b92bbe94c8b8bcfa07932320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1127061176
 GameObject:
   m_ObjectHideFlags: 0
@@ -73845,6 +73858,7 @@ MonoBehaviour:
   editHeroCursor: {fileID: 2800000, guid: 82c724afe5b4485468cc92cbaa019bc9, type: 3}
   attackCursor: {fileID: 2800000, guid: 361b58fd2d3587d46843631c59b68d2e, type: 3}
   moveArrowCursor: {fileID: 2800000, guid: 5f6daceccc1348248a5b6f02d4607a02, type: 3}
+  editTextCursor: {fileID: 2800000, guid: 73130c052217c354bb30897d156222e3, type: 3}
 --- !u!1 &1154104991
 GameObject:
   m_ObjectHideFlags: 0

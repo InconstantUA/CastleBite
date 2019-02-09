@@ -29,6 +29,8 @@ public class CursorController : MonoBehaviour {
     private Texture2D attackCursor;
     [SerializeField]
     private Texture2D moveArrowCursor;
+    [SerializeField]
+    private Texture2D editTextCursor;
 
     public static CursorController Instance { get; private set; }
 
@@ -110,6 +112,11 @@ public class CursorController : MonoBehaviour {
     public void SetDragUnitCursor()
     {
         Cursor.SetCursor(dragUnitCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetEditTextCursor()
+    {
+        Cursor.SetCursor(editTextCursor, Vector2.zero, CursorMode.Auto);
     }
 
 }

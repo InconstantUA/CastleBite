@@ -20,6 +20,11 @@ public class LimitModifierByAreaScope : ModifierLimiter
             // match
             return true;
         }
+        if (srcContext is UnitSlotDropHandler)
+        {
+            // match
+            return true;
+        }
         Debug.Log("Source context doesn't match");
         // doesn't match
         return false;
@@ -67,6 +72,22 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 // limit by default
                 return true;
             case ModifierScope.SingleUnit:
+                // verify if source context is UnitSlotDropHandler and destination context is of PartyUnit type
+                if (srcContext is UnitSlotDropHandler && dstContext is PartyUnit)
+                {
+                    // make sure that UPM is applied only to destination unit if modifier scope is single unit
+                    // verify if this unit belongs to this unit slot (normally this is the slot to which item has been dropped) (IDs of slots are the same)
+                    if ( ((UnitSlotDropHandler)srcContext).GetInstanceID() == ((PartyUnit)dstContext).GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() )
+                    {
+                        // don't limit
+                        return false;
+                    }
+                    else
+                    {
+                        // limit
+                        return true;
+                    }
+                }
                 // verify if destination context is of PartyUnit type (also verifies if it is not null)
                 if (dstContext is PartyUnit)
                 {

@@ -471,7 +471,7 @@ public class PartyUnitUI : MonoBehaviour {
         // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
         for (int i = LPartyUnit.AppliedUniquePowerModifiersData.Count - 1; i >= 0; i--)
         {
-            // Gget UPM text animation config upfront, because UPMdata mabe removed if unit is dead after Trigger
+            // Gget UPM text animation config upfront, because UPMdata may be removed if unit is dead after Trigger
             TextAnimation upmTextAnimation = LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierUIConfig.onTriggerTextAnimation;
             // Trigger UPM
             LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.AppliedUniquePowerModifiersData[i]);
@@ -555,16 +555,46 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void OnItemHasBeenDroppedIntoTheUnitSlotEvent(System.Object unitSlotDropHandler)
+    public void OnItemHasBeenDroppedIntoTheUnitSlotEvent(System.Object unitSlotDropHandlerObj)
     {
         // verify if type is correct
-        if (!(unitSlotDropHandler is UnitSlotDropHandler))
+        if (!(unitSlotDropHandlerObj is UnitSlotDropHandler))
         {
             Debug.LogError("unitSlotDropHandler is not of UnitSlotDropHandler type");
             return;
         }
+        // init unit slot drop handler
+        UnitSlotDropHandler unitSlotDropHandler = (UnitSlotDropHandler)unitSlotDropHandlerObj;
+        // init item config
+        List<UniquePowerModifierConfig> inventoryItemUPMConfigs = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs;
+        // verify if rist UPM can be applied to destination unit
+        if (inventoryItemUPMConfigs[0].AreRequirementsMetInContextOf(unitSlotDropHandler, LPartyUnit))
+        {
+            // get source context 
+            System.Object srcContext = GetSourceContext();
+            // apply unit unique power modifiers (buffs, debuffs, etc)
+            for (int i = 0; i < inventoryItemUPMConfigs.Count; i++)
+            {
+                // verify if UPM can be applied to destination unit
+                if (inventoryItemUPMConfigs[i].AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+                {
+                    // set unique power modifier ID
+                    UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+                    {
+                        inventoryItemID = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.Item,
+                        destinationGameObjectID = this.gameObject.GetInstanceID()
+                    };
+                    // .. uncomment
+                    //inventoryItemUPMConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+                    // run text animation
+                    //inventoryItemUPMConfigs[i].textAnimation.Run(UnitInfoPanelText);
+                }
+            }
+        }
         // verify if it the slot where item has been dropped is the same where this party unit UI is located
-        if (GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() == ((UnitSlotDropHandler)unitSlotDropHandler).GetInstanceID())
+        if (GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() == unitSlotDropHandler.GetInstanceID())
         {
             Debug.Log("Same slot");
             Debug.Log("Act on Item Drop");
