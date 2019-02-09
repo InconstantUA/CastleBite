@@ -18,7 +18,7 @@ MonoBehaviour:
   compatibleEquipmentSlots: 384
   isUsable: 1
   maxUsagesCount: 2
-  itemIsStackable: 1
+  itemIsStackable: 0
   uniquePowerModifierConfigs:
   - {fileID: 11400000, guid: 59b7ed3d50808e749a94b73dda007ee8, type: 2}
   inventoryItemUIConfig: {fileID: 11400000, guid: 50ae533b1f3724448a5d74b225e98bdb,

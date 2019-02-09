@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Protection Shard Aura
   description: Provides defense buff to every party member
-  uniquePowerModifier: {fileID: 0}
+  uniquePowerModifier: {fileID: 11400000, guid: bc5fe3686541b504cb56d13fba928878,
+    type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: b45586c0e8078c74180665852f6cdc9c,
     type: 2}
   uniquePowerModifierType: 0

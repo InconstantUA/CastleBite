@@ -15,13 +15,18 @@ MonoBehaviour:
   displayName: '-'
   description: '-'
   uniquePowerModifier: {fileID: 0}
-  unitStatModifierConfig: {fileID: 11400000, guid: 34a9d13d0751db64d933d80f6bbe1e1e,
+  unitStatModifierConfig: {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c,
     type: 2}
   uniquePowerModifierType: 0
   modifierAppliedHow: 0
   upmDurationLeft: 0
   modifierConfigUpdaters:
   - {fileID: 11400000, guid: 461b6af6ec598fe418be9d34d8e76dc1, type: 2}
-  modifierLimiters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
   modifierAdvisers: []
-  uniquePowerModifierUIConfig: {fileID: 0}
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: f9b78fa1bbc01d34eb8cf820c110d3b4,
+    type: 2}
