@@ -981,9 +981,11 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void ActOnBattleNewUnitHasBeenActivatedEvent(PartyUnitUI activePartyUnitUI)
+    public bool ActOnBattleNewUnitHasBeenActivatedEvent(PartyUnitUI activePartyUnitUI)
     {
         // activate highlight
+        // init is targetable
+        bool isTargetable = false;
         // set source context to active Party Unit
         System.Object srcContext = activePartyUnitUI.LPartyUnit;
         // get cell
@@ -1004,6 +1006,7 @@ public class PartyUnitUI : MonoBehaviour {
                 // item can be applied to this hero, highlight with applicable color
                 // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
                 partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+                isTargetable = true;
             }
             else
             {
@@ -1012,6 +1015,7 @@ public class PartyUnitUI : MonoBehaviour {
                 // item can be applied to this hero, highlight with applicable color
                 // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
                 partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
+                isTargetable = true;
             }
         }
         else
@@ -1020,7 +1024,12 @@ public class PartyUnitUI : MonoBehaviour {
             // item cannot be applied to this hero, highlight with not applicable color
             // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
             partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+            isTargetable = false;
         }
+        //// Activate/Deactive HighlightUnitCanvas
+        //GetComponentInParent<PartyPanelCell>().transform.Find("HighlightUnitCanvas").gameObject.SetActive((activePartyUnitUI.gameObject.GetInstanceID() == this.gameObject.GetInstanceID()));
+        // return if cell can or cannot be targeted
+        return isTargetable;
     }
     #endregion Events Actions
 

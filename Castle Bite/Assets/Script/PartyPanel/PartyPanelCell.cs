@@ -185,6 +185,11 @@ public class PartyPanelCell : MonoBehaviour
 
     public void OnBattleNewUnitHasBeenActivatedEvent(System.Object context)
     {
+        // init is targetable
+        bool isTargetable = false;
+        // init error message (if cell is not targetable)
+        // .. set it dynamically based on limiter triggered
+        string errorMessage = "Cannot target this cell";
         // verify if context is correct
         if (context is PartyUnitUI)
         {
@@ -204,12 +209,13 @@ public class PartyPanelCell : MonoBehaviour
                 if (partyUnitUI != null)
                 {
                     // let party unit override highlights and react on begin item drag event
-                    partyUnitUI.ActOnBattleNewUnitHasBeenActivatedEvent(activePartyUnitUI);
+                    isTargetable = partyUnitUI.ActOnBattleNewUnitHasBeenActivatedEvent(activePartyUnitUI);
                 }
                 else
                 {
                     // highlight with applicable color
                     CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+                    isTargetable = true;
                 }
             }
             else
@@ -217,8 +223,18 @@ public class PartyPanelCell : MonoBehaviour
                 Debug.Log("Cell Requirements are not met");
                 // highlight with not applicable color
                 CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+                isTargetable = false; ;
             }
+            // Activate/Deactive HighlightUnitCanvas
+            transform.Find("HighlightUnitCanvas").gameObject.SetActive((activePartyUnitUI.GetComponentInParent<PartyPanelCell>().gameObject.GetInstanceID() == this.gameObject.GetInstanceID()));
         }
+        // set UnitSlot in cell as targetable or not
+        GetComponentInChildren<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
+    }
+
+    void OnApplyAbilityFromUnitUIToUnitCell(PartyUnitUI activePartyUnitUI, PartyPanelCell partyPanelCell)
+    {
+        Debug.LogWarning(".. OnApplyAbilityFromUnitUIToUnitCell");
     }
 
     public void OnBattleApplyActiveUnitAbility(System.Object context)
@@ -229,6 +245,21 @@ public class PartyPanelCell : MonoBehaviour
             // init unit slot from context
             UnitSlot unitSlot = (UnitSlot)context;
             Debug.LogWarning("OnBattleApplyActiveUnitAbility");
+            // get destination PartyUnitUI
+            PartyUnitUI dstPartyUnitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+            // get cell PartyUnitUI
+            PartyUnitUI thisCellPartyUnitUI = GetComponentInChildren<PartyUnitUI>();
+            // verify if party unit UI is not null
+            if (thisCellPartyUnitUI != null)
+            {
+                // .. using old code
+                thisCellPartyUnitUI.OnApplyAbilityFromUnitUIToUnitUI(activePartyUnitUI, dstPartyUnitUI);
+            }
+            else
+            {
+                // this is probably summon
+                OnApplyAbilityFromUnitUIToUnitCell(activePartyUnitUI, this);
+            }
         }
     }
 }

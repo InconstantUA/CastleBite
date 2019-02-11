@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Deals physical damage to single unit
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
     type: 2}
-  unitStatModifierConfig: {fileID: 11400000, guid: 32324bc119cc3744093a05d6143572dc,
+  unitStatModifierConfig: {fileID: 11400000, guid: 8775af15bcf4a2345a388a36c1cc7b30,
     type: 2}
   uniquePowerModifierAlignment: 2
   triggerCondition: 1

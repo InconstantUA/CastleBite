@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Sarificing Echo UPM Config
+  m_EditorClassIdentifier: 
+  displayName: Blow With Great Sword
+  description: Deals physical damage to single unit
+  uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: 43259196ca4630a4da407ba1f33c4a15,
+    type: 2}
+  uniquePowerModifierAlignment: 1
+  triggerCondition: 1
+  modifierConfigUpdaters:
+  - {fileID: 11400000, guid: 7d265bc2b6a932645ad34c012984aeda, type: 2}
+  - {fileID: 11400000, guid: 58d391115f2085e4d8c156bd739ec8c2, type: 2}
+  modifierLimiters:
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: cf760451fb414ad4380fafc8017842fe, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 6108186d168c7a94b9da4943ad932074,
+    type: 2}

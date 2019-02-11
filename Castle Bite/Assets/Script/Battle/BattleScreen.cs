@@ -733,8 +733,8 @@ public class BattleScreen : MonoBehaviour {
         //queueIsActive = true;
         // Highlight it and reset all other highlights
         // first reset all cells do default values
-        playerPartyPanel.ResetAllCellsCanBeTargetedStatus();
-        enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
+        //playerPartyPanel.ResetAllCellsCanBeTargetedStatus();
+        //enemyPartyPanel.ResetAllCellsCanBeTargetedStatus();
         // Highlight next unit
         // If unit had waiting status in the past, then reset it back to active
         if (ActiveUnitUI.LPartyUnit.UnitStatus == UnitStatus.Waiting)
@@ -1113,7 +1113,7 @@ public class BattleScreen : MonoBehaviour {
                     // Listeners: All active PartyPanelCell(s)
                     battleApplyActiveUnitAbilityEvent.Raise(unitSlot);
                     // tmp:
-                    unitSlot.GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+                    //unitSlot.GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
                     // set unit has moved flag
                     ActiveUnitUI.LPartyUnit.HasMoved = true;
                     // activate next unit

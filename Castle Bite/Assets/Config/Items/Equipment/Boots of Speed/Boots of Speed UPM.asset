@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Boots of Speed UPM
+  m_EditorClassIdentifier: 
+  displayName: Move points buff
+  description: Increases maximum move points
+  uniquePowerModifier: {fileID: 0}
+  unitStatModifierConfig: {fileID: 11400000, guid: d4777038575f6ba4f82ded9025dd3baf,
+    type: 2}
+  uniquePowerModifierAlignment: 0
+  triggerCondition: 0
+  modifierConfigUpdaters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: b9d00720967960349a84d4b79d7b2876, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 5b7b1d7aae749d84e916000cc1817c6e,
+    type: 2}

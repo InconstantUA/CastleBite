@@ -267,6 +267,7 @@ public class PartyInventoryUI : MonoBehaviour {
 
     public void ReorganizeInventoryUI()
     {
+        Debug.LogWarning("ReorganizeInventoryUI");
         // init empty slots list
         List<Transform> emptySlots = new List<Transform>();
         // init number of occupied slots
@@ -277,19 +278,21 @@ public class PartyInventoryUI : MonoBehaviour {
             // verify if slot is empty
             if (child.GetComponentInChildren<InventoryItemDragHandler>() == null)
             {
-                // verify if this is not the parent of the item being dragged
-                // because this slot is onofficially still occupied (if we remove it, then exchange between other slot may not happen successfully)
-                Debug.LogWarning("child: " + child.gameObject.name + "[" + child.gameObject.GetInstanceID() + "]" + ", original parent: " + InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.name + "[" + InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.GetInstanceID() + "]");
-                if (InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.GetInstanceID() != child.gameObject.GetInstanceID())
-                {
-                    // add new slot to the list of empty slots
-                    emptySlots.Add(child);
-                }
-                else
-                {
-                    // increment number of occupied slots
-                    occupiedSlotsCount += 1;
-                }
+                //// verify if this is not the parent of the item being dragged
+                //// because this slot is unofficially still occupied (if we remove it, then exchange between other slot may not happen successfully)
+                //Debug.LogWarning("child: " + child.gameObject.name + "[" + child.gameObject.GetInstanceID() + "]" + ", original parent: " + InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.name + "[" + InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.GetInstanceID() + "]");
+                //if (InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.GetInstanceID() != child.gameObject.GetInstanceID())
+                //{
+                //    // add new slot to the list of empty slots
+                //    emptySlots.Add(child);
+                //}
+                //else
+                //{
+                //    // increment number of occupied slots
+                //    occupiedSlotsCount += 1;
+                //}
+                // add new slot to the list of empty slots
+                emptySlots.Add(child);
             }
             else
             {

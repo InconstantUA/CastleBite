@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Healing Word UPM Config
+  m_EditorClassIdentifier: 
+  displayName: Blow With Great Sword
+  description: Deals physical damage to single unit
+  uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: c78239b96dafc3645a4cf58233846bd2,
+    type: 2}
+  uniquePowerModifierAlignment: 1
+  triggerCondition: 1
+  modifierConfigUpdaters:
+  - {fileID: 11400000, guid: 4d75e89b943b60f4784e7053b4f55eee, type: 2}
+  - {fileID: 11400000, guid: 58d391115f2085e4d8c156bd739ec8c2, type: 2}
+  modifierLimiters:
+  - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
+  modifierAdvisers:
+  - {fileID: 11400000, guid: 1a8ae9a862887744bbb53e741180c815, type: 2}
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 24fa12c8e4873df48893bf55604fdb97,
+    type: 2}

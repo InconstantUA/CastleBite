@@ -140,8 +140,9 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         InventoryItemDragHandler.itemBeingDragged.SetParent(destinationSlot);
         // move destination drag handler into this slot
         destinationItemDragHandler.SetParent(this);
-        // raise event
+        // raise events
         itemHasBeenDroppedIntoTheItemSlotEvent.Raise(this);
+        itemHasBeenDroppedIntoTheItemSlotEvent.Raise(destinationSlot);
     }
 
     public virtual void MoveItemIntoThisSlot()
