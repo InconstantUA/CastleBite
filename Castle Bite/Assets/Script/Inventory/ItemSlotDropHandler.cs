@@ -97,10 +97,10 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
     public void PutItemIntoSlot(InventoryItemDragHandler itemBeingDragged)
     {
         // move item being dragged UI into this slot
-        itemBeingDragged.transform.SetParent(transform);
-        // reset UI position to 0/0/0/0
-        itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
-        itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
+        itemBeingDragged.SetParent(this);
+        //// reset UI position to 0/0/0/0
+        //itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
+        //itemBeingDragged.transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
         //// verify if we are in edit party screen
         //if (transform.root.Find("MiscUI").GetComponentInChildren<EditPartyScreen>(false) != null)
         //{
@@ -127,6 +127,20 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         //    // Mode.PartyInventory
         //    itemHasBeenDroppedIntoInventorySlotEvent.Raise(this);
         //}
+        // raise event
+        itemHasBeenDroppedIntoTheItemSlotEvent.Raise(this);
+    }
+
+    public void ExchangeWithSlotOnDrop(ItemSlotDropHandler destinationSlot)
+    {
+        // this is an item being dragged slot
+        // get item drag handler in destination slot
+        InventoryItemDragHandler destinationItemDragHandler = destinationSlot.GetComponentInChildren<InventoryItemDragHandler>();
+        // move item being dragged (source) into destination slot
+        InventoryItemDragHandler.itemBeingDragged.SetParent(destinationSlot);
+        // move destination drag handler into this slot
+        destinationItemDragHandler.SetParent(this);
+        // raise event
         itemHasBeenDroppedIntoTheItemSlotEvent.Raise(this);
     }
 

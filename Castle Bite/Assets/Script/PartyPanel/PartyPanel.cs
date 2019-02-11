@@ -1579,17 +1579,18 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    bool IsActiveMeleUnitBlockedByItsPartyMembers()
+    bool IsActiveMeleUnitBlockedByItsPartyMembers(PartyPanelCell srcPartyPanelCell)
     {
         // structure: PartyUnitUI(activeBattleUnitUI)
-        string activeMeleUnitFrontBackWideRowPosition = activeBattleUnitUI.GetUnitCell().name; // .transform.parent.parent.parent.name;
-        PartyPanel activeUnitPartyPanel = activeBattleUnitUI.GetUnitPartyPanel(); // .transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
+        //string activeMeleUnitFrontBackWideRowPosition = activeBattleUnitUI.GetUnitCell().name; // .transform.parent.parent.parent.name;
+        //PartyPanel activeUnitPartyPanel = activeBattleUnitUI.GetUnitPartyPanel(); // .transform.parent.parent.parent.parent.parent.GetComponent<PartyPanel>();
         bool isBlocked = true;
-        bool frontRowHasUnitsWhichCanFight = activeUnitPartyPanel.FrontRowHasUnitsWhichCanFight();
-        if (Cell.Back.ToString() == activeMeleUnitFrontBackWideRowPosition)
+        //bool frontRowHasUnitsWhichCanFight = activeUnitPartyPanel.FrontRowHasUnitsWhichCanFight();
+        //if (Cell.Back.ToString() == activeMeleUnitFrontBackWideRowPosition)
+        if (Cell.Back == srcPartyPanelCell.Cell)
         {
 
-            if (frontRowHasUnitsWhichCanFight)
+            if (srcPartyPanelCell.GetComponentInParent<PartyPanel>().FrontRowHasUnitsWhichCanFight())
             {
                 // mele unit is blocked by its own party units
                 isBlocked = true;
@@ -1643,10 +1644,13 @@ public class PartyPanel : MonoBehaviour {
         }
     }
 
-    MeleUnitBlockingCondition GetMeleUnitBlockingCondition(Cell targetUnitCell, Row targetUnitRow, Row activeMeleUnitRow)
+    public MeleUnitBlockingCondition GetMeleUnitBlockingCondition(PartyPanelCell srcPartyPanelCell, PartyPanelCell dstPartyPanelCell)
     {
+        Cell targetUnitCell = dstPartyPanelCell.Cell;
+        Row targetUnitRow = dstPartyPanelCell.GetComponentInParent<PartyPanelRow>().Row;
+        Row activeMeleUnitRow = srcPartyPanelCell.GetComponentInParent<PartyPanelRow>().Row;
         // if Active mele unit is blocked, then it cannot attack anything
-        if (IsActiveMeleUnitBlockedByItsPartyMembers())
+        if (IsActiveMeleUnitBlockedByItsPartyMembers(srcPartyPanelCell))
         {
             return MeleUnitBlockingCondition.AttackerIsBlockedByFriendlyFrontRowUnits;
         }
@@ -2220,85 +2224,85 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    void PrepareBattleFieldForActiveUnit(bool activeUnitIsFromThisParty, PartyUnitUI unitToActivateUI)
-    {
-        // init variables, which are used in a loop
-        bool isAllowedToApplyPwrToTargetUnit = false;
-        string errorMessage = "";
-        // those will be needed only for mele units
-        MeleUnitBlockingCondition meleUnitBlockingCondition = MeleUnitBlockingCondition.None;
-        Row activeMeleUnitRow = activeBattleUnitUI.GetUnitRow().Row;
-        foreach (Row horisontalPanel in horisontalPanels)
-        {
-            foreach (Cell cell in cells)
-            {
-                // verify if destination slot has an unit in it
-                Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
-                if (unitSlot.childCount > 0)
-                {
-                    // Get party unit UI
-                    PartyUnitUI partyUnitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
-                    // get party unit
-                    PartyUnit partyUnit = partyUnitUI.LPartyUnit;
-                    // reset is allowed to apply power to target unit
-                    isAllowedToApplyPwrToTargetUnit = false;
-                    // verify if unit's ability is mele or ranged
-                    if (unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityRange == UnitAbilityRange.Mele)
-                    {
-                        // get active mele unit blocking condition
-                        meleUnitBlockingCondition = GetMeleUnitBlockingCondition(cell, horisontalPanel, activeMeleUnitRow);
-                    }
-                    // verify if ability type is damaging
-                    if ((unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityTypes & UnitAbilityTypes.Damaging) == UnitAbilityTypes.Damaging)
-                    {
-                        // verify if unit can be be attacked (return true if isAllowedToApplyPwrToTargetUnit is already set to true or if it unit can be attacked)
-                        isAllowedToApplyPwrToTargetUnit = isAllowedToApplyPwrToTargetUnit | partyUnit.UnitStatusConfig.GetCanBeAttacked(activeUnitIsFromThisParty, meleUnitBlockingCondition);
-                        // set message based on the unit status (Note: if isAllowedToApplyPwrToTargetUnit is true, then message anyway will not be shown)
-                        errorMessage = partyUnitUI.UnitStatusUIConfig.GetOnTryToAttackMessage(activeUnitIsFromThisParty, meleUnitBlockingCondition);
-                    }
-                    // verify if ability type is healing
-                    if ((unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityTypes & UnitAbilityTypes.Healing) == UnitAbilityTypes.Healing)
-                    {
-                        // Get if unit health is full
-                        bool unitHealthIsFull = partyUnit.UnitHealthCurr == partyUnit.GetUnitEffectiveMaxHealth();
-                        // verify if unit can be be healed (return true if isAllowedToApplyPwrToTargetUnit is already set to true or if it unit can be healed)
-                        isAllowedToApplyPwrToTargetUnit = isAllowedToApplyPwrToTargetUnit | partyUnit.UnitStatusConfig.GetCanBeHealed(activeUnitIsFromThisParty, unitHealthIsFull);
-                        // set message based on the unit status and current health (Note: if isAllowedToApplyPwrToTargetUnit is true, then message anyway will not be shown)
-                        errorMessage = partyUnitUI.UnitStatusUIConfig.GetOnTryToHealMessage(activeUnitIsFromThisParty, unitHealthIsFull);
-                    }
-                    // verify if ability type is resurecting
-                    if ((unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityTypes & UnitAbilityTypes.Resurecting) == UnitAbilityTypes.Resurecting)
-                    {
-                        // verify if unit can be be resurected (return true if isAllowedToApplyPwrToTargetUnit is already set to true or if it unit can be resurected)
-                        isAllowedToApplyPwrToTargetUnit = isAllowedToApplyPwrToTargetUnit | partyUnit.UnitStatusConfig.GetCanBeResurected(activeUnitIsFromThisParty);
-                        Debug.Log("Unit: " + partyUnit.UnitName + ". Allowed to resurect is " + isAllowedToApplyPwrToTargetUnit);
-                        // set message based on the unit status (Note: if isAllowedToApplyPwrToTargetUnit is true, then message anyway will not be shown)
-                        errorMessage = partyUnitUI.UnitStatusUIConfig.GetOnTryToResurectMessage(activeUnitIsFromThisParty);
-                    }
-                    // set if cell can be targeted
-                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToTargetUnit, 
-                        transform.Find(horisontalPanel + "/" + cell), 
-                        errorMessage, // Note: if isAllowedToApplyPwrToTargetUnit is true, then message will not be shown
-                        unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbility.abilityIsApplicableColor,
-                        unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbility.abilityNotApplicableColor);
-                }
-                else
-                {
-                    // no unit in this slot
-                    // verify if this slot is active (to not apply things to disabled unit slots)
-                    if (unitSlot.gameObject.activeSelf)
-                    {
-                        // prohibit applying powers to inactive slots
-                        isAllowedToApplyPwrToTargetUnit = false;
-                        // set error message
-                        errorMessage = "There is no unit in target cell.";
-                        // No unit in cell
-                        SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToTargetUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, Color.green, new Color32(32, 32, 32, 255));
-                    }
-                }
-            }
-        }
-    }
+    //void PrepareBattleFieldForActiveUnit(bool activeUnitIsFromThisParty, PartyUnitUI unitToActivateUI)
+    //{
+    //    // init variables, which are used in a loop
+    //    bool isAllowedToApplyPwrToTargetUnit = false;
+    //    string errorMessage = "";
+    //    // those will be needed only for mele units
+    //    MeleUnitBlockingCondition meleUnitBlockingCondition = MeleUnitBlockingCondition.None;
+    //    Row activeMeleUnitRow = activeBattleUnitUI.GetUnitRow().Row;
+    //    foreach (Row horisontalPanel in horisontalPanels)
+    //    {
+    //        foreach (Cell cell in cells)
+    //        {
+    //            // verify if destination slot has an unit in it
+    //            Transform unitSlot = transform.Find(horisontalPanel + "/" + cell).Find("UnitSlot");
+    //            if (unitSlot.childCount > 0)
+    //            {
+    //                // Get party unit UI
+    //                PartyUnitUI partyUnitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+    //                // get party unit
+    //                PartyUnit partyUnit = partyUnitUI.LPartyUnit;
+    //                // reset is allowed to apply power to target unit
+    //                isAllowedToApplyPwrToTargetUnit = false;
+    //                // verify if unit's ability is mele or ranged
+    //                if (unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityRange == UnitAbilityRange.Mele)
+    //                {
+    //                    // get active mele unit blocking condition
+    //                    meleUnitBlockingCondition = GetMeleUnitBlockingCondition(cell, horisontalPanel, activeMeleUnitRow);
+    //                }
+    //                // verify if ability type is damaging
+    //                if ((unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityTypes & UnitAbilityTypes.Damaging) == UnitAbilityTypes.Damaging)
+    //                {
+    //                    // verify if unit can be be attacked (return true if isAllowedToApplyPwrToTargetUnit is already set to true or if it unit can be attacked)
+    //                    isAllowedToApplyPwrToTargetUnit = isAllowedToApplyPwrToTargetUnit | partyUnit.UnitStatusConfig.GetCanBeAttacked(activeUnitIsFromThisParty, meleUnitBlockingCondition);
+    //                    // set message based on the unit status (Note: if isAllowedToApplyPwrToTargetUnit is true, then message anyway will not be shown)
+    //                    errorMessage = partyUnitUI.UnitStatusUIConfig.GetOnTryToAttackMessage(activeUnitIsFromThisParty, meleUnitBlockingCondition);
+    //                }
+    //                // verify if ability type is healing
+    //                if ((unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityTypes & UnitAbilityTypes.Healing) == UnitAbilityTypes.Healing)
+    //                {
+    //                    // Get if unit health is full
+    //                    bool unitHealthIsFull = partyUnit.UnitHealthCurr == partyUnit.GetUnitEffectiveMaxHealth();
+    //                    // verify if unit can be be healed (return true if isAllowedToApplyPwrToTargetUnit is already set to true or if it unit can be healed)
+    //                    isAllowedToApplyPwrToTargetUnit = isAllowedToApplyPwrToTargetUnit | partyUnit.UnitStatusConfig.GetCanBeHealed(activeUnitIsFromThisParty, unitHealthIsFull);
+    //                    // set message based on the unit status and current health (Note: if isAllowedToApplyPwrToTargetUnit is true, then message anyway will not be shown)
+    //                    errorMessage = partyUnitUI.UnitStatusUIConfig.GetOnTryToHealMessage(activeUnitIsFromThisParty, unitHealthIsFull);
+    //                }
+    //                // verify if ability type is resurecting
+    //                if ((unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbilityTypes & UnitAbilityTypes.Resurecting) == UnitAbilityTypes.Resurecting)
+    //                {
+    //                    // verify if unit can be be resurected (return true if isAllowedToApplyPwrToTargetUnit is already set to true or if it unit can be resurected)
+    //                    isAllowedToApplyPwrToTargetUnit = isAllowedToApplyPwrToTargetUnit | partyUnit.UnitStatusConfig.GetCanBeResurected(activeUnitIsFromThisParty);
+    //                    Debug.Log("Unit: " + partyUnit.UnitName + ". Allowed to resurect is " + isAllowedToApplyPwrToTargetUnit);
+    //                    // set message based on the unit status (Note: if isAllowedToApplyPwrToTargetUnit is true, then message anyway will not be shown)
+    //                    errorMessage = partyUnitUI.UnitStatusUIConfig.GetOnTryToResurectMessage(activeUnitIsFromThisParty);
+    //                }
+    //                // set if cell can be targeted
+    //                SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToTargetUnit, 
+    //                    transform.Find(horisontalPanel + "/" + cell), 
+    //                    errorMessage, // Note: if isAllowedToApplyPwrToTargetUnit is true, then message will not be shown
+    //                    unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbility.abilityIsApplicableColor,
+    //                    unitToActivateUI.LPartyUnit.UnitAbilityConfig.unitAbility.abilityNotApplicableColor);
+    //            }
+    //            else
+    //            {
+    //                // no unit in this slot
+    //                // verify if this slot is active (to not apply things to disabled unit slots)
+    //                if (unitSlot.gameObject.activeSelf)
+    //                {
+    //                    // prohibit applying powers to inactive slots
+    //                    isAllowedToApplyPwrToTargetUnit = false;
+    //                    // set error message
+    //                    errorMessage = "There is no unit in target cell.";
+    //                    // No unit in cell
+    //                    SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToTargetUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, Color.green, new Color32(32, 32, 32, 255));
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
     //public void HighlightActiveUnitInBattle(PartyUnit unitToActivate, bool doHighlight = true)
     //{
     //    Color highlightColor;
@@ -2385,7 +2389,7 @@ public class PartyPanel : MonoBehaviour {
         //        break;
         //}
         // prepare battle field for active unit
-        PrepareBattleFieldForActiveUnit(activeUnitIsFromThisParty, unitToActivateUI);
+        // PrepareBattleFieldForActiveUnit(activeUnitIsFromThisParty, unitToActivateUI);
         // Highlight active unit itself, this should be done after previous highlights
         // to override their logic
         if (activeUnitIsFromThisParty)
@@ -2396,6 +2400,22 @@ public class PartyPanel : MonoBehaviour {
         }
         yield return null;
     }
+
+    //public void OnBattleNewUnitHasBeenActivated(System.Object context)
+    //{
+    //    // verify if context is PartyUnitUI
+    //    if (context is PartyUnitUI)
+    //    {
+    //        // init party unit UI from context
+    //        PartyUnitUI partyUnitUI = (PartyUnitUI)context;
+    //        // save it locally for later use
+    //        activeBattleUnitUI = partyUnitUI;
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Context doesn't match");
+    //    }
+    //}
 
     //void DeactivateExpiredBuffs(PartyUnit unit)
     //{

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Base Mass Healing Ability UPM
+  m_EditorClassIdentifier: 
+  displayName: '-'
+  description: '-'
+  uniquePowerModifier: {fileID: 0}
+  unitStatModifierConfig: {fileID: 11400000, guid: a217605c5da58db4f882de1498389c2c,
+    type: 2}
+  uniquePowerModifierAlignment: 1
+  triggerCondition: 0
+  modifierConfigUpdaters:
+  - {fileID: 11400000, guid: 461b6af6ec598fe418be9d34d8e76dc1, type: 2}
+  modifierLimiters:
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 0}

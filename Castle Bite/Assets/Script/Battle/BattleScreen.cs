@@ -23,6 +23,12 @@ public class BattleScreen : MonoBehaviour {
     GameEvent battleScreenEnable;
     [SerializeField]
     GameEvent battleScreenDisable;
+    [SerializeField]
+    GameEvent battleNewUnitHasBeenActivatedEvent;
+    [SerializeField]
+    GameEvent battleApplyActiveUnitAbilityEvent;
+
+
 
     //[SerializeField]
     //MapManager mapManager;
@@ -802,6 +808,13 @@ public class BattleScreen : MonoBehaviour {
         CoroutineQueueManager.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
     }
 
+    IEnumerator TriggerNewUnitHasBeenActivatedEvent()
+    {
+        // skip first frame
+        yield return null;
+        battleNewUnitHasBeenActivatedEvent.Raise(ActiveUnitUI);
+    }
+
     IEnumerator ActivateUnit()
     {
         //Debug.Log("ActivateUnit");
@@ -818,7 +831,9 @@ public class BattleScreen : MonoBehaviour {
         {
             case UnitStatus.Active:
                 // Activate highlights of which cells can or cannot be targeted
-                SetHighlight();
+                // Trigger event for all required listeners
+                CoroutineQueueManager.Run(TriggerNewUnitHasBeenActivatedEvent());
+                // SetHighlight();
                 // verify if active unit's party panel is AI controlled => faction not equal to player's faction
                 if (ActiveUnitUI.GetUnitPartyPanel().IsAIControlled)
                 {
@@ -1047,7 +1062,8 @@ public class BattleScreen : MonoBehaviour {
     {
         Debug.LogWarning("OnEndItemDrag");
         // Instruct Battle screen to update units highlight
-        SetHighlight();
+        CoroutineQueueManager.Run(TriggerNewUnitHasBeenActivatedEvent());
+        // SetHighlight();
     }
 
     public void OnItemHasBeenDroppedIntoEquipmentSlot(System.Object inventorySlotDropHandler)
@@ -1065,13 +1081,51 @@ public class BattleScreen : MonoBehaviour {
         ((ItemSlotDropHandler)inventorySlotDropHandler).EquipmentSlot = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CurrentHeroEquipmentSlot;
     }
 
-    public void PartyInventoryUIHasBeenEnabledEvent(System.Object partyInventoryUI)
+    public void OnPartyInventoryUIHasBeenEnabled(System.Object partyInventoryUI)
     {
         // verify if object type is correct
         if (partyInventoryUI is PartyInventoryUI)
         {
             // display party inventory
             ((PartyInventoryUI)partyInventoryUI).DisplayHeroEquipmentUsableInventory();
+        }
+    }
+
+    // context is destination unit slot
+    public void OnUnitSlotLeftClickEvent(System.Object context)
+    {
+        // verify if context is correct
+        if (context is UnitSlot)
+        {
+            // init unit slot from context
+            UnitSlot unitSlot = (UnitSlot)context;
+            // Verify if battle has not ended
+            if (!BattleHasEnded)
+            {
+                //Debug.Log("UnitSlot ActOnClick in Battle screen");
+                // act based on the previously set by SetOnClickAction by PartyPanel conditions
+                if (unitSlot.IsAllowedToApplyPowerToThisUnit)
+                {
+                    // it is allowed to apply powers to the unit in this cell
+                    // Block mouse input
+                    InputBlocker.SetActive(true);
+                    // Trigger Event
+                    // Listeners: All active PartyPanelCell(s)
+                    battleApplyActiveUnitAbilityEvent.Raise(unitSlot);
+                    // tmp:
+                    unitSlot.GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+                    // set unit has moved flag
+                    ActiveUnitUI.LPartyUnit.HasMoved = true;
+                    // activate next unit
+                    ActivateNextUnit();
+                }
+                else
+                {
+                    // it is not allowed to use powers on this cell
+                    // display error message
+                    NotificationPopUp.Instance().DisplayMessage(unitSlot.ErrorMessage);
+                }
+            }
         }
     }
 }

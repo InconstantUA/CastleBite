@@ -40,7 +40,7 @@ public class InventoryItemInfoPanel : MonoBehaviour, IPointerUpHandler, IPointer
         // Get Max usages UI tranform
         Transform maxUsagesUI = transform.Find("MaxUsages");
         // verify if item has usages
-        if (inventoryItem.HasActiveModifiers())
+        if (inventoryItem.IsUsable)
         {
             // enable usages information
             maxUsagesUI.gameObject.SetActive(true);

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [Serializable]
@@ -26,6 +27,7 @@ public class EditPartyScreen : MonoBehaviour {
     [SerializeField]
     GameObject unitCanvasTemplate;
 
+    private UnitSlot unitSlotToDismissCache;
 
     public City LCity
     {
@@ -906,13 +908,139 @@ public class EditPartyScreen : MonoBehaviour {
         SetHireUnitPnlButtonActive(true);
     }
 
-    public void PartyInventoryUIHasBeenEnabledEvent(System.Object partyInventoryUI)
+    public void OnPartyInventoryUIHasBeenEnabled(System.Object partyInventoryUI)
     {
         // verify if object type is correct
         if (partyInventoryUI is PartyInventoryUI)
         {
             // display party inventory
             ((PartyInventoryUI)partyInventoryUI).DisplayCurrentPartyInventory();
+        }
+    }
+
+    void ActivateHireUnitButtonsIfNeeded()
+    {
+        // get city screen
+        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
+        // verify if we are in city view mode
+        if (cityScreen != null)
+        {
+            // activate hire unit pnl button
+            cityScreen.SetHireUnitPnlButtonActive(true);
+        }
+    }
+
+    void OnDismissYesConfirmation()
+    {
+        Debug.Log("Yes");
+        // activate hire unit pnl button
+        SetHireUnitPnlButtonActive(true);
+        // Ask city to dismiss unit
+        DimissUnit(unitSlotToDismissCache);
+        // clear cached unit slot reference
+        unitSlotToDismissCache = null;
+    }
+
+    void OnDismissNoConfirmation()
+    {
+        Debug.Log("No");
+        // activate hire unit pnl button
+        SetHireUnitPnlButtonActive(true);
+        // clear cached unit slot reference
+        unitSlotToDismissCache = null;
+    }
+
+    void TryToDismissUnit(PartyUnit unit)
+    {
+        // this depends on the fact if unit is dismissable
+        // for example Capital guard is not dimissable
+        // all other units normally are dismissable
+        if (unit.IsDismissable)
+        {
+            // as for confirmation
+            string confirmationMessage;
+            // verify if this is party leader
+            if (unit.IsLeader)
+            {
+                confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GivenName + " " + unit.UnitName + " and whole party?";
+            }
+            else
+            {
+                confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
+            }
+            // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+            ConfirmationPopUp.Instance().Choice(confirmationMessage, new UnityAction(OnDismissYesConfirmation), new UnityAction(OnDismissNoConfirmation));
+        }
+        else
+        {
+            // display error message
+            NotificationPopUp.Instance().DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
+        }
+    }
+
+    // context is destination unit slot
+    public void OnUnitSlotLeftClickEvent(System.Object context)
+    {
+        // verify if context is correct
+        if (context is UnitSlot)
+        {
+            // init unit slot from context
+            UnitSlot unitSlot = (UnitSlot)context;
+            Debug.Log("UnitSlot ActOnClick in City");
+            // Get city state
+            EditPartyScreenActiveState cityState = EditPartyScreenActiveState;
+            // Verify if city state is not normal
+            if (EditPartyScreenActiveState.Normal != cityState)
+            {
+                DeactivateActiveToggle();
+            }
+            // Get party unit UI in this slot
+            PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+            // Verify if unit is found
+            if (unitUI)
+            {
+                // act based on the city (and cursor) state
+                switch (cityState)
+                {
+                    case EditPartyScreenActiveState.Normal:
+                        // do nothing for now
+                        break;
+                    case EditPartyScreenActiveState.ActiveDismiss:
+                        // cache unit slot to dismiss (it is used in OnDismissYesConfirmation())
+                        unitSlotToDismissCache = unitSlot;
+                        // try to dismiss unit, if it is possible
+                        TryToDismissUnit(unitUI.LPartyUnit);
+                        break;
+                    case EditPartyScreenActiveState.ActiveHeal:
+                        // try to heal unit, if it is possible
+                        Debug.Log("Show Heal Unit confirmation box");
+                        break;
+                    case EditPartyScreenActiveState.ActiveResurect:
+                        // try to resurect unit, if it is possible
+                        Debug.Log("Show Resurect Unit confirmation box");
+                        break;
+                    case EditPartyScreenActiveState.ActiveUnitDrag:
+                        // ??
+                        break;
+                    case EditPartyScreenActiveState.ActiveItemDrag:
+                        // this should not be triggered here, because it should be triggered in the unit slot drop handler when item is being dropped in it
+                        Debug.LogWarning("Unpredicted condition");
+                        break;
+                    default:
+                        Debug.LogError("Unknown state");
+                        break;
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Unit no found");
+            }
+            // Verify if city state is not normal
+            if (EditPartyScreenActiveState.Normal != cityState)
+            {
+                // disable previous city state
+                SetActiveState(cityState, false);
+            }
         }
     }
 }

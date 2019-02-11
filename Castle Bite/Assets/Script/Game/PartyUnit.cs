@@ -483,10 +483,13 @@ public enum ModifierAppliedTo
 }
 
 [Serializable]
-public enum ModifierAppliedHow
+public enum TriggerCondition
 {
-    Active, // Potions, scrolls, weapon with active modifiers (paralise)
-    Passive // Equipment: armor, boots, weapon with passive modifiers
+    NonePassive,    // Give continuous bonus, example: Equipment: armor, boots, weapon with passive modifiers
+    NoneImmediate,  // Apply its power immeadiately upon usage: Healing Potions
+    AtTurnStart     // Debuffs and Buffs with DoTs (Damage over time), which are triggered at turn start
+    //Active, // Potions, scrolls, weapon with active modifiers (paralise)
+    //Passive // Equipment: armor, boots, weapon with passive modifiers
 }
 
 [Serializable]
@@ -496,7 +499,6 @@ public enum ModifierDurationType
     RemoveAtBattleEnd = 2,
     NumberOfBattleTurns = 4,
     NumberOfGameTurns = 8
-
 }
 
 //[Serializable]
@@ -592,7 +594,7 @@ public class UnitStatModifier : System.Object
     public int modifierPower;
     public int skillPowerMultiplier = 1; // move to data
     public ModifierCalculatedHow modifierCalculatedHow;
-    public ModifierAppliedHow modifierAppliedHow;
+    public TriggerCondition modifierAppliedHow;
     public int duration;
     public int durationLeft; // to be moved to data
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
@@ -1102,7 +1104,7 @@ public class PartyUnit : MonoBehaviour {
                     // verify if stat matches
                     if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifiedUnitStatID == unitStatID)
                         // verify if UPM is passive
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this))
                         // verify if dst party unit hass mass scope
@@ -1145,7 +1147,7 @@ public class PartyUnit : MonoBehaviour {
                 for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
                 {
                     // verify if UPM is passive
-                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                         // verify if dst party unit hass mass scope
@@ -1190,7 +1192,7 @@ public class PartyUnit : MonoBehaviour {
                 for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
                 {
                     // verify if UPM is passive
-                    if ((inventoryItem.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
+                    if ((inventoryItem.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
                         // verify if UPM relationships requirements are met
                         && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                         // verify if dst party unit hass mass scope
@@ -1237,7 +1239,7 @@ public class PartyUnit : MonoBehaviour {
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
             // verify if UPM is passive
-            if ((UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
+            if ((UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
                 // verify if UPM relationships requirements are met
                 && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                 // verify if dst party unit hass mass scope
@@ -1356,7 +1358,7 @@ public class PartyUnit : MonoBehaviour {
                 for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
                 {
                     // verify if UPM is passive
-                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive)
+                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this)))
                     {
@@ -1393,7 +1395,7 @@ public class PartyUnit : MonoBehaviour {
         foreach (UniquePowerModifierData uniquePowerModifierData in AppliedUniquePowerModifiersData)
         {
             // verify if UPM is passive
-            if (uniquePowerModifierData.GetUniquePowerModifierConfig().ModifierAppliedHow == ModifierAppliedHow.Passive)
+            if (uniquePowerModifierData.GetUniquePowerModifierConfig().TriggerCondition == TriggerCondition.NonePassive)
             {
                 // add data to the list of all bonuses
                 allBonuses.Add(uniquePowerModifierData);
@@ -2588,170 +2590,170 @@ public class PartyUnit : MonoBehaviour {
     }
 
     // doPreview - use item without actually using it, just verify if item can be used by this unit
-    public bool UseItem(InventoryItem inventoryItem, bool doPreview = false)
-    {
-        // consumable items can have different duration, for example
-        // healing poition - instant usm (0)
-        // apply scroll with harmful spell on the enemy - instant upm (0)
-        // potion of agility - duration 1 day (>=1), increases unit's inititative by x
-        // potion of Titan might - duration is permanent (<0), increases unit's strength by 10%
-        // voodoo doll - instant upm, with 3 usages
-        // resurection stone - instant usm, with 3 usages
-        // to be more generic we assume that somebody may create item with different UPMs and USMs with differnet durations
-        // init list of UPMs and USMs ids which are one-time and should be removed from the list of UPMs and USMs after being used
-        //List<int> upmIDsTobeRemoved = new List<int>();
-        //List<int> usmIDsTobeRemoved = new List<int>();
-        // init is applicable by default with false, if at least one modifier is applicable it should reset this flag to true
-        bool isApplicable = false;
-        // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items may be not stackable
-        // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, 
-        // that is why we do not do this additional check against partly-leader-equipped items
-        if ((GetUnitItemByName(inventoryItem.ItemName) != null)
-            // and that item is not stackable
-            && (!inventoryItem.ItemIsStackable)
-            // and that item is not in equipment slot
-            && (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None))
-        {
-            // unit already has this item
-            Debug.LogWarning("Unit already has " + inventoryItem.name + " item or its bonuses applied. The same item cannot be applied or consumed again.");
-            // same item cannot be applied once again
-            isApplicable = false;
-        }
-        else
-        {
-            // unit does not have this item yet or item is stackable, do additional checks
-            // consume unique power modifiers
-            for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
-            {
-                // verify if this is active modifier
-                if ((inventoryItem.UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Active)
-                // verify if UPM required statuses match current unit status
-                && (MatchStatuses(inventoryItem.UniquePowerModifierConfigs[i].CanBeAppliedToTheUnitsWithStatuses))
-                // verify if UPM scope matches
-                && (MatchItemScope(inventoryItem.UniquePowerModifierConfigs[i].ModifierScope)))
-                {
-                    // upm has instant one-time effect
+    //public bool UseItem(InventoryItem inventoryItem, bool doPreview = false)
+    //{
+    //    // consumable items can have different duration, for example
+    //    // healing poition - instant usm (0)
+    //    // apply scroll with harmful spell on the enemy - instant upm (0)
+    //    // potion of agility - duration 1 day (>=1), increases unit's inititative by x
+    //    // potion of Titan might - duration is permanent (<0), increases unit's strength by 10%
+    //    // voodoo doll - instant upm, with 3 usages
+    //    // resurection stone - instant usm, with 3 usages
+    //    // to be more generic we assume that somebody may create item with different UPMs and USMs with differnet durations
+    //    // init list of UPMs and USMs ids which are one-time and should be removed from the list of UPMs and USMs after being used
+    //    //List<int> upmIDsTobeRemoved = new List<int>();
+    //    //List<int> usmIDsTobeRemoved = new List<int>();
+    //    // init is applicable by default with false, if at least one modifier is applicable it should reset this flag to true
+    //    bool isApplicable = false;
+    //    // verify if the same item is not already applying its UPMs and USMs, because bonuses from the same items may be not stackable
+    //    // normally this check is not needed for the entire-party scope items, which are equipped on the party leader, 
+    //    // that is why we do not do this additional check against partly-leader-equipped items
+    //    if ((GetUnitItemByName(inventoryItem.ItemName) != null)
+    //        // and that item is not stackable
+    //        && (!inventoryItem.ItemIsStackable)
+    //        // and that item is not in equipment slot
+    //        && (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None))
+    //    {
+    //        // unit already has this item
+    //        Debug.LogWarning("Unit already has " + inventoryItem.name + " item or its bonuses applied. The same item cannot be applied or consumed again.");
+    //        // same item cannot be applied once again
+    //        isApplicable = false;
+    //    }
+    //    else
+    //    {
+    //        // unit does not have this item yet or item is stackable, do additional checks
+    //        // consume unique power modifiers
+    //        for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
+    //        {
+    //            // verify if this is active modifier
+    //            if ((inventoryItem.UniquePowerModifierConfigs[i].ModifierAppliedHow == TriggerCondition.Active)
+    //            // verify if UPM required statuses match current unit status
+    //            && (MatchStatuses(inventoryItem.UniquePowerModifierConfigs[i].CanBeAppliedToTheUnitsWithStatuses))
+    //            // verify if UPM scope matches
+    //            && (MatchItemScope(inventoryItem.UniquePowerModifierConfigs[i].ModifierScope)))
+    //            {
+    //                // upm has instant one-time effect
 
-                    // or temporary effect defined by the Duration in number of game or battle turns
-                    // it is destroyed before start of the next turn if duration reaches
-                    // it is applied automatically during calculations (for example damage or defence calculations)
+    //                // or temporary effect defined by the Duration in number of game or battle turns
+    //                // it is destroyed before start of the next turn if duration reaches
+    //                // it is applied automatically during calculations (for example damage or defence calculations)
 
-                    // upm is normally applied only during the battle and to the enemy
-                    // if we are in this situation, then it means that enemy has applied item with upm on this hero
+    //                // upm is normally applied only during the battle and to the enemy
+    //                // if we are in this situation, then it means that enemy has applied item with upm on this hero
 
-                    // verify whether it is applied to base, max or current stat values
-                    // apply upm
-                    bool modifierCanBeApplied = ApplyActiveUPM(inventoryItem.UniquePowerModifierConfigs[i], doPreview);
-                    // if at least one upm is applicable, then set applicable flag to true
-                    if (modifierCanBeApplied)
-                        isApplicable = true;
-                    //    upmIDsTobeRemoved.Add(i);
-                }
-                else
-                {
-                    // this is passive modifier
-                    // it is applied automatically during calculations (for example damage or defence calculations)
-                }
-            }
-            for (int i = 0; i < inventoryItem.UnitStatModifiers.Count; i++)
-            {
-                // verify if this is active USM
-                if ((inventoryItem.UnitStatModifiers[i].modifierAppliedHow == ModifierAppliedHow.Active)
-                // verify if USM required statuses match current unit status
-                && (MatchStatuses(inventoryItem.UnitStatModifiers[i].canBeAppliedToTheUnitsWithStatuses))
-                // verify if USM scope matches
-                && (MatchItemScope(inventoryItem.UnitStatModifiers[i].modifierScope)))
-                {
-                    // verify if usm applies to current stats
-                    if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.CurrentStat)
-                    {
-                        // apply usm
-                        bool modifierCanBeApplied = ApplyUSMToCurrentStatValue(inventoryItem.UnitStatModifiers[i], doPreview);
-                        // if at least one usm is applicable, then set applicable flag to true
-                        if (modifierCanBeApplied)
-                            isApplicable = true;
-                    }
-                    else if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.MaxStat)
-                    {
-                        // apply usm, without actually applying it, because it will be applied passively
-                        bool modifierCanBeApplied = VerifyIfUSMCanBeAppliedToMaxStatValue(inventoryItem.UnitStatModifiers[i]);
-                        // if at least one usm is applicable, then set applicable flag to true
-                        if (modifierCanBeApplied)
-                            isApplicable = true;
-                    }
-                    else
-                    {
-                        Debug.LogError("Do not know to which stat (current or max) unit stat modifier is applied to");
-                    }
-                    // usm has instant one-time effect
-                    // instant modifiers can applied only to the current stat value (example current health)
-                    // but they cannot be applied to the base or max value (example to max health)
+    //                // verify whether it is applied to base, max or current stat values
+    //                // apply upm
+    //                bool modifierCanBeApplied = ApplyActiveUPM(inventoryItem.UniquePowerModifierConfigs[i], doPreview);
+    //                // if at least one upm is applicable, then set applicable flag to true
+    //                if (modifierCanBeApplied)
+    //                    isApplicable = true;
+    //                //    upmIDsTobeRemoved.Add(i);
+    //            }
+    //            else
+    //            {
+    //                // this is passive modifier
+    //                // it is applied automatically during calculations (for example damage or defence calculations)
+    //            }
+    //        }
+    //        for (int i = 0; i < inventoryItem.UnitStatModifiers.Count; i++)
+    //        {
+    //            // verify if this is active USM
+    //            if ((inventoryItem.UnitStatModifiers[i].modifierAppliedHow == TriggerCondition.Active)
+    //            // verify if USM required statuses match current unit status
+    //            && (MatchStatuses(inventoryItem.UnitStatModifiers[i].canBeAppliedToTheUnitsWithStatuses))
+    //            // verify if USM scope matches
+    //            && (MatchItemScope(inventoryItem.UnitStatModifiers[i].modifierScope)))
+    //            {
+    //                // verify if usm applies to current stats
+    //                if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.CurrentStat)
+    //                {
+    //                    // apply usm
+    //                    bool modifierCanBeApplied = ApplyUSMToCurrentStatValue(inventoryItem.UnitStatModifiers[i], doPreview);
+    //                    // if at least one usm is applicable, then set applicable flag to true
+    //                    if (modifierCanBeApplied)
+    //                        isApplicable = true;
+    //                }
+    //                else if (inventoryItem.UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.MaxStat)
+    //                {
+    //                    // apply usm, without actually applying it, because it will be applied passively
+    //                    bool modifierCanBeApplied = VerifyIfUSMCanBeAppliedToMaxStatValue(inventoryItem.UnitStatModifiers[i]);
+    //                    // if at least one usm is applicable, then set applicable flag to true
+    //                    if (modifierCanBeApplied)
+    //                        isApplicable = true;
+    //                }
+    //                else
+    //                {
+    //                    Debug.LogError("Do not know to which stat (current or max) unit stat modifier is applied to");
+    //                }
+    //                // usm has instant one-time effect
+    //                // instant modifiers can applied only to the current stat value (example current health)
+    //                // but they cannot be applied to the base or max value (example to max health)
 
-                    // or temporary effect defined by the Duration in number of game or battle turns
-                    // it is destroyed before start of the next turn if duration reaches
-                    // it is applied automatically during calculations (for example damage or defence calculations)
+    //                // or temporary effect defined by the Duration in number of game or battle turns
+    //                // it is destroyed before start of the next turn if duration reaches
+    //                // it is applied automatically during calculations (for example damage or defence calculations)
 
-                    // verify whether it is applied to base, max or current stat values
-                    // verify if it is applicable and that item is not usable any more
-                    //if (isApplicable && (inventoryItem.LeftUsagesCount <= 1))
-                    //    usmIDsTobeRemoved.Add(i);
-                }
-                else
-                {
-                    // usm applied passively from being placed in equipment slot
-                    // or it does not apply
-                    // it is applied automatically during calculations (for example damage or defence calculations)
-                }
-            }
-            //// verify if there are unit status modifiers
-            //if (inventoryItem.UnitStatusModifiers.Count >= 1)
-            //{
-            //    // verify if unit status matches
-            //    if ((MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
-            //    // verify if scope matches
-            //    && (MatchItemScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
-            //    {
-            //        // set is applicable flag
-            //        isApplicable = true;
-            //        // verify if this is not preview
-            //        if (!doPreview)
-            //        {
-            //            // Apply unit Status
-            //            UnitStatus = inventoryItem.UnitStatusModifiers[0].modifierSetStatus;
-            //        }
-            //    }
-            //}
-        }
-        // verify if at leats one UPM or USM has been applied
-        if (isApplicable)
-        {
-            // verify if this is not preview
-            if (!doPreview)
-            {
-                //// destroy one-time instant USMs and UPMs
-                //foreach (int upmIDTobeRemoved in upmIDsTobeRemoved)
-                //{
-                //    inventoryItem.UniquePowerModifiers.RemoveAt(upmIDTobeRemoved);
-                //}
-                //foreach (int usmIDTobeRemoved in usmIDsTobeRemoved)
-                //{
-                //    inventoryItem.UnitStatModifiers.RemoveAt(usmIDTobeRemoved);
-                //}
-                // decrement usages left counter
-                inventoryItem.LeftUsagesCount -= 1;
-            }
-            // return item is consumable
-            return true;
-        }
-        else
-        {
-            Debug.LogWarning("Item is not applicable to this unit");
-            // this item could not be applied to that unit
-            // item will return back automatically
-            // return item is not consumable
-            return false;
-        }
-    }
+    //                // verify whether it is applied to base, max or current stat values
+    //                // verify if it is applicable and that item is not usable any more
+    //                //if (isApplicable && (inventoryItem.LeftUsagesCount <= 1))
+    //                //    usmIDsTobeRemoved.Add(i);
+    //            }
+    //            else
+    //            {
+    //                // usm applied passively from being placed in equipment slot
+    //                // or it does not apply
+    //                // it is applied automatically during calculations (for example damage or defence calculations)
+    //            }
+    //        }
+    //        //// verify if there are unit status modifiers
+    //        //if (inventoryItem.UnitStatusModifiers.Count >= 1)
+    //        //{
+    //        //    // verify if unit status matches
+    //        //    if ((MatchStatuses(inventoryItem.UnitStatusModifiers[0].canBeAppliedToTheUnitsWithStatuses))
+    //        //    // verify if scope matches
+    //        //    && (MatchItemScope(inventoryItem.UnitStatusModifiers[0].modifierScope)))
+    //        //    {
+    //        //        // set is applicable flag
+    //        //        isApplicable = true;
+    //        //        // verify if this is not preview
+    //        //        if (!doPreview)
+    //        //        {
+    //        //            // Apply unit Status
+    //        //            UnitStatus = inventoryItem.UnitStatusModifiers[0].modifierSetStatus;
+    //        //        }
+    //        //    }
+    //        //}
+    //    }
+    //    // verify if at leats one UPM or USM has been applied
+    //    if (isApplicable)
+    //    {
+    //        // verify if this is not preview
+    //        if (!doPreview)
+    //        {
+    //            //// destroy one-time instant USMs and UPMs
+    //            //foreach (int upmIDTobeRemoved in upmIDsTobeRemoved)
+    //            //{
+    //            //    inventoryItem.UniquePowerModifiers.RemoveAt(upmIDTobeRemoved);
+    //            //}
+    //            //foreach (int usmIDTobeRemoved in usmIDsTobeRemoved)
+    //            //{
+    //            //    inventoryItem.UnitStatModifiers.RemoveAt(usmIDTobeRemoved);
+    //            //}
+    //            // decrement usages left counter
+    //            inventoryItem.LeftUsagesCount -= 1;
+    //        }
+    //        // return item is consumable
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Item is not applicable to this unit");
+    //        // this item could not be applied to that unit
+    //        // item will return back automatically
+    //        // return item is not consumable
+    //        return false;
+    //    }
+    //}
 
     public int GetUnitEffectiveMaxHealth()
     {
@@ -2785,10 +2787,10 @@ public class PartyUnit : MonoBehaviour {
         ApplyDailyHealthRegen();
         // .. decrement daily buffs
         // loop through all items and verify if it has expired
-        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
-        {
-            inventoryItem.ExecutePreTurnActions();
-        }
+        //foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+        //{
+        //    inventoryItem.ExecutePreTurnActions();
+        //}
     }
 
     #region Attributes accessors

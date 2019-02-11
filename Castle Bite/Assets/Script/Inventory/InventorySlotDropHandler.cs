@@ -37,16 +37,21 @@ public class InventorySlotDropHandler: ItemSlotDropHandler
                 //  we don't want to accidentally exchange boots with sword => in this case sword will appear in boots slot
                 //  we don't want to accidentally exchange with the item which is cannot be used by this hero due to requirements (skills) not met.
                 dstItemSlot = GetComponentInParent<PartyInventoryUI>().AddSlot();
+                // Put dragged item into new slot
+                dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
             }
             else
             {
                 //thisIsExachnge = true;
                 // Put item from this slot to the slot of the item beind dragged
-                srcItemSlot.PutItemIntoSlot(itemInThisSlot);
+                srcItemSlot.ExchangeWithSlotOnDrop(this);
             }
         }
-        // Put dragged item into destination slot
-        dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+        else
+        {
+            // Put dragged item into this slot
+            dstItemSlot.PutItemIntoSlot(InventoryItemDragHandler.itemBeingDragged);
+        }
         //// verify if it was not just simple exchange
         //if (!thisIsExachnge)
         //{

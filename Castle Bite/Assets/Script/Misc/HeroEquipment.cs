@@ -65,7 +65,7 @@ public class HeroEquipment : MonoBehaviour {
             // set item name in UI
             dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
             // verify if item has active modifiers
-            if (inventoryItem.HasActiveModifiers())
+            if (inventoryItem.IsUsable)
             {
                 dragHandler.GetComponentInChildren<Text>().text += inventoryItem.GetUsagesInfo();
             }

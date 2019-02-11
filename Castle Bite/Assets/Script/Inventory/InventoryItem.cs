@@ -130,11 +130,11 @@ public class InventoryItem : MonoBehaviour {
         }
     }
 
-    public bool HasActiveModifiers()
-    {
-        //return (HasActiveStatModifiers() || HasActiveUniquePowerModifiers() || HasActiveStatusModifiers());
-        return HasActiveUniquePowerModifiers();
-    }
+    //public bool ItemIsUsable()
+    //{
+    //    //return (HasActiveStatModifiers() || HasActiveUniquePowerModifiers() || HasActiveStatusModifiers());
+    //    //return HasActiveUniquePowerModifiers();
+    //}
 
     //public bool HasActiveStatModifiers()
     //{
@@ -161,185 +161,185 @@ public class InventoryItem : MonoBehaviour {
     //    return false;
     //}
 
-    public bool HasActiveUniquePowerModifiers()
-    {
-        // loop though all unique power modifiers
-        foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
-        {
-            // verify if usm is applied actively
-            if (upm.ModifierAppliedHow == ModifierAppliedHow.Active)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //public bool HasActiveUniquePowerModifiers()
+    //{
+    //    // loop though all unique power modifiers
+    //    foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
+    //    {
+    //        // verify if usm is applied actively
+    //        if (upm.ModifierAppliedHow == TriggerCondition.Active)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
-    public bool HasPassiveUPMs()
-    {
-        // loop though all unique power modifier
-        foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
-        {
-            // verify if upm does not have instant duration
-            if (upm.ModifierAppliedHow == ModifierAppliedHow.Passive)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //public bool HasPassiveUPMs()
+    //{
+    //    // loop though all unique power modifier
+    //    foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
+    //    {
+    //        // verify if upm does not have instant duration
+    //        if (upm.TriggerCondition == TriggerCondition.NonePassive)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
-    public bool HasPassiveUSMs()
-    {
-        // loop though all unit stat modifiers
-        foreach (UnitStatModifier usm in UnitStatModifiers)
-        {
-            // verify if usm does not have instant duration
-            if (usm.modifierAppliedHow == ModifierAppliedHow.Passive)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //public bool HasPassiveUSMs()
+    //{
+    //    // loop though all unit stat modifiers
+    //    foreach (UnitStatModifier usm in UnitStatModifiers)
+    //    {
+    //        // verify if usm does not have instant duration
+    //        if (usm.modifierAppliedHow == TriggerCondition.NonePassive)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
-    public bool HasPassiveModifiers()
-    {
-        return (HasPassiveUPMs() || HasPassiveUSMs());
-    }
+    //public bool HasPassiveModifiers()
+    //{
+    //    return (HasPassiveUPMs() || HasPassiveUSMs());
+    //}
 
-    public bool HasUSMModifiersAppliedToMaxStatValues()
-    {
-        foreach (UnitStatModifier usm in UnitStatModifiers)
-        {
-            // verify if usm does not have instant duration
-            if (usm.modifierAppliedTo == ModifierAppliedTo.MaxStat )
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //public bool HasUSMModifiersAppliedToMaxStatValues()
+    //{
+    //    foreach (UnitStatModifier usm in UnitStatModifiers)
+    //    {
+    //        // verify if usm does not have instant duration
+    //        if (usm.modifierAppliedTo == ModifierAppliedTo.MaxStat )
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
-    public bool HasModifiersAppliedToMaxStatValues()
-    {
-        return HasUSMModifiersAppliedToMaxStatValues();
-    }
+    //public bool HasModifiersAppliedToMaxStatValues()
+    //{
+    //    return HasUSMModifiersAppliedToMaxStatValues();
+    //}
 
-    public void RemoveExpiredUPMs()
-    {
-        for (int i = UniquePowerModifierConfigs.Count - 1; i >= 0; i--)
-        {
-            // verify if usm duration is 0 (instant upm) or duration left is 0
-            if ((UniquePowerModifierConfigs[i].UpmDurationMax == 0) || (UniquePowerModifierConfigs[i].upmDurationLeft == 0))
-            {
-                UniquePowerModifierConfigs.RemoveAt(i);
-            }
-        }
-    }
+    //public void RemoveExpiredUPMs()
+    //{
+    //    for (int i = UniquePowerModifierConfigs.Count - 1; i >= 0; i--)
+    //    {
+    //        // verify if usm duration is 0 (instant upm) or duration left is 0
+    //        if ((UniquePowerModifierConfigs[i].UpmDurationMax == 0) || (UniquePowerModifierConfigs[i].upmDurationLeft == 0))
+    //        {
+    //            UniquePowerModifierConfigs.RemoveAt(i);
+    //        }
+    //    }
+    //}
 
-    public void RemoveExpiredUSMs()
-    {
-        for (int i = UnitStatModifiers.Count - 1; i >= 0; i--)
-        {
-            // verify if usm duration is 0 (instant usm) or duration left is 0
-            if ((UnitStatModifiers[i].duration == 0) || (UnitStatModifiers[i].durationLeft == 0))
-            {
-                // verify if USM is applied to current stat
-                if (UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.CurrentStat)
-                {
-                    // just remove modifier
-                    UnitStatModifiers.RemoveAt(i);
-                }
-                else if(UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.MaxStat)
-                {
-                    // no need to remove modifier because it is applied passively and will not be calculated automatically on USM remove
-                    //// remove modifier effect on unit's max stat value
-                    //transform.parent.GetComponent<PartyUnit>().RemoveUSMEffectOnMaxStatValue(UnitStatModifiers[i]);
-                    // remove modifier
-                    UnitStatModifiers.RemoveAt(i);
-                }
-                else
-                {
-                    Debug.LogError("Do not know how modifier is applied");
-                }
-            }
-        }
-    }
+    //public void RemoveExpiredUSMs()
+    //{
+    //    for (int i = UnitStatModifiers.Count - 1; i >= 0; i--)
+    //    {
+    //        // verify if usm duration is 0 (instant usm) or duration left is 0
+    //        if ((UnitStatModifiers[i].duration == 0) || (UnitStatModifiers[i].durationLeft == 0))
+    //        {
+    //            // verify if USM is applied to current stat
+    //            if (UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.CurrentStat)
+    //            {
+    //                // just remove modifier
+    //                UnitStatModifiers.RemoveAt(i);
+    //            }
+    //            else if(UnitStatModifiers[i].modifierAppliedTo == ModifierAppliedTo.MaxStat)
+    //            {
+    //                // no need to remove modifier because it is applied passively and will not be calculated automatically on USM remove
+    //                //// remove modifier effect on unit's max stat value
+    //                //transform.parent.GetComponent<PartyUnit>().RemoveUSMEffectOnMaxStatValue(UnitStatModifiers[i]);
+    //                // remove modifier
+    //                UnitStatModifiers.RemoveAt(i);
+    //            }
+    //            else
+    //            {
+    //                Debug.LogError("Do not know how modifier is applied");
+    //            }
+    //        }
+    //    }
+    //}
 
-    public void RemoveExpiredModifiers()
-    {
-        RemoveExpiredUPMs();
-        RemoveExpiredUSMs();
-        // status modifiers do not have duration attribute, they just turn some status On
-    }
+    //public void RemoveExpiredModifiers()
+    //{
+    //    RemoveExpiredUPMs();
+    //    RemoveExpiredUSMs();
+    //    // status modifiers do not have duration attribute, they just turn some status On
+    //}
 
-    public void DecrementModifiersDuration()
-    {
-        // loop though all unit stat modifiers
-        foreach (UnitStatModifier usm in UnitStatModifiers)
-        {
-            // verify if usm has non-permanent duration
-            if (usm.duration >= 1)
-            {
-                // decrement duration left
-                usm.durationLeft -= 1;
-            }
-        }
-        // loop though all unique power modifier
-        foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
-        {
-            // verify if usm has non-permanent duration
-            if (upm.UpmDurationMax >= 0)
-            {
-                // decrement duration left
-                upm.upmDurationLeft -= 1;
-            }
-        }
-    }
+    //public void DecrementModifiersDuration()
+    //{
+    //    // loop though all unit stat modifiers
+    //    foreach (UnitStatModifier usm in UnitStatModifiers)
+    //    {
+    //        // verify if usm has non-permanent duration
+    //        if (usm.duration >= 1)
+    //        {
+    //            // decrement duration left
+    //            usm.durationLeft -= 1;
+    //        }
+    //    }
+    //    // loop though all unique power modifier
+    //    foreach (UniquePowerModifierConfig upm in UniquePowerModifierConfigs)
+    //    {
+    //        // verify if usm has non-permanent duration
+    //        if (upm.UpmDurationMax >= 0)
+    //        {
+    //            // decrement duration left
+    //            upm.upmDurationLeft -= 1;
+    //        }
+    //    }
+    //}
 
-    public void SelfDestroyIfExpired()
-    {
-        // verify if item has passive modifiers
-        if (HasPassiveModifiers())
-        {
-            Debug.Log("Item has passive modifiers.");
-            // do not do anything to the item
-            // instant modifiers are already applied
-            // non-instant modifiers are also applied by placing item into the unit's inventory
-        }
-        else if (HasModifiersAppliedToMaxStatValues())
-        {
-            Debug.Log("Item has modifiers applied to max stat values.");
-            // do not do anything to the item
-            // those modifiers with their effects should be removed after duration has expired
-        }
-        else
-        {
-            // only modifiers which are applied to current stat values are left here
-            // verify if item run out of usages
-            if (LeftUsagesCount == 0)
-            {
-                // inventory item only does not have passive modifiers
-                // item should be destroyed, because it has nothing applied afterwards
-                Debug.Log("Destroy item");
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.Log("Item still has usages left");
-                // item still has usages left
-                // it will drop back to its original slot
-            }
-        }
-    }
+    //public void SelfDestroyIfExpired()
+    //{
+    //    // verify if item has passive modifiers
+    //    if (HasPassiveModifiers())
+    //    {
+    //        Debug.Log("Item has passive modifiers.");
+    //        // do not do anything to the item
+    //        // instant modifiers are already applied
+    //        // non-instant modifiers are also applied by placing item into the unit's inventory
+    //    }
+    //    else if (HasModifiersAppliedToMaxStatValues())
+    //    {
+    //        Debug.Log("Item has modifiers applied to max stat values.");
+    //        // do not do anything to the item
+    //        // those modifiers with their effects should be removed after duration has expired
+    //    }
+    //    else
+    //    {
+    //        // only modifiers which are applied to current stat values are left here
+    //        // verify if item run out of usages
+    //        if (LeftUsagesCount == 0)
+    //        {
+    //            // inventory item only does not have passive modifiers
+    //            // item should be destroyed, because it has nothing applied afterwards
+    //            Debug.Log("Destroy item");
+    //            Destroy(gameObject);
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("Item still has usages left");
+    //            // item still has usages left
+    //            // it will drop back to its original slot
+    //        }
+    //    }
+    //}
 
-    public void ExecutePreTurnActions()
-    {
-        DecrementModifiersDuration();
-        RemoveExpiredModifiers();
-        SelfDestroyIfExpired();
-    }
+    //public void ExecutePreTurnActions()
+    //{
+    //    DecrementModifiersDuration();
+    //    RemoveExpiredModifiers();
+    //    SelfDestroyIfExpired();
+    //}
 
     public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
     {
@@ -349,7 +349,7 @@ public class InventoryItem : MonoBehaviour {
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
             // verify if UPM is passive
-            if ((UniquePowerModifierConfigs[i].ModifierAppliedHow == ModifierAppliedHow.Passive))
+            if ((UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive))
             {
                 // create and add UPM data to the list
                 upmsData.Add(new UniquePowerModifierData

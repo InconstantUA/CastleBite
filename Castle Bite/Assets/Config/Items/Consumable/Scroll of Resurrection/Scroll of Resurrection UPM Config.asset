@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Scroll of Resurrection UPM Config
+  m_EditorClassIdentifier: 
+  displayName: Heal
+  description: Heals target unit
+  uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: 146f2bd14a14c774fb295c562a04f62d,
+    type: 2}
+  uniquePowerModifierAlignment: 0
+  triggerCondition: 0
+  modifierConfigUpdaters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: 310d9cf6cb93ca74c8e9abe68be5f0b8, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 812ce6f2a230a734e8f8512bc4416b54,
+    type: 2}

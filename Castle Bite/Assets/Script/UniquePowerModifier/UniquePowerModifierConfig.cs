@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public enum UniquePowerModifierType
+public enum UniquePowerModifierAlignment
 {
-    Buff,
-    Debuff,
-    Summon
+    None,
+    Positive,
+    Negative
 }
 
 [CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Config")]
@@ -23,15 +23,15 @@ public class UniquePowerModifierConfig : ScriptableObject
     //public UnitBuff upmAppliedBuff;
     //public UnitDebuff upmAppliedDebuff;
     [SerializeField]
-    private UniquePowerModifierType uniquePowerModifierType;
+    private UniquePowerModifierAlignment uniquePowerModifierAlignment;
     // private int upmPower;
     // private int upmPowerIncrementOnLevelUp;
     // private int upmDuration;
     // private PowerSource upmSource;
     //public ModifierOrigin upmOrigin; // ?TODO: move to data
     [SerializeField]
-    private ModifierAppliedHow modifierAppliedHow;  // active (example: heal over time buff) or passive (example: defense buff)
-    public int upmDurationLeft; // TODO: move to data
+    private TriggerCondition triggerCondition;  // active (example: heal over time buff) or passive (example: defense buff)
+    //public int upmDurationLeft; // TODO: move to data
     // public int skillPowerMultiplier = 1;
     // private UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
     //[SerializeField]
@@ -295,6 +295,14 @@ public class UniquePowerModifierConfig : ScriptableObject
         }
     }
 
+    public UniquePowerModifierStatusIconUIConfig UniquePowerModifierStausIconUIConfig
+    {
+        get
+        {
+            return uniquePowerModifierUIConfig.StatusIconUIConfig;
+        }
+    }
+
     public UniquePowerModifierUIConfig UniquePowerModifierUIConfig
     {
         get
@@ -311,19 +319,19 @@ public class UniquePowerModifierConfig : ScriptableObject
         }
     }
 
-    public UniquePowerModifierType UniquePowerModifierType
+    public UniquePowerModifierAlignment UniquePowerModifierType
     {
         get
         {
-            return uniquePowerModifierType;
+            return uniquePowerModifierAlignment;
         }
     }
 
-    public ModifierAppliedHow ModifierAppliedHow
+    public TriggerCondition TriggerCondition
     {
         get
         {
-            return modifierAppliedHow;
+            return triggerCondition;
         }
     }
 

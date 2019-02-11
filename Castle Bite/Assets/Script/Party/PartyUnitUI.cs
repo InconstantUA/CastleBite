@@ -472,7 +472,7 @@ public class PartyUnitUI : MonoBehaviour {
         for (int i = LPartyUnit.AppliedUniquePowerModifiersData.Count - 1; i >= 0; i--)
         {
             // Gget UPM text animation config upfront, because UPMdata may be removed if unit is dead after Trigger
-            TextAnimation upmTextAnimation = LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierUIConfig.onTriggerTextAnimation;
+            TextAnimation upmTextAnimation = LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierStausIconUIConfig.onTriggerTextAnimation;
             // Trigger UPM
             LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.AppliedUniquePowerModifiersData[i]);
             // trigger animation to display damage done
@@ -571,7 +571,7 @@ public class PartyUnitUI : MonoBehaviour {
         if (inventoryItemUPMConfigs[0].AreRequirementsMetInContextOf(unitSlotDropHandler, LPartyUnit))
         {
             // get source context 
-            System.Object srcContext = GetSourceContext();
+            System.Object srcContext = GetItemBeingDraggedSourceContext();
             // apply unit unique power modifiers (buffs, debuffs, etc)
             for (int i = 0; i < inventoryItemUPMConfigs.Count; i++)
             {
@@ -589,7 +589,7 @@ public class PartyUnitUI : MonoBehaviour {
                     // apply upm
                     inventoryItemUPMConfigs[i].Apply(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, LPartyUnit, uniquePowerModifierID);
                     // run text animation
-                    inventoryItemUPMConfigs[i].UniquePowerModifierUIConfig.onTriggerTextAnimation.Run(UnitInfoPanelText);
+                    inventoryItemUPMConfigs[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(UnitInfoPanelText);
                 }
             }
         }
@@ -749,27 +749,36 @@ public class PartyUnitUI : MonoBehaviour {
             Debug.Log("Add new UPM");
             // get added UPM (get last UPM from the list)
             UniquePowerModifierData uniquePowerModifierData = partyUnit.AppliedUniquePowerModifiersData[partyUnit.AppliedUniquePowerModifiersData.Count - 1];
-            // init parent transform
-            Transform upmStatusIconParent;
-            // verify if UPM is buff or debuff
-            if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierType.Buff)
+            // verify if UPM has status icon config
+            if (!(uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierStausIconUIConfig is UniquePowerModifierStatusIconNoneUIConfig))
             {
-                upmStatusIconParent = upmBuffsParentTranform;
+                // init parent transform
+                Transform upmStatusIconParent;
+                // verify if UPM is buff or debuff
+                if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierAlignment.Positive)
+                {
+                    upmStatusIconParent = upmBuffsParentTranform;
+                }
+                else if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierAlignment.Negative)
+                {
+                    upmStatusIconParent = upmDebuffsParentTranform;
+                }
+                else if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierAlignment.None)
+                {
+                    upmStatusIconParent = upmBuffsParentTranform;
+                    Debug.LogWarning("UPM should have alignment set. Falling back to positive alignment");
+                }
+                else
+                {
+                    Debug.LogError("Unhandled condition");
+                    // exit without creating UPM status icon
+                    return;
+                }
+                // create UI for added UPM based on UPM config
+                UniquePowerModifierStatusIcon uniquePowerModifierStatusIcon = Instantiate(uniquePowerModifierStatusIconTemplate.gameObject, upmStatusIconParent).GetComponent<UniquePowerModifierStatusIcon>();
+                // activate new UPM
+                uniquePowerModifierStatusIcon.SetActive(uniquePowerModifierData);
             }
-            else if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierType.Debuff)
-            {
-                upmStatusIconParent = upmDebuffsParentTranform;
-            }
-            else
-            {
-                Debug.LogError("Unhandled condition");
-                // set it to debuffs
-                upmStatusIconParent = upmDebuffsParentTranform;
-            }
-            // create UI for added UPM based on UPM config
-            UniquePowerModifierStatusIcon uniquePowerModifierStatusIcon = Instantiate(uniquePowerModifierStatusIconTemplate.gameObject, upmStatusIconParent).GetComponent<UniquePowerModifierStatusIcon>();
-            // activate new UPM
-            uniquePowerModifierStatusIcon.SetActive(uniquePowerModifierData);
         }
     }
 
@@ -903,7 +912,7 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    System.Object GetSourceContext()
+    System.Object GetItemBeingDraggedSourceContext()
     {
         // get source context 
         // try to get party unit (assume that during battle unit can only use items which are located in (childs of) this unit game object)
@@ -936,37 +945,83 @@ public class PartyUnitUI : MonoBehaviour {
     {
         // activate highlight
         // get source context 
-        System.Object srcContext = GetSourceContext();
+        System.Object srcContext = GetItemBeingDraggedSourceContext();
         // get cell
         PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
+        // get UPM config
+        UniquePowerModifierConfig uniquePowerModifierConfig = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0];
         // verify if UPM can be applied to destination unit
-        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+        if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(srcContext, LPartyUnit))
         {
             Debug.Log("Requirements are met");
             // verify if it is advised to use this item in this context
-            if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
+            if (uniquePowerModifierConfig.IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
             {
                 Debug.Log("Advised");
                 // advised
                 // item can be applied to this hero, highlight with applicable color
-                partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
             }
             else
             {
                 Debug.Log("Not Advised");
                 // not advised
                 // item can be applied to this hero, highlight with applicable color
-                partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+                partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
             }
         }
         else
         {
             Debug.Log("Requirements are not met");
             // item cannot be applied to this hero, highlight with not applicable color
-            partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+            partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
         }
     }
 
+    public void ActOnBattleNewUnitHasBeenActivatedEvent(PartyUnitUI activePartyUnitUI)
+    {
+        // activate highlight
+        // set source context to active Party Unit
+        System.Object srcContext = activePartyUnitUI.LPartyUnit;
+        // get cell
+        PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
+        // get UPM config
+        UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
+        // ..
+        Debug.LogWarning("Remove duplicated logic below in ActOnBeginItemDrag()");
+        // verify if UPM can be applied to destination unit
+        if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+        {
+            Debug.Log("Requirements are met");
+            // verify if it is advised to use this item in this context
+            if (uniquePowerModifierConfig.IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
+            {
+                Debug.Log("Advised");
+                // advised
+                // item can be applied to this hero, highlight with applicable color
+                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+            }
+            else
+            {
+                Debug.Log("Not Advised");
+                // not advised
+                // item can be applied to this hero, highlight with applicable color
+                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+                partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
+            }
+        }
+        else
+        {
+            Debug.Log("Requirements are not met");
+            // item cannot be applied to this hero, highlight with not applicable color
+            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+            partyPanelCell.CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+        }
+    }
     #endregion Events Actions
 
     #region Properties

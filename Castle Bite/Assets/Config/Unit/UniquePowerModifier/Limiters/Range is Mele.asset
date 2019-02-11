@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9897925bc3e803439f4b4f1c4350087, type: 3}
+  m_Name: Range is Mele
+  m_EditorClassIdentifier: 
+  unitAbilityRange: 0
+  onTryToAttackNonBlockedEnemyMessage: 
+  onTryToAttackEnemyIfMeleAttackerIsBlockedByFriendlyFrontRowUnitsMessage: Active
+    unit has mele attack range and can attack only adjacent units. At this moment
+    it is blocked by front row party members and cannot attack this enemy unit.
+  onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByFriendlyUnitsInFrontRowMessage: This
+    enemy unit cannot be targeted, because it is protected by units in a front row.
+  onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitAboveMessage: This unit
+    cannot be targeted by mele attack. It is protected by friendly party member.
+  onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitBelowMessage: This unit
+    cannot be targeted by mele attack. It is protected by friendly party member.

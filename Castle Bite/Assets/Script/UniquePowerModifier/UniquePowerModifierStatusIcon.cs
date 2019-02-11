@@ -171,16 +171,16 @@ public class UniquePowerModifierStatusIcon : MonoBehaviour
         // get UPM UI config
         UniquePowerModifierConfig uniquePowerModifierConfig = uniquePowerModifierData.GetUniquePowerModifierConfig();
         // update text button colors
-        textButton.NormalColor = uniquePowerModifierConfig.UniquePowerModifierUIConfig.statusIconTextNormalColor;
-        textButton.HighlightedColor = uniquePowerModifierConfig.UniquePowerModifierUIConfig.statusIconTextHighlightedColor;
-        textButton.PressedColor = uniquePowerModifierConfig.UniquePowerModifierUIConfig.statusIconTextPressedColor;
-        textButton.DisabledColor = uniquePowerModifierConfig.UniquePowerModifierUIConfig.statusIconTextDisabledColor;
+        textButton.NormalColor = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.statusIconTextNormalColor;
+        textButton.HighlightedColor = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.statusIconTextHighlightedColor;
+        textButton.PressedColor = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.statusIconTextPressedColor;
+        textButton.DisabledColor = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.statusIconTextDisabledColor;
         // update text current color
         symbolText.color = textButton.NormalColor;
         // update text symbol
-        symbolText.text = uniquePowerModifierConfig.UniquePowerModifierUIConfig.symbol;
+        symbolText.text = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.symbol;
         // update background image color
-        backgroundImage.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.statusIconBackgroundColor;
+        backgroundImage.color = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.statusIconBackgroundColor;
         // activate game object
         gameObject.SetActive(true);
         // Start animation

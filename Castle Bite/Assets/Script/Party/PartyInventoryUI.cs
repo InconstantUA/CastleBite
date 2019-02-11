@@ -16,6 +16,15 @@ public class PartyInventoryUI : MonoBehaviour {
     int minNumberOfSlots = 3;
     [SerializeField]
     GameEvent partyInventoryUIHasBeenEnabledEvent;
+    int slotID;
+
+    string GetSlotID()
+    {
+        // increment slot ID
+        slotID++;
+        // return it as string
+        return slotID.ToString();
+    }
 
     public ItemSlotDropHandler AddSlot(InventoryItem inventoryItem = null, bool setCurrentItemEquipmentSlot = false)
     {
@@ -35,6 +44,9 @@ public class PartyInventoryUI : MonoBehaviour {
             Debug.Log("Add inventory slot");
             newSlot = Instantiate(inventorySlotDropHandlerTemplate.gameObject, inventoryItemsGrid).GetComponent<ItemSlotDropHandler>();
         }
+        // rename it for easier debugging
+        newSlot.name = "ItemSlotDropHandler" + GetSlotID();
+        // return new slot
         return newSlot;
     }
 
@@ -151,7 +163,7 @@ public class PartyInventoryUI : MonoBehaviour {
             // set item name in UI
             dragHandler.GetComponentInChildren<Text>().text = inventoryItem.ItemName;
             // verify if item has active modifiers
-            if (inventoryItem.HasActiveModifiers())
+            if (inventoryItem.IsUsable)
             {
                 dragHandler.GetComponentInChildren<Text>().text += inventoryItem.GetUsagesInfo();
             }
@@ -191,6 +203,8 @@ public class PartyInventoryUI : MonoBehaviour {
 
     void OnEnable()
     {
+        // reset slot ID
+        slotID = 0;
         // raise an event
         partyInventoryUIHasBeenEnabledEvent.Raise(this);
         //// verify if EditPartyScreen is active
@@ -263,8 +277,19 @@ public class PartyInventoryUI : MonoBehaviour {
             // verify if slot is empty
             if (child.GetComponentInChildren<InventoryItemDragHandler>() == null)
             {
-                // add new slot to the list of empty slots
-                emptySlots.Add(child);
+                // verify if this is not the parent of the item being dragged
+                // because this slot is onofficially still occupied (if we remove it, then exchange between other slot may not happen successfully)
+                Debug.LogWarning("child: " + child.gameObject.name + "[" + child.gameObject.GetInstanceID() + "]" + ", original parent: " + InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.name + "[" + InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.GetInstanceID() + "]");
+                if (InventoryItemDragHandler.itemBeingDragged.ItemBeindDraggedSlot.gameObject.GetInstanceID() != child.gameObject.GetInstanceID())
+                {
+                    // add new slot to the list of empty slots
+                    emptySlots.Add(child);
+                }
+                else
+                {
+                    // increment number of occupied slots
+                    occupiedSlotsCount += 1;
+                }
             }
             else
             {

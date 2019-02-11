@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Chill UPM Config
+  m_EditorClassIdentifier: 
+  displayName: Chill
+  description: Deals water-based damage over time
+  uniquePowerModifier: {fileID: 11400000, guid: cd0de2ec50a98094a9f639ca7da9f827,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: ced41e94aea2a1941bdb835790c1e623,
+    type: 2}
+  uniquePowerModifierAlignment: 2
+  triggerCondition: 2
+  modifierConfigUpdaters:
+  - {fileID: 11400000, guid: d06a6cba92e36d9498de39fd85b14ea9, type: 2}
+  - {fileID: 11400000, guid: 58d391115f2085e4d8c156bd739ec8c2, type: 2}
+  modifierLimiters: []
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 3989859d76f08634a8caf714904a3a48,
+    type: 2}

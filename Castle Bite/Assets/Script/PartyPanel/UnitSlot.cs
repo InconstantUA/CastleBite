@@ -11,15 +11,18 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IPointerClickHandler
 {
+    [SerializeField]
+    GameEvent unitSlotLeftClickEvent;
+
     Text unitName;
     Button unitSlot;
     Color tmpColor;
 
     // reference to the Confirmation pop-up window
     private ConfirmationPopUp confirmationPopUp;
-    // actions for Confrimation pop-up
-    private UnityAction dismissYesAction;
-    private UnityAction dismissNoAction;
+    //// actions for Confrimation pop-up
+    //private UnityAction dismissYesAction;
+    //private UnityAction dismissNoAction;
 
     // For battle screen
     bool isAllowedToApplyPowerToThisUnit = false;
@@ -29,9 +32,9 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Awake()
     {
-        // define actions
-        dismissYesAction = new UnityAction(OnDismissYesConfirmation);
-        dismissNoAction = new UnityAction(OnDismissNoConfirmation);
+        //// define actions
+        //dismissYesAction = new UnityAction(OnDismissYesConfirmation);
+        //dismissNoAction = new UnityAction(OnDismissNoConfirmation);
         // trigger changes
         OnTransformChildrenChanged();
     }
@@ -113,6 +116,8 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // on left mouse click
             SetHighlightedStatus();
             ActOnClick();
+            // act on left mouse click
+            OnLeftMouseClick();
         }
         else if (Input.GetMouseButtonUp(1))
         {
@@ -298,6 +303,14 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
+    public string ErrorMessage
+    {
+        get
+        {
+            return errorMessage;
+        }
+    }
+
     public PartyUnitUI GetPartyUnitUI()
     {
         return GetComponentInChildren<PartyUnitUI>();
@@ -367,187 +380,235 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     //    return transform.parent.parent.parent.GetComponent<PartyPanel>();
     //}
 
-    void ActOnCityClick()
-    {
-        Debug.Log("UnitSlot ActOnClick in City");
-        // Get city screen
-        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
-        // Get city state
-        EditPartyScreenActiveState cityState = cityScreen.EditPartyScreenActiveState;
-        // Verify if city state is not normal
-        if (EditPartyScreenActiveState.Normal != cityState)
-        {
-            cityScreen.DeactivateActiveToggle();
-        }
-        // Get party unit UI in this slot
-        PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
-        // Verify if unit is found
-        if (unitUI)
-        {
-            // act based on the city (and cursor) state
-            switch (cityState)
-            {
-                case EditPartyScreenActiveState.Normal:
-                    // do nothing for now
-                    break;
-                case EditPartyScreenActiveState.ActiveDismiss:
-                    // try to dismiss unit, if it is possible
-                    TryToDismissUnit(unitUI.LPartyUnit);
-                    break;
-                case EditPartyScreenActiveState.ActiveHeal:
-                    // try to heal unit, if it is possible
-                    Debug.Log("Show Heal Unit confirmation box");
-                    break;
-                case EditPartyScreenActiveState.ActiveResurect:
-                    // try to resurect unit, if it is possible
-                    Debug.Log("Show Resurect Unit confirmation box");
-                    break;
-                case EditPartyScreenActiveState.ActiveUnitDrag:
-                    // ??
-                    break;
-                case EditPartyScreenActiveState.ActiveItemDrag:
-                    // this should not be triggered here, because it should be triggered in the unit slot drop handler when item is being dropped in it
-                    Debug.LogWarning("Unpredicted condition");
-                    break;
-                default:
-                    Debug.LogError("Unknown state");
-                    break;
-            }
-        }
-        else
-        {
-            Debug.LogWarning("Unit no found");
-        }
-        // Verify if city state is not normal
-        if (EditPartyScreenActiveState.Normal != cityState)
-        {
-            // disable previous city state
-            cityScreen.SetActiveState(cityState, false);
-        }
-    }
+    //void ActOnCityClick()
+    //{
+    //    Debug.Log("UnitSlot ActOnClick in City");
+    //    // Get city screen
+    //    EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
+    //    // Get city state
+    //    EditPartyScreenActiveState cityState = cityScreen.EditPartyScreenActiveState;
+    //    // Verify if city state is not normal
+    //    if (EditPartyScreenActiveState.Normal != cityState)
+    //    {
+    //        cityScreen.DeactivateActiveToggle();
+    //    }
+    //    // Get party unit UI in this slot
+    //    PartyUnitUI unitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+    //    // Verify if unit is found
+    //    if (unitUI)
+    //    {
+    //        // act based on the city (and cursor) state
+    //        switch (cityState)
+    //        {
+    //            case EditPartyScreenActiveState.Normal:
+    //                // do nothing for now
+    //                break;
+    //            case EditPartyScreenActiveState.ActiveDismiss:
+    //                // try to dismiss unit, if it is possible
+    //                TryToDismissUnit(unitUI.LPartyUnit);
+    //                break;
+    //            case EditPartyScreenActiveState.ActiveHeal:
+    //                // try to heal unit, if it is possible
+    //                Debug.Log("Show Heal Unit confirmation box");
+    //                break;
+    //            case EditPartyScreenActiveState.ActiveResurect:
+    //                // try to resurect unit, if it is possible
+    //                Debug.Log("Show Resurect Unit confirmation box");
+    //                break;
+    //            case EditPartyScreenActiveState.ActiveUnitDrag:
+    //                // ??
+    //                break;
+    //            case EditPartyScreenActiveState.ActiveItemDrag:
+    //                // this should not be triggered here, because it should be triggered in the unit slot drop handler when item is being dropped in it
+    //                Debug.LogWarning("Unpredicted condition");
+    //                break;
+    //            default:
+    //                Debug.LogError("Unknown state");
+    //                break;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("Unit no found");
+    //    }
+    //    // Verify if city state is not normal
+    //    if (EditPartyScreenActiveState.Normal != cityState)
+    //    {
+    //        // disable previous city state
+    //        cityScreen.SetActiveState(cityState, false);
+    //    }
+    //}
 
-    public void ActOnBattleScreenClick()
+
+
+    //public void ActOnBattleScreenClick()
+    //{
+    //    BattleScreen battleScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>();
+    //    // Verify if battle has not ended
+    //    if (!battleScreen.BattleHasEnded)
+    //    {
+    //        //Debug.Log("UnitSlot ActOnClick in Battle screen");
+    //        // act based on the previously set by SetOnClickAction by PartyPanel conditions
+    //        if (isAllowedToApplyPowerToThisUnit)
+    //        {
+    //            // it is allowed to apply powers to the unit in this cell
+    //            // Block mouse input
+    //            InputBlocker.SetActive(true);
+    //            //// Trigger Event
+    //            //battleApplyActiveUnitAbility.Raise(this);
+    //            GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+    //            // apply powers to the target unit(s)
+    //            GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
+    //            // set unit has moved flag
+    //            battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = true;
+    //            // activate next unit
+    //            battleScreen.ActivateNextUnit();
+    //        }
+    //        else
+    //        {
+    //            // it is not allowed to use powers on this cell
+    //            // display error message
+    //            NotificationPopUp.Instance().DisplayMessage(errorMessage);
+    //        }
+    //    }
+    //}
+
+    public void OnLeftMouseClick()
     {
-        BattleScreen battleScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>();
-        // Verify if battle has not ended
-        if (!battleScreen.BattleHasEnded)
-        {
-            //Debug.Log("UnitSlot ActOnClick in Battle screen");
-            // act based on the previously set by SetOnClickAction by PartyPanel conditions
-            if (isAllowedToApplyPowerToThisUnit)
-            {
-                // it is allowed to apply powers to the unit in this cell
-                // Block mouse input
-                InputBlocker.SetActive(true);
-                // GetParentPartyPanel().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
-                // apply powers to the target unit(s)
-                GetComponentInParent<PartyPanel>().ApplyPowersToUnit(unitSlot.GetComponentInChildren<PartyUnitUI>());
-                // set unit has moved flag
-                battleScreen.ActiveUnitUI.LPartyUnit.HasMoved = true;
-                // activate next unit
-                battleScreen.ActivateNextUnit();
-            }
-            else
-            {
-                // it is not allowed to use powers on this cell
-                // display error message
-                NotificationPopUp.Instance().DisplayMessage(errorMessage);
-            }
-        }
+        // Trigger event
+        unitSlotLeftClickEvent.Raise(this);
     }
 
     void ActOnClick()
     {
+        // raise locally registered events (this is required if Battle screen has registered on new unit activation how other slots behave)
+        if (onClick.GetPersistentEventCount() > 0)
+        {
+            onClick.Invoke();
+        }
         // act based on where we are:
         //  - in city
         //  - in hero edit screen
         //  - in battle
-        UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
-        // verify if EditPartyScreen is active
-        if (uiManager.GetComponentInChildren<EditPartyScreen>(false) != null)
-        {
-            ActOnCityClick();
-        }
+        //UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
+        //// verify if EditPartyScreen is active
+        //if (uiManager.GetComponentInChildren<EditPartyScreen>(false) != null)
+        //{
+        //    ActOnCityClick();
+        //}
         // verify if Battle screen is active
-        else if (uiManager.GetComponentInChildren<BattleScreen>(false) != null)
-        {
-            if (onClick.GetPersistentEventCount() > 0)
-            {
-                onClick.Invoke();
-            }
-            ActOnBattleScreenClick();
-        }
-        // verify if PartiesInfoPanel is active
-        else if (uiManager.GetComponentInChildren<PartiesInfoPanel>(false) != null)
-        {
-            Debug.Log("Act on PartiesInfoPanel active");
-        }
-        else
-        {
-            Debug.LogError("No or unknown active screen");
-        }
+        //else if (uiManager.GetComponentInChildren<BattleScreen>(false) != null)
+        //{
+        //    if (onClick.GetPersistentEventCount() > 0)
+        //    {
+        //        onClick.Invoke();
+        //    }
+        //    ActOnBattleScreenClick();
+        //}
+        //// verify if PartiesInfoPanel is active
+        //else if (uiManager.GetComponentInChildren<PartiesInfoPanel>(false) != null)
+        //{
+        //    Debug.Log("Act on PartiesInfoPanel active");
+        //}
+        //else
+        //{
+        //    Debug.LogError("No or unknown active screen");
+        //}
     }
+    //void ActOnClick()
+    //{
+    //    // Trigger event
+    //    unitSlotLeftClickEvent.Raise(this);
+    //    // act based on where we are:
+    //    //  - in city
+    //    //  - in hero edit screen
+    //    //  - in battle
+    //    UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
+    //    // verify if EditPartyScreen is active
+    //    if (uiManager.GetComponentInChildren<EditPartyScreen>(false) != null)
+    //    {
+    //        ActOnCityClick();
+    //    }
+    //    // verify if Battle screen is active
+    //    else if (uiManager.GetComponentInChildren<BattleScreen>(false) != null)
+    //    {
+    //        if (onClick.GetPersistentEventCount() > 0)
+    //        {
+    //            onClick.Invoke();
+    //        }
+    //        ActOnBattleScreenClick();
+    //    }
+    //    // verify if PartiesInfoPanel is active
+    //    else if (uiManager.GetComponentInChildren<PartiesInfoPanel>(false) != null)
+    //    {
+    //        Debug.Log("Act on PartiesInfoPanel active");
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError("No or unknown active screen");
+    //    }
+    //}
 
-    void TryToDismissUnit(PartyUnit unit)
-    {
-        // this depends on the fact if unit is dismissable
-        // for example Capital guard is not dimissable
-        // all other units normally are dismissable
-        if (unit.IsDismissable)
-        {
-            // as for confirmation
-            string confirmationMessage;
-            // verify if this is party leader
-            if (unit.IsLeader)
-            {
-                confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GivenName + " " + unit.UnitName + " and whole party?";
-            }
-            else
-            {
-                confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
-            }
-            // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
-            ConfirmationPopUp.Instance().Choice(confirmationMessage, dismissYesAction, dismissNoAction);
-        }
-        else
-        {
-            // display error message
-            NotificationPopUp.Instance().DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
-        }
-    }
+    //void TryToDismissUnit(PartyUnit unit)
+    //{
+    //    // this depends on the fact if unit is dismissable
+    //    // for example Capital guard is not dimissable
+    //    // all other units normally are dismissable
+    //    if (unit.IsDismissable)
+    //    {
+    //        // as for confirmation
+    //        string confirmationMessage;
+    //        // verify if this is party leader
+    //        if (unit.IsLeader)
+    //        {
+    //            confirmationMessage = "Dismissing party leader will permanently dismiss whole party and all its members. Do you want to dismiss " + unit.GivenName + " " + unit.UnitName + " and whole party?";
+    //        }
+    //        else
+    //        {
+    //            confirmationMessage = "Do you want to dismiss " + unit.UnitName + "?";
+    //        }
+    //        // send actions to Confirmation popup, so he knows how to react on no and yes btn presses
+    //        ConfirmationPopUp.Instance().Choice(confirmationMessage, dismissYesAction, dismissNoAction);
+    //    }
+    //    else
+    //    {
+    //        // display error message
+    //        NotificationPopUp.Instance().DisplayMessage("It is not possible to dismiss " + unit.GivenName + " " + unit.UnitName + ".");
+    //    }
+    //}
 
-    void ActivateHireUnitButtonsIfNeeded()
-    {
-        // get city screen
-        EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
-        // verify if we are in city view mode
-        if (cityScreen != null)
-        {
-            // activate hire unit pnl button
-            cityScreen.SetHireUnitPnlButtonActive(true);
-        }
-    }
+    //void ActivateHireUnitButtonsIfNeeded()
+    //{
+    //    // get city screen
+    //    EditPartyScreen cityScreen = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>();
+    //    // verify if we are in city view mode
+    //    if (cityScreen != null)
+    //    {
+    //        // activate hire unit pnl button
+    //        cityScreen.SetHireUnitPnlButtonActive(true);
+    //    }
+    //}
 
-    void OnDismissYesConfirmation()
-    {
-        Debug.Log("Yes");
-        // Check and activate hire units buttons if we are in city view
-        ActivateHireUnitButtonsIfNeeded();
-        // Ask city to dismiss unit
-        transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().DimissUnit(this);
-        // do not place code below, because this unit slot is destroyed
-    }
+    //void OnDismissYesConfirmation()
+    //{
+    //    Debug.Log("Yes");
+    //    // Check and activate hire units buttons if we are in city view
+    //    ActivateHireUnitButtonsIfNeeded();
+    //    // Ask city to dismiss unit
+    //    transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<EditPartyScreen>().DimissUnit(this);
+    //    // do not place code below, because this unit slot is destroyed
+    //}
 
-    void OnDismissNoConfirmation()
-    {
-        Debug.Log("No");
-        // Check and activate hire units buttons if we are in city view
-        ActivateHireUnitButtonsIfNeeded();
-        //// get party panel from slot
-        //// and activate hire unit pannel button again
-        //// structure: 3partypanel-2row-1cell-this(UnitSlot)
-        //transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
-    }
+    //void OnDismissNoConfirmation()
+    //{
+    //    Debug.Log("No");
+    //    // Check and activate hire units buttons if we are in city view
+    //    ActivateHireUnitButtonsIfNeeded();
+    //    //// get party panel from slot
+    //    //// and activate hire unit pannel button again
+    //    //// structure: 3partypanel-2row-1cell-this(UnitSlot)
+    //    //transform.parent.parent.parent.GetComponent<PartyPanel>().SetHireUnitPnlButtonActive(true);
+    //}
 
     public void SetOnClickAction(bool isAllowedToApplyPwrToThisUnit, string errMsg = "")
     {

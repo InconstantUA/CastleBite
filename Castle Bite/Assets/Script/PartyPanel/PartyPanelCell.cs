@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class PartyPanelCell : MonoBehaviour
@@ -11,6 +9,7 @@ public class PartyPanelCell : MonoBehaviour
     Text canvasText;
 
     private Color beforeItemDragColor;
+    private PartyUnitUI activePartyUnitUI;
 
     public PartyPanel.Cell Cell
     {
@@ -25,6 +24,14 @@ public class PartyPanelCell : MonoBehaviour
         get
         {
             return canvasText;
+        }
+    }
+
+    public PartyUnitUI ActivePartyUnitUI
+    {
+        get
+        {
+            return activePartyUnitUI;
         }
     }
 
@@ -44,8 +51,10 @@ public class PartyPanelCell : MonoBehaviour
         // save original color
         // Debug.LogWarning("Save original color");
         beforeItemDragColor = CanvasText.color;
+        // get UPM config
+        UniquePowerModifierConfig uniquePowerModifierConfig = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0];
         // verify if item is usable
-        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, this))
+        if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, this))
         {
             Debug.Log("Cell Requirements are met");
             // verify if party unit is not present, because if it is present, then we need to give it a possibility to override "applicability"
@@ -61,14 +70,16 @@ public class PartyPanelCell : MonoBehaviour
             else
             {
                 // highlight with applicable color
-                CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                // CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+                CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
             }
         }
         else
         {
             Debug.Log("Cell Requirements are not met");
             // highlight with not applicable color
-            CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+            // CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+            CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
         }
         //// verify if item has active modifiers or usages
         //if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.HasActiveModifiers())
@@ -160,7 +171,64 @@ public class PartyPanelCell : MonoBehaviour
     public void OnEndItemDrag()
     {
         // Debug.LogWarning("Restore original color");
-        // restore original color
-        CanvasText.color = beforeItemDragColor;
+        // verify if edit party screen is active (note: this is not needed during battle screen
+        // Debug.LogWarning("(Check if fixed) Fix unit may change its status (die). Reinitialize highlighs on EndItemDrag()");
+        UIManager uiManager = transform.root.GetComponentInChildren<UIManager>();
+        // verify if EditPartyScreen is active
+        if (uiManager.GetComponentInChildren<EditPartyScreen>(false) != null)
+        {
+            Debug.LogWarning(".. avoid this check");
+            // restore original color
+            CanvasText.color = beforeItemDragColor;
+        }
+    }
+
+    public void OnBattleNewUnitHasBeenActivatedEvent(System.Object context)
+    {
+        // verify if context is correct
+        if (context is PartyUnitUI)
+        {
+            // init and cache newly activated party unit UI from context
+            activePartyUnitUI = (PartyUnitUI)context;
+            // get UPM config
+            UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
+            // verify if active party unit ability is applicable to this cell (example: summon) and party unit (if it is present)
+            if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(activePartyUnitUI.GetComponentInParent<PartyPanelCell>(), this))
+            {
+                Debug.Log("Cell Requirements are met");
+                // verify if party unit is not present, because if it is present, then we need to give it a possibility to override "applicability"
+                // it maybe already overritten, because PartyUnitUI could possibly react earlier on event
+                // get party unit UI
+                PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
+                // verify if its not null
+                if (partyUnitUI != null)
+                {
+                    // let party unit override highlights and react on begin item drag event
+                    partyUnitUI.ActOnBattleNewUnitHasBeenActivatedEvent(activePartyUnitUI);
+                }
+                else
+                {
+                    // highlight with applicable color
+                    CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+                }
+            }
+            else
+            {
+                Debug.Log("Cell Requirements are not met");
+                // highlight with not applicable color
+                CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+            }
+        }
+    }
+
+    public void OnBattleApplyActiveUnitAbility(System.Object context)
+    {
+        // verify if context is correct
+        if (context is UnitSlot)
+        {
+            // init unit slot from context
+            UnitSlot unitSlot = (UnitSlot)context;
+            Debug.LogWarning("OnBattleApplyActiveUnitAbility");
+        }
     }
 }

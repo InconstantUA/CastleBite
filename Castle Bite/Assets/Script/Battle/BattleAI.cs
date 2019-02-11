@@ -100,7 +100,7 @@ public class BattleAI : MonoBehaviour {
         {
             case BattleMove.Option.ApplyPower:
                 // simulate click on a unit slot
-                battleMove.TargetUnitSlot.ActOnBattleScreenClick();
+                battleMove.TargetUnitSlot.OnLeftMouseClick();
                 break;
             case BattleMove.Option.Defend:
                 // simulate button click

@@ -788,6 +788,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9184281}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 9184281}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &20588450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1290,6 +1396,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &22804170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1848,6 +1956,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &40127376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6472,6 +6582,112 @@ MonoBehaviour:
     genericObjectEvent:
       m_PersistentCalls:
         m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 143471509}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 143471509}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     partyUnitEvent:
@@ -18732,6 +18948,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 316495909}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 316495909}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &317495344
 GameObject:
   m_ObjectHideFlags: 0
@@ -22355,6 +22677,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 386724056}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 386724056}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &386848368
 GameObject:
   m_ObjectHideFlags: 0
@@ -22775,6 +23203,12 @@ PrefabInstance:
       propertyPath: unitUIHasBeenDroppedIntoTheUnitSlotEvent
       value: 
       objectReference: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
+        type: 2}
+    - target: {fileID: 114895083965152308, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f,
+        type: 3}
+      propertyPath: unitSlotLeftClickEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
         type: 2}
     m_RemovedComponents:
     - {fileID: 114381351681138740, guid: 3e4f6475c5c280c4f8d785d0f80e8f7f, type: 3}
@@ -23752,6 +24186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &406854910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25384,6 +25820,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &443279904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32358,6 +32796,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &476455983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35938,6 +36378,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &549306785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46147,6 +46589,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 683598087}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 683598087}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &686674814
 GameObject:
   m_ObjectHideFlags: 0
@@ -46714,6 +47262,112 @@ MonoBehaviour:
     genericObjectEvent:
       m_PersistentCalls:
         m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 691294555}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 691294555}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     partyUnitEvent:
@@ -47651,6 +48305,112 @@ MonoBehaviour:
     genericObjectEvent:
       m_PersistentCalls:
         m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 712452594}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 712452594}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     partyUnitEvent:
@@ -49212,6 +49972,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: a4bd38748486243449699e3006130d3a,
         type: 2}
+    - target: {fileID: 114452385082323086, guid: 6fc79732f7b0ca141a5b7f4c9f54c040,
+        type: 3}
+      propertyPath: unitSlotLeftClickEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+        type: 2}
     m_RemovedComponents:
     - {fileID: 114855616011388914, guid: 6fc79732f7b0ca141a5b7f4c9f54c040, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6fc79732f7b0ca141a5b7f4c9f54c040, type: 3}
@@ -50382,6 +51148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &771718655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55521,6 +56289,9 @@ MonoBehaviour:
   battleScreenEnable: {fileID: 11400000, guid: 3565c8de4941aeb488ff45f28d5cf322, type: 2}
   battleScreenDisable: {fileID: 11400000, guid: 1c5d75504bbeeff43a3471b0265295e0,
     type: 2}
+  battleNewUnitHasBeenActivatedEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756,
+    type: 2}
+  battleApplyActiveUnitAbilityEvent: {fileID: 0}
 --- !u!114 &779038338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55708,7 +56479,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - name: Party Inventory UI Has Been Enabled Event
+  - name: On Party Inventory UI Has Been Enabled Event
     gameEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9, type: 2}
     genericAction:
       m_PersistentCalls:
@@ -55719,7 +56490,60 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 779038337}
-          m_MethodName: PartyInventoryUIHasBeenEnabledEvent
+          m_MethodName: OnPartyInventoryUIHasBeenEnabled
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Unit Slot Left Click Event
+    gameEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 779038337}
+          m_MethodName: OnUnitSlotLeftClickEvent
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -61577,6 +62401,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &956820312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63028,6 +63854,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1009230632}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1009230632}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1014556901
 GameObject:
   m_ObjectHideFlags: 0
@@ -63885,6 +64817,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1022818306}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1022818306}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1023646913
 GameObject:
   m_ObjectHideFlags: 0
@@ -64138,6 +65176,112 @@ MonoBehaviour:
     genericObjectEvent:
       m_PersistentCalls:
         m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1026521321}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1026521321}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     partyUnitEvent:
@@ -71432,6 +72576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1107912161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -76898,6 +78044,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1225718332}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1225718332}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1228859055
 GameObject:
   m_ObjectHideFlags: 0
@@ -77525,6 +78777,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1236283079}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1236283079}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1248616288
 GameObject:
   m_ObjectHideFlags: 0
@@ -77955,6 +79313,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1255796317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82134,6 +83494,112 @@ MonoBehaviour:
     genericObjectEvent:
       m_PersistentCalls:
         m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1338337420}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1338337420}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     partyUnitEvent:
@@ -88803,6 +90269,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1378787871}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1378787871}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1380301823
 GameObject:
   m_ObjectHideFlags: 0
@@ -89517,6 +91089,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1388884507}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1388884507}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1392630212
 GameObject:
   m_ObjectHideFlags: 0
@@ -90122,6 +91800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1404416127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90587,6 +92267,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1411541890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92477,6 +94159,112 @@ MonoBehaviour:
     genericObjectEvent:
       m_PersistentCalls:
         m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1463814561}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1463814561}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
       m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
     partyUnitEvent:
@@ -95766,7 +97554,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - name: Party Inventory UI Has Been Enabled Event
+  - name: On Party Inventory UI Has Been Enabled Event
     gameEvent: {fileID: 11400000, guid: 11f25086c6437ff42b90956f743c0ab9, type: 2}
     genericAction:
       m_PersistentCalls:
@@ -95777,7 +97565,60 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1545636096}
-          m_MethodName: PartyInventoryUIHasBeenEnabledEvent
+          m_MethodName: OnPartyInventoryUIHasBeenEnabled
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Unit Slot Left Click Event
+    gameEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1545636096}
+          m_MethodName: OnUnitSlotLeftClickEvent
           m_Mode: 0
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -97995,6 +99836,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1599282678}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1599282678}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1603480641
 GameObject:
   m_ObjectHideFlags: 0
@@ -98304,6 +100251,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1603751575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100043,6 +101992,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1655843173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106918,6 +108869,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1871911092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107282,6 +109235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1875228706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115741,6 +117696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &1996973381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119141,6 +121098,112 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
+  - name: On Battle New Unit Has Been Activated
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2108617338}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: On Battle Apply Active Unit Ability
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2108617338}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &2110741186
 GameObject:
   m_ObjectHideFlags: 0
@@ -120083,6 +122146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2961266ee8fc4745a7540782ef7ff20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSlotLeftClickEvent: {fileID: 11400000, guid: 5437b78a68908ce47b53f580a62ea892,
+    type: 2}
 --- !u!114 &2124755521
 MonoBehaviour:
   m_ObjectHideFlags: 0

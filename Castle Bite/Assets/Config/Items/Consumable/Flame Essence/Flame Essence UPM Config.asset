@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Flame Essence UPM Config
+  m_EditorClassIdentifier: 
+  displayName: Blaze
+  description: Deal fire damage to single unit
+  uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: 7f2d9d44c103a5b4780138783961783e,
+    type: 2}
+  uniquePowerModifierAlignment: 2
+  triggerCondition: 1
+  modifierConfigUpdaters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
+  - {fileID: 11400000, guid: 4b2254fc4144bfb458fe2c35e8d6dd33, type: 2}
+  - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers:
+  - {fileID: 11400000, guid: f1f129d173a1b6b4aa3cb1cf47530dcb, type: 2}
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: a467c5a8139a3554ba59416272e11a64,
+    type: 2}

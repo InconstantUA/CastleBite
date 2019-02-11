@@ -39,6 +39,15 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         }
     }
 
+    public void SetParent(ItemSlotDropHandler itemSlotDropHandler)
+    {
+        // move item being dragged UI into this slot
+        transform.SetParent(itemSlotDropHandler.transform);
+        // reset UI position to 0/0/0/0
+        transform.gameObject.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0); // [ left - bottom ]
+        transform.gameObject.GetComponent<RectTransform>().offsetMax = new Vector2(0, 0); // [ right - top ]
+    }
+
     void BringItemToFront()
     {
         // set parent panel to the top layer
@@ -62,8 +71,8 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
             itemBeingDraggedSlot = GetComponentInParent<ItemSlotDropHandler>();
             // change parent outside of Mask, to PartyInventory, so that canvas is not affected by Mask UI component
             // structure 4PartyInventory-3ItemsList-2Grid-1ItemSlot(Drop)-Item(Drag)
-            transform.SetParent(transform.parent.parent.parent.parent);
-            outOfMaskParentTransform = transform.parent.transform;
+            outOfMaskParentTransform = transform.parent.parent.parent.parent;
+            transform.SetParent(outOfMaskParentTransform);
             // disable raycasts
             GetComponent<CanvasGroup>().blocksRaycasts = false;
             // trigger begin item drag event
@@ -129,7 +138,7 @@ public class InventoryItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragH
         if (LInventoryItem != null)
         {
             // verify if item has usages
-            if (LInventoryItem.HasActiveModifiers())
+            if (LInventoryItem.IsUsable)
             {
                 // update usages info, because it may be reduced, if item is usable
                 GetComponentInChildren<Text>().text = LInventoryItem.ItemName + LInventoryItem.GetUsagesInfo();
