@@ -50,4 +50,41 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
         // Required occupation status doesn't match with current occupations status - discard modifier
         return true;
     }
+
+    public bool DoesContextMatch(System.Object context)
+    {
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if destination unit slot is set
+            if (BattleContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
+        // by default context doesn't match
+        return false;
+    }
+
+    public override bool DoDiscardModifierInContextOf(System.Object context)
+    {
+        // verify if context doesn't match requirements of this limiter
+        if (!DoesContextMatch(context))
+        {
+            // context is not in scope of this limiter
+            // don't limit
+            return false;
+        }
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if we need to discard modifier
+            return DoDiscardModifierInContextOf(null, BattleContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
+        }
+        // don't limit
+        return false;
+    }
+
+
 }

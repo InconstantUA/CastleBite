@@ -399,7 +399,8 @@ public class UniquePowerModifierData : System.Object
         else if (UniquePowerModifierID.unitAbilityID != UnitAbilityID.None)
         {
             // get and return config from config manager by ability ID and UPM index in that ability
-            return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].postActionUniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+            // return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].postActionUniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
+            return ConfigManager.Instance[UniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[UniquePowerModifierID.uniquePowerModifierConfigIndex];
         }
         else if (UniquePowerModifierID.cityID != CityID.None)
         {
@@ -3611,7 +3612,8 @@ public class PartyUnit : MonoBehaviour {
         get
         {
             //return partyUnitData.uniquePowerModifiers;
-            return UnitAbilityConfig.postActionUniquePowerModifierConfigs;
+            // return UnitAbilityConfig.postActionUniquePowerModifierConfigs;
+            return UnitAbilityConfig.uniquePowerModifierConfigs;
         }
 
         //set

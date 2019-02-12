@@ -13,6 +13,12 @@ public class ModifierLimiter : ScriptableObject
         return true;
     }
 
+    public virtual bool DoDiscardModifierInContextOf(System.Object context)
+    {
+        // by default do limit
+        return true;
+    }
+
     // Get message
     public virtual string OnLimitMessage
     {

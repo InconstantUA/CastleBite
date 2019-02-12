@@ -133,4 +133,59 @@ public class LimitModifierByAreaScope : ModifierLimiter
         }
     }
 
+    public bool DoesContextMatch(System.Object context)
+    {
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if active unit and destination units are set
+            if (BattleContext.ActivePartyUnitUI != null && BattleContext.DestinationUnitSlot != null)
+            // context match
+            return true;
+        }
+        // by default context doesn't match
+        return false;
+    }
+
+    public override bool DoDiscardModifierInContextOf(System.Object context)
+    {
+        // verify if context doesn't match requirements of this limiter
+        if (!DoesContextMatch(context))
+        {
+            // context is not in scope of this limiter
+            // don't limit
+            return false;
+        }
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify at which phase we are:
+            //  - new unit has just been activated (target unit is not set)
+            //  - applying ability from active unit to destination slot (target unit is set)
+            // verify if target unit have been set and that modifier scope is single unit and that destination slot has unit
+            if (BattleContext.TargetedUnitSlot != null && modifierScope == ModifierScope.SingleUnit)
+            {
+                // verify if tareted unit is the same as destination slot
+                if (BattleContext.TargetedUnitSlot.gameObject.GetInstanceID() == BattleContext.DestinationUnitSlot.gameObject.GetInstanceID())
+                {
+                    // don't limit
+                    return false;
+                }
+                else
+                {
+                    // limit
+                    return true;
+                }
+            }
+            else
+            {
+                // use default verify if we need to discard modifier
+                return DoDiscardModifierInContextOf(BattleContext.ActivePartyUnitUI, BattleContext.DestinationUnitSlot);
+            }
+
+        }
+        // don't limit
+        return false;
+    }
+
 }

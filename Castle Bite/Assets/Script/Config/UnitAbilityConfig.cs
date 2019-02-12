@@ -23,6 +23,7 @@ public class UnitAbilityConfig : ScriptableObject
     public UniquePowerModifierConfig primaryUniquePowerModifierConfig;
     // Unique power modifiers
     public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
+    public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
     //public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
 
     //public bool IsApplicableToUnit(PartyUnit partyUnit)

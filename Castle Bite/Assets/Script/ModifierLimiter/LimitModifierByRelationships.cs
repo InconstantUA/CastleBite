@@ -114,4 +114,44 @@ public class LimitModifierByRelationships : ModifierLimiter
         return true;
     }
 
+    public bool DoesContextMatch(System.Object context)
+    {
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if active and destination units are set
+            if (BattleContext.ActivePartyUnitUI != null && BattleContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
+        // by default context doesn't match
+        return false;
+    }
+
+    public override bool DoDiscardModifierInContextOf(System.Object context)
+    {
+        // verify if context doesn't match requirements of this limiter
+        if (!DoesContextMatch(context))
+        {
+            // context is not in scope of this limiter
+            // don't limit
+            return false;
+        }
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // get source hero party
+            HeroParty sourceParty = BattleContext.ActivePartyUnitUI.GetComponentInParent<HeroPartyUI>().LHeroParty;
+            // get destination hero party
+            HeroParty destinationParty = BattleContext.DestinationUnitSlot.GetComponentInParent<HeroPartyUI>().LHeroParty;
+            // verify if we need to discard modifier
+            return DoDiscardModifierInContextOf(sourceParty, destinationParty);
+        }
+        // don't limit
+        return false;
+    }
+
+
 }

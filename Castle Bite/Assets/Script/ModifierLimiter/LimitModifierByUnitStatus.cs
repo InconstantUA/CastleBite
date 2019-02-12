@@ -60,4 +60,47 @@ public class LimitModifierByUnitStatus : ModifierLimiter
         // No any of required statuses match - discard modifier
         return true;
     }
+
+    public bool DoesContextMatch(System.Object context)
+    {
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if destination unit slot is set
+            if (BattleContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
+        // by default context doesn't match
+        return false;
+    }
+
+    public override bool DoDiscardModifierInContextOf(System.Object context)
+    {
+        // verify if context doesn't match requirements of this limiter
+        if (!DoesContextMatch(context))
+        {
+            // context is not in scope of this limiter
+            // don't limit
+            return false;
+        }
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // get party unit UI in destination slot
+            PartyUnitUI partyUnitUI = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>();
+            // verify if destination slot has unit
+            if (partyUnitUI != null)
+            {
+                // verify if we need to discard this modifier
+                //  ignore source context
+                return DoDiscardModifierInContextOf(null, partyUnitUI.LPartyUnit);
+            }
+        }
+        // don't limit
+        return false;
+    }
+
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PartyPanelCell : MonoBehaviour
@@ -195,6 +196,10 @@ public class PartyPanelCell : MonoBehaviour
         {
             // init and cache newly activated party unit UI from context
             activePartyUnitUI = (PartyUnitUI)context;
+            // reset battle context values (we don't want to have previously cached targeted party unit slot and upm index)
+            BattleContext.Reset();
+            // cache active unit in battle context
+            BattleContext.ActivePartyUnitUI = activePartyUnitUI;
             // get UPM config
             UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
             // verify if active party unit ability is applicable to this cell (example: summon) and party unit (if it is present)
@@ -237,29 +242,72 @@ public class PartyPanelCell : MonoBehaviour
         Debug.LogWarning(".. OnApplyAbilityFromUnitUIToUnitCell");
     }
 
+    void Test(BattleContext battleContext)
+    {
+
+    }
+
     public void OnBattleApplyActiveUnitAbility(System.Object context)
     {
+        Debug.LogWarning("OnBattleApplyActiveUnitAbility");
         // verify if context is correct
         if (context is UnitSlot)
         {
             // init unit slot from context
             UnitSlot unitSlot = (UnitSlot)context;
-            Debug.LogWarning("OnBattleApplyActiveUnitAbility");
+            // cache target unit slot in battle context (unit which has been targeted by ability)
+            BattleContext.TargetedUnitSlot = unitSlot;
+            // cache this unit slot as destination unit slot in battle context
+            BattleContext.DestinationUnitSlot = GetComponentInChildren<UnitSlot>();
+            // get active party unit in battle
+            PartyUnit activePartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
+            // get active party unit ability config
+            UnitAbilityConfig activeUnitAbilityConfig = activePartyUnit.UnitAbilityConfig;
+            // get active party unit ability upms
+            List<UniquePowerModifierConfig> activeUnitUniquePowerModifierConfigs = activeUnitAbilityConfig.uniquePowerModifierConfigs;
+            // loop through all UPM configs in active party unit ability
+            for (int i = 0; i < activeUnitUniquePowerModifierConfigs.Count; i++)
+            {
+                // set BattleContext
+                BattleContext.ActivatedUPMConfigIndex = i;
+                // verify if UPM can be applied to unit in this party unit UI
+                if (activeUnitUniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(BattleContext.Instance))
+                {
+                    // set unique power modifier ID
+                    BattleContext.UniquePowerModifierID = new UniquePowerModifierID()
+                    {
+                        unitAbilityID = activeUnitAbilityConfig.unitAbilityID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.Ability,
+                        destinationGameObjectID = this.gameObject.GetInstanceID()
+                    };
+                    activeUnitUniquePowerModifierConfigs[i].Apply(BattleContext.Instance);
+                    // .. make it more generic and party cell animated too (on summon)
+                    // get party unit UI
+                    PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
+                    // verify if there is a party unit UI
+                    if (partyUnitUI != null)
+                    {
+                        // run text animation
+                        activeUnitUniquePowerModifierConfigs[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(partyUnitUI.UnitInfoPanelText);
+                    }
+                }
+            }
             // get destination PartyUnitUI
-            PartyUnitUI dstPartyUnitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
-            // get cell PartyUnitUI
-            PartyUnitUI thisCellPartyUnitUI = GetComponentInChildren<PartyUnitUI>();
-            // verify if party unit UI is not null
-            if (thisCellPartyUnitUI != null)
-            {
-                // .. using old code
-                thisCellPartyUnitUI.OnApplyAbilityFromUnitUIToUnitUI(activePartyUnitUI, dstPartyUnitUI);
-            }
-            else
-            {
-                // this is probably summon
-                OnApplyAbilityFromUnitUIToUnitCell(activePartyUnitUI, this);
-            }
+            // PartyUnitUI targetPartyUnitUI = unitSlot.GetComponentInChildren<PartyUnitUI>();
+            //// get cell PartyUnitUI
+            //PartyUnitUI thisCellPartyUnitUI = GetComponentInChildren<PartyUnitUI>();
+            //// verify if party unit UI is not null
+            //if (thisCellPartyUnitUI != null)
+            //{
+            //    // thisCellPartyUnitUI.OnApplyAbilityFromUnitUIToUnitUI(activePartyUnitUI, targetPartyUnitUI);
+            //    thisCellPartyUnitUI.ActOnApplyAbilityToThisPartyUnitUI();
+            //}
+            //else
+            //{
+            //    // this is probably summon
+            //    OnApplyAbilityFromUnitUIToUnitCell(activePartyUnitUI, this);
+            //}
         }
     }
 }

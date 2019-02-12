@@ -65,4 +65,40 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
         return true;
     }
 
+    public bool DoesContextMatch(System.Object context)
+    {
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if there is an item being used and that destination is set
+            if (BattleContext.ItemBeingUsed != null && BattleContext.DestinationUnitSlot)
+            {
+                // context match
+                return true;
+            }
+        }
+        // by default context doesn't match
+        return false;
+    }
+
+    public override bool DoDiscardModifierInContextOf(System.Object context)
+    {
+        // verify if context doesn't match requirements of this limiter
+        if (!DoesContextMatch(context))
+        {
+            // context is not in scope of this limiter
+            // don't limit
+            return false;
+        }
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // verify if we need to discard modifier
+            return DoDiscardModifierInContextOf(BattleContext.ItemBeingUsed, BattleContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
+        }
+        // don't limit
+        return false;
+    }
+
+
 }

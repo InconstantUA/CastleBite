@@ -54,6 +54,42 @@ public class BasePassiveBuffUPM : UniquePowerModifier
         }
     }
 
+    public bool DoesContextMatch(System.Object context)
+    {
+        // verify if context matches battle context
+        if (context is BattleContext)
+        {
+            // .. this can be skipped because this verification (should be) done before upm is applied
+            // verify if destination slot has a unit UI
+            if (BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>() != null)
+            {
+                // context match
+                return true;
+            }
+        }
+        // by default context doesn't match
+        return false;
+    }
+
+    public override void Apply(System.Object context)
+    {
+        // verify if context doesn't match requirements of this UPM
+        if (!DoesContextMatch(context))
+        {
+            // context is not in scope of this UPM
+            // skip all actions
+            return;
+        }
+        if (context is BattleContext)
+        {
+            PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
+            PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+            UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[BattleContext.ActivatedUPMConfigIndex];
+            UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
+            Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
+        }
+    }
+
     public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
         throw new System.NotImplementedException();

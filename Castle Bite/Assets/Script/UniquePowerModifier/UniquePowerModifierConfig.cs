@@ -50,6 +50,11 @@ public class UniquePowerModifierConfig : ScriptableObject
         UniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
     }
 
+    public void Apply(System.Object context)
+    {
+        UniquePowerModifier.Apply(context);
+    }
+
     public void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
     {
         UniquePowerModifier.Apply(inventoryItem, dstPartyUnit, this, uniquePowerModifierID);
@@ -110,6 +115,22 @@ public class UniquePowerModifierConfig : ScriptableObject
         {
             // verify is modifier power is limited
             if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
+            {
+                // at least one requirement is not met
+                return false;
+            }
+        }
+        // if none of limiter is limiting, then return true
+        return true;
+    }
+
+    public bool AreRequirementsMetInContextOf(System.Object context)
+    {
+        // loop through all limiters
+        foreach (ModifierLimiter modifierLimiter in modifierLimiters)
+        {
+            // verify is modifier power is limited
+            if (modifierLimiter.DoDiscardModifierInContextOf(context))
             {
                 // at least one requirement is not met
                 return false;
