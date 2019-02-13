@@ -490,11 +490,6 @@ public class InventoryItem : MonoBehaviour {
         {
             return InventoryItemConfig.uniquePowerModifierConfigs;
         }
-
-        set
-        {
-            InventoryItemConfig.uniquePowerModifierConfigs = value;
-        }
     }
 
     public List<UnitStatModifier> UnitStatModifiers

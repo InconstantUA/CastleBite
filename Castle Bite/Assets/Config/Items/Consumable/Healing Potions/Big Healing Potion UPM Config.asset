@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Heal
   description: Heals target unit
+  isPrimary: 1
+  executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 36287cc28b243224bb3591a8089db670,

@@ -9,7 +9,7 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
 
     public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
-        Debug.Log("Applying " + uniquePowerModifierConfig.DisplayName + " from " + srcPartyUnit.UnitName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
+        Debug.LogWarning("Applying " + uniquePowerModifierConfig.DisplayName + " from " + srcPartyUnit.UnitName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for Trigger)
         UniquePowerModifierData upmData = new UniquePowerModifierData
         {
@@ -33,7 +33,7 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
 
     public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
-        Debug.Log("Applying " + uniquePowerModifierConfig.DisplayName + " from " + inventoryItem.ItemName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
+        Debug.LogWarning("Applying " + uniquePowerModifierConfig.DisplayName + " from " + inventoryItem.ItemName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for Trigger)
         UniquePowerModifierData upmData = new UniquePowerModifierData
         {
@@ -85,7 +85,7 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
         {
             PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
             PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-            UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[BattleContext.ActivatedUPMConfigIndex];
+            UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
             UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
             Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
         }

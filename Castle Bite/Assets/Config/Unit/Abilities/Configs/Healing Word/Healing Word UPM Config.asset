@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Blow With Great Sword
   description: Deals physical damage to single unit
+  isPrimary: 1
+  executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: c78239b96dafc3645a4cf58233846bd2,

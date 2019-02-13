@@ -280,7 +280,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         {
             // verify item is compatible with hero (all required prerequisites are net)
             // if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit))
-            if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(null, this))
+            if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(null, this))
             {
                 // set compatible flag
                 isCompatible = true;
@@ -288,7 +288,7 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
             else
             {
                 // set cavast message
-                canvasMessageText.text = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].GetLimiterMessageInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit);
+                canvasMessageText.text = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.GetLimiterMessageInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit);
                 // set highlight color to not the color which indicates that prerequisites are not met
                 canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemPrerequsitesAreNotMetForThisUnitColor;
             }

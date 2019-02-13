@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Move points buff
   description: Increases maximum move points
+  isPrimary: 1
+  executionOrder: 0
   uniquePowerModifier: {fileID: 0}
   unitStatModifierConfig: {fileID: 11400000, guid: d4777038575f6ba4f82ded9025dd3baf,
     type: 2}

@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Poison
   description: Deals death-based damage over time
+  isPrimary: 0
+  executionOrder: 1
   uniquePowerModifier: {fileID: 11400000, guid: cd0de2ec50a98094a9f639ca7da9f827,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: c6adbfa72091d164bbe59f5f22c6869d,

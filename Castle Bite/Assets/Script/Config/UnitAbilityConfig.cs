@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -20,11 +22,14 @@ public class UnitAbilityConfig : ScriptableObject
     public List<UnitPowerModifier> preActionUnitPowerModifiers;
     // main ability power
     //public UnitStatModifierConfig unitStatModifierConfig;
-    public UniquePowerModifierConfig primaryUniquePowerModifierConfig;
     // Unique power modifiers
     public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
     public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
-    //public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
+
+    [NonSerialized]
+    private UniquePowerModifierConfig primaryUniquePowerModifierConfig;
+    [NonSerialized]
+    private List<UniquePowerModifierConfig> uniquePowerModifierConfigsSortedByExecutionOrder;
 
     //public bool IsApplicableToUnit(PartyUnit partyUnit)
     //{
@@ -40,4 +45,40 @@ public class UnitAbilityConfig : ScriptableObject
     //    // if no one status matches, then return false
     //    return false;
     //}
+
+    public UniquePowerModifierConfig PrimaryUniquePowerModifierConfig
+    {
+        get
+        {
+            // verify if primary upm is not set yet
+            if (primaryUniquePowerModifierConfig == null)
+            {
+                // get UPM which has primary attribute set (should be only one)
+                primaryUniquePowerModifierConfig = uniquePowerModifierConfigs.Find(e => e.IsPrimary == true);
+            }
+            return primaryUniquePowerModifierConfig;
+            // return uniquePowerModifierConfigs.Find(e => e.IsPrimary == true); ;
+        }
+    }
+
+    public List<UniquePowerModifierConfig> UniquePowerModifierConfigsSortedByExecutionOrder
+    {
+        get
+        {
+            // verify if uniquePowerModifierConfigsSortedByExecutionOrder is not set yet
+            if (uniquePowerModifierConfigsSortedByExecutionOrder == null || uniquePowerModifierConfigsSortedByExecutionOrder.Count == 0)
+            {
+                // set it
+                Debug.LogWarning("Set UniquePowerModifierConfigsSortedByExecutionOrder");
+                uniquePowerModifierConfigsSortedByExecutionOrder = uniquePowerModifierConfigs.OrderBy(o => o.ExecutionOrder).ToList();
+                foreach(UniquePowerModifierConfig upmc in uniquePowerModifierConfigsSortedByExecutionOrder)
+                {
+                    Debug.LogWarning("UPMC " + upmc.DisplayName);
+                }
+            }
+            // return uniquePowerModifierConfigs Sorted By Execution Order
+            return uniquePowerModifierConfigsSortedByExecutionOrder;
+        }
+    }
+
 }

@@ -53,7 +53,7 @@ public class PartyPanelCell : MonoBehaviour
         // Debug.LogWarning("Save original color");
         beforeItemDragColor = CanvasText.color;
         // get UPM config
-        UniquePowerModifierConfig uniquePowerModifierConfig = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0];
+        UniquePowerModifierConfig uniquePowerModifierConfig = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig;
         // verify if item is usable
         if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, this))
         {
@@ -201,7 +201,8 @@ public class PartyPanelCell : MonoBehaviour
             // cache active unit in battle context
             BattleContext.ActivePartyUnitUI = activePartyUnitUI;
             // get UPM config
-            UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
+            // UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
+            UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig;
             // verify if active party unit ability is applicable to this cell (example: summon) and party unit (if it is present)
             if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(activePartyUnitUI.GetComponentInParent<PartyPanelCell>(), this))
             {
@@ -264,14 +265,15 @@ public class PartyPanelCell : MonoBehaviour
             // get active party unit ability config
             UnitAbilityConfig activeUnitAbilityConfig = activePartyUnit.UnitAbilityConfig;
             // get active party unit ability upms
-            List<UniquePowerModifierConfig> activeUnitUniquePowerModifierConfigs = activeUnitAbilityConfig.uniquePowerModifierConfigs;
+            List<UniquePowerModifierConfig> activeUnitUniquePowerModifierConfigsSortedByExecutionOrder = activeUnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder;
             // loop through all UPM configs in active party unit ability
-            for (int i = 0; i < activeUnitUniquePowerModifierConfigs.Count; i++)
+            for (int i = 0; i < activeUnitUniquePowerModifierConfigsSortedByExecutionOrder.Count; i++)
             {
+                Debug.LogWarning("UPM: " + "[" + i + "] " + activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].DisplayName);
                 // set BattleContext
                 BattleContext.ActivatedUPMConfigIndex = i;
                 // verify if UPM can be applied to unit in this party unit UI
-                if (activeUnitUniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(BattleContext.Instance))
+                if (activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].AreRequirementsMetInContextOf(BattleContext.Instance))
                 {
                     // set unique power modifier ID
                     BattleContext.UniquePowerModifierID = new UniquePowerModifierID()
@@ -281,7 +283,7 @@ public class PartyPanelCell : MonoBehaviour
                         modifierOrigin = ModifierOrigin.Ability,
                         destinationGameObjectID = this.gameObject.GetInstanceID()
                     };
-                    activeUnitUniquePowerModifierConfigs[i].Apply(BattleContext.Instance);
+                    activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(BattleContext.Instance);
                     // .. make it more generic and party cell animated too (on summon)
                     // get party unit UI
                     PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
@@ -289,7 +291,7 @@ public class PartyPanelCell : MonoBehaviour
                     if (partyUnitUI != null)
                     {
                         // run text animation
-                        activeUnitUniquePowerModifierConfigs[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(partyUnitUI.UnitInfoPanelText);
+                        activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(partyUnitUI.UnitInfoPanelText);
                     }
                 }
             }

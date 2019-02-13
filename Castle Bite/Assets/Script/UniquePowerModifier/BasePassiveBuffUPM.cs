@@ -84,7 +84,7 @@ public class BasePassiveBuffUPM : UniquePowerModifier
         {
             PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
             PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-            UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[BattleContext.ActivatedUPMConfigIndex];
+            UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
             UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
             Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
         }

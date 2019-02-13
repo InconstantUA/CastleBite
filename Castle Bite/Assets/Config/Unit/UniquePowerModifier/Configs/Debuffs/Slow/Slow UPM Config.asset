@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Slow
   description: Reduces unit initiative
+  isPrimary: 0
+  executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: cd0de2ec50a98094a9f639ca7da9f827,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 8d97653f354188b40b7b7e1259e47f40,

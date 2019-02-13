@@ -15,6 +15,10 @@ public class UniquePowerModifierConfig : ScriptableObject
     [SerializeField]
     private string description;
     [SerializeField]
+    private bool isPrimary;
+    [SerializeField]
+    private int executionOrder;
+    [SerializeField]
     private UniquePowerModifier uniquePowerModifier;
     [SerializeField]
     private UnitStatModifierConfig unitStatModifierConfig;
@@ -361,6 +365,22 @@ public class UniquePowerModifierConfig : ScriptableObject
         get
         {
             return modifierConfigUpdaters;
+        }
+    }
+
+    public bool IsPrimary
+    {
+        get
+        {
+            return isPrimary;
+        }
+    }
+
+    public int ExecutionOrder
+    {
+        get
+        {
+            return executionOrder;
         }
     }
 

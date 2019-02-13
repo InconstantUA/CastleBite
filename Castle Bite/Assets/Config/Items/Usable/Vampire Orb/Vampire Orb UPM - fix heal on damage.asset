@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Life leech
   description: Drains life from enemy
+  isPrimary: 1
+  executionOrder: 0
   uniquePowerModifier: {fileID: 0}
   unitStatModifierConfig: {fileID: 11400000, guid: 32f3908bbc0f12a4e8df22ab7d51811e,
     type: 2}

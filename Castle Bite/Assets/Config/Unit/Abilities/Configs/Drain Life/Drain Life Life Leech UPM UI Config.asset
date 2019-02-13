@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c6fc8323fdde854080a681ffa694acb, type: 3}
+  m_Name: Drain Life Life Leech UPM UI Config
+  m_EditorClassIdentifier: 
+  validationUIConfig: {fileID: 11400000, guid: 9ca7e4dd884386b4a9386d7f0047b986, type: 2}
+  statusIconUIConfig: {fileID: 11400000, guid: c85425ce900544a439eb7e770f92b8e6, type: 2}
+  onTriggerUPMTextAnimation: {fileID: 11400000, guid: 447afff3077491749aac2e1628edf477,
+    type: 2}

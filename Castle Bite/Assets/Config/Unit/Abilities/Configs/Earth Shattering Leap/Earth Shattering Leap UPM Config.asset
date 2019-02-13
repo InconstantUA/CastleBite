@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Earth Shattering Leap UPM Config
+  m_EditorClassIdentifier: 
+  displayName: Earth Shattering Leap
+  description: Deals physical damage to entire enemy party
+  isPrimary: 1
+  executionOrder: 0
+  uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: 6f16c582731b1da4cb8cd3319d91460c,
+    type: 2}
+  uniquePowerModifierAlignment: 2
+  triggerCondition: 1
+  modifierConfigUpdaters:
+  - {fileID: 11400000, guid: a6b8283d03782f8499de18746d580f8f, type: 2}
+  - {fileID: 11400000, guid: 58d391115f2085e4d8c156bd739ec8c2, type: 2}
+  modifierLimiters:
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: 4b2254fc4144bfb458fe2c35e8d6dd33, type: 2}
+  - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
+  modifierAdvisers:
+  - {fileID: 11400000, guid: be3ad1b87c04922408a4f970d4af5923, type: 2}
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 48c1adbe3790abd47ae66f136f65f817,
+    type: 2}

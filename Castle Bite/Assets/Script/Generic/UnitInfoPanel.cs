@@ -286,7 +286,8 @@ public class UnitInfoPanel : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             //  get stats upgrade count during current upgrade session
             //int statsUpgradeCount = upgradeUnit.StatsUpgradeCount;
             //return partyUnit.UnitPowerIncrementOnStatsUpgrade * statsUpgradeCount;
-            return partyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmPowerDifference(partyUnit);
+            //return partyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmPowerDifference(partyUnit);
+            return partyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig.GetUpmPowerDifference(partyUnit);
         }
         else
         {

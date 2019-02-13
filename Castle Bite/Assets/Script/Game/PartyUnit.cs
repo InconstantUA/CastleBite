@@ -3137,6 +3137,15 @@ public class PartyUnit : MonoBehaviour {
     //    //}
     //}
 
+    //public UniquePowerModifierConfig PrimaryUniquePowerModifier
+    //{
+    //    get
+    //    {
+    //        // get UPM which has primary attribute set (should be only one)
+    //        return UniquePowerModifierConfigs.Find(e => e.IsPrimary == true);
+    //    }
+    //}
+
     public int UnitAbilityEffectivePower
     {
         get
@@ -3147,7 +3156,8 @@ public class PartyUnit : MonoBehaviour {
             //return UnitAbilityConfig.unitStatModifierConfig.modifierPower +
             //// add stats upgrade count multiplied by power increment on stats upgrade
             //UnitPowerIncrementOnStatsUpgrade* StatsUpgradesCount;
-            return UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmEffectivePower(this);
+            //return UnitAbilityConfig.primaryUniquePowerModifierConfig.GetUpmEffectivePower(this);
+            return UnitAbilityConfig.PrimaryUniquePowerModifierConfig.GetUpmEffectivePower(this);
         }
 
         //set
@@ -3164,7 +3174,8 @@ public class PartyUnit : MonoBehaviour {
             // Get it from unit ability config
             // todo: take into account all modifiers, not only the first one
             //return UnitAbilityConfig.unitStatModifierConfig.powerSource;
-            return UnitAbilityConfig.primaryUniquePowerModifierConfig.UpmSource;
+            //return UnitAbilityConfig.primaryUniquePowerModifierConfig.UpmSource;
+            return UnitAbilityConfig.PrimaryUniquePowerModifierConfig.UpmSource;
         }
 
         //set
@@ -3195,7 +3206,8 @@ public class PartyUnit : MonoBehaviour {
             // return partyUnitData.unitPowerScope;
             // Get it from unit ability config
             //return UnitAbilityConfig.unitStatModifierConfig.modifierScope;
-            return UnitAbilityConfig.primaryUniquePowerModifierConfig.ModifierScope;
+            //return UnitAbilityConfig.primaryUniquePowerModifierConfig.ModifierScope;
+            return UnitAbilityConfig.PrimaryUniquePowerModifierConfig.ModifierScope;
         }
 
         //set
