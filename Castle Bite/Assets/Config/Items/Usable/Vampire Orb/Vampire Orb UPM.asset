@@ -10,17 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
-  m_Name: Vampire Orb UPM - fix heal on damage
+  m_Name: Vampire Orb UPM
   m_EditorClassIdentifier: 
   displayName: Life leech
   description: Drains life from enemy
   isPrimary: 1
   executionOrder: 0
-  uniquePowerModifier: {fileID: 0}
+  uniquePowerModifier: {fileID: 11400000, guid: 48403586b7de21f498058568fb899e7b,
+    type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 32f3908bbc0f12a4e8df22ab7d51811e,
     type: 2}
-  uniquePowerModifierAlignment: 0
-  triggerCondition: 0
+  uniquePowerModifierAlignment: 2
+  triggerCondition: 1
   modifierConfigUpdaters: []
   modifierLimiters:
   - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}

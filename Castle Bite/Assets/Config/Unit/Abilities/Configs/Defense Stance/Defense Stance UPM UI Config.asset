@@ -16,3 +16,5 @@ MonoBehaviour:
   statusIconUIConfig: {fileID: 11400000, guid: 36c6257f230708544a4a5b2ed59c38d8, type: 2}
   onTriggerUPMTextAnimation: {fileID: 11400000, guid: d51fdbaeebe33b34891790d563113e97,
     type: 2}
+  uniquePowerModifierAnimation: {fileID: 11400000, guid: ce0bdeab298e55849a1c2da45e97e024,
+    type: 2}

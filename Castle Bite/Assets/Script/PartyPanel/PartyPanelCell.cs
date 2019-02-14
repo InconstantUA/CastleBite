@@ -283,16 +283,19 @@ public class PartyPanelCell : MonoBehaviour
                         modifierOrigin = ModifierOrigin.Ability,
                         destinationGameObjectID = this.gameObject.GetInstanceID()
                     };
+                    // Apply UPM
                     activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(BattleContext.Instance);
+                    // Run UPM animation
+                    activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.UniquePowerModifierAnimation.Run(BattleContext.Instance);
                     // .. make it more generic and party cell animated too (on summon)
-                    // get party unit UI
-                    PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
-                    // verify if there is a party unit UI
-                    if (partyUnitUI != null)
-                    {
-                        // run text animation
-                        activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(partyUnitUI.UnitInfoPanelText);
-                    }
+                    //// get party unit UI
+                    //PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
+                    //// verify if there is a party unit UI
+                    //if (partyUnitUI != null)
+                    //{
+                    //    // run text animation
+                    //    activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(partyUnitUI.UnitInfoPanelText);
+                    //}
                 }
             }
             // get destination PartyUnitUI

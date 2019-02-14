@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6d2da736c14b3f47b3e9a7ffe5f5508, type: 3}
+  m_Name: Drain Life UPM Animation
+  m_EditorClassIdentifier: 
+  sourceUnitTextAnimation: {fileID: 11400000, guid: 447afff3077491749aac2e1628edf477,
+    type: 2}
+  destinationUnitTextAnimation: {fileID: 11400000, guid: 806fdd29a8490d444a845dd74ad51575,
+    type: 2}

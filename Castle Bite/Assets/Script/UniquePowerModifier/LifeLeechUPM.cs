@@ -58,8 +58,10 @@ public class LifeLeechUPM : UniquePowerModifier
                 Debug.LogWarning("UpmDurationMax should be 0");
             }
             // instantly trigger UPM, but apply it to src unit as heal
-            // Get damage dealt
-            int damageDealt = uniquePowerModifierConfig.GetUpmEffectivePower(activePartyUnit); // current power is negative if it is damage dealing ability
+            // Get UPM effective power
+            int upmEffectiPower = uniquePowerModifierConfig.GetUpmEffectivePower(activePartyUnit);
+            // init damage dealt variable
+            int damageDealt = upmEffectiPower; // current power is negative if it is damage dealing ability
             // verify if damage dealt is not higher than current unit health
             if (Math.Abs(damageDealt) > targetPartyUnit.UnitHealthCurr)
             {
@@ -69,6 +71,8 @@ public class LifeLeechUPM : UniquePowerModifier
             // Heal active unit to amout of damage dealt
             Debug.Log("Heal " + activePartyUnit.UnitName + " for " + Math.Abs(damageDealt) + " health");
             activePartyUnit.UnitHealthCurr += Math.Abs(damageDealt);
+            // Damage target unit
+            targetPartyUnit.UnitHealthCurr += upmEffectiPower;
         }
     }
 

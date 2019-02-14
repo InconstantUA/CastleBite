@@ -22,4 +22,3 @@ MonoBehaviour:
   postActionUniquePowerModifierConfigs: []
   uniquePowerModifierConfigs:
   - {fileID: 11400000, guid: 56440dd125fe860469289c072b773540, type: 2}
-  - {fileID: 11400000, guid: 7cc39a79bdf9fa5459195d9da47dce26, type: 2}

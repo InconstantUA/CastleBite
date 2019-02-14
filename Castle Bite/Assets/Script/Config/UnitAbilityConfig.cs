@@ -55,6 +55,11 @@ public class UnitAbilityConfig : ScriptableObject
             {
                 // get UPM which has primary attribute set (should be only one)
                 primaryUniquePowerModifierConfig = uniquePowerModifierConfigs.Find(e => e.IsPrimary == true);
+                // verify if primary UPM is null
+                if (primaryUniquePowerModifierConfig == null)
+                {
+                    Debug.LogError("Primary UPM config is not set. Set primary in UPM in Unity Editor");
+                }
             }
             return primaryUniquePowerModifierConfig;
             // return uniquePowerModifierConfigs.Find(e => e.IsPrimary == true); ;

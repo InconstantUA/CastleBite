@@ -11,6 +11,8 @@ public class UniquePowerModifierUIConfig : ScriptableObject
     private UniquePowerModifierStatusIconUIConfig statusIconUIConfig;
     [SerializeField]
     private TextAnimation onTriggerUPMTextAnimation;
+    [SerializeField]
+    private UniquePowerModifierAnimation uniquePowerModifierAnimation;
 
     public UniquePowerModifierValidationUIConfig ValidationUIConfig
     {
@@ -36,4 +38,11 @@ public class UniquePowerModifierUIConfig : ScriptableObject
         }
     }
 
+    public UniquePowerModifierAnimation UniquePowerModifierAnimation
+    {
+        get
+        {
+            return uniquePowerModifierAnimation;
+        }
+    }
 }

@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c6fc8323fdde854080a681ffa694acb, type: 3}
-  m_Name: Drain Life UPM UI Config
+  m_Name: old Drain Life UPM UI Config
   m_EditorClassIdentifier: 
   validationUIConfig: {fileID: 11400000, guid: ceab99324087ce74f80f085a718a1855, type: 2}
   statusIconUIConfig: {fileID: 11400000, guid: c85425ce900544a439eb7e770f92b8e6, type: 2}
   onTriggerUPMTextAnimation: {fileID: 11400000, guid: 806fdd29a8490d444a845dd74ad51575,
     type: 2}
+  uniquePowerModifierAnimation: {fileID: 0}
