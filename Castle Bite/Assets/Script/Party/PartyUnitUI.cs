@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -330,9 +331,12 @@ public class PartyUnitUI : MonoBehaviour {
     }
 
     #region Unit Br Canvas
-    public Text GetUnitCanvasText()
+    //public Text GetUnitCanvasText()
+    public TextMeshProUGUI GetUnitCanvasText()
     {
-        return GetUnitCell().Find("Br").GetComponent<Text>();
+        //return GetUnitCell().Find("Br").GetComponent<Text>();
+        //return GetComponentInParent<PartyPanelCell>().CanvasText;
+        return GetUnitCell().GetComponent<PartyPanelCell>().CanvasText;
     }
 
     public void HighlightActiveUnitInBattle(bool doHighlight)
@@ -350,8 +354,9 @@ public class PartyUnitUI : MonoBehaviour {
             highlightColor = new Color32 (32, 32, 32, 255);
         }
         // highlight unit canvas with required color
-        Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
-        canvasText.color = highlightColor;
+        //Text canvasText = GetUnitCell().Find("Br").GetComponent<Text>();
+        //canvasText.color = highlightColor;
+        GetUnitCanvasText().color = highlightColor;
     }
     #endregion Unit Br Canvas
 
@@ -847,73 +852,73 @@ public class PartyUnitUI : MonoBehaviour {
         ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
     }
 
-    public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI targetPartyUnitUI)
-    {
-        // verify if party unit to which modifier has been applied is the same as current
-        if ( (targetPartyUnitUI == this) ||
-            // verify if ability is applicable to the slot where this unit UI is located (this is set as preparation when new active unit is set)
-            // and this is mass ability
-            //(GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit) && srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.isMassScopeAbility)
-            ( GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit && (srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig.ModifierScope > ModifierScope.SingleUnit) ) )
-        {
-            // apply source unit power modifiers
-            // loop through all Unit Power Modifiers
-            foreach (UnitPowerModifier unitPowerModifier in srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.preActionUnitPowerModifiers)
-            {
-                // get and apply unit PowerModifier
-                unitPowerModifier.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
-            }
-            // apply source unit ability to party unit linked to this UI
-            srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
-            // run text animation
-            srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.textAnimation.Run(UnitInfoPanelText);
-            // verify if unit can still participate in battle (is not dead after main ability apply, if it is damaging)
-            //if (targetPartyUnitUI.LPartyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
-            if (LPartyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
-            {
-                // apply unit unique power modifiers (buffs and debuffs)
-                for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.postActionUniquePowerModifierConfigs.Count; i++)
-                {
-                    // SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i], true);
-                    // set unique power modifier ID
-                    UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
-                    {
-                        unitAbilityID = srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbilityID,
-                        uniquePowerModifierConfigIndex = i,
-                        modifierOrigin = ModifierOrigin.Ability,
-                        //destinationGameObjectID = targetPartyUnitUI.gameObject.GetInstanceID()
-                        destinationGameObjectID = this.gameObject.GetInstanceID()
-                    };
-                    srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.postActionUniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
-                }
-            }
-        }
-        // verify if it is source unit
-        else if (srcPartyUnitUI == this)
-        {
-            // don't make any changes, keep it highlighted
-        }
-        else
-        {
-            // clear unit info panel
-            ClearUnitInfoPanel();
-            // remove highlight
-            GetUnitCell().Find("Br").GetComponent<Text>().color = new Color32(32, 32, 32, 255);
-        }
-    }
+    //public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI targetPartyUnitUI)
+    //{
+    //    // verify if party unit to which modifier has been applied is the same as current
+    //    if ( (targetPartyUnitUI == this) ||
+    //        // verify if ability is applicable to the slot where this unit UI is located (this is set as preparation when new active unit is set)
+    //        // and this is mass ability
+    //        //(GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit) && srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.isMassScopeAbility)
+    //        ( GetComponentInParent<UnitSlot>().IsAllowedToApplyPowerToThisUnit && (srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig.ModifierScope > ModifierScope.SingleUnit) ) )
+    //    {
+    //        // apply source unit power modifiers
+    //        // loop through all Unit Power Modifiers
+    //        foreach (UnitPowerModifier unitPowerModifier in srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.preActionUnitPowerModifiers)
+    //        {
+    //            // get and apply unit PowerModifier
+    //            unitPowerModifier.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
+    //        }
+    //        // apply source unit ability to party unit linked to this UI
+    //        srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit);
+    //        // run text animation
+    //        srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbility.textAnimation.Run(UnitInfoPanelText);
+    //        // verify if unit can still participate in battle (is not dead after main ability apply, if it is damaging)
+    //        //if (targetPartyUnitUI.LPartyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
+    //        if (LPartyUnit.UnitStatusConfig.GetCanBeGivenATurnInBattle())
+    //        {
+    //            // apply unit unique power modifiers (buffs and debuffs)
+    //            for (int i = 0; i < srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.postActionUniquePowerModifierConfigs.Count; i++)
+    //            {
+    //                // SetUnitDebuffActive(srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.uniquePowerModifierConfigs[i], true);
+    //                // set unique power modifier ID
+    //                UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+    //                {
+    //                    unitAbilityID = srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.unitAbilityID,
+    //                    uniquePowerModifierConfigIndex = i,
+    //                    modifierOrigin = ModifierOrigin.Ability,
+    //                    //destinationGameObjectID = targetPartyUnitUI.gameObject.GetInstanceID()
+    //                    destinationGameObjectID = this.gameObject.GetInstanceID()
+    //                };
+    //                srcPartyUnitUI.LPartyUnit.UnitAbilityConfig.postActionUniquePowerModifierConfigs[i].Apply(srcPartyUnitUI.LPartyUnit, LPartyUnit, uniquePowerModifierID);
+    //            }
+    //        }
+    //    }
+    //    // verify if it is source unit
+    //    else if (srcPartyUnitUI == this)
+    //    {
+    //        // don't make any changes, keep it highlighted
+    //    }
+    //    else
+    //    {
+    //        // clear unit info panel
+    //        ClearUnitInfoPanel();
+    //        // remove highlight
+    //        GetUnitCell().Find("Br").GetComponent<Text>().color = new Color32(32, 32, 32, 255);
+    //    }
+    //}
 
-    public void OnUnitPowerModifierApply(PartyUnit appliedToPartyUnit, UnitPowerModifier unitPowerModifier)
-    {
-        // verify if party unit to which modifier has been applied is the same as current
-        if (appliedToPartyUnit == LPartyUnit)
-        {
-            // get battle screen queue
-            //CoroutineQueue coroutineQueue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
-            // display unit power modifier animation
-            //unitPowerModifier.textAnimation.Run(UnitInfoPanelText, coroutineQueue);
-            unitPowerModifier.textAnimation.Run(UnitInfoPanelText);
-        }
-    }
+    //public void OnUnitPowerModifierApply(PartyUnit appliedToPartyUnit, UnitPowerModifier unitPowerModifier)
+    //{
+    //    // verify if party unit to which modifier has been applied is the same as current
+    //    if (appliedToPartyUnit == LPartyUnit)
+    //    {
+    //        // get battle screen queue
+    //        //CoroutineQueue coroutineQueue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+    //        // display unit power modifier animation
+    //        //unitPowerModifier.textAnimation.Run(UnitInfoPanelText, coroutineQueue);
+    //        unitPowerModifier.textAnimation.Run(UnitInfoPanelText);
+    //    }
+    //}
 
     System.Object GetItemBeingDraggedSourceContext()
     {

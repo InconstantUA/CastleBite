@@ -15,7 +15,7 @@ MonoBehaviour:
   displayName: Life Leech
   description: Life Leech recovers an amount of life relative to the damage inflicted
     to an enemy
-  isPrimary: 0
+  isPrimary: 1
   executionOrder: 1
   uniquePowerModifier: {fileID: 11400000, guid: 48403586b7de21f498058568fb899e7b,
     type: 2}
@@ -27,9 +27,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4d75e89b943b60f4784e7053b4f55eee, type: 2}
   - {fileID: 11400000, guid: 58d391115f2085e4d8c156bd739ec8c2, type: 2}
   modifierLimiters:
-  - {fileID: 11400000, guid: b9d00720967960349a84d4b79d7b2876, type: 2}
+  - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
   - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
-  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  - {fileID: 11400000, guid: 4b2254fc4144bfb458fe2c35e8d6dd33, type: 2}
   - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
   modifierAdvisers: []
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: f196d7854b847f242bbc4cce949ded47,

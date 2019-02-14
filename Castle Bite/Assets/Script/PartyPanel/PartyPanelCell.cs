@@ -1,13 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PartyPanelCell : MonoBehaviour
 {
     [SerializeField]
     PartyPanel.Cell cell;
+    // .. remove canvasText
     [SerializeField]
     Text canvasText;
+    [SerializeField]
+    TextMeshProUGUI canvasTMPro;
+
+    Material standardCanvasMaterial;
+    Material highlightedCanvasMaterial;
 
     private Color beforeItemDragColor;
     private PartyUnitUI activePartyUnitUI;
@@ -20,11 +27,19 @@ public class PartyPanelCell : MonoBehaviour
         }
     }
 
-    public Text CanvasText
+    //public Text CanvasText
+    //{
+    //    get
+    //    {
+    //        return canvasText;
+    //    }
+    //}
+
+    public TextMeshProUGUI CanvasText
     {
         get
         {
-            return canvasText;
+            return canvasTMPro;
         }
     }
 
@@ -33,6 +48,36 @@ public class PartyPanelCell : MonoBehaviour
         get
         {
             return activePartyUnitUI;
+        }
+    }
+
+    public Material StandardCanvasMaterial
+    {
+        get
+        {
+            // verify it it has not been assigned yet
+            if (standardCanvasMaterial == null)
+            {
+                // get material from resources
+                standardCanvasMaterial = Resources.Load("Fonts and Materials/cour bold Normal SDF") as Material;
+            }
+            // return material
+            return standardCanvasMaterial;
+        }
+    }
+
+    public Material HighlightedCanvasMaterial
+    {
+        get
+        {
+            // verify it it has not been assigned yet
+            if (highlightedCanvasMaterial == null)
+            {
+                // get material from resources
+                highlightedCanvasMaterial = Resources.Load("Fonts and Materials/cour bold Hilighted SDF") as Material;
+            }
+            // return material
+            return highlightedCanvasMaterial;
         }
     }
 
@@ -184,13 +229,47 @@ public class PartyPanelCell : MonoBehaviour
         }
     }
 
+    bool GetIsTargetableAndHighlightUnitCanvasBasedOnUPMConfigApplicability(UniquePowerModifierConfig uniquePowerModifierConfig)
+    {
+        // verify if active party unit ability is applicable to this cell (example: summon) and party unit (if it is present)
+        if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(activePartyUnitUI.GetComponentInParent<PartyPanelCell>(), this))
+        {
+            Debug.Log("Cell Requirements are met");
+            // verify if party unit is not present, because if it is present, then we need to give it a possibility to override "applicability"
+            // it maybe already overritten, because PartyUnitUI could possibly react earlier on event
+            // get party unit UI
+            PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
+            // verify if its not null
+            if (partyUnitUI != null)
+            {
+                // let party unit override highlights and react on begin item drag event
+                return partyUnitUI.ActOnBattleNewUnitHasBeenActivatedEvent(activePartyUnitUI);
+            }
+            else
+            {
+                // highlight with applicable color
+                CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+                // targetable
+                return true;
+            }
+        }
+        else
+        {
+            Debug.Log("Cell Requirements are not met");
+            // highlight with not applicable color
+            CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+            // not targetable
+            return false;
+        }
+    }
+
     public void OnBattleNewUnitHasBeenActivatedEvent(System.Object context)
     {
-        // init is targetable
-        bool isTargetable = false;
         // init error message (if cell is not targetable)
         // .. set it dynamically based on limiter triggered
         string errorMessage = "Cannot target this cell";
+        // init is targetable
+        bool isTargetable = false;
         // verify if context is correct
         if (context is PartyUnitUI)
         {
@@ -203,36 +282,20 @@ public class PartyPanelCell : MonoBehaviour
             // get UPM config
             // UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
             UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig;
-            // verify if active party unit ability is applicable to this cell (example: summon) and party unit (if it is present)
-            if (uniquePowerModifierConfig.AreRequirementsMetInContextOf(activePartyUnitUI.GetComponentInParent<PartyPanelCell>(), this))
+            // Highlight unit canvas based on whether UPM is applicable to this unit or not
+            isTargetable = GetIsTargetableAndHighlightUnitCanvasBasedOnUPMConfigApplicability(uniquePowerModifierConfig);
+            // Activate/Deactive HighlightUnitCanvas
+            // transform.Find("HighlightUnitCanvas").gameObject.SetActive((activePartyUnitUI.GetComponentInParent<PartyPanelCell>().gameObject.GetInstanceID() == this.gameObject.GetInstanceID()));
+            bool isThisActiveUnitCell = activePartyUnitUI.GetComponentInParent<PartyPanelCell>().gameObject.GetInstanceID() == this.gameObject.GetInstanceID();
+            if (isThisActiveUnitCell)
             {
-                Debug.Log("Cell Requirements are met");
-                // verify if party unit is not present, because if it is present, then we need to give it a possibility to override "applicability"
-                // it maybe already overritten, because PartyUnitUI could possibly react earlier on event
-                // get party unit UI
-                PartyUnitUI partyUnitUI = GetComponentInChildren<PartyUnitUI>();
-                // verify if its not null
-                if (partyUnitUI != null)
-                {
-                    // let party unit override highlights and react on begin item drag event
-                    isTargetable = partyUnitUI.ActOnBattleNewUnitHasBeenActivatedEvent(activePartyUnitUI);
-                }
-                else
-                {
-                    // highlight with applicable color
-                    CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
-                    isTargetable = true;
-                }
+                CanvasText.fontSharedMaterial = HighlightedCanvasMaterial;
             }
             else
             {
-                Debug.Log("Cell Requirements are not met");
-                // highlight with not applicable color
-                CanvasText.color = uniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
-                isTargetable = false; ;
+                // CanvasText.fontSharedMaterial.DisableKeyword(ShaderUtilities.Keyword_Glow);
+                CanvasText.fontSharedMaterial = StandardCanvasMaterial;
             }
-            // Activate/Deactive HighlightUnitCanvas
-            transform.Find("HighlightUnitCanvas").gameObject.SetActive((activePartyUnitUI.GetComponentInParent<PartyPanelCell>().gameObject.GetInstanceID() == this.gameObject.GetInstanceID()));
         }
         // set UnitSlot in cell as targetable or not
         GetComponentInChildren<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
@@ -296,6 +359,12 @@ public class PartyPanelCell : MonoBehaviour
                     //    // run text animation
                     //    activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(partyUnitUI.UnitInfoPanelText);
                     //}
+                }
+                else
+                {
+                    // update highlights (in case if it is single-unit scope upm, then we should remove highlight for others)
+                    // highlight with not applicable color
+                    CanvasText.color = activeUnitUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
                 }
             }
             // get destination PartyUnitUI

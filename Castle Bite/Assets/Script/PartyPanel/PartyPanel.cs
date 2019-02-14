@@ -701,7 +701,8 @@ public class PartyPanel : MonoBehaviour {
                         hightlightColor = normalColor;
                     }
                     // Change text box color
-                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    // unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    unitCell.GetComponent<PartyPanelCell>().CanvasText.color = hightlightColor;
                 }
             }
         }
@@ -756,7 +757,8 @@ public class PartyPanel : MonoBehaviour {
                         hightlightColor = normalColor;
                     }
                     // Change text box color
-                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    //unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    unitCell.GetComponent<PartyPanelCell>().CanvasText.color = hightlightColor;
                 }
             }
         }
@@ -810,7 +812,8 @@ public class PartyPanel : MonoBehaviour {
                         hightlightColor = normalColor;
                     }
                     // Change text box color
-                    unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    //unitCell.Find("Br").GetComponent<Text>().color = hightlightColor;
+                    unitCell.GetComponent<PartyPanelCell>().CanvasText.color = hightlightColor;
                 }
             }
         }
@@ -842,12 +845,14 @@ public class PartyPanel : MonoBehaviour {
         if (isDroppable)
         {
             // Change text box color
-            cellTr.Find("Br").GetComponent<Text>().color = Color.green;
+            //cellTr.Find("Br").GetComponent<Text>().color = Color.green;
+            cellTr.GetComponent<PartyPanelCell>().CanvasText.color = Color.green;
         }
         else
         {
             // Change text box color
-            cellTr.Find("Br").GetComponent<Text>().color = Color.red;
+            //cellTr.Find("Br").GetComponent<Text>().color = Color.red;
+            cellTr.GetComponent<PartyPanelCell>().CanvasText.color = Color.red;
         }
         // set UnitSlot in cell as droppable or not
         cellTr.Find("UnitSlot").GetComponent<UnitSlotDropHandler>().SetOnDropAction(isDroppable, errorMessage);
@@ -1229,7 +1234,8 @@ public class PartyPanel : MonoBehaviour {
                 foreach (Cell cell in cells)
                 {
                     // Change text box color
-                    transform.Find(horisontalPanel+"/"+cell+"/Br").GetComponent<Text>().color = normalColor;
+                    //transform.Find(horisontalPanel+"/"+cell+"/Br").GetComponent<Text>().color = normalColor;
+                    transform.Find(horisontalPanel+"/"+cell).GetComponent<PartyPanelCell>().CanvasText.color = normalColor;
                 }
             }
         }
@@ -1435,50 +1441,50 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    void SetIfCellCanBeTargetedStatus(bool isTargetable, Transform cellTr, string errorMessage, Color positiveColor, Color negativeColor)
-    {
-        // isDroppable means if we can drop units to this cell
-        if (isTargetable)
-        {
-            // Unit can be targeted
-            // Change text box color
-            cellTr.Find("Br").GetComponent<Text>().color = positiveColor;
-        }
-        else
-        {
-            // Unit can't be targeted
-            // Change text box color
-            // Skip "Br" modify for dead and units which has escaped from battle
-            // Get unit if it is present in the cell
-            Transform unitSlot = cellTr.Find("UnitSlot");
-            if (unitSlot.childCount > 0)
-            {
-                // Unit present in cell
-                PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                // Verify if unit has not escaped or dead
-                if (   (unit.UnitStatus == UnitStatus.Active)
-                    || (unit.UnitStatus == UnitStatus.Waiting)
-                    || (unit.UnitStatus == UnitStatus.Escaping) )
-                {
-                    // Unit is alive and has not escaped
-                    // Apply default negative Color
-                    cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
-                }
-                else
-                {
-                    // do not change status of dead or escaped unit, because it is already set correctly
-                }
-            }
-            else
-            {
-                // No unit
-                // Apply default negative Color
-                cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
-            }
-        }
-        // set UnitSlot in cell as droppable or not
-        cellTr.Find("UnitSlot").GetComponent<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
-    }
+    //void SetIfCellCanBeTargetedStatus(bool isTargetable, Transform cellTr, string errorMessage, Color positiveColor, Color negativeColor)
+    //{
+    //    // isDroppable means if we can drop units to this cell
+    //    if (isTargetable)
+    //    {
+    //        // Unit can be targeted
+    //        // Change text box color
+    //        cellTr.Find("Br").GetComponent<Text>().color = positiveColor;
+    //    }
+    //    else
+    //    {
+    //        // Unit can't be targeted
+    //        // Change text box color
+    //        // Skip "Br" modify for dead and units which has escaped from battle
+    //        // Get unit if it is present in the cell
+    //        Transform unitSlot = cellTr.Find("UnitSlot");
+    //        if (unitSlot.childCount > 0)
+    //        {
+    //            // Unit present in cell
+    //            PartyUnit unit = unitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+    //            // Verify if unit has not escaped or dead
+    //            if (   (unit.UnitStatus == UnitStatus.Active)
+    //                || (unit.UnitStatus == UnitStatus.Waiting)
+    //                || (unit.UnitStatus == UnitStatus.Escaping) )
+    //            {
+    //                // Unit is alive and has not escaped
+    //                // Apply default negative Color
+    //                cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
+    //            }
+    //            else
+    //            {
+    //                // do not change status of dead or escaped unit, because it is already set correctly
+    //            }
+    //        }
+    //        else
+    //        {
+    //            // No unit
+    //            // Apply default negative Color
+    //            cellTr.Find("Br").GetComponent<Text>().color = negativeColor;
+    //        }
+    //    }
+    //    // set UnitSlot in cell as droppable or not
+    //    cellTr.Find("UnitSlot").GetComponent<UnitSlot>().SetOnClickAction(isTargetable, errorMessage);
+    //}
 
     PartyUnitUI GetUnitUIWhichCanFight(Row horisontalPanel, Cell cell)
     {
@@ -1564,20 +1570,20 @@ public class PartyPanel : MonoBehaviour {
         return false;
     }
 
-    public void ResetAllCellsCanBeTargetedStatus()
-    {
-        bool isAllowedToApplyPwrToThisUnit = false;
-        Color positiveColor = Color.white; // it doesn't matter, because isAllowedToApplyPwrToThisUnit is false
-        Color negativeColor = new Color32(32, 32, 32, 255);
-        string errorMessage = "This cannot be targeted";
-        foreach (Row horisontalPanel in horisontalPanels)
-        {
-            foreach (Cell cell in cells)
-            {
-                SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
-            }
-        }
-    }
+    //public void ResetAllCellsCanBeTargetedStatus()
+    //{
+    //    bool isAllowedToApplyPwrToThisUnit = false;
+    //    Color positiveColor = Color.white; // it doesn't matter, because isAllowedToApplyPwrToThisUnit is false
+    //    Color negativeColor = new Color32(32, 32, 32, 255);
+    //    string errorMessage = "This cannot be targeted";
+    //    foreach (Row horisontalPanel in horisontalPanels)
+    //    {
+    //        foreach (Cell cell in cells)
+    //        {
+    //            SetIfCellCanBeTargetedStatus(isAllowedToApplyPwrToThisUnit, transform.Find(horisontalPanel + "/" + cell), errorMessage, positiveColor, negativeColor);
+    //        }
+    //    }
+    //}
 
     bool IsActiveMeleUnitBlockedByItsPartyMembers(PartyPanelCell srcPartyPanelCell)
     {
@@ -2580,12 +2586,16 @@ public class PartyPanel : MonoBehaviour {
 
     public void ResetUnitCellHighlight()
     {
-        foreach (Row horisontalPanel in horisontalPanels)
+        //foreach (Row horisontalPanel in horisontalPanels)
+        //{
+        //    foreach (Cell cell in cells)
+        //    {
+        //        transform.Find(horisontalPanel + "/" + cell).Find("Br").GetComponent<Text>().color = new Color32(128, 128, 128, 255);
+        //    }
+        //}
+        foreach(PartyPanelCell partyPanelCell in GetComponentsInChildren<PartyPanelCell>(true))
         {
-            foreach (Cell cell in cells)
-            {
-                transform.Find(horisontalPanel + "/" + cell).Find("Br").GetComponent<Text>().color = new Color32(128, 128, 128, 255);
-            }
+            partyPanelCell.CanvasText.color = new Color32(128, 128, 128, 255);
         }
     }
 
@@ -2865,89 +2875,89 @@ public class PartyPanel : MonoBehaviour {
     //    }
     //}
 
-    public void ApplyPowersToUnit(PartyUnitUI dstUnitUI)
-    {
-        // Trigger Event
-        triggerUnitAbility.Raise(activeBattleUnitUI.gameObject, dstUnitUI.gameObject);
-        // reset cell info panel beforehand, for both parties, to clean up previous information
-        //ResetUnitCellInfoPanel();
-        //activeBattleUnitUI.GetUnitPartyPanel().ResetUnitCellInfoPanel();
-        // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
-        // but still the power should be applied
-        //if (dstUnitUI)
-        //{
-        //    //Debug.Log(activeBattleUnit.UnitName + " acting upon " + dstUnit.UnitName + " or whole party");
-        //    switch (activeBattleUnitUI.LPartyUnit.UnitAbilityID)
-        //    {
-        //        // Helping or buf powers
-        //        case UnitAbilityID.HealingWord:
-        //            ApplyHealingPowerToSingleUnit(dstUnitUI);
-        //            break;
-        //        case UnitAbilityID.HealingSong:
-        //        case UnitAbilityID.SacrificingEcho:
-        //            ApplyHealingPowerToMultipleUnits();
-        //            break;
-        //        case UnitAbilityID.Resurect:
-        //            ApplyResurectPower(dstUnitUI);
-        //            break;
-        //        // Mele attack powers
-        //        case UnitAbilityID.BlowWithGreatSword:
-        //        case UnitAbilityID.BlowWithMaul:
-        //        case UnitAbilityID.CutWithAxe:
-        //        case UnitAbilityID.CutWithDagger:
-        //        case UnitAbilityID.SlashWithSword:
-        //        case UnitAbilityID.StabWithDagger:
-        //        case UnitAbilityID.StompWithFoot:
-        //        // Ranged attack powers
-        //        case UnitAbilityID.ShootWithBow:
-        //        case UnitAbilityID.ShootWithCompoudBow:
-        //        case UnitAbilityID.ThrowSpear:
-        //        case UnitAbilityID.ThrowRock:
-        //        case UnitAbilityID.DrainLife:
-        //            ApplyDestructivePowerToSingleUnitUI(dstUnitUI);
-        //            break;
-        //        // Magic (including pure or whole-party) attack powers
-        //        case UnitAbilityID.CastChainLightning:
-        //        case UnitAbilityID.CastLightningStorm:
-        //        case UnitAbilityID.HolyWord:
-        //        case UnitAbilityID.EarthShatteringLeap:
-        //        case UnitAbilityID.Malediction:
-        //            ApplyDestructivePowerToMultipleUnits();
-        //            break;
-        //        default:
-        //            Debug.LogError("Unknown unit power");
-        //            break;
-        //    }
-        //}
-        //else
-        //{
-        //    // in case of magic power - apply it to all units in enemy party
-        //    Debug.Log(activeBattleUnitUI.LPartyUnit.UnitName + " acting upon whole party");
-        //    switch (activeBattleUnitUI.LPartyUnit.UnitAbilityID)
-        //    {
-        //        // Helping or buf powers
-        //        case UnitAbilityID.HealingSong:
-        //        case UnitAbilityID.SacrificingEcho:
-        //            ApplyHealingPowerToMultipleUnits();
-        //            break;
-        //        // Magic (including pure or whole-party) attack powers
-        //        case UnitAbilityID.CastChainLightning:
-        //        case UnitAbilityID.CastLightningStorm:
-        //        case UnitAbilityID.HolyWord:
-        //        case UnitAbilityID.EarthShatteringLeap:
-        //        case UnitAbilityID.Malediction:
-        //            ApplyDestructivePowerToMultipleUnits();
-        //            break;
-        //        default:
-        //            Debug.LogError("Unknown unit power");
-        //            break;
-        //    }
-        //}
-        // Gradually fade away unit cell information
-        // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
-        // CoroutineQueueManager.Run(FadeUnitsCellInfo());
-        // StartCoroutine("FadeUnitCellInfo");
-    }
+    //public void ApplyPowersToUnit(PartyUnitUI dstUnitUI)
+    //{
+    //    // Trigger Event
+    //    triggerUnitAbility.Raise(activeBattleUnitUI.gameObject, dstUnitUI.gameObject);
+    //    // reset cell info panel beforehand, for both parties, to clean up previous information
+    //    //ResetUnitCellInfoPanel();
+    //    //activeBattleUnitUI.GetUnitPartyPanel().ResetUnitCellInfoPanel();
+    //    // in case of applying magic powers it is possible to click on the unit slot, where there is no unit
+    //    // but still the power should be applied
+    //    //if (dstUnitUI)
+    //    //{
+    //    //    //Debug.Log(activeBattleUnit.UnitName + " acting upon " + dstUnit.UnitName + " or whole party");
+    //    //    switch (activeBattleUnitUI.LPartyUnit.UnitAbilityID)
+    //    //    {
+    //    //        // Helping or buf powers
+    //    //        case UnitAbilityID.HealingWord:
+    //    //            ApplyHealingPowerToSingleUnit(dstUnitUI);
+    //    //            break;
+    //    //        case UnitAbilityID.HealingSong:
+    //    //        case UnitAbilityID.SacrificingEcho:
+    //    //            ApplyHealingPowerToMultipleUnits();
+    //    //            break;
+    //    //        case UnitAbilityID.Resurect:
+    //    //            ApplyResurectPower(dstUnitUI);
+    //    //            break;
+    //    //        // Mele attack powers
+    //    //        case UnitAbilityID.BlowWithGreatSword:
+    //    //        case UnitAbilityID.BlowWithMaul:
+    //    //        case UnitAbilityID.CutWithAxe:
+    //    //        case UnitAbilityID.CutWithDagger:
+    //    //        case UnitAbilityID.SlashWithSword:
+    //    //        case UnitAbilityID.StabWithDagger:
+    //    //        case UnitAbilityID.StompWithFoot:
+    //    //        // Ranged attack powers
+    //    //        case UnitAbilityID.ShootWithBow:
+    //    //        case UnitAbilityID.ShootWithCompoudBow:
+    //    //        case UnitAbilityID.ThrowSpear:
+    //    //        case UnitAbilityID.ThrowRock:
+    //    //        case UnitAbilityID.DrainLife:
+    //    //            ApplyDestructivePowerToSingleUnitUI(dstUnitUI);
+    //    //            break;
+    //    //        // Magic (including pure or whole-party) attack powers
+    //    //        case UnitAbilityID.CastChainLightning:
+    //    //        case UnitAbilityID.CastLightningStorm:
+    //    //        case UnitAbilityID.HolyWord:
+    //    //        case UnitAbilityID.EarthShatteringLeap:
+    //    //        case UnitAbilityID.Malediction:
+    //    //            ApplyDestructivePowerToMultipleUnits();
+    //    //            break;
+    //    //        default:
+    //    //            Debug.LogError("Unknown unit power");
+    //    //            break;
+    //    //    }
+    //    //}
+    //    //else
+    //    //{
+    //    //    // in case of magic power - apply it to all units in enemy party
+    //    //    Debug.Log(activeBattleUnitUI.LPartyUnit.UnitName + " acting upon whole party");
+    //    //    switch (activeBattleUnitUI.LPartyUnit.UnitAbilityID)
+    //    //    {
+    //    //        // Helping or buf powers
+    //    //        case UnitAbilityID.HealingSong:
+    //    //        case UnitAbilityID.SacrificingEcho:
+    //    //            ApplyHealingPowerToMultipleUnits();
+    //    //            break;
+    //    //        // Magic (including pure or whole-party) attack powers
+    //    //        case UnitAbilityID.CastChainLightning:
+    //    //        case UnitAbilityID.CastLightningStorm:
+    //    //        case UnitAbilityID.HolyWord:
+    //    //        case UnitAbilityID.EarthShatteringLeap:
+    //    //        case UnitAbilityID.Malediction:
+    //    //            ApplyDestructivePowerToMultipleUnits();
+    //    //            break;
+    //    //        default:
+    //    //            Debug.LogError("Unknown unit power");
+    //    //            break;
+    //    //    }
+    //    //}
+    //    // Gradually fade away unit cell information
+    //    // CoroutineQueue queue = transform.root.GetComponentInChildren<UIManager>().GetComponentInChildren<BattleScreen>(true).Queue;
+    //    // CoroutineQueueManager.Run(FadeUnitsCellInfo());
+    //    // StartCoroutine("FadeUnitCellInfo");
+    //}
 
     //public void SetUnitDefenseBuffActive(PartyUnitUI partyUnitUI)
     //{

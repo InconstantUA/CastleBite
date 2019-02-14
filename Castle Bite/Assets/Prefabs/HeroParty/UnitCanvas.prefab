@@ -453,112 +453,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  - name: Apply Unit Ability Unit UI to Unit UI
-    gameEvent: {fileID: 11400000, guid: e56ca734c44aad44e99467b3841dd0c3, type: 2}
-    genericAction:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-    genericObjectEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    partyUnitEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    partyUnitHealthHasChangedEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    unitAbilityEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    unitToUnitEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114938818029723712}
-          m_MethodName: OnApplyAbilityFromUnitUIToUnitUI
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    uniquePowerModifierDataEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-  - name: Apply Unit Power Modifier
-    gameEvent: {fileID: 11400000, guid: 5211f2719b444b4469e7b53a1d4b1ed8, type: 2}
-    genericAction:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-    genericObjectEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    partyUnitEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    partyUnitHealthHasChangedEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 114938818029723712}
-          m_MethodName: OnUnitPowerModifierApply
-          m_Mode: 0
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    unitAbilityEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    unitToUnitEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-    uniquePowerModifierDataEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
   - name: UPM Data Has Been Added
     gameEvent: {fileID: 11400000, guid: 9b2c4948f393789408a528ee15395380, type: 2}
     genericAction:
@@ -1094,7 +988,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 12, y: 17}
+  m_AnchoredPosition: {x: 15, y: 17}
   m_SizeDelta: {x: 24, y: 16}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &222852718848670848
@@ -1241,7 +1135,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -11.5, y: 16.5}
+  m_AnchoredPosition: {x: -13, y: 16.5}
   m_SizeDelta: {x: 25, y: 16}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &222941233559643254

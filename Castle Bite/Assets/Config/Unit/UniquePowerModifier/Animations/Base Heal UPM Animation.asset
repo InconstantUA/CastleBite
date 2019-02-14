@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 333506cf1512e104a88accd8ecffdbe0, type: 3}
   m_Name: Base Heal UPM Animation
   m_EditorClassIdentifier: 
-  textAnimation: {fileID: 11400000, guid: e7ca77a4a946b194ea79248c93834a74, type: 2}
+  textAnimation: {fileID: 11400000, guid: 17d8a871e87d89849963f61334024faa, type: 2}
