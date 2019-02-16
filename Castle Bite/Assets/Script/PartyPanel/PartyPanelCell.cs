@@ -8,8 +8,8 @@ public class PartyPanelCell : MonoBehaviour
     [SerializeField]
     PartyPanel.Cell cell;
     // .. remove canvasText
-    [SerializeField]
-    Text canvasText;
+    //[SerializeField]
+    //Text canvasText;
     [SerializeField]
     TextMeshProUGUI canvasTMPro;
 

@@ -799,8 +799,15 @@ public class EditPartyScreen : MonoBehaviour {
     // todo: fix duplicate function in PartyPanel
     public void SetHireUnitButtonActiveByCell(bool doActivate, PartyPanel.Row row, PartyPanel.Cell cell)
     {
-        // Debug.Log("Set hire unit button at " + cellAddress + " " + doActivate.ToString());
-        transform.root.Find("MiscUI/HireCommonUnitButtons/" + row + "/" + cell).GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+        Debug.Log("Set hire unit button at row " + row + " " + " and cell " + cell + " active:" + doActivate.ToString());
+        // get cell transform
+        Transform cellTransform = transform.root.Find("MiscUI/HireCommonUnitButtons/" + row + "/" + cell);
+        // verify if cell exists (it doesn't exist for Wide cell in Hire Unit Button panel)
+        if (cellTransform != null)
+        {
+            // activate or deactivate hire party unit button
+            cellTransform.GetComponentInChildren<HirePartyUnitButton>(true).gameObject.SetActive(doActivate);
+        }
     }
 
     void BringHireUnitPnlButtonToTheFront()

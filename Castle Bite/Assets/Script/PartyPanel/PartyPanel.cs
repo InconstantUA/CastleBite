@@ -50,7 +50,7 @@ public class PartyPanel : MonoBehaviour {
     public enum ChangeType { Init, HireSingleUnit, HireDoubleUnit, HirePartyLeader, DismissSingleUnit, DismissDoubleUnit, DismissPartyLeader}
 
     // for battle
-    PartyUnitUI activeBattleUnitUI;
+    //PartyUnitUI activeBattleUnitUI;
     public string deadStatusText = "Dead";
     public string levelUpStatusText = "Level up";
     bool isAIControlled = false;
@@ -2329,83 +2329,83 @@ public class PartyPanel : MonoBehaviour {
     //    canvasText.color = highlightColor;
     //}
 
-    public IEnumerator SetActiveUnitInBattle(PartyUnitUI unitToActivateUI)
-    {
-        //Debug.Log("SetActiveUnitInBattle " + unitToActivate.UnitName);
-        // save it locally for later use
-        activeBattleUnitUI = unitToActivateUI;
-        // new unit became active in battle
-        // highlight differently cells which this unit can or cannot interract and in which way
-        // act based on activated unit relationships with this panel
-        // verify if this is enemy unit or unit from this party
-        bool activeUnitIsFromThisParty = GetIsUnitFriendly(unitToActivateUI);
-        // If active unit is from this party
-        //// Then trigger buffs and debuffs before applying highlights
-        //if (activeUnitIsFromThisParty)
-        //{
-        //    // Verify if unit has buffs which should be removed, example: defense
-        //    DeactivateExpiredBuffs(unitToActivate);
-        //    // Verify if unit has debuffs which should be applied, example: poison
-        //    TriggerAppliedDebuffs(unitToActivate);
-        //    // Deactivate debuffs which has expired, example: poison duration may last 2 turns
-        //    // This is checked and done after debuff trigger
-        //    //DeactivateExpiredDebuffs(unitToActivate);
-        //}
-        // defined below how actions applied to the friendly and enemy units
-        // based on the active unit powers
-        //switch (unitToActivateUI.LPartyUnit.UnitAbilityID)
-        //{
-        //    // Helping or buf powers
-        //    case UnitAbilityID.HealingWord:
-        //    case UnitAbilityID.HealingSong:
-        //    case UnitAbilityID.SacrificingEcho:
-        //        PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
-        //        break;
-        //    case UnitAbilityID.Resurect:
-        //        PrepareBattleFieldForResurectPower(activeUnitIsFromThisParty);
-        //        break;
-        //    // Mele attack powers
-        //    case UnitAbilityID.BlowWithGreatSword:
-        //    case UnitAbilityID.BlowWithMaul:
-        //    case UnitAbilityID.CutWithAxe:
-        //    case UnitAbilityID.CutWithDagger:
-        //    case UnitAbilityID.SlashWithSword:
-        //    case UnitAbilityID.StabWithDagger:
-        //    case UnitAbilityID.StompWithFoot:
-        //        PrepareBattleFieldForMelePower(activeUnitIsFromThisParty);
-        //        break;
-        //    // Ranged attack powers
-        //    case UnitAbilityID.ShootWithBow:
-        //    case UnitAbilityID.ShootWithCompoudBow:
-        //    case UnitAbilityID.ThrowSpear:
-        //    case UnitAbilityID.ThrowRock:
-        //    case UnitAbilityID.DrainLife:
-        //        PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
-        //        break;
-        //    // Magic (including pure or whole-party) attack powers
-        //    case UnitAbilityID.CastChainLightning:
-        //    case UnitAbilityID.CastLightningStorm:
-        //    case UnitAbilityID.HolyWord:
-        //    case UnitAbilityID.EarthShatteringLeap:
-        //    case UnitAbilityID.Malediction:
-        //        PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
-        //        break;
-        //    default:
-        //        Debug.LogError("Unknown unit power");
-        //        break;
-        //}
-        // prepare battle field for active unit
-        // PrepareBattleFieldForActiveUnit(activeUnitIsFromThisParty, unitToActivateUI);
-        // Highlight active unit itself, this should be done after previous highlights
-        // to override their logic
-        if (activeUnitIsFromThisParty)
-        {
-            // This unit belongs to this party highlight it here
-            // without adding to a queue
-            unitToActivateUI.HighlightActiveUnitInBattle(true);
-        }
-        yield return null;
-    }
+    //public IEnumerator SetActiveUnitInBattle(PartyUnitUI unitToActivateUI)
+    //{
+    //    //Debug.Log("SetActiveUnitInBattle " + unitToActivate.UnitName);
+    //    // save it locally for later use
+    //    activeBattleUnitUI = unitToActivateUI;
+    //    // new unit became active in battle
+    //    // highlight differently cells which this unit can or cannot interract and in which way
+    //    // act based on activated unit relationships with this panel
+    //    // verify if this is enemy unit or unit from this party
+    //    bool activeUnitIsFromThisParty = GetIsUnitFriendly(unitToActivateUI);
+    //    // If active unit is from this party
+    //    //// Then trigger buffs and debuffs before applying highlights
+    //    //if (activeUnitIsFromThisParty)
+    //    //{
+    //    //    // Verify if unit has buffs which should be removed, example: defense
+    //    //    DeactivateExpiredBuffs(unitToActivate);
+    //    //    // Verify if unit has debuffs which should be applied, example: poison
+    //    //    TriggerAppliedDebuffs(unitToActivate);
+    //    //    // Deactivate debuffs which has expired, example: poison duration may last 2 turns
+    //    //    // This is checked and done after debuff trigger
+    //    //    //DeactivateExpiredDebuffs(unitToActivate);
+    //    //}
+    //    // defined below how actions applied to the friendly and enemy units
+    //    // based on the active unit powers
+    //    //switch (unitToActivateUI.LPartyUnit.UnitAbilityID)
+    //    //{
+    //    //    // Helping or buf powers
+    //    //    case UnitAbilityID.HealingWord:
+    //    //    case UnitAbilityID.HealingSong:
+    //    //    case UnitAbilityID.SacrificingEcho:
+    //    //        PrepareBattleFieldForHealPower(activeUnitIsFromThisParty);
+    //    //        break;
+    //    //    case UnitAbilityID.Resurect:
+    //    //        PrepareBattleFieldForResurectPower(activeUnitIsFromThisParty);
+    //    //        break;
+    //    //    // Mele attack powers
+    //    //    case UnitAbilityID.BlowWithGreatSword:
+    //    //    case UnitAbilityID.BlowWithMaul:
+    //    //    case UnitAbilityID.CutWithAxe:
+    //    //    case UnitAbilityID.CutWithDagger:
+    //    //    case UnitAbilityID.SlashWithSword:
+    //    //    case UnitAbilityID.StabWithDagger:
+    //    //    case UnitAbilityID.StompWithFoot:
+    //    //        PrepareBattleFieldForMelePower(activeUnitIsFromThisParty);
+    //    //        break;
+    //    //    // Ranged attack powers
+    //    //    case UnitAbilityID.ShootWithBow:
+    //    //    case UnitAbilityID.ShootWithCompoudBow:
+    //    //    case UnitAbilityID.ThrowSpear:
+    //    //    case UnitAbilityID.ThrowRock:
+    //    //    case UnitAbilityID.DrainLife:
+    //    //        PrepareBattleFieldForRangedPower(activeUnitIsFromThisParty);
+    //    //        break;
+    //    //    // Magic (including pure or whole-party) attack powers
+    //    //    case UnitAbilityID.CastChainLightning:
+    //    //    case UnitAbilityID.CastLightningStorm:
+    //    //    case UnitAbilityID.HolyWord:
+    //    //    case UnitAbilityID.EarthShatteringLeap:
+    //    //    case UnitAbilityID.Malediction:
+    //    //        PrepareBattleFieldForMagicPower(activeUnitIsFromThisParty);
+    //    //        break;
+    //    //    default:
+    //    //        Debug.LogError("Unknown unit power");
+    //    //        break;
+    //    //}
+    //    // prepare battle field for active unit
+    //    // PrepareBattleFieldForActiveUnit(activeUnitIsFromThisParty, unitToActivateUI);
+    //    // Highlight active unit itself, this should be done after previous highlights
+    //    // to override their logic
+    //    if (activeUnitIsFromThisParty)
+    //    {
+    //        // This unit belongs to this party highlight it here
+    //        // without adding to a queue
+    //        unitToActivateUI.HighlightActiveUnitInBattle(true);
+    //    }
+    //    yield return null;
+    //}
 
     //public void OnBattleNewUnitHasBeenActivated(System.Object context)
     //{

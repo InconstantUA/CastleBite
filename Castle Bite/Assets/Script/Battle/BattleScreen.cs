@@ -802,11 +802,11 @@ public class BattleScreen : MonoBehaviour {
         yield return new WaitForSeconds(0.25f);
     }
 
-    public void SetHighlight()
-    {
-        CoroutineQueueManager.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
-        CoroutineQueueManager.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
-    }
+    //public void SetHighlight()
+    //{
+    //    CoroutineQueueManager.Run(playerPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+    //    CoroutineQueueManager.Run(enemyPartyPanel.SetActiveUnitInBattle(ActiveUnitUI));
+    //}
 
     IEnumerator TriggerNewUnitHasBeenActivatedEvent()
     {
