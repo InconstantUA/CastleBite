@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
-  m_Name: Slash With Sword UPM Config
+  m_Name: Holy Word UPM Config
   m_EditorClassIdentifier: 
-  displayName: Slash With Sword
-  description: Deals physical damage to single unit
+  displayName: Holy Word
+  description: Deals pure damage to entire enemy party
   isPrimary: 1
   executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,
     type: 2}
-  unitStatModifierConfig: {fileID: 11400000, guid: d80bcdeff0409a445b9c761019c7b159,
+  unitStatModifierConfig: {fileID: 11400000, guid: 428a6eb9dc9d6d344a7cbadc6cc4e7ba,
     type: 2}
   uniquePowerModifierAlignment: 2
   triggerCondition: 1
@@ -26,12 +26,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 45dfbb954f31cfd43a9e059d309b3c49, type: 2}
   - {fileID: 11400000, guid: 58d391115f2085e4d8c156bd739ec8c2, type: 2}
   modifierLimiters:
-  - {fileID: 11400000, guid: d8a867d9f3d6fcc4f83c7b3884a88485, type: 2}
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
   - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
   - {fileID: 11400000, guid: 4b2254fc4144bfb458fe2c35e8d6dd33, type: 2}
   - {fileID: 11400000, guid: 6827dee1e830c1948963d90bf9efcfa9, type: 2}
-  - {fileID: 11400000, guid: 78f70c342af8468438ee70d9f1829621, type: 2}
-  modifierAdvisers:
-  - {fileID: 11400000, guid: be3ad1b87c04922408a4f970d4af5923, type: 2}
-  uniquePowerModifierUIConfig: {fileID: 11400000, guid: b4fa542bb8c1f414890df5adbb568bab,
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 35f91dc81f446ae47a11fb8a66a68a8e,
     type: 2}

@@ -19,6 +19,6 @@ MonoBehaviour:
   unitAbilityTypes: 4
   unitAbilityRange: 1
   preActionUnitPowerModifiers: []
-  primaryUniquePowerModifierConfig: {fileID: 11400000, guid: 11da930038b5dd545ad8f94e422d679c,
-    type: 2}
   postActionUniquePowerModifierConfigs: []
+  uniquePowerModifierConfigs:
+  - {fileID: 11400000, guid: 1b6181d99d1c42a48b54428b52c2f1a9, type: 2}
