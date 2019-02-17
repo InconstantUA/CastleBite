@@ -31,13 +31,13 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    ValidationResult DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
         // verify if source or destination context do not match requirements of this limiter
         if (!DoesContextMatch(srcContext, dstContext))
         {
             // context is not in scope of this limiter - don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // set context to party unit
         PartyPanelCell dstPartyPanelCell = (PartyPanelCell)dstContext;
@@ -45,15 +45,15 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
         if (dstPartyPanelCell.IsOccupied() == shouldBeOccupied)
         {
             // Required occupation status matches with current occupations status - dont' limit modifier
-            return false;
+            return ValidationResult.Pass();
         }
         // Required occupation status doesn't match with current occupations status - discard modifier
-        return true;
+        return ValidationResult.Discard(onDiscardMessage);
     }
 
     public bool DoesContextMatch(System.Object context)
     {
-        // verify if context matches battle context
+        // verify if context matches battle or edit party screen context
         if (context is BattleContext)
         {
             // verify if destination unit slot is set
@@ -63,18 +63,27 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
                 return true;
             }
         }
+        if (context is EditPartyScreenContext)
+        {
+            // verify if destination unit slot is set
+            if (EditPartyScreenContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
         // by default context doesn't match
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object context)
+    public override ValidationResult DoDiscardModifierInContextOf(System.Object context)
     {
         // verify if context doesn't match requirements of this limiter
         if (!DoesContextMatch(context))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // verify if context matches battle context
         if (context is BattleContext)
@@ -82,8 +91,14 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
             // verify if we need to discard modifier
             return DoDiscardModifierInContextOf(null, BattleContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
         }
+        // verify if context matches edit party screen context
+        if (context is EditPartyScreenContext)
+        {
+            // verify if we need to discard modifier
+            return DoDiscardModifierInContextOf(null, EditPartyScreenContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
+        }
         // don't limit
-        return false;
+        return ValidationResult.Pass();
     }
 
 

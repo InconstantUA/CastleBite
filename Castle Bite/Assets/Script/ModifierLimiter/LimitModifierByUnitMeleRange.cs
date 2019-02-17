@@ -18,8 +18,6 @@ public class LimitModifierByUnitMeleRange : ModifierLimiter
     string onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitAboveMessage;
     [SerializeField]
     string onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitBelowMessage;
-    // cache mele unit blocking condition for OnLimitMessage
-    private MeleUnitBlockingCondition meleUnitBlockingConditionCache = MeleUnitBlockingCondition.None;
 
     public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
     {
@@ -60,47 +58,44 @@ public class LimitModifierByUnitMeleRange : ModifierLimiter
         return dstPartyPanelCell.GetComponentInParent<PartyPanel>().GetMeleUnitBlockingCondition(srcPartyPanelCell, dstPartyPanelCell);
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    ValidationResult DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
         // verify if source or destination context do not match requirements of this limiter
         if (!DoesContextMatch(srcContext, dstContext))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // get and cache mele unit blocking condition
-        meleUnitBlockingConditionCache = GetMeleUnitBlockingCondition(srcContext, dstContext);
+        MeleUnitBlockingCondition meleUnitBlockingCondition = GetMeleUnitBlockingCondition(srcContext, dstContext);
         // verify if mele blocking condition has been triggered
-        if (MeleUnitBlockingCondition.None == meleUnitBlockingConditionCache)
+        if (MeleUnitBlockingCondition.None == meleUnitBlockingCondition)
         {
             // destination cell can be reached - dont' limit modifier
-            return false;
+            return ValidationResult.Pass();
         }
         // Default: destination cell is not reachable - discard modifier
-        return true;
+        return ValidationResult.Discard(GetOnLimitMessage(meleUnitBlockingCondition));
     }
 
-    public override string OnLimitMessage
+    string GetOnLimitMessage(MeleUnitBlockingCondition meleUnitBlockingCondition)
     {
-        get
+        switch (meleUnitBlockingCondition)
         {
-            switch (meleUnitBlockingConditionCache)
-            {
-                case MeleUnitBlockingCondition.None:
-                    return onTryToAttackNonBlockedEnemyMessage;
-                case MeleUnitBlockingCondition.AttackerIsBlockedByFriendlyFrontRowUnits:
-                    return onTryToAttackEnemyIfMeleAttackerIsBlockedByFriendlyFrontRowUnitsMessage;
-                case MeleUnitBlockingCondition.TargetUnitIsProtectedByFriendlyUnitsInFrontRow:
-                    return onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByFriendlyUnitsInFrontRowMessage;
-                case MeleUnitBlockingCondition.TargetUnitIsProtectedByUnitAbove:
-                    return onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitAboveMessage;
-                case MeleUnitBlockingCondition.TargetUnitIsProtectedByUnitBelow:
-                    return onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitBelowMessage;
-                default:
-                    Debug.LogError("Unknown MeleUnitBlockingCondition: " + meleUnitBlockingConditionCache);
-                    return onTryToAttackNonBlockedEnemyMessage;
-            }
+            case MeleUnitBlockingCondition.None:
+                return onTryToAttackNonBlockedEnemyMessage;
+            case MeleUnitBlockingCondition.AttackerIsBlockedByFriendlyFrontRowUnits:
+                return onTryToAttackEnemyIfMeleAttackerIsBlockedByFriendlyFrontRowUnitsMessage;
+            case MeleUnitBlockingCondition.TargetUnitIsProtectedByFriendlyUnitsInFrontRow:
+                return onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByFriendlyUnitsInFrontRowMessage;
+            case MeleUnitBlockingCondition.TargetUnitIsProtectedByUnitAbove:
+                return onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitAboveMessage;
+            case MeleUnitBlockingCondition.TargetUnitIsProtectedByUnitBelow:
+                return onTryToAttackEnemyIfMeleAttackerAndTargetIsProtectedByUnitBelowMessage;
+            default:
+                Debug.LogError("Unknown MeleUnitBlockingCondition: " + meleUnitBlockingCondition);
+                return onTryToAttackNonBlockedEnemyMessage;
         }
     }
 
@@ -120,14 +115,14 @@ public class LimitModifierByUnitMeleRange : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object context)
+    public override ValidationResult DoDiscardModifierInContextOf(System.Object context)
     {
         // verify if context doesn't match requirements of this limiter
         if (!DoesContextMatch(context))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // verify if context matches battle context
         if (context is BattleContext)
@@ -136,7 +131,7 @@ public class LimitModifierByUnitMeleRange : ModifierLimiter
             return DoDiscardModifierInContextOf(BattleContext.ActivePartyUnitUI.GetComponentInParent<PartyPanelCell>(), BattleContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
         }
         // don't limit
-        return false;
+        return ValidationResult.Pass();
     }
 
 }

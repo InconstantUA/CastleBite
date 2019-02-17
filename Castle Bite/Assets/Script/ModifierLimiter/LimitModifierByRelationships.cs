@@ -83,14 +83,14 @@ public class LimitModifierByRelationships : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    ValidationResult DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
         // verify if source or destination context do not match requirements of this limiter
         if (!DoesContextMatch(srcContext, dstContext))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         //// verify if destination context is of HeroEquipmentSlots type
         //if (dstContext is InventorySlotDropHandler)
@@ -107,11 +107,11 @@ public class LimitModifierByRelationships : ModifierLimiter
             if (relation == relationships)
             {
                 // don't limit
-                return false;
+                return ValidationResult.Pass();
             }
         }
         // if none of required relations match then limit modifier
-        return true;
+        return ValidationResult.Discard(onDiscardMessage);
     }
 
     public bool DoesContextMatch(System.Object context)
@@ -126,18 +126,29 @@ public class LimitModifierByRelationships : ModifierLimiter
                 return true;
             }
         }
+        // verify if context matches edit party screen context
+        if (context is EditPartyScreenContext)
+        {
+            // verify if destination unit is set
+            // we assume that when edit party screen is active, then all units have the same faction
+            if (EditPartyScreenContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
         // by default context doesn't match
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object context)
+    public override ValidationResult DoDiscardModifierInContextOf(System.Object context)
     {
         // verify if context doesn't match requirements of this limiter
         if (!DoesContextMatch(context))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // verify if context matches battle context
         if (context is BattleContext)
@@ -149,9 +160,25 @@ public class LimitModifierByRelationships : ModifierLimiter
             // verify if we need to discard modifier
             return DoDiscardModifierInContextOf(sourceParty, destinationParty);
         }
-        // don't limit
-        return false;
+        // verify if context matches battle context
+        if (context is EditPartyScreenContext)
+        {
+            // loop through all required relationships
+            foreach (Relationships.State relation in requiredAnyOfRelationships)
+            {
+                // verify if relationships match same faction
+                // we assume that when edit party screen is active, then all units have the same faction
+                if (relation == Relationships.State.SameFaction)
+                {
+                    // don't limit
+                    return ValidationResult.Pass();
+                }
+            }
+            // if none of required relations match then limit modifier
+            return ValidationResult.Discard(onDiscardMessage);
+        }
+        // default: don't limit
+        return ValidationResult.Pass();
     }
-
 
 }

@@ -9,6 +9,11 @@ public class HeroEquipment : MonoBehaviour {
     GameObject inventoryItemDragHandlerTemplate;
     [SerializeField]
     BackgroundIntermediate backgroundIntermediate;
+    [SerializeField]
+    GameEvent equipmentScreenHasBeenActivatedEvent;
+    [SerializeField]
+    GameEvent equipmentScreenHasBeenDeactivatedEvent;
+
     UnitEquipmentButton lUnitEquipmentButton;
     PartyUnit lPartyUnit;
 
@@ -101,6 +106,10 @@ public class HeroEquipment : MonoBehaviour {
         transform.root.Find("MiscUI/RightHeroParty").SetAsLastSibling();
         // set equipment slots with items
         SetEquipmentSlots(lPartyUnit);
+        // raise event for game context
+        equipmentScreenHasBeenActivatedEvent.Raise();
+        // set context
+        EquipmentScreenContext.PartyUnitBeingModified = lPartyUnit;
     }
 
     public void DeactivateAdvance()
@@ -112,6 +121,10 @@ public class HeroEquipment : MonoBehaviour {
         {
             Destroy(itemDragHandler.gameObject);
         }
+        // raise event for game context
+        equipmentScreenHasBeenDeactivatedEvent.Raise();
+        // reset context
+        EquipmentScreenContext.Reset();
         // deactivate this menu
         gameObject.SetActive(false);
         // activate other menus back

@@ -32,4 +32,40 @@ public class BattleContext : Singleton<BattleContext>
     // inventory item which has been used
     public static InventoryItem ItemBeingUsed { get; set; }
 
+    public void OnBattleNewUnitHasBeenActivatedEvent(System.Object context)
+    {
+        Debug.LogWarning("Set ActivePartyUnitUI context");
+        // verify if context is correct
+        if (context is PartyUnitUI)
+        {
+            // reset battle context values (we don't want to have previously cached targeted party unit slot and upm index)
+            Reset();
+            // cache active unit in battle context
+            ActivePartyUnitUI = (PartyUnitUI)context;
+        }
+    }
+
+    public void OnBattleApplyActiveUnitAbility(System.Object context)
+    {
+        Debug.LogWarning("Set TargetedUnitSlot context");
+        // verify if context is correct
+        if (context is UnitSlot)
+        {
+            // cache target unit slot in battle context (unit which has been targeted by ability)
+            TargetedUnitSlot = (UnitSlot)context;
+        }
+    }
+
+    public void OnBeginItemDrag()
+    {
+        // save item being used in cache
+        ItemBeingUsed = InventoryItemDragHandler.itemBeingDragged.LInventoryItem;
+    }
+
+    public void OnEndItemDrag()
+    {
+        // reset item being used
+        ItemBeingUsed = null;
+    }
+
 }

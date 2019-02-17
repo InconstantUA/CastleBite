@@ -1671,6 +1671,496 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 47898608}
   m_CullTransparentMesh: 0
+--- !u!1 &49349424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 49349425}
+  - component: {fileID: 49349426}
+  - component: {fileID: 49349427}
+  m_Layer: 5
+  m_Name: GameContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &49349425
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49349424}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 128885842}
+  - {fileID: 955859323}
+  - {fileID: 1605132585}
+  - {fileID: 1779432766}
+  m_Father: {fileID: 1201476884}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &49349426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49349424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d038aa6ba079f7e40b49243fc6332e3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &49349427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49349424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: MapScreenHasBeenActivatedEvent
+    gameEvent: {fileID: 11400000, guid: eae0ed93fd1feba478769e286917e4e5, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnMapScreenHasBeenActivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: MapScreenHasBeenDeactivatedEvent
+    gameEvent: {fileID: 11400000, guid: bdfa6768fab5e1d449f77d2ba09822e7, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnMapScreenHasBeenDeactivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: BattleScreenHasBeenActivatedEvent
+    gameEvent: {fileID: 11400000, guid: fef080e29d294c44da659a83d0472986, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnBattleScreenHasBeenActivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: BattleScreenHasBeenDeactivatedEvent
+    gameEvent: {fileID: 11400000, guid: 94616383a89434046b8755e4ecc41373, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnBattleScreenHasBeenDeactivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EditPartyScreenHasBeenActivatedEvent
+    gameEvent: {fileID: 11400000, guid: eafd104b283b55a489204ed6f7baebcb, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnEditPartyScreenHasBeenActivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EditPartyScreenHasBeenDeactivatedEvent
+    gameEvent: {fileID: 11400000, guid: 65eefdece23752b4b86a46a376ed3946, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnEditPartyScreenHasBeenDeactivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EquipmentScreenHasBeenActivatedEvent
+    gameEvent: {fileID: 11400000, guid: a06a15f867d173241a3dc4fb78735424, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnEquipmentScreenHasBeenActivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EquipmentScreenHasBeenDeactivatedEvent
+    gameEvent: {fileID: 11400000, guid: 16332ba6af0a01b4aa9a4876ab15e884, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 49349426}
+          m_MethodName: OnEquipmentScreenHasBeenDeactivated
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &49937010
 GameObject:
   m_ObjectHideFlags: 0
@@ -5413,6 +5903,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128244206}
   m_CullTransparentMesh: 0
+--- !u!1 &128885841
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 128885842}
+  - component: {fileID: 128885843}
+  m_Layer: 5
+  m_Name: MapContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &128885842
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128885841}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 49349425}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &128885843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128885841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77d03c6b350d7634fa410dcc3bcfe422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &136395717 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224112313859787072, guid: ec18c120febaa3e43872b7a62dc9e8ea,
@@ -52560,6 +53098,10 @@ MonoBehaviour:
     type: 2}
   battleApplyActiveUnitAbilityEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169,
     type: 2}
+  battleScreenHasBeenActivatedEvent: {fileID: 11400000, guid: fef080e29d294c44da659a83d0472986,
+    type: 2}
+  battleScreenHasBeenDeactivatedEvent: {fileID: 11400000, guid: 94616383a89434046b8755e4ecc41373,
+    type: 2}
 --- !u!114 &779038338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58682,6 +59224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 955859323}
   - component: {fileID: 955859324}
+  - component: {fileID: 955859325}
   m_Layer: 5
   m_Name: BattleContext
   m_TagString: Untagged
@@ -58696,11 +59239,11 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 955859322}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1201476884}
+  m_Father: {fileID: 49349425}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -58720,6 +59263,231 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 341a273e24680974d9210e0d77189b50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &955859325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955859322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: BattleNewUnitHasBeenActivatedEvent
+    gameEvent: {fileID: 11400000, guid: f805dd8ca77727b48afad6bcf5209756, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 955859324}
+          m_MethodName: OnBattleNewUnitHasBeenActivatedEvent
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: BattleApplyActiveUnitAbility
+    gameEvent: {fileID: 11400000, guid: db26907198fda82438f521e38a0d2169, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 955859324}
+          m_MethodName: OnBattleApplyActiveUnitAbility
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: BeginItemDragEvent
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 955859324}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EndItemDragEvent
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 955859324}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &963562046
 GameObject:
   m_ObjectHideFlags: 0
@@ -72178,7 +72946,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1153475310}
-  - {fileID: 955859323}
+  - {fileID: 49349425}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -90097,6 +90865,10 @@ MonoBehaviour:
   lHeroParties: []
   editPartyScreenActiveState: 0
   unitCanvasTemplate: {fileID: 719685449}
+  editPartyScreenHasBeenActivatedEvent: {fileID: 11400000, guid: eafd104b283b55a489204ed6f7baebcb,
+    type: 2}
+  editPartyScreenHasBeenDeactivatedEvent: {fileID: 11400000, guid: 65eefdece23752b4b86a46a376ed3946,
+    type: 2}
 --- !u!114 &1545636097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93024,6 +93796,227 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f864e92b55bb4c4a8a71000c895ee68, type: 3}
+--- !u!1 &1605132584
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1605132585}
+  - component: {fileID: 1605132586}
+  - component: {fileID: 1605132587}
+  m_Layer: 5
+  m_Name: EditPartyScreenContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1605132585
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605132584}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 49349425}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1605132586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605132584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86102e981acea3441b29ba92c4a367ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1605132587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605132584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: BeginItemDragEvent
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1605132586}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EndItemDragEvent
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1605132586}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: ItemHasBeenDroppedIntoTheUnitSlotEvent
+    gameEvent: {fileID: 11400000, guid: aba9f29c4a496b742977bec90bd041a4, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1605132586}
+          m_MethodName: OnItemHasBeenDroppedIntoTheUnitSlot
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1 &1606591999
 GameObject:
   m_ObjectHideFlags: 0
@@ -98766,6 +99759,174 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1773993266}
   m_CullTransparentMesh: 0
+--- !u!1 &1779432765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1779432766}
+  - component: {fileID: 1779432767}
+  - component: {fileID: 1779432768}
+  m_Layer: 5
+  m_Name: EquipmentScreenContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1779432766
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779432765}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 49349425}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1779432767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779432765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e80f5cc33f435fd4b961dc6e28db7264, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1779432768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779432765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5c079dc1348d794fbc16be93a3d1164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsAndActions:
+  - name: BeginItemDragEvent
+    gameEvent: {fileID: 11400000, guid: e5b95bb629be83743a6e8f1c464d9d7e, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1779432767}
+          m_MethodName: OnBeginItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  - name: EndItemDragEvent
+    gameEvent: {fileID: 11400000, guid: 467ddc444819dbe4ca70baf71cdc1890, type: 2}
+    genericAction:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1779432767}
+          m_MethodName: OnEndItemDrag
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    genericObjectEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: GenericObjectEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    partyUnitHealthHasChangedEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    unitPowerModifierEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitAbilityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitAbilityEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    unitToUnitEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UnitUIToUnitUIEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    uniquePowerModifierDataEvent:
+      m_PersistentCalls:
+        m_Calls: []
+      m_TypeName: UniquePowerModifierDataEvent, Assembly-CSharp, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
 --- !u!1001 &1783581450
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100102,6 +101263,10 @@ MonoBehaviour:
   inventoryItemDragHandlerTemplate: {fileID: 1575628502178596, guid: fa67fd67db4d3284bb1abc2bdeb8365a,
     type: 3}
   backgroundIntermediate: {fileID: 884559931}
+  equipmentScreenHasBeenActivatedEvent: {fileID: 11400000, guid: a06a15f867d173241a3dc4fb78735424,
+    type: 2}
+  equipmentScreenHasBeenDeactivatedEvent: {fileID: 11400000, guid: 16332ba6af0a01b4aa9a4876ab15e884,
+    type: 2}
 --- !u!114 &1823811733
 MonoBehaviour:
   m_ObjectHideFlags: 0

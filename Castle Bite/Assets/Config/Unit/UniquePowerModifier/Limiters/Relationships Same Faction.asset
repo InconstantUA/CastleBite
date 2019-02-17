@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a238924dde04874db153bb2c734867d, type: 3}
   m_Name: Relationships Same Faction
   m_EditorClassIdentifier: 
+  onDiscardMessage: Applicable only to the units of the same faction
   requiredAnyOfRelationships: 03000000

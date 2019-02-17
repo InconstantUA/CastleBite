@@ -5,27 +5,52 @@ using UnityEngine;
 // base class for modifier limiter (used by unique power modifier)
 public class ModifierLimiter : ScriptableObject
 {
+    public string onDiscardMessage;
 
-    // default verify if modifier has to be discarded
-    public virtual bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    public class ValidationResult
     {
-        // by default do limit
-        return true;
-    }
+        // set default values:
+        public bool doDiscardModifier = false;
+        public string message = "";
 
-    public virtual bool DoDiscardModifierInContextOf(System.Object context)
-    {
-        // by default do limit
-        return true;
-    }
-
-    // Get message
-    public virtual string OnLimitMessage
-    {
-        get
+        public static ValidationResult Pass()
         {
-            return "";
+            return new ValidationResult
+            {
+                doDiscardModifier = false,
+                message = ""
+            };
+        }
+
+        public static ValidationResult Discard(string onDiscardMessage)
+        {
+            return new ValidationResult
+            {
+                doDiscardModifier = true,
+                message = onDiscardMessage
+            };
         }
     }
+    //// default verify if modifier has to be discarded
+    //bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    //{
+    //    // by default do limit
+    //    return true;
+    //}
+
+    public virtual ValidationResult DoDiscardModifierInContextOf(System.Object context)
+    {
+        // by default do not discard modifier
+        return ValidationResult.Pass();
+    }
+
+    //// Get message
+    //public virtual string OnLimitMessage
+    //{
+    //    get
+    //    {
+    //        return "";
+    //    }
+    //}
 
 }

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9c57fb3a4b0c04d9f92d710433c671, type: 3}
   m_Name: Area Scope Single Unit
   m_EditorClassIdentifier: 
+  onDiscardMessage: Applicable only single unit
   modifierScope: 1

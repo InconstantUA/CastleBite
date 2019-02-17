@@ -83,11 +83,19 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
         }
         if (context is BattleContext)
         {
-            PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
-            PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-            UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
-            UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
-            Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
+            // verify if source context is PartyUnit
+            if (BattleContext.ActivePartyUnitUI != null)
+            {
+                PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
+                PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+                UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
+                UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
+                Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
+            }
+            else
+            {
+                Debug.LogError("Unknown source context");
+            }
         }
     }
 

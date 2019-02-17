@@ -616,5 +616,17 @@ public class UnitSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         errorMessage = errMsg;
     }
 
+    public void SetOnClickAction(ModifierLimiter.ValidationResult validationResult)
+    {
+        if (validationResult.doDiscardModifier)
+        {
+            isAllowedToApplyPowerToThisUnit = false;
+        }
+        else
+        {
+            isAllowedToApplyPowerToThisUnit = true;
+        }
+        errorMessage = validationResult.message;
+    }
     #endregion OnClick
 }

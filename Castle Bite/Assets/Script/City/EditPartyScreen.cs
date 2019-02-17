@@ -26,6 +26,10 @@ public class EditPartyScreen : MonoBehaviour {
     EditPartyScreenActiveState editPartyScreenActiveState = EditPartyScreenActiveState.Normal;
     [SerializeField]
     GameObject unitCanvasTemplate;
+    [SerializeField]
+    GameEvent editPartyScreenHasBeenActivatedEvent;
+    [SerializeField]
+    GameEvent editPartyScreenHasBeenDeactivatedEvent;
 
     private UnitSlot unitSlotToDismissCache;
 
@@ -208,6 +212,7 @@ public class EditPartyScreen : MonoBehaviour {
     void OnEnable()
     {
         SetRequiredComponentsActive(true);
+        editPartyScreenHasBeenActivatedEvent.Raise();
     }
 
     void OnDisable()
@@ -223,6 +228,7 @@ public class EditPartyScreen : MonoBehaviour {
         {
             lHeroParties = null;
         }
+        editPartyScreenHasBeenDeactivatedEvent.Raise();
     }
 
     #region States

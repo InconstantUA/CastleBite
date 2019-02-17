@@ -42,14 +42,14 @@ public class LimitModifierByAreaScope : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    ValidationResult DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
         // verify if source or destination context do not match requirements of this limiter
         if (!DoesContextMatch(srcContext, dstContext))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         //if (dstContext is InventorySlotDropHandler)
         //{
@@ -66,11 +66,11 @@ public class LimitModifierByAreaScope : ModifierLimiter
                     if ( ((PartyUnit)srcContext).GetInstanceID() == ((PartyUnit)dstContext).GetInstanceID())
                     {
                         // don't limit
-                        return false;
+                        return ValidationResult.Pass();
                     }
                 }
                 // limit by default
-                return true;
+                return ValidationResult.Discard(onDiscardMessage);
             case ModifierScope.SingleUnit:
                 // verify if source context is UnitSlotDropHandler and destination context is of PartyUnit type
                 if (srcContext is UnitSlotDropHandler && dstContext is PartyUnit)
@@ -85,51 +85,51 @@ public class LimitModifierByAreaScope : ModifierLimiter
                         if (partyUnitUI.LPartyUnit == (PartyUnit)dstContext)
                         {
                             // don't limit
-                            return false;
+                            return ValidationResult.Pass();
                         }
                         else
                         {
                             // limit
-                            return true;
+                            return ValidationResult.Discard(onDiscardMessage);
                         }
                     }
                     else
                     {
                         // limit
-                        return true;
+                        return ValidationResult.Discard(onDiscardMessage);
                     }
                 }
                 // verify if destination context is of PartyUnit type (also verifies if it is not null)
                 if (dstContext is PartyUnit)
                 {
                     // don't limit
-                    return false;
+                    return ValidationResult.Pass();
                 }
                 // limit by default
-                return true;
+                return ValidationResult.Discard(onDiscardMessage);
             case ModifierScope.EntireParty:
                 // verify if destination context is of Party or PartyUnit type (also verifies if it is not null)
                 if ( (dstContext is HeroParty) || (dstContext is PartyUnit) )
                 {
                     // don't limit
-                    return false;
+                    return ValidationResult.Pass();
                 }
                 // limit by default
-                return true;
+                return ValidationResult.Discard(onDiscardMessage);
             case ModifierScope.AllPlayerUnits:
                 // use case: global spells, player abilities
                 // verify if destination context is of Player type (also verifies if it is not null)
                 if ( (dstContext is GamePlayer) || (dstContext is HeroParty) || (dstContext is PartyUnit) )
                 {
                     // don't limit
-                    return false;
+                    return ValidationResult.Pass();
                 }
                 // limit by default
-                return true;
+                return ValidationResult.Discard(onDiscardMessage);
             default:
                 Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
                 // limit by default
-                return true;
+                return ValidationResult.Discard("Unknown modifier scope");
         }
     }
 
@@ -143,49 +143,124 @@ public class LimitModifierByAreaScope : ModifierLimiter
             // context match
             return true;
         }
+        // verify if context matches edit party screen context
+        if (context is EditPartyScreenContext)
+        {
+            // destination unit is set
+            if (EditPartyScreenContext.DestinationUnitSlot != null)
+                // context match
+                return true;
+        }
         // by default context doesn't match
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object context)
+    public override ValidationResult DoDiscardModifierInContextOf(System.Object context)
     {
         // verify if context doesn't match requirements of this limiter
         if (!DoesContextMatch(context))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // verify if context matches battle context
         if (context is BattleContext)
         {
-            // verify at which phase we are:
-            //  - new unit has just been activated (target unit is not set)
-            //  - applying ability from active unit to destination slot (target unit is set)
-            // verify if target unit have been set and that modifier scope is single unit and that destination slot has unit
-            if (BattleContext.TargetedUnitSlot != null && modifierScope == ModifierScope.SingleUnit)
+            switch (modifierScope)
             {
-                // verify if tareted unit is the same as destination slot
-                if (BattleContext.TargetedUnitSlot.gameObject.GetInstanceID() == BattleContext.DestinationUnitSlot.gameObject.GetInstanceID())
-                {
+                case ModifierScope.Self:
+                    // verify if destination (validated) unit slot is the same as active unit slot
+                    if (BattleContext.DestinationUnitSlot.gameObject.GetInstanceID() == BattleContext.ActivePartyUnitUI.GetComponentInParent<UnitSlot>().gameObject.GetInstanceID())
+                    {
+                        // don't limit
+                        return ValidationResult.Pass();
+                    }
+                    // limit by default
+                    return ValidationResult.Discard(onDiscardMessage);
+                case ModifierScope.SingleUnit:
+                    // verify at which phase we are:
+                    //  - new unit has just been activated (target unit is not set)
+                    //  - applying ability from active unit to destination slot (target unit is set)
+                    // verify if target unit have been set and that modifier scope is single unit and that destination slot has unit
+                    if (BattleContext.TargetedUnitSlot != null)
+                    {
+                        // verify if tareted unit is the same as destination slot
+                        if (BattleContext.TargetedUnitSlot.gameObject.GetInstanceID() == BattleContext.DestinationUnitSlot.gameObject.GetInstanceID())
+                        {
+                            // don't limit
+                            return ValidationResult.Pass();
+                        }
+                        else
+                        {
+                            // limit
+                            return ValidationResult.Discard(onDiscardMessage);
+                        }
+                    }
+                    else
+                    {
+                        // don't limit, because target unit slot has not been set yet
+                        return ValidationResult.Pass();
+                    }
+                case ModifierScope.EntireParty:
                     // don't limit
-                    return false;
-                }
-                else
-                {
-                    // limit
-                    return true;
-                }
+                    return ValidationResult.Pass();
+                case ModifierScope.AllPlayerUnits:
+                    // don't limit
+                    return ValidationResult.Pass();
+                default:
+                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                    // limit by default
+                    return ValidationResult.Discard("Unknown modifier scope");
             }
-            else
+        }
+        // verify if context matches edit party screen context
+        if (context is EditPartyScreenContext)
+        {
+            switch (modifierScope)
             {
-                // use default verify if we need to discard modifier
-                return DoDiscardModifierInContextOf(BattleContext.ActivePartyUnitUI, BattleContext.DestinationUnitSlot);
+                case ModifierScope.Self:
+                    // this scope is not applicable in EditPartyScreen context
+                    // don't limit
+                    return ValidationResult.Pass();
+                case ModifierScope.SingleUnit:
+                    // verify at which phase we are:
+                    //  - new unit has just been activated (target unit is not set)
+                    //  - applying ability from active unit to destination slot (target unit is set)
+                    // verify if target unit have been set and that modifier scope is single unit and that destination slot has unit
+                    if (BattleContext.TargetedUnitSlot != null)
+                    {
+                        // verify if tareted unit is the same as destination slot
+                        if (BattleContext.TargetedUnitSlot.gameObject.GetInstanceID() == BattleContext.DestinationUnitSlot.gameObject.GetInstanceID())
+                        {
+                            // don't limit
+                            return ValidationResult.Pass();
+                        }
+                        else
+                        {
+                            // limit
+                            return ValidationResult.Discard(onDiscardMessage);
+                        }
+                    }
+                    else
+                    {
+                        // don't limit, because target unit slot has not been set yet
+                        return ValidationResult.Pass();
+                    }
+                case ModifierScope.EntireParty:
+                    // don't limit
+                    return ValidationResult.Pass();
+                case ModifierScope.AllPlayerUnits:
+                    // don't limit
+                    return ValidationResult.Pass();
+                default:
+                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                    // limit by default
+                    return ValidationResult.Discard("Unknown modifier scope");
             }
-
         }
         // don't limit
-        return false;
+        return ValidationResult.Pass();
     }
 
 }

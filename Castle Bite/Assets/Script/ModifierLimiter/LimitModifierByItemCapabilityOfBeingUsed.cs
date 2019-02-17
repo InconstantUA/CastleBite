@@ -34,7 +34,7 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
             // match
             return true;
         }
-        else if (dstContext is PartyUnit)
+        else if (dstContext is PartyUnit) // .. can be skipped
         {
             // match
             return true;
@@ -44,14 +44,14 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    ValidationResult DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
         // verify if source or destination context do not match requirements of this limiter
         if (!DoesContextMatch(srcContext, dstContext))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // set context to Inventory Item
         InventoryItem inventoryItem = (InventoryItem)srcContext;
@@ -59,10 +59,10 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
         if (inventoryItem.IsUsable == shouldBeUsable)
         {
             // Usable - dont' limit modifier
-            return false;
+            return ValidationResult.Pass();
         }
         // Not usable - discard modifier
-        return true;
+        return ValidationResult.Discard(onDiscardMessage);
     }
 
     public bool DoesContextMatch(System.Object context)
@@ -71,7 +71,17 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
         if (context is BattleContext)
         {
             // verify if there is an item being used and that destination is set
-            if (BattleContext.ItemBeingUsed != null && BattleContext.DestinationUnitSlot)
+            if (BattleContext.ItemBeingUsed != null && BattleContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
+        // verify if context matches edit party screen context
+        if (context is EditPartyScreenContext)
+        {
+            // verify if there is an item being used and that destination is set
+            if (EditPartyScreenContext.ItemBeingUsed != null && EditPartyScreenContext.DestinationUnitSlot != null)
             {
                 // context match
                 return true;
@@ -81,14 +91,14 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object context)
+    public override ValidationResult DoDiscardModifierInContextOf(System.Object context)
     {
         // verify if context doesn't match requirements of this limiter
         if (!DoesContextMatch(context))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         // verify if context matches battle context
         if (context is BattleContext)
@@ -96,8 +106,14 @@ public class LimitModifierByItemCapabilityOfBeingUsed : ModifierLimiter
             // verify if we need to discard modifier
             return DoDiscardModifierInContextOf(BattleContext.ItemBeingUsed, BattleContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
         }
+        // verify if context matches battle context
+        if (context is EditPartyScreenContext)
+        {
+            // verify if we need to discard modifier
+            return DoDiscardModifierInContextOf(EditPartyScreenContext.ItemBeingUsed, EditPartyScreenContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
+        }
         // don't limit
-        return false;
+        return ValidationResult.Pass();
     }
 
 

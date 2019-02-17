@@ -27,6 +27,10 @@ public class BattleScreen : MonoBehaviour {
     GameEvent battleNewUnitHasBeenActivatedEvent;
     [SerializeField]
     GameEvent battleApplyActiveUnitAbilityEvent;
+    [SerializeField]
+    GameEvent battleScreenHasBeenActivatedEvent;
+    [SerializeField]
+    GameEvent battleScreenHasBeenDeactivatedEvent;
 
 
 
@@ -186,11 +190,17 @@ public class BattleScreen : MonoBehaviour {
         }
     }
 
+    void OnEnable()
+    {
+        battleScreenHasBeenActivatedEvent.Raise();
+    }
+
     void OnDisable()
     {
         // trigger event
         battleScreenDisable.Raise();
         SetCommonBattleUIActive(false);
+        battleScreenHasBeenDeactivatedEvent.Raise();
     }
 
     //void SetBattleControlButtonActive(string buttonName, bool doActivate)

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9897925bc3e803439f4b4f1c4350087, type: 3}
   m_Name: Range is Mele
   m_EditorClassIdentifier: 
+  onDiscardMessage: '-'
   unitAbilityRange: 0
   onTryToAttackNonBlockedEnemyMessage: 
   onTryToAttackEnemyIfMeleAttackerIsBlockedByFriendlyFrontRowUnitsMessage: Active

@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b143297191ba7454780707cffdf44442, type: 3}
   m_Name: Status is Active or Waiting or Escaping
   m_EditorClassIdentifier: 
+  onDiscardMessage: Applicable only to alive units
   requiredAnyOfUnitStatus: 000000000100000002000000

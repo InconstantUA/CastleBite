@@ -9,49 +9,86 @@ public class AdviseAgainstAttackingUnitWithImmunityToAttackPowerSource : Modifie
     [SerializeField]
     PowerSource immunityToPowerSource;
 
-    public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
-    {
-        return DoesSourceContextMatch(srcContext) && DoesDestinationContextMatch(dstContext);
-    }
+    //public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
+    //{
+    //    return DoesSourceContextMatch(srcContext) && DoesDestinationContextMatch(dstContext);
+    //}
 
-    public bool DoesSourceContextMatch(System.Object srcContext)
-    {
-        // always match
-        return true;
-    }
+    //public bool DoesSourceContextMatch(System.Object srcContext)
+    //{
+    //    // always match
+    //    return true;
+    //}
 
-    public bool DoesDestinationContextMatch(System.Object dstContext)
+    //public bool DoesDestinationContextMatch(System.Object dstContext)
+    //{
+    //    if (dstContext is PartyUnit)
+    //    {
+    //        // match
+    //        return true;
+    //    }
+    //    Debug.Log("Destination context doesn't match");
+    //    // doesn't match
+    //    return false;
+    //}
+
+    //public override bool DoAdviseAgainstUPMUsageInContextOf(System.Object srcContext, System.Object dstContext)
+    //{
+    //    // verify if source or destination context do not match requirements of this limiter
+    //    if (!DoesContextMatch(srcContext, dstContext))
+    //    {
+    //        // context is not in scope of this limiter - don't advise against
+    //        return false;
+    //    }
+    //    // get destination context as PartyUnit
+    //    if (dstContext is PartyUnit)
+    //    {
+    //        PartyUnit dstPartyUnit = (PartyUnit)dstContext;
+    //        // verify if unit is immunte to specific power source (resistance is more than or equal to 100%)
+    //        if (dstPartyUnit.GetUnitEffectiveResistance(immunityToPowerSource) >= 100)
+    //        {
+    //            // advise against
+    //            return true;
+    //        }
+    //    }
+    //    // by default don't advise against
+    //    return false;
+    //}
+
+    public bool DoesContextMatch(System.Object context)
     {
-        if (dstContext is PartyUnit)
+        // verify if context matches battle context
+        if (context is BattleContext)
         {
-            // match
-            return true;
+            // verify if destination unit slot is set
+            if (BattleContext.DestinationUnitSlot != null)
+                // verify if destination slot has unit
+                if (BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>())
+                    // context match
+                    return true;
         }
-        Debug.Log("Destination context doesn't match");
-        // doesn't match
+        // by default context doesn't match
         return false;
     }
 
-    public override bool DoAdviseAgainstUPMUsageInContextOf(System.Object srcContext, System.Object dstContext)
+    public override bool DoAdviseAgainstUPMUsageInContextOf(System.Object context)
     {
         // verify if source or destination context do not match requirements of this limiter
-        if (!DoesContextMatch(srcContext, dstContext))
+        if (!DoesContextMatch(context))
         {
             // context is not in scope of this limiter - don't advise against
             return false;
         }
         // get destination context as PartyUnit
-        if (dstContext is PartyUnit)
+        PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+        // verify if unit is immunte to specific power source (resistance is more than or equal to 100%)
+        if (dstPartyUnit.GetUnitEffectiveResistance(immunityToPowerSource) >= 100)
         {
-            PartyUnit dstPartyUnit = (PartyUnit)dstContext;
-            // verify if unit is immunte to specific power source (resistance is more than or equal to 100%)
-            if (dstPartyUnit.GetUnitEffectiveResistance(immunityToPowerSource) >= 100)
-            {
-                // advise against
-                return true;
-            }
+            // advise against
+            return true;
         }
         // by default don't advise against
         return false;
     }
+
 }

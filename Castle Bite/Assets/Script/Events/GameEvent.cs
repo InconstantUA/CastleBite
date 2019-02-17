@@ -48,7 +48,9 @@ public class GameEvent : ScriptableObject
     public void Raise(GameObject gameObject = null)
     {
         // Loop through all registered listeners
-        for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        // Note: order is important, because for example for battle events we first need to set context and BattleContext needs to do this before PartyPanelCell acts
+        for (int i = 0; i < eventsListeners.Count; i++)
+        //for (int i = eventsListeners.Count - 1; i >= 0; i--)
         {
             // Initiate actions on event listener
             eventsListeners[i].ActOnEvent(this, gameObject);
@@ -58,7 +60,13 @@ public class GameEvent : ScriptableObject
     public void Raise(System.Object systemObject)
     {
         // Loop through all registered listeners
-        for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        //for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        //{
+        //    // Initiate actions on event listener
+        //    eventsListeners[i].ActOnEvent(this, systemObject);
+        //}
+        // Note: order is important, because for example for battle events we first need to set context and BattleContext needs to do this before PartyPanelCell acts
+        for (int i = 0; i < eventsListeners.Count; i++)
         {
             // Initiate actions on event listener
             eventsListeners[i].ActOnEvent(this, systemObject);
@@ -68,7 +76,9 @@ public class GameEvent : ScriptableObject
     public void Raise(GameObject gameObject, int difference)
     {
         // Loop through all registered listeners
-        for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        //for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        // Note: order is important, because for example for battle events we first need to set context and BattleContext needs to do this before PartyPanelCell acts
+        for (int i = 0; i < eventsListeners.Count; i++)
         {
             // Initiate actions on event listener
             eventsListeners[i].ActOnEvent(this, gameObject, difference);
@@ -78,7 +88,9 @@ public class GameEvent : ScriptableObject
     public void Raise(GameObject gameObject, ScriptableObject scriptableObject)
     {
         // Loop through all registered listeners
-        for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        //for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        // Note: order is important, because for example for battle events we first need to set context and BattleContext needs to do this before PartyPanelCell acts
+        for (int i = 0; i < eventsListeners.Count; i++)
         {
             // Initiate actions on event listener
             eventsListeners[i].ActOnEvent(this, gameObject, scriptableObject);
@@ -88,7 +100,9 @@ public class GameEvent : ScriptableObject
     public void Raise(GameObject gameObject1, GameObject gameObject2)
     {
         // Loop through all registered listeners
-        for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        //for (int i = eventsListeners.Count - 1; i >= 0; i--)
+        // Note: order is important, because for example for battle events we first need to set context and BattleContext needs to do this before PartyPanelCell acts
+        for (int i = 0; i < eventsListeners.Count; i++)
         {
             // Initiate actions on event listener
             eventsListeners[i].ActOnEvent(this, gameObject1, gameObject2);

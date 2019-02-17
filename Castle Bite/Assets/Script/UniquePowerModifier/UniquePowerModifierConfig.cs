@@ -118,7 +118,8 @@ public class UniquePowerModifierConfig : ScriptableObject
         foreach (ModifierLimiter modifierLimiter in modifierLimiters)
         {
             // verify is modifier power is limited
-            if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
+            Debug.LogError(".. uncomment below and fix");
+            //if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
             {
                 // at least one requirement is not met
                 return false;
@@ -128,29 +129,48 @@ public class UniquePowerModifierConfig : ScriptableObject
         return true;
     }
 
-    public bool AreRequirementsMetInContextOf(System.Object context)
+    public ModifierLimiter.ValidationResult AreRequirementsMetInContextOf(System.Object context)
     {
         // loop through all limiters
         foreach (ModifierLimiter modifierLimiter in modifierLimiters)
         {
+            ModifierLimiter.ValidationResult result = modifierLimiter.DoDiscardModifierInContextOf(context);
+            Debug.LogWarning(modifierLimiter.GetType().Name + " validation [" + result.doDiscardModifier + "] : [" + result.message + "]");
             // verify is modifier power is limited
-            if (modifierLimiter.DoDiscardModifierInContextOf(context))
+            if (result.doDiscardModifier)
             {
                 // at least one requirement is not met
-                return false;
+                return result;
             }
         }
         // if none of limiter is limiting, then return true
-        return true;
+        return ModifierLimiter.ValidationResult.Pass();
     }
 
-    public bool IsItAdvisedToActInContextOf(System.Object srcContext, System.Object dstContext)
+    //public bool IsItAdvisedToActInContextOf(System.Object srcContext, System.Object dstContext)
+    //{
+    //    // loop through all advisers
+    //    foreach (ModifierAdviser modifierAdviser in modifierAdvisers)
+    //    {
+    //        // verify is modifier power is limited
+    //        if (modifierAdviser.DoAdviseAgainstUPMUsageInContextOf(srcContext, dstContext))
+    //        {
+    //            // at least one not advised condition is met
+    //            // advise against acting in current context
+    //            return false;
+    //        }
+    //    }
+    //    // if none of advisers conditions are met, advise to act in current context
+    //    return true;
+    //}
+
+    public bool IsItAdvisedToActInContextOf(System.Object context)
     {
         // loop through all advisers
         foreach (ModifierAdviser modifierAdviser in modifierAdvisers)
         {
             // verify is modifier power is limited
-            if (modifierAdviser.DoAdviseAgainstUPMUsageInContextOf(srcContext, dstContext))
+            if (modifierAdviser.DoAdviseAgainstUPMUsageInContextOf(context))
             {
                 // at least one not advised condition is met
                 // advise against acting in current context
@@ -161,23 +181,23 @@ public class UniquePowerModifierConfig : ScriptableObject
         return true;
     }
 
-    public string GetLimiterMessageInContextOf(System.Object srcContext, System.Object dstContext)
-    {
-        string message = "";
-        // loop through all limiters
-        foreach (ModifierLimiter modifierLimiter in modifierLimiters)
-        {
-            // verify is modifier power is limited
-            if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
-            {
-                Debug.Log(".. Verify and adjust message size. Idea: show full message with pop-up on mouse over.");
-                // at least one requirement is not met
-                return modifierLimiter.OnLimitMessage;
-            }
-        }
-        // return resulting message
-        return message;
-    }
+    //public string GetLimiterMessageInContextOf(System.Object srcContext, System.Object dstContext)
+    //{
+    //    string message = "";
+    //    // loop through all limiters
+    //    foreach (ModifierLimiter modifierLimiter in modifierLimiters)
+    //    {
+    //        // verify is modifier power is limited
+    //        //if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
+    //        {
+    //            Debug.Log(".. Verify and adjust message size. Idea: show full message with pop-up on mouse over.");
+    //            // at least one requirement is not met
+    //            return modifierLimiter.OnLimitMessage;
+    //        }
+    //    }
+    //    // return resulting message
+    //    return message;
+    //}
 
     UnitStatModifierConfig GetUpdatedUnitStatModifierConfig(System.Object context)
     {

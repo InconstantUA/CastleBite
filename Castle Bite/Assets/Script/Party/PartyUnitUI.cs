@@ -560,137 +560,137 @@ public class PartyUnitUI : MonoBehaviour {
         }
     }
 
-    public void OnItemHasBeenDroppedIntoTheUnitSlotEvent(System.Object unitSlotDropHandlerObj)
-    {
-        // verify if type is correct
-        if (!(unitSlotDropHandlerObj is UnitSlotDropHandler))
-        {
-            Debug.LogError("unitSlotDropHandler is not of UnitSlotDropHandler type");
-            return;
-        }
-        // init unit slot drop handler
-        UnitSlotDropHandler unitSlotDropHandler = (UnitSlotDropHandler)unitSlotDropHandlerObj;
-        // init item config
-        List<UniquePowerModifierConfig> uniquePowerModifierConfigsSortedByExecutionOrder = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.UniquePowerModifierConfigsSortedByExecutionOrder;
-        // verify if this UPM can be applied to destination unit
-        if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(unitSlotDropHandler, LPartyUnit))
-        {
-            // get source context 
-            System.Object srcContext = GetItemBeingDraggedSourceContext();
-            // apply unit unique power modifiers (buffs, debuffs, etc)
-            for (int i = 0; i < uniquePowerModifierConfigsSortedByExecutionOrder.Count; i++)
-            {
-                // verify if UPM can be applied to destination unit
-                if (uniquePowerModifierConfigsSortedByExecutionOrder[i].AreRequirementsMetInContextOf(srcContext, LPartyUnit))
-                {
-                    // set unique power modifier ID
-                    UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
-                    {
-                        inventoryItemID = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemID,
-                        uniquePowerModifierConfigIndex = i,
-                        modifierOrigin = ModifierOrigin.Item,
-                        destinationGameObjectID = this.gameObject.GetInstanceID()
-                    };
-                    // apply upm
-                    uniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, LPartyUnit, uniquePowerModifierID);
-                    // run text animation
-                    uniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(UnitInfoPanelText);
-                }
-            }
-        }
-        //// verify if it the slot where item has been dropped is the same where this party unit UI is located
-        //if (GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() == unitSlotDropHandler.GetInstanceID())
-        //{
-        //    Debug.Log("Same slot");
-        //    Debug.Log("Act on Item Drop");
-        //    InventoryItemDragHandler inventoryItemDragHandler = InventoryItemDragHandler.itemBeingDragged;
-        //    // get item
-        //    InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
-        //    // verify if item has active modifiers or usages
-        //    if (inventoryItem.HasActiveModifiers())
-        //    {
-        //        Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
-        //        // consume item and verify if it was successfull
-        //        if (lPartyUnit.UseItem(inventoryItem))
-        //        {
-        //            // successfully consumed item
-        //            // update UI based on changed party unit data
-        //            UpdateUnitCellInfo();
-        //            // item has run out of usages
-        //            if (inventoryItem.LeftUsagesCount == 0)
-        //            {
-        //                // there are no usages left
-        //                Debug.Log("Move item to the unit");
-        //                // move item to the unit, there are still might be non-instant upms and usms
-        //                inventoryItem.transform.SetParent(LPartyUnit.transform);
-        //                // Get PartyInventoryUI (before InventoryItemDragHandler is destroyed)
-        //                PartyInventoryUI partyInventoryUI = inventoryItemDragHandler.ItemBeindDraggedSlot.GetComponentInParent<PartyInventoryUI>();
-        //                // verify if it is not null
-        //                if (partyInventoryUI != null)
-        //                {
-        //                    // Note: inventoryItemDragHandler removal will suppress On End Item Drag event
-        //                    // .. workaround:
-        //                    // call on end drag manually before removing item
-        //                    inventoryItemDragHandler.OnEndDrag(null);
-        //                    // remove item drag handler
-        //                    RecycleBin.Recycle(inventoryItemDragHandler.gameObject);
-        //                    // reorganize inventory UI
-        //                    partyInventoryUI.ReorganizeInventoryUI();
-        //                }
-        //                else
-        //                {
-        //                    Debug.LogError("Logic error. Probably source slot is not party of PartyInventoryUI, but can be part of Equipment Menu");
-        //                }
-        //                //// Get source item slot transform
-        //                //ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
-        //                //// verify if source slot is in party inventory mode
-        //                //if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
-        //                //{
-        //                //    // Get PartyInventoryUI (before slot is destroyed)
-        //                //    PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
-        //                //    // remove all empty slots in inventory to fill in possible gaps after item consumption
-        //                //    partyInventoryUI.RemoveAllEmptySlots();
-        //                //    // fill in empty slots in inventory;
-        //                //    partyInventoryUI.FillInEmptySlots();
-        //                //}
-        //            }
-        //            else
-        //            {
-        //                // there are still usages left
-        //                Debug.Log("Clone item to the unit");
-        //                // clone item and place it into the unit
-        //                // so non-instant modifiers can be applied
-        //                // and assign inventoryItem varible with new inventory item
-        //                // inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
-        //                inventoryItem = Instantiate(inventoryItem.gameObject, LPartyUnit.transform).GetComponent<InventoryItem>();
-        //                // old inventory item, which was clonned, will return back to the inventory
-        //            }
-        //            // remove expired modifiers from triggered item
-        //            // note: don't do this on original modifier config, because it removes UPM from config
-        //            // inventoryItem.RemoveExpiredModifiers();
-        //            // self-destory item on expire
-        //            inventoryItem.SelfDestroyIfExpired();
-        //        }
-        //        else
-        //        {
-        //            // item cannot be consumed
-        //            // item will return to its original position
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // item is not consumable
-        //        // nothing to do here
-        //        // item will return to its original position
-        //        // this type of items should be placed into hero equipment
-        //    }
-        //}
-        //else
-        //{
-        //    Debug.Log("Other slot");
-        //}
-        CursorController.Instance.SetNormalCursor();
-    }
+    //public void OnItemHasBeenDroppedIntoTheUnitSlotEvent(System.Object unitSlotDropHandlerObj)
+    //{
+    //    // verify if type is correct
+    //    if (!(unitSlotDropHandlerObj is UnitSlotDropHandler))
+    //    {
+    //        Debug.LogError("unitSlotDropHandler is not of UnitSlotDropHandler type");
+    //        return;
+    //    }
+    //    // init unit slot drop handler
+    //    UnitSlotDropHandler unitSlotDropHandler = (UnitSlotDropHandler)unitSlotDropHandlerObj;
+    //    // init item config
+    //    List<UniquePowerModifierConfig> uniquePowerModifierConfigsSortedByExecutionOrder = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.UniquePowerModifierConfigsSortedByExecutionOrder;
+    //    // verify if this UPM can be applied to destination unit
+    //    if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(unitSlotDropHandler, LPartyUnit))
+    //    {
+    //        // get source context 
+    //        System.Object srcContext = GetItemBeingDraggedSourceContext();
+    //        // apply unit unique power modifiers (buffs, debuffs, etc)
+    //        for (int i = 0; i < uniquePowerModifierConfigsSortedByExecutionOrder.Count; i++)
+    //        {
+    //            // verify if UPM can be applied to destination unit
+    //            if (uniquePowerModifierConfigsSortedByExecutionOrder[i].AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+    //            {
+    //                // set unique power modifier ID
+    //                UniquePowerModifierID uniquePowerModifierID = new UniquePowerModifierID()
+    //                {
+    //                    inventoryItemID = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemID,
+    //                    uniquePowerModifierConfigIndex = i,
+    //                    modifierOrigin = ModifierOrigin.Item,
+    //                    destinationGameObjectID = this.gameObject.GetInstanceID()
+    //                };
+    //                // apply upm
+    //                uniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(InventoryItemDragHandler.itemBeingDragged.LInventoryItem, LPartyUnit, uniquePowerModifierID);
+    //                // run text animation
+    //                uniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.OnTriggerUPMTextAnimation.Run(UnitInfoPanelText);
+    //            }
+    //        }
+    //    }
+    //    //// verify if it the slot where item has been dropped is the same where this party unit UI is located
+    //    //if (GetComponentInParent<UnitSlotDropHandler>().GetInstanceID() == unitSlotDropHandler.GetInstanceID())
+    //    //{
+    //    //    Debug.Log("Same slot");
+    //    //    Debug.Log("Act on Item Drop");
+    //    //    InventoryItemDragHandler inventoryItemDragHandler = InventoryItemDragHandler.itemBeingDragged;
+    //    //    // get item
+    //    //    InventoryItem inventoryItem = inventoryItemDragHandler.LInventoryItem;
+    //    //    // verify if item has active modifiers or usages
+    //    //    if (inventoryItem.HasActiveModifiers())
+    //    //    {
+    //    //        Debug.Log("Apply item's UniquePowerModifier(s) and UnitStatModifier(s) to the party unit and its UI");
+    //    //        // consume item and verify if it was successfull
+    //    //        if (lPartyUnit.UseItem(inventoryItem))
+    //    //        {
+    //    //            // successfully consumed item
+    //    //            // update UI based on changed party unit data
+    //    //            UpdateUnitCellInfo();
+    //    //            // item has run out of usages
+    //    //            if (inventoryItem.LeftUsagesCount == 0)
+    //    //            {
+    //    //                // there are no usages left
+    //    //                Debug.Log("Move item to the unit");
+    //    //                // move item to the unit, there are still might be non-instant upms and usms
+    //    //                inventoryItem.transform.SetParent(LPartyUnit.transform);
+    //    //                // Get PartyInventoryUI (before InventoryItemDragHandler is destroyed)
+    //    //                PartyInventoryUI partyInventoryUI = inventoryItemDragHandler.ItemBeindDraggedSlot.GetComponentInParent<PartyInventoryUI>();
+    //    //                // verify if it is not null
+    //    //                if (partyInventoryUI != null)
+    //    //                {
+    //    //                    // Note: inventoryItemDragHandler removal will suppress On End Item Drag event
+    //    //                    // .. workaround:
+    //    //                    // call on end drag manually before removing item
+    //    //                    inventoryItemDragHandler.OnEndDrag(null);
+    //    //                    // remove item drag handler
+    //    //                    RecycleBin.Recycle(inventoryItemDragHandler.gameObject);
+    //    //                    // reorganize inventory UI
+    //    //                    partyInventoryUI.ReorganizeInventoryUI();
+    //    //                }
+    //    //                else
+    //    //                {
+    //    //                    Debug.LogError("Logic error. Probably source slot is not party of PartyInventoryUI, but can be part of Equipment Menu");
+    //    //                }
+    //    //                //// Get source item slot transform
+    //    //                //ItemSlotDropHandler srcItemSlot = inventoryItemDragHandler.ItemBeindDraggedSlot;
+    //    //                //// verify if source slot is in party inventory mode
+    //    //                //if (srcItemSlot.SlotMode == ItemSlotDropHandler.Mode.PartyInventory)
+    //    //                //{
+    //    //                //    // Get PartyInventoryUI (before slot is destroyed)
+    //    //                //    PartyInventoryUI partyInventoryUI = srcItemSlot.GetComponentInParent<PartyInventoryUI>();
+    //    //                //    // remove all empty slots in inventory to fill in possible gaps after item consumption
+    //    //                //    partyInventoryUI.RemoveAllEmptySlots();
+    //    //                //    // fill in empty slots in inventory;
+    //    //                //    partyInventoryUI.FillInEmptySlots();
+    //    //                //}
+    //    //            }
+    //    //            else
+    //    //            {
+    //    //                // there are still usages left
+    //    //                Debug.Log("Clone item to the unit");
+    //    //                // clone item and place it into the unit
+    //    //                // so non-instant modifiers can be applied
+    //    //                // and assign inventoryItem varible with new inventory item
+    //    //                // inventoryItem = Instantiate(inventoryItem.gameObject, this.transform).GetComponent<InventoryItem>();
+    //    //                inventoryItem = Instantiate(inventoryItem.gameObject, LPartyUnit.transform).GetComponent<InventoryItem>();
+    //    //                // old inventory item, which was clonned, will return back to the inventory
+    //    //            }
+    //    //            // remove expired modifiers from triggered item
+    //    //            // note: don't do this on original modifier config, because it removes UPM from config
+    //    //            // inventoryItem.RemoveExpiredModifiers();
+    //    //            // self-destory item on expire
+    //    //            inventoryItem.SelfDestroyIfExpired();
+    //    //        }
+    //    //        else
+    //    //        {
+    //    //            // item cannot be consumed
+    //    //            // item will return to its original position
+    //    //        }
+    //    //    }
+    //    //    else
+    //    //    {
+    //    //        // item is not consumable
+    //    //        // nothing to do here
+    //    //        // item will return to its original position
+    //    //        // this type of items should be placed into hero equipment
+    //    //    }
+    //    //}
+    //    //else
+    //    //{
+    //    //    Debug.Log("Other slot");
+    //    //}
+    //    CursorController.Instance.SetNormalCursor();
+    //}
 
     #region Events Actions
     // called in UI in EventsListener
@@ -920,131 +920,133 @@ public class PartyUnitUI : MonoBehaviour {
     //    }
     //}
 
-    System.Object GetItemBeingDraggedSourceContext()
-    {
-        // get source context 
-        // try to get party unit (assume that during battle unit can only use items which are located in (childs of) this unit game object)
-        // if outside of the battle or if item is dragged from inventiry, then this will result in null
-        System.Object srcContext = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<PartyUnit>();
-        // verify if srcPartyUnit is null
-        if (srcContext == null)
-        {
-            // context is hero party (item is dragged from inventory)
-            // get party
-            HeroParty heroParty = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<HeroParty>();
-            // verify if party is garnizon type
-            if (heroParty.PartyMode == PartyMode.Garnizon)
-            {
-                // set context to the city
-                srcContext = heroParty.GetComponentInParent<City>();
-            }
-            else
-            {
-                // party mode = normal party
-                // set context to the party leader
-                srcContext = heroParty.GetPartyLeader();
-            }
-        }
-        // return result
-        return srcContext;
-    }
+    //System.Object GetItemBeingDraggedSourceContext()
+    //{
+    //    // get source context 
+    //    // try to get party unit (assume that during battle unit can only use items which are located in (childs of) this unit game object)
+    //    // if outside of the battle or if item is dragged from inventiry, then this will result in null
+    //    System.Object srcContext = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<PartyUnit>();
+    //    // verify if srcPartyUnit is null
+    //    if (srcContext == null)
+    //    {
+    //        // context is hero party (item is dragged from inventory)
+    //        // get party
+    //        HeroParty heroParty = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.GetComponentInParent<HeroParty>();
+    //        // verify if party is garnizon type
+    //        if (heroParty.PartyMode == PartyMode.Garnizon)
+    //        {
+    //            // set context to the city
+    //            srcContext = heroParty.GetComponentInParent<City>();
+    //        }
+    //        else
+    //        {
+    //            // party mode = normal party
+    //            // set context to the party leader
+    //            srcContext = heroParty.GetPartyLeader();
+    //        }
+    //    }
+    //    // return result
+    //    return srcContext;
+    //}
 
-    public void ActOnBeginItemDrag()
-    {
-        // activate highlight
-        // get source context 
-        System.Object srcContext = GetItemBeingDraggedSourceContext();
-        // get cell
-        PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
-        // get UPM config
-        UniquePowerModifierConfig primaryUniquePowerModifierConfig = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig;
-        // verify if UPM can be applied to destination unit
-        if (primaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(srcContext, LPartyUnit))
-        {
-            Debug.Log("Requirements are met");
-            // verify if it is advised to use this item in this context
-            if (primaryUniquePowerModifierConfig.IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
-            {
-                Debug.Log("Advised");
-                // advised
-                // item can be applied to this hero, highlight with applicable color
-                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
-                partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
-            }
-            else
-            {
-                Debug.Log("Not Advised");
-                // not advised
-                // item can be applied to this hero, highlight with applicable color
-                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
-                partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
-            }
-        }
-        else
-        {
-            Debug.Log("Requirements are not met");
-            // item cannot be applied to this hero, highlight with not applicable color
-            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
-            partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
-        }
-    }
+    //public void ActOnBeginItemDrag()
+    //{
+    //    // activate highlight
+    //    // get source context 
+    //    System.Object srcContext = GetItemBeingDraggedSourceContext();
+    //    // get cell
+    //    PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
+    //    // get UPM config
+    //    UniquePowerModifierConfig primaryUniquePowerModifierConfig = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig;
+    //    // verify if UPM can be applied to destination unit
+    //    if (primaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+    //    {
+    //        Debug.Log("Requirements are met");
+    //        // verify if it is advised to use this item in this context
+    //        //if (primaryUniquePowerModifierConfig.IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
+    //        if (primaryUniquePowerModifierConfig.IsItAdvisedToActInContextOf(GameContext.Context))
+    //        {
+    //            Debug.Log("Advised");
+    //            // advised
+    //            // item can be applied to this hero, highlight with applicable color
+    //            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+    //            partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("Not Advised");
+    //            // not advised
+    //            // item can be applied to this hero, highlight with applicable color
+    //            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+    //            partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Requirements are not met");
+    //        // item cannot be applied to this hero, highlight with not applicable color
+    //        // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+    //        partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+    //    }
+    //}
 
-    public bool ActOnBattleNewUnitHasBeenActivatedEvent(PartyUnitUI activePartyUnitUI)
-    {
-        // activate highlight
-        // init is targetable
-        bool isTargetable = false;
-        // set source context to active Party Unit
-        System.Object srcContext = activePartyUnitUI.LPartyUnit;
-        // get cell
-        PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
-        // get UPM config
-        // UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
-        UniquePowerModifierConfig primaryUniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig;
-        // ..
-        Debug.LogWarning("Remove duplicated logic below in ActOnBeginItemDrag()");
-        // verify if UPM can be applied to destination unit
-        if (primaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(srcContext, LPartyUnit))
-        {
-            Debug.Log("Requirements are met");
-            // verify if it is advised to use this item in this context
-            if (primaryUniquePowerModifierConfig.IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
-            {
-                Debug.Log("Advised");
-                // advised
-                // item can be applied to this hero, highlight with applicable color
-                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
-                //if (partyPanelCell == null) { Debug.Log("partyPanelCell"); }
-                //if (partyPanelCell.CanvasText == null) { Debug.Log("partyPanelCell.CanvasText"); }
-                //if (primaryUniquePowerModifierConfig == null) { Debug.Log("primaryUniquePowerModifierConfig"); }
-                //if (primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig == null) { Debug.Log("primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig"); }
-                //if (primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig == null) { Debug.Log("primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig"); }
-                partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
-                isTargetable = true;
-            }
-            else
-            {
-                Debug.Log("Not Advised");
-                // not advised
-                // item can be applied to this hero, highlight with applicable color
-                // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
-                partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
-                isTargetable = true;
-            }
-        }
-        else
-        {
-            Debug.Log("Requirements are not met");
-            // item cannot be applied to this hero, highlight with not applicable color
-            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
-            partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
-            isTargetable = false;
-        }
-        //// Activate/Deactive HighlightUnitCanvas
-        //GetComponentInParent<PartyPanelCell>().transform.Find("HighlightUnitCanvas").gameObject.SetActive((activePartyUnitUI.gameObject.GetInstanceID() == this.gameObject.GetInstanceID()));
-        // return if cell can or cannot be targeted
-        return isTargetable;
-    }
+    //public bool ActOnBattleNewUnitHasBeenActivatedEvent()
+    //{
+    //    // activate highlight
+    //    // init is targetable
+    //    bool isTargetable = false;
+    //    // set source context to active Party Unit
+    //    System.Object srcContext = BattleContext.ActivePartyUnitUI.LPartyUnit;
+    //    // get cell
+    //    PartyPanelCell partyPanelCell = GetComponentInParent<PartyPanelCell>();
+    //    // get UPM config
+    //    // UniquePowerModifierConfig uniquePowerModifierConfig = activePartyUnitUI.LPartyUnit.UnitAbilityConfig.primaryUniquePowerModifierConfig;
+    //    UniquePowerModifierConfig primaryUniquePowerModifierConfig = BattleContext.ActivePartyUnitUI.LPartyUnit.UnitAbilityConfig.PrimaryUniquePowerModifierConfig;
+    //    // ..
+    //    Debug.LogWarning(".. Remove duplicated logic below in ActOnBeginItemDrag()");
+    //    // verify if UPM can be applied to destination unit
+    //    // if (primaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(srcContext, LPartyUnit))
+    //    if (primaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(BattleContext.Instance))
+    //    {
+    //        Debug.Log("Requirements are met");
+    //        // verify if it is advised to use this item in this context
+    //        if (primaryUniquePowerModifierConfig.IsItAdvisedToActInContextOf(srcContext, LPartyUnit))
+    //        {
+    //            Debug.Log("Advised");
+    //            // advised
+    //            // item can be applied to this hero, highlight with applicable color
+    //            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableForUnitSlotColor;
+    //            //if (partyPanelCell == null) { Debug.Log("partyPanelCell"); }
+    //            //if (partyPanelCell.CanvasText == null) { Debug.Log("partyPanelCell.CanvasText"); }
+    //            //if (primaryUniquePowerModifierConfig == null) { Debug.Log("primaryUniquePowerModifierConfig"); }
+    //            //if (primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig == null) { Debug.Log("primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig"); }
+    //            //if (primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig == null) { Debug.Log("primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig"); }
+    //            partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableForUnitSlotColor;
+    //            isTargetable = true;
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("Not Advised");
+    //            // not advised
+    //            // item can be applied to this hero, highlight with applicable color
+    //            // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsApplicableButNotAdvisedForUnitSlotColor;
+    //            partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsApplicableButNotAdvisedForUnitSlotColor;
+    //            isTargetable = true;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Requirements are not met");
+    //        // item cannot be applied to this hero, highlight with not applicable color
+    //        // partyPanelCell.CanvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemIsNotApplicableForUnitSlotColor;
+    //        partyPanelCell.CanvasText.color = primaryUniquePowerModifierConfig.UniquePowerModifierUIConfig.ValidationUIConfig.upmIsNotApplicableForUnitSlotColor;
+    //        isTargetable = false;
+    //    }
+    //    //// Activate/Deactive HighlightUnitCanvas
+    //    //GetComponentInParent<PartyPanelCell>().transform.Find("HighlightUnitCanvas").gameObject.SetActive((activePartyUnitUI.gameObject.GetInstanceID() == this.gameObject.GetInstanceID()));
+    //    // return if cell can or cannot be targeted
+    //    return isTargetable;
+    //}
     #endregion Events Actions
 
     #region Properties

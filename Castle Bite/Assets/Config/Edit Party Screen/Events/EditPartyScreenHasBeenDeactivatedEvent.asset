@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f355e249dda6486429dbb7c287d95ba7, type: 3}
-  m_Name: Skill at least 1 Shard Aura level
+  m_Script: {fileID: 11500000, guid: 6a1882c3447f05649bdb0ac577797b94, type: 3}
+  m_Name: EditPartyScreenHasBeenDeactivatedEvent
   m_EditorClassIdentifier: 
-  requiredUnitSkillID: 10
-  minRequiredUnitSkillLevel: 1

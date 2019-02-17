@@ -29,14 +29,14 @@ public class LimitModifierIfUnitHealthIsFull : ModifierLimiter
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
+    ValidationResult DoDiscardModifierInContextOf(System.Object srcContext, System.Object dstContext)
     {
         // verify if source or destination context do not match requirements of this limiter
         if (!DoesContextMatch(srcContext, dstContext))
         {
             // context is not in scope of this limiter
             // don't limit
-            return false;
+            return ValidationResult.Pass();
         }
         //// verify if destination context is of InventorySlotDropHandler type
         //if (dstContext is InventorySlotDropHandler)
@@ -52,11 +52,11 @@ public class LimitModifierIfUnitHealthIsFull : ModifierLimiter
             if (dstPartyUnit.UnitHealthCurr >= dstPartyUnit.GetUnitEffectiveMaxHealth())
             {
                 // limit
-                return true;
+                return ValidationResult.Discard(onDiscardMessage);
             }
         }
         // don't limit
-        return false;
+        return ValidationResult.Pass();
     }
 
     public bool DoesContextMatch(System.Object context)
@@ -71,11 +71,21 @@ public class LimitModifierIfUnitHealthIsFull : ModifierLimiter
                 return true;
             }
         }
+        // verify if context matches edit party screen context
+        if (context is EditPartyScreenContext)
+        {
+            // verify if destination unit is set
+            if (EditPartyScreenContext.DestinationUnitSlot != null)
+            {
+                // context match
+                return true;
+            }
+        }
         // by default context doesn't match
         return false;
     }
 
-    public override bool DoDiscardModifierInContextOf(System.Object context)
+    public override ValidationResult DoDiscardModifierInContextOf(System.Object context)
     {
         // verify if context doesn't match requirements of this limiter
         if (!DoesContextMatch(context))
@@ -85,7 +95,7 @@ public class LimitModifierIfUnitHealthIsFull : ModifierLimiter
             {
                 // context is not in scope of this limiter
                 // don't limit
-                return false;
+                return ValidationResult.Pass();
             }
         }
         // verify if context matches battle context
@@ -101,7 +111,20 @@ public class LimitModifierIfUnitHealthIsFull : ModifierLimiter
                 return DoDiscardModifierInContextOf(null, partyUnitUI.LPartyUnit);
             }
         }
+        // verify if context matches EditPartyScreenContext context
+        if (context is EditPartyScreenContext)
+        {
+            // get party unit UI in destination slot
+            PartyUnitUI partyUnitUI = EditPartyScreenContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>();
+            // verify if destination slot has unit
+            if (partyUnitUI != null)
+            {
+                // verify if we need to discard this modifier
+                //  ignore source context
+                return DoDiscardModifierInContextOf(null, partyUnitUI.LPartyUnit);
+            }
+        }
         // don't limit
-        return false;
+        return ValidationResult.Pass();
     }
 }

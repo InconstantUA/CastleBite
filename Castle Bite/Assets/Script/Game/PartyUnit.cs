@@ -2109,7 +2109,7 @@ public class PartyUnit : MonoBehaviour {
             case PowerSource.Earth:
             case PowerSource.Life:
             case PowerSource.Physical:
-                Debug.LogWarning("Not implemented resistance source: " + source);
+                Debug.Log("Not implemented resistance source: " + source);
                 return 0;
             default:
                 Debug.LogError("Unknown source " + source.ToString());

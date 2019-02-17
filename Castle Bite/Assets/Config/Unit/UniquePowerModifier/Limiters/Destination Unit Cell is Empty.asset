@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbc7b4baa01e7af41b44875543bf66c8, type: 3}
   m_Name: Destination Unit Cell is Empty
   m_EditorClassIdentifier: 
+  onDiscardMessage: Destination unit cell should be empty
   shouldBeOccupied: 0

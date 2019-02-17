@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c35069e22f022c84bbd4a26ef3a1f2a0, type: 3}
   m_Name: Is Item Usable
   m_EditorClassIdentifier: 
+  onDiscardMessage: Item is not usable
   shouldBeUsable: 1

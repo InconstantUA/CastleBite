@@ -278,9 +278,13 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
         // verify if equipment slot is compatible
         if ((InventoryItemDragHandler.itemBeingDragged.LInventoryItem.CompatibleEquipmentSlots & EquipmentSlot) == EquipmentSlot)
         {
+            // set context
+            EquipmentScreenContext.DestinationItemSlotDropHandler = this;
             // verify item is compatible with hero (all required prerequisites are net)
+            ModifierLimiter.ValidationResult validationResult = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(GameContext.Context);
             // if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.uniquePowerModifierConfigs[0].AreRequirementsMetInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit))
-            if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(null, this))
+            // if (InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.AreRequirementsMetInContextOf(null, this))
+            if (!validationResult.doDiscardModifier)
             {
                 // set compatible flag
                 isCompatible = true;
@@ -288,7 +292,9 @@ public class ItemSlotDropHandler : MonoBehaviour, IDropHandler {
             else
             {
                 // set cavast message
-                canvasMessageText.text = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.GetLimiterMessageInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit);
+                // Debug.LogError(".. uncomment below and fix");
+                //canvasMessageText.text = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.PrimaryUniquePowerModifierConfig.GetLimiterMessageInContextOf(null, GetComponentInParent<HeroEquipment>().LPartyUnit);
+                canvasMessageText.text = validationResult.message;
                 // set highlight color to not the color which indicates that prerequisites are not met
                 canvasText.color = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.inventoryItemUIConfig.itemPrerequsitesAreNotMetForThisUnitColor;
             }
