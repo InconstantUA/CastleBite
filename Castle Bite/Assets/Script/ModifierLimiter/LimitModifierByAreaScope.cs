@@ -228,10 +228,10 @@ public class LimitModifierByAreaScope : ModifierLimiter
                     //  - new unit has just been activated (target unit is not set)
                     //  - applying ability from active unit to destination slot (target unit is set)
                     // verify if target unit have been set and that modifier scope is single unit and that destination slot has unit
-                    if (BattleContext.TargetedUnitSlot != null)
+                    if (EditPartyScreenContext.TargetedUnitSlot != null)
                     {
                         // verify if tareted unit is the same as destination slot
-                        if (BattleContext.TargetedUnitSlot.gameObject.GetInstanceID() == BattleContext.DestinationUnitSlot.gameObject.GetInstanceID())
+                        if (EditPartyScreenContext.TargetedUnitSlot.gameObject.GetInstanceID() == EditPartyScreenContext.DestinationUnitSlot.gameObject.GetInstanceID())
                         {
                             // don't limit
                             return ValidationResult.Pass();

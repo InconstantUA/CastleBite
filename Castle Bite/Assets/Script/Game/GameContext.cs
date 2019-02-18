@@ -135,4 +135,58 @@ public class GameContext : Singleton<GameContext>
                 return;
         }
     }
+
+    public static void SetUniquePowerModifierID(UniquePowerModifierID uniquePowerModifierID)
+    {
+        switch (activeGameContextID)
+        {
+            case GameContextID.None:
+                Debug.LogWarning("None: Return");
+                return;
+            case GameContextID.Map:
+                Debug.LogWarning("Map: Return");
+                return;
+            case GameContextID.Battle:
+                Debug.Log("Set UniquePowerModifierID for Battle context");
+                BattleContext.UniquePowerModifierID = uniquePowerModifierID;
+                return;
+            case GameContextID.EditPartyScreen:
+                Debug.Log("Set UniquePowerModifierID for EditPartyScreen context");
+                EditPartyScreenContext.UniquePowerModifierID = uniquePowerModifierID;
+                return;
+            case GameContextID.EquipmentScreen:
+                Debug.LogWarning("EquipmentScreen: Return");
+                return;
+            default:
+                Debug.LogError("Unknown game context");
+                return;
+        }
+    }
+
+    public static void SetActivatedUPMConfigIndex(int activatedUPMConfigIndex)
+    {
+        switch (activeGameContextID)
+        {
+            case GameContextID.None:
+                Debug.LogWarning("None: Return");
+                return;
+            case GameContextID.Map:
+                Debug.LogWarning("Map: Return");
+                return;
+            case GameContextID.Battle:
+                Debug.Log("Set ActivatedUPMConfigIndex for Battle context");
+                BattleContext.ActivatedUPMConfigIndex = activatedUPMConfigIndex;
+                return;
+            case GameContextID.EditPartyScreen:
+                Debug.Log("Set ActivatedUPMConfigIndex for EditPartyScreen context");
+                EditPartyScreenContext.ActivatedUPMConfigIndex = activatedUPMConfigIndex;
+                return;
+            case GameContextID.EquipmentScreen:
+                Debug.LogWarning("EquipmentScreen: Return");
+                return;
+            default:
+                Debug.LogError("Unknown game context");
+                return;
+        }
+    }
 }

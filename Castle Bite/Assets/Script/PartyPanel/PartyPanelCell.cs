@@ -455,9 +455,11 @@ public class PartyPanelCell : MonoBehaviour
         // cache target unit slot in battle context (unit which has been targeted by ability)
         //BattleContext.TargetedUnitSlot = unitSlotDropHandler.GetComponent<UnitSlot>();
         // cache this unit slot as destination unit slot in battle context
-        BattleContext.DestinationUnitSlot = GetComponentInChildren<UnitSlot>();
+        //BattleContext.DestinationUnitSlot = GetComponentInChildren<UnitSlot>();
+        GameContext.SetDestinationUnitSlot(GetComponentInChildren<UnitSlot>());
         // get item being used (dragged)
-        InventoryItem itemBeingUsed = BattleContext.ItemBeingUsed;
+        //InventoryItem itemBeingUsed = BattleContext.ItemBeingUsed;
+        InventoryItem itemBeingUsed = GameContext.GetItemBeingUsed();
         // init item config
         //List<UniquePowerModifierConfig> itemUniquePowerModifierConfigsSortedByExecutionOrder = InventoryItemDragHandler.itemBeingDragged.LInventoryItem.InventoryItemConfig.UniquePowerModifierConfigsSortedByExecutionOrder;
         List<UniquePowerModifierConfig> itemUniquePowerModifierConfigsSortedByExecutionOrder = itemBeingUsed.InventoryItemConfig.UniquePowerModifierConfigsSortedByExecutionOrder;
@@ -466,22 +468,25 @@ public class PartyPanelCell : MonoBehaviour
         {
             Debug.LogWarning("UPM: " + "[" + i + "] " + itemUniquePowerModifierConfigsSortedByExecutionOrder[i].DisplayName);
             // set BattleContext
-            BattleContext.ActivatedUPMConfigIndex = i;
-            // verify if UPM can be applied to unit in this party unit UI
-            if (itemUniquePowerModifierConfigsSortedByExecutionOrder[i].AreRequirementsMetInContextOf(BattleContext.Instance).doDiscardModifier == false)
+            GameContext.SetActivatedUPMConfigIndex(i);
+            // verify if UPM can be applied to cell/unit in this cell
+            // if (itemUniquePowerModifierConfigsSortedByExecutionOrder[i].AreRequirementsMetInContextOf(BattleContext.Instance).doDiscardModifier == false)
+            if (itemUniquePowerModifierConfigsSortedByExecutionOrder[i].AreRequirementsMetInContextOf(GameContext.Context).doDiscardModifier == false)
             {
                 // set unique power modifier ID
-                BattleContext.UniquePowerModifierID = new UniquePowerModifierID()
+                GameContext.SetUniquePowerModifierID(new UniquePowerModifierID()
                 {
                     inventoryItemID = itemBeingUsed.InventoryItemID,
                     uniquePowerModifierConfigIndex = i,
                     modifierOrigin = ModifierOrigin.Item,
                     destinationGameObjectID = this.gameObject.GetInstanceID()
-                };
+                });
                 // Apply UPM
-                itemUniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(BattleContext.Instance);
+                //itemUniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(BattleContext.Instance);
+                itemUniquePowerModifierConfigsSortedByExecutionOrder[i].Apply(GameContext.Context);
                 // Run UPM animation
-                itemUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.UniquePowerModifierAnimation.Run(BattleContext.Instance);
+                //itemUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.UniquePowerModifierAnimation.Run(BattleContext.Instance);
+                itemUniquePowerModifierConfigsSortedByExecutionOrder[i].UniquePowerModifierUIConfig.UniquePowerModifierAnimation.Run(GameContext.Context);
             }
             else
             {

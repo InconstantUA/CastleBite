@@ -68,4 +68,16 @@ public class BattleContext : Singleton<BattleContext>
         ItemBeingUsed = null;
     }
 
+    public void OnItemHasBeenDroppedIntoTheUnitSlot(System.Object context)
+    {
+        // verify if context is wrong
+        if (!(context is UnitSlotDropHandler))
+        {
+            Debug.LogError("Context is not PartyUnit");
+            // exit
+            return;
+        }
+        // cache target unit slot in context (unit which has been targeted)
+        TargetedUnitSlot = ((UnitSlotDropHandler)context).GetComponent<UnitSlot>();
+    }
 }

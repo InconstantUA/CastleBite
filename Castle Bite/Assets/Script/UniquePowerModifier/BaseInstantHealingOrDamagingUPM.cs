@@ -7,7 +7,7 @@ using UnityEngine;
 public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
 {
 
-    public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
         Debug.LogWarning("Applying " + uniquePowerModifierConfig.DisplayName + " from " + srcPartyUnit.UnitName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for Trigger)
@@ -31,7 +31,7 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
         Trigger(dstPartyUnit, upmData);
     }
 
-    public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
         Debug.LogWarning("Applying " + uniquePowerModifierConfig.DisplayName + " from " + inventoryItem.ItemName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for Trigger)
@@ -68,6 +68,17 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
                 return true;
             }
         }
+        // verify if context matches battle context
+        if (context is EditPartyScreenContext)
+        {
+            // .. this can be skipped because this verification (should be) done before upm is applied
+            // verify if destination slot has a unit UI
+            if (EditPartyScreenContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>() != null)
+            {
+                // context match
+                return true;
+            }
+        }
         // by default context doesn't match
         return false;
     }
@@ -86,16 +97,39 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
             // verify if source context is PartyUnit
             if (BattleContext.ActivePartyUnitUI != null)
             {
-                PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
-                PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
-                UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
-                UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
-                Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
+                // verify if item has been dragged (if we are here, then it means that Item has been dropped onto the unit slot)
+                if (BattleContext.ItemBeingUsed != null)
+                {
+                    // apply item UPM from Battle Context
+                    InventoryItem srcInventoryItem = BattleContext.ItemBeingUsed;
+                    PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+                    UniquePowerModifierConfig uniquePowerModifierConfig = srcInventoryItem.InventoryItemConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
+                    UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
+                    Apply(srcInventoryItem, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
+                }
+                else
+                {
+                    // apply unit ability UPM
+                    PartyUnit srcPartyUnit = BattleContext.ActivePartyUnitUI.LPartyUnit;
+                    PartyUnit dstPartyUnit = BattleContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+                    UniquePowerModifierConfig uniquePowerModifierConfig = srcPartyUnit.UnitAbilityConfig.UniquePowerModifierConfigsSortedByExecutionOrder[BattleContext.ActivatedUPMConfigIndex];
+                    UniquePowerModifierID uniquePowerModifierID = BattleContext.UniquePowerModifierID;
+                    Apply(srcPartyUnit, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
+                }
             }
             else
             {
                 Debug.LogError("Unknown source context");
             }
+        }
+        if (context is EditPartyScreenContext)
+        {
+            // apply item UPM from edit party screen context
+            InventoryItem srcInventoryItem = EditPartyScreenContext.ItemBeingUsed;
+            PartyUnit dstPartyUnit = EditPartyScreenContext.DestinationUnitSlot.GetComponentInChildren<PartyUnitUI>().LPartyUnit;
+            UniquePowerModifierConfig uniquePowerModifierConfig = srcInventoryItem.InventoryItemConfig.UniquePowerModifierConfigsSortedByExecutionOrder[EditPartyScreenContext.ActivatedUPMConfigIndex];
+            UniquePowerModifierID uniquePowerModifierID = EditPartyScreenContext.UniquePowerModifierID;
+            Apply(srcInventoryItem, dstPartyUnit, uniquePowerModifierConfig, uniquePowerModifierID);
         }
     }
 

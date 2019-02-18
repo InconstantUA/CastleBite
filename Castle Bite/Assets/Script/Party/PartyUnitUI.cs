@@ -849,7 +849,13 @@ public class PartyUnitUI : MonoBehaviour {
         };
         // get defensive stance UPM configuration form manager and apply it to self
         // ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].postActionUniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
-        ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
+        //ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(LPartyUnit, LPartyUnit, uniquePowerModifierID);
+        Debug.LogWarning(".. Validate");
+        // Set context
+        GameContext.SetDestinationUnitSlot(GetComponentInParent<UnitSlot>());
+        GameContext.SetUniquePowerModifierID(uniquePowerModifierID);
+        // Apply UPM
+        ConfigManager.Instance[uniquePowerModifierID.unitAbilityID].uniquePowerModifierConfigs[uniquePowerModifierID.uniquePowerModifierConfigIndex].Apply(GameContext.Context);
     }
 
     //public void OnApplyAbilityFromUnitUIToUnitUI(PartyUnitUI srcPartyUnitUI, PartyUnitUI targetPartyUnitUI)

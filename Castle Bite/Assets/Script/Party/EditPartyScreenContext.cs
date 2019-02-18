@@ -13,6 +13,12 @@ public class EditPartyScreenContext : Singleton<EditPartyScreenContext>
     // id which can be used to uniquely identify UPM
     public static UnitSlot DestinationUnitSlot { get; set; }
 
+    // id of activated unique power modifier (for Apply())
+    public static UniquePowerModifierID UniquePowerModifierID { get; set; }
+
+    // configuration of activated unique power modifier (there can be more than one UPM defined in unit's ability, so we need to keep track of which one is used now)
+    public static int ActivatedUPMConfigIndex { get; set; }
+
     public void OnBeginItemDrag()
     {
         // Reset targeted unit slot

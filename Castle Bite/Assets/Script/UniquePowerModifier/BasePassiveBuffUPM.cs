@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/BasePassiveBuffUPM")]
 public class BasePassiveBuffUPM : UniquePowerModifier
 {
-    public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
         Debug.Log("Applying " + uniquePowerModifierConfig.DisplayName + " DoT " + " from " + srcPartyUnit.UnitName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for game save / restore)
@@ -90,10 +90,10 @@ public class BasePassiveBuffUPM : UniquePowerModifier
         }
     }
 
-    public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
-    {
-        throw new System.NotImplementedException();
-    }
+    //public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    //{
+    //    throw new System.NotImplementedException();
+    //}
 
     public override void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
     {

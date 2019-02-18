@@ -8,14 +8,14 @@ using UnityEngine;
 public class LifeLeechUPM : UniquePowerModifier
 {
 
-    public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
-    {
-        throw new NotImplementedException();
-    }
-    public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
-    {
-        throw new NotImplementedException();
-    }
+    //public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    //{
+    //    throw new NotImplementedException();
+    //}
+    //public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    //{
+    //    throw new NotImplementedException();
+    //}
 
     public bool DoesContextMatch(System.Object context)
     {

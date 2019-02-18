@@ -16,9 +16,9 @@ MonoBehaviour:
   modifierAppliedTo: 0
   modifierScope: 0
   requiredRelationships: 
-  modifierPower: 1
+  modifierPower: 10
   modifierCalculatedHow: 0
-  modifierDurationType: 0
+  modifierDurationType: 1
   duration: 0
   canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
   powerSource: 5

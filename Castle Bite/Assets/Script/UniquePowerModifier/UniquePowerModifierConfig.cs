@@ -49,51 +49,51 @@ public class UniquePowerModifierConfig : ScriptableObject
     [SerializeField]
     private UniquePowerModifierUIConfig uniquePowerModifierUIConfig;
 
-    public void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
-    {
-        UniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
-    }
+    //public void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
+    //{
+    //    UniquePowerModifier.Apply(srcPartyUnit, dstPartyUnit, this, uniquePowerModifierID);
+    //}
 
     public void Apply(System.Object context)
     {
         UniquePowerModifier.Apply(context);
     }
 
-    public void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
-    {
-        UniquePowerModifier.Apply(inventoryItem, dstPartyUnit, this, uniquePowerModifierID);
-    }
+    //public void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
+    //{
+    //    UniquePowerModifier.Apply(inventoryItem, dstPartyUnit, this, uniquePowerModifierID);
+    //}
 
     public void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
     {
         UniquePowerModifier.Trigger(dstPartyUnit, uniquePowerModifierData);
     }
 
-    public bool MatchScope(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
-    {
-        // Match
-        switch (ModifierScope)
-        {
-            case ModifierScope.Self:
-                // verify if source and destination party units are the same
-                if (srcPartyUnitUPMOwner.GetInstanceID() == dstPartyUnit.GetInstanceID())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            case ModifierScope.SingleUnit:
-            case ModifierScope.EntireParty:
-            case ModifierScope.AllPlayerUnits:
-                Debug.LogError("Finish this function logic implementation");
-                return true;
-            default:
-                Debug.LogError("Unknown modifier scope: " + ModifierScope.ToString());
-                return false;
-        }
-    }
+    //public bool MatchScope(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
+    //{
+    //    // Match
+    //    switch (ModifierScope)
+    //    {
+    //        case ModifierScope.Self:
+    //            // verify if source and destination party units are the same
+    //            if (srcPartyUnitUPMOwner.GetInstanceID() == dstPartyUnit.GetInstanceID())
+    //            {
+    //                return true;
+    //            }
+    //            else
+    //            {
+    //                return false;
+    //            }
+    //        case ModifierScope.SingleUnit:
+    //        case ModifierScope.EntireParty:
+    //        case ModifierScope.AllPlayerUnits:
+    //            Debug.LogError("Finish this function logic implementation");
+    //            return true;
+    //        default:
+    //            Debug.LogError("Unknown modifier scope: " + ModifierScope.ToString());
+    //            return false;
+    //    }
+    //}
 
     public bool MatchRelationships(PartyUnit srcPartyUnitUPMOwner, PartyUnit dstPartyUnit)
     {
@@ -112,22 +112,22 @@ public class UniquePowerModifierConfig : ScriptableObject
         return false;
     }
 
-    public bool AreRequirementsMetInContextOf(System.Object srcContext, System.Object dstContext)
-    {
-        // loop through all limiters
-        foreach (ModifierLimiter modifierLimiter in modifierLimiters)
-        {
-            // verify is modifier power is limited
-            Debug.LogError(".. uncomment below and fix");
-            //if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
-            {
-                // at least one requirement is not met
-                return false;
-            }
-        }
-        // if none of limiter is limiting, then return true
-        return true;
-    }
+    //public bool AreRequirementsMetInContextOf(System.Object srcContext, System.Object dstContext)
+    //{
+    //    // loop through all limiters
+    //    foreach (ModifierLimiter modifierLimiter in modifierLimiters)
+    //    {
+    //        // verify is modifier power is limited
+    //        Debug.LogError(".. uncomment below and fix");
+    //        //if (modifierLimiter.DoDiscardModifierInContextOf(srcContext, dstContext))
+    //        {
+    //            // at least one requirement is not met
+    //            return false;
+    //        }
+    //    }
+    //    // if none of limiter is limiting, then return true
+    //    return true;
+    //}
 
     public ModifierLimiter.ValidationResult AreRequirementsMetInContextOf(System.Object context)
     {
@@ -208,6 +208,7 @@ public class UniquePowerModifierConfig : ScriptableObject
         {
             updatedUSMC = modifierConfigUpdater.GetUpdatedUSMC(updatedUSMC, context);
         }
+        Debug.LogWarning("Updated USMConfig power " + updatedUSMC.modifierPower);
         // return result
         return updatedUSMC;
     }

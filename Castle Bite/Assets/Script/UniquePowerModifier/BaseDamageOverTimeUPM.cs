@@ -22,7 +22,7 @@ public class BaseDamageOverTimeUPM : UniquePowerModifier
     //[SerializeField]
     //GameEvent uniquePowerModifierHasBeenTriggeredEvent;
 
-    public override void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
         Debug.Log("Applying " + uniquePowerModifierConfig.DisplayName + " DoT " + " from " + srcPartyUnit.UnitName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for game save / restore)
@@ -106,10 +106,10 @@ public class BaseDamageOverTimeUPM : UniquePowerModifier
         }
     }
 
-    public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
-    {
-        throw new System.NotImplementedException();
-    }
+    //public override void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
+    //{
+    //    throw new System.NotImplementedException();
+    //}
 
     public override void Trigger(PartyUnit dstPartyUnit, UniquePowerModifierData uniquePowerModifierData)
     {
