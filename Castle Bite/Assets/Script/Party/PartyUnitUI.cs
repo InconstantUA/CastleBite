@@ -331,11 +331,16 @@ public class PartyUnitUI : MonoBehaviour {
     }
 
     #region Unit Br Canvas
-    //public Text GetUnitCanvasText()
-    public TextMeshProUGUI GetUnitCanvasText()
+    ////public Text GetUnitCanvasText()
+    //public TextMeshProUGUI GetUnitCanvasText()
+    //{
+    //    //return GetUnitCell().Find("Br").GetComponent<Text>();
+    //    //return GetComponentInParent<PartyPanelCell>().CanvasText;
+    //    return GetUnitCell().GetComponent<PartyPanelCell>().CanvasText;
+    //}
+
+    public TMProButton GetUnitCanvasText()
     {
-        //return GetUnitCell().Find("Br").GetComponent<Text>();
-        //return GetComponentInParent<PartyPanelCell>().CanvasText;
         return GetUnitCell().GetComponent<PartyPanelCell>().CanvasText;
     }
 

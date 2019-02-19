@@ -168,16 +168,21 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
+    public virtual void SetTextColor(Color color)
+    {
+        GetComponent<Text>().color = color;
+    }
+
     void SetHighlightedStatus()
     {
         if (scaleHighlightedColorFromNormal)
         {
             // GetComponent<Text>().color = new Color32((byte)((normalColor.r * 255) + highlightedColorScale), (byte)((normalColor.g * 255) + highlightedColorScale), (byte)((normalColor.b * 255) + highlightedColorScale), (byte)(normalColor.a * 255));
-            GetComponent<Text>().color = new Color(normalColor.r * highlightedColorScale, normalColor.g * highlightedColorScale, normalColor.b * highlightedColorScale, normalColor.a);
+            SetTextColor(new Color(normalColor.r * highlightedColorScale, normalColor.g * highlightedColorScale, normalColor.b * highlightedColorScale, normalColor.a));
         }
         else
         {
-            GetComponent<Text>().color = highlightedColor;
+            SetTextColor(highlightedColor);
         }
     }
 
@@ -186,22 +191,22 @@ public class TextButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (scalePressedColorFromNormal)
         {
             // GetComponent<Text>().color = new Color32((byte)((normalColor.r * 255) + pressedColorScale), (byte)((normalColor.g * 255) + pressedColorScale), (byte)((normalColor.b * 255) + pressedColorScale), (byte)(normalColor.a * 255));
-            GetComponent<Text>().color = new Color(normalColor.r * pressedColorScale, normalColor.g * pressedColorScale, normalColor.b * pressedColorScale, normalColor.a);
+            SetTextColor(new Color(normalColor.r * pressedColorScale, normalColor.g * pressedColorScale, normalColor.b * pressedColorScale, normalColor.a));
         }
         else
         {
-            GetComponent<Text>().color = pressedColor;
+            SetTextColor(pressedColor);
         }
     }
 
     public void SetNormalStatus()
     {
-        GetComponent<Text>().color = normalColor;
+        SetTextColor(normalColor);
     }
 
     public void SetDisabledStatus()
     {
-        GetComponent<Text>().color = disabledColor;
+        SetTextColor(disabledColor);
     }
 
     public void SetInteractable(bool value)

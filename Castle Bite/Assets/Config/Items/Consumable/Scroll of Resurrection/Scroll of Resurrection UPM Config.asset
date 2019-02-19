@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
   m_Name: Scroll of Resurrection UPM Config
   m_EditorClassIdentifier: 
-  displayName: Heal
-  description: Heals target unit
+  displayName: Resurection
+  description: Resurects target unit with 1 health
   isPrimary: 1
   executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,

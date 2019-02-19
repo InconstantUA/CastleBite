@@ -96,6 +96,18 @@ public class EditPartyScreen : MonoBehaviour {
             // activate left hero party UI
             heroPartyUI.gameObject.SetActive(true);
             // assign party leader to left focus panel
+            if (transform.root.Find("MiscUI/LeftFocus") == null)
+                Debug.LogWarning("1");
+            if (transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>() == null)
+                Debug.LogWarning("2");
+            if (transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject == null)
+                Debug.LogWarning("3");
+            if (heroPartyUI == null)
+                Debug.LogWarning("4");
+            if (heroPartyUI.GetPartyLeaderUI() == null)
+                Debug.LogWarning("5");
+            if (heroPartyUI.GetPartyLeaderUI().gameObject == null)
+                Debug.LogWarning("6");
             transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = heroPartyUI.GetPartyLeaderUI().gameObject;
             // activate left Focus panel
             transform.root.Find("MiscUI/LeftFocus").gameObject.SetActive(true);

@@ -16,7 +16,7 @@ MonoBehaviour:
   modifierAppliedTo: 0
   modifierScope: 0
   requiredRelationships: 
-  modifierPower: 10
+  modifierPower: 1
   modifierCalculatedHow: 0
   modifierDurationType: 1
   duration: 0

@@ -12,6 +12,8 @@ public class PartyPanelCell : MonoBehaviour
     //Text canvasText;
     [SerializeField]
     TextMeshProUGUI canvasTMPro;
+    [SerializeField]
+    TMProButton canvasTMProButton;
 
     Material standardCanvasMaterial;
     Material highlightedCanvasMaterial;
@@ -35,11 +37,19 @@ public class PartyPanelCell : MonoBehaviour
     //    }
     //}
 
-    public TextMeshProUGUI CanvasText
+    //public TextMeshProUGUI CanvasText
+    //{
+    //    get
+    //    {
+    //        return canvasTMPro;
+    //    }
+    //}
+
+    public TMProButton CanvasText
     {
         get
         {
-            return canvasTMPro;
+            return canvasTMProButton;
         }
     }
 

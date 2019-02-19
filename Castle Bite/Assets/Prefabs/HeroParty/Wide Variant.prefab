@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wide Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 7947268224225242316, guid: eeeda4f2a75294f448fa5fb490af3335,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7947268224225242317, guid: eeeda4f2a75294f448fa5fb490af3335,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -122,6 +127,11 @@ PrefabInstance:
       propertyPath: cell
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7947268223109660073, guid: eeeda4f2a75294f448fa5fb490af3335,
+        type: 3}
+      propertyPath: cellSize
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7947268223477645729, guid: eeeda4f2a75294f448fa5fb490af3335,
         type: 3}
       propertyPath: m_text
@@ -153,11 +163,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textInfo.spaceCount
       value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 7947268223109660073, guid: eeeda4f2a75294f448fa5fb490af3335,
-        type: 3}
-      propertyPath: cellSize
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeeda4f2a75294f448fa5fb490af3335, type: 3}
