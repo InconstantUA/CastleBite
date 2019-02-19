@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
   m_Name: Healing Word UPM Config
   m_EditorClassIdentifier: 
-  displayName: Blow With Great Sword
-  description: Deals physical damage to single unit
+  displayName: Healing Word
+  description: Heals single unit
   isPrimary: 1
   executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
   m_Name: Blow With Maul UPM Config
   m_EditorClassIdentifier: 
-  displayName: Blow With Great Sword
+  displayName: Blow With Maul
   description: Deals physical damage to single unit
   isPrimary: 1
   executionOrder: 0

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
   m_Name: Malediction DoT UPM Config
   m_EditorClassIdentifier: 
-  displayName: Malediction
-  description: Deals instant death damage to single unit
+  displayName: Curse
+  description: Deals death damage over time single unit
   isPrimary: 0
   executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: 488b57bbee1a88b459aff2b86da200e3,

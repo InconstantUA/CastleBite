@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
   m_Name: Protection Aura UPM Config
   m_EditorClassIdentifier: 
-  displayName: Defense Aura
+  displayName: Protection Aura
   description: Provides defense bonus to all friendly party units
+  isPrimary: 0
+  executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: bc5fe3686541b504cb56d13fba928878,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 2bc108e442fab1142b0b556677550520,

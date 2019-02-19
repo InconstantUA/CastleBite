@@ -19,11 +19,11 @@ public class UnitAbilityConfig : ScriptableObject
     //public PowerSource powerSource;
     //public UnitPowerScope unitPowerScope;
     // main ability modifier
-    public List<UnitPowerModifier> preActionUnitPowerModifiers;
+    //public List<UnitPowerModifier> preActionUnitPowerModifiers;
     // main ability power
     //public UnitStatModifierConfig unitStatModifierConfig;
     // Unique power modifiers
-    public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
+    //public List<UniquePowerModifierConfig> postActionUniquePowerModifierConfigs;
     public List<UniquePowerModifierConfig> uniquePowerModifierConfigs;
 
     [NonSerialized]
