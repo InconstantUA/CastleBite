@@ -6,7 +6,25 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Limiters/Applicable Only To x units")]
 public class LimitModifierByAreaScope : ModifierLimiter
 {
-    public ModifierScope modifierScope;
+    [SerializeField]
+    private ModifierScopeID modifierScopeID;
+    [System.NonSerialized]
+    private ModifierScope modifierScope;
+
+    public ModifierScope ModifierScope
+    {
+        get
+        {
+            // verify if modifier scope has not been set
+            if (modifierScope == null)
+            {
+                // set modifier scope
+                modifierScope = new ModifierScope(modifierScopeID);
+            }
+            // return modifier scope
+            return modifierScope;
+        }
+    }
 
     public bool DoesContextMatch(System.Object srcContext, System.Object dstContext)
     {
@@ -56,9 +74,9 @@ public class LimitModifierByAreaScope : ModifierLimiter
         //    // ignore this limiter (don't discard)
         //    return false;
         //}
-        switch (modifierScope)
+        switch (modifierScopeID)
         {
-            case ModifierScope.Self:
+            case ModifierScopeID.Self:
                 // verify if source context and destination context are of PartyUnit type (also verifies if it is not null)
                 if ((srcContext is PartyUnit) && (dstContext is PartyUnit))
                 {
@@ -71,7 +89,7 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 }
                 // limit by default
                 return ValidationResult.Discard(onDiscardMessage);
-            case ModifierScope.SingleUnit:
+            case ModifierScopeID.SingleUnit:
                 // verify if source context is UnitSlotDropHandler and destination context is of PartyUnit type
                 if (srcContext is UnitSlotDropHandler && dstContext is PartyUnit)
                 {
@@ -107,7 +125,7 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 }
                 // limit by default
                 return ValidationResult.Discard(onDiscardMessage);
-            case ModifierScope.EntireParty:
+            case ModifierScopeID.EntireParty:
                 // verify if destination context is of Party or PartyUnit type (also verifies if it is not null)
                 if ( (dstContext is HeroParty) || (dstContext is PartyUnit) )
                 {
@@ -116,7 +134,7 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 }
                 // limit by default
                 return ValidationResult.Discard(onDiscardMessage);
-            case ModifierScope.AllPlayerUnits:
+            case ModifierScopeID.AllPlayerUnits:
                 // use case: global spells, player abilities
                 // verify if destination context is of Player type (also verifies if it is not null)
                 if ( (dstContext is GamePlayer) || (dstContext is HeroParty) || (dstContext is PartyUnit) )
@@ -127,7 +145,7 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 // limit by default
                 return ValidationResult.Discard(onDiscardMessage);
             default:
-                Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                Debug.LogError("Unknown modifier scope: " + modifierScopeID.ToString());
                 // limit by default
                 return ValidationResult.Discard("Unknown modifier scope");
         }
@@ -151,6 +169,16 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 // context match
                 return true;
         }
+        // verify if context matches edit party screen context
+        if (context is ItemPropagationContext)
+        {
+            // Get propagation context
+            ItemPropagationContext propagationContext = (ItemPropagationContext)context;
+            // verify if source item and destination unit is set
+            if (propagationContext.SourceItem != null && propagationContext.DestinationPartyUnit != null)
+                // context match
+                return true;
+        }
         // by default context doesn't match
         return false;
     }
@@ -167,9 +195,9 @@ public class LimitModifierByAreaScope : ModifierLimiter
         // verify if context matches battle context
         if (context is BattleContext)
         {
-            switch (modifierScope)
+            switch (modifierScopeID)
             {
-                case ModifierScope.Self:
+                case ModifierScopeID.Self:
                     // verify if destination (validated) unit slot is the same as active unit slot
                     if (BattleContext.DestinationUnitSlot.gameObject.GetInstanceID() == BattleContext.ActivePartyUnitUI.GetComponentInParent<UnitSlot>().gameObject.GetInstanceID())
                     {
@@ -178,7 +206,7 @@ public class LimitModifierByAreaScope : ModifierLimiter
                     }
                     // limit by default
                     return ValidationResult.Discard(onDiscardMessage);
-                case ModifierScope.SingleUnit:
+                case ModifierScopeID.SingleUnit:
                     // verify at which phase we are:
                     //  - new unit has just been activated (target unit is not set)
                     //  - applying ability from active unit to destination slot (target unit is set)
@@ -202,14 +230,14 @@ public class LimitModifierByAreaScope : ModifierLimiter
                         // don't limit, because target unit slot has not been set yet
                         return ValidationResult.Pass();
                     }
-                case ModifierScope.EntireParty:
+                case ModifierScopeID.EntireParty:
                     // don't limit
                     return ValidationResult.Pass();
-                case ModifierScope.AllPlayerUnits:
+                case ModifierScopeID.AllPlayerUnits:
                     // don't limit
                     return ValidationResult.Pass();
                 default:
-                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                    Debug.LogError("Unknown modifier scope: " + modifierScopeID.ToString());
                     // limit by default
                     return ValidationResult.Discard("Unknown modifier scope");
             }
@@ -217,13 +245,13 @@ public class LimitModifierByAreaScope : ModifierLimiter
         // verify if context matches edit party screen context
         if (context is EditPartyScreenContext)
         {
-            switch (modifierScope)
+            switch (modifierScopeID)
             {
-                case ModifierScope.Self:
+                case ModifierScopeID.Self:
                     // this scope is not applicable in EditPartyScreen context
                     // don't limit
                     return ValidationResult.Pass();
-                case ModifierScope.SingleUnit:
+                case ModifierScopeID.SingleUnit:
                     // verify at which phase we are:
                     //  - new unit has just been activated (target unit is not set)
                     //  - applying ability from active unit to destination slot (target unit is set)
@@ -247,14 +275,53 @@ public class LimitModifierByAreaScope : ModifierLimiter
                         // don't limit, because target unit slot has not been set yet
                         return ValidationResult.Pass();
                     }
-                case ModifierScope.EntireParty:
+                case ModifierScopeID.EntireParty:
                     // don't limit
                     return ValidationResult.Pass();
-                case ModifierScope.AllPlayerUnits:
+                case ModifierScopeID.AllPlayerUnits:
                     // don't limit
                     return ValidationResult.Pass();
                 default:
-                    Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());
+                    Debug.LogError("Unknown modifier scope: " + modifierScopeID.ToString());
+                    // limit by default
+                    return ValidationResult.Discard("Unknown modifier scope");
+            }
+        }
+        // verify if context matches item propagation context
+        if (context is ItemPropagationContext)
+        {
+            // Get propagation context
+            ItemPropagationContext propagationContext = (ItemPropagationContext)context;
+            switch (modifierScopeID)
+            {
+                case ModifierScopeID.Self:
+                    // get item owner
+                    PartyUnit itemOwnerPartyUnit = propagationContext.SourceItem.GetComponentInParent<PartyUnit>();
+                    // verify if item owner is not null
+                    if (itemOwnerPartyUnit != null)
+                    {
+                        // verify if item owner is the same unit as destination (validated) unit
+                        if (itemOwnerPartyUnit.GetInstanceID() == propagationContext.DestinationPartyUnit.GetInstanceID())
+                        {
+                            // don't limit (allow propagation)
+                            return ValidationResult.Pass();
+                        }
+                    }
+                    // default: don't allow propagation, limit
+                    return ValidationResult.Discard(onDiscardMessage);
+                case ModifierScopeID.SingleUnit:
+                    // this scope is not applicable for propagation use case
+                    Debug.LogWarning("Single Unit scope is not applicable for propagation use case. Don't propagate");
+                    // default: don't allow propagation, limit
+                    return ValidationResult.Discard(onDiscardMessage);
+                case ModifierScopeID.EntireParty:
+                    // don't limit (allow propagation)
+                    return ValidationResult.Pass();
+                case ModifierScopeID.AllPlayerUnits:
+                    // don't limit (allow propagation)
+                    return ValidationResult.Pass();
+                default:
+                    Debug.LogError("Unknown modifier scope: " + modifierScopeID.ToString());
                     // limit by default
                     return ValidationResult.Discard("Unknown modifier scope");
             }

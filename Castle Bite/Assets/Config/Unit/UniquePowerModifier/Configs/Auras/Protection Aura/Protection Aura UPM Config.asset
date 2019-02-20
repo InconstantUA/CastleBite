@@ -20,10 +20,13 @@ MonoBehaviour:
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 2bc108e442fab1142b0b556677550520,
     type: 2}
-  uniquePowerModifierAlignment: 1
   triggerCondition: 0
   modifierConfigUpdaters: []
-  modifierLimiters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: dbc48d1ea5260654da54211e9bf8d549, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
   modifierAdvisers: []
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: 772235217a0fa334ab1008ffbb20b240,
     type: 2}

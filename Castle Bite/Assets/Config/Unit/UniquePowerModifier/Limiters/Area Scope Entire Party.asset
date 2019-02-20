@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Area Scope Entire Party
   m_EditorClassIdentifier: 
   onDiscardMessage: Applicable only to player party
-  modifierScope: 2
+  modifierScopeID: 8

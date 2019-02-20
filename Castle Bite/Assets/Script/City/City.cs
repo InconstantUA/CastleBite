@@ -96,10 +96,10 @@ public class City : MonoBehaviour {
         // init list of UPMs data
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
         // loop through all unique powe modifier configs
-        // we assume that it is only one UPM in the list (defense)
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
             Debug.Log("city upm " + UniquePowerModifierConfigs[i].DisplayName);
+            // .. verify if UPM is applicable to destination party unit
             // create new UPM data based on UPM config and destination party unit
             upmsData.Add(new UniquePowerModifierData {
                 uniquePowerModifierID = new UniquePowerModifierID
@@ -108,7 +108,6 @@ public class City : MonoBehaviour {
                     uniquePowerModifierConfigIndex = i,
                     modifierOrigin = ModifierOrigin.City,
                     destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
-
                 },
                 durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax, // normally duration type is permanent, so this value is not relevant
                 // currentPower = GetCityDefense() // this is exceptional when we don't inherit value from UPM config, because logic for defense power is not easy to set via Unit Stat Modifier

@@ -34,6 +34,8 @@ public class ConfigManager : MonoBehaviour
     FactionConfig[] factionConfigs;
     [SerializeField]
     UnitAbilityConfig[] unitAbilityConfigs;
+    [SerializeField]
+    ModifierScopeConfig[] modifierScopeConfigs;
 
     void Awake()
     {
@@ -229,6 +231,14 @@ public class ConfigManager : MonoBehaviour
         get
         {
             return inventoryItemConfigs.First(e => e.inventoryItemID == inventoryItemID);
+        }
+    }
+
+    public ModifierScopeConfig this[ModifierScopeID modifierScopeID]
+    {
+        get
+        {
+            return modifierScopeConfigs.First(e => e.ModifierScopeID == modifierScopeID);
         }
     }
 

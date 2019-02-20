@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Defense Stance UPM UI Status Icon Config
   m_EditorClassIdentifier: 
   symbol: D
+  uniquePowerModifierAlignment: 1
   statusIconTextNormalColor: {r: 0.34117648, g: 0.6509804, b: 0.2901961, a: 1}
   statusIconTextHighlightedColor: {r: 0, g: 1, b: 0, a: 1}
   statusIconTextPressedColor: {r: 0.86274517, g: 0.86274517, b: 0.86274517, a: 1}

@@ -1,12 +1,5 @@
 ﻿using UnityEngine;
 
-public enum UniquePowerModifierAlignment
-{
-    None,
-    Positive,
-    Negative
-}
-
 [CreateAssetMenu(menuName = "Config/Unit/UniquePowerModifiers/Config")]
 public class UniquePowerModifierConfig : ScriptableObject
 {
@@ -26,8 +19,8 @@ public class UniquePowerModifierConfig : ScriptableObject
     // private ModifierScope modifierScope;
     //public UnitBuff upmAppliedBuff;
     //public UnitDebuff upmAppliedDebuff;
-    [SerializeField]
-    private UniquePowerModifierAlignment uniquePowerModifierAlignment;
+    //[SerializeField]
+    //private UniquePowerModifierAlignment uniquePowerModifierAlignment;
     // private int upmPower;
     // private int upmPowerIncrementOnLevelUp;
     // private int upmDuration;
@@ -48,6 +41,9 @@ public class UniquePowerModifierConfig : ScriptableObject
     private ModifierAdviser[] modifierAdvisers; // highlight differently when it is not advised to use UPM in specific situations (example: heal full health unit)
     [SerializeField]
     private UniquePowerModifierUIConfig uniquePowerModifierUIConfig;
+
+    [System.NonSerialized]
+    ModifierScope modifierScopeCache = null;
 
     //public void Apply(PartyUnit srcPartyUnit, PartyUnit dstPartyUnit, UniquePowerModifierID uniquePowerModifierID)
     //{
@@ -257,11 +253,34 @@ public class UniquePowerModifierConfig : ScriptableObject
         }
     }
 
+    ModifierScope GetModifierScope()
+    {
+        //return unitStatModifierConfig.modifierScope;
+        // loop through all modifier limiters
+        foreach (ModifierLimiter modifierLimiter in modifierLimiters)
+        {
+            // verify if limiter is of area scope modifier type
+            if (modifierLimiter is LimitModifierByAreaScope)
+            {
+                return ((LimitModifierByAreaScope)modifierLimiter).ModifierScope;
+            }
+        }
+        // if none of modifiers are limiting scope, then return unlimited.
+        return new ModifierScope(ModifierScopeID.Unlimited);
+    }
+
     public ModifierScope ModifierScope
     {
         get
         {
-            return unitStatModifierConfig.modifierScope;
+            // verify if cached value has not been set yet
+            if (modifierScopeCache == null)
+            {
+                // get modifier scope and cache it
+                modifierScopeCache = GetModifierScope();
+            }
+            // return cached value
+            return modifierScopeCache;
         }
     }
 
@@ -365,13 +384,13 @@ public class UniquePowerModifierConfig : ScriptableObject
         }
     }
 
-    public UniquePowerModifierAlignment UniquePowerModifierType
-    {
-        get
-        {
-            return uniquePowerModifierAlignment;
-        }
-    }
+    //public UniquePowerModifierAlignment UniquePowerModifierType
+    //{
+    //    get
+    //    {
+    //        return uniquePowerModifierAlignment;
+    //    }
+    //}
 
     public TriggerCondition TriggerCondition
     {

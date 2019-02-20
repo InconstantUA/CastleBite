@@ -137,6 +137,16 @@ public class LimitModifierByRelationships : ModifierLimiter
                 return true;
             }
         }
+        // verify if context matches edit party screen context
+        if (context is ItemPropagationContext)
+        {
+            // Get propagation context
+            ItemPropagationContext propagationContext = (ItemPropagationContext)context;
+            // verify if source item and destination unit is set
+            if (propagationContext.SourceItem != null && propagationContext.DestinationPartyUnit != null)
+                // context match
+                return true;
+        }
         // by default context doesn't match
         return false;
     }
@@ -175,6 +185,40 @@ public class LimitModifierByRelationships : ModifierLimiter
                 }
             }
             // if none of required relations match then limit modifier
+            return ValidationResult.Discard(onDiscardMessage);
+        }
+        // verify if context matches item propagation context
+        if (context is ItemPropagationContext)
+        {
+            // Get propagation context
+            ItemPropagationContext propagationContext = (ItemPropagationContext)context;
+            // get item owner
+            PartyUnit itemOwnerPartyUnit = propagationContext.SourceItem.GetComponentInParent<PartyUnit>();
+            // verify if item owner is not null = item is being equipped
+            if (itemOwnerPartyUnit != null)
+            {
+                // get item owner party
+                HeroParty itemOwnerParty = itemOwnerPartyUnit.GetComponentInParent<HeroParty>();
+                // get destination unit party
+                HeroParty destinationUnitParty = propagationContext.DestinationPartyUnit.GetComponentInParent<HeroParty>();
+                // verify if both parties are not null
+                if (itemOwnerParty != null && destinationUnitParty != null)
+                {
+                    // get relationships between item ower and destination (validated) unit
+                    Relationships.State relations = Relationships.Instance.GetRelationships(itemOwnerParty.Faction, destinationUnitParty.Faction);
+                    // loop through all required relationships
+                    foreach (Relationships.State relation in requiredAnyOfRelationships)
+                    {
+                        // verify if relationships match required
+                        if (relation == relations)
+                        {
+                            // don't limit
+                            return ValidationResult.Pass();
+                        }
+                    }
+                }
+            }
+            // default: don't allow propagation, limit
             return ValidationResult.Discard(onDiscardMessage);
         }
         // default: don't limit

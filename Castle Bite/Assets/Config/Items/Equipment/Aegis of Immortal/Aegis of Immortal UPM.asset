@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
+  m_Name: Aegis of Immortal UPM
+  m_EditorClassIdentifier: 
+  displayName: Protective Shield
+  description: Provides defense buff to bearer
+  isPrimary: 1
+  executionOrder: 0
+  uniquePowerModifier: {fileID: 11400000, guid: bc5fe3686541b504cb56d13fba928878,
+    type: 2}
+  unitStatModifierConfig: {fileID: 11400000, guid: a74b0f3495869954199a35cbdd00ecaa,
+    type: 2}
+  triggerCondition: 0
+  modifierConfigUpdaters: []
+  modifierLimiters:
+  - {fileID: 11400000, guid: b9d00720967960349a84d4b79d7b2876, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: dbc48d1ea5260654da54211e9bf8d549, type: 2}
+  - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: bb430f316dec37040a4592b6f8480259,
+    type: 2}

@@ -15,14 +15,20 @@ MonoBehaviour:
   displayName: City Defense
   description: Gives bonus defense to all units in city. Defense bonus depens on the
     city level.
+  isPrimary: 0
+  executionOrder: 0
   uniquePowerModifier: {fileID: 11400000, guid: bc5fe3686541b504cb56d13fba928878,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 2df8913cc98fe4e479039aefc5e37d96,
     type: 2}
-  uniquePowerModifierType: 0
-  modifierAppliedHow: 1
-  upmDurationLeft: 0
+  triggerCondition: 0
   modifierConfigUpdaters:
   - {fileID: 11400000, guid: a726d313aea37ed4687487736b945533, type: 2}
-  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 86e3eea86c0273c44846bb79ca9b7139,
+  modifierLimiters:
+  - {fileID: 11400000, guid: 8df0de9fb43993a4f95933ba4b3a0bbb, type: 2}
+  - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
+  - {fileID: 11400000, guid: dbc48d1ea5260654da54211e9bf8d549, type: 2}
+  - {fileID: 11400000, guid: 4f2c6f86e1110aa49b6660c7a2b869e9, type: 2}
+  modifierAdvisers: []
+  uniquePowerModifierUIConfig: {fileID: 11400000, guid: 3ea36c4a92703244ba9c60b19fffaa25,
     type: 2}

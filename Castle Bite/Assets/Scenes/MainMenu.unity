@@ -73215,6 +73215,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a38c5b76b0201f4c9b8c5b4c5e2f514, type: 2}
   - {fileID: 11400000, guid: 35a19388d78f8264596cd97a751d1d88, type: 2}
   - {fileID: 11400000, guid: 97387eb1903314f4f844f57474336533, type: 2}
+  modifierScopeConfigs:
+  - {fileID: 11400000, guid: b8ed0658566a2a247b04e4b33173bee9, type: 2}
+  - {fileID: 11400000, guid: d570dfd0a0527be4aae79af358e97e1e, type: 2}
+  - {fileID: 11400000, guid: 0d53a1c208690164597838a282a7d12b, type: 2}
+  - {fileID: 11400000, guid: 2afd55668185d1949b1daabb852cd5c5, type: 2}
+  - {fileID: 11400000, guid: 38a5f491ade49b4468f9e67e980f7061, type: 2}
+  - {fileID: 11400000, guid: b1cd5bd47e9f7184ca152da0a7502723, type: 2}
 --- !u!114 &1201476888
 MonoBehaviour:
   m_ObjectHideFlags: 0

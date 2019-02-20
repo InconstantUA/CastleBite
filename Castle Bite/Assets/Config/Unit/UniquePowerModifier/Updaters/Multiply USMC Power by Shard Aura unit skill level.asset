@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add16ebf11d2f514f8b1a7882ed85f47, type: 3}
   m_Name: Multiply USMC Power by Shard Aura unit skill level
   m_EditorClassIdentifier: 
-  associatedUnitSkillID: 2
+  associatedUnitSkillID: 10
   associatedUnitSkillMultiplier: 1

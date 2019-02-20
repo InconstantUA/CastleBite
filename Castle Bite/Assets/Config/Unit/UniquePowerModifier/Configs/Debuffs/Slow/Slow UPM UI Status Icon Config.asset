@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Slow UPM UI Status Icon Config
   m_EditorClassIdentifier: 
   symbol: S
+  uniquePowerModifierAlignment: 2
   statusIconTextNormalColor: {r: 0.76470596, g: 0.6745098, b: 0.5921569, a: 1}
   statusIconTextHighlightedColor: {r: 0.8470589, g: 0.3137255, b: 0.3137255, a: 1}
   statusIconTextPressedColor: {r: 0.86274517, g: 0.86274517, b: 0.86274517, a: 1}

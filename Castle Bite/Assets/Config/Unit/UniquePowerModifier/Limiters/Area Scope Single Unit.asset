@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Area Scope Single Unit
   m_EditorClassIdentifier: 
   onDiscardMessage: Applicable only single unit
-  modifierScope: 1
+  modifierScopeID: 4

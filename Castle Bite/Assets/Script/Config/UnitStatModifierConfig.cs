@@ -13,7 +13,7 @@ public class UnitStatModifierConfig : ScriptableObject
     //public UnitStatModifierID unitStatModifierID; // used in UnitStatModifierData, which is used when modifier is applied to other units from unit ability, for example: paralyze
     public UnitStatID unitStat;
     public ModifierAppliedTo modifierAppliedTo; // current/max stat
-    public ModifierScope modifierScope; // self, single unit, entire party, etc. Used by items
+    //public ModifierScope modifierScope; // self, single unit, entire party, etc. Used by items
     public Relationships.State[] requiredRelationships; // friendly, enemy, neutral, etc.
     public int modifierPower;
     public ModifierCalculatedHow modifierCalculatedHow; // additive, precent-from-base, percent-from-all

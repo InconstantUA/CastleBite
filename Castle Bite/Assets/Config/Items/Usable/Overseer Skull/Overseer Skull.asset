@@ -16,7 +16,7 @@ MonoBehaviour:
   itemDisplayName: Overseer Skull
   itemCost: 4000
   compatibleEquipmentSlots: 48
-  isUsable: 1
+  isUsable: 0
   maxUsagesCount: -1
   itemIsStackable: 0
   uniquePowerModifierConfigs:

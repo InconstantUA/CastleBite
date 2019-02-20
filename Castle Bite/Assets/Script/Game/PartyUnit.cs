@@ -234,12 +234,14 @@ public enum ModifierOrigin
 
 // note modifier scope shoud be defined from lower to higher scope, because it impacts further logics
 [Serializable]
-public enum ModifierScope
+public enum ModifierScopeID
 {
-    Self,
-    SingleUnit,
-    EntireParty,
-    AllPlayerUnits
+    None            = 0,
+    Self            = 1,
+    SingleUnit      = 4,
+    EntireParty     = 8,
+    AllPlayerUnits  = 16,
+    Unlimited       = 1024
 }
 
 [Serializable]
@@ -591,11 +593,11 @@ public class UnitStatModifier : System.Object
 {
     public UnitStatID unitStat;
     public ModifierAppliedTo modifierAppliedTo;
-    public ModifierScope modifierScope;
+    public ModifierScopeID modifierScope;
     public int modifierPower;
     public int skillPowerMultiplier = 1; // move to data
     public ModifierCalculatedHow modifierCalculatedHow;
-    public TriggerCondition modifierAppliedHow;
+    //public TriggerCondition modifierAppliedHow;
     public int duration;
     public int durationLeft; // to be moved to data
     public UnitStatus[] canBeAppliedToTheUnitsWithStatuses;
@@ -1109,7 +1111,7 @@ public class PartyUnit : MonoBehaviour {
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this))
                         // verify if dst party unit hass mass scope
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.Self))
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.Self))
                     {
                         // create and add UPM data to the list
                         upmsData.Add(new UniquePowerModifierData
@@ -1152,7 +1154,7 @@ public class PartyUnit : MonoBehaviour {
                         // verify if UPM relationships requirements are met
                         && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                         // verify if dst party unit hass mass scope
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty))
+                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
                     {
                         // create and add UPM data to the list
                         upmsData.Add(new UniquePowerModifierData
@@ -1180,51 +1182,58 @@ public class PartyUnit : MonoBehaviour {
         // init list of UPMs data
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
         // init current power variable
-        int currentPower;
+        //int currentPower;
         // loop through all equipped items
         foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
         {
+            // set ItemPropagationContext
+            ItemPropagationContext itemPropagationContext = new ItemPropagationContext(inventoryItem, dstPartyUnit);
             // verify if item is not in belt
-            if (((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
-                // verify if item is not consumed (slot is none)
-                && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None))
+            //if (((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
+            //    // verify if item is not consumed (slot is none)
+            //    && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None))
+            //{
+            // loop through the list of all UPMs in the item
+            for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
             {
-                // loop through the list of all UPMs in the item
-                for (int i = 0; i < inventoryItem.UniquePowerModifierConfigs.Count; i++)
+                //// verify if UPM is passive
+                //if ((inventoryItem.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
+                //    // verify if UPM relationships requirements are met
+                //    && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                //    // verify if dst party unit hass mass scope
+                //    && (inventoryItem.UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
+                // verify if UPM can be propagated
+                if (inventoryItem.UniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(itemPropagationContext).doDiscardModifier == false)
                 {
-                    // verify if UPM is passive
-                    if ((inventoryItem.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
-                        // verify if UPM relationships requirements are met
-                        && (inventoryItem.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
-                        // verify if dst party unit hass mass scope
-                        && (inventoryItem.UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty))
+                    // verify if UPM is associated with a skill
+                    //if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
+                    //{
+                    //    currentPower = UniquePowerModifierConfigs[i].UpmBasePower;
+                    //}
+                    //else
+                    //{
+                    //    // get current power multiplied by this party unit skill level * multiplied by skill multiplier defined in config
+                    //    currentPower = Mathf.RoundToInt(UniquePowerModifierConfigs[i].UpmBasePower * GetUnitSkillData(inventoryItem.UniquePowerModifierConfigs[i].AssociatedUnitSkillID).currentSkillLevel * inventoryItem.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier);
+                    //}
+
+                    // create and add UPM data to the list
+                    upmsData.Add(new UniquePowerModifierData
                     {
-                        // verify if UPM is associated with a skill
-                        if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
+                        uniquePowerModifierID = new UniquePowerModifierID
                         {
-                            currentPower = UniquePowerModifierConfigs[i].UpmBasePower;
-                        }
-                        else
-                        {
-                            // get current power multiplied by this party unit skill level * multiplied by skill multiplier defined in config
-                            currentPower = Mathf.RoundToInt(UniquePowerModifierConfigs[i].UpmBasePower * GetUnitSkillData(inventoryItem.UniquePowerModifierConfigs[i].AssociatedUnitSkillID).currentSkillLevel * inventoryItem.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier);
-                        }
-                        // create and add UPM data to the list
-                        upmsData.Add(new UniquePowerModifierData
-                        {
-                            uniquePowerModifierID = new UniquePowerModifierID
-                            {
-                                inventoryItemID = inventoryItem.InventoryItemID,
-                                uniquePowerModifierConfigIndex = i,
-                                modifierOrigin = ModifierOrigin.Item,
-                                destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
-                            },
-                            durationLeft = inventoryItem.UniquePowerModifierConfigs[i].UpmDurationMax,
-                            currentPower = currentPower
-                        });
-                    }
+                            inventoryItemID = inventoryItem.InventoryItemID,
+                            uniquePowerModifierConfigIndex = i,
+                            modifierOrigin = ModifierOrigin.Item,
+                            destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                        },
+                        durationLeft = inventoryItem.UniquePowerModifierConfigs[i].UpmDurationMax,
+                        //currentPower = currentPower
+                        currentPower = inventoryItem.UniquePowerModifierConfigs[i].GetUpmEffectivePower(this)
+                    });
+                    Debug.LogWarning("Propagate [" + inventoryItem.InventoryItemID + "] Item UPM [" + inventoryItem.UniquePowerModifierConfigs[i].DisplayName + "] power [" + inventoryItem.UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) + "] to [" + dstPartyUnit.UnitName + "] unit");
                 }
             }
+            //}
         }
         // return the list with UPMs data
         return upmsData;
@@ -1244,7 +1253,7 @@ public class PartyUnit : MonoBehaviour {
                 // verify if UPM relationships requirements are met
                 && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
                 // verify if dst party unit hass mass scope
-                && (UniquePowerModifierConfigs[i].ModifierScope >= ModifierScope.EntireParty))
+                && (UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
             {
                 // verify if UPM is associated with a skill
                 if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
@@ -1900,7 +1909,7 @@ public class PartyUnit : MonoBehaviour {
                             foreach (UnitStatModifier usm in inventoryItem.UnitStatModifiers)
                             {
                                 // verify if usm applies to the stat and that it has mass scope
-                                if ((usm.unitStat == unitStat) && (usm.modifierScope >= ModifierScope.EntireParty))
+                                if ((usm.unitStat == unitStat) && (usm.modifierScope >= ModifierScopeID.EntireParty))
                                 {
                                     //// .. verify if there is no already same item and that its unit stat modifier is not stackable, maybe this check is not needed here, because it is done before item is consumed
                                     //Debug.Log("Verify non-stackable USMs from the same item with entire party scope");
@@ -2193,87 +2202,87 @@ public class PartyUnit : MonoBehaviour {
         return false;
     }
 
-    bool ApplyUSMToCurrentStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
-    {
-        Debug.LogWarning("Apply unit stat modifier");
-        switch (unitStatModifier.unitStat)
-        {
-            case UnitStatID.Leadership:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.Health:
-                // verify if unit health is not max already and if unit is not dead
-                if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
-                {
-                    // verify if it is not preview
-                    if (!doPreview)
-                    {
-                        // apply usm power to this unit
-                        UnitHealthCurr = ApplyInstantUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
-                    }
-                    // item is applicable to this unit
-                    return true;
-                }
-                // by default item is not applicable
-                return false;
-            case UnitStatID.Defense:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.Power:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.Initiative:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.MovePoints:
-                // verify if unit is a party leader 
-                if (IsLeader)
-                {
-                    // verify if current move points are not max already
-                    if (MovePointsCurrent != GetEffectiveMaxMovePoints())
-                    {
-                        // verify if it is not preview
-                        if (!doPreview)
-                        {
-                            // apply usm power to this unit
-                            MovePointsCurrent = ApplyInstantUSMPower(unitStatModifier, MovePointsCurrent, GetEffectiveMaxMovePoints(), false);
-                        }
-                        // item is applicable to this unit
-                        return true;
-                    }
-                }
-                // by default item is not applicable
-                return false;
-            case UnitStatID.ScoutingRange:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.DeathResistance:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.FireResistance:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.WaterResistance:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            case UnitStatID.MindResistance:
-                // not applicable for instant unit stat modifier, because it is not consumable unit stat
-                // by default item is not applicable
-                return false;
-            default:
-                Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
-                // by default item is not applicable
-                return false;
-        }
-    }
+    //bool ApplyUSMToCurrentStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
+    //{
+    //    Debug.LogWarning("Apply unit stat modifier");
+    //    switch (unitStatModifier.unitStat)
+    //    {
+    //        case UnitStatID.Leadership:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.Health:
+    //            // verify if unit health is not max already and if unit is not dead
+    //            if (UnitHealthCurr != GetUnitEffectiveMaxHealth())
+    //            {
+    //                // verify if it is not preview
+    //                if (!doPreview)
+    //                {
+    //                    // apply usm power to this unit
+    //                    UnitHealthCurr = ApplyInstantUSMPower(unitStatModifier, UnitHealthCurr, GetUnitEffectiveMaxHealth(), false);
+    //                }
+    //                // item is applicable to this unit
+    //                return true;
+    //            }
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.Defense:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.Power:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.Initiative:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.MovePoints:
+    //            // verify if unit is a party leader 
+    //            if (IsLeader)
+    //            {
+    //                // verify if current move points are not max already
+    //                if (MovePointsCurrent != GetEffectiveMaxMovePoints())
+    //                {
+    //                    // verify if it is not preview
+    //                    if (!doPreview)
+    //                    {
+    //                        // apply usm power to this unit
+    //                        MovePointsCurrent = ApplyInstantUSMPower(unitStatModifier, MovePointsCurrent, GetEffectiveMaxMovePoints(), false);
+    //                    }
+    //                    // item is applicable to this unit
+    //                    return true;
+    //                }
+    //            }
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.ScoutingRange:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.DeathResistance:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.FireResistance:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.WaterResistance:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        case UnitStatID.MindResistance:
+    //            // not applicable for instant unit stat modifier, because it is not consumable unit stat
+    //            // by default item is not applicable
+    //            return false;
+    //        default:
+    //            Debug.LogError("Unknown unit stat " + unitStatModifier.unitStat.ToString());
+    //            // by default item is not applicable
+    //            return false;
+    //    }
+    //}
 
     //bool ApplyUSMToMaxStatValue(UnitStatModifier unitStatModifier, bool doPreview = false)
     //{
@@ -2507,14 +2516,14 @@ public class PartyUnit : MonoBehaviour {
     //    }
     //}
 
-    bool MatchItemScope(ModifierScope modifierScope)
+    bool MatchItemScope(ModifierScopeID modifierScope)
     {
         switch (modifierScope)
         {
-            case ModifierScope.Self:
-            case ModifierScope.SingleUnit:
-            case ModifierScope.EntireParty:
-            case ModifierScope.AllPlayerUnits:
+            case ModifierScopeID.Self:
+            case ModifierScopeID.SingleUnit:
+            case ModifierScopeID.EntireParty:
+            case ModifierScopeID.AllPlayerUnits:
                 return true;
             default:
                 Debug.LogError("Unknown modifier scope: " + modifierScope.ToString());

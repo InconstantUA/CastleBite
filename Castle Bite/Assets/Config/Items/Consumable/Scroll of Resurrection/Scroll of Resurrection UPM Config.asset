@@ -20,7 +20,6 @@ MonoBehaviour:
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 146f2bd14a14c774fb295c562a04f62d,
     type: 2}
-  uniquePowerModifierAlignment: 1
   triggerCondition: 1
   modifierConfigUpdaters: []
   modifierLimiters:
@@ -29,6 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 310d9cf6cb93ca74c8e9abe68be5f0b8, type: 2}
   - {fileID: 11400000, guid: cc404998287e1aa4da41bd8f4b3f4535, type: 2}
   - {fileID: 11400000, guid: 112c9fe073585954d9c9c824e7eb0a30, type: 2}
+  - {fileID: 11400000, guid: e9f2ac708b67ce242a08e48dcbc0984b, type: 2}
   modifierAdvisers: []
   uniquePowerModifierUIConfig: {fileID: 11400000, guid: 812ce6f2a230a734e8f8512bc4416b54,
     type: 2}

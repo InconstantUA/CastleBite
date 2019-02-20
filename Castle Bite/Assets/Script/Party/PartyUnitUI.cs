@@ -764,19 +764,21 @@ public class PartyUnitUI : MonoBehaviour {
             {
                 // init parent transform
                 Transform upmStatusIconParent;
+                // get upm alignment
+                UniquePowerModifierAlignment uniquePowerModifierAlignment = uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierStausIconUIConfig.uniquePowerModifierAlignment;
                 // verify if UPM is buff or debuff
-                if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierAlignment.Positive)
+                if (uniquePowerModifierAlignment == UniquePowerModifierAlignment.Left)
                 {
                     upmStatusIconParent = upmBuffsParentTranform;
                 }
-                else if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierAlignment.Negative)
+                else if (uniquePowerModifierAlignment == UniquePowerModifierAlignment.Right)
                 {
                     upmStatusIconParent = upmDebuffsParentTranform;
                 }
-                else if (uniquePowerModifierData.GetUniquePowerModifierConfig().UniquePowerModifierType == UniquePowerModifierAlignment.None)
+                else if (uniquePowerModifierAlignment == UniquePowerModifierAlignment.None)
                 {
                     upmStatusIconParent = upmBuffsParentTranform;
-                    Debug.LogWarning("UPM should have alignment set. Falling back to positive alignment");
+                    Debug.LogWarning("UPM Status Icon UI Config should have alignment set. Falling back to positive alignment");
                 }
                 else
                 {
