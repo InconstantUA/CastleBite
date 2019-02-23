@@ -49,20 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventoryItemData:
-    inventoryItemType: 1201
     inventoryItemID: 1201
-    unitStatModifiers:
-    - unitStat: 1
-      modifierAppliedTo: 1
-      modifierScope: 1
-      modifierPower: 15
-      skillPowerMultiplier: 1
-      modifierCalculatedHow: 2
-      modifierAppliedHow: 0
-      duration: -1
-      durationLeft: -1
-      canBeAppliedToTheUnitsWithStatuses: 000000000100000002000000
-    uniquePowerModifiers: []
-    unitStatusModifiers: []
+    uniquePowerModifiersData: []
+    unitStatModifiers: []
     currentHeroEquipmentSlot: 0
     leftUsagesCount: 1

@@ -11,7 +11,7 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
     {
         Debug.LogWarning("Applying " + uniquePowerModifierConfig.DisplayName + " from " + srcPartyUnit.UnitName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for Trigger)
-        UniquePowerModifierData upmData = new UniquePowerModifierData
+        UniquePowerModifierData uniquePowerModifierData = new UniquePowerModifierData
         {
             // set UPM ID
             UniquePowerModifierID = uniquePowerModifierID,
@@ -28,14 +28,14 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
             Debug.LogWarning("UpmDurationMax should be 0");
         }
         // instantly trigger UPM
-        Trigger(dstPartyUnit, upmData);
+        Trigger(dstPartyUnit, uniquePowerModifierData);
     }
 
     void Apply(InventoryItem inventoryItem, PartyUnit dstPartyUnit, UniquePowerModifierConfig uniquePowerModifierConfig, UniquePowerModifierID uniquePowerModifierID)
     {
         Debug.LogWarning("Applying " + uniquePowerModifierConfig.DisplayName + " from " + inventoryItem.ItemName + " to " + dstPartyUnit.UnitName + ", origin is " + uniquePowerModifierID.modifierOrigin);
         // init upm data variable (this is required for Trigger)
-        UniquePowerModifierData upmData = new UniquePowerModifierData
+        UniquePowerModifierData uniquePowerModifierData = new UniquePowerModifierData
         {
             // set UPM ID
             UniquePowerModifierID = uniquePowerModifierID,
@@ -52,7 +52,7 @@ public class BaseInstantHealingOrDamagingUPM : UniquePowerModifier
             Debug.LogWarning("UpmDurationMax should be 0");
         }
         // instantly trigger UPM
-        Trigger(dstPartyUnit, upmData);
+        Trigger(dstPartyUnit, uniquePowerModifierData);
     }
 
     public bool DoesContextMatch(System.Object context)

@@ -15,7 +15,7 @@ MonoBehaviour:
   unitType: 36
   unitDisplayName: Abomination
   unitLeadership: 0
-  unitBaseExperienceRequiredToReachNewLevel: 200
+  unitBaseExperienceRequiredToReachNewLevel: 600
   unitExperienceRequiredToReachNewLevelIncrementOnLevelUp: 50
   unitBaseExperienceReward: 100
   unitExperienceRewardIncrementOnLevelUp: 100
@@ -26,7 +26,6 @@ MonoBehaviour:
   unitResistances:
   - source: 0
     percent: 10
-  unitAbility: 15
   unitAbilityID: 15
   unitInitiative: 50
   unitRole: rotection and dealing high mele damage
@@ -39,8 +38,36 @@ MonoBehaviour:
   canLearnSkills: 0
   classIsUpgradable: 1
   requiresUnitType: 0
-  unlocksUnitTypes: 
-  upgradeCost: 200
+  unlocksUnitTypes: 28000000
+  upgradeCost: 400
   movePointsMax: 0
   movePointsIncrementOnLevelUp: 0
   scoutingRange: 0
+  unitStatConfigs:
+  - unitStatID: 0
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 4
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 2
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 5
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 6
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 8
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 9
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 11
+    baseValue: 0
+    baseValueIncrement: 0
+  - unitStatID: 10
+    baseValue: 0
+    baseValueIncrement: 0

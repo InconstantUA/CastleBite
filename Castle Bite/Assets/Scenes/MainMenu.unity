@@ -73146,6 +73146,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7bca2c260876f0e4b9edd8a82d5ad889, type: 2}
   - {fileID: 11400000, guid: f467e4db79df0e44b84e002d53277387, type: 2}
   - {fileID: 11400000, guid: 67e3467a36a203a43b141c4f1ede1eed, type: 2}
+  - {fileID: 11400000, guid: df610b9aa5f667d4194c0e71fd51dc5d, type: 2}
   inventoryItemConfigs:
   - {fileID: 11400000, guid: ce090447c67a3a9468409e35b3957447, type: 2}
   - {fileID: 11400000, guid: d70dae3b66c9f31479590b159ba1f5bb, type: 2}
@@ -73215,6 +73216,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3a38c5b76b0201f4c9b8c5b4c5e2f514, type: 2}
   - {fileID: 11400000, guid: 35a19388d78f8264596cd97a751d1d88, type: 2}
   - {fileID: 11400000, guid: 97387eb1903314f4f844f57474336533, type: 2}
+  - {fileID: 11400000, guid: dba2453c91e112643b2ac06f8460a7cd, type: 2}
   modifierScopeConfigs:
   - {fileID: 11400000, guid: b8ed0658566a2a247b04e4b33173bee9, type: 2}
   - {fileID: 11400000, guid: d570dfd0a0527be4aae79af358e97e1e, type: 2}

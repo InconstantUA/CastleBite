@@ -72,6 +72,24 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
                 return true;
             }
         }
+        if (context is PartyUnitPropagationContext)
+        {
+            // Get propagation context
+            PartyUnitPropagationContext propagationContext = (PartyUnitPropagationContext)context;
+            // verify if source and destination units are set
+            if (propagationContext.SourcePartyUnit != null && propagationContext.DestinationPartyUnit != null)
+                // context match
+                return true;
+        }
+        if (context is CityPropagationContext)
+        {
+            // Get propagation context
+            CityPropagationContext propagationContext = (CityPropagationContext)context;
+            // verify if source city and destination unit are set
+            if (propagationContext.SourceCity != null && propagationContext.DestinationPartyUnit != null)
+                // context match
+                return true;
+        }
         // by default context doesn't match
         return false;
     }
@@ -96,6 +114,18 @@ public class LimitModifierByDestinationCellOccupationStatus : ModifierLimiter
         {
             // verify if we need to discard modifier
             return DoDiscardModifierInContextOf(null, EditPartyScreenContext.DestinationUnitSlot.GetComponentInParent<PartyPanelCell>());
+        }
+        // verify if context matches party unit propagation context
+        if (context is PartyUnitPropagationContext)
+        {
+            // match by default, because in this conext we need to have unit cell occupied and it is applied to party unit, which we validate during context validation
+            return ValidationResult.Pass();
+        }
+        // verify if context matches city propagation context
+        if (context is CityPropagationContext)
+        {
+            // match by default, because in this conext we need to have unit cell occupied and it is applied to party unit, which we validate during context validation
+            return ValidationResult.Pass();
         }
         // don't limit
         return ValidationResult.Pass();

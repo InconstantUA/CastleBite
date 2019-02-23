@@ -73,12 +73,24 @@ public class City : MonoBehaviour {
 
     public int GetCityDefense()
     {
-        int bonus = 0;
-        if (CityType == CityType.Capital)
+        // verify if UPM status modifier affects defense and it is positive
+        // assuming that city defense UPM has 0 ID and there is no other UPM which modifies defense
+        if (UniquePowerModifierConfigs[0].ModifiedUnitStatID == UnitStatID.Defense)
         {
-            bonus = 20;
+            // return effective defense based on city level (UPM updater will take care about this)
+            return UniquePowerModifierConfigs[0].GetUpmEffectivePower(this);
         }
-        return (CityLevelCurrent * 5) + bonus;
+        else
+        {
+            Debug.LogError("Could not find defense UPN");
+            return 0;
+        }
+        //int bonus = 0;
+        //if (CityType == CityType.Capital)
+        //{
+        //    bonus = 20;
+        //}
+        //return (CityLevelCurrent * 5) + bonus;
     }
 
     public List<UniquePowerModifierConfig> UniquePowerModifierConfigs
@@ -95,24 +107,30 @@ public class City : MonoBehaviour {
         // by default city gives only defense bonus to all units inside
         // init list of UPMs data
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // set propagation context
+        CityPropagationContext propagationContext = new CityPropagationContext(this, dstPartyUnit);
         // loop through all unique powe modifier configs
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
             Debug.Log("city upm " + UniquePowerModifierConfigs[i].DisplayName);
-            // .. verify if UPM is applicable to destination party unit
-            // create new UPM data based on UPM config and destination party unit
-            upmsData.Add(new UniquePowerModifierData {
-                uniquePowerModifierID = new UniquePowerModifierID
+            // Verify if UPM is applicable to destination party unit
+            if (UniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(propagationContext).doDiscardModifier == false)
+            {
+                // create new UPM data based on UPM config and destination party unit
+                upmsData.Add(new UniquePowerModifierData
                 {
-                    cityID = cityData.cityID,
-                    uniquePowerModifierConfigIndex = i,
-                    modifierOrigin = ModifierOrigin.City,
-                    destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
-                },
-                durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax, // normally duration type is permanent, so this value is not relevant
-                // currentPower = GetCityDefense() // this is exceptional when we don't inherit value from UPM config, because logic for defense power is not easy to set via Unit Stat Modifier
-                currentPower = UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) // Updater will take care about current city level
-            });
+                    uniquePowerModifierID = new UniquePowerModifierID
+                    {
+                        cityID = cityData.cityID,
+                        uniquePowerModifierConfigIndex = i,
+                        modifierOrigin = ModifierOrigin.City,
+                        destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                    },
+                    durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax, // normally duration type is permanent, so this value is not relevant
+                    currentPower = UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) // Updater will take care about current city level
+                });
+                Debug.LogWarning("Propagate [" + cityData.cityID + "] City UPM [" + UniquePowerModifierConfigs[i].DisplayName + "] power [" + UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) + "] to [" + dstPartyUnit.UnitName + "] unit");
+            }
         }
         // return the list with UPMs data
         return upmsData;

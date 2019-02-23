@@ -169,13 +169,23 @@ public class LimitModifierByAreaScope : ModifierLimiter
                 // context match
                 return true;
         }
-        // verify if context matches edit party screen context
-        if (context is ItemPropagationContext)
+        // verify if context matches party unit propagation context
+        if (context is PartyUnitPropagationContext)
         {
             // Get propagation context
-            ItemPropagationContext propagationContext = (ItemPropagationContext)context;
-            // verify if source item and destination unit is set
-            if (propagationContext.SourceItem != null && propagationContext.DestinationPartyUnit != null)
+            PartyUnitPropagationContext propagationContext = (PartyUnitPropagationContext)context;
+            // verify if source party unit and destination unit is set
+            if (propagationContext.SourcePartyUnit != null && propagationContext.DestinationPartyUnit != null)
+                // context match
+                return true;
+        }
+        // verify if context matches city propagation context
+        if (context is CityPropagationContext)
+        {
+            // Get propagation context
+            CityPropagationContext propagationContext = (CityPropagationContext)context;
+            // verify if source city and destination unit is set
+            if (propagationContext.SourceCity != null && propagationContext.DestinationPartyUnit != null)
                 // context match
                 return true;
         }
@@ -287,26 +297,49 @@ public class LimitModifierByAreaScope : ModifierLimiter
                     return ValidationResult.Discard("Unknown modifier scope");
             }
         }
-        // verify if context matches item propagation context
-        if (context is ItemPropagationContext)
+        // verify if context matches party unit propagation context
+        if (context is PartyUnitPropagationContext)
         {
             // Get propagation context
-            ItemPropagationContext propagationContext = (ItemPropagationContext)context;
+            PartyUnitPropagationContext propagationContext = (PartyUnitPropagationContext)context;
             switch (modifierScopeID)
             {
                 case ModifierScopeID.Self:
-                    // get item owner
-                    PartyUnit itemOwnerPartyUnit = propagationContext.SourceItem.GetComponentInParent<PartyUnit>();
-                    // verify if item owner is not null
-                    if (itemOwnerPartyUnit != null)
+                    // verify if item owner is the same unit as destination (validated) unit
+                    if (propagationContext.SourcePartyUnit.GetInstanceID() == propagationContext.DestinationPartyUnit.GetInstanceID())
                     {
-                        // verify if item owner is the same unit as destination (validated) unit
-                        if (itemOwnerPartyUnit.GetInstanceID() == propagationContext.DestinationPartyUnit.GetInstanceID())
-                        {
-                            // don't limit (allow propagation)
-                            return ValidationResult.Pass();
-                        }
+                        // don't limit (allow propagation)
+                        return ValidationResult.Pass();
                     }
+                    // default: don't allow propagation, limit
+                    return ValidationResult.Discard(onDiscardMessage);
+                case ModifierScopeID.SingleUnit:
+                    // this scope is not applicable for propagation use case
+                    Debug.LogWarning("Single Unit scope is not applicable for propagation use case. Don't propagate");
+                    // default: don't allow propagation, limit
+                    return ValidationResult.Discard(onDiscardMessage);
+                case ModifierScopeID.EntireParty:
+                    // don't limit (allow propagation)
+                    return ValidationResult.Pass();
+                case ModifierScopeID.AllPlayerUnits:
+                    // don't limit (allow propagation)
+                    return ValidationResult.Pass();
+                default:
+                    Debug.LogError("Unknown modifier scope: " + modifierScopeID.ToString());
+                    // limit by default
+                    return ValidationResult.Discard("Unknown modifier scope");
+            }
+        }
+        // verify if context matches city propagation context
+        if (context is CityPropagationContext)
+        {
+            // Get propagation context
+            //CityPropagationContext propagationContext = (CityPropagationContext)context;
+            switch (modifierScopeID)
+            {
+                case ModifierScopeID.Self:
+                    // this scope is not applicable for propagation use case
+                    Debug.LogWarning("Self scope is not applicable for propagation use case. Don't propagate");
                     // default: don't allow propagation, limit
                     return ValidationResult.Discard(onDiscardMessage);
                 case ModifierScopeID.SingleUnit:

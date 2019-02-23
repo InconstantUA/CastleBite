@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1884d1217d1720479401342b2ca506d, type: 3}
+  m_Name: Dusk
+  m_EditorClassIdentifier: 
+  abilityDisplayName: Dusk
+  abilityDescription: Description
+  unitAbilityID: 23
+  unitAbility: {fileID: 11400000, guid: dac24f57290a20c42bb3db864cd2edf5, type: 2}
+  unitAbilityTypes: 4
+  unitAbilityRange: 1
+  uniquePowerModifierConfigs:
+  - {fileID: 11400000, guid: 91ca6fd68c7959a4eacb952ad479043e, type: 2}
+  - {fileID: 11400000, guid: 61e85ace42090444ab11e6addbff3333, type: 2}

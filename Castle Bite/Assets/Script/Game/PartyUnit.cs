@@ -19,6 +19,7 @@ public enum UnitType
     Megara, // Storyline hero
     Elder, // Dominion, mass heal
     Ancient, // Dominion, resurect and mass heal
+    Oblivion, // Undead upgrade of Abomination
     Unknown
 };
 
@@ -56,6 +57,7 @@ public enum UnitAbilityID
     DrainLife,          // Undead Vampire
     SacrificingEcho,    // Dominion Ancient
     DefensiveStance,    // Default defense stance ability
+    Dusk,               // Undead Oblivion
     None
 };
 
@@ -1138,6 +1140,8 @@ public class PartyUnit : MonoBehaviour {
     {
         // init list of UPMs data
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+        // set propagation context
+        PartyUnitPropagationContext propagationContext = new PartyUnitPropagationContext(this, dstPartyUnit);
         // loop through all unit skills
         foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
         {
@@ -1149,12 +1153,8 @@ public class PartyUnit : MonoBehaviour {
                 // loop through all UPMs in skill config
                 for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
                 {
-                    // verify if UPM is passive
-                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
-                        // verify if UPM relationships requirements are met
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
-                        // verify if dst party unit hass mass scope
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
+                    // verify if UPM can be propagated
+                    if (unitSkillConfig.UniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(propagationContext).doDiscardModifier == false)
                     {
                         // create and add UPM data to the list
                         upmsData.Add(new UniquePowerModifierData
@@ -1167,9 +1167,32 @@ public class PartyUnit : MonoBehaviour {
                                 destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
                             },
                             durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
-                            currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
+                            //currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
+                            currentPower = unitSkillConfig.UniquePowerModifierConfigs[i].GetUpmEffectivePower(this)
                         });
+                        Debug.LogWarning("Propagate [" + unitSkillConfig.unitSkillID + "] Item UPM [" + unitSkillConfig.UniquePowerModifierConfigs[i].DisplayName + "] power [" + unitSkillConfig.UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) + "] to [" + dstPartyUnit.UnitName + "] unit");
                     }
+                    //// verify if UPM is passive
+                    //if ((unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
+                    //    // verify if UPM relationships requirements are met
+                    //    && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
+                    //    // verify if dst party unit hass mass scope
+                    //    && (unitSkillConfig.UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
+                    //{
+                    //    // create and add UPM data to the list
+                    //    upmsData.Add(new UniquePowerModifierData
+                    //    {
+                    //        uniquePowerModifierID = new UniquePowerModifierID
+                    //        {
+                    //            unitSkillID = unitSkillConfig.unitSkillID,
+                    //            uniquePowerModifierConfigIndex = i,
+                    //            modifierOrigin = ModifierOrigin.Skill,
+                    //            destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+                    //        },
+                    //        durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
+                    //        currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
+                    //    });
+                    //}
                 }
             }
         }
@@ -1183,11 +1206,13 @@ public class PartyUnit : MonoBehaviour {
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
         // init current power variable
         //int currentPower;
+        // set propagation context
+        PartyUnitPropagationContext propagationContext = new PartyUnitPropagationContext(this, dstPartyUnit);
         // loop through all equipped items
         foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
         {
-            // set ItemPropagationContext
-            ItemPropagationContext itemPropagationContext = new ItemPropagationContext(inventoryItem, dstPartyUnit);
+            // update ItemPropagationContext
+            //itemPropagationContext.SourceItem = inventoryItem;
             // verify if item is not in belt
             //if (((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
             //    // verify if item is not consumed (slot is none)
@@ -1203,7 +1228,7 @@ public class PartyUnit : MonoBehaviour {
                 //    // verify if dst party unit hass mass scope
                 //    && (inventoryItem.UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
                 // verify if UPM can be propagated
-                if (inventoryItem.UniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(itemPropagationContext).doDiscardModifier == false)
+                if (inventoryItem.UniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(propagationContext).doDiscardModifier == false)
                 {
                     // verify if UPM is associated with a skill
                     //if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
@@ -1241,30 +1266,20 @@ public class PartyUnit : MonoBehaviour {
 
     public List<UniquePowerModifierData> GetAbilityPropagatedBonuses(PartyUnit dstPartyUnit)
     {
+        // note this requires extention of propagation and will be implemented later
+        Debug.LogWarning(".. not implemented");
+        // idea: use graph with bonus bearers as nodes
+        // make sure that upm is not applied during ability apply and at the same time during propagation
         // init list of UPMs data
         List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
-        // init current power variable
-        int currentPower;
+        // set propagation context
+        PartyUnitPropagationContext propagationContext = new PartyUnitPropagationContext(this, dstPartyUnit);
         // loop through the list of all UPMs in unit ability
         for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
         {
-            // verify if UPM is passive
-            if ((UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
-                // verify if UPM relationships requirements are met
-                && (UniquePowerModifierConfigs[i].MatchRelationships(this, dstPartyUnit))
-                // verify if dst party unit hass mass scope
-                && (UniquePowerModifierConfigs[i].ModifierScope.ModifierScopeID >= ModifierScopeID.EntireParty))
+            // verify if UPM can be propagated
+            if (UniquePowerModifierConfigs[i].AreRequirementsMetInContextOf(propagationContext).doDiscardModifier == false)
             {
-                // verify if UPM is associated with a skill
-                if (UniquePowerModifierConfigs[i].AssociatedUnitSkillID != UnitSkillID.None)
-                {
-                    currentPower = UniquePowerModifierConfigs[i].UpmBasePower;
-                }
-                else
-                {
-                    // get current power multiplied by this party unit skill level * multiplied by skill multiplier defined in config
-                    currentPower = Mathf.RoundToInt(UniquePowerModifierConfigs[i].UpmBasePower * GetUnitSkillData(UniquePowerModifierConfigs[i].AssociatedUnitSkillID).currentSkillLevel * UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier);
-                }
                 // create and add UPM data to the list
                 upmsData.Add(new UniquePowerModifierData
                 {
@@ -1276,8 +1291,9 @@ public class PartyUnit : MonoBehaviour {
                         destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
                     },
                     durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
-                    currentPower = currentPower
+                    currentPower = UniquePowerModifierConfigs[i].GetUpmEffectivePower(this)
                 });
+                Debug.LogWarning("Propagate [" + UnitAbilityConfig.abilityDisplayName + "] Ability UPM [" + UniquePowerModifierConfigs[i].DisplayName + "] power [" + UniquePowerModifierConfigs[i].GetUpmEffectivePower(this) + "] to [" + dstPartyUnit.UnitName + "] unit");
             }
         }
         // return the list with UPMs data
@@ -1322,76 +1338,76 @@ public class PartyUnit : MonoBehaviour {
         return allBonuses;
     }
 
-    public List<UniquePowerModifierData> AddBonusesFromEquippedItems(List<UniquePowerModifierData> allBonuses)
-    {
-        // loop through all equipped items
-        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
-        {
-            // verify if item is not in belt
-            if ( ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
-                // verify if item is not consumed (slot is none)
-                && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None) )
-            {
-                allBonuses.AddRange(inventoryItem.GetPropagatedBonuses(this));
-            }
-        }
-        // return updated list of all bonuses
-        return allBonuses;
-    }
+    //public List<UniquePowerModifierData> AddBonusesFromEquippedItems(List<UniquePowerModifierData> allBonuses)
+    //{
+    //    // loop through all equipped items
+    //    foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+    //    {
+    //        // verify if item is not in belt
+    //        if ( ((HeroEquipmentSlots.BeltSlots & inventoryItem.CurrentHeroEquipmentSlot) != inventoryItem.CurrentHeroEquipmentSlot)
+    //            // verify if item is not consumed (slot is none)
+    //            && (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None) )
+    //        {
+    //            allBonuses.AddRange(inventoryItem.GetPropagatedBonuses(this));
+    //        }
+    //    }
+    //    // return updated list of all bonuses
+    //    return allBonuses;
+    //}
 
-    public List<UniquePowerModifierData> AddBonusesFromConsumedItems(List<UniquePowerModifierData> allBonuses)
-    {
-        // loop through all equipped items
-        foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
-        {
-            // verify if item is has been consumed (slot is none)
-            if (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None)
-            {
-                allBonuses.AddRange(inventoryItem.GetPropagatedBonuses(this));
-            }
-        }
-        // return updated list of all bonuses
-        return allBonuses;
-    }
+    //public List<UniquePowerModifierData> AddBonusesFromConsumedItems(List<UniquePowerModifierData> allBonuses)
+    //{
+    //    // loop through all equipped items
+    //    foreach (InventoryItem inventoryItem in GetComponentsInChildren<InventoryItem>())
+    //    {
+    //        // verify if item is has been consumed (slot is none)
+    //        if (inventoryItem.CurrentHeroEquipmentSlot == HeroEquipmentSlots.None)
+    //        {
+    //            allBonuses.AddRange(inventoryItem.GetPropagatedBonuses(this));
+    //        }
+    //    }
+    //    // return updated list of all bonuses
+    //    return allBonuses;
+    //}
 
-    public List<UniquePowerModifierData> AddBonusesFromLearnedSkills(List<UniquePowerModifierData> allBonuses)
-    {
-        // loop through all unit skills
-        foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
-        {
-            // verify if skill has been learned
-            if (unitSkillData.currentSkillLevel > 0)
-            {
-                // get skill config
-                UnitSkillConfig unitSkillConfig = ConfigManager.Instance[unitSkillData.unitSkill];
-                // loop through all UPMs in skill config
-                for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
-                {
-                    // verify if UPM is passive
-                    if ((unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
-                        // verify if UPM relationships requirements are met
-                        && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this)))
-                    {
-                        // create and add UPM data to the list
-                        allBonuses.Add(new UniquePowerModifierData
-                        {
-                            uniquePowerModifierID = new UniquePowerModifierID
-                            {
-                                unitSkillID = unitSkillConfig.unitSkillID,
-                                uniquePowerModifierConfigIndex = i,
-                                modifierOrigin = ModifierOrigin.Skill,
-                                destinationGameObjectID = gameObject.GetInstanceID()
-                            },
-                            durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
-                            currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
-                        });
-                    }
-                }
-            }
-        }
-        // return updated list of all bonuses
-        return allBonuses;
-    }
+    //public List<UniquePowerModifierData> AddBonusesFromLearnedSkills(List<UniquePowerModifierData> allBonuses)
+    //{
+    //    // loop through all unit skills
+    //    foreach (UnitSkillData unitSkillData in PartyUnitData.unitSkillsData)
+    //    {
+    //        // verify if skill has been learned
+    //        if (unitSkillData.currentSkillLevel > 0)
+    //        {
+    //            // get skill config
+    //            UnitSkillConfig unitSkillConfig = ConfigManager.Instance[unitSkillData.unitSkill];
+    //            // loop through all UPMs in skill config
+    //            for (int i = 0; i < unitSkillConfig.UniquePowerModifierConfigs.Count; i++)
+    //            {
+    //                // verify if UPM is passive
+    //                if ((unitSkillConfig.UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive)
+    //                    // verify if UPM relationships requirements are met
+    //                    && (unitSkillConfig.UniquePowerModifierConfigs[i].MatchRelationships(this, this)))
+    //                {
+    //                    // create and add UPM data to the list
+    //                    allBonuses.Add(new UniquePowerModifierData
+    //                    {
+    //                        uniquePowerModifierID = new UniquePowerModifierID
+    //                        {
+    //                            unitSkillID = unitSkillConfig.unitSkillID,
+    //                            uniquePowerModifierConfigIndex = i,
+    //                            modifierOrigin = ModifierOrigin.Skill,
+    //                            destinationGameObjectID = gameObject.GetInstanceID()
+    //                        },
+    //                        durationLeft = unitSkillConfig.UniquePowerModifierConfigs[i].UpmDurationMax,
+    //                        currentPower = Mathf.RoundToInt(unitSkillConfig.UniquePowerModifierConfigs[i].UpmBasePower * unitSkillData.currentSkillLevel * unitSkillConfig.UniquePowerModifierConfigs[i].AssociatedUnitSkillPowerMultiplier)
+    //                    });
+    //                }
+    //            }
+    //        }
+    //    }
+    //    // return updated list of all bonuses
+    //    return allBonuses;
+    //}
 
     public List<UniquePowerModifierData> AddBonusesFromPlayerUniqueAbility(List<UniquePowerModifierData> allBonuses)
     {
@@ -1424,11 +1440,11 @@ public class PartyUnit : MonoBehaviour {
         // add bonuses propagated by party leader
         allBonuses = AddBonusesPropagatedbyPartyLeader(allBonuses);
         // get bonuses from equipped items (normally it is applicable only to party-leader)
-        allBonuses = AddBonusesFromEquippedItems(allBonuses);
+        //allBonuses = AddBonusesFromEquippedItems(allBonuses);
         //get gained bonuses from consumed items
-        allBonuses = AddBonusesFromConsumedItems(allBonuses);
+        //allBonuses = AddBonusesFromConsumedItems(allBonuses);
         // get bonuses from learned skills (normally it is applicable only to party-leader) 
-        allBonuses = AddBonusesFromLearnedSkills(allBonuses);
+        //allBonuses = AddBonusesFromLearnedSkills(allBonuses);
         // get gained bonuses from player unique ability
         allBonuses = AddBonusesFromPlayerUniqueAbility(allBonuses);
         //get gained bonuses from applied abilities

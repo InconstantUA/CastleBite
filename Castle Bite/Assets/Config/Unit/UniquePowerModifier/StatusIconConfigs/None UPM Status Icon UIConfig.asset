@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: None UPM Status Icon UIConfig
   m_EditorClassIdentifier: 
   symbol: 
+  uniquePowerModifierAlignment: 0
   statusIconTextNormalColor: {r: 0, g: 0, b: 0, a: 0}
   statusIconTextHighlightedColor: {r: 0, g: 0, b: 0, a: 0}
   statusIconTextPressedColor: {r: 0, g: 0, b: 0, a: 0}
   statusIconTextDisabledColor: {r: 0, g: 0, b: 0, a: 0}
   statusIconBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
-  onTriggerTextAnimation: {fileID: 0}
+  onTriggerTextAnimation: {fileID: 11400000, guid: d51fdbaeebe33b34891790d563113e97,
+    type: 2}

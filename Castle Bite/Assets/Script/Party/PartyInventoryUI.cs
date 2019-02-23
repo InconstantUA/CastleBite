@@ -184,18 +184,24 @@ public class PartyInventoryUI : MonoBehaviour {
 
     public void DisplayHeroEquipmentUsableInventory()
     {
-        // get all usable items from party leader equipment
-        foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
+        // get party leader
+        PartyUnit partyLeader = GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader();
+        // verify if party leader exists (it may not exist in city garnizon)
+        if (partyLeader != null)
         {
-            // get item
-            InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
-            // verify if this is an item
-            if (inventoryItem != null)
+            // get all usable items from party leader equipment
+            foreach (Transform childTransform in GetComponentInParent<HeroPartyUI>().LHeroParty.GetPartyLeader().transform)
             {
-                // verify if item is in hero eqipment slot and that it is usable
-                if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None && inventoryItem.IsUsable)
+                // get item
+                InventoryItem inventoryItem = childTransform.GetComponent<InventoryItem>();
+                // verify if this is an item
+                if (inventoryItem != null)
                 {
-                    SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
+                    // verify if item is in hero eqipment slot and that it is usable
+                    if (inventoryItem.CurrentHeroEquipmentSlot != HeroEquipmentSlots.None && inventoryItem.IsUsable)
+                    {
+                        SetItemRepresentationInInventoryUI(childTransform.GetComponent<InventoryItem>(), true);
+                    }
                 }
             }
         }

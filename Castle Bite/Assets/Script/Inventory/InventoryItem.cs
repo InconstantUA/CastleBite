@@ -341,34 +341,34 @@ public class InventoryItem : MonoBehaviour {
     //    SelfDestroyIfExpired();
     //}
 
-    public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
-    {
-        // init upms data list
-        List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
-        // loop through the list of all UPMs in the item
-        for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
-        {
-            // verify if UPM is passive
-            if ((UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive))
-            {
-                // create and add UPM data to the list
-                upmsData.Add(new UniquePowerModifierData
-                {
-                    uniquePowerModifierID = new UniquePowerModifierID
-                    {
-                        inventoryItemID = InventoryItemID,
-                        uniquePowerModifierConfigIndex = i,
-                        modifierOrigin = ModifierOrigin.Item,
-                        destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
-                    },
-                    durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
-                    currentPower = UniquePowerModifierConfigs[i].UpmBasePower
-                });
-            }
-        }
-        // return result
-        return upmsData;
-    }
+    //public List<UniquePowerModifierData> GetPropagatedBonuses(PartyUnit dstPartyUnit)
+    //{
+    //    // init upms data list
+    //    List<UniquePowerModifierData> upmsData = new List<UniquePowerModifierData>();
+    //    // loop through the list of all UPMs in the item
+    //    for (int i = 0; i < UniquePowerModifierConfigs.Count; i++)
+    //    {
+    //        // verify if UPM is passive
+    //        if ((UniquePowerModifierConfigs[i].TriggerCondition == TriggerCondition.NonePassive))
+    //        {
+    //            // create and add UPM data to the list
+    //            upmsData.Add(new UniquePowerModifierData
+    //            {
+    //                uniquePowerModifierID = new UniquePowerModifierID
+    //                {
+    //                    inventoryItemID = InventoryItemID,
+    //                    uniquePowerModifierConfigIndex = i,
+    //                    modifierOrigin = ModifierOrigin.Item,
+    //                    destinationGameObjectID = dstPartyUnit.gameObject.GetInstanceID()
+    //                },
+    //                durationLeft = UniquePowerModifierConfigs[i].UpmDurationMax,
+    //                currentPower = UniquePowerModifierConfigs[i].UpmBasePower
+    //            });
+    //        }
+    //    }
+    //    // return result
+    //    return upmsData;
+    //}
 
 
     #region Properties

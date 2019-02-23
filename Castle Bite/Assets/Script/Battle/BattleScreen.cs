@@ -253,6 +253,23 @@ public class BattleScreen : MonoBehaviour {
         //SetBattleExitButtonActive(false);
     }
 
+    void InitFocusPanel(string focusPanelName, HeroPartyUI heroPartyUI)
+    {
+        // get party mode
+        if (heroPartyUI.LHeroParty.PartyMode == PartyMode.Party)
+        {
+            // Party mode
+            // assign party leader to the focus panel
+            transform.root.Find("MiscUI/" + focusPanelName).GetComponent<FocusPanel>().focusedObject = heroPartyUI.GetPartyLeaderUI().gameObject;
+        }
+        else
+        {
+            // Garnizon mode
+            // assign city to the focus panel
+            transform.root.Find("MiscUI/" + focusPanelName).GetComponent<FocusPanel>().focusedObject = heroPartyUI.LHeroParty.GetComponentInParent<City>().gameObject;
+        }
+    }
+
     void EnterBattleCommon(HeroParty playerHeroParty, HeroParty enemyHeroParty)
     {
         // activate this battle sreen
@@ -274,10 +291,14 @@ public class BattleScreen : MonoBehaviour {
         // Activate Hero parties UIs upfront so that PartyLeaders UIs are created
         playerHeroPartyUI.gameObject.SetActive(true);
         enemyHeroPartyUI.gameObject.SetActive(true);
-        // assign party leader to the left focus panel
-        transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerHeroPartyUI.GetPartyLeaderUI().gameObject;
-        // assign party leader to the right focus panel
-        transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyHeroPartyUI.GetPartyLeaderUI().gameObject;
+        // init left focus panel
+        InitFocusPanel("LeftFocus", playerHeroPartyUI);
+        // init right focus panel
+        InitFocusPanel("RightFocus", enemyHeroPartyUI);
+        //// assign party leader to the left focus panel
+        //transform.root.Find("MiscUI/LeftFocus").GetComponent<FocusPanel>().focusedObject = playerHeroPartyUI.GetPartyLeaderUI().gameObject;
+        //// assign party leader to the right focus panel
+        //transform.root.Find("MiscUI/RightFocus").GetComponent<FocusPanel>().focusedObject = enemyHeroPartyUI.GetPartyLeaderUI().gameObject;
         // trigger battle screen enable event
         battleScreenEnable.Raise();
         // Activate all needed UI at once
