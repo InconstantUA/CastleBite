@@ -481,31 +481,37 @@ public class PartyUnitUI : MonoBehaviour {
         // Loop through all UPMs on this party unit in backwards order (so we can remove items in a loop)
         for (int i = LPartyUnit.AppliedUniquePowerModifiersData.Count - 1; i >= 0; i--)
         {
-            // Gget UPM text animation config upfront, because UPMdata may be removed if unit is dead after Trigger
-            TextAnimation upmTextAnimation = LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifierStausIconUIConfig.onTriggerTextAnimation;
-            // Trigger UPM
-            LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.AppliedUniquePowerModifiersData[i]);
-            // trigger animation to display damage done
-            upmTextAnimation.Run(UnitInfoPanelText);
-            // verify if unit is still alive
-            if (LPartyUnit.UnitStatus != UnitStatus.Dead)
+            // get UPM config
+            UniquePowerModifierConfig uniquePowerModifierConfig = LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig();
+            // verify if trigger condition matches
+            if (uniquePowerModifierConfig.TriggerCondition == TriggerCondition.AtTurnStart)
             {
-                // verify if UPM duration left is 0 or unit is dead
-                if (LPartyUnit.AppliedUniquePowerModifiersData[i].DurationLeft == 0)
+                // Gget UPM text animation config upfront, because UPMdata may be removed if unit is dead after Trigger
+                TextAnimation upmTextAnimation = uniquePowerModifierConfig.UniquePowerModifierStausIconUIConfig.onTriggerTextAnimation;
+                // Trigger UPM
+                LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().Trigger(LPartyUnit, LPartyUnit.AppliedUniquePowerModifiersData[i]);
+                // trigger animation to display damage done
+                upmTextAnimation.Run(UnitInfoPanelText);
+                // verify if unit is still alive
+                if (LPartyUnit.UnitStatus != UnitStatus.Dead)
                 {
-                    // UPM has expired
-                    // trigger UPM removed event
-                    //LPartyUnit.UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
-                    LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(LPartyUnit.AppliedUniquePowerModifiersData[i]);
-                    // remove it from the list
-                    LPartyUnit.AppliedUniquePowerModifiersData.RemoveAt(i);
+                    // verify if UPM duration left is 0
+                    if (LPartyUnit.AppliedUniquePowerModifiersData[i].DurationLeft == 0)
+                    {
+                        // UPM has expired
+                        // trigger UPM removed event
+                        //LPartyUnit.UnitEvents.uniquePowerModifierHasBeenRemovedEvent.Raise(LPartyUnit.UniquePowerModifiersData[i]);
+                        LPartyUnit.AppliedUniquePowerModifiersData[i].GetUniquePowerModifierConfig().UniquePowerModifier.Events.DataHasBeenRemovedEvent.Raise(LPartyUnit.AppliedUniquePowerModifiersData[i]);
+                        // remove it from the list
+                        LPartyUnit.AppliedUniquePowerModifiersData.RemoveAt(i);
+                    }
                 }
-            }
-            else
-            {
-                // all UPMs data already should be removed in party unit UnitHealthCurr property
-                // exit this loop
-                break;
+                else
+                {
+                    // all UPMs data already should be removed in party unit UnitHealthCurr property
+                    // exit this loop
+                    break;
+                }
             }
         }
     }

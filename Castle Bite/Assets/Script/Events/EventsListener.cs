@@ -19,10 +19,10 @@ public class PartyUnitHealthHasChangedEvent : UnityEvent<PartyUnit, int>
 {
 }
 
-[System.Serializable]
-public class UnitPowerModifierEvent : UnityEvent<PartyUnit, UnitPowerModifier>
-{
-}
+//[System.Serializable]
+//public class UnitPowerModifierEvent : UnityEvent<PartyUnit, UnitPowerModifier>
+//{
+//}
 
 [System.Serializable]
 public class UnitAbilityEvent : UnityEvent<PartyUnit, UnitAbility>
@@ -48,7 +48,7 @@ public class EventAndAction
     public GenericObjectEvent genericObjectEvent;
     public PartyUnitEvent partyUnitEvent;
     public PartyUnitHealthHasChangedEvent partyUnitHealthHasChangedEvent;
-    public UnitPowerModifierEvent unitPowerModifierEvent;
+    //public UnitPowerModifierEvent unitPowerModifierEvent;
     public UnitAbilityEvent unitAbilityEvent;
     public UnitUIToUnitUIEvent unitToUnitEvent;
     public UniquePowerModifierDataEvent uniquePowerModifierDataEvent;
@@ -106,12 +106,12 @@ public class EventAndAction
 
     public void Invoke(GameObject gameObject, ScriptableObject scriptableObject)
     {
-        // Check if at least 1 object is listening for the event
-        if (unitPowerModifierEvent.GetPersistentEventCount() >= 1)
-        {
-            // Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " and " + scriptableObject.name + " scriptable object");
-            unitPowerModifierEvent.Invoke(gameObject.GetComponent<PartyUnit>(), (UnitPowerModifier)scriptableObject);
-        }
+        //// Check if at least 1 object is listening for the event
+        //if (unitPowerModifierEvent.GetPersistentEventCount() >= 1)
+        //{
+        //    // Debug.Log("Invoking event for " + gameObject.GetComponent<PartyUnit>().UnitName + " and " + scriptableObject.name + " scriptable object");
+        //    unitPowerModifierEvent.Invoke(gameObject.GetComponent<PartyUnit>(), (UnitPowerModifier)scriptableObject);
+        //}
         // Check if at least 1 object is listening for the event
         if (unitAbilityEvent.GetPersistentEventCount() >= 1)
         {

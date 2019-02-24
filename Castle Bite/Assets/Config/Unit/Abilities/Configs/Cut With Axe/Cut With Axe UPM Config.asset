@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c268c19d50b6b0a4b968c4b21aada5c3, type: 3}
   m_Name: Cut With Axe UPM Config
   m_EditorClassIdentifier: 
-  displayName: Blow With Great Sword
+  displayName: Cut With Axe
   description: Deals physical damage to single unit
   isPrimary: 1
   executionOrder: 0
@@ -20,7 +20,6 @@ MonoBehaviour:
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 8775af15bcf4a2345a388a36c1cc7b30,
     type: 2}
-  uniquePowerModifierAlignment: 2
   triggerCondition: 1
   modifierConfigUpdaters:
   - {fileID: 11400000, guid: 280467bdd2653484293a4f3a7ecbfa00, type: 2}

@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Gives defense bonus to all party members
   isPrimary: 1
   executionOrder: 3
-  uniquePowerModifier: {fileID: 11400000, guid: bc5fe3686541b504cb56d13fba928878,
+  uniquePowerModifier: {fileID: 11400000, guid: 595e5b6a58e766f43abdd8a8d306e846,
     type: 2}
   unitStatModifierConfig: {fileID: 11400000, guid: 5b02f6fa373986945ba6823fdb33d6f1,
     type: 2}
