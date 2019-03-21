@@ -737,11 +737,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -790,11 +785,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -1770,11 +1760,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -1823,11 +1808,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -1876,11 +1856,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -1929,11 +1904,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -1982,11 +1952,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -2035,11 +2000,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -2088,11 +2048,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -2141,11 +2096,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -2193,9 +2143,9 @@ RectTransform:
   m_Father: {fileID: 1861483330}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &49937012
@@ -2870,9 +2820,9 @@ RectTransform:
   m_Father: {fileID: 734790885}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 326, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 56, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &65777869
@@ -4847,11 +4797,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -4955,11 +4900,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -5008,11 +4948,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -5061,11 +4996,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -5114,11 +5044,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -5156,11 +5081,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -5209,11 +5129,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -13880,9 +13795,9 @@ RectTransform:
   m_Father: {fileID: 374311621}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 160, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 128, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &199761316
@@ -15795,11 +15710,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -15848,11 +15758,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -15928,12 +15833,12 @@ PrefabInstance:
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 177
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
@@ -15953,7 +15858,7 @@ PrefabInstance:
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
@@ -15963,7 +15868,7 @@ PrefabInstance:
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224732572760555712, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
@@ -15978,62 +15883,62 @@ PrefabInstance:
     - target: {fileID: 224462033047247868, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224462033047247868, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224462033047247868, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 36
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224462033047247868, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224304632071103250, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224304632071103250, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224304632071103250, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 121
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224304632071103250, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224965238022509426, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224965238022509426, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224965238022509426, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 204
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224965238022509426, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224965617152170578, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
@@ -16058,42 +15963,42 @@ PrefabInstance:
     - target: {fileID: 224382080635909122, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224382080635909122, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224382080635909122, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 268
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224382080635909122, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224073956761587870, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224073956761587870, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224073956761587870, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 326
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224073956761587870, guid: f2cc86d0cfeecc84c8bd98d1757df463,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1674447890897374, guid: f2cc86d0cfeecc84c8bd98d1757df463, type: 3}
       propertyPath: m_Layer
@@ -16289,9 +16194,9 @@ RectTransform:
   m_Father: {fileID: 350025312}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 174, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &245379331
@@ -17405,9 +17310,9 @@ RectTransform:
   m_Father: {fileID: 1285084813}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -40}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 360, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &272703897
@@ -17908,9 +17813,9 @@ RectTransform:
   m_Father: {fileID: 1307643124}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 288, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 128, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &290025669
@@ -18862,9 +18767,9 @@ RectTransform:
   m_Father: {fileID: 350025312}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 315, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 90, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &326853803
@@ -21929,9 +21834,9 @@ RectTransform:
   m_Father: {fileID: 270748404}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 260, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &381936131
@@ -31204,9 +31109,9 @@ RectTransform:
   m_Father: {fileID: 350025312}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 71, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 142, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &469496858
@@ -31441,9 +31346,9 @@ RectTransform:
   m_Father: {fileID: 1958607635}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 260, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &479634017
@@ -32105,9 +32010,9 @@ RectTransform:
   m_Father: {fileID: 374311621}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 288, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 128, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &486154208
@@ -32767,7 +32672,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 1, y: 0}
-  m_SizeDelta: {x: 271, y: 16}
+  m_SizeDelta: {x: 271, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &501282921
 MonoBehaviour:
@@ -33551,7 +33456,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Unique power modifiers:'
+  m_Text: 'Unique powers:'
 --- !u!222 &518552369
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34272,9 +34177,9 @@ RectTransform:
   m_Father: {fileID: 885252648}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 260, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &538442949
@@ -41349,9 +41254,9 @@ RectTransform:
   m_Father: {fileID: 581365598}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 71, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 142, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &597194709
@@ -46458,9 +46363,9 @@ RectTransform:
   m_Father: {fileID: 734790885}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 204, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 68, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &727248883
@@ -46573,9 +46478,9 @@ RectTransform:
   m_Father: {fileID: 581365598}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 174, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &732255072
@@ -47259,9 +47164,9 @@ RectTransform:
   m_Father: {fileID: 1307643124}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 48, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 96, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &747541711
@@ -53163,11 +53068,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53216,11 +53116,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53269,11 +53164,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53322,11 +53212,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53375,11 +53260,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53428,11 +53308,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53481,11 +53356,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53534,11 +53404,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53587,11 +53452,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53640,11 +53500,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -53693,11 +53548,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -55058,9 +54908,9 @@ RectTransform:
   m_Father: {fileID: 1285084813}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 180, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 360, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &815995381
@@ -59309,11 +59159,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -59362,11 +59207,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -59415,11 +59255,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -59468,11 +59303,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -59521,11 +59351,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -60610,7 +60435,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -67319,9 +67144,9 @@ RectTransform:
   m_Father: {fileID: 734790885}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 121, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 98, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1057972034
@@ -67398,9 +67223,9 @@ RectTransform:
   m_Father: {fileID: 734790885}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 36, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 72, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1061526402
@@ -68002,9 +67827,9 @@ RectTransform:
   m_Father: {fileID: 374311621}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 48, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 96, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1083371050
@@ -71066,11 +70891,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -71119,11 +70939,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -71172,11 +70987,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -71225,11 +71035,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -71790,9 +71595,9 @@ RectTransform:
   m_Father: {fileID: 885252648}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1177218317
@@ -72289,9 +72094,9 @@ RectTransform:
   m_Father: {fileID: 1307643124}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 160, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 128, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1182609262
@@ -75160,9 +74965,9 @@ RectTransform:
   m_Father: {fileID: 581365598}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 315, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 90, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1261554588
@@ -77712,11 +77517,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -77765,11 +77565,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -78042,9 +77837,9 @@ RectTransform:
   m_Father: {fileID: 1861483330}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 260, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1310366518
@@ -85362,9 +85157,9 @@ RectTransform:
   m_Father: {fileID: 717705148}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 260, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1380517349
@@ -85930,9 +85725,9 @@ RectTransform:
   m_Father: {fileID: 717705148}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1396022914
@@ -86318,9 +86113,9 @@ RectTransform:
   m_Father: {fileID: 1181843351}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1406399073
@@ -87629,7 +87424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1455943922
 RectTransform:
   m_ObjectHideFlags: 0
@@ -87766,11 +87561,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -89391,9 +89181,9 @@ RectTransform:
   m_Father: {fileID: 350025312}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 238, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1516424049
@@ -89558,9 +89348,9 @@ RectTransform:
   m_Father: {fileID: 1307643124}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 356, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 8, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1518826302
@@ -90008,9 +89798,9 @@ RectTransform:
   m_Father: {fileID: 270748404}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1526921896
@@ -90977,11 +90767,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91030,11 +90815,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91083,11 +90863,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91136,11 +90911,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91189,11 +90959,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91242,11 +91007,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91295,11 +91055,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91348,11 +91103,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -91401,11 +91151,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -93953,11 +93698,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -94006,11 +93746,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -94059,11 +93794,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -98959,9 +98689,9 @@ RectTransform:
   m_Father: {fileID: 734790885}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 268, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 60, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1749793610
@@ -99916,11 +99646,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -99969,11 +99694,6 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: PartyUnitHealthHasChangedEvent, Assembly-CSharp, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    unitPowerModifierEvent:
-      m_PersistentCalls:
-        m_Calls: []
-      m_TypeName: UnitPowerModifierEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
     unitAbilityEvent:
       m_PersistentCalls:
         m_Calls: []
@@ -100587,9 +100307,9 @@ RectTransform:
   m_Father: {fileID: 374311621}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 356, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 8, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1803005851
@@ -102421,9 +102141,9 @@ RectTransform:
   m_Father: {fileID: 581365598}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 238, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1874473351
@@ -103319,9 +103039,9 @@ RectTransform:
   m_Father: {fileID: 1181843351}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 260, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1910764336
@@ -112964,9 +112684,9 @@ RectTransform:
   m_Father: {fileID: 1958607635}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -8}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2069924802
